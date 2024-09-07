@@ -21,6 +21,8 @@
 		388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
 		388372012C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
+		38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
+		38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,7 @@
 		388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SOOUM.swift"; sourceTree = "<group>"; };
 		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
+		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +135,7 @@
 			children = (
 				388371F82C8C8EB1004212EB /* SooumStyle.swift */,
 				388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */,
+				38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */,
 			);
 			path = Foundations;
 			sourceTree = "<group>";
@@ -300,6 +304,7 @@
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
+				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +317,7 @@
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
+				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
