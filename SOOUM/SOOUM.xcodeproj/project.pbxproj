@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		384A250C2C8AFA62006B31D0 /* Info-prod.plist in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAFD2C8702C200A5E139 /* Info-prod.plist */; };
 		385441902C870544004E2BB0 /* TempViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF32C8702C100A5E139 /* TempViewController.swift */; };
 		385441912C870544004E2BB0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAEF2C8702C100A5E139 /* AppDelegate.swift */; };
 		385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
@@ -18,7 +17,6 @@
 		387FBAF42C8702C100A5E139 /* TempViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF32C8702C100A5E139 /* TempViewController.swift */; };
 		387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
 		387FBAFC2C8702C200A5E139 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAFB2C8702C200A5E139 /* Base */; };
-		388DCC3A2C8707C200DC5329 /* Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 388DCC382C8707C200DC5329 /* Info-dev.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -200,7 +198,6 @@
 			files = (
 				385441952C870544004E2BB0 /* Assets.xcassets in Resources */,
 				385441962C870544004E2BB0 /* Base in Resources */,
-				388DCC3A2C8707C200DC5329 /* Info-dev.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,7 +207,6 @@
 			files = (
 				387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */,
 				387FBAFC2C8702C200A5E139 /* Base in Resources */,
-				384A250C2C8AFA62006B31D0 /* Info-prod.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
