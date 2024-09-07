@@ -67,7 +67,6 @@
 			isa = PBXGroup;
 			children = (
 				387FBB032C87036D00A5E139 /* App */,
-				387FBB042C87037B00A5E139 /* Presentations */,
 				387FBB052C87038F00A5E139 /* Resources */,
 			);
 			path = SOOUM;
@@ -80,13 +79,6 @@
 				387FBAF12C8702C100A5E139 /* SceneDelegate.swift */,
 			);
 			path = App;
-			sourceTree = "<group>";
-		};
-		387FBB042C87037B00A5E139 /* Presentations */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Presentations;
 			sourceTree = "<group>";
 		};
 		387FBB052C87038F00A5E139 /* Resources */ = {
