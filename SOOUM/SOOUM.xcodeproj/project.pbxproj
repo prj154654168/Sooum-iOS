@@ -17,6 +17,8 @@
 		387FBAFC2C8702C200A5E139 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAFB2C8702C200A5E139 /* Base */; };
 		388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371F82C8C8EB1004212EB /* SooumStyle.swift */; };
 		388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371F82C8C8EB1004212EB /* SooumStyle.swift */; };
+		388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
+		388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
 		388372012C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 /* End PBXBuildFile section */
@@ -30,6 +32,7 @@
 		387FBAFB2C8702C200A5E139 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		387FBAFD2C8702C200A5E139 /* Info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-prod.plist"; sourceTree = "<group>"; };
 		388371F82C8C8EB1004212EB /* SooumStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SooumStyle.swift; sourceTree = "<group>"; };
+		388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SOOUM.swift"; sourceTree = "<group>"; };
 		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -128,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				388371F82C8C8EB1004212EB /* SooumStyle.swift */,
+				388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */,
 			);
 			path = Foundations;
 			sourceTree = "<group>";
@@ -292,6 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
@@ -303,6 +308,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
