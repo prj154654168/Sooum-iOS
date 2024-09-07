@@ -23,6 +23,10 @@ extension SOOUMStyle where Base == UIColor {
     static let blue800 = UIColor(hex: "#076D85")
     static let blue900 = UIColor(hex: "#055466")
     
+    // Gray Scale
+    static let white = UIColor(hex: "#FFFFFF")
+    static let black = UIColor(hex: "#000000")
+    
     // Dim
     static let dim = UIColor(red: 0, green: 0, blue: 0, alpha: 0.7)
 }
