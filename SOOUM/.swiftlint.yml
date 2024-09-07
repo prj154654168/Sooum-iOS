@@ -96,7 +96,6 @@ disabled_rules:
 # 👉🏻 Opt-In Rules
 #     주석처리가 되지 않고 작성된 Rule이 적용된 Rule 입니다.
 opt_in_rules:
-  - anyobject_protocol
   - array_init
   - attributes
   - balanced_xctest_lifecycle
