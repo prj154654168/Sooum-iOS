@@ -15,6 +15,14 @@
 		387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
 		387FBAFC2C8702C200A5E139 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAFB2C8702C200A5E139 /* Base */; };
+		388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371F82C8C8EB1004212EB /* SooumStyle.swift */; };
+		388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371F82C8C8EB1004212EB /* SooumStyle.swift */; };
+		388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
+		388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
+		388372012C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
+		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
+		38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
+		38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,7 +33,11 @@
 		387FBAF82C8702C200A5E139 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		387FBAFB2C8702C200A5E139 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		387FBAFD2C8702C200A5E139 /* Info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-prod.plist"; sourceTree = "<group>"; };
+		388371F82C8C8EB1004212EB /* SooumStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SooumStyle.swift; sourceTree = "<group>"; };
+		388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SOOUM.swift"; sourceTree = "<group>"; };
+		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
+		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +78,9 @@
 		387FBAEE2C8702C100A5E139 /* SOOUM */ = {
 			isa = PBXGroup;
 			children = (
+				388371F62C8C8E7F004212EB /* DesignSystem */,
 				387FBB032C87036D00A5E139 /* App */,
+				388371FE2C8C8FAC004212EB /* Extensions */,
 				387FBB052C87038F00A5E139 /* Resources */,
 			);
 			path = SOOUM;
@@ -106,6 +120,40 @@
 				388DCC382C8707C200DC5329 /* Info-dev.plist */,
 			);
 			path = Develop;
+			sourceTree = "<group>";
+		};
+		388371F62C8C8E7F004212EB /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				388371F72C8C8E8C004212EB /* Foundations */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		388371F72C8C8E8C004212EB /* Foundations */ = {
+			isa = PBXGroup;
+			children = (
+				388371F82C8C8EB1004212EB /* SooumStyle.swift */,
+				388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */,
+				38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */,
+			);
+			path = Foundations;
+			sourceTree = "<group>";
+		};
+		388371FE2C8C8FAC004212EB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				388371FF2C8C8FC2004212EB /* Cocoa */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		388371FF2C8C8FC2004212EB /* Cocoa */ = {
+			isa = PBXGroup;
+			children = (
+				388372002C8C8FCF004212EB /* UIColor.swift */,
+			);
+			path = Cocoa;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,8 +299,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
+				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
+				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,8 +312,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
+				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
+				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
