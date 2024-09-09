@@ -21,6 +21,8 @@
 		388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
 		388372012C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
+		388DA1012C8F538400A9DD56 /* PretendardVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */; };
+		388DA1022C8F538400A9DD56 /* PretendardVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */; };
 		38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 /* End PBXBuildFile section */
@@ -36,6 +38,7 @@
 		388371F82C8C8EB1004212EB /* SooumStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SooumStyle.swift; sourceTree = "<group>"; };
 		388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SOOUM.swift"; sourceTree = "<group>"; };
 		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PretendardVariable.ttf; sourceTree = "<group>"; };
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +103,7 @@
 			children = (
 				387FBAF82C8702C200A5E139 /* Assets.xcassets */,
 				387FBAFA2C8702C200A5E139 /* LaunchScreen.storyboard */,
+				388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */,
 				387FBB152C87044700A5E139 /* Develop */,
 				387FBB062C8703F600A5E139 /* Production */,
 			);
@@ -239,6 +243,7 @@
 			files = (
 				385441952C870544004E2BB0 /* Assets.xcassets in Resources */,
 				385441962C870544004E2BB0 /* Base in Resources */,
+				388DA1022C8F538400A9DD56 /* PretendardVariable.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +253,7 @@
 			files = (
 				387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */,
 				387FBAFC2C8702C200A5E139 /* Base in Resources */,
+				388DA1012C8F538400A9DD56 /* PretendardVariable.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
