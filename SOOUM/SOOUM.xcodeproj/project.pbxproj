@@ -23,6 +23,10 @@
 		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 		38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
+		38CE94C42C904E4A0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C32C904E4A0004B238 /* SnapKit */; };
+		38CE94C62C904E5E0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C52C904E5E0004B238 /* SnapKit */; };
+		38CE94C92C904E940004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C82C904E940004B238 /* Then */; };
+		38CE94CB2C904E990004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94CA2C904E990004B238 /* Then */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +49,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38CE94C42C904E4A0004B238 /* SnapKit in Frameworks */,
+				38CE94CB2C904E990004B238 /* Then in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38CE94C62C904E5E0004B238 /* SnapKit in Frameworks */,
+				38CE94C92C904E940004B238 /* Then in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,6 +71,7 @@
 			children = (
 				387FBAEE2C8702C100A5E139 /* SOOUM */,
 				387FBAED2C8702C100A5E139 /* Products */,
+				38CE94C22C904E4A0004B238 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -174,6 +183,10 @@
 			dependencies = (
 			);
 			name = "SOOUM-Dev";
+			packageProductDependencies = (
+				38CE94C32C904E4A0004B238 /* SnapKit */,
+				38CE94CA2C904E990004B238 /* Then */,
+			);
 			productName = SOOUM;
 			productReference = 3854419A2C870544004E2BB0 /* SOOUM-Dev.app */;
 			productType = "com.apple.product-type.application";
@@ -191,6 +204,10 @@
 			dependencies = (
 			);
 			name = SOOUM;
+			packageProductDependencies = (
+				38CE94C52C904E5E0004B238 /* SnapKit */,
+				38CE94C82C904E940004B238 /* Then */,
+			);
 			productName = SOOUM;
 			productReference = 387FBAEC2C8702C100A5E139 /* SOOUM.app */;
 			productType = "com.apple.product-type.application";
@@ -221,6 +238,8 @@
 			mainGroup = 387FBAE32C8702C100A5E139;
 			packageReferences = (
 				38D8EFDE2C8C3FFE00C059F4 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
+				38CE94C12C904E190004B238 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				38CE94C72C904E8B0004B238 /* XCRemoteSwiftPackageReference "Then" */,
 			);
 			productRefGroup = 387FBAED2C8702C100A5E139 /* Products */;
 			projectDirPath = "";
@@ -601,6 +620,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		38CE94C12C904E190004B238 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		38CE94C72C904E8B0004B238 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 		38D8EFDE2C8C3FFE00C059F4 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
@@ -610,6 +645,29 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		38CE94C32C904E4A0004B238 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38CE94C12C904E190004B238 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		38CE94C52C904E5E0004B238 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38CE94C12C904E190004B238 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		38CE94C82C904E940004B238 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38CE94C72C904E8B0004B238 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+		38CE94CA2C904E990004B238 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38CE94C72C904E8B0004B238 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 387FBAE42C8702C100A5E139 /* Project object */;
 }
