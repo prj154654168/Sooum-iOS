@@ -11,14 +11,15 @@ extension UIImage {
     
     enum SOOUMType: Equatable {
         case icon(IconStyle)
+        case logo
         
         enum IconStyle {
             case outlined(Outlined)
             
             enum Outlined: String {
-                case add_card
+                case addCard
                 case alarm
-                case chat_bubble_grid
+                case chatBubbleGrid
                 case clock
                 case comment
                 case heart
@@ -41,6 +42,8 @@ extension UIImage {
             switch self {
             case .icon(let iconStyle):
                 return iconStyle.imageName
+            case .logo:
+                return "logo"
             }
         }
         
