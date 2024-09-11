@@ -61,9 +61,11 @@ class SOMNavigationBar: UIView {
     
     /// 네비게이션 바 뒤로가기 버튼
     let backButton = UIButton().then {
-        $0.tintAdjustmentMode = .normal
+        var config = UIButton.Configuration.plain()
         // TODO: 추후 뒤로가기 버튼이 추가되면 수정
-        $0.setImage(.init(.icon(.outlined(.home))), for: .normal)
+        config.image = .init(.icon(.outlined(.home)))
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .gray }
+        $0.configuration = config
     }
     var isHideBackButton: Bool {
         set { self.backButton.isHidden = newValue }
@@ -71,8 +73,9 @@ class SOMNavigationBar: UIView {
     }
     
     /// leftButtons 혹은 rightButtons 간격
-    var spacing: CGFloat = 0 {
-        didSet { 
+    var spacing: CGFloat = 5 {
+        didSet {
+            self.leftContainer.spacing = self.spacing
             self.leftButtonsView.spacing = self.spacing
             self.rightButtonsView.spacing = self.spacing
         }
