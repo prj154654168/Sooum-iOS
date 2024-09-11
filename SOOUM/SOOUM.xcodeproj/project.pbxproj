@@ -23,6 +23,8 @@
 		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 		38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
+		38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
+		38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
 		38CE94C42C904E4A0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C32C904E4A0004B238 /* SnapKit */; };
 		38CE94C62C904E5E0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C52C904E5E0004B238 /* SnapKit */; };
 		38CE94C92C904E940004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C82C904E940004B238 /* Then */; };
@@ -42,6 +44,7 @@
 		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
+		38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMNavigationBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +137,7 @@
 		388371F62C8C8E7F004212EB /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
+				38CE94BD2C904D140004B238 /* Components */,
 				388371F72C8C8E8C004212EB /* Foundations */,
 			);
 			path = DesignSystem;
@@ -163,6 +167,21 @@
 				388372002C8C8FCF004212EB /* UIColor.swift */,
 			);
 			path = Cocoa;
+			sourceTree = "<group>";
+		};
+		38CE94BD2C904D140004B238 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		38CE94C22C904E4A0004B238 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -320,6 +339,7 @@
 			files = (
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
+				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
@@ -333,6 +353,7 @@
 			files = (
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
+				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
