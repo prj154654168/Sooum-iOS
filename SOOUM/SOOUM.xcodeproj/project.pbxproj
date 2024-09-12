@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3836ACB42C8F045300A3C566 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB32C8F045300A3C566 /* Typography.swift */; };
+		3836ACB52C8F045300A3C566 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB32C8F045300A3C566 /* Typography.swift */; };
+		3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */; };
+		3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */; };
+		3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */; };
+		3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */; };
 		385441912C870544004E2BB0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAEF2C8702C100A5E139 /* AppDelegate.swift */; };
 		385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		385441952C870544004E2BB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
@@ -21,6 +27,14 @@
 		388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
 		388372012C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
+		388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FA2C8F521000A9DD56 /* FontContainer.swift */; };
+		388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FA2C8F521000A9DD56 /* FontContainer.swift */; };
+		388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FD2C8F526C00A9DD56 /* UIFont.swift */; };
+		388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FD2C8F526C00A9DD56 /* UIFont.swift */; };
+		388DA1012C8F538400A9DD56 /* PretendardVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */; };
+		388DA1022C8F538400A9DD56 /* PretendardVariable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */; };
+		388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA1032C8F545E00A9DD56 /* Typography+SOOUM.swift */; };
+		388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA1032C8F545E00A9DD56 /* Typography+SOOUM.swift */; };
 		38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
@@ -32,6 +46,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3836ACB32C8F045300A3C566 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Observer.swift"; sourceTree = "<group>"; };
+		3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Typography.swift"; sourceTree = "<group>"; };
 		3854419A2C870544004E2BB0 /* SOOUM-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SOOUM-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEF2C8702C100A5E139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -42,6 +59,10 @@
 		388371F82C8C8EB1004212EB /* SooumStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SooumStyle.swift; sourceTree = "<group>"; };
 		388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SOOUM.swift"; sourceTree = "<group>"; };
 		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		388DA0FA2C8F521000A9DD56 /* FontContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontContainer.swift; sourceTree = "<group>"; };
+		388DA0FD2C8F526C00A9DD56 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
+		388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PretendardVariable.ttf; sourceTree = "<group>"; };
+		388DA1032C8F545E00A9DD56 /* Typography+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Typography+SOOUM.swift"; sourceTree = "<group>"; };
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
 		38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMNavigationBar.swift; sourceTree = "<group>"; };
@@ -69,6 +90,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3836ACB12C8F042C00A3C566 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				3836ACB22C8F043500A3C566 /* Typography */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		3836ACB22C8F043500A3C566 /* Typography */ = {
+			isa = PBXGroup;
+			children = (
+				3836ACB32C8F045300A3C566 /* Typography.swift */,
+				388DA0FA2C8F521000A9DD56 /* FontContainer.swift */,
+				3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */,
+				3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */,
+			);
+			path = Typography;
+			sourceTree = "<group>";
+		};
 		387FBAE32C8702C100A5E139 = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +133,7 @@
 				388371F62C8C8E7F004212EB /* DesignSystem */,
 				387FBB032C87036D00A5E139 /* App */,
 				388371FE2C8C8FAC004212EB /* Extensions */,
+				3836ACB12C8F042C00A3C566 /* Utilities */,
 				387FBB052C87038F00A5E139 /* Resources */,
 			);
 			path = SOOUM;
@@ -112,6 +153,7 @@
 			children = (
 				387FBAF82C8702C200A5E139 /* Assets.xcassets */,
 				387FBAFA2C8702C200A5E139 /* LaunchScreen.storyboard */,
+				388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */,
 				387FBB152C87044700A5E139 /* Develop */,
 				387FBB062C8703F600A5E139 /* Production */,
 			);
@@ -149,6 +191,7 @@
 				388371F82C8C8EB1004212EB /* SooumStyle.swift */,
 				388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */,
 				38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */,
+				388DA1032C8F545E00A9DD56 /* Typography+SOOUM.swift */,
 			);
 			path = Foundations;
 			sourceTree = "<group>";
@@ -165,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				388372002C8C8FCF004212EB /* UIColor.swift */,
+				388DA0FD2C8F526C00A9DD56 /* UIFont.swift */,
 			);
 			path = Cocoa;
 			sourceTree = "<group>";
@@ -277,6 +321,7 @@
 			files = (
 				385441952C870544004E2BB0 /* Assets.xcassets in Resources */,
 				385441962C870544004E2BB0 /* Base in Resources */,
+				388DA1022C8F538400A9DD56 /* PretendardVariable.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +331,7 @@
 			files = (
 				387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */,
 				387FBAFC2C8702C200A5E139 /* Base in Resources */,
+				388DA1012C8F538400A9DD56 /* PretendardVariable.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,12 +383,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */,
+				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
+				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
+				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
+				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,12 +403,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
+				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
+				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
+				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
+				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
