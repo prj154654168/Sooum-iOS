@@ -15,7 +15,10 @@ extension UILabel {
         static var typography: UInt8 = .zero
     }
 
-    func setTypography(_ typography: Typography, with closure: ((NSMutableAttributedString) -> Void)? = nil) {
+    func setTypography(
+        _ typography: Typography,
+        with closure: ((NSMutableAttributedString) -> Void)? = nil
+    ) {
 
         objc_setAssociatedObject(self, &Keys.typography, typography, .OBJC_ASSOCIATION_RETAIN)
 
@@ -23,7 +26,10 @@ extension UILabel {
 
         let updateClosure: (String?) -> Void = { [weak self] text in
             if let text: String = text {
-                let attributedString = NSMutableAttributedString(string: text, attributes: typography.attributes)
+                let attributedString = NSMutableAttributedString(
+                    string: text,
+                    attributes: typography.attributes
+                )
                 closure?(attributedString)
                 self?.attributedText = attributedString
             }
