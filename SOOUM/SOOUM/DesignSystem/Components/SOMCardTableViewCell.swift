@@ -5,8 +5,8 @@
 //  Created by JDeoks on 9/12/24.
 //
 
-import UIKit
 import Then
+import UIKit
 
 class SOMCardTableViewCell: UITableViewCell {
     
@@ -132,5 +132,4 @@ class SOMCardTableViewCell: UITableViewCell {
         cardContentStackView.addSubview(cardTextContentLabel)
         contentView.addSubview(cardTextContainerView)
     }
-        
 }

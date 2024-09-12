@@ -18,6 +18,8 @@
 		2A101F302C931D6000965071 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 2A101F2F2C931D6000965071 /* RxRelay */; };
 		2A101F322C931D6000965071 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2A101F312C931D6000965071 /* RxSwift */; };
 		2A101F342C931D6700965071 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 2A101F332C931D6700965071 /* RxDataSources */; };
+		2A101F362C932A7100965071 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F352C932A7100965071 /* UIView.swift */; };
+		2A101F382C932AA800965071 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F372C932AA800965071 /* UIStackView.swift */; };
 		3836ACB42C8F045300A3C566 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB32C8F045300A3C566 /* Typography.swift */; };
 		3836ACB52C8F045300A3C566 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB32C8F045300A3C566 /* Typography.swift */; };
 		3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */; };
@@ -68,6 +70,8 @@
 
 /* Begin PBXFileReference section */
 		2A101F1D2C9319A700965071 /* SOMCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMCardTableViewCell.swift; sourceTree = "<group>"; };
+		2A101F352C932A7100965071 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		2A101F372C932AA800965071 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		3836ACB32C8F045300A3C566 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Observer.swift"; sourceTree = "<group>"; };
 		3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Typography.swift"; sourceTree = "<group>"; };
@@ -259,6 +263,8 @@
 			children = (
 				388372002C8C8FCF004212EB /* UIColor.swift */,
 				388DA0FD2C8F526C00A9DD56 /* UIFont.swift */,
+				2A101F352C932A7100965071 /* UIView.swift */,
+				2A101F372C932AA800965071 /* UIStackView.swift */,
 			);
 			path = Cocoa;
 			sourceTree = "<group>";
