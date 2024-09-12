@@ -19,6 +19,16 @@
 		385053562C92DCF900C80B02 /* SOMTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053542C92DCF900C80B02 /* SOMTabBar.swift */; };
 		385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053572C92DD2300C80B02 /* SOMTabBarController.swift */; };
 		385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053572C92DD2300C80B02 /* SOMTabBarController.swift */; };
+		3850535C2C92DDE900C80B02 /* FirstVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3850535B2C92DDE900C80B02 /* FirstVC.swift */; };
+		3850535D2C92DDE900C80B02 /* FirstVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3850535B2C92DDE900C80B02 /* FirstVC.swift */; };
+		3850535F2C92DDF200C80B02 /* SecondVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3850535E2C92DDF200C80B02 /* SecondVC.swift */; };
+		385053602C92DDF200C80B02 /* SecondVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3850535E2C92DDF200C80B02 /* SecondVC.swift */; };
+		385053622C92DDFD00C80B02 /* ThirdVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053612C92DDFD00C80B02 /* ThirdVC.swift */; };
+		385053632C92DDFD00C80B02 /* ThirdVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053612C92DDFD00C80B02 /* ThirdVC.swift */; };
+		385053652C92DE0700C80B02 /* FourthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053642C92DE0700C80B02 /* FourthVC.swift */; };
+		385053662C92DE0700C80B02 /* FourthVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053642C92DE0700C80B02 /* FourthVC.swift */; };
+		385053682C92DE1100C80B02 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053672C92DE1100C80B02 /* TabBarController.swift */; };
+		385053692C92DE1100C80B02 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053672C92DE1100C80B02 /* TabBarController.swift */; };
 		385441912C870544004E2BB0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAEF2C8702C100A5E139 /* AppDelegate.swift */; };
 		385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		385441952C870544004E2BB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
@@ -58,6 +68,11 @@
 		385053512C92DBE200C80B02 /* SOMTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarItem.swift; sourceTree = "<group>"; };
 		385053542C92DCF900C80B02 /* SOMTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBar.swift; sourceTree = "<group>"; };
 		385053572C92DD2300C80B02 /* SOMTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarController.swift; sourceTree = "<group>"; };
+		3850535B2C92DDE900C80B02 /* FirstVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstVC.swift; sourceTree = "<group>"; };
+		3850535E2C92DDF200C80B02 /* SecondVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondVC.swift; sourceTree = "<group>"; };
+		385053612C92DDFD00C80B02 /* ThirdVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdVC.swift; sourceTree = "<group>"; };
+		385053642C92DE0700C80B02 /* FourthVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourthVC.swift; sourceTree = "<group>"; };
+		385053672C92DE1100C80B02 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		3854419A2C870544004E2BB0 /* SOOUM-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SOOUM-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEF2C8702C100A5E139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -118,9 +133,28 @@
 			path = Typography;
 			sourceTree = "<group>";
 		};
+		385053502C92DBCA00C80B02 /* SOMTabBarController */ = {
+			isa = PBXGroup;
+			children = (
 				385053512C92DBE200C80B02 /* SOMTabBarItem.swift */,
 				385053542C92DCF900C80B02 /* SOMTabBar.swift */,
 				385053572C92DD2300C80B02 /* SOMTabBarController.swift */,
+			);
+			path = SOMTabBarController;
+			sourceTree = "<group>";
+		};
+		3850535A2C92DDC000C80B02 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				3850535B2C92DDE900C80B02 /* FirstVC.swift */,
+				3850535E2C92DDF200C80B02 /* SecondVC.swift */,
+				385053612C92DDFD00C80B02 /* ThirdVC.swift */,
+				385053642C92DE0700C80B02 /* FourthVC.swift */,
+				385053672C92DE1100C80B02 /* TabBarController.swift */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
 		387FBAE32C8702C100A5E139 = {
 			isa = PBXGroup;
 			children = (
@@ -142,6 +176,7 @@
 		387FBAEE2C8702C100A5E139 /* SOOUM */ = {
 			isa = PBXGroup;
 			children = (
+				3850535A2C92DDC000C80B02 /* Test */,
 				388371F62C8C8E7F004212EB /* DesignSystem */,
 				387FBB032C87036D00A5E139 /* App */,
 				388371FE2C8C8FAC004212EB /* Extensions */,
@@ -398,10 +433,14 @@
 			files = (
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				385053632C92DDFD00C80B02 /* ThirdVC.swift in Sources */,
 				388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */,
+				385053662C92DE0700C80B02 /* FourthVC.swift in Sources */,
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
+				385053602C92DDF200C80B02 /* SecondVC.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
+				3850535D2C92DDE900C80B02 /* FirstVC.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
@@ -410,6 +449,7 @@
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
+				385053692C92DE1100C80B02 /* TabBarController.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
 			);
@@ -421,10 +461,14 @@
 			files = (
 				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				385053622C92DDFD00C80B02 /* ThirdVC.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
+				385053652C92DE0700C80B02 /* FourthVC.swift in Sources */,
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
+				3850535F2C92DDF200C80B02 /* SecondVC.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
+				3850535C2C92DDE900C80B02 /* FirstVC.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
@@ -433,6 +477,7 @@
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
+				385053682C92DE1100C80B02 /* TabBarController.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
 			);
