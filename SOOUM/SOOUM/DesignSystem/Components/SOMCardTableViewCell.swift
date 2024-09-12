@@ -10,6 +10,7 @@ import UIKit
 
 class SOMCardTableViewCell: UITableViewCell {
     
+    /// homeSelect 값에 따라 스택뷰 순서 변함
     enum Mode {
         case latest
         case interest
@@ -112,6 +113,7 @@ class SOMCardTableViewCell: UITableViewCell {
     // MARK: - initView
     private func initView() {
         addSubviews()
+        initConstraint()
     }
     
     private func addSubviews() {
@@ -128,8 +130,66 @@ class SOMCardTableViewCell: UITableViewCell {
         cardTextContainerView.addSubview(cardTextContentLabel)
         contentView.addSubview(cardTextContainerView)
     }
+    
     private func addCardContentStackView() {
-        cardContentStackView.addSubview(cardTextContentLabel)
+        cardContentStackView.addArrangedSubviews(
+            timeInfoStackView,
+            distanceInfoStackView,
+            likeInfoStackView,
+            commentInfoStackView
+        )
+        
+        addTimeInfoStackView()
+        addDistanceInfoStackView()
+        addLikeInfoStackView()
+        addCommentInfoStackView()
+        
         contentView.addSubview(cardTextContainerView)
     }
+    
+    private func addTimeInfoStackView() {
+        timeInfoStackView.addArrangedSubviews(timeImageView, timeLabel)
+    }
+    
+    private func addDistanceInfoStackView() {
+        distanceInfoStackView.addArrangedSubviews(distanceImageView, distanceLabel)
+    }
+    
+    private func addLikeInfoStackView() {
+        likeInfoStackView.addArrangedSubviews(likeImageView, likeLabel)
+    }
+    
+    private func addCommentInfoStackView() {
+        commentInfoStackView.addArrangedSubviews(commentImageView, commentLabel)
+    }
+    
+    // MARK: - initConstraint
+    private func initConstraint() {
+        cardPungTimeLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(20)
+            $0.height.equalTo(24)
+            $0.bottom.equalTo(cardTextContainerView.snp.top).offset(20)
+        }
+        
+        cardTextContainerView.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.centerX.equalToSuperview()
+        }
+        
+        cardTextContentLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(10)
+            $0.leading.equalToSuperview().offset(4)
+            $0.trailing.equalToSuperview().offset(4)
+            $0.bottom.equalToSuperview().offset(10)
+        }
+        
+        cardContentStackView.snp.makeConstraints {
+            $0.bottom.equalToSuperview()
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
+            $0.height.height.equalTo(12)
+        }
+        
+    }
+
 }
