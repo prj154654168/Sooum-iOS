@@ -31,6 +31,8 @@
 		2A101F3E2C933D5200965071 /* SOMCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F1D2C9319A700965071 /* SOMCardTableViewCell.swift */; };
 		2A101F3F2C933D6300965071 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F352C932A7100965071 /* UIView.swift */; };
 		2A101F402C933D6500965071 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F372C932AA800965071 /* UIStackView.swift */; };
+		2AE9A8582C95AF9E0063A6B7 /* SOMCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9A8572C95AF9E0063A6B7 /* SOMCard.swift */; };
+		2AE9A8592C95AFA00063A6B7 /* SOMCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE9A8572C95AF9E0063A6B7 /* SOMCard.swift */; };
 		3836ACB42C8F045300A3C566 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB32C8F045300A3C566 /* Typography.swift */; };
 		3836ACB52C8F045300A3C566 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB32C8F045300A3C566 /* Typography.swift */; };
 		3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */; };
@@ -295,6 +297,7 @@
 				385053502C92DBCA00C80B02 /* SOMTabBarController */,
 				38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */,
 				2A101F1D2C9319A700965071 /* SOMCardTableViewCell.swift */,
+				2AE9A8572C95AF9E0063A6B7 /* SOMCard.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -515,6 +518,7 @@
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
+				2AE9A8592C95AFA00063A6B7 /* SOMCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -543,6 +547,7 @@
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
+				2AE9A8582C95AF9E0063A6B7 /* SOMCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

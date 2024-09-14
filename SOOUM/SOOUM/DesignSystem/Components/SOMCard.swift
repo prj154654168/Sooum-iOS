@@ -1,27 +1,15 @@
 //
-//  SOMCardTableViewCell.swift
+//  SOMCard.swift
 //  SOOUM
 //
-//  Created by JDeoks on 9/12/24.
+//  Created by JDeoks on 9/14/24.
 //
 
-import SnapKit
-import Then
+import Foundation
 import UIKit
 
-class SOMCardTableViewCell: UITableViewCell {
-//    모델은 대충 만들기
-//    펑 구현 인터벌 사용
-    
-    /// homeSelect 값에 따라 스택뷰 순서 변함
-    enum Mode {
-        case latest
-        case interest
-        case distance
-    }
-    
-    /// 카드 펑 타임
-    var pungTime: Date? = nil
+
+class SOMCard: UIView {
     
     let rootContainerView = UIView().then {
         $0.backgroundColor = .orange
@@ -40,7 +28,7 @@ class SOMCardTableViewCell: UITableViewCell {
             fontContainer: Pretendard(
                 size: 14,
                 weight: .bold
-            ), 
+            ),
             lineHeight: 16.7,
             letterSpacing: 0
         )
@@ -143,8 +131,12 @@ class SOMCardTableViewCell: UITableViewCell {
         $0.text = "12"
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    convenience init() {
+        self.init(frame: .zero)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         initView()
     }
     
@@ -154,13 +146,12 @@ class SOMCardTableViewCell: UITableViewCell {
     
     // MARK: - initView
     private func initView() {
-        self.selectionStyle = .none
         addSubviews()
         initConstraint()
     }
     
     private func addSubviews() {
-        contentView.addSubview(rootContainerView)
+        self.addSubview(rootContainerView)
         addCardPungTimeLabel()
         addCardTextContainerView()
         addCardContentStackView()
