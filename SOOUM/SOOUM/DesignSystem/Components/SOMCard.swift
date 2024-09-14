@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-
 class SOMCard: UIView {
     
     let rootContainerView = UIView().then {
@@ -75,7 +74,14 @@ class SOMCard: UIView {
     }
     
     let timeLabel = UILabel().then {
-        $0.font = Pretendard(size: 10, weight: .bold).font
+        $0.typography = .init(
+            fontContainer: Pretendard(
+                size: 10,
+                weight: .bold
+            ),
+            lineHeight: 11,
+            letterSpacing: 0
+        )
         $0.textColor = .som.white
         $0.text = "30분전"
     }
@@ -92,7 +98,14 @@ class SOMCard: UIView {
     }
     
     let distanceLabel = UILabel().then {
-        $0.font = Pretendard(size: 10, weight: .bold).font
+        $0.typography = .init(
+            fontContainer: Pretendard(
+                size: 10,
+                weight: .bold
+            ),
+            lineHeight: 11,
+            letterSpacing: 0
+        )
         $0.textColor = .som.white
         $0.text = "1km"
     }
@@ -109,7 +122,14 @@ class SOMCard: UIView {
     }
     
     let likeLabel = UILabel().then {
-        $0.font = Pretendard(size: 10, weight: .bold).font
+        $0.typography = .init(
+            fontContainer: Pretendard(
+                size: 10,
+                weight: .bold
+            ),
+            lineHeight: 11,
+            letterSpacing: 0
+        )
         $0.textColor = .som.white
         $0.text = "12"
     }
@@ -126,7 +146,14 @@ class SOMCard: UIView {
     }
     
     let commentLabel = UILabel().then {
-        $0.font = Pretendard(size: 10, weight: .bold).font
+        $0.typography = .init(
+            fontContainer: Pretendard(
+                size: 10,
+                weight: .bold
+            ),
+            lineHeight: 11,
+            letterSpacing: 0
+        )
         $0.textColor = .som.white
         $0.text = "12"
     }
@@ -136,6 +163,7 @@ class SOMCard: UIView {
     }
     
     override init(frame: CGRect) {
+        print("\(type(of: self)) - \(#function)")
         super.init(frame: frame)
         initView()
     }
