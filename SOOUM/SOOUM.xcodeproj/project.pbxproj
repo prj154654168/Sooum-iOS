@@ -23,6 +23,8 @@
 		385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		385441952C870544004E2BB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
 		385441962C870544004E2BB0 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAFB2C8702C200A5E139 /* Base */; };
+		385653E52C97FFA4009470D0 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385653E42C97FFA4009470D0 /* TestViewController.swift */; };
+		385653E62C97FFA4009470D0 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385653E42C97FFA4009470D0 /* TestViewController.swift */; };
 		387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAEF2C8702C100A5E139 /* AppDelegate.swift */; };
 		387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
@@ -64,6 +66,7 @@
 		385053572C92DD2300C80B02 /* SOMTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarController.swift; sourceTree = "<group>"; };
 		3854419A2C870544004E2BB0 /* SOOUM-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SOOUM-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		385653E12C97F8EA009470D0 /* SOMHomeTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBar.swift; sourceTree = "<group>"; };
+		385653E42C97FFA4009470D0 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		387147D82C942DF30051B3BB /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEF2C8702C100A5E139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -142,6 +145,7 @@
 				387FBAEE2C8702C100A5E139 /* SOOUM */,
 				387FBAED2C8702C100A5E139 /* Products */,
 				38CE94C22C904E4A0004B238 /* Frameworks */,
+				38ED2AAD2C98593900920B53 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -157,6 +161,7 @@
 		387FBAEE2C8702C100A5E139 /* SOOUM */ = {
 			isa = PBXGroup;
 			children = (
+				385653E42C97FFA4009470D0 /* TestViewController.swift */,
 				388371F62C8C8E7F004212EB /* DesignSystem */,
 				387FBB032C87036D00A5E139 /* App */,
 				388371FE2C8C8FAC004212EB /* Extensions */,
@@ -432,6 +437,7 @@
 			files = (
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				385653E62C97FFA4009470D0 /* TestViewController.swift in Sources */,
 				388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */,
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
@@ -457,6 +463,7 @@
 			files = (
 				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				385653E52C97FFA4009470D0 /* TestViewController.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
