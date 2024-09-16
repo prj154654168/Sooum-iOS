@@ -19,6 +19,20 @@ class SOMTabBar: UIView {
 
     static let height: CGFloat = 60
     
+    private var tabBarItemContainer = UIStackView().then {
+        $0.axis = .horizontal
+        $0.distribution = .equalSpacing
+        $0.alignment = .center
+        $0.layoutMargins = .init(top: 4, left: 4, bottom: 4, right: 4)
+        $0.isLayoutMarginsRelativeArrangement = true
+        $0.layer.cornerRadius = (60 - 4 * 2) * 0.5
+    }
+    
+    private let tabBarBackgroundView = UIView().then {
+        $0.backgroundColor = .som.dim
+        $0.layer.cornerRadius = 60 * 0.5
+    }
+    
     var viewControllers: [UIViewController] = [] {
         didSet {
             guard self.viewControllers.isEmpty == false else { return }
@@ -28,20 +42,6 @@ class SOMTabBar: UIView {
         }
     }
     
-    var tabBarItemContainer = UIStackView().then {
-        $0.axis = .horizontal
-        $0.distribution = .equalSpacing
-        $0.alignment = .center
-        $0.layoutMargins = .init(top: 4, left: 4, bottom: 4, right: 4)
-        $0.isLayoutMarginsRelativeArrangement = true
-        $0.layer.cornerRadius = (60 - 4 * 2) * 0.5
-    }
-    
-    let tabBarBackgroundView = UIView().then {
-        $0.backgroundColor = .som.dim
-        $0.layer.cornerRadius = 60 * 0.5
-    }
-    
     weak var delegate: SOMTabBarDelegate?
     
     private let width: CGFloat = UIScreen.main.bounds.width - 20 * 2
@@ -49,12 +49,12 @@ class SOMTabBar: UIView {
     private var selectedIndex: Int = 0
     private var prevSelectedIndex: Int = 0
     
-    var numberOfItems: Int {
-        self.viewControllers.count
+    private var tabWidth: CGFloat {
+        self.width / CGFloat(self.numberOfItems)
     }
     
-    var tabWidth: CGFloat {
-        self.width / CGFloat(self.numberOfItems)
+    var numberOfItems: Int {
+        self.viewControllers.count
     }
     
     convenience init() {

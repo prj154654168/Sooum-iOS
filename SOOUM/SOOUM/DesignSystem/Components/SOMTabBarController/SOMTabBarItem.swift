@@ -16,7 +16,7 @@ class SOMTabBarItem: UIView {
     static let width: CGFloat = 50
     static let height: CGFloat = 52
     
-    let titleLabel = UILabel().then {
+    private let titleLabel = UILabel().then {
         $0.textAlignment = .center
         $0.typography = .init(fontContainer: Pretendard(size: 10, weight: .medium), lineHeight: 12)
         $0.textColor = .som.gray01
@@ -26,14 +26,14 @@ class SOMTabBarItem: UIView {
         get { self.titleLabel.text }
     }
     
-    let imageView = UIImageView().then {
+    private let imageView = UIImageView().then {
         $0.tintColor = .som.gray01
     }
     var image: UIImage? {
         didSet { self.imageView.image = self.image }
     }
     
-    let backgroundView = UIView().then {
+    private let backgroundView = UIView().then {
         $0.backgroundColor = .clear
         $0.layer.cornerRadius = 52 * 0.5
     }
