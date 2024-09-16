@@ -89,10 +89,6 @@ class SOMTabBar: UIView {
             tabBarItem.title = $0.tabBarItem.title
             tabBarItem.image = $0.tabBarItem.image
             self.tabBarItemContainer.addArrangedSubview(tabBarItem)
-            tabBarItem.snp.makeConstraints {
-                $0.width.equalTo(SOMTabBarItem.width)
-                $0.height.equalTo(SOMTabBarItem.height)
-            }
         }
     }
     

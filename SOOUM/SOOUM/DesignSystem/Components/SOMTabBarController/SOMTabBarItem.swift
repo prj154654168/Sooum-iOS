@@ -13,9 +13,6 @@ import Then
 
 class SOMTabBarItem: UIView {
     
-    static let width: CGFloat = 50
-    static let height: CGFloat = 52
-    
     private let titleLabel = UILabel().then {
         $0.textAlignment = .center
         $0.typography = .init(fontContainer: Pretendard(size: 10, weight: .medium), lineHeight: 12)
