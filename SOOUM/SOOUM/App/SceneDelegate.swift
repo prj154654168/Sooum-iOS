@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window?.windowScene = windowScene
         // TODO: 메인 화면 연결
-        window?.rootViewController = TabBarController()
+//        window?.rootViewController = 
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
     }
