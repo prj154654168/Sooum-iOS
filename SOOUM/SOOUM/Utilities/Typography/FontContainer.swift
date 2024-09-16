@@ -22,7 +22,10 @@ class FontConrainer: NSObject, NSCopying {
             self.font = .systemFont(ofSize: self.size, weight: newValue)
         }
         get {
-            guard let traits = self.font.fontDescriptor.object(forKey: .traits) as? [UIFontDescriptor.TraitKey: Any],
+            guard let traits = self.font.fontDescriptor.object(forKey: .traits) as? [
+                UIFontDescriptor.TraitKey:
+                    Any
+            ],
                 let rawWeight = traits[.weight] as? CGFloat
             else {
                 return .regular

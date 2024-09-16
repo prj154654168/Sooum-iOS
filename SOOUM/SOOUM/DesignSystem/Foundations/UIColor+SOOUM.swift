@@ -11,6 +11,9 @@ extension UIColor: SOOUMStyleCompatible { }
 
 extension SOOUMStyle where Base == UIColor {
     
+    // Primary
+    static let primary = UIColor(hex: "#0BC7F2")
+    
     // Blue
     static let blue50 = UIColor(hex: "#E7F9FE")
     static let blue100 = UIColor(hex: "#B4EEFB")
@@ -25,8 +28,9 @@ extension SOOUMStyle where Base == UIColor {
     
     // Gray Scale
     static let white = UIColor(hex: "#FFFFFF")
+    static let gray01 = UIColor(hex: "#7D7D7D")
     static let black = UIColor(hex: "#000000")
     
     // Dim
-    static let dim = UIColor(red: 0, green: 0, blue: 0, alpha: 0.7)
+    static let dim = UIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
 }
