@@ -49,6 +49,8 @@
 		38CE94C62C904E5E0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C52C904E5E0004B238 /* SnapKit */; };
 		38CE94C92C904E940004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C82C904E940004B238 /* Then */; };
 		38CE94CB2C904E990004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94CA2C904E990004B238 /* Then */; };
+		38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */; };
+		38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +61,7 @@
 		385053542C92DCF900C80B02 /* SOMTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBar.swift; sourceTree = "<group>"; };
 		385053572C92DD2300C80B02 /* SOMTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarController.swift; sourceTree = "<group>"; };
 		3854419A2C870544004E2BB0 /* SOOUM-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SOOUM-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		387147D82C942DF30051B3BB /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEF2C8702C100A5E139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		387FBAF12C8702C100A5E139 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -75,6 +78,7 @@
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
 		38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMNavigationBar.swift; sourceTree = "<group>"; };
+		38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,6 +252,8 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+				387147D82C942DF30051B3BB /* SOMHomeTabBarItem.swift */,
+				38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */,
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -408,6 +414,7 @@
 				388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */,
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
+				38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
@@ -431,6 +438,7 @@
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
+				38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
