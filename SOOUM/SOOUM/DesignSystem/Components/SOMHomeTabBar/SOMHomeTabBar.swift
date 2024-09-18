@@ -55,10 +55,6 @@ class SOMHomeTabBar: UIView {
             let homeTabBarItem = SOMHomeTabBarItem()
             homeTabBarItem.text = $0.rawValue
             self.homeTabBarItemContainer.addArrangedSubview(homeTabBarItem)
-//            homeTabBarItem.snp.makeConstraints {
-//                $0.width.equalTo(SOMHomeTabBarItem.width)
-//                $0.height.equalTo(SOMHomeTabBarItem.height)
-//            }
         }
         
         backgroudView.addSubview(self.homeTabBarItemContainer)
