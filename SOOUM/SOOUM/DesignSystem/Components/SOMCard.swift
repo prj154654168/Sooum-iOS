@@ -57,7 +57,7 @@ class SOMCard: UIView {
                 size: 16,
                 weight: .bold
             ),
-            lineHeight: 28.8,
+            lineHeight: 30,
             letterSpacing: 0
         )
         $0.textColor = .som.white
@@ -266,11 +266,12 @@ class SOMCard: UIView {
         
         pungContainerView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(cardTextContainerView.snp.top)
+            $0.height.equalTo(rootContainerView.snp.height).multipliedBy(0.25)
         }
         
         cardPungTimeBackgroundView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
+            print(rootContainerView.frame.height)
             $0.centerY.equalToSuperview()
             $0.height.equalTo(24)
         }
@@ -287,15 +288,14 @@ class SOMCard: UIView {
             $0.centerX.equalToSuperview()
             $0.width.equalTo(rootContainerView.snp.width).multipliedBy(0.6)
             $0.height.greaterThanOrEqualTo(48)
-            $0.height.lessThanOrEqualTo(rootContainerView.snp.height).multipliedBy(0.6)
-//            equalTo(rootContainerView.snp.height).multipliedBy(0.6)
+            $0.height.lessThanOrEqualTo(rootContainerView.snp.height).multipliedBy(0.5)
         }
         
         cardTextContentLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(4)
+            $0.top.equalToSuperview().offset(8)
             $0.leading.equalToSuperview().offset(4)
             $0.trailing.equalToSuperview().offset(-4)
-            $0.bottom.equalToSuperview().offset(-4)
+            $0.bottom.equalToSuperview().offset(-8)
         }
         
         cardGradientView.snp.makeConstraints {

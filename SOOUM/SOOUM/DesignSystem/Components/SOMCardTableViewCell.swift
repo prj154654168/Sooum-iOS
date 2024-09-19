@@ -50,7 +50,7 @@ class SOMCardTableViewCell: UITableViewCell {
     func setData(card: Card) {
         self.pungTime = card.pungTime
         self.card = card
-        self.cardView.cardTextContentLabel.text = "\(card.id)최대"
+        self.cardView.cardTextContentLabel.text = "최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수"
         self.cardView.cardPungTimeLabel.text = getTimeOutStr(pungTime: card.pungTime)
         self.subscribePungTime()
     }
