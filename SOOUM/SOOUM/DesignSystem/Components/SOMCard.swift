@@ -5,12 +5,14 @@
 //  Created by JDeoks on 9/14/24.
 //
 
-import Foundation
 import UIKit
+
+import SnapKit
+import Then
 
 class SOMCard: UIView {
     
-    let rootContainerView = UIView().then {
+    let rootContainerView = UIImageView().then {
         $0.backgroundColor = .orange
         $0.layer.cornerRadius = 40
         $0.layer.masksToBounds = true
@@ -45,7 +47,7 @@ class SOMCard: UIView {
     /// cardTextContentLabel를 감싸는 불투명 컨테이너 뷰
     let cardTextContainerView = UIView().then {
         $0.backgroundColor = .som.dim
-        $0.layer.cornerRadius = 12
+        $0.layer.cornerRadius = 24
     }
     
     /// 본문 표시 라벨
@@ -60,7 +62,7 @@ class SOMCard: UIView {
         )
         $0.textColor = .som.white
         $0.numberOfLines = 0
-        $0.text = ""
+        $0.textAlignment = .center
     }
     
     let cardGradientView = UIView().then {
@@ -284,14 +286,16 @@ class SOMCard: UIView {
             $0.centerY.equalToSuperview()
             $0.centerX.equalToSuperview()
             $0.width.equalTo(rootContainerView.snp.width).multipliedBy(0.6)
-            $0.height.equalTo(rootContainerView.snp.height).multipliedBy(0.6)
+            $0.height.greaterThanOrEqualTo(48)
+            $0.height.lessThanOrEqualTo(rootContainerView.snp.height).multipliedBy(0.6)
+//            equalTo(rootContainerView.snp.height).multipliedBy(0.6)
         }
         
         cardTextContentLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
+            $0.top.equalToSuperview().offset(4)
             $0.leading.equalToSuperview().offset(4)
             $0.trailing.equalToSuperview().offset(-4)
-            $0.bottom.equalToSuperview().offset(-10)
+            $0.bottom.equalToSuperview().offset(-4)
         }
         
         cardGradientView.snp.makeConstraints {
@@ -329,7 +333,7 @@ class SOMCard: UIView {
     private func addGradient() {
         cardGradientLayer.colors = [
             UIColor.clear.cgColor,
-            UIColor.black.withAlphaComponent(0.8).cgColor
+            UIColor.black.withAlphaComponent(0.24).cgColor
         ]
         cardGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
         cardGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
