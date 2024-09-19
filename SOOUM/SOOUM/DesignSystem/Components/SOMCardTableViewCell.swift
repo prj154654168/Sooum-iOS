@@ -5,10 +5,11 @@
 //  Created by JDeoks on 9/12/24.
 //
 
+import UIKit
+
 import RxSwift
 import SnapKit
 import Then
-import UIKit
 
 class SOMCardTableViewCell: UITableViewCell {
     
@@ -20,6 +21,8 @@ class SOMCardTableViewCell: UITableViewCell {
         case distance
     }
     
+    // TODO: - 삭제
+    /// 셀 재사용 디버깅용 아이디
     let id = Int.random(in: 0...200)
     
     var card: Card?
@@ -47,7 +50,7 @@ class SOMCardTableViewCell: UITableViewCell {
     func setData(card: Card) {
         self.pungTime = card.pungTime
         self.card = card
-        self.cardView.cardTextContentLabel.text = "\(card.id)"
+        self.cardView.cardTextContentLabel.text = "\(card.id)최대"
         self.cardView.cardPungTimeLabel.text = getTimeOutStr(pungTime: card.pungTime)
         self.subscribePungTime()
     }
