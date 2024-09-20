@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2A101F1E2C9319A700965071 /* SOMCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F1D2C9319A700965071 /* SOMCardTableViewCell.swift */; };
 		2A101F212C931CE600965071 /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 2A101F202C931CE600965071 /* Differentiator */; };
 		2A101F232C931CE600965071 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 2A101F222C931CE600965071 /* RxDataSources */; };
 		2A101F252C931CFD00965071 /* Differentiator in Frameworks */ = {isa = PBXBuildFile; productRef = 2A101F242C931CFD00965071 /* Differentiator */; };
@@ -18,12 +17,8 @@
 		2A101F302C931D6000965071 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 2A101F2F2C931D6000965071 /* RxRelay */; };
 		2A101F322C931D6000965071 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2A101F312C931D6000965071 /* RxSwift */; };
 		2A101F342C931D6700965071 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 2A101F332C931D6700965071 /* RxDataSources */; };
-		2A101F362C932A7100965071 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F352C932A7100965071 /* UIView.swift */; };
-		2A101F382C932AA800965071 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F372C932AA800965071 /* UIStackView.swift */; };
-		2A101F3A2C93310A00965071 /* TestTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F392C93310A00965071 /* TestTableViewController.swift */; };
 		2A101F3B2C933D3900965071 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		2A101F3C2C933D3900965071 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
-		2A101F3D2C933D4900965071 /* TestTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F392C93310A00965071 /* TestTableViewController.swift */; };
 		2A101F3E2C933D5200965071 /* SOMCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F1D2C9319A700965071 /* SOMCardTableViewCell.swift */; };
 		2A101F3F2C933D6300965071 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F352C932A7100965071 /* UIView.swift */; };
 		2A101F402C933D6500965071 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A101F372C932AA800965071 /* UIStackView.swift */; };
@@ -79,7 +74,6 @@
 		2A101F1D2C9319A700965071 /* SOMCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMCardTableViewCell.swift; sourceTree = "<group>"; };
 		2A101F352C932A7100965071 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		2A101F372C932AA800965071 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
-		2A101F392C93310A00965071 /* TestTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTableViewController.swift; sourceTree = "<group>"; };
 		2AE9A8572C95AF9E0063A6B7 /* SOMCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMCard.swift; sourceTree = "<group>"; };
 		3836ACB32C8F045300A3C566 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Observer.swift"; sourceTree = "<group>"; };
@@ -88,8 +82,6 @@
 		385053542C92DCF900C80B02 /* SOMTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBar.swift; sourceTree = "<group>"; };
 		385053572C92DD2300C80B02 /* SOMTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarController.swift; sourceTree = "<group>"; };
 		3854419A2C870544004E2BB0 /* SOOUM-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SOOUM-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		385653E12C97F8EA009470D0 /* SOMHomeTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBar.swift; sourceTree = "<group>"; };
-		387147D82C942DF30051B3BB /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEF2C8702C100A5E139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		387FBAF12C8702C100A5E139 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -177,7 +169,6 @@
 				387FBAEE2C8702C100A5E139 /* SOOUM */,
 				387FBAED2C8702C100A5E139 /* Products */,
 				38CE94C22C904E4A0004B238 /* Frameworks */,
-				38ED2AAD2C98593900920B53 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -193,7 +184,6 @@
 		387FBAEE2C8702C100A5E139 /* SOOUM */ = {
 			isa = PBXGroup;
 			children = (
-				2A101F392C93310A00965071 /* TestTableViewController.swift */,
 				388371F62C8C8E7F004212EB /* DesignSystem */,
 				387FBB032C87036D00A5E139 /* App */,
 				388371FE2C8C8FAC004212EB /* Extensions */,
@@ -296,15 +286,6 @@
 			children = (
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		38ED2AAD2C98593900920B53 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				385653E12C97F8EA009470D0 /* SOMHomeTabBar.swift */,
-				387147D82C942DF30051B3BB /* SOMHomeTabBarItem.swift */,
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		38ED2AB32C985AB400920B53 /* SOMHomeTabBar */ = {
@@ -493,7 +474,6 @@
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
-				2A101F3D2C933D4900965071 /* TestTableViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
@@ -501,7 +481,6 @@
 				2A101F3C2C933D3900965071 /* SceneDelegate.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				385053562C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
-				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
@@ -528,7 +507,6 @@
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
-				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,

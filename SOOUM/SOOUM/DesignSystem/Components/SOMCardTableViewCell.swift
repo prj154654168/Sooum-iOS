@@ -11,19 +11,20 @@ import RxSwift
 import SnapKit
 import Then
 
+struct Card {
+    
+    let id: Int
+    let pungTime: Date
+}
+
 class SOMCardTableViewCell: UITableViewCell {
     
-    // TODO: - 모드 구현
     /// homeSelect 값에 따라 스택뷰 순서 변함
     enum Mode {
         case latest
         case interest
         case distance
     }
-    
-    // TODO: - 삭제
-    /// 셀 재사용 디버깅용 아이디
-    let id = Int.random(in: 0...200)
     
     var card: Card?
     
@@ -47,10 +48,12 @@ class SOMCardTableViewCell: UITableViewCell {
     }
     
     // MARK: - setData
+    /// 셀의 ui에 데이터 바인딩 하는 함수. cellForRowAt에서 호출
     func setData(card: Card) {
         self.pungTime = card.pungTime
         self.card = card
-        self.cardView.cardTextContentLabel.text = "최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수최대글자수"
+//        self.cardView.cardTextContentLabel.text =
+//        self.cardView.rootContainerView.image =
         self.cardView.cardPungTimeLabel.text = getTimeOutStr(pungTime: card.pungTime)
         self.subscribePungTime()
     }

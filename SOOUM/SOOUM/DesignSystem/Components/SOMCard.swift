@@ -12,7 +12,7 @@ import Then
 
 class SOMCard: UIView {
     
-    let rootContainerView = UIImageView().then {
+    let rootContainerImageView = UIImageView().then {
         $0.backgroundColor = .orange
         $0.layer.cornerRadius = 40
         $0.layer.masksToBounds = true
@@ -200,7 +200,7 @@ class SOMCard: UIView {
     }
     
     private func addSubviews() {
-        self.addSubview(rootContainerView)
+        self.addSubview(rootContainerImageView)
         addCardPungTimeLabel()
         addCardTextContainerView()
         addCardGradientView()
@@ -208,14 +208,14 @@ class SOMCard: UIView {
     }
     
     private func addCardPungTimeLabel() {
-        rootContainerView.addSubview(pungContainerView)
+        rootContainerImageView.addSubview(pungContainerView)
         pungContainerView.addSubview(cardPungTimeBackgroundView)
         cardPungTimeBackgroundView.addSubview(cardPungTimeLabel)
     }
     
     private func addCardTextContainerView() {
         cardTextContainerView.addSubview(cardTextContentLabel)
-        rootContainerView.addSubview(cardTextContainerView)
+        rootContainerImageView.addSubview(cardTextContainerView)
     }
     
     private func addCardContentStackView() {
@@ -232,11 +232,11 @@ class SOMCard: UIView {
         addLikeInfoStackView()
         addCommentInfoStackView()
         
-        rootContainerView.addSubview(cardContentStackView)
+        rootContainerImageView.addSubview(cardContentStackView)
     }
     
     private func addCardGradientView() {
-        rootContainerView.addSubview(cardGradientView)
+        rootContainerImageView.addSubview(cardGradientView)
     }
     
     private func addTimeInfoStackView() {
@@ -257,7 +257,7 @@ class SOMCard: UIView {
     
     // MARK: - initConstraint
     private func initConstraint() {
-        rootContainerView.snp.makeConstraints {
+        rootContainerImageView.snp.makeConstraints {
             $0.leading.equalToSuperview().inset(20)
             $0.top.equalToSuperview().inset(5)
             $0.trailing.equalToSuperview().inset(20)
@@ -266,12 +266,12 @@ class SOMCard: UIView {
         
         pungContainerView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview()
-            $0.height.equalTo(rootContainerView.snp.height).multipliedBy(0.25)
+            $0.height.equalTo(rootContainerImageView.snp.height).multipliedBy(0.25)
         }
         
         cardPungTimeBackgroundView.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            print(rootContainerView.frame.height)
+            print(rootContainerImageView.frame.height)
             $0.centerY.equalToSuperview()
             $0.height.equalTo(24)
         }
@@ -286,16 +286,16 @@ class SOMCard: UIView {
         cardTextContainerView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(rootContainerView.snp.width).multipliedBy(0.6)
+            $0.width.equalTo(rootContainerImageView.snp.width).multipliedBy(0.6)
             $0.height.greaterThanOrEqualTo(48)
-            $0.height.lessThanOrEqualTo(rootContainerView.snp.height).multipliedBy(0.5)
+            $0.height.lessThanOrEqualTo(rootContainerImageView.snp.height).multipliedBy(0.5)
         }
         
         cardTextContentLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
+            $0.top.equalToSuperview().offset(4)
             $0.leading.equalToSuperview().offset(4)
             $0.trailing.equalToSuperview().offset(-4)
-            $0.bottom.equalToSuperview().offset(-8)
+            $0.bottom.equalToSuperview().offset(-4)
         }
         
         cardGradientView.snp.makeConstraints {
