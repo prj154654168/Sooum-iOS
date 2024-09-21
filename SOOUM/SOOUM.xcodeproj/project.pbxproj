@@ -65,6 +65,8 @@
 		38FDC2C12C9E74B700C094C2 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 38FDC2C02C9E74B700C094C2 /* RxCocoa */; };
 		38FDC2C32C9E74B700C094C2 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 38FDC2C22C9E74B700C094C2 /* RxSwift */; };
 		38FDC2C52C9E74B700C094C2 /* RxKeyboard in Frameworks */ = {isa = PBXBuildFile; productRef = 38FDC2C42C9E74B700C094C2 /* RxKeyboard */; };
+		38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */; };
+		38FDC2C82C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +98,7 @@
 		38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBar.swift; sourceTree = "<group>"; };
 		38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
 		38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -300,6 +303,7 @@
 			isa = PBXGroup;
 			children = (
 				38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */,
+				38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -478,6 +482,7 @@
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
+				38FDC2C82C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
@@ -506,6 +511,7 @@
 				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
+				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
