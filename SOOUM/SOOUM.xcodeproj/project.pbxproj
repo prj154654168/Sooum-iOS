@@ -57,6 +57,12 @@
 		38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */; };
 		38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */; };
 		38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */; };
+		38FDC2BB2C9E74AD00C094C2 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 38FDC2BA2C9E74AD00C094C2 /* RxCocoa */; };
+		38FDC2BD2C9E74AD00C094C2 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 38FDC2BC2C9E74AD00C094C2 /* RxSwift */; };
+		38FDC2BF2C9E74AD00C094C2 /* RxKeyboard in Frameworks */ = {isa = PBXBuildFile; productRef = 38FDC2BE2C9E74AD00C094C2 /* RxKeyboard */; };
+		38FDC2C12C9E74B700C094C2 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 38FDC2C02C9E74B700C094C2 /* RxCocoa */; };
+		38FDC2C32C9E74B700C094C2 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 38FDC2C22C9E74B700C094C2 /* RxSwift */; };
+		38FDC2C52C9E74B700C094C2 /* RxKeyboard in Frameworks */ = {isa = PBXBuildFile; productRef = 38FDC2C42C9E74B700C094C2 /* RxKeyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,8 +100,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38FDC2C12C9E74B700C094C2 /* RxCocoa in Frameworks */,
 				38CE94C42C904E4A0004B238 /* SnapKit in Frameworks */,
+				38FDC2C32C9E74B700C094C2 /* RxSwift in Frameworks */,
 				38CE94CB2C904E990004B238 /* Then in Frameworks */,
+				38FDC2C52C9E74B700C094C2 /* RxKeyboard in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,8 +112,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38FDC2BB2C9E74AD00C094C2 /* RxCocoa in Frameworks */,
 				38CE94C62C904E5E0004B238 /* SnapKit in Frameworks */,
+				38FDC2BD2C9E74AD00C094C2 /* RxSwift in Frameworks */,
 				38CE94C92C904E940004B238 /* Then in Frameworks */,
+				38FDC2BF2C9E74AD00C094C2 /* RxKeyboard in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +292,14 @@
 			path = SOMHomeTabBar;
 			sourceTree = "<group>";
 		};
+		38FDC2B42C9E745B00C094C2 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -301,6 +321,9 @@
 			packageProductDependencies = (
 				38CE94C32C904E4A0004B238 /* SnapKit */,
 				38CE94CA2C904E990004B238 /* Then */,
+				38FDC2C02C9E74B700C094C2 /* RxCocoa */,
+				38FDC2C22C9E74B700C094C2 /* RxSwift */,
+				38FDC2C42C9E74B700C094C2 /* RxKeyboard */,
 			);
 			productName = SOOUM;
 			productReference = 3854419A2C870544004E2BB0 /* SOOUM-Dev.app */;
@@ -322,6 +345,9 @@
 			packageProductDependencies = (
 				38CE94C52C904E5E0004B238 /* SnapKit */,
 				38CE94C82C904E940004B238 /* Then */,
+				38FDC2BA2C9E74AD00C094C2 /* RxCocoa */,
+				38FDC2BC2C9E74AD00C094C2 /* RxSwift */,
+				38FDC2BE2C9E74AD00C094C2 /* RxKeyboard */,
 			);
 			productName = SOOUM;
 			productReference = 387FBAEC2C8702C100A5E139 /* SOOUM.app */;
@@ -355,6 +381,8 @@
 				38D8EFDE2C8C3FFE00C059F4 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 				38CE94C12C904E190004B238 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				38CE94C72C904E8B0004B238 /* XCRemoteSwiftPackageReference "Then" */,
+				38FDC2B82C9E749300C094C2 /* XCRemoteSwiftPackageReference "RxSwift" */,
+				38FDC2B92C9E749E00C094C2 /* XCRemoteSwiftPackageReference "RxKeyboard" */,
 			);
 			productRefGroup = 387FBAED2C8702C100A5E139 /* Products */;
 			projectDirPath = "";
@@ -789,6 +817,22 @@
 				minimumVersion = 0.56.2;
 			};
 		};
+		38FDC2B82C9E749300C094C2 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.7.1;
+			};
+		};
+		38FDC2B92C9E749E00C094C2 /* XCRemoteSwiftPackageReference "RxKeyboard" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RxSwiftCommunity/RxKeyboard";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -811,6 +855,36 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 38CE94C72C904E8B0004B238 /* XCRemoteSwiftPackageReference "Then" */;
 			productName = Then;
+		};
+		38FDC2BA2C9E74AD00C094C2 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38FDC2B82C9E749300C094C2 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		38FDC2BC2C9E74AD00C094C2 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38FDC2B82C9E749300C094C2 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		38FDC2BE2C9E74AD00C094C2 /* RxKeyboard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38FDC2B92C9E749E00C094C2 /* XCRemoteSwiftPackageReference "RxKeyboard" */;
+			productName = RxKeyboard;
+		};
+		38FDC2C02C9E74B700C094C2 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38FDC2B82C9E749300C094C2 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		38FDC2C22C9E74B700C094C2 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38FDC2B82C9E749300C094C2 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		38FDC2C42C9E74B700C094C2 /* RxKeyboard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 38FDC2B92C9E749E00C094C2 /* XCRemoteSwiftPackageReference "RxKeyboard" */;
+			productName = RxKeyboard;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
