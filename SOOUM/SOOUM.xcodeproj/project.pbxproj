@@ -69,8 +69,6 @@
 		385053542C92DCF900C80B02 /* SOMTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBar.swift; sourceTree = "<group>"; };
 		385053572C92DD2300C80B02 /* SOMTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarController.swift; sourceTree = "<group>"; };
 		3854419A2C870544004E2BB0 /* SOOUM-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SOOUM-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		385653E12C97F8EA009470D0 /* SOMHomeTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBar.swift; sourceTree = "<group>"; };
-		387147D82C942DF30051B3BB /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEF2C8702C100A5E139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		387FBAF12C8702C100A5E139 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -157,7 +155,6 @@
 				387FBAEE2C8702C100A5E139 /* SOOUM */,
 				387FBAED2C8702C100A5E139 /* Products */,
 				38CE94C22C904E4A0004B238 /* Frameworks */,
-				38ED2AAD2C98593900920B53 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -272,15 +269,6 @@
 			children = (
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		38ED2AAD2C98593900920B53 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				385653E12C97F8EA009470D0 /* SOMHomeTabBar.swift */,
-				387147D82C942DF30051B3BB /* SOMHomeTabBarItem.swift */,
-			);
-			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		38ED2AB32C985AB400920B53 /* SOMHomeTabBar */ = {
