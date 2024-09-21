@@ -115,7 +115,8 @@ class BaseNavigationViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         // setupNaviBar() 가 viewWillAppear(_:)에서 호출되지 않게 함
         
-        // 순환참조가 발생할 경우 약한 참조인 delegate가 nil이 되기 때문에, 네비게이션바 설정이 무시될 수 있습니다. 이를 방어하기 위해 네비게이션바를 설정합니다.
+        // 순환참조가 발생할 경우 약한 참조인 delegate가 nil이 되기 때문에,
+        // 네비게이션바 설정이 무시될 수 있습니다. 이를 방어하기 위해 네비게이션바를 설정합니다.
         if self.navigationController?.delegate == nil {
             let isFirstViewController = self.navigationController?.viewControllers.first == self
             self.navigationBar.isHideBackButton = isFirstViewController
@@ -134,11 +135,15 @@ class BaseNavigationViewController: BaseViewController {
 
         if let to: UIViewController.Type = to,
             let viewControllers = self.navigationController?.viewControllers,
-            let destination: UIViewController = viewControllers.last(where: { type(of: $0) == to }) {
+            let destination: UIViewController = viewControllers.last(
+                where: { type(of: $0) == to }
+            ) {
             destination.hidesBottomBarWhenPushed = bottomBarHidden
             self.navigationController?.popToViewController(destination, animated: animated)
         } else {
-            self.navigationController?.viewControllers.dropLast().last?.hidesBottomBarWhenPushed = bottomBarHidden
+            self.navigationController?
+                .viewControllers.dropLast().last?
+                .hidesBottomBarWhenPushed = bottomBarHidden
             self.navigationController?.popViewController(animated: animated)
         }
 
@@ -177,4 +182,3 @@ extension BaseNavigationViewController: UINavigationControllerDelegate {
         }
     }
 }
-
