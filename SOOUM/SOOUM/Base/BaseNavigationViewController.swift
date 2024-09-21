@@ -61,13 +61,6 @@ class BaseNavigationViewController: BaseViewController {
             }
             .disposed(by: self.disposeBag)
 
-        self.rx.observe(\.title)
-            .distinctUntilChanged()
-            .subscribe(with: self.navigationBar) { navigationBar, title in
-                navigationBar.title = title
-            }
-            .disposed(by: self.disposeBag)
-
         super.viewDidLoad()
 
         // 최상단에 적용되어야 하므로 setupConstraints 뒤인 이 곳에 위치함
