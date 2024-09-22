@@ -27,7 +27,7 @@ class BaseViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    /// Show deinit class name
     deinit {
         print("ℹ️ Deinit: ", type(of: self).description().components(separatedBy: ".").last ?? "")
     }
@@ -51,11 +51,11 @@ class BaseViewController: UIViewController {
             .disposed(by: self.disposeBag)
     }
 
-
+    /// Set auto layouts
     func setupConstraints() {
         // override point
     }
-
+    /// View action with rx
     func bind() {
         // override point
     }
@@ -65,7 +65,7 @@ class BaseViewController: UIViewController {
 
         self.setupNaviBar()
     }
-
+    /// Set navigationBar
     func setupNaviBar() {
         // override point
     }

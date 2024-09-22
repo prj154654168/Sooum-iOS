@@ -53,7 +53,7 @@ class BaseNavigationViewController: BaseViewController {
     override func viewDidLoad() {
 
         self.isNavigationBarHidden = false
-
+        /// 네비게이션 바가 isHidden 에 따라, safeAreaInsets.top을 조절 (isHidden == false, 네비게이션 바 아래쪽으로 뷰를 붙이기 위해)
         self.navigationBar.rx.observe(\.isHidden)
             .distinctUntilChanged()
             .subscribe(with: self) { object, isHidden in
