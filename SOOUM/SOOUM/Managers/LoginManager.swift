@@ -11,9 +11,9 @@ import Security
 class LoginManager {
     
     enum KeyChainKey: String {
-        case accessToken = "accessToken"
-        case refreshToken = "refreshToken"
-        case deviceId = "deviceId"
+        case accessToken
+        case refreshToken
+        case deviceId
     }
     
     static let shared = LoginManager()
@@ -78,7 +78,9 @@ class LoginManager {
         var item: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &item)
         
-        guard status == errSecSuccess, let tokenData = item as? Data, let token = String(data: tokenData, encoding: .utf8) else {
+        guard status == errSecSuccess,
+              let tokenData = item as? Data,
+              let token = String(data: tokenData, encoding: .utf8) else {
             return nil
         }
         
