@@ -29,6 +29,8 @@
 		385441962C870544004E2BB0 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAFB2C8702C200A5E139 /* Base */; };
 		385620E92CA199F400E0AB5A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 385620E82CA199F400E0AB5A /* Alamofire */; };
 		385620EB2CA199FB00E0AB5A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 385620EA2CA199FB00E0AB5A /* Alamofire */; };
+		385620F22CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */; };
+		385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */; };
 		385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */; };
 		385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */; };
 		3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
@@ -85,6 +87,7 @@
 		385053542C92DCF900C80B02 /* SOMTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBar.swift; sourceTree = "<group>"; };
 		385053572C92DD2300C80B02 /* SOMTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarController.swift; sourceTree = "<group>"; };
 		3854419A2C870544004E2BB0 /* SOOUM-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SOOUM-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_Request.swift; sourceTree = "<group>"; };
 		385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_constants.swift; sourceTree = "<group>"; };
 		3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PushAndPop.swift"; sourceTree = "<group>"; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -178,6 +181,7 @@
 			path = SOMTabBarController;
 			sourceTree = "<group>";
 		};
+				385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */,
 				385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */,
 		387FBAE32C8702C100A5E139 = {
 			isa = PBXGroup;
@@ -499,6 +503,7 @@
 				38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
+				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				38FDC2C82C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
@@ -530,6 +535,7 @@
 				38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
+				385620F22CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
