@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // TODO: 메인 화면 연결
         print("\(type(of: self)) - \(#function)")
 
-//        window?.rootViewController =
+        window?.rootViewController = TestTableViewController()
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
     }
