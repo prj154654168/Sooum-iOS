@@ -27,6 +27,20 @@
 		385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		385441952C870544004E2BB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
 		385441962C870544004E2BB0 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAFB2C8702C200A5E139 /* Base */; };
+		385620E92CA199F400E0AB5A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 385620E82CA199F400E0AB5A /* Alamofire */; };
+		385620EB2CA199FB00E0AB5A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 385620EA2CA199FB00E0AB5A /* Alamofire */; };
+		385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620EE2CA19C9500E0AB5A /* NetworkManager.swift */; };
+		385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620EE2CA19C9500E0AB5A /* NetworkManager.swift */; };
+		385620F22CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */; };
+		385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */; };
+		385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */; };
+		385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */; };
+		385B97E32CA1A2D500067CA7 /* MockResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B97E22CA1A2D500067CA7 /* MockResponse.swift */; };
+		385B97E42CA1A2D500067CA7 /* MockResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B97E22CA1A2D500067CA7 /* MockResponse.swift */; };
+		385B97E82CA1A31900067CA7 /* McokRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B97E72CA1A31900067CA7 /* McokRequest.swift */; };
+		385B97E92CA1A31900067CA7 /* McokRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B97E72CA1A31900067CA7 /* McokRequest.swift */; };
+		385B97EB2CA1A35A00067CA7 /* MockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B97EA2CA1A35A00067CA7 /* MockViewController.swift */; };
+		385B97EC2CA1A35A00067CA7 /* MockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385B97EA2CA1A35A00067CA7 /* MockViewController.swift */; };
 		3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
 		3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
 		387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAEF2C8702C100A5E139 /* AppDelegate.swift */; };
@@ -81,6 +95,12 @@
 		385053542C92DCF900C80B02 /* SOMTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBar.swift; sourceTree = "<group>"; };
 		385053572C92DD2300C80B02 /* SOMTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarController.swift; sourceTree = "<group>"; };
 		3854419A2C870544004E2BB0 /* SOOUM-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SOOUM-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		385620EE2CA19C9500E0AB5A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_Request.swift; sourceTree = "<group>"; };
+		385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_constants.swift; sourceTree = "<group>"; };
+		385B97E22CA1A2D500067CA7 /* MockResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockResponse.swift; sourceTree = "<group>"; };
+		385B97E72CA1A31900067CA7 /* McokRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = McokRequest.swift; sourceTree = "<group>"; };
+		385B97EA2CA1A35A00067CA7 /* MockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockViewController.swift; sourceTree = "<group>"; };
 		3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PushAndPop.swift"; sourceTree = "<group>"; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEF2C8702C100A5E139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +132,7 @@
 				38FDC2C12C9E74B700C094C2 /* RxCocoa in Frameworks */,
 				38CE94C42C904E4A0004B238 /* SnapKit in Frameworks */,
 				38FDC2C32C9E74B700C094C2 /* RxSwift in Frameworks */,
+				385620EB2CA199FB00E0AB5A /* Alamofire in Frameworks */,
 				38CE94CB2C904E990004B238 /* Then in Frameworks */,
 				38FDC2C52C9E74B700C094C2 /* RxKeyboard in Frameworks */,
 			);
@@ -124,6 +145,7 @@
 				38FDC2BB2C9E74AD00C094C2 /* RxCocoa in Frameworks */,
 				38CE94C62C904E5E0004B238 /* SnapKit in Frameworks */,
 				38FDC2BD2C9E74AD00C094C2 /* RxSwift in Frameworks */,
+				385620E92CA199F400E0AB5A /* Alamofire in Frameworks */,
 				38CE94C92C904E940004B238 /* Then in Frameworks */,
 				38FDC2BF2C9E74AD00C094C2 /* RxKeyboard in Frameworks */,
 			);
@@ -144,6 +166,7 @@
 		3836ACB12C8F042C00A3C566 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				385620F42CA19E8600E0AB5A /* Alamofire */,
 				3836ACB22C8F043500A3C566 /* Typography */,
 			);
 			path = Utilities;
@@ -170,6 +193,55 @@
 			path = SOMTabBarController;
 			sourceTree = "<group>";
 		};
+		385620EC2CA19C0D00E0AB5A /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				385620ED2CA19C2200E0AB5A /* NetworkManager */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		385620ED2CA19C2200E0AB5A /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+				385620EE2CA19C9500E0AB5A /* NetworkManager.swift */,
+			);
+			path = NetworkManager;
+			sourceTree = "<group>";
+		};
+		385620F42CA19E8600E0AB5A /* Alamofire */ = {
+			isa = PBXGroup;
+			children = (
+				385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */,
+				385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */,
+			);
+			path = Alamofire;
+			sourceTree = "<group>";
+		};
+		385B97E12CA1A2C100067CA7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				385B97E22CA1A2D500067CA7 /* MockResponse.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		385B97E52CA1A2EC00067CA7 /* Alamofire */ = {
+			isa = PBXGroup;
+			children = (
+				385B97E62CA1A2F500067CA7 /* Develop */,
+			);
+			path = Alamofire;
+			sourceTree = "<group>";
+		};
+		385B97E62CA1A2F500067CA7 /* Develop */ = {
+			isa = PBXGroup;
+			children = (
+				385B97E72CA1A31900067CA7 /* McokRequest.swift */,
+			);
+			path = Develop;
+			sourceTree = "<group>";
+		};
 		387FBAE32C8702C100A5E139 = {
 			isa = PBXGroup;
 			children = (
@@ -194,9 +266,12 @@
 				388371F62C8C8E7F004212EB /* DesignSystem */,
 				387FBB032C87036D00A5E139 /* App */,
 				38FDC2B42C9E745B00C094C2 /* Base */,
+				385620EC2CA19C0D00E0AB5A /* Managers */,
+				385B97E12CA1A2C100067CA7 /* Models */,
 				388371FE2C8C8FAC004212EB /* Extensions */,
 				3836ACB12C8F042C00A3C566 /* Utilities */,
 				387FBB052C87038F00A5E139 /* Resources */,
+				385B97EA2CA1A35A00067CA7 /* MockViewController.swift */,
 			);
 			path = SOOUM;
 			sourceTree = "<group>";
@@ -216,6 +291,7 @@
 				387FBAF82C8702C200A5E139 /* Assets.xcassets */,
 				387FBAFA2C8702C200A5E139 /* LaunchScreen.storyboard */,
 				388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */,
+				385B97E52CA1A2EC00067CA7 /* Alamofire */,
 				387FBB152C87044700A5E139 /* Develop */,
 				387FBB062C8703F600A5E139 /* Production */,
 			);
@@ -336,6 +412,7 @@
 				38FDC2C02C9E74B700C094C2 /* RxCocoa */,
 				38FDC2C22C9E74B700C094C2 /* RxSwift */,
 				38FDC2C42C9E74B700C094C2 /* RxKeyboard */,
+				385620EA2CA199FB00E0AB5A /* Alamofire */,
 			);
 			productName = SOOUM;
 			productReference = 3854419A2C870544004E2BB0 /* SOOUM-Dev.app */;
@@ -360,6 +437,7 @@
 				38FDC2BA2C9E74AD00C094C2 /* RxCocoa */,
 				38FDC2BC2C9E74AD00C094C2 /* RxSwift */,
 				38FDC2BE2C9E74AD00C094C2 /* RxKeyboard */,
+				385620E82CA199F400E0AB5A /* Alamofire */,
 			);
 			productName = SOOUM;
 			productReference = 387FBAEC2C8702C100A5E139 /* SOOUM.app */;
@@ -395,6 +473,7 @@
 				38CE94C72C904E8B0004B238 /* XCRemoteSwiftPackageReference "Then" */,
 				38FDC2B82C9E749300C094C2 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				38FDC2B92C9E749E00C094C2 /* XCRemoteSwiftPackageReference "RxKeyboard" */,
+				385620E72CA199E900E0AB5A /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 387FBAED2C8702C100A5E139 /* Products */;
 			projectDirPath = "";
@@ -475,6 +554,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				385B97E42CA1A2D500067CA7 /* MockResponse.swift in Sources */,
+				385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
 				2A048E852C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
@@ -486,9 +567,12 @@
 				38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
+				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
+				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				38FDC2C82C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
+				385B97EC2CA1A35A00067CA7 /* MockViewController.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				385053562C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
@@ -498,6 +582,7 @@
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
+				385B97E92CA1A31900067CA7 /* McokRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +590,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				385B97E32CA1A2D500067CA7 /* MockResponse.swift in Sources */,
+				385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
 				2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
@@ -516,9 +603,12 @@
 				38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
+				385620F22CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
+				385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
+				385B97EB2CA1A35A00067CA7 /* MockViewController.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
@@ -528,6 +618,7 @@
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
+				385B97E82CA1A31900067CA7 /* McokRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -567,6 +658,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
+				SOOUM_SERVER_ENDPOINT = "49.172.40.78:8080";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -595,6 +687,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
+				SOOUM_SERVER_ENDPOINT = "49.172.40.78:8080";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -660,6 +753,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SOOUM_DISPLAY_NAME = "";
+				SOOUM_SERVER_ENDPOINT = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -717,6 +811,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SOOUM_DISPLAY_NAME = "";
+				SOOUM_SERVER_ENDPOINT = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -811,6 +906,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		385620E72CA199E900E0AB5A /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
 		38CE94C12C904E190004B238 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -854,6 +957,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		385620E82CA199F400E0AB5A /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 385620E72CA199E900E0AB5A /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		385620EA2CA199FB00E0AB5A /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 385620E72CA199E900E0AB5A /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
 		38CE94C32C904E4A0004B238 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 38CE94C12C904E190004B238 /* XCRemoteSwiftPackageReference "SnapKit" */;
