@@ -22,8 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         
         window?.windowScene = windowScene
-        // TODO: 메인 화면 연결
-        window?.rootViewController = MockViewController()
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
     }
