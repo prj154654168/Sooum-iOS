@@ -37,6 +37,8 @@
 		385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */; };
 		3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
 		3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
+		3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4702CA3F03400AA46A2 /* SOMCard.swift */; };
+		3878F4722CA3F03400AA46A2 /* SOMCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4702CA3F03400AA46A2 /* SOMCard.swift */; };
 		3878F4742CA3F06C00AA46A2 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4732CA3F06C00AA46A2 /* UIStackView.swift */; };
 		3878F4752CA3F06C00AA46A2 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4732CA3F06C00AA46A2 /* UIStackView.swift */; };
 		3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4762CA3F08300AA46A2 /* UIView.swift */; };
@@ -97,6 +99,7 @@
 		385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_Request.swift; sourceTree = "<group>"; };
 		385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_constants.swift; sourceTree = "<group>"; };
 		3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PushAndPop.swift"; sourceTree = "<group>"; };
+		3878F4702CA3F03400AA46A2 /* SOMCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMCard.swift; sourceTree = "<group>"; };
 		3878F4732CA3F06C00AA46A2 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		3878F4762CA3F08300AA46A2 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -215,6 +218,14 @@
 			path = Alamofire;
 			sourceTree = "<group>";
 		};
+		3878F46F2CA3F01100AA46A2 /* SOMCard */ = {
+			isa = PBXGroup;
+			children = (
+				3878F4702CA3F03400AA46A2 /* SOMCard.swift */,
+			);
+			path = SOMCard;
+			sourceTree = "<group>";
+		};
 		387FBAE32C8702C100A5E139 = {
 			isa = PBXGroup;
 			children = (
@@ -327,6 +338,7 @@
 		38CE94BD2C904D140004B238 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				3878F46F2CA3F01100AA46A2 /* SOMCard */,
 				2A048E792C9BDF1000FFD485 /* SOMLocationFilter */,
 				38ED2AB32C985AB400920B53 /* SOMHomeTabBar */,
 				385053502C92DBCA00C80B02 /* SOMTabBarController */,
@@ -554,6 +566,7 @@
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
+				3878F4722CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -589,6 +602,7 @@
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
+				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
