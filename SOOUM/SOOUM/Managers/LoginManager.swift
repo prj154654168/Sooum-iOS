@@ -21,13 +21,13 @@ class LoginManager {
     private let service: String
     
     private init() {
-        #if DEBUG
-        print("dev")
-        self.service = "com.sooum.dev"
-        #else
-        print("production")
-        self.service = "com.sooum"
-        #endif
+        // Info.plist에서 "service" 키로 값을 읽어옴
+        if let serviceName = Bundle.main.object(forInfoDictionaryKey: "service") as? String {
+            self.service = serviceName
+            print("serviceName:", serviceName)
+        } else {
+            self.service = "com.sooum.dev" 
+        }
     }
     
     /// 디바이스의 고유 UUID를 생성. 이미 존재할 경우 기존의 deviceId를 그대로 사용함.
