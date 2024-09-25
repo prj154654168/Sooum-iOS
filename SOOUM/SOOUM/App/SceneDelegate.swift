@@ -22,10 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         
         window?.windowScene = windowScene
-        // TODO: 메인 화면 연결
-        print("\(type(of: self)) - \(#function)")
-
-        window?.rootViewController = TestTableViewController()
+        
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
     }
