@@ -12,7 +12,7 @@ import Then
 
 
 protocol SOMHomeTabBarDelegate: AnyObject {
-     func tabBar(_ tabBar: SOMHomeTabBar, didSelectTabAt index: Int)
+    func tabBar(_ tabBar: SOMHomeTabBar, didSelectTabAt index: Int)
 }
 
 class SOMHomeTabBar: UIView {
@@ -40,7 +40,6 @@ class SOMHomeTabBar: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupConstraints()
-        self.didSelectTab(0)
     }
     
     required init?(coder: NSCoder) {
@@ -80,9 +79,10 @@ class SOMHomeTabBar: UIView {
         }
     }
     
-    private func didSelectTab(_ index: Int) {
+    func didSelectTab(_ index: Int) {
         
         guard index + 1 != selectedIndex else { return }
+        
         self.homeTabBarItemContainer.arrangedSubviews.enumerated().forEach {
             guard let homeTabView = $1 as? SOMHomeTabBarItem else { return }
             if $0 == index {

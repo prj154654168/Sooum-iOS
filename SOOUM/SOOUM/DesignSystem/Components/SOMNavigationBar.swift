@@ -137,8 +137,10 @@ class SOMNavigationBar: UIView {
         self.leftContainer.removeArrangedSubview(self.centerContainer)
         
         if titlePosition == .left {
+            self.centerContainer.isHidden = true
             self.leftContainer.addArrangedSubview(titleView)
         } else {
+            self.centerContainer.isHidden = true
             self.centerContainer.addSubview(titleView)
             titleView.snp.makeConstraints {
                 $0.edges.equalToSuperview()
