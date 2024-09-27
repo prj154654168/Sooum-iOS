@@ -7,13 +7,14 @@
 
 import UIKit
 
+import ReactorKit
 import RxSwift
 
 import SnapKit
 import Then
 
 
-class LaunchScreenViewController: BaseViewController {
+class LaunchScreenViewController: BaseViewController, View {
     
     let viewForAnimation = UIView().then {
         $0.backgroundColor = UIColor(hex: "#A2E3FF")
@@ -45,13 +46,21 @@ class LaunchScreenViewController: BaseViewController {
         }
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    func bind(reactor: LaunchScreenViewReactor) {
         
-        self.animate(to: 45)
+        self.rx.viewDidLayoutSubviews
+            .subscribe(with: self) { object, _ in
+                object.animate(to: 45) { _ in
+                    
+                    let viewController = MainTabBarController()
+                    viewController.reactor = reactor.reactorForMainTabBar()
+                    object.view.window?.rootViewController = viewController
+                }
+            }
+            .disposed(by: self.disposeBag)
     }
     
-    private func animate(to height: CGFloat) {
+    private func animate(to height: CGFloat, completion: @escaping ((Bool) -> Void)) {
         
         UIView.animate(
             withDuration: 0.5,
@@ -60,7 +69,8 @@ class LaunchScreenViewController: BaseViewController {
             animations: {
                 self.viewForAnimation.transform = .init(translationX: 0, y: height)
                 self.view.layoutIfNeeded()
-            }
+            },
+            completion: completion
         )
     }
 }
