@@ -10,6 +10,15 @@ import UIKit
 
 extension UIColor {
     
+    var toImage: UIImage? {
+        UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
+        UIGraphicsGetCurrentContext()!.setFillColor(self.cgColor)
+        UIGraphicsGetCurrentContext()!.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
+        let colorImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return colorImage
+    }
+    
     convenience init(r: Int, g: Int, b: Int, a: CGFloat = 1.0) {
         self.init(
             red: CGFloat(r) / 255.0,
