@@ -87,6 +87,10 @@ class SOMCardTableViewCell: UITableViewCell {
         }
     }
     
+    func changeOrderInCardContentStack(_ selectedIndex: Int) {
+        self.cardView.changeOrderInCardContentStack(selectedIndex)
+    }
+    
     /// 남은 시간 스트링으로 반환
     private func getTimeOutStr(pungTime: Date) -> String {
         let remainingTime = Int(pungTime.timeIntervalSince(Date()))

@@ -301,7 +301,7 @@ class SOMCard: UIView {
             $0.bottom.equalToSuperview()
             $0.height.equalTo(60)
         }
-                
+        
         cardContentStackView.snp.makeConstraints {
             $0.bottom.equalToSuperview().offset(-24)
             $0.leading.equalToSuperview()
@@ -335,5 +335,36 @@ class SOMCard: UIView {
         cardGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
         cardGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
         cardGradientView.layer.insertSublayer(cardGradientLayer, at: 0)
+    }
+    
+    func changeOrderInCardContentStack(_ selectedIndex: Int) {
+        self.cardContentStackView.subviews.forEach { $0.removeFromSuperview() }
+        
+        switch selectedIndex {
+        case 1:
+            cardContentStackView.addArrangedSubviews(
+                UIView(),
+                likeInfoStackView,
+                commentInfoStackView,
+                timeInfoStackView,
+                distanceInfoStackView
+            )
+        case 2:
+            cardContentStackView.addArrangedSubviews(
+                UIView(),
+                distanceInfoStackView,
+                timeInfoStackView,
+                likeInfoStackView,
+                commentInfoStackView
+            )
+        default:
+            cardContentStackView.addArrangedSubviews(
+                UIView(),
+                timeInfoStackView,
+                distanceInfoStackView,
+                likeInfoStackView,
+                commentInfoStackView
+            )
+        }
     }
 }
