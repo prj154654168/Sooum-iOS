@@ -26,7 +26,6 @@ extension UIViewController {
         CATransaction.commit()
     }
     
-    // swiftlint:enable identifier_name
     func navigationPop(
         to: UIViewController.Type? = nil,
         animated: Bool = true,

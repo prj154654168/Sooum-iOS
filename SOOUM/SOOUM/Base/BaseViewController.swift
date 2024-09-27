@@ -17,6 +17,8 @@ import Then
 class BaseViewController: UIViewController {
 
     var disposeBag = DisposeBag()
+    
+    let activityIndicatorView = UIActivityIndicatorView(style: .large)
 
     private(set) var isEndEditingWhenWillDisappear: Bool = true
 
@@ -37,6 +39,14 @@ class BaseViewController: UIViewController {
 
         self.view.backgroundColor = .white
         self.setupConstraints()
+        
+        self.activityIndicatorView.color = .black
+        
+        self.view.addSubview(self.activityIndicatorView)
+        self.activityIndicatorView.snp.makeConstraints {
+            $0.centerX.equalTo(self.view.safeAreaLayoutGuide.snp.centerX)
+            $0.centerY.equalTo(self.view.safeAreaLayoutGuide.snp.centerY)
+        }
 
         self.bind()
 
