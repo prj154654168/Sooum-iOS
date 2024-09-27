@@ -40,9 +40,9 @@ class NetworkManager {
         var sessionDelegate: URLSessionDelegate?
         /// Overrides the default delegate queue
         var sessionDelegateQueue: OperationQueue?
-        /// By default, uses `.millisecondsSince1970` date decoding strategy
+        /// By default, uses `yyyy-MM-dd'T'HH:mm:ss.SSSSSS` date decoding strategy
         var decoder: JSONDecoder
-        /// By default, uses `.millisecondsSince1970` date encoding strategy
+        /// By default, uses `yyyy-MM-dd'T'HH:mm:ss.SSSSSS` date encoding strategy
         var encoder: JSONEncoder
         
         /// Initializes the configuration
@@ -55,10 +55,17 @@ class NetworkManager {
             self.sessionConfiguration = sessionConfiguration
             self.sessionDelegate = sessionDelegate
             self.sessionDelegateQueue = sessionDelegateQueue
+            
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+            /// UTC 기준
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            
             self.decoder = JSONDecoder()
-            self.decoder.dateDecodingStrategy = .millisecondsSince1970
+            self.decoder.dateDecodingStrategy = .formatted(formatter)
             self.encoder = JSONEncoder()
-            self.encoder.dateEncodingStrategy = .millisecondsSince1970
+            self.encoder.dateEncodingStrategy = .formatted(formatter)
         }
     }
     
@@ -119,9 +126,19 @@ extension NetworkManager: NetworkManagerDelegate {
                             observer.onError(error)
                         }
                         
+                        print(
+                            "⭕️ Success request server, " +
+                            "request: \(request.self) " +
+                            "method: \(request.method.rawValue)"
+                        )
                         observer.onNext(value)
                         observer.onCompleted()
                     case .failure(let error):
+                        print(
+                            "ℹ️ Request server, " +
+                            "request: \(request.self) " +
+                            "method: \(request.method.rawValue)"
+                        )
                         print("❌ Network or response format error: \(error)")
                         observer.onError(error)
                     }
