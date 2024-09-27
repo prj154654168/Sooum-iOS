@@ -61,6 +61,8 @@ class MainHomeViewController: BaseNavigationViewController, View {
     /// tableView에 표시될 카드 정보
     var cards = [Card]()
     
+    var tableViewTopConstraint: Constraint?
+    
     let coordinate = PublishSubject<(latitude: String, longitude: String)>()
     
     
@@ -76,6 +78,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
     }
     
     override func setupConstraints() {
+        super.setupConstraints()
         
         self.view.addSubview(self.headerView)
         self.headerView.snp.makeConstraints {
@@ -85,7 +88,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints {
-            $0.top.equalTo(self.headerView.snp.bottom)
+            self.tableViewTopConstraint = $0.top.equalTo(self.headerView.snp.bottom).constraint
             $0.bottom.leading.trailing.equalToSuperview()
         }
         
@@ -137,7 +140,6 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         
-        
         /// State
         reactor.state.map(\.isLoading)
             .distinctUntilChanged()
@@ -182,6 +184,8 @@ extension MainHomeViewController: UITableViewDataSource {
         ) as! SOMCardTableViewCell
         cell.selectionStyle = .none
         cell.setData(card: self.cards[indexPath.row])
+        /// card content stack order change
+        cell.changeOrderInCardContentStack(self.reactor?.currentState.index ?? 0)
         
         return cell
     }
@@ -212,6 +216,17 @@ extension MainHomeViewController: UITableViewDataSource {
     
      func scrollViewDidScroll(_ scrollView: UIScrollView) {
          let offsetY = scrollView.contentOffset.y
-         self.moveTopButton.isHidden = offsetY <= 0 ? true : false
+         let isTop = offsetY <= 0
+         self.moveTopButton.isHidden = isTop ? true : false
+         self.headerView.isHidden = !isTop
+         self.tableViewTopConstraint?.deactivate()
+         self.tableView.snp.makeConstraints {
+             self.tableViewTopConstraint = $0.top.equalTo(
+                isTop ? self.headerView.snp.bottom : self.view.safeAreaLayoutGuide.snp.top
+             ).constraint
+         }
+         UIView.animate(withDuration: 0.1) {
+             self.view.layoutIfNeeded()
+         }
      }
  }
