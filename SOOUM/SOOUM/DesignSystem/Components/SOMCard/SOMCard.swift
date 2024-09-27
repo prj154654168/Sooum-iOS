@@ -13,7 +13,6 @@ import Then
 class SOMCard: UIView {
     
     let rootContainerImageView = UIImageView().then {
-        $0.backgroundColor = .orange
         $0.layer.cornerRadius = 40
         $0.layer.masksToBounds = true
     }
@@ -41,13 +40,12 @@ class SOMCard: UIView {
             letterSpacing: 0
         )
         $0.textColor = .som.white
-        $0.text = "14:00:00"
         $0.textAlignment = .center
     }
     
     /// cardTextContentLabel를 감싸는 불투명 컨테이너 뷰
     let cardTextContainerView = UIView().then {
-        $0.backgroundColor = .som.dim
+        $0.backgroundColor = .som.dimForCard
         $0.layer.cornerRadius = 24
     }
     
@@ -99,7 +97,6 @@ class SOMCard: UIView {
             letterSpacing: 0
         )
         $0.textColor = .som.white
-        $0.text = "30분전"
     }
     
     /// 거리 정보 표시 스택뷰
@@ -123,7 +120,6 @@ class SOMCard: UIView {
             letterSpacing: 0
         )
         $0.textColor = .som.white
-        $0.text = "1km"
     }
     
     /// 좋아요 정보 표시 스택뷰
@@ -147,7 +143,6 @@ class SOMCard: UIView {
             letterSpacing: 0
         )
         $0.textColor = .som.white
-        $0.text = "12"
     }
     
     /// 댓글 정보 표시 스택뷰
@@ -171,7 +166,6 @@ class SOMCard: UIView {
             letterSpacing: 0
         )
         $0.textColor = .som.white
-        $0.text = "12"
     }
     
     // MARK: - init
@@ -238,6 +232,7 @@ class SOMCard: UIView {
     
     private func addCardGradientView() {
         rootContainerImageView.addSubview(cardGradientView)
+        rootContainerImageView.bringSubviewToFront(cardGradientView)
     }
     
     private func addTimeInfoStackView() {
