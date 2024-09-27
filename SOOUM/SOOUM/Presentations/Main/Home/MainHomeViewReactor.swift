@@ -97,13 +97,12 @@ class MainHomeViewReactor: Reactor {
         switch mutation {
         case let .cards(cards):
             state.cards = cards
-            state.displayedCards = []
-            state.displayedCards = self.separate(current: cards)
+            state.displayedCards = self.separate(current: cards, displayed: [])
         case let .more(cards):
             state.cards += cards
-            state.displayedCards += self.separate(current: cards)
+            state.displayedCards += self.separate(current: cards, displayed: state.displayedCards)
         case let .displayedCards(cards):
-            state.displayedCards += self.separate(current: cards)
+            state.displayedCards += self.separate(current: cards, displayed: state.displayedCards)
         case let .updateIndex(index):
             state.index = index
         case let .updateCoordinate(latitude, longitude):
@@ -194,8 +193,8 @@ extension MainHomeViewReactor {
 
 extension MainHomeViewReactor {
     
-    func separate(current cards: [Card]) -> [Card] {
-        let count = self.currentState.displayedCards.count
+    func separate(current cards: [Card], displayed displayedCards: [Card]) -> [Card] {
+        let count = displayedCards.count
         let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
         return displayedCards
     }
