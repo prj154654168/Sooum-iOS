@@ -238,13 +238,6 @@
 			path = LocationManager;
 			sourceTree = "<group>";
 		};
-		38121E2B2CA6B88B00602499 /* SOMAlertController */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = SOMAlertController;
-			sourceTree = "<group>";
-		};
 		38121E2F2CA6C76C00602499 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
@@ -520,7 +513,6 @@
 		38CE94BD2C904D140004B238 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				38121E2B2CA6B88B00602499 /* SOMAlertController */,
 				3878F46F2CA3F01100AA46A2 /* SOMCard */,
 				2A048E792C9BDF1000FFD485 /* SOMLocationFilter */,
 				38ED2AB32C985AB400920B53 /* SOMHomeTabBar */,
