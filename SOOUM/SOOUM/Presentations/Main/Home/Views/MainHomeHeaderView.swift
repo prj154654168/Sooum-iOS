@@ -63,8 +63,6 @@ class MainHomeHeaderView: UIView {
                 object.locationFilter.snp.updateConstraints {
                     $0.height.equalTo(isHidden ? 0 : 54)
                 }
-                
-                object.layoutIfNeeded()
             }
             .disposed(by: self.disponseBag)
     }

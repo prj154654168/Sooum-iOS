@@ -31,6 +31,7 @@ class SOMNavigationBar: UIView {
     private let leftContainer = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .center
+        $0.distribution = .equalSpacing
     }
     
     private let leftButtonsView = UIStackView().then {
@@ -109,7 +110,6 @@ class SOMNavigationBar: UIView {
             $0.top.equalToSuperview().offset(10)
             $0.bottom.equalToSuperview().offset(-10)
             $0.leading.equalToSuperview().offset(20)
-            $0.trailing.lessThanOrEqualTo(self.centerContainer.snp.leading)
         }
         
         self.leftContainer.addArrangedSubview(self.backButton)
@@ -123,7 +123,6 @@ class SOMNavigationBar: UIView {
         self.rightButtonsView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(10)
             $0.bottom.equalToSuperview().offset(-10)
-            $0.leading.greaterThanOrEqualTo(self.centerContainer.snp.trailing)
             $0.trailing.equalToSuperview().offset(-20)
         }
     }
@@ -134,13 +133,13 @@ class SOMNavigationBar: UIView {
     ) {
         
         self.centerContainer.subviews.forEach { $0.removeFromSuperview() }
-        self.leftContainer.removeArrangedSubview(self.centerContainer)
+        self.leftContainer.removeArrangedSubview(titleView)
         
         if titlePosition == .left {
             self.centerContainer.isHidden = true
             self.leftContainer.addArrangedSubview(titleView)
         } else {
-            self.centerContainer.isHidden = true
+            self.centerContainer.isHidden = false
             self.centerContainer.addSubview(titleView)
             titleView.snp.makeConstraints {
                 $0.edges.equalToSuperview()
