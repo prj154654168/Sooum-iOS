@@ -29,7 +29,7 @@ class SOMTabBar: UIView {
     }
     
     private let tabBarBackgroundView = UIView().then {
-        $0.backgroundColor = .som.dim
+        $0.backgroundColor = .som.dimForTabBar
         $0.layer.cornerRadius = 60 * 0.5
     }
     

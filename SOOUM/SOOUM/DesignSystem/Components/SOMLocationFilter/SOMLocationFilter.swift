@@ -20,12 +20,12 @@ protocol SOMLocationFilterDelegate: AnyObject {
 
 class SOMLocationFilter: UIView {
     
-    enum Distance {
-        case under1Km
-        case under5Km
-        case under10Km
-        case under20Km
-        case under50Km
+    enum Distance: String {
+        case under1Km = "UNDER_1"
+        case under5Km = "UNDER_5"
+        case under10Km = "UNDER_10"
+        case under20Km = "UNDER_20"
+        case under50Km = "UNDER_50"
         
         var text: String {
             switch self {

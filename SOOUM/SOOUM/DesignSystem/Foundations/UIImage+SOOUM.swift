@@ -15,11 +15,33 @@ extension UIImage {
         
         enum IconStyle {
             case outlined(Outlined)
+            case filled(Filled)
             
             enum Outlined: String {
                 case addCard
                 case alarm
+                case arrowBack
+                case arrowTop
+                case cancel
                 case chatBubbleGrid
+                case clock
+                case comment
+                case heart
+                case home
+                case location
+                case more
+                case plus
+                case profile
+                case refresh
+                case report
+                case star
+                case tag
+                case trash
+            }
+            
+            enum Filled: String {
+                case addCard
+                case alarm
                 case clock
                 case comment
                 case heart
@@ -34,6 +56,8 @@ extension UIImage {
                 switch self {
                 case .outlined(let outlined):
                     return "\(outlined.rawValue)_outlined"
+                case .filled(let filled):
+                    return "\(filled.rawValue)_filled"
                 }
             }
         }

@@ -26,7 +26,6 @@ extension UIViewController {
         CATransaction.commit()
     }
     
-    // swiftlint:enable identifier_name
     func navigationPop(
         to: UIViewController.Type? = nil,
         animated: Bool = true,
@@ -38,11 +37,15 @@ extension UIViewController {
 
         if let to: UIViewController.Type = to,
             let viewControllers = self.navigationController?.viewControllers,
-            let destination: UIViewController = viewControllers.last(where: { type(of: $0) == to }) {
+            let destination: UIViewController = viewControllers.last(
+                where: { type(of: $0) == to }
+            ) {
             destination.hidesBottomBarWhenPushed = bottomBarHidden
             self.navigationController?.popToViewController(destination, animated: animated)
         } else {
-            self.navigationController?.viewControllers.dropLast().last?.hidesBottomBarWhenPushed = bottomBarHidden
+            self.navigationController?
+                .viewControllers.dropLast().last?
+                .hidesBottomBarWhenPushed = bottomBarHidden
             self.navigationController?.popViewController(animated: animated)
         }
 
