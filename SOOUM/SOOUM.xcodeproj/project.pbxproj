@@ -16,6 +16,7 @@
 		2A44A42B2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */; };
 		2A44A42D2CAC14C800DC463E /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A42C2CAC14C800DC463E /* LoginResponse.swift */; };
 		2A44A42E2CAC14C800DC463E /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A42C2CAC14C800DC463E /* LoginResponse.swift */; };
+		2A44A4302CAC159F00DC463E /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A42F2CAC159F00DC463E /* LoginRequest.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
@@ -139,6 +140,7 @@
 		2A44A4262CAC06BD00DC463E /* RSAKeyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyRequest.swift; sourceTree = "<group>"; };
 		2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyResponse.swift; sourceTree = "<group>"; };
 		2A44A42C2CAC14C800DC463E /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		2A44A42F2CAC159F00DC463E /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
 		38121E2C2CA6C53300602499 /* distanceCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = distanceCardResponse.swift; sourceTree = "<group>"; };
@@ -517,6 +519,7 @@
 			children = (
 				384972A02CA4DEC00012FCA1 /* CardRequest.swift */,
 				2A44A4262CAC06BD00DC463E /* RSAKeyRequest.swift */,
+				2A44A42F2CAC159F00DC463E /* LoginRequest.swift */,
 			);
 			path = Develop;
 			sourceTree = "<group>";
@@ -782,6 +785,7 @@
 				3878F4722CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				38B6AAE32CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
 				38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */,
+				2A44A4302CAC159F00DC463E /* LoginRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
