@@ -33,10 +33,6 @@ enum RSAKeyRequest: BaseRequest {
         if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
             var request = URLRequest(url: url)
             request.method = self.method
-            request.setValue(
-                Constants.ContentType.json.rawValue,
-                forHTTPHeaderField: Constants.HTTPHeader.acceptType.rawValue
-            )
 
             let encoded = try encoding.encode(request, with: self.parameters)
             return encoded
