@@ -24,8 +24,8 @@ class MainHomeViewController: BaseNavigationViewController, View {
     let rightAlamButton = UIButton().then {
         var config = UIButton.Configuration.plain()
         config.image = .init(.icon(.outlined(.alarm)))
-        config.image?.withTintColor(.som.gray02)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray02 }
+        config.image?.withTintColor(.som.gray03)
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray03 }
         $0.configuration = config
     }
     
