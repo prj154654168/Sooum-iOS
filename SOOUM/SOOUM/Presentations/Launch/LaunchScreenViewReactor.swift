@@ -5,8 +5,10 @@
 //  Created by 오현식 on 9/26/24.
 //
 
-import ReactorKit
+import Foundation
+import Security
 
+import ReactorKit
 
 /*
  - 어플 실행
@@ -56,6 +58,10 @@ class LaunchScreenViewReactor: Reactor {
     var accessToken: String?
     var refreshToken: String?
     
+    // TODO: - 삭제
+    /// 임시 디바이스 아이디
+    let deviceID = "asdawgrwasekjfhsdlkjfg"
+    
     let initialState = State(isLoading: false, signinSuccess: false, signupSuccess: false)
     
     private let networkManager: NetworkManager
@@ -99,20 +105,74 @@ class LaunchScreenViewReactor: Reactor {
 extension LaunchScreenViewReactor {
     
     private func processLoginFlow() -> Observable<Mutation> {
-        return networkManager.requestRSAPublicKey()
-            .flatMap { publicKey in
-                // Reactor 내부에 공개키 설정
-                self.publicKey = publicKey
-                return self.encryptDeviceId()
+        return fetchRSAKey()
+            .flatMap { rsaKeyResponse -> Observable<String> in
+                // 공개키로 기기 id 암호화
+                guard let encryptedDeviceID = self.encryptIMEI(with: rsaKeyResponse.key.publicKey, deviceID: self.deviceID) else {
+                    return Observable.error(NSError(domain: "EncryptionError", code: -1, userInfo: nil))
+                }
+                return Observable.just(encryptedDeviceID)
             }
-            .flatMap { encryptedDeviceId in
-                // 로그인 시도
-                self.attemptLogin(with: encryptedDeviceId)
+            .flatMap { encryptedIMEI -> Observable<LoginResponse> in
+                // 2. 암호화된 IMEI로 로그인 요청
+                let loginRequest = LoginRequest.login(encryptedIMEI: encryptedIMEI)
+                return self.networkManager.request(LoginResponse.self, request: loginRequest)
+            }
+            .flatMap { loginResponse -> Observable<Mutation> in
+                if loginResponse.isRegistered {
+                    // 3. 기존 사용자 -> 로그인 성공 처리
+                    self.accessToken = loginResponse.token?.accessToken
+                    self.refreshToken = loginResponse.token?.refreshToken
+                    return Observable.just(Mutation.setLoginSuccess)
+                } else {
+                    // 4. 신규 사용자 -> 회원가입 처리
+                    return self.processSignupFlow()
+                }
             }
             .catch { error in
-                // 에러 발생 시 Mutation.setError 반환
+                // 에러 처리
                 return Observable.just(Mutation.setError(error.localizedDescription))
             }
+
+    }
+    
+    /// RSA 키 fetch
+    func fetchRSAKey() -> Observable<RSAKeyResponse> {
+        let request = RSAKeyRequest.getPublicKey
+        return networkManager.request(RSAKeyResponse.self, request: request)
+    }
+    
+    /// 기기 id 공개키로 암호화
+    func encryptDeviceID(with publicKey: String, deviceID: String) -> String? {
+        // PublicKey를 Data로 변환
+        guard let publicKeyData = Data(base64Encoded: publicKey) else {
+            print("Invalid Public Key")
+            return nil
+        }
+
+        // deviceID를 Data로 변환
+        guard let deviceIDData = deviceID.data(using: .utf8) else {
+            print("Invalid Device ID")
+            return nil
+        }
+
+        // 3. PublicKey를 SecKey로 변환
+        let keyDict: [NSObject: NSObject] = [kSecAttrKeyType: kSecAttrKeyTypeRSA,
+                                              kSecAttrKeyClass: kSecAttrKeyClassPublic]
+        guard let secKey = SecKeyCreateWithData(publicKeyData as CFData, keyDict as CFDictionary, nil) else {
+            print("Failed to create SecKey")
+            return nil
+        }
+
+        // 4. RSA 암호화
+        var error: Unmanaged<CFError>?
+        guard let encryptedData = SecKeyCreateEncryptedData(secKey, .rsaEncryptionOAEPSHA256, deviceIDData as CFData, &error) else {
+            print("RSA Encryption Failed: \(error.debugDescription)")
+            return nil
+        }
+
+        // 5. 암호화된 데이터를 Base64로 인코딩하여 반환
+        return (encryptedData as Data).base64EncodedString()
     }
     
 }
