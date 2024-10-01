@@ -11,6 +11,11 @@
 		2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */; };
 		2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */; };
 		2A048E852C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */; };
+		2A44A4282CAC06BD00DC463E /* RSAKeyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4262CAC06BD00DC463E /* RSAKeyRequest.swift */; };
+		2A44A42A2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */; };
+		2A44A42B2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */; };
+		2A44A42D2CAC14C800DC463E /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A42C2CAC14C800DC463E /* LoginResponse.swift */; };
+		2A44A42E2CAC14C800DC463E /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A42C2CAC14C800DC463E /* LoginResponse.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
@@ -131,6 +136,9 @@
 /* Begin PBXFileReference section */
 		2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilter.swift; sourceTree = "<group>"; };
 		2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilterCollectionViewCell.swift; sourceTree = "<group>"; };
+		2A44A4262CAC06BD00DC463E /* RSAKeyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyRequest.swift; sourceTree = "<group>"; };
+		2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyResponse.swift; sourceTree = "<group>"; };
+		2A44A42C2CAC14C800DC463E /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
 		38121E2C2CA6C53300602499 /* distanceCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = distanceCardResponse.swift; sourceTree = "<group>"; };
@@ -490,6 +498,8 @@
 				38B6AAE52CA47EBA00CE6DB6 /* LatestCardResponse.swift */,
 				382C58742CA64F8F00CEF814 /* PopularCardResponse.swift */,
 				38121E2C2CA6C53300602499 /* distanceCardResponse.swift */,
+				2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */,
+				2A44A42C2CAC14C800DC463E /* LoginResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -506,6 +516,7 @@
 			isa = PBXGroup;
 			children = (
 				384972A02CA4DEC00012FCA1 /* CardRequest.swift */,
+				2A44A4262CAC06BD00DC463E /* RSAKeyRequest.swift */,
 			);
 			path = Develop;
 			sourceTree = "<group>";
@@ -725,6 +736,7 @@
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
 				2A048E852C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				2A44A42E2CAC14C800DC463E /* LoginResponse.swift in Sources */,
 				3878F4782CA3F08300AA46A2 /* UIView.swift in Sources */,
 				388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */,
 				384972A12CA4DEC00012FCA1 /* CardRequest.swift in Sources */,
@@ -732,6 +744,7 @@
 				38B6AADC2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
+				2A44A42B2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
 				382C58762CA64F8F00CEF814 /* PopularCardResponse.swift in Sources */,
 				3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
@@ -743,6 +756,7 @@
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
+				2A44A4282CAC06BD00DC463E /* RSAKeyRequest.swift in Sources */,
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
 				38FDC2C82C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
@@ -789,6 +803,7 @@
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
+				2A44A42D2CAC14C800DC463E /* LoginResponse.swift in Sources */,
 				38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
@@ -805,6 +820,7 @@
 				3878F47A2CA3F09E00AA46A2 /* SOMCardTableViewCell.swift in Sources */,
 				38121E2D2CA6C53300602499 /* distanceCardResponse.swift in Sources */,
 				38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
+				2A44A42A2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
