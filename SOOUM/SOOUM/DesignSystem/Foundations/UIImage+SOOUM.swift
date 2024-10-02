@@ -26,6 +26,7 @@ extension UIImage {
                 case chatBubbleGrid
                 case clock
                 case comment
+                case commentAdd
                 case heart
                 case home
                 case location
