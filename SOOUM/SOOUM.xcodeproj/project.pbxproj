@@ -106,6 +106,8 @@
 		38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
 		38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
+		38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
+		38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
 		38B6AAC82CA3F73B00CE6DB6 /* ReactorKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38B6AAC72CA3F73B00CE6DB6 /* ReactorKit */; };
 		38B6AACA2CA3F74300CE6DB6 /* ReactorKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38B6AAC92CA3F74300CE6DB6 /* ReactorKit */; };
 		38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
@@ -198,6 +200,7 @@
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
 		38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndCommentView.swift; sourceTree = "<group>"; };
+		38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreBottomSheetViewController.swift; sourceTree = "<group>"; };
 		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeViewController.swift; sourceTree = "<group>"; };
 		38B6AAD42CA41B3C00CE6DB6 /* MainHomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeHeaderView.swift; sourceTree = "<group>"; };
@@ -431,6 +434,7 @@
 			path = Develop;
 			sourceTree = "<group>";
 		};
+				38AA00042CAD96A6002C5F1E /* MoreBottomSheet */,
 		388009822CABF0FD002A9209 /* SwiftEntryKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -502,6 +506,14 @@
 				38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		38AA00042CAD96A6002C5F1E /* MoreBottomSheet */ = {
+			isa = PBXGroup;
+			children = (
+				38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */,
+			);
+			path = MoreBottomSheet;
 			sourceTree = "<group>";
 		};
 		38B6AACB2CA410C000CE6DB6 /* Main */ = {
@@ -793,6 +805,7 @@
 				384972A12CA4DEC00012FCA1 /* CardRequest.swift in Sources */,
 				38B6AAE72CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */,
 				38B6AADC2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
+				38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				382C58762CA64F8F00CEF814 /* PopularCardResponse.swift in Sources */,
@@ -880,6 +893,7 @@
 				38B6AAD52CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
 				3878F47A2CA3F09E00AA46A2 /* SOMCardTableViewCell.swift in Sources */,
 				38121E2D2CA6C53300602499 /* distanceCardResponse.swift in Sources */,
+				38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
