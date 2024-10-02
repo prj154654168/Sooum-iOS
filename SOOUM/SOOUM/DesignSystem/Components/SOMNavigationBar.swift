@@ -37,17 +37,26 @@ class SOMNavigationBar: UIView {
     private let leftButtonsView = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .center
+        $0.distribution = .equalSpacing
     }
     
     private let rightButtonsView = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .center
+        $0.distribution = .equalSpacing
     }
+    
+    private var centerContainerCenterXConstraint: Constraint?
+    private var centerContainerLeadingConstraint: Constraint?
     
     /// 타이틀 (text == label / logo == image)
     let titleLabel = UILabel().then {
-        $0.textAlignment = .center
-        // TODO: 추후 DesignSystem의 Foundation이 정리되면 수정 (typography, color)
+        $0.textColor = .som.black
+        $0.typography = .init(
+            fontContainer: Pretendard(size: 18, weight: .semibold),
+            lineHeight: 18,
+            letterSpacing: 0.005
+        )
     }
     var title: String? {
         set { self.titleLabel.text = newValue }
@@ -56,16 +65,18 @@ class SOMNavigationBar: UIView {
     var titleView: UIView? {
         didSet { self.setTitleViewConstraints(self.titleView ?? self.titleLabel) }
     }
-    var titlePosition: TitlePosition? {
-        didSet { self.setTitlePosition(self.titlePosition ?? .left) }
+    var titlePosition: TitlePosition = .center {
+        didSet {
+            self.setTitlePosition(self.titlePosition, titleView: self.titleView ?? self.titleLabel)
+        }
     }
     
     /// 네비게이션 바 뒤로가기 버튼
     let backButton = UIButton().then {
         var config = UIButton.Configuration.plain()
-        // TODO: 추후 뒤로가기 버튼이 추가되면 수정
-        config.image = .init(.icon(.outlined(.home)))
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .gray }
+        config.image = .init(.icon(.outlined(.arrowBack)))
+        config.image?.withTintColor(.som.black)
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.black }
         $0.configuration = config
     }
     var isHideBackButton: Bool {
@@ -73,8 +84,9 @@ class SOMNavigationBar: UIView {
         get { self.backButton.isHidden }
     }
     
+    
     /// leftButtons 혹은 rightButtons 간격
-    var spacing: CGFloat = 5 {
+    var spacing: CGFloat = 0 {
         didSet {
             self.leftContainer.spacing = self.spacing
             self.leftButtonsView.spacing = self.spacing
@@ -100,15 +112,13 @@ class SOMNavigationBar: UIView {
         
         self.addSubview(self.centerContainer)
         self.centerContainer.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.bottom.equalToSuperview().offset(-10)
-            $0.centerX.equalToSuperview()
+            $0.centerY.equalToSuperview()
+            self.centerContainerCenterXConstraint = $0.centerX.equalToSuperview().constraint
         }
         
         self.addSubview(self.leftContainer)
         self.leftContainer.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.bottom.equalToSuperview().offset(-10)
+            $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(20)
         }
         
@@ -121,38 +131,36 @@ class SOMNavigationBar: UIView {
         
         self.addSubview(self.rightButtonsView)
         self.rightButtonsView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.bottom.equalToSuperview().offset(-10)
+            $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().offset(-20)
         }
     }
     
-    private func setTitleViewConstraints(
-        _ titleView: UIView,
-        titlePosition: TitlePosition = .left
-    ) {
+    private func setTitleViewConstraints(_ titleView: UIView) {
         
         self.centerContainer.subviews.forEach { $0.removeFromSuperview() }
-        self.leftContainer.removeArrangedSubview(titleView)
+        self.centerContainer.addSubview(titleView)
         
-        if titlePosition == .left {
-            self.centerContainer.isHidden = true
-            self.leftContainer.addArrangedSubview(titleView)
-        } else {
-            self.centerContainer.isHidden = false
-            self.centerContainer.addSubview(titleView)
-            titleView.snp.makeConstraints {
-                $0.edges.equalToSuperview()
-            }
+        titleView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
+        
+        self.setTitlePosition(self.titlePosition, titleView: titleView)
     }
     
-    private func setTitlePosition(_ titlePosition: TitlePosition) {
+    private func setTitlePosition(_ titlePosition: TitlePosition, titleView: UIView) {
         
-        self.setTitleViewConstraints(
-            self.titleView ?? self.titleLabel,
-            titlePosition: titlePosition
-        )
+        if titlePosition == .left {
+            self.centerContainerCenterXConstraint?.deactivate()
+            
+            self.centerContainer.snp.makeConstraints {
+                self.centerContainerLeadingConstraint = $0.leading.equalTo(
+                    self.leftContainer.snp.trailing
+                ).constraint
+            }
+        } else {
+            self.centerContainerLeadingConstraint?.deactivate()
+        }
     }
     
     private func prepare() {
