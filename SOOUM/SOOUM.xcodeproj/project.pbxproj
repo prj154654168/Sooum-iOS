@@ -72,6 +72,14 @@
 		387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
 		387FBAFC2C8702C200A5E139 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAFB2C8702C200A5E139 /* Base */; };
+		3880098E2CABF4C2002A9209 /* SOMTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3880098D2CABF4C2002A9209 /* SOMTag.swift */; };
+		3880098F2CABF4C2002A9209 /* SOMTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3880098D2CABF4C2002A9209 /* SOMTag.swift */; };
+		388009912CABF855002A9209 /* SOMTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009902CABF855002A9209 /* SOMTagModel.swift */; };
+		388009922CABF855002A9209 /* SOMTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009902CABF855002A9209 /* SOMTagModel.swift */; };
+		388009942CABFAAA002A9209 /* SOMTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009932CABFAAA002A9209 /* SOMTags.swift */; };
+		388009952CABFAAA002A9209 /* SOMTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009932CABFAAA002A9209 /* SOMTags.swift */; };
+		388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009962CAC20EC002A9209 /* SOMTags+Rx.swift */; };
+		388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009962CAC20EC002A9209 /* SOMTags+Rx.swift */; };
 		388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371F82C8C8EB1004212EB /* SooumStyle.swift */; };
 		388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371F82C8C8EB1004212EB /* SooumStyle.swift */; };
 		388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
@@ -163,6 +171,10 @@
 		387FBAF82C8702C200A5E139 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		387FBAFB2C8702C200A5E139 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		387FBAFD2C8702C200A5E139 /* Info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-prod.plist"; sourceTree = "<group>"; };
+		3880098D2CABF4C2002A9209 /* SOMTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTag.swift; sourceTree = "<group>"; };
+		388009902CABF855002A9209 /* SOMTagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagModel.swift; sourceTree = "<group>"; };
+		388009932CABFAAA002A9209 /* SOMTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTags.swift; sourceTree = "<group>"; };
+		388009962CAC20EC002A9209 /* SOMTags+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMTags+Rx.swift"; sourceTree = "<group>"; };
 		388371F82C8C8EB1004212EB /* SooumStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SooumStyle.swift; sourceTree = "<group>"; };
 		388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SOOUM.swift"; sourceTree = "<group>"; };
 		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
@@ -402,6 +414,17 @@
 			path = Develop;
 			sourceTree = "<group>";
 		};
+		3880098C2CABF4AD002A9209 /* SOMTags */ = {
+			isa = PBXGroup;
+			children = (
+				388009902CABF855002A9209 /* SOMTagModel.swift */,
+				3880098D2CABF4C2002A9209 /* SOMTag.swift */,
+				388009932CABFAAA002A9209 /* SOMTags.swift */,
+				388009962CAC20EC002A9209 /* SOMTags+Rx.swift */,
+			);
+			path = SOMTags;
+			sourceTree = "<group>";
+		};
 		388371F62C8C8E7F004212EB /* DesignSystem */ = {
 			isa = PBXGroup;
 			children = (
@@ -513,6 +536,7 @@
 		38CE94BD2C904D140004B238 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				3880098C2CABF4AD002A9209 /* SOMTags */,
 				3878F46F2CA3F01100AA46A2 /* SOMCard */,
 				2A048E792C9BDF1000FFD485 /* SOMLocationFilter */,
 				38ED2AB32C985AB400920B53 /* SOMHomeTabBar */,
@@ -733,6 +757,7 @@
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				382C58762CA64F8F00CEF814 /* PopularCardResponse.swift in Sources */,
+				388009922CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
@@ -744,6 +769,7 @@
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
+				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
 				38FDC2C82C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38B6AAD62CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
@@ -753,12 +779,14 @@
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				385053562C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
+				3880098F2CABF4C2002A9209 /* SOMTag.swift in Sources */,
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
 				38121E2E2CA6C53300602499 /* distanceCardResponse.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				38121E352CA6DA4000602499 /* Date.swift in Sources */,
 				2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
+				388009952CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				3878F4752CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				38B6AAE02CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
@@ -782,12 +810,15 @@
 				38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
+				388009912CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				38B6AAE62CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */,
 				38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
+				388009942CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
+				3880098E2CABF4C2002A9209 /* SOMTag.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
@@ -822,6 +853,7 @@
 				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				38B6AAE22CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
+				388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				382C58752CA64F8F00CEF814 /* PopularCardResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

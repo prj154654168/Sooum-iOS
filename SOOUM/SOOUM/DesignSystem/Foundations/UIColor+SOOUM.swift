@@ -31,6 +31,7 @@ extension SOOUMStyle where Base == UIColor {
     static let gray01 = UIColor(hex: "#7D7D7D")
     static let gray02 = UIColor(hex: "#B4B4B4")
     static let gray03 = UIColor(hex: "#C7C7C7")
+    static let gray04 = UIColor(hex: "#DEDEDE")
     static let black = UIColor(hex: "#000000")
     
     // Dim
