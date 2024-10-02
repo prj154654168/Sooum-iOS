@@ -72,6 +72,14 @@
 		387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
 		387FBAFC2C8702C200A5E139 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAFB2C8702C200A5E139 /* Base */; };
+		3880097F2CABF0F0002A9209 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3880097E2CABF0F0002A9209 /* SwiftEntryKit */; };
+		388009812CABF0F7002A9209 /* SwiftEntryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 388009802CABF0F7002A9209 /* SwiftEntryKit */; };
+		388009842CABF11F002A9209 /* SwiftEntryKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009832CABF11F002A9209 /* SwiftEntryKit.swift */; };
+		388009852CABF11F002A9209 /* SwiftEntryKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009832CABF11F002A9209 /* SwiftEntryKit.swift */; };
+		388009872CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009862CABF155002A9209 /* SwiftEntryKit_Show.swift */; };
+		388009882CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009862CABF155002A9209 /* SwiftEntryKit_Show.swift */; };
+		3880098A2CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009892CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift */; };
+		3880098B2CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009892CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift */; };
 		3880098E2CABF4C2002A9209 /* SOMTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3880098D2CABF4C2002A9209 /* SOMTag.swift */; };
 		3880098F2CABF4C2002A9209 /* SOMTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3880098D2CABF4C2002A9209 /* SOMTag.swift */; };
 		388009912CABF855002A9209 /* SOMTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388009902CABF855002A9209 /* SOMTagModel.swift */; };
@@ -173,6 +181,9 @@
 		387FBAF82C8702C200A5E139 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		387FBAFB2C8702C200A5E139 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		387FBAFD2C8702C200A5E139 /* Info-prod.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-prod.plist"; sourceTree = "<group>"; };
+		388009832CABF11F002A9209 /* SwiftEntryKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEntryKit.swift; sourceTree = "<group>"; };
+		388009862CABF155002A9209 /* SwiftEntryKit_Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEntryKit_Show.swift; sourceTree = "<group>"; };
+		388009892CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftEntryKit_ViewController.swift; sourceTree = "<group>"; };
 		3880098D2CABF4C2002A9209 /* SOMTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTag.swift; sourceTree = "<group>"; };
 		388009902CABF855002A9209 /* SOMTagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagModel.swift; sourceTree = "<group>"; };
 		388009932CABFAAA002A9209 /* SOMTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTags.swift; sourceTree = "<group>"; };
@@ -212,6 +223,7 @@
 				38B6AACA2CA3F74300CE6DB6 /* ReactorKit in Frameworks */,
 				38FDC2C32C9E74B700C094C2 /* RxSwift in Frameworks */,
 				384972A92CA54E2F0012FCA1 /* Kingfisher in Frameworks */,
+				388009812CABF0F7002A9209 /* SwiftEntryKit in Frameworks */,
 				385620EB2CA199FB00E0AB5A /* Alamofire in Frameworks */,
 				38CE94CB2C904E990004B238 /* Then in Frameworks */,
 				38FDC2C52C9E74B700C094C2 /* RxKeyboard in Frameworks */,
@@ -227,6 +239,7 @@
 				38B6AAC82CA3F73B00CE6DB6 /* ReactorKit in Frameworks */,
 				38FDC2BD2C9E74AD00C094C2 /* RxSwift in Frameworks */,
 				384972A72CA54E2A0012FCA1 /* Kingfisher in Frameworks */,
+				3880097F2CABF0F0002A9209 /* SwiftEntryKit in Frameworks */,
 				385620E92CA199F400E0AB5A /* Alamofire in Frameworks */,
 				38CE94C92C904E940004B238 /* Then in Frameworks */,
 				38FDC2BF2C9E74AD00C094C2 /* RxKeyboard in Frameworks */,
@@ -265,6 +278,7 @@
 		3836ACB12C8F042C00A3C566 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				388009822CABF0FD002A9209 /* SwiftEntryKit */,
 				385620F42CA19E8600E0AB5A /* Alamofire */,
 				3836ACB22C8F043500A3C566 /* Typography */,
 			);
@@ -415,6 +429,16 @@
 				388DCC382C8707C200DC5329 /* Info-dev.plist */,
 			);
 			path = Develop;
+			sourceTree = "<group>";
+		};
+		388009822CABF0FD002A9209 /* SwiftEntryKit */ = {
+			isa = PBXGroup;
+			children = (
+				388009832CABF11F002A9209 /* SwiftEntryKit.swift */,
+				388009862CABF155002A9209 /* SwiftEntryKit_Show.swift */,
+				388009892CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift */,
+			);
+			path = SwiftEntryKit;
 			sourceTree = "<group>";
 		};
 		3880098C2CABF4AD002A9209 /* SOMTags */ = {
@@ -609,6 +633,7 @@
 				385620EA2CA199FB00E0AB5A /* Alamofire */,
 				38B6AAC92CA3F74300CE6DB6 /* ReactorKit */,
 				384972A82CA54E2F0012FCA1 /* Kingfisher */,
+				388009802CABF0F7002A9209 /* SwiftEntryKit */,
 			);
 			productName = SOOUM;
 			productReference = 3854419A2C870544004E2BB0 /* SOOUM-Dev.app */;
@@ -636,6 +661,7 @@
 				385620E82CA199F400E0AB5A /* Alamofire */,
 				38B6AAC72CA3F73B00CE6DB6 /* ReactorKit */,
 				384972A62CA54E2A0012FCA1 /* Kingfisher */,
+				3880097E2CABF0F0002A9209 /* SwiftEntryKit */,
 			);
 			productName = SOOUM;
 			productReference = 387FBAEC2C8702C100A5E139 /* SOOUM.app */;
@@ -674,6 +700,7 @@
 				385620E72CA199E900E0AB5A /* XCRemoteSwiftPackageReference "Alamofire" */,
 				38B6AAC62CA3F73000CE6DB6 /* XCRemoteSwiftPackageReference "ReactorKit" */,
 				384972A52CA54E1F0012FCA1 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				3880097D2CABF0E0002A9209 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
 			);
 			productRefGroup = 387FBAED2C8702C100A5E139 /* Products */;
 			projectDirPath = "";
@@ -760,6 +787,7 @@
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
 				2A048E852C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				388009882CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */,
 				3878F4782CA3F08300AA46A2 /* UIView.swift in Sources */,
 				388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */,
 				384972A12CA4DEC00012FCA1 /* CardRequest.swift in Sources */,
@@ -772,10 +800,12 @@
 				3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
+				3880098B2CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift in Sources */,
 				38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
+				388009852CABF11F002A9209 /* SwiftEntryKit.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
@@ -822,6 +852,7 @@
 				38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
+				388009872CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */,
 				388009912CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				38B6AAE62CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */,
@@ -843,6 +874,7 @@
 				3849729E2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
+				388009842CABF11F002A9209 /* SwiftEntryKit.swift in Sources */,
 				38B6AAD82CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
 				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38B6AAD52CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
@@ -858,6 +890,7 @@
 				38121E312CA6C77500602499 /* Double.swift in Sources */,
 				384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
+				3880098A2CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift in Sources */,
 				3878F4742CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				38B6AADF2CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
@@ -1177,6 +1210,14 @@
 				minimumVersion = 5.9.1;
 			};
 		};
+		3880097D2CABF0E0002A9209 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/huri000/SwiftEntryKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		38B6AAC62CA3F73000CE6DB6 /* XCRemoteSwiftPackageReference "ReactorKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactorKit/ReactorKit.git";
@@ -1247,6 +1288,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 385620E72CA199E900E0AB5A /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		3880097E2CABF0F0002A9209 /* SwiftEntryKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3880097D2CABF0E0002A9209 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */;
+			productName = SwiftEntryKit;
+		};
+		388009802CABF0F7002A9209 /* SwiftEntryKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3880097D2CABF0E0002A9209 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */;
+			productName = SwiftEntryKit;
 		};
 		38B6AAC72CA3F73B00CE6DB6 /* ReactorKit */ = {
 			isa = XCSwiftPackageProductDependency;
