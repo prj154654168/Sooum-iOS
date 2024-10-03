@@ -66,8 +66,6 @@
 		3878F4752CA3F06C00AA46A2 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4732CA3F06C00AA46A2 /* UIStackView.swift */; };
 		3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4762CA3F08300AA46A2 /* UIView.swift */; };
 		3878F4782CA3F08300AA46A2 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4762CA3F08300AA46A2 /* UIView.swift */; };
-		3878F47A2CA3F09E00AA46A2 /* SOMCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4792CA3F09E00AA46A2 /* SOMCardTableViewCell.swift */; };
-		3878F47B2CA3F09E00AA46A2 /* SOMCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4792CA3F09E00AA46A2 /* SOMCardTableViewCell.swift */; };
 		387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAEF2C8702C100A5E139 /* AppDelegate.swift */; };
 		387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
@@ -126,6 +124,8 @@
 		38B6AAE32CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAE12CA4787200CE6DB6 /* MainTabBarReactor.swift */; };
 		38B6AAE62CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAE52CA47EBA00CE6DB6 /* LatestCardResponse.swift */; };
 		38B6AAE72CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAE52CA47EBA00CE6DB6 /* LatestCardResponse.swift */; };
+		38B8A5802CAE9363000AFE83 /* SOMCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A57F2CAE9363000AFE83 /* SOMCardModel.swift */; };
+		38B8A5812CAE9363000AFE83 /* SOMCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A57F2CAE9363000AFE83 /* SOMCardModel.swift */; };
 		38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
 		38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
 		38CE94C42C904E4A0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C32C904E4A0004B238 /* SnapKit */; };
@@ -176,7 +176,6 @@
 		3878F4702CA3F03400AA46A2 /* SOMCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMCard.swift; sourceTree = "<group>"; };
 		3878F4732CA3F06C00AA46A2 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		3878F4762CA3F08300AA46A2 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
-		3878F4792CA3F09E00AA46A2 /* SOMCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMCardTableViewCell.swift; sourceTree = "<group>"; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEF2C8702C100A5E139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		387FBAF12C8702C100A5E139 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -209,6 +208,7 @@
 		38B6AADE2CA4777200CE6DB6 /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
 		38B6AAE12CA4787200CE6DB6 /* MainTabBarReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarReactor.swift; sourceTree = "<group>"; };
 		38B6AAE52CA47EBA00CE6DB6 /* LatestCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestCardResponse.swift; sourceTree = "<group>"; };
+		38B8A57F2CAE9363000AFE83 /* SOMCardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMCardModel.swift; sourceTree = "<group>"; };
 		38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMNavigationBar.swift; sourceTree = "<group>"; };
 		38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBar.swift; sourceTree = "<group>"; };
 		38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
@@ -356,8 +356,8 @@
 		3878F46F2CA3F01100AA46A2 /* SOMCard */ = {
 			isa = PBXGroup;
 			children = (
+				38B8A57F2CAE9363000AFE83 /* SOMCardModel.swift */,
 				3878F4702CA3F03400AA46A2 /* SOMCard.swift */,
-				3878F4792CA3F09E00AA46A2 /* SOMCardTableViewCell.swift */,
 			);
 			path = SOMCard;
 			sourceTree = "<group>";
@@ -816,6 +816,7 @@
 				3880098B2CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift in Sources */,
 				38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
+				38B8A5812CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				388009852CABF11F002A9209 /* SwiftEntryKit.swift in Sources */,
@@ -828,7 +829,6 @@
 				38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				38FDC2C82C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38B6AAD62CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
-				3878F47B2CA3F09E00AA46A2 /* SOMCardTableViewCell.swift in Sources */,
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
@@ -890,8 +890,8 @@
 				388009842CABF11F002A9209 /* SwiftEntryKit.swift in Sources */,
 				38B6AAD82CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
 				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
+				38B8A5802CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
 				38B6AAD52CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
-				3878F47A2CA3F09E00AA46A2 /* SOMCardTableViewCell.swift in Sources */,
 				38121E2D2CA6C53300602499 /* distanceCardResponse.swift in Sources */,
 				38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,

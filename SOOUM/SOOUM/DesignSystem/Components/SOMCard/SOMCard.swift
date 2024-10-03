@@ -13,70 +13,26 @@ import Then
 
 class SOMCard: UIView {
     
-    /// 정보를 표시할 card
-    var card: Card = .init()
+    var model: SOMCardModel?
     
-    /// 스토리 펑타임
-    var pungTime: Date?
+    var isDetail: Bool = false {
+        didSet {
+            self.updateDetailViewWithHidden(self.isDetail)
+        }
+    }
+    
+    var isComment: Bool = false {
+        didSet {
+            self.updateCommentViewWithHidden(self.isComment)
+        }
+    }
     
     /// 펑 이벤트 처리 위해 추가
     var disposeBag = DisposeBag()
     
-    /// 현재 카드가 펑된 카드인지 확인
-    var isPunged: Bool {
-        guard let pungTime = self.pungTime else {
-            return false
-        }
-        let remainingTime = pungTime.timeIntervalSince(Date())
-        return remainingTime <= 0
-    }
-    
-    func setData(card: Card) {
-        // 카드 배경 이미지
-        rootContainerImageView.setImage(strUrl: card.backgroundImgURL.url)
-        
-        // 카드 본문
-        cardTextContentLabel.text = card.content
-        
-        // 하단 정보
-        likeImageView.image = card.likeCnt != 0 ?
-            .init(.icon(.filled(.heart))) :
-            .init(.icon(.outlined(.heart)))
-        likeImageView.tintColor = card.likeCnt != 0 ? .som.primary : .som.white
-        commentImageView.image = card.commentCnt != 0 ?
-            .init(.icon(.filled(.comment))) :
-            .init(.icon(.outlined(.comment)))
-        commentImageView.tintColor = card.commentCnt != 0 ? .som.primary : .som.white
-        
-        /// 임시 시간 어떻게 표시하는 지 물어봐야 함
-        timeLabel.text = card.createdAt.infoReadableTimeTakenFromThis(to: Date())
-        /// 임시 distance가 없을 때 어떻게 표시하는 지 물어봐야 함
-        distanceLabel.text = (card.distance ?? 0).infoReadableDistanceRangeFromThis()
-        likeLabel.text = "\(card.likeCnt)"
-        likeLabel.textColor = card.isLiked ? .som.primary : .som.white
-        commentLabel.text = "\(card.commentCnt)"
-        commentLabel.textColor = card.commentCnt != 0 ? .som.primary : .som.white
-        
-        // 스토리 정보 설정
-        pungContainerView.isHidden = card.isStory
-        if card.isStory {
-            self.pungTime = card.storyExpirationTime
-            self.cardPungTimeLabel.text = getTimeOutStr(
-                pungTime: pungTime ?? Date()
-            )
-            self.updatePungUI()
-            self.subscribePungTime()
-        }
-    }
-    
     let rootContainerImageView = UIImageView().then {
         $0.layer.cornerRadius = 40
         $0.layer.masksToBounds = true
-    }
-    
-    /// 카드 펑 라벨, 배경, 컨테이너 뷰
-    let pungContainerView = UIView().then {
-        $0.backgroundColor = .clear
     }
     
     /// 카드 펑 라벨 배경
@@ -85,7 +41,6 @@ class SOMCard: UIView {
         $0.layer.cornerRadius = 12
         $0.layer.masksToBounds = true
     }
-    
     /// 카드 펑 남은시간 표시 라벨
     let cardPungTimeLabel = UILabel().then {
         $0.typography = .init(
@@ -100,12 +55,45 @@ class SOMCard: UIView {
         $0.textAlignment = .center
     }
     
-    /// cardTextContentLabel를 감싸는 불투명 컨테이너 뷰
-    let cardTextContainerView = UIView().then {
-        $0.backgroundColor = .som.dimForCard
-        $0.layer.cornerRadius = 24
+    /// 상세보기, 전글 배경
+    let detailPrevCardBackgroundImageView = UIImageView().then {
+        $0.layer.borderColor = UIColor.som.white.cgColor
+        $0.layer.borderWidth = 2
+        $0.layer.cornerRadius = 14
+        $0.layer.masksToBounds = true
+    }
+    /// 상세보기, 전글 라벨
+    let detailPrevCardTextLabel = UILabel().then {
+        $0.text = "전글"
+        $0.textColor = .som.white
+        $0.typography = .init(
+            fontContainer: Pretendard(size: 14, weight: .medium),
+            lineHeight: 15.56,
+            letterSpacing: -0.04
+        )
     }
     
+    /// 상세보기, 상단 오른쪽 설정 버튼
+    let detailRightTopSettingButton = UIButton().then {
+        var config = UIButton.Configuration.plain()
+        config.image = .init(.icon(.outlined(.more)))
+        config.image?.withTintColor(.som.gray04)
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray04 }
+        $0.configuration = config
+    }
+    
+    /// cardTextContentLabel를 감싸는 불투명 컨테이너 뷰
+    let cardTextBackgroundView = UIView().then {
+        $0.backgroundColor = .clear
+        $0.layer.cornerRadius = 24
+        $0.clipsToBounds = true
+    }
+    let cardTextBackgroundBlurView = UIVisualEffectView().then {
+        let blurEffect = UIBlurEffect(style: .dark)
+        $0.effect = blurEffect
+        $0.backgroundColor = .som.dimForCard
+        $0.alpha = 0.8
+    }
     /// 본문 표시 라벨
     let cardTextContentLabel = UILabel().then {
         $0.typography = .init(
@@ -259,23 +247,36 @@ class SOMCard: UIView {
     private func addSubviews() {
         self.addSubview(rootContainerImageView)
         addCardPungTimeLabel()
+        addDetailPrevCardLabel()
+        addDetailSettingButton()
         addCardTextContainerView()
         addCardGradientView()
         addCardContentStackView()
     }
     
     private func addCardPungTimeLabel() {
-        rootContainerImageView.addSubview(pungContainerView)
-        pungContainerView.addSubview(cardPungTimeBackgroundView)
+        rootContainerImageView.addSubview(cardPungTimeBackgroundView)
         cardPungTimeBackgroundView.addSubview(cardPungTimeLabel)
     }
     
+    private func addDetailPrevCardLabel() {
+        rootContainerImageView.addSubview(detailPrevCardBackgroundImageView)
+        detailPrevCardBackgroundImageView.addSubview(detailPrevCardTextLabel)
+    }
+    
+    private func addDetailSettingButton() {
+        rootContainerImageView.addSubview(detailRightTopSettingButton)
+    }
+    
     private func addCardTextContainerView() {
-        cardTextContainerView.addSubview(cardTextContentLabel)
-        rootContainerImageView.addSubview(cardTextContainerView)
+        rootContainerImageView.addSubview(cardTextBackgroundView)
+        cardTextBackgroundView.addSubview(cardTextBackgroundBlurView)
+        cardTextBackgroundView.addSubview(cardTextContentLabel)
     }
     
     private func addCardContentStackView() {
+        rootContainerImageView.addSubview(cardContentStackView)
+        
         cardContentStackView.addArrangedSubviews(
             UIView(),
             timeInfoStackView,
@@ -288,8 +289,6 @@ class SOMCard: UIView {
         addDistanceInfoStackView()
         addLikeInfoStackView()
         addCommentInfoStackView()
-        
-        rootContainerImageView.addSubview(cardContentStackView)
     }
     
     private func addCardGradientView() {
@@ -315,41 +314,51 @@ class SOMCard: UIView {
     
     // MARK: - initConstraint
     private func initConstraint() {
+        /// 홈피드 이미지 배경
         rootContainerImageView.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(20)
-            $0.top.equalToSuperview().inset(5)
-            $0.trailing.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().inset(5)
-        }
-        
-        pungContainerView.snp.makeConstraints {
-            $0.top.leading.trailing.equalToSuperview()
-            $0.height.equalTo(rootContainerImageView.snp.height).multipliedBy(0.25)
-        }
-        
-        cardPungTimeBackgroundView.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.centerY.equalToSuperview()
-            $0.height.equalTo(25)
-            $0.width.equalTo(90)
-        }
-        
-        cardPungTimeLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(11)
-            $0.top.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(11)
+            $0.top.equalToSuperview().offset(10)
             $0.bottom.equalToSuperview()
-            $0.centerX.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(20)
         }
         
-        cardTextContainerView.snp.makeConstraints {
+        /// 펑 라벨
+        cardPungTimeBackgroundView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(26)
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(25)
+        }
+        cardPungTimeLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.centerX.equalToSuperview()
-            $0.width.equalTo(rootContainerImageView.snp.width).multipliedBy(0.75)
-            $0.height.greaterThanOrEqualTo(48)
-            $0.height.lessThanOrEqualTo(rootContainerImageView.snp.height).multipliedBy(0.5)
+            $0.leading.trailing.equalToSuperview().inset(10)
         }
         
+        /// 상세보기, 전글 라벨
+        detailPrevCardBackgroundImageView.snp.makeConstraints {
+            $0.top.leading.equalToSuperview().offset(16)
+            $0.size.equalTo(44)
+        }
+        detailPrevCardTextLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(10)
+        }
+        
+        /// 상세보기, 상단 오른쪽 설정 버튼
+        detailRightTopSettingButton.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(26)
+            $0.trailing.equalToSuperview().offset(-26)
+            $0.size.equalTo(24)
+        }
+        
+        /// 본문 라벨
+        cardTextBackgroundView.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(40)
+            let width = UIScreen.main.bounds.width - 20 * 2 - 40 * 2
+            $0.width.equalTo(width)
+        }
+        cardTextBackgroundBlurView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
         cardTextContentLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(14)
             $0.leading.equalToSuperview().offset(16)
@@ -357,6 +366,7 @@ class SOMCard: UIView {
             $0.bottom.equalToSuperview().offset(-14)
         }
         
+        /// 하단 그라디언트 뷰
         cardGradientView.snp.makeConstraints {
             $0.leading.equalToSuperview()
             $0.trailing.equalToSuperview()
@@ -364,25 +374,22 @@ class SOMCard: UIView {
             $0.height.equalTo(60)
         }
         
+        /// 하단 컨텐트 뷰
         cardContentStackView.snp.makeConstraints {
             $0.bottom.equalToSuperview().offset(-24)
             $0.leading.equalToSuperview()
             $0.trailing.equalToSuperview().offset(-26)
             $0.height.height.equalTo(12)
         }
-        
         timeImageView.snp.makeConstraints {
             $0.height.width.equalTo(12)
         }
-        
         distanceImageView.snp.makeConstraints {
             $0.height.width.equalTo(12)
         }
-        
         likeImageView.snp.makeConstraints {
             $0.height.width.equalTo(12)
         }
-        
         commentImageView.snp.makeConstraints {
             $0.height.width.equalTo(12)
         }
@@ -397,6 +404,60 @@ class SOMCard: UIView {
         cardGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
         cardGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
         cardGradientView.layer.insertSublayer(cardGradientLayer, at: 0)
+    }
+    
+    private func updateDetailViewWithHidden(_ isDetail: Bool) {
+        detailPrevCardBackgroundImageView.isHidden = !isDetail
+        detailRightTopSettingButton.isHidden = !isDetail
+        likeInfoStackView.isHidden = !isDetail
+        commentInfoStackView.isHidden = !isDetail
+    }
+    
+    private func updateCommentViewWithHidden(_ isComment: Bool) {
+        cardPungTimeBackgroundView.isHidden = isComment
+    }
+    
+    /// 홈피드 모델 초기화
+    func setModel(model: SOMCardModel) {
+        
+        self.model = model
+        self.isDetail = model.isDetail
+        self.isComment = model.isComment
+        // 카드 배경 이미지
+        rootContainerImageView.setImage(strUrl: model.data.backgroundImgURL.url)
+        
+        // 카드 본문
+        cardTextContentLabel.text = model.data.content
+        
+        // 하단 정보
+        likeImageView.image = model.data.likeCnt != 0 ?
+            .init(.icon(.filled(.heart))) :
+            .init(.icon(.outlined(.heart)))
+        likeImageView.tintColor = model.data.likeCnt != 0 ? .som.primary : .som.white
+        commentImageView.image = model.data.commentCnt != 0 ?
+            .init(.icon(.filled(.comment))) :
+            .init(.icon(.outlined(.comment)))
+        commentImageView.tintColor = model.data.commentCnt != 0 ? .som.primary : .som.white
+        
+        /// 임시 시간 어떻게 표시하는 지 물어봐야 함
+        timeLabel.text = model.data.createdAt.infoReadableTimeTakenFromThis(to: Date())
+        /// 임시 distance가 없을 때 어떻게 표시하는 지 물어봐야 함
+        distanceLabel.text = (model.data.distance ?? 0).infoReadableDistanceRangeFromThis()
+        likeLabel.text = "\(model.data.likeCnt)"
+        likeLabel.textColor = model.data.isLiked ? .som.primary : .som.white
+        commentLabel.text = "\(model.data.commentCnt)"
+        commentLabel.textColor = model.data.commentCnt != 0 ? .som.primary : .som.white
+        
+        // 스토리 정보 설정
+        cardPungTimeBackgroundView.isHidden = !model.data.isStory
+        if model.data.isStory {
+            self.model?.pungTime = model.data.storyExpirationTime
+            self.cardPungTimeLabel.text = getTimeOutStr(
+                pungTime: self.model?.pungTime ?? Date()
+            )
+            self.updatePungUI()
+            self.subscribePungTime()
+        }
     }
     
     /// 카드 모드에 따라 스택뷰 순서 변경
@@ -437,10 +498,10 @@ class SOMCard: UIView {
     func subscribePungTime() {
         Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                guard let self = self, let pungTime = self.pungTime else {
+                guard let self = self, let pungTime = self.model?.pungTime else {
                     return
                 }
-                if isPunged {
+                if self.model?.isPunged == true {
                     updatePungUI()
                 } else {
                     self.cardPungTimeLabel.text = self.getTimeOutStr(pungTime: pungTime)
@@ -466,7 +527,7 @@ class SOMCard: UIView {
     
     /// 펑 ui 즉각적으로 업데이트
     func updatePungUI() {
-        if isPunged {
+        if self.model?.isPunged == true {
             // TODO: - 펑 디자인 나오면 수정 필요
             self.cardPungTimeLabel.text = "00:00:00"
             self.cardTextContentLabel.text = "펑된 카드입니다."
