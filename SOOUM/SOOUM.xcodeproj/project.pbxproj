@@ -126,6 +126,8 @@
 		38B6AAE72CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAE52CA47EBA00CE6DB6 /* LatestCardResponse.swift */; };
 		38B8A5802CAE9363000AFE83 /* SOMCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A57F2CAE9363000AFE83 /* SOMCardModel.swift */; };
 		38B8A5812CAE9363000AFE83 /* SOMCardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A57F2CAE9363000AFE83 /* SOMCardModel.swift */; };
+		38B8A5842CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A5832CAE9CC4000AFE83 /* MainHomeViewCell.swift */; };
+		38B8A5852CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A5832CAE9CC4000AFE83 /* MainHomeViewCell.swift */; };
 		38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
 		38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
 		38CE94C42C904E4A0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C32C904E4A0004B238 /* SnapKit */; };
@@ -529,6 +531,7 @@
 		38B6AACF2CA411DE00CE6DB6 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				38B8A5822CAE9CB7000AFE83 /* Cells */,
 				38B6AAD32CA41B2C00CE6DB6 /* Views */,
 				38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */,
 				3849729D2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift */,
@@ -578,6 +581,14 @@
 				384972A02CA4DEC00012FCA1 /* CardRequest.swift */,
 			);
 			path = Develop;
+			sourceTree = "<group>";
+		};
+		38B8A5822CAE9CB7000AFE83 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				38B8A5832CAE9CC4000AFE83 /* MainHomeViewCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		38CE94BD2C904D140004B238 /* Components */ = {
@@ -850,6 +861,7 @@
 				384972A42CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
 				3878F4722CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				38B6AAE32CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
+				38B8A5852CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -910,6 +922,7 @@
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
+				38B8A5842CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				38B6AAE22CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
