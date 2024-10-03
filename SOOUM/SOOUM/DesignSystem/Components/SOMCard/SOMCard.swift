@@ -7,10 +7,67 @@
 
 import UIKit
 
+import RxSwift
 import SnapKit
 import Then
 
 class SOMCard: UIView {
+    
+    /// 정보를 표시할 card
+    var card: Card = .init()
+    
+    /// 스토리 펑타임
+    var pungTime: Date?
+    
+    /// 펑 이벤트 처리 위해 추가
+    var disposeBag = DisposeBag()
+    
+    /// 현재 카드가 펑된 카드인지 확인
+    var isPunged: Bool {
+        guard let pungTime = self.pungTime else {
+            return false
+        }
+        let remainingTime = pungTime.timeIntervalSince(Date())
+        return remainingTime <= 0
+    }
+    
+    func setData(card: Card) {
+        // 카드 배경 이미지
+        rootContainerImageView.setImage(strUrl: card.backgroundImgURL.url)
+        
+        // 카드 본문
+        cardTextContentLabel.text = card.content
+        
+        // 하단 정보
+        likeImageView.image = card.likeCnt != 0 ?
+            .init(.icon(.filled(.heart))) :
+            .init(.icon(.outlined(.heart)))
+        likeImageView.tintColor = card.likeCnt != 0 ? .som.primary : .som.white
+        commentImageView.image = card.commentCnt != 0 ?
+            .init(.icon(.filled(.comment))) :
+            .init(.icon(.outlined(.comment)))
+        commentImageView.tintColor = card.commentCnt != 0 ? .som.primary : .som.white
+        
+        /// 임시 시간 어떻게 표시하는 지 물어봐야 함
+        timeLabel.text = card.createdAt.infoReadableTimeTakenFromThis(to: Date())
+        /// 임시 distance가 없을 때 어떻게 표시하는 지 물어봐야 함
+        distanceLabel.text = (card.distance ?? 0).infoReadableDistanceRangeFromThis()
+        likeLabel.text = "\(card.likeCnt)"
+        likeLabel.textColor = card.isLiked ? .som.primary : .som.white
+        commentLabel.text = "\(card.commentCnt)"
+        commentLabel.textColor = card.commentCnt != 0 ? .som.primary : .som.white
+        
+        // 스토리 정보 설정
+        pungContainerView.isHidden = card.isStory
+        if card.isStory {
+            self.pungTime = card.storyExpirationTime
+            self.cardPungTimeLabel.text = getTimeOutStr(
+                pungTime: pungTime ?? Date()
+            )
+            self.updatePungUI()
+            self.subscribePungTime()
+        }
+    }
     
     let rootContainerImageView = UIImageView().then {
         $0.layer.cornerRadius = 40
@@ -187,6 +244,11 @@ class SOMCard: UIView {
         cardGradientLayer.frame = cardGradientView.bounds
     }
     
+    /// 이 컴포넌트를 사용하는 재사용 셀에서 호출
+    func prepareForReuse() {
+        disposeBag = DisposeBag()
+    }
+    
     // MARK: - initUI
     private func initUI() {
         addSubviews()
@@ -337,6 +399,7 @@ class SOMCard: UIView {
         cardGradientView.layer.insertSublayer(cardGradientLayer, at: 0)
     }
     
+    /// 카드 모드에 따라 스택뷰 순서 변경
     func changeOrderInCardContentStack(_ selectedIndex: Int) {
         self.cardContentStackView.subviews.forEach { $0.removeFromSuperview() }
         
@@ -365,6 +428,48 @@ class SOMCard: UIView {
                 likeInfoStackView,
                 commentInfoStackView
             )
+        }
+    }
+    
+    // MARK: - 카드 펑 로직
+    
+    /// 펑 이벤트 구독
+    func subscribePungTime() {
+        Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self, let pungTime = self.pungTime else {
+                    return
+                }
+                if isPunged {
+                    updatePungUI()
+                } else {
+                    self.cardPungTimeLabel.text = self.getTimeOutStr(pungTime: pungTime)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
+    /// 매 초마다 펑 여부 확인 이벤트 구독
+    func getTimeOutStr(pungTime: Date) -> String {
+        let remainingTime = Int(pungTime.timeIntervalSince(Date()))
+
+        if remainingTime <= 0 {
+            return "00:00:00"
+        }
+        
+        let hours = remainingTime / 3600
+        let minutes = (remainingTime % 3600) / 60
+        let seconds = remainingTime % 60
+        
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+    
+    /// 펑 ui 즉각적으로 업데이트
+    func updatePungUI() {
+        if isPunged {
+            // TODO: - 펑 디자인 나오면 수정 필요
+            self.cardPungTimeLabel.text = "00:00:00"
+            self.cardTextContentLabel.text = "펑된 카드입니다."
         }
     }
 }
