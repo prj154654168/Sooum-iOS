@@ -30,7 +30,8 @@ enum RSAKeyRequest: BaseRequest {
     }
 
     func asURLRequest() throws -> URLRequest {
-        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        if let url = URL(string: "http://49.172.40.78:8080")?.appendingPathComponent(self.path) {
+            print("\(type(of: self)) - \(#function) url:", url)
             var request = URLRequest(url: url)
             request.method = self.method
 

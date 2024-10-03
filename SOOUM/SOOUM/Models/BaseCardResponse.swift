@@ -111,14 +111,6 @@ struct CardURL: Codable {
     let next: Next
 }
 
-struct Next: Codable {
-    let url: String
-    
-    enum CodingKeys: String, CodingKey {
-        case url = "href"
-    }
-}
-
 struct CardDetail: Codable {
     let detail: Next
 }

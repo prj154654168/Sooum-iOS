@@ -64,11 +64,9 @@ class LaunchScreenViewReactor: Reactor {
     
     let initialState = State(isLoading: false, signinSuccess: false, signupSuccess: false)
     
-    private let networkManager: NetworkManager
+    private let networkManager = NetworkManager.shared
     
-    init(networkManager: NetworkManager) {
-        self.networkManager = networkManager
-    }
+    init() { }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
@@ -98,34 +96,35 @@ class LaunchScreenViewReactor: Reactor {
         }
         return newState
     }
-
 }
 
 // MARK: - 통신 로직
 extension LaunchScreenViewReactor {
     
     private func processLoginFlow() -> Observable<Mutation> {
+        print("\(type(of: self)) - \(#function)")
+
         return fetchRSAKey()
             .flatMap { rsaKeyResponse -> Observable<String> in
                 // 공개키로 기기 id 암호화
-                guard let encryptedDeviceID = self.encryptIMEI(with: rsaKeyResponse.key.publicKey, deviceID: self.deviceID) else {
+                guard let encryptedDeviceID = self.encryptDeviceID(with: rsaKeyResponse.key!.publicKey, deviceID: self.deviceID) else {
                     return Observable.error(NSError(domain: "EncryptionError", code: -1, userInfo: nil))
                 }
                 return Observable.just(encryptedDeviceID)
             }
-            .flatMap { encryptedIMEI -> Observable<LoginResponse> in
-                // 2. 암호화된 IMEI로 로그인 요청
-                let loginRequest = LoginRequest.login(encryptedIMEI: encryptedIMEI)
-                return self.networkManager.request(LoginResponse.self, request: loginRequest)
+            .flatMap { encryptedDeviceID -> Observable<SigninResponse> in
+                // 암호화된 기기 id로 로그인 요청
+                let loginRequest = SigninRequest.login(encryptedDeviceId: encryptedDeviceID)
+                return self.networkManager.request(SigninResponse.self, request: loginRequest)
             }
             .flatMap { loginResponse -> Observable<Mutation> in
                 if loginResponse.isRegistered {
-                    // 3. 기존 사용자 -> 로그인 성공 처리
+                    // 기존 사용자 -> 로그인 성공 처리
                     self.accessToken = loginResponse.token?.accessToken
                     self.refreshToken = loginResponse.token?.refreshToken
                     return Observable.just(Mutation.setLoginSuccess)
                 } else {
-                    // 4. 신규 사용자 -> 회원가입 처리
+                    // 규 사용자 -> 회원가입 처리
                     return self.processSignupFlow()
                 }
             }
@@ -133,17 +132,20 @@ extension LaunchScreenViewReactor {
                 // 에러 처리
                 return Observable.just(Mutation.setError(error.localizedDescription))
             }
-
     }
     
     /// RSA 키 fetch
     func fetchRSAKey() -> Observable<RSAKeyResponse> {
+        print("\(type(of: self)) - \(#function)")
+
         let request = RSAKeyRequest.getPublicKey
         return networkManager.request(RSAKeyResponse.self, request: request)
     }
     
     /// 기기 id 공개키로 암호화
     func encryptDeviceID(with publicKey: String, deviceID: String) -> String? {
+        print("\(type(of: self)) - \(#function)")
+
         // PublicKey를 Data로 변환
         guard let publicKeyData = Data(base64Encoded: publicKey) else {
             print("Invalid Public Key")
@@ -175,6 +177,30 @@ extension LaunchScreenViewReactor {
         return (encryptedData as Data).base64EncodedString()
     }
     
+    private func processSignupFlow() -> Observable<Mutation> {
+        print("\(type(of: self)) - \(#function)")
+
+        let request = SignupRequest.signup(
+            encryptedDeviceId: self.deviceID,
+            firebaseToken: "example_firebase_token",  // 실제로 사용할 Firebase 토큰
+            isAllowNotify: true
+//            isAllowTermOne: true,
+//            isAllowTermTwo: true,
+//            isAllowTermThree: true
+        )
+        return self.networkManager.request(SignupResponse.self, request: request)
+            .flatMap { signupResponse -> Observable<Mutation> in
+                // 토큰 저장
+                self.accessToken = signupResponse.token.accessToken
+                self.refreshToken = signupResponse.token.refreshToken
+                // 회원가입 성공 처리
+                return Observable.just(Mutation.setSignupSuccess)
+            }
+            .catch { error in
+                // 에러 처리
+                return Observable.just(Mutation.setError(error.localizedDescription))
+            }
+    }
 }
     
 extension LaunchScreenViewReactor {
@@ -182,5 +208,4 @@ extension LaunchScreenViewReactor {
     func reactorForMainTabBar() -> MainTabBarReactor {
         MainTabBarReactor()
     }
-    
 }

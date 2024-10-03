@@ -1,5 +1,5 @@
 //
-//  LoginRequest.swift
+//  SigninRequest.swift
 //  SOOUM-Dev
 //
 //  Created by JDeoks on 10/1/24.
@@ -9,7 +9,7 @@ import Foundation
 
 import Alamofire
 
-enum LoginRequest: BaseRequest {
+enum SigninRequest: BaseRequest {
     case login(encryptedDeviceId: String)
 
     var path: String {
@@ -32,7 +32,7 @@ enum LoginRequest: BaseRequest {
     }
 
     func asURLRequest() throws -> URLRequest {
-        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        if let url = URL(string: "http://49.172.40.78:8080")?.appendingPathComponent(self.path) {
             var request = URLRequest(url: url)
             request.method = self.method
             
