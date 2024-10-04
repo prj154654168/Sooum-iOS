@@ -48,7 +48,7 @@ class MoreBottomSheetViewController: BaseViewController {
         self.view.layer.cornerRadius = 20
         self.view.snp.makeConstraints {
             $0.width.equalTo(UIScreen.main.bounds.width)
-            $0.height.greaterThanOrEqualTo(178)
+            $0.height.equalTo(178 - 21)
         }
         
         let handle = UIView().then {
@@ -71,7 +71,6 @@ class MoreBottomSheetViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(66)
         }
-        
         blockBackgroundView.addSubview(self.blockLabel)
         self.blockLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
@@ -85,7 +84,7 @@ class MoreBottomSheetViewController: BaseViewController {
         self.view.addSubview(reportBackgroundView)
         reportBackgroundView.snp.makeConstraints {
             $0.top.equalTo(blockBackgroundView.snp.bottom)
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            $0.bottom.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(66)
         }
