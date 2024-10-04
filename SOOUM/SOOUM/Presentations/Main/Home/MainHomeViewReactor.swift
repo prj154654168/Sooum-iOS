@@ -199,3 +199,11 @@ extension MainHomeViewReactor {
         return displayedCards
     }
 }
+
+/// Hand oveer reactor
+extension MainHomeViewReactor {
+    
+    func reactorForDetail(_ selected: Card) -> DetailViewReactor {
+        DetailViewReactor(prevCard: selected)
+    }
+}

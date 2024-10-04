@@ -42,11 +42,6 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
-        let width = UIScreen.main.bounds.width - 20 * 2
-        $0.rowHeight = width
-        $0.sectionHeaderHeight = 0
-        $0.sectionFooterHeight = 0
-        
         $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
         
         $0.refreshControl = UIRefreshControl().then {
@@ -194,6 +189,16 @@ extension MainHomeViewController: UITableViewDataSource {
 
  extension MainHomeViewController: UITableViewDelegate {
      
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+         guard let reactor = self.reactor else { return }
+         
+         let selectedCard = self.cards[indexPath.row]
+         
+         let viewController = DetailViewController()
+         viewController.reactor = reactor.reactorForDetail(selectedCard)
+         self.navigationPush(viewController, animated: true)
+     }
+     
      func tableView(
         _ tableView: UITableView,
         willDisplay cell: UITableViewCell,
@@ -214,6 +219,12 @@ extension MainHomeViewController: UITableViewDataSource {
                  self.reactor?.action.onNext(.moreFind)
              }
          }
+     }
+     
+     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+         let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
+         let height: CGFloat = width + 10 /// 가로 + top inset
+         return height
      }
     
      func scrollViewDidScroll(_ scrollView: UIScrollView) {

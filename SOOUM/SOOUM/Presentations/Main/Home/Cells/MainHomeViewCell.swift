@@ -31,7 +31,10 @@ class MainHomeViewCell: UITableViewCell {
         
         self.contentView.addSubview(self.cardView)
         self.cardView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.equalToSuperview().offset(10)
+            $0.bottom.equalToSuperview()
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
         }
     }
     
