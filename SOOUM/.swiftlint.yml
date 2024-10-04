@@ -43,7 +43,7 @@ disabled_rules:
   # - legacy_hashing
   # - legacy_nsgeometry_functions ⭕️
   # - legacy_random
-  # - line_length
+  - line_length
   # - mark ⭕️
   # - multiple_closures_with_trailing_closure
   - nesting
@@ -154,10 +154,11 @@ analyzer_rules: # rules run by `swiftlint analyze`
 
 # 👉🏻 lint검사를 하지 않을 Group을 나열합니다.
 excluded:
-  - TARAS/Resources
+  - SOOUM/Resources
+  - SOOUM/Models
 
 # 👉🏻 Options
-line_length: 100
+# line_length: 100
 
 identifier_name:
   min_length: # only min_length

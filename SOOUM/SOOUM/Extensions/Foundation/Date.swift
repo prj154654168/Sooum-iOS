@@ -20,8 +20,6 @@ extension Date {
         let days: Int = time / (24 * 60 * 60)
         let hours: Int = .init(time % (24 * 60 * 60)) / (60 * 60)
         let minutes: Int = .init(time % (60 * 60)) / 60
-        /// 추후 초가 사용되면 주석 풀기
-        // let seconds: Int = .init(time % 60)
         
         if days > 364 {
             return "\(days)년전".trimmingCharacters(in: .whitespaces)
