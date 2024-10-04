@@ -316,9 +316,7 @@ class SOMCard: UIView {
     private func initConstraint() {
         /// 홈피드 이미지 배경
         rootContainerImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.bottom.equalToSuperview()
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.edges.equalToSuperview()
         }
         
         /// 펑 라벨
@@ -352,9 +350,8 @@ class SOMCard: UIView {
         /// 본문 라벨
         cardTextBackgroundView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.trailing.equalToSuperview().inset(40)
-            let width = UIScreen.main.bounds.width - 20 * 2 - 40 * 2
-            $0.width.equalTo(width)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
         }
         cardTextBackgroundBlurView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -399,7 +396,7 @@ class SOMCard: UIView {
     private func addGradient() {
         cardGradientLayer.colors = [
             UIColor.clear.cgColor,
-            UIColor.black.withAlphaComponent(0.24).cgColor
+            UIColor.black.withAlphaComponent(0.6).cgColor
         ]
         cardGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
         cardGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
@@ -409,8 +406,8 @@ class SOMCard: UIView {
     private func updateDetailViewWithHidden(_ isDetail: Bool) {
         detailPrevCardBackgroundImageView.isHidden = !isDetail
         detailRightTopSettingButton.isHidden = !isDetail
-        likeInfoStackView.isHidden = !isDetail
-        commentInfoStackView.isHidden = !isDetail
+        likeInfoStackView.isHidden = isDetail
+        commentInfoStackView.isHidden = isDetail
     }
     
     private func updateCommentViewWithHidden(_ isComment: Bool) {
