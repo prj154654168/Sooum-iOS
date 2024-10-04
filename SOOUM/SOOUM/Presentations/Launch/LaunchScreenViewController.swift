@@ -51,10 +51,12 @@ class LaunchScreenViewController: BaseViewController, View {
         self.rx.viewDidLayoutSubviews
             .subscribe(with: self) { object, _ in
                 object.animate(to: 45) { _ in
-                    
                     let viewController = MainTabBarController()
                     viewController.reactor = reactor.reactorForMainTabBar()
-                    object.view.window?.rootViewController = viewController
+                    let navigationController = UINavigationController(
+                        rootViewController: viewController
+                    )
+                    object.view.window?.rootViewController = navigationController
                 }
             }
             .disposed(by: self.disposeBag)
