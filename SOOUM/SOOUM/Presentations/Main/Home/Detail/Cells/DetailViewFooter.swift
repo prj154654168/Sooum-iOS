@@ -158,7 +158,19 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
         
         var offset = targetContentOffset.pointee
         let index = (offset.x + scrollView.contentInset.left) / cellWidthIncludingSpacing
-        let roundedIndex = round(index)
+        var roundedIndex = round(index)
+        
+        if velocity.x > 0 {
+            roundedIndex = floor(roundedIndex) + 1
+        } else if velocity.x < 0 {
+            roundedIndex = ceil(roundedIndex) - 1
+        } else {
+            roundedIndex = round(roundedIndex)
+        }
+        roundedIndex = max(
+            0,
+            min(roundedIndex, CGFloat(self.collectionView.numberOfItems(inSection: 0) - 1))
+        )
         
         offset = CGPoint(
             x: roundedIndex * cellWidthIncludingSpacing - scrollView.contentInset.left,
