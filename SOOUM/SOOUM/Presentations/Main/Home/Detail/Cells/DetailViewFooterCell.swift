@@ -24,6 +24,11 @@ class DetailViewFooterCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.cardView.prepareForReuse()
+    }
+    
     private func setupConstraints() {
         
         self.contentView.addSubview(self.cardView)

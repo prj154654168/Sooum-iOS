@@ -13,7 +13,23 @@ import Then
 
 class DetailViewFooter: UICollectionReusableView {
     
+    enum Text {
+        static let noContentText: String = "댓글이 아직 없어요"
+    }
+    
     let likeAndCommentView = LikeAndCommentView()
+    
+    let noContentBackgroundView = UIView()
+    let noContentLabel = UILabel().then {
+        $0.text = Text.noContentText
+        $0.textColor = .som.gray02
+        $0.textAlignment = .center
+        $0.typography = .init(
+            fontContainer: Pretendard(size: 16, weight: .semibold),
+            lineHeight: 26,
+            letterSpacing: -0.04
+        )
+    }
     
     private let flowLayout = UICollectionViewFlowLayout().then {
         $0.minimumLineSpacing = 8
@@ -27,6 +43,8 @@ class DetailViewFooter: UICollectionReusableView {
         $0.alwaysBounceHorizontal = true
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
+        
+        $0.decelerationRate = .fast
         
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
@@ -71,6 +89,16 @@ class DetailViewFooter: UICollectionReusableView {
             $0.top.equalTo(self.likeAndCommentView.snp.bottom)
             $0.bottom.leading.trailing.equalToSuperview()
         }
+        
+        self.addSubviews(self.noContentBackgroundView)
+        self.noContentBackgroundView.snp.makeConstraints {
+            $0.top.equalTo(self.likeAndCommentView.snp.bottom)
+            $0.bottom.leading.trailing.equalToSuperview()
+        }
+        self.noContentBackgroundView.addSubview(self.noContentLabel)
+        self.noContentLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
     
     func setData(_ datas: [Card], like: Int, comment: Int) {
@@ -88,7 +116,8 @@ extension DetailViewFooter: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        self.commentCards.count
+        self.noContentBackgroundView.isHidden = !self.commentCards.isEmpty
+        return self.commentCards.count
     }
     
     func collectionView(
@@ -99,12 +128,7 @@ extension DetailViewFooter: UICollectionViewDataSource {
             .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         as! DetailViewFooterCell
         
-        let model: SOMCardModel = .init(
-            data: self.commentCards[indexPath.row],
-            isDetail: false,
-            isComment: true
-        )
-        
+        let model: SOMCardModel = .init(data: self.commentCards[indexPath.row])
         cell.setModel(model)
         
         return cell
@@ -120,8 +144,27 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
     ) {
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let cellWidthWithSpacing = cell.bounds.width + layout.minimumLineSpacing
-        collectionView.contentInset.left = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
-        collectionView.contentInset.right = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
+        layout.sectionInset.left = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
+        layout.sectionInset.right = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
+    }
+    
+    func scrollViewWillEndDragging(
+        _ scrollView: UIScrollView,
+        withVelocity velocity: CGPoint,
+        targetContentOffset: UnsafeMutablePointer<CGPoint>
+    ) {
+        let layout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        let cellWidthIncludingSpacing = self.collectionView.bounds.height + layout.minimumLineSpacing
+        
+        var offset = targetContentOffset.pointee
+        let index = (offset.x + scrollView.contentInset.left) / cellWidthIncludingSpacing
+        let roundedIndex = round(index)
+        
+        offset = CGPoint(
+            x: roundedIndex * cellWidthIncludingSpacing - scrollView.contentInset.left,
+            y: scrollView.contentInset.top
+        )
+        targetContentOffset.pointee = offset
     }
     
     func collectionView(
