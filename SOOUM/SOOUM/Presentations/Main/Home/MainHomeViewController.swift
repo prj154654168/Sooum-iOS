@@ -172,7 +172,7 @@ extension MainHomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let model = SOMCardModel(data: self.cards[indexPath.row], isDetail: false, isComment: false)
+        let model = SOMCardModel(data: self.cards[indexPath.row])
         
         let cell: MainHomeViewCell = tableView.dequeueReusableCell(
             withIdentifier: "cell",
