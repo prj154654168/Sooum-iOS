@@ -77,7 +77,7 @@ import RxSwift
      }
      
      var detailCard = Card()
-     var tags = [SOMTagModel(id: "111", originalText: "다")]
+     var tags = [SOMTagModel]()
      
      var commentCards = [Card]()
      
@@ -137,7 +137,6 @@ import RxSwift
              .distinctUntilChanged()
              .subscribe(with: self) { object, detailCard in
                  object.detailCard = detailCard
-                 object.commentCards = [detailCard, detailCard]
                  object.collectionView.reloadData()
              }
              .disposed(by: self.disposeBag)
@@ -161,10 +160,10 @@ extension DetailViewController: UICollectionViewDataSource {
             .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
             as! DetailViewCell
         
-        let model: SOMCardModel = .init(data: self.detailCard, isDetail: true, isComment: false)
+        let model: SOMCardModel = .init(data: self.detailCard)
         cell.setData(model, tags: self.tags)
         
-        cell.cardView.detailRightTopSettingButton.rx.tap
+        cell.rightTopSettingButton.rx.tap
             .subscribe(with: self.moreButtonBottomSheetViewController) { bottomSheet, _ in
                 var wrapper: SwiftEntryKitViewControllerWrapper = bottomSheet.sek
                 wrapper.entryName = Text.moreBottomSheetEntryName
@@ -209,7 +208,8 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
         let width: CGFloat = UIScreen.main.bounds.width
-        let height: CGFloat = (width - 20 * 2) + 59 /// 카드 높이 + 태그 높이
+        let tagHeight: CGFloat = self.tags.isEmpty ? 40 : 59
+        let height: CGFloat = (width - 20 * 2) + tagHeight /// 카드 높이 + 태그 높이
         return CGSize(width: width, height: height)
     }
     
@@ -219,7 +219,8 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         referenceSizeForFooterInSection section: Int
     ) -> CGSize {
         let width: CGFloat = UIScreen.main.bounds.width
-        let cellHeight: CGFloat = (width - 20 * 2) + 59
+        let tagHeight: CGFloat = self.tags.isEmpty ? 40 : 59
+        let cellHeight: CGFloat = (width - 20 * 2) + tagHeight
         let height: CGFloat = collectionView.bounds.height - cellHeight
         return CGSize(width: width, height: height)
     }
