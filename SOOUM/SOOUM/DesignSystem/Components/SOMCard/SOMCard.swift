@@ -13,23 +13,16 @@ import Then
 
 class SOMCard: UIView {
     
+    enum Text {
+        static let pungedCardLabel: String = "삭제된 카드에요"
+    }
+    
     var model: SOMCardModel?
-    
-    var isDetail: Bool = false {
-        didSet {
-            self.updateDetailViewWithHidden(self.isDetail)
-        }
-    }
-    
-    var isComment: Bool = false {
-        didSet {
-            self.updateCommentViewWithHidden(self.isComment)
-        }
-    }
     
     /// 펑 이벤트 처리 위해 추가
     var disposeBag = DisposeBag()
     
+    /// 배경 이미지
     let rootContainerImageView = UIImageView().then {
         $0.layer.cornerRadius = 40
         $0.layer.masksToBounds = true
@@ -55,31 +48,21 @@ class SOMCard: UIView {
         $0.textAlignment = .center
     }
     
-    /// 상세보기, 전글 배경
-    let detailPrevCardBackgroundImageView = UIImageView().then {
-        $0.layer.borderColor = UIColor.som.white.cgColor
-        $0.layer.borderWidth = 2
-        $0.layer.cornerRadius = 14
-        $0.layer.masksToBounds = true
+    /// 삭제(펑 됐을 때) 배경
+    let pungedCardBackgroundView = UIView().then {
+        $0.backgroundColor = .som.black.withAlphaComponent(0.7)
+        $0.isHidden = true
     }
-    /// 상세보기, 전글 라벨
-    let detailPrevCardTextLabel = UILabel().then {
-        $0.text = "전글"
+    /// 삭제(펑 됐을 때) 라벨
+    let pungedCardLabel = UILabel().then {
+        $0.text = Text.pungedCardLabel
         $0.textColor = .som.white
+        $0.textAlignment = .center
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .medium),
-            lineHeight: 15.56,
+            fontContainer: Pretendard(size: 16, weight: .bold),
+            lineHeight: 19,
             letterSpacing: -0.04
         )
-    }
-    
-    /// 상세보기, 상단 오른쪽 설정 버튼
-    let detailRightTopSettingButton = UIButton().then {
-        var config = UIButton.Configuration.plain()
-        config.image = .init(.icon(.outlined(.more)))
-        config.image?.withTintColor(.som.gray04)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray04 }
-        $0.configuration = config
     }
     
     /// cardTextContentLabel를 감싸는 불투명 컨테이너 뷰
@@ -246,26 +229,21 @@ class SOMCard: UIView {
     
     private func addSubviews() {
         self.addSubview(rootContainerImageView)
+        addPungedCardView()
         addCardPungTimeLabel()
-        addDetailPrevCardLabel()
-        addDetailSettingButton()
         addCardTextContainerView()
         addCardGradientView()
         addCardContentStackView()
     }
     
+    private func addPungedCardView() {
+        rootContainerImageView.addSubview(pungedCardBackgroundView)
+        pungedCardBackgroundView.addSubview(pungedCardLabel)
+    }
+    
     private func addCardPungTimeLabel() {
         rootContainerImageView.addSubview(cardPungTimeBackgroundView)
         cardPungTimeBackgroundView.addSubview(cardPungTimeLabel)
-    }
-    
-    private func addDetailPrevCardLabel() {
-        rootContainerImageView.addSubview(detailPrevCardBackgroundImageView)
-        detailPrevCardBackgroundImageView.addSubview(detailPrevCardTextLabel)
-    }
-    
-    private func addDetailSettingButton() {
-        rootContainerImageView.addSubview(detailRightTopSettingButton)
     }
     
     private func addCardTextContainerView() {
@@ -319,6 +297,14 @@ class SOMCard: UIView {
             $0.edges.equalToSuperview()
         }
         
+        /// 삭제(펑 됐을 때) 라벨
+        pungedCardBackgroundView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        pungedCardLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
         /// 펑 라벨
         cardPungTimeBackgroundView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(26)
@@ -328,23 +314,6 @@ class SOMCard: UIView {
         cardPungTimeLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.trailing.equalToSuperview().inset(10)
-        }
-        
-        /// 상세보기, 전글 라벨
-        detailPrevCardBackgroundImageView.snp.makeConstraints {
-            $0.top.leading.equalToSuperview().offset(16)
-            $0.size.equalTo(44)
-        }
-        detailPrevCardTextLabel.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.trailing.equalToSuperview().inset(10)
-        }
-        
-        /// 상세보기, 상단 오른쪽 설정 버튼
-        detailRightTopSettingButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(26)
-            $0.trailing.equalToSuperview().offset(-26)
-            $0.size.equalTo(24)
         }
         
         /// 본문 라벨
@@ -403,23 +372,10 @@ class SOMCard: UIView {
         cardGradientView.layer.insertSublayer(cardGradientLayer, at: 0)
     }
     
-    private func updateDetailViewWithHidden(_ isDetail: Bool) {
-        detailPrevCardBackgroundImageView.isHidden = !isDetail
-        detailRightTopSettingButton.isHidden = !isDetail
-        likeInfoStackView.isHidden = isDetail
-        commentInfoStackView.isHidden = isDetail
-    }
-    
-    private func updateCommentViewWithHidden(_ isComment: Bool) {
-        cardPungTimeBackgroundView.isHidden = isComment
-    }
-    
     /// 홈피드 모델 초기화
     func setModel(model: SOMCardModel) {
         
         self.model = model
-        self.isDetail = model.isDetail
-        self.isComment = model.isComment
         // 카드 배경 이미지
         rootContainerImageView.setImage(strUrl: model.data.backgroundImgURL.url)
         
@@ -524,10 +480,11 @@ class SOMCard: UIView {
     
     /// 펑 ui 즉각적으로 업데이트
     func updatePungUI() {
-        if self.model?.isPunged == true {
-            // TODO: - 펑 디자인 나오면 수정 필요
-            self.cardPungTimeLabel.text = "00:00:00"
-            self.cardTextContentLabel.text = "펑된 카드입니다."
+        guard let model = self.model else { return }
+        
+        if model.isPunged {
+            rootContainerImageView.subviews.forEach { $0.removeFromSuperview() }
+            pungedCardBackgroundView.isHidden = false
         }
     }
 }

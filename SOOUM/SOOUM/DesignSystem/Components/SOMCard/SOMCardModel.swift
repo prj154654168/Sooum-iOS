@@ -22,13 +22,8 @@ class SOMCardModel {
         return remainingTime <= 0
     }
     
-    let isDetail: Bool
-    let isComment: Bool
-    
-    init(data: Card, isDetail: Bool, isComment: Bool) {
+    init(data: Card) {
         self.data = data
         self.pungTime = data.storyExpirationTime
-        self.isDetail = isDetail
-        self.isComment = isComment
     }
 }
