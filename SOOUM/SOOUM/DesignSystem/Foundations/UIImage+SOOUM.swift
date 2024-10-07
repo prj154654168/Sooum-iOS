@@ -11,6 +11,7 @@ extension UIImage {
     
     enum SOOUMType: Equatable {
         case icon(IconStyle)
+        case image(ImageStyle)
         case logo
         
         enum IconStyle {
@@ -63,10 +64,16 @@ extension UIImage {
             }
         }
         
+        enum ImageStyle: String {
+            case refreshControl
+        }
+        
         var imageName: String {
             switch self {
             case .icon(let iconStyle):
                 return iconStyle.imageName
+            case .image(let imageStyle):
+                return imageStyle.rawValue
             case .logo:
                 return "logo"
             }
