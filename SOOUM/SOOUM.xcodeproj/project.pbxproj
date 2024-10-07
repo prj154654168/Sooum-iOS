@@ -60,6 +60,8 @@
 		385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */; };
 		3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
 		3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
+		38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */; };
+		38773E7D2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */; };
 		3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4702CA3F03400AA46A2 /* SOMCard.swift */; };
 		3878F4722CA3F03400AA46A2 /* SOMCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4702CA3F03400AA46A2 /* SOMCard.swift */; };
 		3878F4742CA3F06C00AA46A2 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4732CA3F06C00AA46A2 /* UIStackView.swift */; };
@@ -185,6 +187,7 @@
 		385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_Request.swift; sourceTree = "<group>"; };
 		385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_constants.swift; sourceTree = "<group>"; };
 		3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PushAndPop.swift"; sourceTree = "<group>"; };
+		38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMRefreshControl.swift; sourceTree = "<group>"; };
 		3878F4702CA3F03400AA46A2 /* SOMCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMCard.swift; sourceTree = "<group>"; };
 		3878F4732CA3F06C00AA46A2 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		3878F4762CA3F08300AA46A2 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
@@ -638,6 +641,7 @@
 				38ED2AB32C985AB400920B53 /* SOMHomeTabBar */,
 				385053502C92DBCA00C80B02 /* SOMTabBarController */,
 				38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */,
+				38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -851,6 +855,7 @@
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				388009882CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */,
 				3878F4782CA3F08300AA46A2 /* UIView.swift in Sources */,
+				38773E7D2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */,
 				388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */,
 				384972A12CA4DEC00012FCA1 /* CardRequest.swift in Sources */,
 				38B6AAE72CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */,
@@ -930,6 +935,7 @@
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				388009942CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
+				38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */,
 				3880098E2CABF4C2002A9209 /* SOMTag.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,

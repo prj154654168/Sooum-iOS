@@ -44,9 +44,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
         
-        $0.refreshControl = UIRefreshControl().then {
-            $0.tintColor = .som.black
-        }
+        $0.refreshControl = SOMRefreshControl()
         $0.dataSource = self
         $0.delegate = self
     }

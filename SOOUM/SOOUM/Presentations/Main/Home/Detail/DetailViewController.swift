@@ -55,9 +55,7 @@ import RxSwift
          $0.alwaysBounceVertical = true
          $0.backgroundColor = .som.white
          $0.indicatorStyle = .black
-         $0.refreshControl = UIRefreshControl().then {
-             $0.tintColor = .som.black
-         }
+         $0.refreshControl = SOMRefreshControl()
          
          $0.register(DetailViewCell.self, forCellWithReuseIdentifier: "cell")
          $0.register(
