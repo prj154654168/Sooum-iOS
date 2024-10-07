@@ -29,8 +29,16 @@ class SOMTabBar: UIView {
     }
     
     private let tabBarBackgroundView = UIView().then {
-        $0.backgroundColor = .som.dimForTabBar
+        $0.backgroundColor = .clear
         $0.layer.cornerRadius = 60 * 0.5
+        $0.clipsToBounds = true
+    }
+    
+    private let blurView = UIVisualEffectView().then {
+        let blurEffect = UIBlurEffect(style: .regular)
+        $0.effect = blurEffect
+        $0.backgroundColor = .som.dimForTabBar
+        $0.alpha = 0.9
     }
     
     var viewControllers: [UIViewController] = [] {
@@ -70,6 +78,13 @@ class SOMTabBar: UIView {
     }
     
     private func setupConstraints() {
+        
+        self.tabBarBackgroundView.addSubview(self.blurView)
+        self.blurView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalTo(self.width)
+            $0.height.equalTo(60)
+        }
         
         self.tabBarBackgroundView.addSubview(self.tabBarItemContainer)
         self.tabBarItemContainer.snp.makeConstraints {

@@ -50,7 +50,7 @@ class MoveTopButtonView: UIView {
         let backgroundView = UIView().then {
             $0.backgroundColor = .som.white
             $0.layer.cornerRadius = 40 * 0.5
-            $0.layer.borderColor = UIColor.som.gray02.cgColor
+            $0.layer.borderColor = UIColor.som.gray03.cgColor
             $0.layer.borderWidth = 1
         }
         

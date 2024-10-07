@@ -13,7 +13,7 @@ class MainHomeViewReactor: Reactor {
     enum Action: Equatable {
         case refresh
         case moreFind
-        case moreFindWithId(lastId: Double?)
+        case moreFindWithId(lastId: String?)
         case homeTabBarItemDidTap(index: Int)
         case coordinate(String, String)
         case distanceFilter(String)
@@ -155,11 +155,11 @@ extension MainHomeViewReactor {
         }
     }
     
-    func moreFindWithId(_ lastId: Double?) -> Observable<Mutation> {
+    func moreFindWithId(_ lastId: String?) -> Observable<Mutation> {
             
         let selectedIndex = self.currentState.index
         
-        let lastId = lastId?.toString ?? ""
+        let lastId = lastId ?? ""
         
         let latitude = self.currentState.coordinate.0
         let longitude = self.currentState.coordinate.1
@@ -197,5 +197,13 @@ extension MainHomeViewReactor {
         let count = displayedCards.count
         let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
         return displayedCards
+    }
+}
+
+/// Hand oveer reactor
+extension MainHomeViewReactor {
+    
+    func reactorForDetail(_ selected: Card) -> DetailViewReactor {
+        DetailViewReactor(prevCard: selected)
     }
 }

@@ -36,7 +36,7 @@ class SOMLocationFilterCollectionViewCell: UICollectionViewCell {
         label.textColor = isSelected ? .som.primary : .som.gray01
         contentView.layer.borderColor = isSelected 
             ? UIColor.som.primary.cgColor
-            : UIColor.som.gray02.cgColor
+            : UIColor.som.gray03.cgColor
     }
     
     // MARK: - initUI

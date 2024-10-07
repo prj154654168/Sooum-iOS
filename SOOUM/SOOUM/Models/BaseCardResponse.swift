@@ -15,7 +15,7 @@ struct Status: Codable {
 }
 
 struct Card: Equatable, Codable {
-    let id: Double
+    let id: String
     let distance: Double?
     
     let createdAt: Date
@@ -37,7 +37,8 @@ struct Card: Equatable, Codable {
     let isCommentWritten: Bool
     
     enum Font: String, Codable {
-        case custom = "CUSTOM"
+        case pretendard = "PRETENDARD"
+        case school = "SCHOOL_SAFE_CHALKBOARD_ERASER"
     }
 
     enum FontSize: String, Codable {
@@ -64,7 +65,7 @@ struct Card: Equatable, Codable {
     static func == (lhs: Self, rhs: Self) -> Bool { lhs.id == rhs.id }
     
     init() {
-        self.id = 0
+        self.id = ""
         self.distance = nil
         self.createdAt = Date()
         self.storyExpirationTime = nil
@@ -73,7 +74,7 @@ struct Card: Equatable, Codable {
         self.commentCnt = 0
         self.backgroundImgURL = .init(url: "")
         self.links = .init(detail: .init(url: ""))
-        self.font = .custom
+        self.font = .pretendard
         self.fontSize = .big
         self.isStory = false
         self.isLiked = false
@@ -82,7 +83,8 @@ struct Card: Equatable, Codable {
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(Double.self, forKey: .id)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.distance = try container.decodeIfPresent(Double.self, forKey: .distance)
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
         self.storyExpirationTime = try container.decodeIfPresent(
             Date.self,
@@ -98,12 +100,6 @@ struct Card: Equatable, Codable {
         self.isStory = try container.decode(Bool.self, forKey: .isStory)
         self.isLiked = try container.decode(Bool.self, forKey: .isLiked)
         self.isCommentWritten = try container.decode(Bool.self, forKey: .isCommentWritten)
-        
-        if let distance = try? container.decode(Double.self, forKey: .distance) {
-            self.distance = distance
-        } else {
-            self.distance = try container.decodeIfPresent(Double.self, forKey: .distance)
-        }
     }
 }
 

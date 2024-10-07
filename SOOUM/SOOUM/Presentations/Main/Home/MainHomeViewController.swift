@@ -20,12 +20,14 @@ class MainHomeViewController: BaseNavigationViewController, View {
     let logo = UIImageView().then {
         $0.image = .init(.logo)
         $0.tintColor = .som.primary
+        $0.contentMode = .scaleAspectFit
     }
+    
     let rightAlamButton = UIButton().then {
         var config = UIButton.Configuration.plain()
         config.image = .init(.icon(.outlined(.alarm)))
-        config.image?.withTintColor(.som.gray02)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray02 }
+        config.image?.withTintColor(.som.gray03)
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray03 }
         $0.configuration = config
     }
     
@@ -35,25 +37,14 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.isHidden = true
     }
     
-    let refreshControl = UIRefreshControl().then {
-        $0.tintColor = .som.black
-    }
-    
     lazy var tableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
-        let width = UIScreen.main.bounds.width
-        $0.rowHeight = (width - 20 * 2) * 0.9 + 10
-        $0.sectionHeaderHeight = 0
-        $0.sectionFooterHeight = 0
+        $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
         
-        $0.contentInset.top = 10
-        
-        $0.register(SOMCardTableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        $0.refreshControl = self.refreshControl
+        $0.refreshControl = SOMRefreshControl()
         $0.dataSource = self
         $0.delegate = self
     }
@@ -72,6 +63,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         super.setupNaviBar()
         
         self.navigationBar.titleView = self.logo
+        self.navigationBar.titlePosition = .left
         
         self.navigationBar.isHideBackButton = true
         self.navigationBar.setRightButtons([self.rightAlamButton])
@@ -178,12 +170,14 @@ extension MainHomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell: SOMCardTableViewCell = tableView.dequeueReusableCell(
+        let model = SOMCardModel(data: self.cards[indexPath.row])
+        
+        let cell: MainHomeViewCell = tableView.dequeueReusableCell(
             withIdentifier: "cell",
             for: indexPath
-        ) as! SOMCardTableViewCell
+        ) as! MainHomeViewCell
         cell.selectionStyle = .none
-        cell.setData(card: self.cards[indexPath.row])
+        cell.setModel(model)
         /// card content stack order change
         cell.changeOrderInCardContentStack(self.reactor?.currentState.index ?? 0)
         
@@ -192,6 +186,16 @@ extension MainHomeViewController: UITableViewDataSource {
 }
 
  extension MainHomeViewController: UITableViewDelegate {
+     
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+         guard let reactor = self.reactor else { return }
+         
+         let selectedCard = self.cards[indexPath.row]
+         
+         let viewController = DetailViewController()
+         viewController.reactor = reactor.reactorForDetail(selectedCard)
+         self.navigationPush(viewController, animated: true)
+     }
      
      func tableView(
         _ tableView: UITableView,
@@ -205,13 +209,20 @@ extension MainHomeViewController: UITableViewDataSource {
              
              let currentState = self.reactor?.currentState
              if currentState?.cards.count == currentState?.displayedCards.count {
-                 if let cell = cell as? SOMCardTableViewCell {
-                     self.reactor?.action.onNext(.moreFindWithId(lastId: cell.card.id))
+                 if let cell = cell as? MainHomeViewCell {
+                     let lastId = cell.cardView.model?.data.id
+                     self.reactor?.action.onNext(.moreFindWithId(lastId: lastId))
                  }
              } else {
                  self.reactor?.action.onNext(.moreFind)
              }
          }
+     }
+     
+     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+         let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
+         let height: CGFloat = width + 10 /// 가로 + top inset
+         return height
      }
     
      func scrollViewDidScroll(_ scrollView: UIScrollView) {
