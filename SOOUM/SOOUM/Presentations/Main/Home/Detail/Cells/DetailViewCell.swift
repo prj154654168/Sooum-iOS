@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RxSwift
+
 import SnapKit
 import Then
 
@@ -67,6 +69,8 @@ class DetailViewCell: UICollectionViewCell {
         }
     }
     
+    var disposeBag = DisposeBag()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupConstraints()
@@ -79,6 +83,7 @@ class DetailViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.cardView.prepareForReuse()
+        self.disposeBag = DisposeBag()
     }
     
     private func setupConstraints() {

@@ -173,7 +173,7 @@ extension DetailViewController: UICollectionViewDataSource {
                     isHandleBar: true
                 )
             }
-            .disposed(by: self.disposeBag)
+            .disposed(by: cell.disposeBag)
         
         return cell
     }
