@@ -63,7 +63,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
     
     var tableViewTopConstraint: Constraint?
     
-    let coordinate = PublishSubject<(latitude: String, longitude: String)>()
+    let detailViewController = DetailViewController()
     
     
     // MARK: - Life Cycles
@@ -174,20 +174,11 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.coordinate
-            .distinctUntilChanged({ $0.latitude == $1.latitude && $0.longitude == $1.longitude })
-            .map { coordinate in
-                Reactor.Action.coordinate(coordinate.latitude, coordinate.longitude)
-            }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
         self.headerView.locationFilterDidTap
             .distinctUntilChanged()
             .map { Reactor.Action.distanceFilter($0) }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
-        
         
         /// State
         reactor.state.map(\.isLoading)
@@ -212,6 +203,14 @@ class MainHomeViewController: BaseNavigationViewController, View {
                 object.cards = cards
                 self.placeholderView.isHidden = !cards.isEmpty
                 object.tableView.reloadData()
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.coordinate)
+            .distinctUntilChanged({ $0.0 == $1.0 && $0.1 == $1.1 })
+            .map { ($0.0 ?? "", $0.1 ?? "") }
+            .subscribe(with: self.detailViewController) { detailViewController, coordinate in
+                detailViewController.reactor?.action.onNext(.coordinate(coordinate.0, coordinate.1))
             }
             .disposed(by: self.disposeBag)
     }
@@ -246,13 +245,10 @@ extension MainHomeViewController: UITableViewDataSource {
  extension MainHomeViewController: UITableViewDelegate {
      
      func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-         guard let reactor = self.reactor else { return }
+         let selectedId = self.cards[indexPath.row].id
          
-         let selectedCard = self.cards[indexPath.row]
-         
-         let viewController = DetailViewController()
-         viewController.reactor = reactor.reactorForDetail(selectedCard)
-         self.navigationPush(viewController, animated: true)
+         self.detailViewController.reactor = self.reactor?.reactorForDetail(selectedId)
+         self.navigationPush(self.detailViewController, animated: true)
      }
      
      func tableView(

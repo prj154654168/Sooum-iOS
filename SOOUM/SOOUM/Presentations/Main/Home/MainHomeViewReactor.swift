@@ -183,7 +183,7 @@ extension MainHomeViewReactor {
 /// Hand oveer reactor
 extension MainHomeViewReactor {
     
-    func reactorForDetail(_ selected: Card) -> DetailViewReactor {
-        DetailViewReactor(prevCard: selected)
+    func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
+        DetailViewReactor(selectedId)
     }
 }
