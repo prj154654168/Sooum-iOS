@@ -17,6 +17,8 @@ enum CardRequest: BaseRequest {
     case popularCard(latitude: String?, longitude: String?)
     /// 거리순
     case distancCard(id: String?, latitude: String, longitude: String, distanceFilter: String)
+    /// 상세보기
+    case detailCard(id: String, latitude: String?, longitude: String?)
 
     var path: String {
         switch self {
@@ -34,12 +36,14 @@ enum CardRequest: BaseRequest {
             } else {
                 return "/cards/home/distance"
             }
+        case let .detailCard(id, _, _):
+            return "/cards/\(id)/detail"
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .latestCard, .popularCard, .distancCard:
+        case .latestCard, .popularCard, .distancCard, .detailCard:
             return .get
         }
     }
@@ -60,12 +64,18 @@ enum CardRequest: BaseRequest {
             }
         case let .distancCard(_, latitude, longitude, distanceFilter):
             return ["latitude": latitude, "longitude": longitude, "distanceFilter": distanceFilter]
+        case let .detailCard(_, latitude, longitude):
+            if let latitude = latitude, let longitude = longitude {
+                return ["latitude": latitude, "longitude": longitude]
+            } else {
+                return [:]
+            }
         }
     }
 
     var encoding: ParameterEncoding {
         switch self {
-        case .latestCard, .popularCard, .distancCard:
+        case .latestCard, .popularCard, .distancCard, .detailCard:
             return URLEncoding.queryString
         }
     }
