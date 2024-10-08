@@ -19,12 +19,7 @@ extension UIImageView {
         
         /// Image load
         if let strUrl: String = strUrl, let url = URL(string: strUrl) {
-            let header = AnyModifier { request in
-                var req = request
-                req.addValue("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjY5Mjk0MzMsImV4cCI6MTAxNzI2OTI5NDMzLCJzdWIiOiJBY2Nlc3NUb2tlbiIsImlkIjo2MjUwNDc5NzMyNTA1MTUxNTMsInJvbGUiOiJVU0VSIn0.aL4Tr3FaSwvu9hOQISAvGJfCHBGCV9jRo_BfTQkBssU", forHTTPHeaderField: "Authorization")
-                return req
-            }
-            self.kf.setImage(with: url, options: [.requestModifier(header)]) { _ in
+            self.kf.setImage(with: url) { _ in
                 /// Delete label if image loading is successful
                 Self.label.removeFromSuperview()
             }
