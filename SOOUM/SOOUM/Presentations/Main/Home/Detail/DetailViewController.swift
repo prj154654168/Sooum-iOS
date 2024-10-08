@@ -74,8 +74,7 @@ import RxSwift
          58
      }
      
-     var detailCard = Card()
-     var tags = [SOMTagModel]()
+     var detailCard = DetailCard()
      
      var commentCards = [Card]()
      
@@ -125,16 +124,36 @@ import RxSwift
              .disposed(by: self.disposeBag)
          
          /// Action
-         self.rx.viewDidLoad
+         self.rx.viewWillAppear
+             .map { _ in Reactor.Action.refresh }
+             .bind(to: reactor.action)
+             .disposed(by: self.disposeBag)
+         
+         self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
+             .withLatestFrom(reactor.state.map(\.isLoading))
+             .filter { $0 == false }
              .map { _ in Reactor.Action.refresh }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
          /// State
+         reactor.state.map(\.isLoading)
+             .distinctUntilChanged()
+             .subscribe(with: self.collectionView) { collectionView, isLoading in
+                 if isLoading {
+                     collectionView.refreshControl?.manualyBeginRefreshing()
+                 } else {
+                     collectionView.refreshControl?.endRefreshing()
+                 }
+             }
+             .disposed(by: self.disposeBag)
+         
          reactor.state.map(\.detailCard)
              .distinctUntilChanged()
              .subscribe(with: self) { object, detailCard in
                  object.detailCard = detailCard
+                 object.titleLabel.text = detailCard.member.nickname
+                 object.titleImageView.setImage(strUrl: detailCard.member.profileImgUrl ?? "")
                  object.collectionView.reloadData()
              }
              .disposed(by: self.disposeBag)
@@ -158,8 +177,29 @@ extension DetailViewController: UICollectionViewDataSource {
             .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
             as! DetailViewCell
         
-        let model: SOMCardModel = .init(data: self.detailCard)
-        cell.setData(model, tags: self.tags)
+        let card: Card = .init(
+            id: self.detailCard.id,
+            content: self.detailCard.content,
+            distance: self.detailCard.distance,
+            createdAt: self.detailCard.createdAt,
+            storyExpirationTime: self.detailCard.storyExpirationTime,
+            likeCnt: 0,
+            commentCnt: 0,
+            backgroundImgURL: self.detailCard.backgroundImgURL,
+            links: .init(detail: .init(url: "")),
+            font: self.detailCard.font,
+            fontSize: .big,
+            isStory: self.detailCard.isStory,
+            isLiked: false,
+            isCommentWritten: false
+         )
+        let model: SOMCardModel = .init(data: card)
+        
+        let tags: [SOMTagModel] = self.detailCard.tags.map {
+            SOMTagModel(id: $0.id, originalText: $0.content)
+        }
+        cell.setData(model, tags: tags)
+        cell.isOwnCard = self.detailCard.isOwnCard
         
         cell.rightTopSettingButton.rx.tap
             .subscribe(with: self.moreButtonBottomSheetViewController) { bottomSheet, _ in
@@ -190,7 +230,7 @@ extension DetailViewController: UICollectionViewDataSource {
                     for: indexPath
                 ) as! DetailViewFooter
             
-            footer.setData(self.commentCards, like: 10, comment: 10)
+            footer.setData(self.commentCards, like: 0, comment: 0)
             return footer
         } else {
             return .init(frame: .zero)
@@ -206,7 +246,7 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
         let width: CGFloat = UIScreen.main.bounds.width
-        let tagHeight: CGFloat = self.tags.isEmpty ? 40 : 59
+        let tagHeight: CGFloat = self.detailCard.tags.isEmpty ? 40 : 59
         let height: CGFloat = (width - 20 * 2) + tagHeight /// 카드 높이 + 태그 높이
         return CGSize(width: width, height: height)
     }
@@ -217,7 +257,7 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         referenceSizeForFooterInSection section: Int
     ) -> CGSize {
         let width: CGFloat = UIScreen.main.bounds.width
-        let tagHeight: CGFloat = self.tags.isEmpty ? 40 : 59
+        let tagHeight: CGFloat = self.detailCard.tags.isEmpty ? 40 : 59
         let cellHeight: CGFloat = (width - 20 * 2) + tagHeight
         let height: CGFloat = collectionView.bounds.height - cellHeight
         return CGSize(width: width, height: height)
