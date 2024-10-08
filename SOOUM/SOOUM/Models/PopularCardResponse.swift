@@ -18,6 +18,15 @@ struct PopularCardResponse: Codable {
     }
 }
 
+extension PopularCardResponse: EmptyInitializable {
+    static func empty() -> PopularCardResponse {
+        return .init(
+            embedded: .init(cards: []),
+            status: .init(httpCode: 0, httpStatus: "", responseMessage: "")
+        )
+    }
+}
+
 struct PopularCardEmbedded: Codable {
     let cards: [Card]
     

@@ -20,6 +20,16 @@ struct DistanceCardResponse: Codable {
     }
 }
 
+extension DistanceCardResponse: EmptyInitializable {
+    static func empty() -> DistanceCardResponse {
+        return .init(
+            embedded: .init(cards: []),
+            links: .init(next: .init(url: "")),
+            status: .init(httpCode: 0, httpStatus: "", responseMessage: "")
+        )
+    }
+}
+
 struct DistanceCardEmbedded: Codable {
     let cards: [Card]
     

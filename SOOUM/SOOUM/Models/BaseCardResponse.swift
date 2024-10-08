@@ -8,6 +8,10 @@
 import Foundation
 
 
+protocol EmptyInitializable {
+    static func empty() -> Self
+}
+
 struct Status: Codable {
     let httpCode: Int
     let httpStatus: String

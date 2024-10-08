@@ -20,6 +20,16 @@ struct LatestCardResponse: Codable {
     }
 }
 
+extension LatestCardResponse: EmptyInitializable {
+    static func empty() -> LatestCardResponse {
+        return .init(
+            embedded: .init(cards: []),
+            links: .init(next: .init(url: "")),
+            status: .init(httpCode: 0, httpStatus: "", responseMessage: "")
+        )
+    }
+}
+
 struct LatestCardEmbedded: Codable {
     let cards: [Card]
     
