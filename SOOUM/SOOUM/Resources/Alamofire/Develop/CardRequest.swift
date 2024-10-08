@@ -75,7 +75,7 @@ enum CardRequest: BaseRequest {
         if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
             var request = URLRequest(url: url)
             request.method = self.method
-            request.setValue("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3Mjc4OTkxOTQsImV4cCI6NDgzODI5OTE5NCwic3ViIjoiQWNjZXNzVG9rZW4iLCJpZCI6NjI5NDAxODExMDY2MDgxNDAxLCJyb2xlIjoiVVNFUiJ9.bN1EKcJjyhM-NZ0ptDeUTLS9Fq8-nrgAfaPuR1tJWWw", forHTTPHeaderField: "Authorization")
+            request.setValue("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MjgzMDgwNTQsImV4cCI6NDgzODcwODA1NCwic3ViIjoiQWNjZXNzVG9rZW4iLCJpZCI6NjMxMTExNzU3MDY3NzMxMTAwLCJyb2xlIjoiVVNFUiJ9.bD1ktqefCL3gETkXo3Prwx5LsnkCNlxF38PMXId2VVE", forHTTPHeaderField: "Authorization")
             request.setValue(
                 Constants.ContentType.json.rawValue,
                 forHTTPHeaderField: Constants.HTTPHeader.contentType.rawValue
