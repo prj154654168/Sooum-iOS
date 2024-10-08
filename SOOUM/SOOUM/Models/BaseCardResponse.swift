@@ -1,31 +1,21 @@
 //
-//  BaseResponse.swift
+//  BaseCardResponse.swift
 //  SOOUM
 //
-//  Created by 오현식 on 9/27/24.
+//  Created by 오현식 on 10/8/24.
 //
 
 import Foundation
 
 
-protocol EmptyInitializable {
-    static func empty() -> Self
-}
-
-struct Status: Codable {
-    let httpCode: Int
-    let httpStatus: String
-    let responseMessage: String
-}
-
-struct Card: Equatable, Codable {
+struct Card: CardProtocol {
     let id: String
+    let content: String
+    
     let distance: Double?
     
     let createdAt: Date
     let storyExpirationTime: Date?
-    
-    let content: String
     
     let likeCnt: Int
     let commentCnt: Int
@@ -39,22 +29,13 @@ struct Card: Equatable, Codable {
     let isStory: Bool
     let isLiked: Bool
     let isCommentWritten: Bool
-    
-    enum Font: String, Codable {
-        case pretendard = "PRETENDARD"
-        case school = "SCHOOL_SAFE_CHALKBOARD_ERASER"
-    }
-
-    enum FontSize: String, Codable {
-        case big = "BIG"
-    }
 
     enum CodingKeys: String, CodingKey {
         case id
+        case content
         case distance
         case createdAt
         case storyExpirationTime
-        case content
         case likeCnt
         case commentCnt
         case backgroundImgURL = "backgroundImgUrl"
@@ -67,13 +48,15 @@ struct Card: Equatable, Codable {
     }
     
     static func == (lhs: Self, rhs: Self) -> Bool { lhs.id == rhs.id }
-    
+}
+
+extension Card {
     init() {
         self.id = ""
+        self.content = ""
         self.distance = nil
         self.createdAt = Date()
         self.storyExpirationTime = nil
-        self.content = ""
         self.likeCnt = 0
         self.commentCnt = 0
         self.backgroundImgURL = .init(url: "")
@@ -99,26 +82,10 @@ struct Card: Equatable, Codable {
         self.commentCnt = try container.decode(Int.self, forKey: .commentCnt)
         self.backgroundImgURL = try container.decode(Next.self, forKey: .backgroundImgURL)
         self.links = try container.decode(CardDetail.self, forKey: .links)
-        self.font = try container.decode(Self.Font.self, forKey: .font)
-        self.fontSize = try container.decode(Self.FontSize.self, forKey: .fontSize)
+        self.font = try container.decode(Font.self, forKey: .font)
+        self.fontSize = try container.decode(FontSize.self, forKey: .fontSize)
         self.isStory = try container.decode(Bool.self, forKey: .isStory)
         self.isLiked = try container.decode(Bool.self, forKey: .isLiked)
         self.isCommentWritten = try container.decode(Bool.self, forKey: .isCommentWritten)
     }
-}
-
-struct CardURL: Codable {
-    let next: Next
-}
-
-struct Next: Codable {
-    let url: String
-    
-    enum CodingKeys: String, CodingKey {
-        case url = "href"
-    }
-}
-
-struct CardDetail: Codable {
-    let detail: Next
 }

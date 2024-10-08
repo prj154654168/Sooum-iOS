@@ -25,7 +25,7 @@ extension DistanceCardResponse: EmptyInitializable {
         return .init(
             embedded: .init(cards: []),
             links: .init(next: .init(url: "")),
-            status: .init(httpCode: 0, httpStatus: "", responseMessage: "")
+            status: .init()
         )
     }
 }
