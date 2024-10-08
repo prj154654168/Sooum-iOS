@@ -17,6 +17,11 @@ import Then
 
 class MainHomeViewController: BaseNavigationViewController, View {
     
+    enum Text {
+        static let title: String = "아직 등록된 카드가 없어요"
+        static let subTitle: String = "사소하지만 말 못 한 이야기를\n카드로 만들어 볼까요?"
+    }
+    
     let logo = UIImageView().then {
         $0.image = .init(.logo)
         $0.tintColor = .som.primary
@@ -47,6 +52,10 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.refreshControl = SOMRefreshControl()
         $0.dataSource = self
         $0.delegate = self
+    }
+    
+    let placeholderView = UIView().then {
+        $0.isHidden = true
     }
     
     /// tableView에 표시될 카드 정보
@@ -84,6 +93,45 @@ class MainHomeViewController: BaseNavigationViewController, View {
             $0.bottom.leading.trailing.equalToSuperview()
         }
         
+        self.view.addSubview(self.placeholderView)
+        self.placeholderView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        let placeholderTitleLabel = UILabel().then {
+            $0.typography = .init(
+                fontContainer: Pretendard(size: 16, weight: .semibold),
+                lineHeight: 22,
+                letterSpacing: 0.005
+            )
+            $0.text = Text.title
+            $0.textColor = .som.black
+            $0.textAlignment = .center
+        }
+        self.placeholderView.addSubview(placeholderTitleLabel)
+        placeholderTitleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.centerX.equalToSuperview()
+        }
+        
+        let placeholderSubTitleLabel = UILabel().then {
+            $0.typography = .init(
+                fontContainer: Pretendard(size: 14, weight: .semibold),
+                lineHeight: 18,
+                letterSpacing: 0.005
+            )
+            $0.numberOfLines = 0
+            $0.text = Text.subTitle
+            $0.textColor = .som.gray02
+            $0.textAlignment = .center
+        }
+        self.placeholderView.addSubview(placeholderSubTitleLabel)
+        placeholderSubTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(placeholderTitleLabel.snp.bottom).offset(14)
+            $0.bottom.equalToSuperview()
+            $0.centerX.equalToSuperview()
+        }
+        
         self.view.addSubview(self.moveTopButton)
         self.view.bringSubviewToFront(self.moveTopButton)
         self.moveTopButton.snp.makeConstraints {
@@ -114,20 +162,29 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
+            .withLatestFrom(reactor.state.map(\.isLoading))
+            .filter { $0 == false }
             .map { _ in Reactor.Action.refresh }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
-        self.coordinate
-            .map { coordinate in
-                Reactor.Action.coordinate(coordinate.latitude, coordinate.longitude)
-            }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         self.headerView.homeTabBarDidTap
             .distinctUntilChanged()
             .map { index in Reactor.Action.homeTabBarItemDidTap(index: index) }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        self.coordinate
+            .distinctUntilChanged({ $0.latitude == $1.latitude && $0.longitude == $1.longitude })
+            .map { coordinate in
+                Reactor.Action.coordinate(coordinate.latitude, coordinate.longitude)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        self.headerView.locationFilterDidTap
+            .distinctUntilChanged()
+            .map { Reactor.Action.distanceFilter($0) }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -149,10 +206,11 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.displayedCards)
+        reactor.state.map(\.cards)
             .distinctUntilChanged()
             .subscribe(with: self) { object, cards in
                 object.cards = cards
+                self.placeholderView.isHidden = !cards.isEmpty
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
@@ -179,7 +237,7 @@ extension MainHomeViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         cell.setModel(model)
         /// card content stack order change
-        cell.changeOrderInCardContentStack(self.reactor?.currentState.index ?? 0)
+        cell.changeOrderInCardContentStack(self.reactor?.currentState.selectedIndex ?? 0)
         
         return cell
     }
@@ -207,14 +265,10 @@ extension MainHomeViewController: UITableViewDataSource {
          
          if indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex {
              
-             let currentState = self.reactor?.currentState
-             if currentState?.cards.count == currentState?.displayedCards.count {
-                 if let cell = cell as? MainHomeViewCell {
-                     let lastId = cell.cardView.model?.data.id
-                     self.reactor?.action.onNext(.moreFindWithId(lastId: lastId))
-                 }
-             } else {
-                 self.reactor?.action.onNext(.moreFind)
+             if let cell = cell as? MainHomeViewCell {
+                 let lastId = cell.cardView.model?.data.id
+                 let selectedIndex = self.reactor?.currentState.selectedIndex ?? 0
+                 self.reactor?.action.onNext(.moreFind(lastId: lastId, selectedIndex: selectedIndex))
              }
          }
      }
