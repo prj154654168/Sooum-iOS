@@ -41,16 +41,6 @@ class MainTabBarController: SOMTabBarController, View {
             }
             .disposed(by: self.disposeBag)
         
-        /// State
-        reactor.state.map(\.coordinate)
-            .subscribe(with: self.mainHomeViewController) { mainHomeViewController, coordinate in
-                mainHomeViewController.coordinate.onNext(
-                    (coordinate.latitude, coordinate.longitude)
-                )
-            }
-            .disposed(by: self.disposeBag)
-        
-        
         /// viewControllers
         self.mainHomeViewController.reactor = reactor.reactorForMainHome()
         self.mainHomeViewController.tabBarItem = .init(
@@ -100,7 +90,7 @@ extension MainTabBarController: LocationManagerDelegate {
         let latitude = coordinate.latitude.description
         let longitude = coordinate.longitude.description
         
-        self.reactor?.action.onNext(.coordinate((latitude: latitude, longitude: longitude)))
+        self.mainHomeViewController.reactor?.action.onNext(.coordinate(latitude, longitude))
     }
     
     func locationManager(_ manager: LocationManager, didChangeAuthStatus status: AuthStatus) {
