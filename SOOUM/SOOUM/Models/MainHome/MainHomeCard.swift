@@ -1,5 +1,5 @@
 //
-//  BaseCardResponse.swift
+//  MainHomeCard.swift
 //  SOOUM
 //
 //  Created by 오현식 on 10/8/24.
@@ -20,8 +20,8 @@ struct Card: CardProtocol {
     let likeCnt: Int
     let commentCnt: Int
     
-    let backgroundImgURL: Next
-    let links: CardDetail
+    let backgroundImgURL: URLString
+    let links: Detail
     
     let font: Font
     let fontSize: FontSize
@@ -80,8 +80,8 @@ extension Card {
         self.content = try container.decode(String.self, forKey: .content)
         self.likeCnt = try container.decode(Int.self, forKey: .likeCnt)
         self.commentCnt = try container.decode(Int.self, forKey: .commentCnt)
-        self.backgroundImgURL = try container.decode(Next.self, forKey: .backgroundImgURL)
-        self.links = try container.decode(CardDetail.self, forKey: .links)
+        self.backgroundImgURL = try container.decode(URLString.self, forKey: .backgroundImgURL)
+        self.links = try container.decode(Detail.self, forKey: .links)
         self.font = try container.decode(Font.self, forKey: .font)
         self.fontSize = try container.decode(FontSize.self, forKey: .fontSize)
         self.isStory = try container.decode(Bool.self, forKey: .isStory)

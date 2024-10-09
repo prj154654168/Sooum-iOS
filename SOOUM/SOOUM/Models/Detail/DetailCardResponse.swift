@@ -54,7 +54,7 @@ struct DetailCard: CardProtocol {
     let createdAt: Date
     let storyExpirationTime: Date?
     
-    let backgroundImgURL: Next
+    let backgroundImgURL: URLString
     
     let font: Font
     
@@ -107,7 +107,7 @@ extension DetailCard {
             forKey: .storyExpirationTime
         )
         self.content = try container.decode(String.self, forKey: .content)
-        self.backgroundImgURL = try container.decode(Next.self, forKey: .backgroundImgURL)
+        self.backgroundImgURL = try container.decode(URLString.self, forKey: .backgroundImgURL)
         self.font = try container.decode(Font.self, forKey: .font)
         self.isStory = try container.decode(Bool.self, forKey: .isStory)
         
@@ -132,7 +132,7 @@ struct Member: Codable {
 struct Tag: Codable {
     let id: String
     let content: String
-    let links: TagURL
+    let links: TagFeed
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -141,8 +141,8 @@ struct Tag: Codable {
     }
 }
 
-struct TagURL: Codable {
-    let tagFeed: Next
+struct TagFeed: Codable {
+    let tagFeed: URLString
      
     enum CodingKeys: String, CodingKey {
         case tagFeed = "tag-feed"

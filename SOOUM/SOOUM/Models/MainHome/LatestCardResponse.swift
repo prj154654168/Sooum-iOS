@@ -10,7 +10,7 @@ import Foundation
 
 struct LatestCardResponse: Codable {
     let embedded: LatestCardEmbedded
-    let links: CardURL
+    let links: Next
     let status: Status
 
     enum CodingKeys: String, CodingKey {

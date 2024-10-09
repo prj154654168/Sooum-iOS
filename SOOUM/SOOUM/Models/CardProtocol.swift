@@ -42,7 +42,7 @@ protocol CardProtocol: Equatable, Codable {
     var createdAt: Date { get }
     var storyExpirationTime: Date? { get }
     
-    var backgroundImgURL: Next { get }
+    var backgroundImgURL: URLString { get }
     
     var font: Font { get }
     
@@ -50,15 +50,15 @@ protocol CardProtocol: Equatable, Codable {
 }
 
 /// 다음 카드 URL
-struct CardURL: Codable {
-    let next: Next
+struct Next: Codable {
+    let next: URLString
 }
 /// 상세보기 카드 URL
-struct CardDetail: Codable {
-    let detail: Next
+struct Detail: Codable {
+    let detail: URLString
 }
 /// 실제 urlString
-struct Next: Codable {
+struct URLString: Codable {
     let url: String
     
     enum CodingKeys: String, CodingKey {

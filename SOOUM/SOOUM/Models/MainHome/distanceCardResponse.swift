@@ -10,7 +10,7 @@ import Foundation
 
 struct DistanceCardResponse: Codable {
     let embedded: DistanceCardEmbedded
-    let links: CardURL
+    let links: Next
     let status: Status
 
     enum CodingKeys: String, CodingKey {
