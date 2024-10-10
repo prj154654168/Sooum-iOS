@@ -54,7 +54,7 @@ class DetailViewFooter: UICollectionReusableView {
         $0.delegate = self
     }
     
-    var commentCards = [Card]()
+    var commentCards = [CardProtocol]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -101,7 +101,7 @@ class DetailViewFooter: UICollectionReusableView {
         }
     }
     
-    func setData(_ datas: [Card], like: Int, comment: Int) {
+    func setData(_ datas: [any CardProtocol], like: Int, comment: Int) {
         self.commentCards = datas
         self.likeAndCommentView.likeCount = like
         self.likeAndCommentView.commentCount = comment
