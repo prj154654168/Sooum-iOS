@@ -76,8 +76,8 @@ import RxSwift
      
      var detailCard = DetailCard()
      
-     var commentCards = [Card]()
-     
+     var commentCards: [CardProtocol] = []
+     var cardSummary = CardSummary()
      
      // MARK: - Life Cycles
      
@@ -157,7 +157,23 @@ import RxSwift
                  object.collectionView.reloadData()
              }
              .disposed(by: self.disposeBag)
+         
+         reactor.state.map(\.commentCards)
+             .subscribe(with: self) { object, commentCards in
+                 object.commentCards = commentCards
+                 object.collectionView.reloadData()
+             }
+             .disposed(by: disposeBag)
+
+         reactor.state.map(\.cardSummary)
+             .subscribe(with: self) { object, cardSummary in
+                 object.cardSummary = cardSummary
+                 object.collectionView.reloadData()
+             }
+             .disposed(by: disposeBag)
      }
+     
+     
  }
 
 extension DetailViewController: UICollectionViewDataSource {
