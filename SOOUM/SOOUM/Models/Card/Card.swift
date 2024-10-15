@@ -1,5 +1,5 @@
 //
-//  MainHomeCard.swift
+//  Card.swift
 //  SOOUM
 //
 //  Created by 오현식 on 10/8/24.
@@ -26,7 +26,6 @@ struct Card: CardProtocol {
     let font: Font
     let fontSize: FontSize
     
-    let isStory: Bool
     let isLiked: Bool
     let isCommentWritten: Bool
 
@@ -42,15 +41,19 @@ struct Card: CardProtocol {
         case links = "_links"
         case font
         case fontSize
-        case isStory
         case isLiked
         case isCommentWritten
     }
-    
-    static func == (lhs: Self, rhs: Self) -> Bool { lhs.id == rhs.id }
 }
 
 extension Card {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
+extension Card {
+    
     init() {
         self.id = ""
         self.content = ""
@@ -59,11 +62,10 @@ extension Card {
         self.storyExpirationTime = nil
         self.likeCnt = 0
         self.commentCnt = 0
-        self.backgroundImgURL = .init(url: "")
-        self.links = .init(detail: .init(url: ""))
+        self.backgroundImgURL = .init()
+        self.links = .init()
         self.font = .pretendard
         self.fontSize = .big
-        self.isStory = false
         self.isLiked = false
         self.isCommentWritten = false
     }
@@ -84,7 +86,6 @@ extension Card {
         self.links = try container.decode(Detail.self, forKey: .links)
         self.font = try container.decode(Font.self, forKey: .font)
         self.fontSize = try container.decode(FontSize.self, forKey: .fontSize)
-        self.isStory = try container.decode(Bool.self, forKey: .isStory)
         self.isLiked = try container.decode(Bool.self, forKey: .isLiked)
         self.isCommentWritten = try container.decode(Bool.self, forKey: .isCommentWritten)
     }

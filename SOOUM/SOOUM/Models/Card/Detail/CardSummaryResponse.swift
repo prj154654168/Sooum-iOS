@@ -15,11 +15,16 @@ struct CardSummaryResponse: Codable {
         case cardSummary
         case status
     }
+}
 
+extension CardSummaryResponse {
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.cardSummary = try container.decode(CardSummary.self, forKey: .cardSummary)
         self.status = try container.decode(Status.self, forKey: .status)
+        
+        let singleContainer = try decoder.singleValueContainer()
+        self.cardSummary = try singleContainer.decode(CardSummary.self)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -27,13 +32,26 @@ struct CardSummaryResponse: Codable {
         try container.encode(cardSummary, forKey: .cardSummary)
         try container.encode(status, forKey: .status)
     }
+    
+    init() {
+        self.cardSummary = .init()
+        self.status = .init()
+    }
+}
+
+extension CardSummaryResponse: EmptyInitializable {
+    static func empty() -> CardSummaryResponse {
+        return .init()
+    }
 }
 
 struct CardSummary: Codable {
     let commentCnt: Int
     let cardLikeCnt: Int
     let isLiked: Bool
-    
+}
+
+extension CardSummary {
     init() {
         commentCnt = 0
         cardLikeCnt = 0

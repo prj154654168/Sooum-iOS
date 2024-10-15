@@ -24,7 +24,7 @@ extension LatestCardResponse: EmptyInitializable {
     static func empty() -> LatestCardResponse {
         return .init(
             embedded: .init(cards: []),
-            links: .init(next: .init(url: "")),
+            links: .init(),
             status: .init()
         )
     }
