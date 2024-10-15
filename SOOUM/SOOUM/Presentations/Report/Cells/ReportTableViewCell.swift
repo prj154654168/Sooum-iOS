@@ -37,18 +37,26 @@ class ReportTableViewCell: UITableViewCell {
     }
     
     func updateIsSelected(isSelected: Bool, animated: Bool) {
-        
+        let borderColor = isSelected ? UIColor.som.blue600.cgColor : UIColor.som.gray04.cgColor
+        let toggleImage: UIImage = isSelected ? .radioFilled : .radioOutlined
+        let durationTime: TimeInterval = 0.3
         if animated {
-            UIView.transition(with: reasonView.toggleView, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                self.reasonView.toggleView.image = isSelected ? .radioFilled : .radioOutlined
-            }, completion: nil)
-
-            UIView.animate(withDuration: 0.3) {
-                self.reasonView.rootContainerView.layer.borderColor = isSelected ? UIColor.som.blue600.cgColor : UIColor.som.gray04.cgColor
+            UIView.transition(
+                with: reasonView.toggleView,
+                duration: durationTime,
+                options: .transitionCrossDissolve,
+                animations: {
+                    self.reasonView.toggleView.image = toggleImage
+                },
+                completion: nil
+            )
+            
+            UIView.animate(withDuration: durationTime) {
+                self.reasonView.rootContainerView.layer.borderColor = borderColor
             }
         } else {
-            reasonView.toggleView.image = isSelected ? .radioFilled : .radioOutlined
-            reasonView.rootContainerView.layer.borderColor = isSelected ? UIColor.som.blue600.cgColor : UIColor.som.gray04.cgColor
+            reasonView.toggleView.image = toggleImage
+            reasonView.rootContainerView.layer.borderColor = borderColor
         }
     }
     
@@ -57,17 +65,12 @@ class ReportTableViewCell: UITableViewCell {
         self.selectionStyle = .none
         self.backgroundColor = .clear
         self.contentView.clipsToBounds = true
-        addSubviews()
         setupConstraints()
-    }
-    
-    // MARK: - addSubviews
-    private func addSubviews() {
-        self.contentView.addSubview(reasonView)
     }
     
     // MARK: - setupConstraints
     private func setupConstraints() {
+        self.contentView.addSubview(reasonView)
         reasonView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(6)
             $0.bottom.equalToSuperview().offset(-6)

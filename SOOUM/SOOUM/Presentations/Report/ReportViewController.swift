@@ -163,7 +163,6 @@ class ReportViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
     }
-    
 }
 
 // MARK: - UITableView
