@@ -12,40 +12,40 @@ class DetailViewReactor: Reactor {
     
     enum Action: Equatable {
         case refresh
-        case coordinate(String, String)
     }
     
     enum Mutation {
-        case detailCard(DetailCard)
-        case commentCards([CommentCard])
+        case detailCard(DetailCard, PrevCard)
+        case commentCards([Card])
         case cardSummary(CardSummary)
-        case updateCoordinate(String, String)
         case updateIsLoading(Bool)
     }
     
     struct State {
         var detailCard: DetailCard
-        var commentCards: [CommentCard]
+        var prevCard: PrevCard
+        var commentCards: [Card]
         var cardSummary: CardSummary
-        var coordinate: (String?, String?)
         var isLoading: Bool
     }
     
     var initialState: State = .init(
         detailCard: .init(),
+        prevCard: .init(),
         commentCards: [],
         cardSummary: .init(),
-        coordinate: (nil, nil),
         isLoading: false
     )
     
     private let networkManager = NetworkManager.shared
     private let locationManager = LocationManager.shared
     
-    private let id: String
+    private var selectedCardIds: [String]
     
-    init(_ id: String) {
-        self.id = id
+    /// id가 nil이면 pop, nil이 아니면 push
+    /// selectedCardIds.count == 1 이면 isFrom == .mainHome, 아니면 isFrom == .detailComment
+    init(_ selectedCardIds: [String]) {
+        self.selectedCardIds = selectedCardIds
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -57,27 +57,25 @@ class DetailViewReactor: Reactor {
                     self.fetchDetailCard(),
                     self.fetchCommentCards(),
                     self.fetchCardSummary()
-                ).flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
+                )
+                .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
                     Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
                 },
                 .just(.updateIsLoading(false))
             ])
-        case let .coordinate(latitude, longitude):
-            return .just(.updateCoordinate(latitude, longitude))
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case let .detailCard(detailCard):
+        case let .detailCard(detailCard, prevCard):
             state.detailCard = detailCard
+            state.prevCard = prevCard
         case let .commentCards(commentCards):
             state.commentCards = commentCards
         case let .cardSummary(cardSummary):
             state.cardSummary = cardSummary
-        case let .updateCoordinate(latitude, longitude):
-            state.coordinate = (latitude, longitude)
         case let .updateIsLoading(isLoading):
             state.isLoading = isLoading
         }
@@ -85,37 +83,60 @@ class DetailViewReactor: Reactor {
     }
     
     func fetchDetailCard() -> Observable<Mutation> {
-        let latitude = self.currentState.coordinate.0
-        let longitude = self.currentState.coordinate.1
+        let latitude = self.locationManager.coordinate.latitude
+        let longitude = self.locationManager.coordinate.longitude
         
         let requset: CardRequest = .detailCard(
-            id: self.id,
+            id: self.selectedCardIds.last ?? "",
             latitude: latitude,
             longitude: longitude
         )
-        return self.networkManager.request(DetailCardResponse.self, request: requset)
-            .map(\.detailCard)
-            .map { .detailCard($0) }
+        
+        if self.selectedCardIds.count < 2 {
+            return self.networkManager.request(DetailCardResponse.self, request: requset)
+                .map(\.detailCard)
+                .map { .detailCard($0, .init()) }
+        } else {
+            return self.networkManager.request(DetailCardByCommentResponse.self, request: requset)
+                .map { ($0.detailCard, $0.prevCard) }
+                .map { .detailCard($0, $1) }
+        }
     }
     
     func fetchCommentCards() -> Observable<Mutation> {
-        let latitude = self.currentState.coordinate.0
-        let longitude = self.currentState.coordinate.1
+        let latitude = self.locationManager.coordinate.latitude
+        let longitude = self.locationManager.coordinate.longitude
         
-        let requset: CardRequest = .detailCard(
-            id: self.id,
+        let requset: CardRequest = .commentCard(
+            id: self.selectedCardIds.last ?? "",
             latitude: latitude,
             longitude: longitude
         )
         return self.networkManager.request(CommentCardResponse.self, request: requset)
-            .map(\.embedded.commentCardsInfoList)
+            .map(\.embedded.commentCards)
             .map { .commentCards($0) }
     }
     
     func fetchCardSummary() -> Observable<Mutation> {
-        let requset: CardRequest = .cardSummary(id: self.id)
+        let requset: CardRequest = .cardSummary(id: self.selectedCardIds.last ?? "")
         return self.networkManager.request(CardSummaryResponse.self, request: requset)
             .map(\.cardSummary)
             .map { .cardSummary($0) }
+    }
+}
+
+extension DetailViewReactor {
+    
+    func reactorForMainHome() -> MainHomeViewReactor {
+        return MainHomeViewReactor()
+    }
+    
+    func reactorForPush(_ selectedId: String) -> DetailViewReactor {
+        self.selectedCardIds.append(selectedId)
+        return DetailViewReactor(self.selectedCardIds)
+    }
+    
+    func reactorForPop() -> DetailViewReactor {
+        return DetailViewReactor(self.selectedCardIds.dropLast())
     }
 }

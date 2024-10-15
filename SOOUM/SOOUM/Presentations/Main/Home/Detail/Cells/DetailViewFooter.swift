@@ -7,6 +7,9 @@
 
 import UIKit
 
+import RxCocoa
+import RxSwift
+
 import SnapKit
 import Then
 
@@ -19,7 +22,7 @@ class DetailViewFooter: UICollectionReusableView {
     
     let likeAndCommentView = LikeAndCommentView()
     
-    let noContentBackgroundView = UIView()
+    let noContentBackgroundView = UIImageView()
     let noContentLabel = UILabel().then {
         $0.text = Text.noContentText
         $0.textColor = .som.gray02
@@ -54,7 +57,11 @@ class DetailViewFooter: UICollectionReusableView {
         $0.delegate = self
     }
     
-    var commentCards = [CardProtocol]()
+    var commentCards = [Card]()
+    
+    let didTap = PublishRelay<String>()
+    
+    var disposeBag = DisposeBag()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -63,6 +70,11 @@ class DetailViewFooter: UICollectionReusableView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.disposeBag = DisposeBag()
     }
     
     private func setupConstraints() {
@@ -101,12 +113,18 @@ class DetailViewFooter: UICollectionReusableView {
         }
     }
     
-    func setData(_ datas: [any CardProtocol], like: Int, comment: Int) {
+    func setDatas(_ datas: [Card], cardSummary: CardSummary) {
         self.commentCards = datas
-        self.likeAndCommentView.likeCount = like
-        self.likeAndCommentView.commentCount = comment
+        self.likeAndCommentView.likeCount = cardSummary.cardLikeCnt
+        self.likeAndCommentView.commentCount = cardSummary.commentCnt
+        self.likeAndCommentView.isLikeSelected = cardSummary.isLiked
         
-        self.collectionView.reloadData()
+        self.collectionView.isHidden = datas.isEmpty
+        self.noContentBackgroundView.isHidden = !datas.isEmpty
+        
+        if !datas.isEmpty {
+            self.collectionView.reloadData()
+        }
     }
 }
 
@@ -116,7 +134,6 @@ extension DetailViewFooter: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        self.noContentBackgroundView.isHidden = !self.commentCards.isEmpty
         return self.commentCards.count
     }
     
@@ -128,10 +145,16 @@ extension DetailViewFooter: UICollectionViewDataSource {
             .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         as! DetailViewFooterCell
         
-        let model: SOMCardModel = .init(data: self.commentCards[indexPath.row])
+        let commentCard = self.commentCards[indexPath.row]
+        let model: SOMCardModel = .init(data: commentCard)
         cell.setModel(model)
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedId = self.commentCards[indexPath.row].id
+        self.didTap.accept(selectedId)
     }
 }
 

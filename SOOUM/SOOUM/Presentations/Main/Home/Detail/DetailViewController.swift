@@ -54,7 +54,8 @@ import RxSwift
      ).then {
          $0.alwaysBounceVertical = true
          $0.backgroundColor = .som.white
-         $0.indicatorStyle = .black
+         $0.showsVerticalScrollIndicator = false
+         $0.showsHorizontalScrollIndicator = false
          $0.refreshControl = SOMRefreshControl()
          
          $0.register(DetailViewCell.self, forCellWithReuseIdentifier: "cell")
@@ -75,8 +76,9 @@ import RxSwift
      }
      
      var detailCard = DetailCard()
+     var prevCard = PrevCard()
      
-     var commentCards: [any CardProtocol] = []
+     var commentCards = [Card]()
      var cardSummary = CardSummary()
      
      // MARK: - Life Cycles
@@ -116,10 +118,10 @@ import RxSwift
      // MARK: - Bind
      
      func bind(reactor: DetailViewReactor) {
-         /// Navigation pop
+         /// Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop()
+                 object.navigationPop(to: MainHomeViewController.self, animated: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -148,15 +150,18 @@ import RxSwift
              }
              .disposed(by: self.disposeBag)
          
-         reactor.state.map(\.detailCard)
-             .distinctUntilChanged()
-             .subscribe(with: self) { object, detailCard in
-                 object.detailCard = detailCard
-                 object.titleLabel.text = detailCard.member.nickname
-                 object.titleImageView.setImage(strUrl: detailCard.member.profileImgUrl ?? "")
-                 object.collectionView.reloadData()
-             }
-             .disposed(by: self.disposeBag)
+         Observable.combineLatest(
+            reactor.state.map(\.detailCard).distinctUntilChanged(),
+            reactor.state.map(\.prevCard).distinctUntilChanged()
+         )
+         .subscribe(with: self) { object, pair in
+             object.detailCard = pair.0
+             object.prevCard = pair.1
+             object.titleLabel.text = pair.0.member.nickname
+             object.titleImageView.setImage(strUrl: pair.0.member.profileImgUrl ?? "")
+             object.collectionView.reloadData()
+         }
+         .disposed(by: self.disposeBag)
          
          reactor.state.map(\.commentCards)
              .subscribe(with: self) { object, commentCards in
@@ -184,36 +189,52 @@ extension DetailViewController: UICollectionViewDataSource {
     }
     
     func collectionView(
-        _ collectionView: UICollectionView,
+        _ collectionView: UICollectionView, 
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         let cell: DetailViewCell = collectionView
             .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
             as! DetailViewCell
         
-        let card: Card = .init(
+        let card = Card(
             id: self.detailCard.id,
             content: self.detailCard.content,
             distance: self.detailCard.distance,
             createdAt: self.detailCard.createdAt,
             storyExpirationTime: self.detailCard.storyExpirationTime,
-            likeCnt: 0,
-            commentCnt: 0,
+            likeCnt: self.detailCard.likeCnt,
+            commentCnt: self.detailCard.commentCnt,
             backgroundImgURL: self.detailCard.backgroundImgURL,
-            links: .init(detail: .init(url: "")),
+            links: .init(),
             font: self.detailCard.font,
-            fontSize: .big,
-            isStory: self.detailCard.isStory,
-            isLiked: false,
-            isCommentWritten: false
-         )
-        let model: SOMCardModel = .init(data: card)
+            fontSize: self.detailCard.fontSize,
+            isLiked: self.detailCard.isLiked,
+            isCommentWritten: self.detailCard.isCommentWritten
+        )
+        let model: SOMCardModel = .init(data: card, type: .detail)
         
         let tags: [SOMTagModel] = self.detailCard.tags.map {
             SOMTagModel(id: $0.id, originalText: $0.content)
         }
-        cell.setData(model, tags: tags)
+        cell.setDatas(model, tags: tags)
+        
         cell.isOwnCard = self.detailCard.isOwnCard
+        cell.prevCard = self.prevCard
+        
+        cell.prevCardBackgroundButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                let willInsertViewController = DetailViewController()
+                willInsertViewController.reactor = object.reactor?.reactorForPop()
+                guard var viewControllers = object.navigationController?.viewControllers else { return }
+                viewControllers.insert(willInsertViewController, at: 1)
+                object.navigationController?.setViewControllers(viewControllers, animated: false)
+                if let destination = viewControllers.first(where: { $0 == willInsertViewController }) {
+                    object.navigationController?.popToViewController(destination, animated: true)
+                } else {
+                    object.navigationPop()
+                }
+            }
+            .disposed(by: cell.disposeBag)
         
         cell.rightTopSettingButton.rx.tap
             .subscribe(with: self.moreButtonBottomSheetViewController) { bottomSheet, _ in
@@ -244,7 +265,19 @@ extension DetailViewController: UICollectionViewDataSource {
                     for: indexPath
                 ) as! DetailViewFooter
             
-            footer.setData(self.commentCards, like: 0, comment: 0)
+            footer.setDatas(self.commentCards, cardSummary: self.cardSummary)
+            
+            footer.didTap
+                .subscribe(with: self) { object, _ in
+                    let willRemoveViewController = object.navigationController?.viewControllers.last as? DetailViewController
+                    let selectedId = footer.commentCards[indexPath.row].id
+                    let viewController = DetailViewController()
+                    viewController.reactor = object.reactor?.reactorForPush(selectedId)
+                    object.navigationPush(viewController, animated: true) { _ in
+                        object.navigationController?.viewControllers.removeAll(where: { $0 == willRemoveViewController })
+                    }
+                }
+                .disposed(by: footer.disposeBag)
             return footer
         } else {
             return .init(frame: .zero)

@@ -25,6 +25,9 @@ class DetailViewCell: UICollectionViewCell {
         $0.commentInfoStackView.isHidden = true
     }
     
+    let prevCardBackgroundButton = UIButton().then {
+        $0.isHidden = true
+    }
     /// 상세보기, 전글 배경
     let prevCardBackgroundImageView = UIImageView().then {
         $0.layer.borderColor = UIColor.som.white.cgColor
@@ -56,16 +59,27 @@ class DetailViewCell: UICollectionViewCell {
     
     lazy var tags = SOMTags()
     
-    var isPrevCardExist: Bool = false {
-        didSet {
-            self.prevCardBackgroundImageView.isHidden = !isPrevCardExist
-        }
-    }
-    
     var isOwnCard: Bool = false {
         didSet {
             let image = UIImage(.icon(.outlined(self.isOwnCard ? .trash : .more)))
             self.rightTopSettingButton.configuration?.image = image
+        }
+    }
+    
+    var prevCard: PrevCard = .init() {
+        didSet {
+            if prevCard.previousCardImgLink.url.isEmpty {
+                self.isPrevCardExist = false
+            } else {
+                self.isPrevCardExist = true
+                self.prevCardBackgroundImageView.setImage(strUrl: prevCard.previousCardImgLink.url)
+            }
+        }
+    }
+    private var isPrevCardExist: Bool = false {
+        didSet {
+            self.prevCardBackgroundImageView.isHidden = !self.isPrevCardExist
+            self.prevCardBackgroundButton.isHidden = !self.isPrevCardExist
         }
     }
     
@@ -99,12 +113,21 @@ class DetailViewCell: UICollectionViewCell {
         
         self.contentView.addSubview(self.prevCardBackgroundImageView)
         self.prevCardBackgroundImageView.snp.makeConstraints {
-            $0.top.leading.equalToSuperview().offset(16)
+            $0.top.equalTo(self.cardView.snp.top).offset(16)
+            $0.leading.equalTo(self.cardView.snp.leading).offset(16)
             $0.size.equalTo(44)
         }
+        
         self.prevCardBackgroundImageView.addSubviews(self.prevCardTextLabel)
         self.prevCardTextLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
+        }
+        
+        self.contentView.addSubview(self.prevCardBackgroundButton)
+        self.prevCardBackgroundButton.snp.makeConstraints {
+            $0.top.equalTo(self.cardView.snp.top).offset(16)
+            $0.leading.equalTo(self.cardView.snp.leading).offset(16)
+            $0.size.equalTo(44)
         }
         
         self.contentView.addSubview(self.rightTopSettingButton)
@@ -123,7 +146,7 @@ class DetailViewCell: UICollectionViewCell {
         }
     }
     
-    func setData(_ model: SOMCardModel, tags: [SOMTagModel]) {
+    func setDatas(_ model: SOMCardModel, tags: [SOMTagModel]) {
         self.cardView.setModel(model: model)
         self.tags.setDatas(tags)
         self.tags.snp.updateConstraints {
