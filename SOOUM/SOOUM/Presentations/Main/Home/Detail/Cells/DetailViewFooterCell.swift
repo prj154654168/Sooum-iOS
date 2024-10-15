@@ -38,6 +38,5 @@ class DetailViewFooterCell: UICollectionViewCell {
     }
     
     func setModel(_ model: any CardProtocol) {
-        let cardModel: SOMCardModel = .init(data: .init(id: model.id, content: model.content, distance: model.distance, createdAt: model.createdAt, storyExpirationTime: nil, likeCnt: model.lik, commentCnt: <#T##Int#>, backgroundImgURL: <#T##URLString#>, links: <#T##Detail#>, font: <#T##Font#>, fontSize: <#T##FontSize#>, isStory: <#T##Bool#>, isLiked: <#T##Bool#>, isCommentWritten: <#T##Bool#>))
     }
 }

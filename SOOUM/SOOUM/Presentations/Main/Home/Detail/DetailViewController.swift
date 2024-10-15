@@ -76,7 +76,7 @@ import RxSwift
      
      var detailCard = DetailCard()
      
-     var commentCards: [CardProtocol] = []
+     var commentCards: [any CardProtocol] = []
      var cardSummary = CardSummary()
      
      // MARK: - Life Cycles
@@ -172,8 +172,6 @@ import RxSwift
              }
              .disposed(by: disposeBag)
      }
-     
-     
  }
 
 extension DetailViewController: UICollectionViewDataSource {
