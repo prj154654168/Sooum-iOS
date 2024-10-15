@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        let viewController = LaunchScreenViewController()
 //        viewController.reactor = LaunchScreenViewReactor()
         let viewController = ReportViewController()
-        viewController.reactor = ReportViewReactor()
+        viewController.reactor = ReportViewReactor("110")
         window?.rootViewController = viewController
 //        window?.backgroundColor = .white
         window?.makeKeyAndVisible()
