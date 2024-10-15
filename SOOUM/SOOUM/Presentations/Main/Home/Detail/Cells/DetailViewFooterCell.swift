@@ -37,6 +37,7 @@ class DetailViewFooterCell: UICollectionViewCell {
         }
     }
     
-    func setModel(_ model: any CardProtocol) {
+    func setModel(_ model: SOMCardModel) {
+        self.cardView.setModel(model: model)
     }
 }
