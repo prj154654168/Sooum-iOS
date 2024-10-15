@@ -205,14 +205,6 @@ class MainHomeViewController: BaseNavigationViewController, View {
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.coordinate)
-            .distinctUntilChanged({ $0.0 == $1.0 && $0.1 == $1.1 })
-            .map { ($0.0 ?? "", $0.1 ?? "") }
-            .subscribe(with: self.detailViewController) { detailViewController, coordinate in
-                detailViewController.reactor?.action.onNext(.coordinate(coordinate.0, coordinate.1))
-            }
-            .disposed(by: self.disposeBag)
     }
 }
 
