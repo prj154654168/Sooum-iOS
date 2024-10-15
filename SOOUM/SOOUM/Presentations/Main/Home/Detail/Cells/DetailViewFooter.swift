@@ -54,7 +54,7 @@ class DetailViewFooter: UICollectionReusableView {
         $0.delegate = self
     }
     
-    var commentCards = [any CardProtocol]()
+    var commentCards = [CardProtocol]()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -128,8 +128,8 @@ extension DetailViewFooter: UICollectionViewDataSource {
             .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         as! DetailViewFooterCell
         
-//        let model: SOMCardModel = .init(data: self.commentCards[indexPath.row])
-//        cell.setModel(model)
+        let model: SOMCardModel = .init(data: self.commentCards[indexPath.row])
+        cell.setModel(model)
         
         return cell
     }
