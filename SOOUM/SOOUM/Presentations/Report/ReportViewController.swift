@@ -145,11 +145,11 @@ class ReportViewController: BaseViewController, View {
         uploadReportButtonLabel.rx
             .tapGesture()
             .when(.recognized)
-            .map { _ in
+            .compactMap { _ in
                 guard let selectedReason = self.selectedReason else {
                     return nil
                 }
-                Reactor.Action.report(selectedReason)
+                return Reactor.Action.report(selectedReason)
             }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
