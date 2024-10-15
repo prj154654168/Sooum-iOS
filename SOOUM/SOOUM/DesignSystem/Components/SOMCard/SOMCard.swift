@@ -14,7 +14,8 @@ import Then
 class SOMCard: UIView {
     
     enum Text {
-        static let pungedCardLabel: String = "삭제된 카드에요"
+        static let pungedCardInMainHomeText: String = "삭제된 카드에요"
+        static let pungedCardInDetailText: String = "이 글은 삭제되었어요"
     }
     
     var model: SOMCardModel?
@@ -24,6 +25,7 @@ class SOMCard: UIView {
     
     /// 배경 이미지
     let rootContainerImageView = UIImageView().then {
+        $0.backgroundColor = .clear
         $0.layer.cornerRadius = 40
         $0.layer.masksToBounds = true
     }
@@ -48,19 +50,41 @@ class SOMCard: UIView {
         $0.textAlignment = .center
     }
     
+    /// 메인홈
     /// 삭제(펑 됐을 때) 배경
-    let pungedCardBackgroundView = UIView().then {
+    let pungedCardInMainHomeBackgroundView = UIView().then {
         $0.backgroundColor = .som.black.withAlphaComponent(0.7)
         $0.isHidden = true
     }
     /// 삭제(펑 됐을 때) 라벨
-    let pungedCardLabel = UILabel().then {
-        $0.text = Text.pungedCardLabel
+    let pungedCardInMainHomeLabel = UILabel().then {
+        $0.text = Text.pungedCardInMainHomeText
         $0.textColor = .som.white
         $0.textAlignment = .center
         $0.typography = .init(
             fontContainer: Pretendard(size: 16, weight: .bold),
             lineHeight: 19,
+            letterSpacing: -0.04
+        )
+    }
+    /// 상세보기
+    /// 삭제(펑 됐을 때) 컨테이너
+    let pungedCardInDetailBackgroundView = UIView().then {
+        $0.isHidden = true
+    }
+    /// 삭제(펑 됐을 때) 이미지
+    let pungedCardInDetailImageView = UIImageView().then {
+        $0.image = .init(.icon(.outlined(.trash)))
+        $0.tintColor = .som.gray02
+    }
+    /// 삭제(펑 됐을 때) 라벨
+    let pungedCardInDetailLabel = UILabel().then {
+        $0.text = Text.pungedCardInDetailText
+        $0.textColor = .som.gray02
+        $0.textAlignment = .center
+        $0.typography = .init(
+            fontContainer: Pretendard(size: 16, weight: .semibold),
+            lineHeight: 26,
             letterSpacing: -0.04
         )
     }
@@ -229,16 +253,22 @@ class SOMCard: UIView {
     
     private func addSubviews() {
         self.addSubview(rootContainerImageView)
-        addPungedCardView()
+        addPungedCardInMainHomeView()
+        addPungedCardInDetailView()
         addCardPungTimeLabel()
         addCardTextContainerView()
         addCardGradientView()
         addCardContentStackView()
     }
     
-    private func addPungedCardView() {
-        rootContainerImageView.addSubview(pungedCardBackgroundView)
-        pungedCardBackgroundView.addSubview(pungedCardLabel)
+    private func addPungedCardInMainHomeView() {
+        rootContainerImageView.addSubview(pungedCardInMainHomeBackgroundView)
+        pungedCardInMainHomeBackgroundView.addSubview(pungedCardInMainHomeLabel)
+    }
+    
+    private func addPungedCardInDetailView() {
+        rootContainerImageView.addSubview(pungedCardInDetailBackgroundView)
+        pungedCardInDetailBackgroundView.addSubviews(pungedCardInDetailImageView, pungedCardInDetailLabel)
     }
     
     private func addCardPungTimeLabel() {
@@ -297,12 +327,25 @@ class SOMCard: UIView {
             $0.edges.equalToSuperview()
         }
         
+        /// 메인홈
         /// 삭제(펑 됐을 때) 라벨
-        pungedCardBackgroundView.snp.makeConstraints {
+        pungedCardInMainHomeBackgroundView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        pungedCardLabel.snp.makeConstraints {
+        pungedCardInMainHomeLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
+        }
+        /// 상세보기
+        pungedCardInDetailBackgroundView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        pungedCardInDetailImageView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.size.equalTo(60)
+        }
+        pungedCardInDetailLabel.snp.makeConstraints {
+            $0.top.equalTo(pungedCardInDetailImageView.snp.bottom)
+            $0.bottom.leading.trailing.equalToSuperview()
         }
         
         /// 펑 라벨
@@ -394,7 +437,7 @@ class SOMCard: UIView {
         
         /// 임시 시간 어떻게 표시하는 지 물어봐야 함
         timeLabel.text = model.data.createdAt.infoReadableTimeTakenFromThis(to: Date())
-        /// 임시 distance가 없을 때 어떻게 표시하는 지 물어봐야 함
+        distanceInfoStackView.isHidden = model.data.distance == nil
         distanceLabel.text = (model.data.distance ?? 0).infoReadableDistanceRangeFromThis()
         likeLabel.text = "\(model.data.likeCnt)"
         likeLabel.textColor = model.data.isLiked ? .som.primary : .som.white
@@ -402,12 +445,9 @@ class SOMCard: UIView {
         commentLabel.textColor = model.data.commentCnt != 0 ? .som.primary : .som.white
         
         // 스토리 정보 설정
-        cardPungTimeBackgroundView.isHidden = !model.data.isStory
-        if model.data.isStory {
-            self.model?.pungTime = model.data.storyExpirationTime
-            self.cardPungTimeLabel.text = getTimeOutStr(
-                pungTime: self.model?.pungTime ?? Date()
-            )
+        cardPungTimeBackgroundView.isHidden = model.data.storyExpirationTime == nil
+        if let pungTime = model.pungTime {
+            self.cardPungTimeLabel.text = getTimeOutStr(pungTime: pungTime)
             self.updatePungUI()
             self.subscribePungTime()
         }
@@ -484,7 +524,15 @@ class SOMCard: UIView {
         
         if model.isPunged {
             rootContainerImageView.subviews.forEach { $0.removeFromSuperview() }
-            pungedCardBackgroundView.isHidden = false
+            
+            switch model.type {
+            case .mainHome:
+                pungedCardInMainHomeBackgroundView.isHidden = false
+            case .detail:
+                rootContainerImageView.image = nil
+                rootContainerImageView.backgroundColor = UIColor(hex: "#F8F8F8")
+                pungedCardInDetailBackgroundView.isHidden = false
+            }
         }
     }
 }

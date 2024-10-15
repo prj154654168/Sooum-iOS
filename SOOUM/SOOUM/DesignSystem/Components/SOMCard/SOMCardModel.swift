@@ -9,6 +9,12 @@ import Foundation
 
 
 class SOMCardModel {
+    
+    enum CardType {
+        case mainHome
+        case detail
+    }
+    
     /// 카드 정보
     let data: Card
     /// 스토리 펑타임
@@ -22,8 +28,11 @@ class SOMCardModel {
         return remainingTime <= 0
     }
     
-    init(data: Card) {
+    var type: CardType
+    
+    init(data: Card, type: CardType = .mainHome) {
         self.data = data
         self.pungTime = data.storyExpirationTime
+        self.type = type
     }
 }
