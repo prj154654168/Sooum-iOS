@@ -75,8 +75,12 @@
 		385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */; };
 		385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */; };
 		385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */; };
-		38608B302CB5195D0066BB40 /* MainHomeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38608B2F2CB5195D0066BB40 /* MainHomeCard.swift */; };
-		38608B312CB5195D0066BB40 /* MainHomeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38608B2F2CB5195D0066BB40 /* MainHomeCard.swift */; };
+		385E65A32CBE56D00032E120 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385E65A22CBE56D00032E120 /* Coordinate.swift */; };
+		385E65A42CBE56D00032E120 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385E65A22CBE56D00032E120 /* Coordinate.swift */; };
+		385E65A62CBE6E270032E120 /* DetailCardByCommentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385E65A52CBE6E270032E120 /* DetailCardByCommentResponse.swift */; };
+		385E65A72CBE6E270032E120 /* DetailCardByCommentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385E65A52CBE6E270032E120 /* DetailCardByCommentResponse.swift */; };
+		38608B302CB5195D0066BB40 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38608B2F2CB5195D0066BB40 /* Card.swift */; };
+		38608B312CB5195D0066BB40 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38608B2F2CB5195D0066BB40 /* Card.swift */; };
 		38608B332CB519A80066BB40 /* DetailCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38608B322CB519A80066BB40 /* DetailCardResponse.swift */; };
 		38608B342CB519A80066BB40 /* DetailCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38608B322CB519A80066BB40 /* DetailCardResponse.swift */; };
 		3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
@@ -167,6 +171,10 @@
 		38CE94C62C904E5E0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C52C904E5E0004B238 /* SnapKit */; };
 		38CE94C92C904E940004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C82C904E940004B238 /* Then */; };
 		38CE94CB2C904E990004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94CA2C904E990004B238 /* Then */; };
+		38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */; };
+		38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */; };
+		38D5CE0F2CBCFA070054AB9A /* DetailCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D5CE0E2CBCFA070054AB9A /* DetailCard.swift */; };
+		38D5CE102CBCFA070054AB9A /* DetailCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D5CE0E2CBCFA070054AB9A /* DetailCard.swift */; };
 		38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */; };
 		38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */; };
 		38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */; };
@@ -215,7 +223,9 @@
 		385620EE2CA19C9500E0AB5A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_Request.swift; sourceTree = "<group>"; };
 		385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_constants.swift; sourceTree = "<group>"; };
-		38608B2F2CB5195D0066BB40 /* MainHomeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeCard.swift; sourceTree = "<group>"; };
+		385E65A22CBE56D00032E120 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
+		385E65A52CBE6E270032E120 /* DetailCardByCommentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCardByCommentResponse.swift; sourceTree = "<group>"; };
+		38608B2F2CB5195D0066BB40 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		38608B322CB519A80066BB40 /* DetailCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCardResponse.swift; sourceTree = "<group>"; };
 		3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PushAndPop.swift"; sourceTree = "<group>"; };
 		38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMRefreshControl.swift; sourceTree = "<group>"; };
@@ -262,6 +272,8 @@
 		38B8A58A2CAEA79A000AFE83 /* DetailViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooter.swift; sourceTree = "<group>"; };
 		38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooterCell.swift; sourceTree = "<group>"; };
 		38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMNavigationBar.swift; sourceTree = "<group>"; };
+		38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleDefaults.swift; sourceTree = "<group>"; };
+		38D5CE0E2CBCFA070054AB9A /* DetailCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCard.swift; sourceTree = "<group>"; };
 		38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBar.swift; sourceTree = "<group>"; };
 		38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
 		38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -360,7 +372,6 @@
 		380AF0932CB57930004781F7 /* MainHome */ = {
 			isa = PBXGroup;
 			children = (
-				38608B2F2CB5195D0066BB40 /* MainHomeCard.swift */,
 				38B6AAE52CA47EBA00CE6DB6 /* LatestCardResponse.swift */,
 				382C58742CA64F8F00CEF814 /* PopularCardResponse.swift */,
 				38121E2C2CA6C53300602499 /* distanceCardResponse.swift */,
@@ -371,7 +382,9 @@
 		380AF0942CB57941004781F7 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
+				38D5CE0E2CBCFA070054AB9A /* DetailCard.swift */,
 				38608B322CB519A80066BB40 /* DetailCardResponse.swift */,
+				385E65A52CBE6E270032E120 /* DetailCardByCommentResponse.swift */,
 				2AFADC422CB6B22F00083D30 /* CommentCardResponse.swift */,
 				2AFADC452CB6B23F00083D30 /* CardSummaryResponse.swift */,
 			);
@@ -393,6 +406,7 @@
 				388009822CABF0FD002A9209 /* SwiftEntryKit */,
 				385620F42CA19E8600E0AB5A /* Alamofire */,
 				3836ACB22C8F043500A3C566 /* Typography */,
+				38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -498,6 +512,7 @@
 				38FDC2B42C9E745B00C094C2 /* Base */,
 				385620EC2CA19C0D00E0AB5A /* Managers */,
 				38B6AAE42CA47E8D00CE6DB6 /* Models */,
+				385E65A22CBE56D00032E120 /* Coordinate.swift */,
 				385071972CA2956D00A7905A /* Presentations */,
 				388371FE2C8C8FAC004212EB /* Extensions */,
 				3836ACB12C8F042C00A3C566 /* Utilities */,
@@ -679,9 +694,7 @@
 		38B6AAE42CA47E8D00CE6DB6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				382C58772CA651E800CEF814 /* CardProtocol.swift */,
-				380AF0932CB57930004781F7 /* MainHome */,
-				380AF0942CB57941004781F7 /* Detail */,
+				38D5CE0D2CBCF7210054AB9A /* Card */,
 				2AE6B15C2CBEB2BE00FA5C3C /* Report */,
 			);
 			path = Models;
@@ -741,6 +754,17 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		38D5CE0D2CBCF7210054AB9A /* Card */ = {
+			isa = PBXGroup;
+			children = (
+				382C58772CA651E800CEF814 /* CardProtocol.swift */,
+				38608B2F2CB5195D0066BB40 /* Card.swift */,
+				380AF0932CB57930004781F7 /* MainHome */,
+				380AF0942CB57941004781F7 /* Detail */,
+			);
+			path = Card;
 			sourceTree = "<group>";
 		};
 		38ED2AB32C985AB400920B53 /* SOMHomeTabBar */ = {
@@ -944,6 +968,7 @@
 				385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				38B6AAD22CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */,
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
+				385E65A72CBE6E270032E120 /* DetailCardByCommentResponse.swift in Sources */,
 				2A048E852C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				388009882CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */,
@@ -954,7 +979,7 @@
 				38B6AAE72CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */,
 				38B6AADC2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
-				38608B312CB5195D0066BB40 /* MainHomeCard.swift in Sources */,
+				38608B312CB5195D0066BB40 /* Card.swift in Sources */,
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				382C58762CA64F8F00CEF814 /* PopularCardResponse.swift in Sources */,
@@ -971,6 +996,7 @@
 				38B8A5812CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
+				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				388009852CABF11F002A9209 /* SwiftEntryKit.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
@@ -986,6 +1012,7 @@
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
+				38D5CE102CBCFA070054AB9A /* DetailCard.swift in Sources */,
 				385053562C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
 				2AE6B14D2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */,
 				3880098F2CABF4C2002A9209 /* SOMTag.swift in Sources */,
@@ -1000,6 +1027,7 @@
 				38121E352CA6DA4000602499 /* Date.swift in Sources */,
 				2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
+				385E65A42CBE56D00032E120 /* Coordinate.swift in Sources */,
 				388009952CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				3878F4752CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				38B6AAE02CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
@@ -1021,23 +1049,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
+				385E65A62CBE6E270032E120 /* DetailCardByCommentResponse.swift in Sources */,
 				38B6AAD12CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */,
 				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
 				2AFADC432CB6B22F00083D30 /* CommentCardResponse.swift in Sources */,
 				2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
+				385E65A32CBE56D00032E120 /* Coordinate.swift in Sources */,
 				38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
 				388009872CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */,
 				2AE6B14C2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */,
 				388009912CABF855002A9209 /* SOMTagModel.swift in Sources */,
-				38608B302CB5195D0066BB40 /* MainHomeCard.swift in Sources */,
+				38608B302CB5195D0066BB40 /* Card.swift in Sources */,
 				2AE6B15A2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				38B6AAE62CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */,
 				38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
+				38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				388009942CABFAAA002A9209 /* SOMTags.swift in Sources */,
@@ -1091,6 +1122,7 @@
 				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				38B6AAE22CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
+				38D5CE0F2CBCFA070054AB9A /* DetailCard.swift in Sources */,
 				38B8A5882CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
 				388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				382C58752CA64F8F00CEF814 /* PopularCardResponse.swift in Sources */,
@@ -1140,7 +1172,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = "ec2-43-203-217-225.ap-northeast-2.compute.amazonaws.com:8080";
+				SOOUM_SERVER_ENDPOINT = "ec2-3-35-167-223.ap-northeast-2.compute.amazonaws.com:8080";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1176,7 +1208,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = "ec2-43-203-217-225.ap-northeast-2.compute.amazonaws.com:8080";
+				SOOUM_SERVER_ENDPOINT = "ec2-3-35-167-223.ap-northeast-2.compute.amazonaws.com:8080";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
