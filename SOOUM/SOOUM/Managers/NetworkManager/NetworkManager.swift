@@ -131,6 +131,13 @@ extension NetworkManager: NetworkManagerDelegate {
                                 "method: \(request.method.rawValue)"
                             )
                             
+                            /// 서버 응답을 그대로 확인하고 디버깅하기 위해 출력
+                            if let json = try? JSONSerialization.jsonObject(with: response.data ?? .init()),
+                               let pretty = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
+                               let toString = String(data: pretty, encoding: .utf8) {
+                                print("data: \n \(toString)")
+                            }
+                            
                             observer.onNext(value)
                             observer.onCompleted()
                         }
