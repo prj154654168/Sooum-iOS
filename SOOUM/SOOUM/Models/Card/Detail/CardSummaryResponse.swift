@@ -45,7 +45,7 @@ extension CardSummaryResponse: EmptyInitializable {
     }
 }
 
-struct CardSummary: Codable {
+struct CardSummary: Equatable, Codable {
     let commentCnt: Int
     let cardLikeCnt: Int
     let isLiked: Bool

@@ -164,6 +164,7 @@ import RxSwift
          .disposed(by: self.disposeBag)
          
          reactor.state.map(\.commentCards)
+             .distinctUntilChanged()
              .subscribe(with: self) { object, commentCards in
                  object.commentCards = commentCards
                  object.collectionView.reloadData()
@@ -171,6 +172,7 @@ import RxSwift
              .disposed(by: disposeBag)
 
          reactor.state.map(\.cardSummary)
+             .distinctUntilChanged()
              .subscribe(with: self) { object, cardSummary in
                  object.cardSummary = cardSummary
                  object.collectionView.reloadData()
