@@ -81,6 +81,8 @@ import RxSwift
      var commentCards = [Card]()
      var cardSummary = CardSummary()
      
+     var isDeleted = false
+     
      // MARK: - Life Cycles
      
      override func setupNaviBar() {
@@ -178,6 +180,14 @@ import RxSwift
                  object.collectionView.reloadData()
              }
              .disposed(by: disposeBag)
+         
+         reactor.state.map(\.isDeleted)
+             .distinctUntilChanged()
+             .subscribe(with: self) { object, isDeleted in
+                 object.isDeleted = isDeleted
+                 object.collectionView.reloadData()
+             }
+             .disposed(by: self.disposeBag)
      }
  }
 
@@ -197,6 +207,11 @@ extension DetailViewController: UICollectionViewDataSource {
         let cell: DetailViewCell = collectionView
             .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
             as! DetailViewCell
+    
+        guard self.isDeleted == false else {
+            cell.isDeleted()
+            return cell
+        }
         
         let card = Card(
             id: self.detailCard.id,
@@ -213,7 +228,7 @@ extension DetailViewController: UICollectionViewDataSource {
             isLiked: self.detailCard.isLiked,
             isCommentWritten: self.detailCard.isCommentWritten
         )
-        let model: SOMCardModel = .init(data: card, type: .detail)
+        let model: SOMCardModel = .init(data: card)
         
         let tags: [SOMTagModel] = self.detailCard.tags.map {
             SOMTagModel(id: $0.id, originalText: $0.content)
@@ -239,14 +254,21 @@ extension DetailViewController: UICollectionViewDataSource {
             .disposed(by: cell.disposeBag)
         
         cell.rightTopSettingButton.rx.tap
-            .subscribe(with: self.moreButtonBottomSheetViewController) { bottomSheet, _ in
-                var wrapper: SwiftEntryKitViewControllerWrapper = bottomSheet.sek
-                wrapper.entryName = Text.moreBottomSheetEntryName
-                wrapper.showBottomNote(
-                    screenColor: .som.black.withAlphaComponent(0.7),
-                    screenInteraction: .dismiss,
-                    isHandleBar: true
-                )
+            .subscribe(with: self) { object, _ in
+                
+                if self.detailCard.isOwnCard {
+                    /// 자신의 카드일 때 카드 삭제하기
+                    object.reactor?.action.onNext(.delete)
+                } else {
+                    /// 자신의 카드가 아닐 때 차단/신고하기
+                    var wrapper: SwiftEntryKitViewControllerWrapper = object.moreButtonBottomSheetViewController.sek
+                    wrapper.entryName = Text.moreBottomSheetEntryName
+                    wrapper.showBottomNote(
+                        screenColor: .som.black.withAlphaComponent(0.7),
+                        screenInteraction: .dismiss,
+                        isHandleBar: true
+                    )
+                }
             }
             .disposed(by: cell.disposeBag)
         
@@ -269,16 +291,25 @@ extension DetailViewController: UICollectionViewDataSource {
             
             footer.setDatas(self.commentCards, cardSummary: self.cardSummary)
             
+            guard let reactor = self.reactor else { return footer }
+            
             footer.didTap
                 .subscribe(with: self) { object, _ in
                     let willRemoveViewController = object.navigationController?.viewControllers.last as? DetailViewController
                     let selectedId = footer.commentCards[indexPath.row].id
                     let viewController = DetailViewController()
-                    viewController.reactor = object.reactor?.reactorForPush(selectedId)
+                    viewController.reactor = reactor.reactorForPush(selectedId)
                     object.navigationPush(viewController, animated: true) { _ in
                         object.navigationController?.viewControllers.removeAll(where: { $0 == willRemoveViewController })
                     }
                 }
+                .disposed(by: footer.disposeBag)
+            
+            footer.likeAndCommentView.likeBackgroundButton.rx.tap
+                .withLatestFrom(reactor.state.map(\.isLike))
+                .subscribe(onNext: { isLike in
+                    reactor.action.onNext(.updateLike(isLike))
+                })
                 .disposed(by: footer.disposeBag)
             return footer
         } else {
