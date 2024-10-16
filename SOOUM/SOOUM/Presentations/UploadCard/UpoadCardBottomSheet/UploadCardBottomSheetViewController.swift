@@ -55,6 +55,11 @@ class UploadCardBottomSheetViewController: UIViewController {
             SelectDefaultImageTableViewCell.self,
             forCellReuseIdentifier: String(describing: SelectDefaultImageTableViewCell.self)
         )
+        $0.register(
+            SelectFontTableViewCell.self,
+            forCellReuseIdentifier: String(describing: SelectFontTableViewCell.self)
+        )
+        
         
         $0.dataSource = self
         $0.delegate = self
@@ -88,7 +93,7 @@ class UploadCardBottomSheetViewController: UIViewController {
 extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        1
+        2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -108,7 +113,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
             return createSelectDefaultImageTableViewCell(indexPath: indexPath)
             
         case .selectFont:
-            return createSelectDefaultImageTableViewCell(indexPath: indexPath)
+            return createSelectFontTableViewCell(indexPath: indexPath)
             
         case .otherSettings:
             return createSelectDefaultImageTableViewCell(indexPath: indexPath)
@@ -123,6 +128,17 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! SelectDefaultImageTableViewCell
+        return cell
+    }
+    
+    private func createSelectFontTableViewCell(indexPath: IndexPath) -> SelectFontTableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier:
+                String(
+                    describing: SelectFontTableViewCell.self
+                ),
+            for: indexPath
+        ) as! SelectFontTableViewCell
         return cell
     }
 }
