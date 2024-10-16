@@ -18,6 +18,7 @@ class DetailViewCell: UICollectionViewCell {
     enum Text {
         static let prevCardTitle: String = "전글"
         static let pungedPrevCardTitle: String = "삭제됨"
+        static let deletedCardInDetailText: String = "이 글은 삭제되었어요"
     }
     
     let cardView = SOMCard().then {
@@ -55,6 +56,30 @@ class DetailViewCell: UICollectionViewCell {
         config.image?.withTintColor(.som.gray04)
         config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray04 }
         $0.configuration = config
+    }
+    
+    /// 상세보기, 카드 삭제 됐을 때 배경
+    let deletedCardInDetailBackgroundView = UIView().then {
+        $0.backgroundColor = .init(hex: "#F8F8F8")
+        $0.layer.cornerRadius = 40
+        $0.layer.masksToBounds = true
+        $0.isHidden = true
+    }
+    /// 상세보기, 카드 삭제 됐을 때 이미지
+    let deletedCardInDetailImageView = UIImageView().then {
+        $0.image = .init(.icon(.outlined(.trash)))
+        $0.tintColor = .som.gray02
+    }
+    /// 상세보기, 카드 삭제 됐을 때 라벨
+    let deletedCardInDetailLabel = UILabel().then {
+        $0.text = Text.deletedCardInDetailText
+        $0.textColor = .som.gray02
+        $0.textAlignment = .center
+        $0.typography = .init(
+            fontContainer: Pretendard(size: 16, weight: .semibold),
+            lineHeight: 26,
+            letterSpacing: -0.04
+        )
     }
     
     lazy var tags = SOMTags()
@@ -113,11 +138,10 @@ class DetailViewCell: UICollectionViewCell {
         
         self.contentView.addSubview(self.prevCardBackgroundImageView)
         self.prevCardBackgroundImageView.snp.makeConstraints {
-            $0.top.equalTo(self.cardView.snp.top).offset(16)
-            $0.leading.equalTo(self.cardView.snp.leading).offset(16)
+            $0.top.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(36)
             $0.size.equalTo(44)
         }
-        
         self.prevCardBackgroundImageView.addSubviews(self.prevCardTextLabel)
         self.prevCardTextLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
@@ -125,9 +149,7 @@ class DetailViewCell: UICollectionViewCell {
         
         self.contentView.addSubview(self.prevCardBackgroundButton)
         self.prevCardBackgroundButton.snp.makeConstraints {
-            $0.top.equalTo(self.cardView.snp.top).offset(16)
-            $0.leading.equalTo(self.cardView.snp.leading).offset(16)
-            $0.size.equalTo(44)
+            $0.edges.equalTo(self.prevCardBackgroundImageView.snp.edges)
         }
         
         self.contentView.addSubview(self.rightTopSettingButton)
@@ -135,6 +157,30 @@ class DetailViewCell: UICollectionViewCell {
             $0.top.equalTo(self.cardView.snp.top).offset(26)
             $0.trailing.equalTo(self.cardView.snp.trailing).offset(-26)
             $0.size.equalTo(24)
+        }
+        
+        self.contentView.addSubview(self.deletedCardInDetailBackgroundView)
+        self.deletedCardInDetailBackgroundView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+            let width: CGFloat = UIScreen.main.bounds.width - 20 * 2
+            $0.height.equalTo(width)
+        }
+        
+        let container = UIStackView(arrangedSubviews: [
+            self.deletedCardInDetailImageView,
+            self.deletedCardInDetailLabel
+        ]).then {
+            $0.axis = .vertical
+            $0.alignment = .center
+        }
+        self.deletedCardInDetailBackgroundView.addSubview(container)
+        container.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        self.deletedCardInDetailImageView.snp.makeConstraints {
+            $0.size.equalTo(60)
         }
         
         self.contentView.addSubview(self.tags)
@@ -152,5 +198,11 @@ class DetailViewCell: UICollectionViewCell {
         self.tags.snp.updateConstraints {
             $0.height.equalTo(tags.isEmpty ? 40 : 59)
         }
+    }
+    
+    func isDeleted() {
+        self.cardView.removeFromSuperview()
+        self.rightTopSettingButton.removeFromSuperview()
+        self.deletedCardInDetailBackgroundView.isHidden = false
     }
 }
