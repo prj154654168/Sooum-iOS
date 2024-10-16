@@ -512,7 +512,6 @@
 				38FDC2B42C9E745B00C094C2 /* Base */,
 				385620EC2CA19C0D00E0AB5A /* Managers */,
 				38B6AAE42CA47E8D00CE6DB6 /* Models */,
-				385E65A22CBE56D00032E120 /* Coordinate.swift */,
 				385071972CA2956D00A7905A /* Presentations */,
 				388371FE2C8C8FAC004212EB /* Extensions */,
 				3836ACB12C8F042C00A3C566 /* Utilities */,
@@ -694,6 +693,7 @@
 		38B6AAE42CA47E8D00CE6DB6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				385E65A22CBE56D00032E120 /* Coordinate.swift */,
 				38D5CE0D2CBCF7210054AB9A /* Card */,
 				2AE6B15C2CBEB2BE00FA5C3C /* Report */,
 			);
