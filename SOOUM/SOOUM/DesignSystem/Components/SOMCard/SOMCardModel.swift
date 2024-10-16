@@ -9,6 +9,7 @@ import Foundation
 
 
 class SOMCardModel {
+    
     /// 카드 정보
     let data: Card
     /// 스토리 펑타임

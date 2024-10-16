@@ -18,7 +18,7 @@ enum AuthStatus {
 }
 
 protocol LocationManagerDelegate: AnyObject {
-//    
+    
     func locationManager(
         _ manager: LocationManager,
         didUpdateCoordinate coordinate: CLLocationCoordinate2D
@@ -35,8 +35,12 @@ class LocationManager: NSObject {
     
     weak var delegate: LocationManagerDelegate?
     
-    private(set) var coordinate: CLLocationCoordinate2D?
     private(set) var locationAuthStatus: AuthStatus
+    
+    var coordinate: Coordinate {
+        let coordinate = SimpleDefaults.shared.loadLocation()
+        return coordinate
+    }
     
     private override init() {
         self.locationAuthStatus = .notDetermined
@@ -65,6 +69,7 @@ class LocationManager: NSObject {
             self.locationManager.startUpdatingLocation()
         default:
             self.locationManager.stopUpdatingLocation()
+            SimpleDefaults.shared.initLocation()
         }
     }
     
@@ -91,7 +96,11 @@ extension LocationManager: CLLocationManagerDelegate {
     /// 위치 정보 업데이트
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let coordinate = locations.last?.coordinate else { return }
-        self.coordinate = coordinate
+        let convert: Coordinate = .init(
+            latitude: coordinate.latitude.description,
+            longitude: coordinate.longitude.description
+        )
+        SimpleDefaults.shared.saveLocation(convert)
         self.delegate?.locationManager(self, didUpdateCoordinate: coordinate)
     }
     

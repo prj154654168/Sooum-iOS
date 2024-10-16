@@ -28,7 +28,6 @@ class LikeAndCommentView: UIView {
         )
     }
     
-    let commentBackgroundButton = UIButton()
     private let commentImageView = UIImageView().then {
         $0.image = .init(.icon(.outlined(.commentAdd)))
         $0.tintColor = .som.black
@@ -91,10 +90,6 @@ class LikeAndCommentView: UIView {
         commentContainer.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().offset(-20)
-        }
-        self.addSubviews(self.commentBackgroundButton)
-        self.commentBackgroundButton.snp.makeConstraints {
-            $0.edges.equalTo(commentContainer)
         }
         
         let likeContainer = UIStackView(

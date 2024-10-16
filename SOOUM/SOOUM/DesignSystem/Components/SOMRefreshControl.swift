@@ -35,10 +35,12 @@ class SOMRefreshControl: UIRefreshControl {
     }
     
     deinit {
-        removeObserver(self, forKeyPath: #keyPath(isRefreshing))
+        self.removeObserver(self, forKeyPath: #keyPath(isRefreshing))
     }
     
     private func setupConstraints() {
+        
+        self.addObserver(self, forKeyPath: #keyPath(isRefreshing), options: .new, context: nil)
         
         self.tintColor = .clear
         
@@ -76,9 +78,9 @@ class SOMRefreshControl: UIRefreshControl {
         self.animation(false)
     }
     
-    private func animation(_ isStarted: Bool) {
+    private func animation(_ isRefreshing: Bool) {
         
-        if isStarted {
+        if isRefreshing {
             let rotate = CABasicAnimation(keyPath: "transform.rotation.z")
             rotate.toValue = NSNumber(value: Double.pi * 2.0)
             rotate.duration = 1
