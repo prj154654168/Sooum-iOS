@@ -23,6 +23,10 @@ enum CardRequest: BaseRequest {
     case commentCard(id: String, latitude: String?, longitude: String?)
     /// 상세보기 - 댓글 좋아요 정보
     case cardSummary(id: String)
+    /// 상세보기 - 카드 삭제
+    case deleteCard(id: String)
+    /// 상세보기 - 좋아요 업데이트
+    case updateLike(id: String, isLike: Bool)
     
 
     var path: String {
@@ -52,6 +56,10 @@ enum CardRequest: BaseRequest {
             
         case let .cardSummary(id):
             return "/cards/current/\(id)/summary"
+        case let .deleteCard(id):
+            return "/cards/\(id)"
+        case let .updateLike(id, _):
+            return "/cards/\(id)/like"
         }
     }
 
@@ -59,6 +67,10 @@ enum CardRequest: BaseRequest {
         switch self {
         case .latestCard, .popularCard, .distancCard, .detailCard, .commentCard, .cardSummary:
             return .get
+        case .deleteCard:
+            return .delete
+        case let .updateLike(_, isLike):
+            return isLike ? .post : .delete
         }
     }
 
@@ -95,14 +107,14 @@ enum CardRequest: BaseRequest {
                 return [:]
             }
         
-        case .cardSummary:
+        case .cardSummary, .updateLike, .deleteCard:
             return [:]
         }
     }
 
     var encoding: ParameterEncoding {
         switch self {
-        case .latestCard, .popularCard, .distancCard, .detailCard, .commentCard, .cardSummary:
+        default:
             return URLEncoding.queryString
         }
     }

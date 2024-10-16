@@ -12,12 +12,16 @@ class DetailViewReactor: Reactor {
     
     enum Action: Equatable {
         case refresh
+        case delete
+        case updateLike(Bool)
     }
     
     enum Mutation {
         case detailCard(DetailCard, PrevCard)
         case commentCards([Card])
         case cardSummary(CardSummary)
+        case updateIsDeleted(Bool)
+        case updateLike(Bool)
         case updateIsLoading(Bool)
     }
     
@@ -26,6 +30,8 @@ class DetailViewReactor: Reactor {
         var prevCard: PrevCard
         var commentCards: [Card]
         var cardSummary: CardSummary
+        var isDeleted: Bool
+        var isLike: Bool
         var isLoading: Bool
     }
     
@@ -34,6 +40,8 @@ class DetailViewReactor: Reactor {
         prevCard: .init(),
         commentCards: [],
         cardSummary: .init(),
+        isDeleted: false,
+        isLike: false,
         isLoading: false
     )
     
@@ -63,6 +71,19 @@ class DetailViewReactor: Reactor {
                 },
                 .just(.updateIsLoading(false))
             ])
+        case .delete:
+            guard let id = self.selectedCardIds.last else { return .empty() }
+            let request: CardRequest = .deleteCard(id: id)
+            return self.networkManager.request(Status.self, request: request)
+                .map { _ in .updateIsDeleted(true) }
+        case let .updateLike(isLike):
+            guard let id = self.selectedCardIds.last else { return .empty() }
+            let request: CardRequest = .updateLike(id: id, isLike: !isLike)
+            return .concat([
+                self.networkManager.request(Status.self, request: request)
+                    .map { _ in .updateLike(!isLike) },
+                self.fetchCardSummary()
+            ])
         }
     }
     
@@ -76,6 +97,10 @@ class DetailViewReactor: Reactor {
             state.commentCards = commentCards
         case let .cardSummary(cardSummary):
             state.cardSummary = cardSummary
+        case let .updateIsDeleted(isDeleted):
+            state.isDeleted = isDeleted
+        case let .updateLike(isLike):
+            state.isLike = isLike
         case let .updateIsLoading(isLoading):
             state.isLoading = isLoading
         }
