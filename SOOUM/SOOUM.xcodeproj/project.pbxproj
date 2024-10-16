@@ -37,6 +37,16 @@
 		2AFADC442CB6B22F00083D30 /* CommentCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFADC422CB6B22F00083D30 /* CommentCardResponse.swift */; };
 		2AFADC462CB6B23F00083D30 /* CardSummaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFADC452CB6B23F00083D30 /* CardSummaryResponse.swift */; };
 		2AFADC472CB6B23F00083D30 /* CardSummaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFADC452CB6B23F00083D30 /* CardSummaryResponse.swift */; };
+		2AE6B1632CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1622CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift */; };
+		2AE6B1642CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1622CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift */; };
+		2AE6B1662CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1652CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift */; };
+		2AE6B1672CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1652CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift */; };
+		2AE6B16D2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B16C2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift */; };
+		2AE6B16E2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B16C2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift */; };
+		2AE6B1712CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1702CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift */; };
+		2AE6B1722CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1702CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift */; };
+		2AE6B1752CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1742CBFD59B00FA5C3C /* ImageCollectionViewCell.swift */; };
+		2AE6B1762CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1742CBFD59B00FA5C3C /* ImageCollectionViewCell.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
@@ -263,6 +273,11 @@
 		2AE6B15D2CBEB2D800FA5C3C /* ReportResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportResponse.swift; sourceTree = "<group>"; };
 		2AFADC422CB6B22F00083D30 /* CommentCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCardResponse.swift; sourceTree = "<group>"; };
 		2AFADC452CB6B23F00083D30 /* CardSummaryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSummaryResponse.swift; sourceTree = "<group>"; };
+		2AE6B1622CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadCardBottomSheetViewController.swift; sourceTree = "<group>"; };
+		2AE6B1652CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadCardBottomSheetViewReactor.swift; sourceTree = "<group>"; };
+		2AE6B16C2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadCardBottomSheetSegmentView.swift; sourceTree = "<group>"; };
+		2AE6B1702CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDefaultImageTableViewCell.swift; sourceTree = "<group>"; };
+		2AE6B1742CBFD59B00FA5C3C /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
 		38121E2C2CA6C53300602499 /* distanceCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = distanceCardResponse.swift; sourceTree = "<group>"; };
@@ -445,6 +460,50 @@
 			path = Report;
 			sourceTree = "<group>";
 		};
+		2AE6B1602CBFB7C000FA5C3C /* UploadCard */ = {
+			isa = PBXGroup;
+			children = (
+				2AE6B1612CBFB7D200FA5C3C /* UpoadCardBottomSheet */,
+			);
+			path = UploadCard;
+			sourceTree = "<group>";
+		};
+		2AE6B1612CBFB7D200FA5C3C /* UpoadCardBottomSheet */ = {
+			isa = PBXGroup;
+			children = (
+				2AE6B1622CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift */,
+				2AE6B1652CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift */,
+				2AE6B16F2CBFD00E00FA5C3C /* Cells */,
+				2AE6B16B2CBFBC3F00FA5C3C /* Views */,
+			);
+			path = UpoadCardBottomSheet;
+			sourceTree = "<group>";
+		};
+		2AE6B16B2CBFBC3F00FA5C3C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2AE6B16C2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2AE6B16F2CBFD00E00FA5C3C /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				2AE6B1702CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift */,
+				2AE6B1732CBFD58B00FA5C3C /* Cells */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		2AE6B1732CBFD58B00FA5C3C /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				2AE6B1742CBFD59B00FA5C3C /* ImageCollectionViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		38026E3D2CA2B44B0045E1CE /* LocationManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -562,6 +621,7 @@
 		385071972CA2956D00A7905A /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
+				2AE6B1602CBFB7C000FA5C3C /* UploadCard */,
 				385071982CA2958100A7905A /* Launch */,
 				38B6AACB2CA410C000CE6DB6 /* Main */,
 			);
@@ -1158,6 +1218,7 @@
 				382C58792CA651E800CEF814 /* CardProtocol.swift in Sources */,
 				385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				38B6AAD22CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */,
+				2AE6B1672CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift in Sources */,
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
 				385E65A72CBE6E270032E120 /* DetailCardByCommentResponse.swift in Sources */,
 				38389BA02CCCFB7D006728AF /* AuthKeyChain.swift in Sources */,
@@ -1206,11 +1267,15 @@
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
+				2AE6B16E2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */,
 				38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				3816C0612CCDE35300C8688C /* ErrorInterceptor.swift in Sources */,
 				38FDC2C82C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				3880097C2CABEE3D002A9209 /* DetailViewController.swift in Sources */,
+				2AE6B1762CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */,
+				2AE6B1642CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */,
 				38B6AAD62CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
+				2AE6B1722CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift in Sources */,
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
@@ -1270,6 +1335,7 @@
 				2AFADC432CB6B22F00083D30 /* CommentCardResponse.swift in Sources */,
 				2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
 				385E65A32CBE56D00032E120 /* Coordinate.swift in Sources */,
+				2AE6B1632CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */,
 				38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */,
@@ -1333,6 +1399,8 @@
 				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38B8A5802CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
 				38B6AAD52CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
+				2AE6B1712CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift in Sources */,
+				2AE6B1662CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift in Sources */,
 				38121E2D2CA6C53300602499 /* distanceCardResponse.swift in Sources */,
 				38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
@@ -1346,6 +1414,7 @@
 				382C58782CA651E800CEF814 /* CardProtocol.swift in Sources */,
 				2A048E7B2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
 				38121E312CA6C77500602499 /* Double.swift in Sources */,
+				2AE6B1752CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */,
 				384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
 				3816C05C2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */,
@@ -1360,6 +1429,7 @@
 				2AE6B15E2CBEB2D800FA5C3C /* ReportResponse.swift in Sources */,
 				38B8A5842CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,
+				2AE6B16D2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */,
 				38B6AAE22CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
 				38D5CE0F2CBCFA070054AB9A /* DetailCard.swift in Sources */,
