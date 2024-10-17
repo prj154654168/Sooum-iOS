@@ -59,7 +59,10 @@ class UploadCardBottomSheetViewController: UIViewController {
             SelectFontTableViewCell.self,
             forCellReuseIdentifier: String(describing: SelectFontTableViewCell.self)
         )
-        
+        $0.register(
+            UploadCardSettingTableViewCell.self,
+            forCellReuseIdentifier: String(describing: UploadCardSettingTableViewCell.self)
+        )
         
         $0.dataSource = self
         $0.delegate = self
@@ -93,7 +96,7 @@ class UploadCardBottomSheetViewController: UIViewController {
 extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        2
+        Section.allCases.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -102,8 +105,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
             1
             
         case .otherSettings:
-            1
-//            Section.OtherSettings.allCases.count
+            Section.OtherSettings.allCases.count
         }
     }
     
@@ -116,7 +118,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
             return createSelectFontTableViewCell(indexPath: indexPath)
             
         case .otherSettings:
-            return createSelectDefaultImageTableViewCell(indexPath: indexPath)
+            return createUploadCardSettingTableViewCell(indexPath: indexPath)
         }
     }
     
@@ -139,6 +141,19 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! SelectFontTableViewCell
+        return cell
+    }
+    
+    private func createUploadCardSettingTableViewCell(indexPath: IndexPath) -> UploadCardSettingTableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier:
+                String(
+                    describing: UploadCardSettingTableViewCell.self
+                ),
+            for: indexPath
+        ) as! UploadCardSettingTableViewCell
+        
+        cell.setData(settingOption: Section.OtherSettings.allCases[indexPath.item], state: false)
         return cell
     }
 }

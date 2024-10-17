@@ -7,7 +7,23 @@
 
 import UIKit
 
+import ReactorKit
+import RxGesture
+import RxSwift
+
+import SnapKit
+import Then
+
 class SelectFontTableViewCell: UITableViewCell {
+    
+    enum FontType {
+        case gothic
+        case handwriting
+    }
+    
+    var selectedFont: FontType = .gothic
+    
+    var disposeBag = DisposeBag()
 
     let titleLabel = UILabel().then {
         $0.typography = .init(
@@ -58,11 +74,71 @@ class SelectFontTableViewCell: UITableViewCell {
     // MARK: - init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
         setupConstraint()
+        //  TODO: 삭제
+        setData()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
+    
+    // MARK: - setData
+    func setData() {
+        action()
+    }
+    
+    // MARK: - action
+    private func action() {
+        gothicButtonLabel.rx.tapGesture()
+            .when(.recognized)
+            .subscribe { _ in
+                self.updateFont(font: .gothic, animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        handwritingButtonLabel.rx.tapGesture()
+            .when(.recognized)
+            .subscribe { _ in
+                self.updateFont(font: .handwriting, animated: true)
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    private func updateFont(font: FontType, animated: Bool) {
+        self.selectedFont = font
+        let duration = animated ? 0.2 : 0.0
+        
+        UIView.animate(withDuration: duration) {
+            self.gothicButtonLabel.backgroundColor = font == .gothic ? .som.primary : .som.gray04
+            self.handwritingButtonLabel.backgroundColor = font == .handwriting ? .som.primary : .som.gray04
+        }
+        
+        UIView.transition(
+            with: self.gothicButtonLabel,
+            duration: duration,
+            options: .transitionCrossDissolve,
+            animations: {
+                self.gothicButtonLabel.textColor = font == .gothic ? .som.white : .som.gray01
+            }, 
+            completion: nil
+        )
+        
+        UIView.transition(
+            with: self.handwritingButtonLabel,
+            duration: duration,
+            options: .transitionCrossDissolve,
+            animations: {
+                self.handwritingButtonLabel.textColor = font == .handwriting ? .som.white : .som.gray01
+            }, 
+            completion: nil
+        )
     }
 
     // MARK: - setupConstraint

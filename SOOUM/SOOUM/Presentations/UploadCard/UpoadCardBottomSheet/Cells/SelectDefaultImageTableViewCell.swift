@@ -18,6 +18,8 @@ class SelectDefaultImageTableViewCell: UITableViewCell {
     // 이미지 컬렉션 뷰 설정
     lazy var imageCollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout).then {
         $0.showsHorizontalScrollIndicator = false
+        $0.layer.cornerRadius = 10
+        $0.clipsToBounds = true
         $0.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: "ImageCollectionViewCell")
         $0.dataSource = self
         $0.delegate = self
