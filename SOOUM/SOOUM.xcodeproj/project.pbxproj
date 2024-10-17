@@ -49,6 +49,10 @@
 		2AE6B1762CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1742CBFD59B00FA5C3C /* ImageCollectionViewCell.swift */; };
 		2AE6B1782CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1772CBFE49D00FA5C3C /* SelectFontTableViewCell.swift */; };
 		2AE6B1792CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1772CBFE49D00FA5C3C /* SelectFontTableViewCell.swift */; };
+		2AE6B17B2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B17A2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift */; };
+		2AE6B17C2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B17A2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift */; };
+		2AE6B17F2CBFEA5200FA5C3C /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B17E2CBFEA5200FA5C3C /* ToggleView.swift */; };
+		2AE6B1802CBFEA5200FA5C3C /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B17E2CBFEA5200FA5C3C /* ToggleView.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
@@ -281,6 +285,8 @@
 		2AE6B1702CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDefaultImageTableViewCell.swift; sourceTree = "<group>"; };
 		2AE6B1742CBFD59B00FA5C3C /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		2AE6B1772CBFE49D00FA5C3C /* SelectFontTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFontTableViewCell.swift; sourceTree = "<group>"; };
+		2AE6B17A2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadCardSettingTableViewCell.swift; sourceTree = "<group>"; };
+		2AE6B17E2CBFEA5200FA5C3C /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
 		38121E2C2CA6C53300602499 /* distanceCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = distanceCardResponse.swift; sourceTree = "<group>"; };
@@ -493,8 +499,10 @@
 		2AE6B16F2CBFD00E00FA5C3C /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				2AE6B17D2CBFEA4200FA5C3C /* Views */,
 				2AE6B1772CBFE49D00FA5C3C /* SelectFontTableViewCell.swift */,
 				2AE6B1702CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift */,
+				2AE6B17A2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift */,
 				2AE6B1732CBFD58B00FA5C3C /* Cells */,
 			);
 			path = Cells;
@@ -506,6 +514,14 @@
 				2AE6B1742CBFD59B00FA5C3C /* ImageCollectionViewCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		2AE6B17D2CBFEA4200FA5C3C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2AE6B17E2CBFEA5200FA5C3C /* ToggleView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		38026E3D2CA2B44B0045E1CE /* LocationManager */ = {
@@ -1259,6 +1275,7 @@
 				38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				2AE6B1512CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
+				2AE6B1802CBFEA5200FA5C3C /* ToggleView.swift in Sources */,
 				38B8A5812CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
@@ -1294,6 +1311,7 @@
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
 				38405CCC2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
 				381A1D6B2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
+				2AE6B17C2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,
 				38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
 				38121E2E2CA6C53300602499 /* distanceCardResponse.swift in Sources */,
 				2AFADC472CB6B23F00083D30 /* CardSummaryResponse.swift in Sources */,
@@ -1355,6 +1373,7 @@
 				2AE6B15A2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				38B6AAE62CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */,
+				2AE6B17B2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,
 				38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				3887D0392CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
@@ -1363,6 +1382,7 @@
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				381A1D6A2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
+				2AE6B17F2CBFEA5200FA5C3C /* ToggleView.swift in Sources */,
 				388009942CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				38D6F1832CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
