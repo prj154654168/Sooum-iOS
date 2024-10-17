@@ -17,6 +17,7 @@ import Then
 class UploadCardBottomSheetViewController: UIViewController {
     
     enum Section: CaseIterable {
+        case imageSegment
         case selectImage
         case selectFont
         case otherSettings
@@ -44,13 +45,17 @@ class UploadCardBottomSheetViewController: UIViewController {
         }
     }
     
-    let segmentView = UploadCardBottomSheetSegmentView()
+//    let segmentView = UploadCardBottomSheetSegmentView()
     
     lazy var tableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
+        $0.register(
+            BottomSheetSegmentTableViewCell.self,
+            forCellReuseIdentifier: String(describing: BottomSheetSegmentTableViewCell.self)
+        )
         $0.register(
             SelectDefaultImageTableViewCell.self,
             forCellReuseIdentifier: String(describing: SelectDefaultImageTableViewCell.self)
@@ -75,17 +80,17 @@ class UploadCardBottomSheetViewController: UIViewController {
     }
     
     func setupConstraints() {
-        self.view.addSubview(segmentView)
-        segmentView.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-            $0.leading.equalToSuperview().offset(8)
-            $0.trailing.equalToSuperview().offset(-14)
-            $0.height.equalTo(32)
-        }
+//        self.view.addSubview(segmentView)
+//        segmentView.snp.makeConstraints {
+//            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+//            $0.leading.equalToSuperview().offset(8)
+//            $0.trailing.equalToSuperview().offset(-14)
+//            $0.height.equalTo(32)
+//        }
         
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints {
-            $0.top.equalTo(segmentView.snp.bottom)
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
@@ -101,7 +106,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section.allCases[section] {
-        case .selectImage, .selectFont:
+        case .imageSegment, .selectImage, .selectFont:
             1
             
         case .otherSettings:
@@ -111,6 +116,9 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section.allCases[indexPath.section] {
+        case .imageSegment:
+            return createBottomSheetSegmentTableViewCell(indexPath: indexPath)
+            
         case .selectImage:
             return createSelectDefaultImageTableViewCell(indexPath: indexPath)
             
@@ -120,6 +128,18 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
         case .otherSettings:
             return createUploadCardSettingTableViewCell(indexPath: indexPath)
         }
+    }
+    
+    private func createBottomSheetSegmentTableViewCell(indexPath: IndexPath) -> BottomSheetSegmentTableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier:
+                String(
+                    describing: BottomSheetSegmentTableViewCell.self
+                ),
+            for: indexPath
+        ) as! BottomSheetSegmentTableViewCell
+        cell.setData()
+        return cell
     }
     
     private func createSelectDefaultImageTableViewCell(indexPath: IndexPath) -> SelectDefaultImageTableViewCell {
@@ -141,6 +161,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! SelectFontTableViewCell
+        cell.setData()
         return cell
     }
     
