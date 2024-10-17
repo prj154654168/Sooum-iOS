@@ -31,6 +31,7 @@ class SelectDefaultImageTableViewCell: UITableViewCell {
     // 초기화 코드
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
         setupConstraint()
     }
     
