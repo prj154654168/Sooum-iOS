@@ -15,7 +15,7 @@ class SOMLocationFilterCollectionViewCell: UICollectionViewCell {
     /// 거리 범위 텍스트 표시하는 라벨
     let label = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 12, weight: .regular),
+            fontContainer: BuiltInFont(size: 12, weight: .regular),
             lineHeight: 14,
             letterSpacing: 0.07
         )

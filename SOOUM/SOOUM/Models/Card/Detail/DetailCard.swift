@@ -1,48 +1,12 @@
 //
-//  DetailCardResponse.swift
+//  DetailCard.swift
 //  SOOUM
 //
-//  Created by 오현식 on 10/8/24.
+//  Created by 오현식 on 10/14/24.
 //
 
 import Foundation
 
-
-struct DetailCardResponse: Codable {
-    let detailCard: DetailCard
-    let status: Status
-    
-    enum CodingKeys: String, CodingKey {
-        case detailCard
-        case status
-    }
-    
-    init(from decoder: any Decoder) throws {
-        let SingleContainer = try decoder.singleValueContainer()
-        self.detailCard = try SingleContainer.decode(DetailCard.self)
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.status = try container.decode(Status.self, forKey: .status)
-    }
-    
-    func encode(to encoder: any Encoder) throws {
-        var container = encoder.singleValueContainer()
-        
-        try container.encode(detailCard)
-        try container.encode(status)
-    }
-    
-    init() {
-        self.detailCard = .init()
-        self.status = .init()
-    }
-}
-
-extension DetailCardResponse: EmptyInitializable {
-    static func empty() -> DetailCardResponse {
-        return .init()
-    }
-}
 
 struct DetailCard: CardProtocol {
     
@@ -54,11 +18,16 @@ struct DetailCard: CardProtocol {
     let createdAt: Date
     let storyExpirationTime: Date?
     
+    let likeCnt: Int
+    let commentCnt: Int
+    
     let backgroundImgURL: URLString
     
     let font: Font
+    let fontSize: FontSize
     
-    let isStory: Bool
+    let isLiked: Bool
+    let isCommentWritten: Bool
     
     let isOwnCard: Bool
     
@@ -67,31 +36,44 @@ struct DetailCard: CardProtocol {
 
     enum CodingKeys: String, CodingKey {
         case id
+        case content
         case distance
         case createdAt
         case storyExpirationTime
-        case content
+        case likeCnt
+        case commentCnt
         case backgroundImgURL = "backgroundImgUrl"
         case font
-        case isStory
+        case fontSize
+        case isLiked
+        case isCommentWritten
         case isOwnCard
         case member
         case tags
     }
-    
-    static func == (lhs: Self, rhs: Self) -> Bool { lhs.id == rhs.id }
 }
 
 extension DetailCard {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
+extension DetailCard {
+    
     init() {
         self.id = ""
         self.content = ""
         self.distance = nil
         self.createdAt = Date()
         self.storyExpirationTime = nil
-        self.backgroundImgURL = .init(url: "")
+        self.likeCnt = 0
+        self.commentCnt = 0
+        self.backgroundImgURL = .init()
         self.font = .pretendard
-        self.isStory = false
+        self.fontSize = .big
+        self.isLiked = false
+        self.isCommentWritten = false
         self.isOwnCard = false
         self.member = .init()
         self.tags = []
@@ -107,9 +89,13 @@ extension DetailCard {
             forKey: .storyExpirationTime
         )
         self.content = try container.decode(String.self, forKey: .content)
+        self.likeCnt = try container.decode(Int.self, forKey: .likeCnt)
+        self.commentCnt = try container.decode(Int.self, forKey: .commentCnt)
         self.backgroundImgURL = try container.decode(URLString.self, forKey: .backgroundImgURL)
         self.font = try container.decode(Font.self, forKey: .font)
-        self.isStory = try container.decode(Bool.self, forKey: .isStory)
+        self.fontSize = try container.decode(FontSize.self, forKey: .fontSize)
+        self.isLiked = try container.decode(Bool.self, forKey: .isLiked)
+        self.isCommentWritten = try container.decode(Bool.self, forKey: .isCommentWritten)
         
         self.isOwnCard = try container.decode(Bool.self, forKey: .isOwnCard)
         self.member = try container.decode(Member.self, forKey: .member)

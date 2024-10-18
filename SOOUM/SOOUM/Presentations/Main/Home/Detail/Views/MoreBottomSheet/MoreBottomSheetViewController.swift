@@ -24,7 +24,7 @@ class MoreBottomSheetViewController: BaseViewController {
         $0.textColor = .som.black
         $0.textAlignment = .center
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .medium),
+            fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 29,
             letterSpacing: -0.04
         )
@@ -36,7 +36,7 @@ class MoreBottomSheetViewController: BaseViewController {
         $0.textColor = .som.black
         $0.textAlignment = .center
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .medium),
+            fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 29,
             letterSpacing: -0.04
         )

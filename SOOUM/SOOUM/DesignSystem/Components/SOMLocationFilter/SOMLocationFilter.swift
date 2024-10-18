@@ -155,7 +155,7 @@ extension SOMLocationFilter:
         let label = UILabel().then {
             let distance = distances[indexPath.item]
             $0.typography = .init(
-                fontContainer: Pretendard(
+                fontContainer: BuiltInFont(
                     size: 12,
                     weight: .bold
                 ),

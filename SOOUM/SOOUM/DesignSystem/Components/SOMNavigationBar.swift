@@ -53,7 +53,7 @@ class SOMNavigationBar: UIView {
     let titleLabel = UILabel().then {
         $0.textColor = .som.black
         $0.typography = .init(
-            fontContainer: Pretendard(size: 18, weight: .semibold),
+            fontContainer: BuiltInFont(size: 18, weight: .semibold),
             lineHeight: 18,
             letterSpacing: 0.005
         )

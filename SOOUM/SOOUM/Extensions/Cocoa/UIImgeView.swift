@@ -31,7 +31,7 @@ extension UIImageView {
             Self.label.text = "Loading..."
             Self.label.textColor = .som.white
             Self.label.typography = .init(
-                fontContainer: Pretendard(size: 18, weight: .medium),
+                fontContainer: BuiltInFont(size: 18, weight: .medium),
                 lineHeight: 21.48,
                 letterSpacing: -0.04
             )

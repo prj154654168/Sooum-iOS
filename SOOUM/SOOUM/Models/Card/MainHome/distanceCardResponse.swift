@@ -24,7 +24,7 @@ extension DistanceCardResponse: EmptyInitializable {
     static func empty() -> DistanceCardResponse {
         return .init(
             embedded: .init(cards: []),
-            links: .init(next: .init(url: "")),
+            links: .init(),
             status: .init()
         )
     }

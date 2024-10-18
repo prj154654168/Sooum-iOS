@@ -15,7 +15,7 @@ class SOMTabBarItem: UIView {
     
     private let titleLabel = UILabel().then {
         $0.textAlignment = .center
-        $0.typography = .init(fontContainer: Pretendard(size: 10, weight: .medium), lineHeight: 12)
+        $0.typography = .init(fontContainer: BuiltInFont(size: 10, weight: .medium), lineHeight: 12)
         $0.textColor = .som.gray01
     }
     var title: String? {
@@ -76,7 +76,7 @@ class SOMTabBarItem: UIView {
         
         self.titleLabel.textColor = .som.white
         self.titleLabel.typography = .init(
-            fontContainer: Pretendard(size: 10, weight: .bold),
+            fontContainer: BuiltInFont(size: 10, weight: .bold),
             lineHeight: 12
         )
         self.imageView.tintColor = .som.white
@@ -88,7 +88,7 @@ class SOMTabBarItem: UIView {
         // TODO: 추후 DesignSystem의 Foundation이 정리되면 수정 (typography)
         self.titleLabel.textColor = .som.gray01
         self.titleLabel.typography = .init(
-            fontContainer: Pretendard(size: 10, weight: .medium),
+            fontContainer: BuiltInFont(size: 10, weight: .medium),
             lineHeight: 12
         )
         self.imageView.tintColor = .som.gray01

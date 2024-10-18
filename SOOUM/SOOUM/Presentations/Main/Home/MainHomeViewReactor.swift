@@ -14,7 +14,6 @@ class MainHomeViewReactor: Reactor {
         case refresh
         case moreFind(lastId: String?, selectedIndex: Int)
         case homeTabBarItemDidTap(index: Int)
-        case coordinate(String, String)
         case distanceFilter(String)
     }
     
@@ -22,7 +21,6 @@ class MainHomeViewReactor: Reactor {
         case cards([Card])
         case more([Card])
         case updateSelectedIndex(Int)
-        case updateCoordinate(String, String)
         case updateDistanceFilter(String)
         case updateIsLoading(Bool)
         case updateIsProcessing(Bool)
@@ -31,7 +29,6 @@ class MainHomeViewReactor: Reactor {
     struct State {
         var cards: [Card]
         var selectedIndex: Int
-        var coordinate: (String?, String?)
         var distanceFilter: String
         var isLoading: Bool
         var isProcessing: Bool
@@ -40,7 +37,6 @@ class MainHomeViewReactor: Reactor {
     var initialState: State = .init(
         cards: [],
         selectedIndex: 0,
-        coordinate: (nil, nil),
         distanceFilter: "UNDER_1",
         isLoading: false,
         isProcessing: false
@@ -74,10 +70,13 @@ class MainHomeViewReactor: Reactor {
                 self.refresh(index),
                 .just(.updateIsLoading(false))
             ])
-        case let .coordinate(latitude, longitude):
-            return .just(.updateCoordinate(latitude, longitude))
         case let .distanceFilter(distanceFilter):
-            return .just(.updateDistanceFilter(distanceFilter))
+            return .concat([
+                .just(.updateIsLoading(true)),
+                .just(.updateDistanceFilter(distanceFilter)),
+                self.refresh(2),
+                .just(.updateIsLoading(false))
+            ])
         }
     }
     
@@ -90,8 +89,6 @@ class MainHomeViewReactor: Reactor {
             state.cards += cards
         case let .updateSelectedIndex(selectedIndex):
             state.selectedIndex = selectedIndex
-        case let .updateCoordinate(latitude, longitude):
-            state.coordinate = (latitude, longitude)
         case let .updateDistanceFilter(distanceFilter):
             state.distanceFilter = distanceFilter
         case let .updateIsLoading(isLoading):
@@ -107,8 +104,8 @@ extension MainHomeViewReactor {
     
     func refresh(_ selectedIndex: Int = 0) -> Observable<Mutation> {
         
-        let latitude = self.currentState.coordinate.0
-        let longitude = self.currentState.coordinate.1
+        let latitude = self.locationManager.coordinate.latitude
+        let longitude = self.locationManager.coordinate.longitude
         
         let distanceFilter = self.currentState.distanceFilter
         
@@ -119,8 +116,8 @@ extension MainHomeViewReactor {
             case 2:
                 return .distancCard(
                     id: nil,
-                    latitude: latitude ?? "",
-                    longitude: longitude ?? "",
+                    latitude: latitude,
+                    longitude: longitude,
                     distanceFilter: distanceFilter
                 )
             default:
@@ -149,8 +146,8 @@ extension MainHomeViewReactor {
         
         let lastId = lastId ?? ""
         
-        let latitude = self.currentState.coordinate.0
-        let longitude = self.currentState.coordinate.1
+        let latitude = self.locationManager.coordinate.latitude
+        let longitude = self.locationManager.coordinate.longitude
         
         let distanceFilter = self.currentState.distanceFilter
         
@@ -159,8 +156,8 @@ extension MainHomeViewReactor {
             case 2:
                 return .distancCard(
                     id: lastId,
-                    latitude: latitude ?? "",
-                    longitude: longitude ?? "",
+                    latitude: latitude,
+                    longitude: longitude,
                     distanceFilter: distanceFilter
                 )
             default:
@@ -184,6 +181,6 @@ extension MainHomeViewReactor {
 extension MainHomeViewReactor {
     
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(selectedId)
+        DetailViewReactor([selectedId])
     }
 }
