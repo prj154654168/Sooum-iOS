@@ -38,7 +38,7 @@ extension SOMTagModel: Hashable {
 extension SOMTagModel {
     
     private static let textTypography: Typography = .init(
-        fontContainer: Pretendard(size: 14, weight: .medium),
+        fontContainer: BuiltInFont(size: 14, weight: .medium),
         lineHeight: 22,
         letterSpacing: -0.04
     )

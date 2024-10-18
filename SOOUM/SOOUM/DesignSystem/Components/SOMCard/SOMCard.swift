@@ -38,7 +38,7 @@ class SOMCard: UIView {
     /// 카드 펑 남은시간 표시 라벨
     let cardPungTimeLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 14,
                 weight: .bold
             ),
@@ -61,7 +61,7 @@ class SOMCard: UIView {
         $0.textColor = .som.white
         $0.textAlignment = .center
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .bold),
+            fontContainer: BuiltInFont(size: 16, weight: .bold),
             lineHeight: 19,
             letterSpacing: -0.04
         )
@@ -82,7 +82,7 @@ class SOMCard: UIView {
     /// 본문 표시 라벨
     let cardTextContentLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 16,
                 weight: .bold
             ),
@@ -119,7 +119,7 @@ class SOMCard: UIView {
     
     let timeLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 10,
                 weight: .bold
             ),
@@ -142,7 +142,7 @@ class SOMCard: UIView {
     
     let distanceLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 10,
                 weight: .bold
             ),
@@ -165,7 +165,7 @@ class SOMCard: UIView {
     
     let likeLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 10,
                 weight: .bold
             ),
@@ -188,7 +188,7 @@ class SOMCard: UIView {
     
     let commentLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 10,
                 weight: .bold
             ),

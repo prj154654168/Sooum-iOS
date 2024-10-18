@@ -22,7 +22,7 @@ class LikeAndCommentView: UIView {
         $0.textColor = .som.black
         $0.textAlignment = .center
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .medium),
+            fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 17,
             letterSpacing: -0.04
         )
@@ -36,7 +36,7 @@ class LikeAndCommentView: UIView {
         $0.textColor = .som.black
         $0.textAlignment = .center
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .medium),
+            fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 17,
             letterSpacing: -0.04
         )

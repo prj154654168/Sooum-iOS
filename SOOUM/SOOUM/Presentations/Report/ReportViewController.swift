@@ -66,7 +66,7 @@ class ReportViewController: BaseViewController, View {
     
     let tableViewTitleLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 16,
                 weight: .semibold
             ),
@@ -90,7 +90,7 @@ class ReportViewController: BaseViewController, View {
     
     let uploadReportButtonLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 16,
                 weight: .bold
             ),

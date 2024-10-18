@@ -25,7 +25,7 @@ class ReportReasonView: UIView {
     
     let titleLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 16,
                 weight: .regular
             ),
@@ -37,7 +37,7 @@ class ReportReasonView: UIView {
     
     let descLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 12,
                 weight: .regular
             ),

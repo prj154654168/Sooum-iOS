@@ -25,7 +25,7 @@ class MoveTopButtonView: UIView {
         $0.text = Text.title
         $0.textColor = .som.gray01
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .bold),
+            fontContainer: BuiltInFont(size: 14, weight: .bold),
             lineHeight: 17,
             letterSpacing: -0.56
         )

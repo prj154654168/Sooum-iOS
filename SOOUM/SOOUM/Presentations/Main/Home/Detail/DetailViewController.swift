@@ -30,7 +30,7 @@ import RxSwift
          $0.textColor = .som.black
          $0.textAlignment = .center
          $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .bold),
+            fontContainer: BuiltInFont(size: 16, weight: .bold),
             lineHeight: 16,
             letterSpacing: -0.02
          )

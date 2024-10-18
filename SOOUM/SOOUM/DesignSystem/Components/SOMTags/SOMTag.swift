@@ -20,7 +20,7 @@ class SOMTag: UICollectionViewCell {
     private let label = UILabel().then {
         $0.textColor = .som.gray01
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .medium),
+            fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 22,
             letterSpacing: -0.04
         )

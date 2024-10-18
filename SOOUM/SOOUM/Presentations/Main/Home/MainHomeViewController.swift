@@ -100,7 +100,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         let placeholderTitleLabel = UILabel().then {
             $0.typography = .init(
-                fontContainer: Pretendard(size: 16, weight: .semibold),
+                fontContainer: BuiltInFont(size: 16, weight: .semibold),
                 lineHeight: 22,
                 letterSpacing: 0.005
             )
@@ -116,7 +116,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         let placeholderSubTitleLabel = UILabel().then {
             $0.typography = .init(
-                fontContainer: Pretendard(size: 14, weight: .semibold),
+                fontContainer: BuiltInFont(size: 14, weight: .semibold),
                 lineHeight: 18,
                 letterSpacing: 0.005
             )
