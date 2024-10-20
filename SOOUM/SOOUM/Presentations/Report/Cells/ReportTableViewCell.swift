@@ -30,7 +30,7 @@ class ReportTableViewCell: UITableViewCell {
     }
     
     // MARK: - setData
-    func setData(reason: ReportViewController.ReportType, isSelected: Bool) {
+    func setData(reason: ReportViewReactor.ReportType, isSelected: Bool) {
         reasonView.titleLabel.text = reason.title
         reasonView.descLabel.text = reason.description
         updateIsSelected(isSelected: isSelected, animated: false)

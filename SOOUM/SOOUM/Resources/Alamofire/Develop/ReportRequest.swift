@@ -11,7 +11,7 @@ import Alamofire
 
 enum ReportRequest: BaseRequest {
 
-    case reportCard(id: String, reportType: ReportViewController.ReportType)
+    case reportCard(id: String, reportType: ReportViewReactor.ReportType)
     
 
     var path: String {
@@ -56,7 +56,6 @@ enum ReportRequest: BaseRequest {
                 Constants.ContentType.json.rawValue,
                 forHTTPHeaderField: Constants.HTTPHeader.acceptType.rawValue
             )
-
             let encoded = try encoding.encode(request, with: self.parameters)
             return encoded
         } else {
