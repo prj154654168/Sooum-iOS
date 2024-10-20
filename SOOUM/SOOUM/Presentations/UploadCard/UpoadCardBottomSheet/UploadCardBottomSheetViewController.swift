@@ -45,7 +45,7 @@ class UploadCardBottomSheetViewController: UIViewController {
         }
     }
     
-//    let segmentView = UploadCardBottomSheetSegmentView()
+    var segmentState = BottomSheetSegmentTableViewCell.ImageSegment.defaultImage
     
     lazy var tableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
@@ -59,6 +59,10 @@ class UploadCardBottomSheetViewController: UIViewController {
         $0.register(
             SelectDefaultImageTableViewCell.self,
             forCellReuseIdentifier: String(describing: SelectDefaultImageTableViewCell.self)
+        )
+        $0.register(
+            SelectMyImageTableViewCell.self,
+            forCellReuseIdentifier: String(describing: SelectMyImageTableViewCell.self)
         )
         $0.register(
             SelectFontTableViewCell.self,
@@ -120,7 +124,12 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
             return createBottomSheetSegmentTableViewCell(indexPath: indexPath)
             
         case .selectImage:
-            return createSelectDefaultImageTableViewCell(indexPath: indexPath)
+            switch segmentState {
+            case .defaultImage:
+                return createSelectDefaultImageTableViewCell(indexPath: indexPath)
+            case .myImage:
+                return createSelectMyImageTableViewCell(indexPath: indexPath)
+            }
             
         case .selectFont:
             return createSelectFontTableViewCell(indexPath: indexPath)
@@ -138,7 +147,13 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! BottomSheetSegmentTableViewCell
-        cell.setData()
+        cell.setData(segmentState: segmentState)
+        cell.imageSegmentChanged
+            .subscribe { segment in
+                self.segmentState = segment
+                self.tableView.reloadSections(IndexSet([1, 2, 3]), with: .automatic)
+            }
+            .disposed(by: cell.disposeBag)
         return cell
     }
     
@@ -150,6 +165,17 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! SelectDefaultImageTableViewCell
+        return cell
+    }
+    
+    private func createSelectMyImageTableViewCell(indexPath: IndexPath) -> SelectMyImageTableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier:
+                String(
+                    describing: SelectMyImageTableViewCell.self
+                ),
+            for: indexPath
+        ) as! SelectMyImageTableViewCell
         return cell
     }
     

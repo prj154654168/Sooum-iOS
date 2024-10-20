@@ -21,6 +21,8 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
         case myImage
     }
     
+    let imageSegmentChanged = PublishSubject<ImageSegment>()
+    
     var selectedSegment: ImageSegment = .defaultImage
     
     var disposeBag = DisposeBag()
@@ -95,8 +97,9 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     }
     
     // MARK: - setData
-    func setData() {
+    func setData(segmentState: ImageSegment) {
         action()
+        updateImageSegment(segment: segmentState, animated: false)
     }
     
     // MARK: - action
@@ -104,6 +107,7 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
         defualtImageButtonLabel.rx.tapGesture()
             .when(.recognized)
             .subscribe { _ in
+                self.imageSegmentChanged.onNext(.defaultImage)
                 self.updateImageSegment(segment: .defaultImage, animated: true)
             }
             .disposed(by: disposeBag)
@@ -111,6 +115,7 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
         myImageButtonLabel.rx.tapGesture()
             .when(.recognized)
             .subscribe { _ in
+                self.imageSegmentChanged.onNext(.myImage)
                 self.updateImageSegment(segment: .myImage, animated: true)
             }
             .disposed(by: disposeBag)
