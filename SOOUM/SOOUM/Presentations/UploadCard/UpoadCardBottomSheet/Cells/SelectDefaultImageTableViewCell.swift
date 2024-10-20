@@ -20,7 +20,7 @@ class SelectDefaultImageTableViewCell: UITableViewCell {
         $0.showsHorizontalScrollIndicator = false
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
-        $0.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: "ImageCollectionViewCell")
+        $0.register(ImageCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: ImageCollectionViewCell.self))
         $0.dataSource = self
         $0.delegate = self
     }

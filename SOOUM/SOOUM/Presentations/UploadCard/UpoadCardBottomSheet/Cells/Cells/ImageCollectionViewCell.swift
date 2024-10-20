@@ -12,8 +12,8 @@ class ImageCollectionViewCell: UICollectionViewCell {
     
     // 이미지 뷰
     private let imageView = UIImageView().then {
-        $0.backgroundColor = .som.gray03
-        $0.layer.borderColor = UIColor.som.gray02.cgColor
+        $0.backgroundColor = .som.gray04
+        $0.layer.borderColor = UIColor.som.gray03.cgColor
         $0.layer.borderWidth = 1
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true

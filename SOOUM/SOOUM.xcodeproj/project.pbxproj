@@ -55,6 +55,8 @@
 		2AE6B1802CBFEA5200FA5C3C /* ToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B17E2CBFEA5200FA5C3C /* ToggleView.swift */; };
 		2AE6B18F2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B18E2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift */; };
 		2AE6B1902CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B18E2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift */; };
+		2AE6B1922CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1912CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift */; };
+		2AE6B1932CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1912CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
@@ -290,6 +292,7 @@
 		2AE6B17A2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadCardSettingTableViewCell.swift; sourceTree = "<group>"; };
 		2AE6B17E2CBFEA5200FA5C3C /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		2AE6B18E2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetSegmentTableViewCell.swift; sourceTree = "<group>"; };
+		2AE6B1912CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMyImageTableViewCell.swift; sourceTree = "<group>"; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
 		38121E2C2CA6C53300602499 /* distanceCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = distanceCardResponse.swift; sourceTree = "<group>"; };
@@ -504,8 +507,9 @@
 			children = (
 				2AE6B17D2CBFEA4200FA5C3C /* Views */,
 				2AE6B18E2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift */,
-				2AE6B1772CBFE49D00FA5C3C /* SelectFontTableViewCell.swift */,
 				2AE6B1702CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift */,
+				2AE6B1912CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift */,
+				2AE6B1772CBFE49D00FA5C3C /* SelectFontTableViewCell.swift */,
 				2AE6B17A2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift */,
 				2AE6B1732CBFD58B00FA5C3C /* Cells */,
 			);
@@ -1304,6 +1308,7 @@
 				2AE6B1722CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift in Sources */,
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
+				2AE6B1932CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				38D5CE102CBCFA070054AB9A /* DetailCard.swift in Sources */,
@@ -1438,6 +1443,7 @@
 				2A44A42A2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				2AE6B1502CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
+				2AE6B1922CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				2AE6B18F2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				3887D0362CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
