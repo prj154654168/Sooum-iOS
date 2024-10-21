@@ -17,15 +17,22 @@ import Then
 
 class MainHomeViewController: BaseNavigationViewController, View {
     
+    enum Text {
+        static let title: String = "아직 등록된 카드가 없어요"
+        static let subTitle: String = "사소하지만 말 못 한 이야기를\n카드로 만들어 볼까요?"
+    }
+    
     let logo = UIImageView().then {
         $0.image = .init(.logo)
         $0.tintColor = .som.primary
+        $0.contentMode = .scaleAspectFit
     }
+    
     let rightAlamButton = UIButton().then {
         var config = UIButton.Configuration.plain()
         config.image = .init(.icon(.outlined(.alarm)))
-        config.image?.withTintColor(.som.gray02)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray02 }
+        config.image?.withTintColor(.som.gray03)
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray03 }
         $0.configuration = config
     }
     
@@ -35,27 +42,20 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.isHidden = true
     }
     
-    let refreshControl = UIRefreshControl().then {
-        $0.tintColor = .som.black
-    }
-    
     lazy var tableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
-        let width = UIScreen.main.bounds.width
-        $0.rowHeight = (width - 20 * 2) * 0.9 + 10
-        $0.sectionHeaderHeight = 0
-        $0.sectionFooterHeight = 0
+        $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
         
-        $0.contentInset.top = 10
-        
-        $0.register(SOMCardTableViewCell.self, forCellReuseIdentifier: "cell")
-        
-        $0.refreshControl = self.refreshControl
+        $0.refreshControl = SOMRefreshControl()
         $0.dataSource = self
         $0.delegate = self
+    }
+    
+    let placeholderView = UIView().then {
+        $0.isHidden = true
     }
     
     /// tableView에 표시될 카드 정보
@@ -63,7 +63,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
     
     var tableViewTopConstraint: Constraint?
     
-    let coordinate = PublishSubject<(latitude: String, longitude: String)>()
+    let detailViewController = DetailViewController()
     
     
     // MARK: - Life Cycles
@@ -72,6 +72,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         super.setupNaviBar()
         
         self.navigationBar.titleView = self.logo
+        self.navigationBar.titlePosition = .left
         
         self.navigationBar.isHideBackButton = true
         self.navigationBar.setRightButtons([self.rightAlamButton])
@@ -90,6 +91,45 @@ class MainHomeViewController: BaseNavigationViewController, View {
         self.tableView.snp.makeConstraints {
             self.tableViewTopConstraint = $0.top.equalTo(self.headerView.snp.bottom).constraint
             $0.bottom.leading.trailing.equalToSuperview()
+        }
+        
+        self.view.addSubview(self.placeholderView)
+        self.placeholderView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        let placeholderTitleLabel = UILabel().then {
+            $0.typography = .init(
+                fontContainer: BuiltInFont(size: 16, weight: .semibold),
+                lineHeight: 22,
+                letterSpacing: 0.005
+            )
+            $0.text = Text.title
+            $0.textColor = .som.black
+            $0.textAlignment = .center
+        }
+        self.placeholderView.addSubview(placeholderTitleLabel)
+        placeholderTitleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.centerX.equalToSuperview()
+        }
+        
+        let placeholderSubTitleLabel = UILabel().then {
+            $0.typography = .init(
+                fontContainer: BuiltInFont(size: 14, weight: .semibold),
+                lineHeight: 18,
+                letterSpacing: 0.005
+            )
+            $0.numberOfLines = 0
+            $0.text = Text.subTitle
+            $0.textColor = .som.gray02
+            $0.textAlignment = .center
+        }
+        self.placeholderView.addSubview(placeholderSubTitleLabel)
+        placeholderSubTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(placeholderTitleLabel.snp.bottom).offset(14)
+            $0.bottom.equalToSuperview()
+            $0.centerX.equalToSuperview()
         }
         
         self.view.addSubview(self.moveTopButton)
@@ -122,14 +162,9 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
+            .withLatestFrom(reactor.state.map(\.isLoading))
+            .filter { $0 == false }
             .map { _ in Reactor.Action.refresh }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
-        self.coordinate
-            .map { coordinate in
-                Reactor.Action.coordinate(coordinate.latitude, coordinate.longitude)
-            }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -139,6 +174,11 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        self.headerView.locationFilterDidTap
+            .distinctUntilChanged()
+            .map { Reactor.Action.distanceFilter($0) }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
         
         /// State
         reactor.state.map(\.isLoading)
@@ -157,10 +197,11 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.displayedCards)
+        reactor.state.map(\.cards)
             .distinctUntilChanged()
             .subscribe(with: self) { object, cards in
                 object.cards = cards
+                self.placeholderView.isHidden = !cards.isEmpty
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
@@ -178,20 +219,29 @@ extension MainHomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell: SOMCardTableViewCell = tableView.dequeueReusableCell(
+        let model = SOMCardModel(data: self.cards[indexPath.row])
+        
+        let cell: MainHomeViewCell = tableView.dequeueReusableCell(
             withIdentifier: "cell",
             for: indexPath
-        ) as! SOMCardTableViewCell
+        ) as! MainHomeViewCell
         cell.selectionStyle = .none
-        cell.setData(card: self.cards[indexPath.row])
+        cell.setModel(model)
         /// card content stack order change
-        cell.changeOrderInCardContentStack(self.reactor?.currentState.index ?? 0)
+        cell.changeOrderInCardContentStack(self.reactor?.currentState.selectedIndex ?? 0)
         
         return cell
     }
 }
 
  extension MainHomeViewController: UITableViewDelegate {
+     
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+         let selectedId = self.cards[indexPath.row].id
+         
+         self.detailViewController.reactor = self.reactor?.reactorForDetail(selectedId)
+         self.navigationPush(self.detailViewController, animated: true)
+     }
      
      func tableView(
         _ tableView: UITableView,
@@ -203,15 +253,18 @@ extension MainHomeViewController: UITableViewDataSource {
          
          if indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex {
              
-             let currentState = self.reactor?.currentState
-             if currentState?.cards.count == currentState?.displayedCards.count {
-                 if let cell = cell as? SOMCardTableViewCell {
-                     self.reactor?.action.onNext(.moreFindWithId(lastId: cell.card.id))
-                 }
-             } else {
-                 self.reactor?.action.onNext(.moreFind)
+             if let cell = cell as? MainHomeViewCell {
+                 let lastId = cell.cardView.model?.data.id
+                 let selectedIndex = self.reactor?.currentState.selectedIndex ?? 0
+                 self.reactor?.action.onNext(.moreFind(lastId: lastId, selectedIndex: selectedIndex))
              }
          }
+     }
+     
+     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+         let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
+         let height: CGFloat = width + 10 /// 가로 + top inset
+         return height
      }
     
      func scrollViewDidScroll(_ scrollView: UIScrollView) {

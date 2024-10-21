@@ -30,6 +30,7 @@ class BaseNavigationViewController: BaseViewController {
 
     private(set) var navigationPopWithBottomBarHidden: Bool = false
     private(set) var navigationPopGestureEnabled: Bool = true
+    private(set) var navigationBarHeight: CGFloat = SOMNavigationBar.height
 
     var navigationBarColor: UIColor? {
         set {
@@ -42,7 +43,7 @@ class BaseNavigationViewController: BaseViewController {
 
     var isNavigationBarHidden: Bool {
         set {
-            self.additionalSafeAreaInsets.top = newValue ? 0 : SOMNavigationBar.height
+            self.additionalSafeAreaInsets.top = newValue ? 0 : self.navigationBarHeight
             self.navigationBar.isHidden = newValue
         }
         get {
@@ -57,7 +58,7 @@ class BaseNavigationViewController: BaseViewController {
         self.navigationBar.rx.observe(\.isHidden)
             .distinctUntilChanged()
             .subscribe(with: self) { object, isHidden in
-                object.additionalSafeAreaInsets.top = isHidden ? 0 : SOMNavigationBar.height
+                object.additionalSafeAreaInsets.top = isHidden ? 0 : object.navigationBarHeight
             }
             .disposed(by: self.disposeBag)
 
@@ -75,7 +76,7 @@ class BaseNavigationViewController: BaseViewController {
         self.navigationBar.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-            $0.height.equalTo(SOMNavigationBar.height)
+            $0.height.equalTo(self.navigationBarHeight)
         }
     }
 

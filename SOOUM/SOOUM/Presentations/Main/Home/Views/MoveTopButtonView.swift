@@ -25,7 +25,7 @@ class MoveTopButtonView: UIView {
         $0.text = Text.title
         $0.textColor = .som.gray01
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .bold),
+            fontContainer: BuiltInFont(size: 14, weight: .bold),
             lineHeight: 17,
             letterSpacing: -0.56
         )
@@ -50,7 +50,7 @@ class MoveTopButtonView: UIView {
         let backgroundView = UIView().then {
             $0.backgroundColor = .som.white
             $0.layer.cornerRadius = 40 * 0.5
-            $0.layer.borderColor = UIColor.som.gray02.cgColor
+            $0.layer.borderColor = UIColor.som.gray03.cgColor
             $0.layer.borderWidth = 1
         }
         

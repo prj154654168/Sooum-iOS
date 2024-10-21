@@ -15,7 +15,7 @@ class SOMLocationFilterCollectionViewCell: UICollectionViewCell {
     /// 거리 범위 텍스트 표시하는 라벨
     let label = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 12, weight: .regular),
+            fontContainer: BuiltInFont(size: 12, weight: .regular),
             lineHeight: 14,
             letterSpacing: 0.07
         )
@@ -36,7 +36,7 @@ class SOMLocationFilterCollectionViewCell: UICollectionViewCell {
         label.textColor = isSelected ? .som.primary : .som.gray01
         contentView.layer.borderColor = isSelected 
             ? UIColor.som.primary.cgColor
-            : UIColor.som.gray02.cgColor
+            : UIColor.som.gray03.cgColor
     }
     
     // MARK: - initUI

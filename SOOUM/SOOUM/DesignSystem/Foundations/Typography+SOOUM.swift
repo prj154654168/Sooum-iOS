@@ -8,17 +8,25 @@
 import UIKit
 
 
-class Pretendard: FontConrainer {
+class BuiltInFont: FontConrainer {
+    
+    enum FontType: String {
+        case pretendard = "PretendardVariable"
+        case school = "Hakgyoansim"
+    }
+    
+    var type: FontType
 
-    init(size fontSize: CGFloat, weight: UIFont.Weight) {
-        let fontName = UIFont.pretendardFontName(with: weight)
+    init(_ type: FontType = .pretendard, size fontSize: CGFloat, weight: UIFont.Weight) {
+        self.type = type
+        let fontName = UIFont.builtInFontName(type.rawValue, with: weight)
         let font = UIFont(name: fontName, size: fontSize)!
         super.init(font)
     }
 
     override var weight: UIFont.Weight {
         set {
-            self.font = .pretendardFont(ofSize: self.size, weight: newValue)
+            self.font = .builtInFont(self.type.rawValue, ofSize: self.size, weight: newValue)
         }
         get {
             return super.weight
@@ -27,7 +35,7 @@ class Pretendard: FontConrainer {
 
     override var size: CGFloat {
         set {
-            self.font = .pretendardFont(ofSize: newValue, weight: self.weight)
+            self.font = .builtInFont(self.type.rawValue, ofSize: newValue, weight: self.weight)
         }
         get {
             return super.size
@@ -35,13 +43,13 @@ class Pretendard: FontConrainer {
     }
 
     override func copy(with zone: NSZone? = nil) -> Any {
-        return Pretendard(size: self.size, weight: self.weight)
+        return BuiltInFont(size: self.size, weight: self.weight)
     }
 }
 
 fileprivate extension UIFont {
 
-    static func pretendardFontName(with weight: Weight) -> String {
+    static func builtInFontName(_ name: String, with weight: Weight) -> String {
         let weightName: String = {
             switch weight {
             case .thin: return "Thin"
@@ -55,11 +63,11 @@ fileprivate extension UIFont {
             default: return "Regular"
             }
         }()
-        return "PretendardVariable-\(weightName)"
+        return "\(name)-\(weightName)"
     }
 
-    static func pretendardFont(ofSize fontSize: CGFloat, weight: Weight) -> UIFont {
-        let fontName = self.pretendardFontName(with: weight)
+    static func builtInFont(_ name: String, ofSize fontSize: CGFloat, weight: Weight) -> UIFont {
+        let fontName = self.builtInFontName(name, with: weight)
         return .init(name: fontName, size: fontSize)!
     }
 }

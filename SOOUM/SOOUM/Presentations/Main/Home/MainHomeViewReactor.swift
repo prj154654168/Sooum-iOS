@@ -12,19 +12,15 @@ class MainHomeViewReactor: Reactor {
     
     enum Action: Equatable {
         case refresh
-        case moreFind
-        case moreFindWithId(lastId: Double?)
+        case moreFind(lastId: String?, selectedIndex: Int)
         case homeTabBarItemDidTap(index: Int)
-        case coordinate(String, String)
         case distanceFilter(String)
     }
     
     enum Mutation {
         case cards([Card])
         case more([Card])
-        case displayedCards([Card])
-        case updateIndex(Int)
-        case updateCoordinate(String, String)
+        case updateSelectedIndex(Int)
         case updateDistanceFilter(String)
         case updateIsLoading(Bool)
         case updateIsProcessing(Bool)
@@ -32,9 +28,7 @@ class MainHomeViewReactor: Reactor {
     
     struct State {
         var cards: [Card]
-        var displayedCards: [Card]
-        var index: Int
-        var coordinate: (String?, String?)
+        var selectedIndex: Int
         var distanceFilter: String
         var isLoading: Bool
         var isProcessing: Bool
@@ -42,9 +36,7 @@ class MainHomeViewReactor: Reactor {
     
     var initialState: State = .init(
         cards: [],
-        displayedCards: [],
-        index: 0,
-        coordinate: (nil, nil),
+        selectedIndex: 0,
         distanceFilter: "UNDER_1",
         isLoading: false,
         isProcessing: false
@@ -65,30 +57,26 @@ class MainHomeViewReactor: Reactor {
                 self.refresh(),
                 .just(.updateIsLoading(false))
             ])
-        case .moreFind:
-            let cards = self.currentState.cards
-            
+        case let .moreFind(lastId, selectedIndex):
             return .concat([
                 .just(.updateIsProcessing(true)),
-                .just(.displayedCards(cards)),
-                .just(.updateIsProcessing(false))
-            ])
-        case let .moreFindWithId(lastId):
-            return .concat([
-                .just(.updateIsProcessing(true)),
-                self.moreFindWithId(lastId),
+                self.moreFind(lastId, index: selectedIndex),
                 .just(.updateIsProcessing(false))
             ])
         case let .homeTabBarItemDidTap(index):
             return .concat([
-                .just(.updateIndex(index)),
                 .just(.updateIsLoading(true)),
+                .just(.updateSelectedIndex(index)),
+                self.refresh(index),
                 .just(.updateIsLoading(false))
             ])
-        case let .coordinate(latitude, longitude):
-            return .just(.updateCoordinate(latitude, longitude))
         case let .distanceFilter(distanceFilter):
-            return .just(.updateDistanceFilter(distanceFilter))
+            return .concat([
+                .just(.updateIsLoading(true)),
+                .just(.updateDistanceFilter(distanceFilter)),
+                self.refresh(2),
+                .just(.updateIsLoading(false))
+            ])
         }
     }
     
@@ -97,16 +85,10 @@ class MainHomeViewReactor: Reactor {
         switch mutation {
         case let .cards(cards):
             state.cards = cards
-            state.displayedCards = self.separate(current: cards, displayed: [])
         case let .more(cards):
             state.cards += cards
-            state.displayedCards += self.separate(current: cards, displayed: state.displayedCards)
-        case let .displayedCards(cards):
-            state.displayedCards += self.separate(current: cards, displayed: state.displayedCards)
-        case let .updateIndex(index):
-            state.index = index
-        case let .updateCoordinate(latitude, longitude):
-            state.coordinate = (latitude, longitude)
+        case let .updateSelectedIndex(selectedIndex):
+            state.selectedIndex = selectedIndex
         case let .updateDistanceFilter(distanceFilter):
             state.distanceFilter = distanceFilter
         case let .updateIsLoading(isLoading):
@@ -120,82 +102,85 @@ class MainHomeViewReactor: Reactor {
 
 extension MainHomeViewReactor {
     
-    func refresh() -> Observable<Mutation> {
+    func refresh(_ selectedIndex: Int = 0) -> Observable<Mutation> {
         
-        let selectedIndex = self.currentState.index
+        let latitude = self.locationManager.coordinate.latitude
+        let longitude = self.locationManager.coordinate.longitude
         
-        let latitude = self.currentState.coordinate.0
-        let longitude = self.currentState.coordinate.1
+        let distanceFilter = self.currentState.distanceFilter
+        
+        var request: CardRequest {
+            switch selectedIndex {
+            case 1:
+                return .popularCard(latitude: latitude, longitude: longitude)
+            case 2:
+                return .distancCard(
+                    id: nil,
+                    latitude: latitude,
+                    longitude: longitude,
+                    distanceFilter: distanceFilter
+                )
+            default:
+                return .latestCard(id: nil, latitude: latitude, longitude: longitude)
+            }
+        }
         
         if selectedIndex == 0 {
-            let request: CardRequest = .latestCard(
-                id: nil,
-                latitude: latitude,
-                longitude: longitude
-            )
             return self.networkManager.request(LatestCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .cards($0) }
         } else if selectedIndex == 1 {
-            let request: CardRequest = .popularCard(latitude: latitude, longitude: longitude)
             return self.networkManager.request(PopularCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .cards($0) }
         } else {
-            let distanceFilter = self.currentState.distanceFilter
-            let request: CardRequest = .distancCard(
-                id: nil,
-                latitude: latitude ?? "",
-                longitude: longitude ?? "",
-                distanceFilter: distanceFilter
-            )
             return self.networkManager.request(DistanceCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .cards($0) }
         }
     }
     
-    func moreFindWithId(_ lastId: Double?) -> Observable<Mutation> {
-            
-        let selectedIndex = self.currentState.index
+    func moreFind(_ lastId: String?, index selectedIndex: Int) -> Observable<Mutation> {
         
-        let lastId = lastId?.toString ?? ""
+        if selectedIndex == 1 { return .empty() }
         
-        let latitude = self.currentState.coordinate.0
-        let longitude = self.currentState.coordinate.1
+        let lastId = lastId ?? ""
+        
+        let latitude = self.locationManager.coordinate.latitude
+        let longitude = self.locationManager.coordinate.longitude
+        
+        let distanceFilter = self.currentState.distanceFilter
+        
+        var request: CardRequest {
+            switch selectedIndex {
+            case 2:
+                return .distancCard(
+                    id: lastId,
+                    latitude: latitude,
+                    longitude: longitude,
+                    distanceFilter: distanceFilter
+                )
+            default:
+                return .latestCard(id: lastId, latitude: latitude, longitude: longitude)
+            }
+        }
         
         if selectedIndex == 0 {
-            let request: CardRequest = .latestCard(
-                id: lastId,
-                latitude: latitude,
-                longitude: longitude
-            )
             return self.networkManager.request(LatestCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .more($0) }
-        } else if selectedIndex == 2 {
-            let distanceFilter = self.currentState.distanceFilter
-            
-            let request: CardRequest = .distancCard(
-                id: lastId,
-                latitude: latitude ?? "",
-                longitude: longitude ?? "",
-                distanceFilter: distanceFilter
-            )
+        } else {
             return self.networkManager.request(DistanceCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .more($0) }
         }
-        
-        return .empty()
     }
 }
 
+/// Hand oveer reactor
 extension MainHomeViewReactor {
     
-    func separate(current cards: [Card], displayed displayedCards: [Card]) -> [Card] {
-        let count = displayedCards.count
-        let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
-        return displayedCards
+    func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
+        DetailViewReactor([selectedId])
     }
 }

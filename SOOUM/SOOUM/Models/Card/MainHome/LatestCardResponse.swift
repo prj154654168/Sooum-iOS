@@ -10,13 +10,23 @@ import Foundation
 
 struct LatestCardResponse: Codable {
     let embedded: LatestCardEmbedded
-    let links: CardURL
+    let links: Next
     let status: Status
 
     enum CodingKeys: String, CodingKey {
         case embedded = "_embedded"
         case links = "_links"
         case status
+    }
+}
+
+extension LatestCardResponse: EmptyInitializable {
+    static func empty() -> LatestCardResponse {
+        return .init(
+            embedded: .init(cards: []),
+            links: .init(),
+            status: .init()
+        )
     }
 }
 

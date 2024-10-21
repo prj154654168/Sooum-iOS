@@ -19,7 +19,7 @@ class SOMHomeTabBarItem: UIView {
         $0.textAlignment = .center
         $0.textColor = .som.gray01
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .medium),
+            fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 14,
             letterSpacing: 0.07
         )
@@ -60,7 +60,7 @@ class SOMHomeTabBarItem: UIView {
         
         self.titleLabel.textColor = .som.black
         self.titleLabel.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .bold),
+            fontContainer: BuiltInFont(size: 14, weight: .bold),
             lineHeight: 14,
             letterSpacing: 0.07
         )
@@ -70,7 +70,7 @@ class SOMHomeTabBarItem: UIView {
         
         self.titleLabel.textColor = .som.gray01
         self.titleLabel.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .medium),
+            fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 14,
             letterSpacing: 0.07
         )
