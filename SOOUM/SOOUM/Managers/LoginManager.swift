@@ -21,12 +21,13 @@ class LoginManager {
     private let service: String
     
     private init() {
-        // Info.plist에서 "service" 키로 값을 읽어옴
-        if let serviceName = Bundle.main.object(forInfoDictionaryKey: "service") as? String {
+        // Info.plist에서 "Service" 키로 값을 읽어옴
+        if let serviceName = Bundle.main.object(forInfoDictionaryKey: "Service") as? String {
             self.service = serviceName
             print("serviceName:", serviceName)
         } else {
-            self.service = "com.sooum.dev" 
+            print("serviceName 없음")
+            self.service = "com.sooum.dev"
         }
     }
     

@@ -16,8 +16,8 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-    <key>service</key>
-    <string>com.sooum</string>
+	<key>Service</key>
+	<string>$(SERVICE)</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
