@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        
+
         let viewController = LaunchScreenViewController()
         viewController.reactor = LaunchScreenViewReactor()
         window?.rootViewController = viewController

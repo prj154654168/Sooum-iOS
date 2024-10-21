@@ -11,6 +11,8 @@
 		2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */; };
 		2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */; };
 		2A048E852C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */; };
+		2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
+		2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2AE6B1492CBC15BF00FA5C3C /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1482CBC15BF00FA5C3C /* ReportViewController.swift */; };
 		2AE6B14A2CBC15BF00FA5C3C /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1482CBC15BF00FA5C3C /* ReportViewController.swift */; };
 		2AE6B14C2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B14B2CBC160C00FA5C3C /* ReportViewReactor.swift */; };
@@ -200,6 +202,7 @@
 /* Begin PBXFileReference section */
 		2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilter.swift; sourceTree = "<group>"; };
 		2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilterCollectionViewCell.swift; sourceTree = "<group>"; };
+		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
 		2AE6B1482CBC15BF00FA5C3C /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
 		2AE6B14B2CBC160C00FA5C3C /* ReportViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewReactor.swift; sourceTree = "<group>"; };
 		2AE6B14F2CBCC2F600FA5C3C /* ReportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTableViewCell.swift; sourceTree = "<group>"; };
@@ -295,6 +298,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38FDC2C12C9E74B700C094C2 /* RxCocoa in Frameworks */,
+				2A649ED32CAE947D002D8284 /* RxGesture in Frameworks */,
 				38CE94C42C904E4A0004B238 /* SnapKit in Frameworks */,
 				2AE6B1582CBEA80B00FA5C3C /* RxGesture in Frameworks */,
 				38B6AACA2CA3F74300CE6DB6 /* ReactorKit in Frameworks */,
@@ -756,6 +760,7 @@
 				38ED2AB32C985AB400920B53 /* SOMHomeTabBar */,
 				385053502C92DBCA00C80B02 /* SOMTabBarController */,
 				38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */,
+				2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */,
 				38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */,
 			);
 			path = Components;
@@ -1015,6 +1020,7 @@
 				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				388009852CABF11F002A9209 /* SwiftEntryKit.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
+				2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */,
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
@@ -1075,6 +1081,7 @@
 				38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
+				2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */,
 				388009872CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */,
 				2AE6B14C2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */,
 				388009912CABF855002A9209 /* SOMTagModel.swift in Sources */,
@@ -1532,6 +1539,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+
 		2AE6B1572CBEA80B00FA5C3C /* RxGesture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2AE6B1562CBEA80B00FA5C3C /* XCRemoteSwiftPackageReference "RxGesture" */;
