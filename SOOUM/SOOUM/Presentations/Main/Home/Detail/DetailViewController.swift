@@ -30,7 +30,7 @@ import RxSwift
          $0.textColor = .som.black
          $0.textAlignment = .center
          $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .bold),
+            fontContainer: BuiltInFont(size: 16, weight: .bold),
             lineHeight: 16,
             letterSpacing: -0.02
          )
@@ -54,7 +54,8 @@ import RxSwift
      ).then {
          $0.alwaysBounceVertical = true
          $0.backgroundColor = .som.white
-         $0.indicatorStyle = .black
+         $0.showsVerticalScrollIndicator = false
+         $0.showsHorizontalScrollIndicator = false
          $0.refreshControl = SOMRefreshControl()
          
          $0.register(DetailViewCell.self, forCellWithReuseIdentifier: "cell")
@@ -75,9 +76,12 @@ import RxSwift
      }
      
      var detailCard = DetailCard()
+     var prevCard = PrevCard()
      
      var commentCards = [Card]()
+     var cardSummary = CardSummary()
      
+     var isDeleted = false
      
      // MARK: - Life Cycles
      
@@ -116,10 +120,22 @@ import RxSwift
      // MARK: - Bind
      
      func bind(reactor: DetailViewReactor) {
-         /// Navigation pop
+         /// Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop()
+                 object.navigationPop(to: MainHomeViewController.self, animated: false)
+             }
+             .disposed(by: self.disposeBag)
+         
+         /// navigationPush
+         self.moreButtonBottomSheetViewController.reportBackgroundButton.rx.tap
+             .compactMap { _ in reactor.selectedCardIds.last }
+             .map(reactor.reactorForReport)
+             .subscribe(with: self) { object, reactor in
+                 if SwiftEntryKit.isCurrentlyDisplaying { SwiftEntryKit.dismiss() }
+                 let viewController = ReportViewController()
+                 viewController.reactor = reactor
+                 object.navigationPush(viewController, animated: true)
              }
              .disposed(by: self.disposeBag)
          
@@ -148,12 +164,39 @@ import RxSwift
              }
              .disposed(by: self.disposeBag)
          
-         reactor.state.map(\.detailCard)
+         Observable.combineLatest(
+            reactor.state.map(\.detailCard).distinctUntilChanged(),
+            reactor.state.map(\.prevCard).distinctUntilChanged()
+         )
+         .subscribe(with: self) { object, pair in
+             object.detailCard = pair.0
+             object.prevCard = pair.1
+             object.titleLabel.text = pair.0.member.nickname
+             object.titleImageView.setImage(strUrl: pair.0.member.profileImgUrl ?? "")
+             object.collectionView.reloadData()
+         }
+         .disposed(by: self.disposeBag)
+         
+         reactor.state.map(\.commentCards)
              .distinctUntilChanged()
-             .subscribe(with: self) { object, detailCard in
-                 object.detailCard = detailCard
-                 object.titleLabel.text = detailCard.member.nickname
-                 object.titleImageView.setImage(strUrl: detailCard.member.profileImgUrl ?? "")
+             .subscribe(with: self) { object, commentCards in
+                 object.commentCards = commentCards
+                 object.collectionView.reloadData()
+             }
+             .disposed(by: disposeBag)
+
+         reactor.state.map(\.cardSummary)
+             .distinctUntilChanged()
+             .subscribe(with: self) { object, cardSummary in
+                 object.cardSummary = cardSummary
+                 object.collectionView.reloadData()
+             }
+             .disposed(by: disposeBag)
+         
+         reactor.state.map(\.isDeleted)
+             .distinctUntilChanged()
+             .subscribe(with: self) { object, isDeleted in
+                 object.isDeleted = isDeleted
                  object.collectionView.reloadData()
              }
              .disposed(by: self.disposeBag)
@@ -170,46 +213,74 @@ extension DetailViewController: UICollectionViewDataSource {
     }
     
     func collectionView(
-        _ collectionView: UICollectionView,
+        _ collectionView: UICollectionView, 
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         let cell: DetailViewCell = collectionView
             .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
             as! DetailViewCell
+    
+        guard self.isDeleted == false else {
+            cell.isDeleted()
+            return cell
+        }
         
-        let card: Card = .init(
+        let card = Card(
             id: self.detailCard.id,
             content: self.detailCard.content,
             distance: self.detailCard.distance,
             createdAt: self.detailCard.createdAt,
             storyExpirationTime: self.detailCard.storyExpirationTime,
-            likeCnt: 0,
-            commentCnt: 0,
+            likeCnt: self.detailCard.likeCnt,
+            commentCnt: self.detailCard.commentCnt,
             backgroundImgURL: self.detailCard.backgroundImgURL,
-            links: .init(detail: .init(url: "")),
+            links: .init(),
             font: self.detailCard.font,
-            fontSize: .big,
-            isStory: self.detailCard.isStory,
-            isLiked: false,
-            isCommentWritten: false
-         )
+            fontSize: self.detailCard.fontSize,
+            isLiked: self.detailCard.isLiked,
+            isCommentWritten: self.detailCard.isCommentWritten
+        )
         let model: SOMCardModel = .init(data: card)
         
         let tags: [SOMTagModel] = self.detailCard.tags.map {
             SOMTagModel(id: $0.id, originalText: $0.content)
         }
-        cell.setData(model, tags: tags)
+        cell.setDatas(model, tags: tags)
+        
         cell.isOwnCard = self.detailCard.isOwnCard
+        cell.prevCard = self.prevCard
+        
+        cell.prevCardBackgroundButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                let willInsertViewController = DetailViewController()
+                willInsertViewController.reactor = object.reactor?.reactorForPop()
+                guard var viewControllers = object.navigationController?.viewControllers else { return }
+                viewControllers.insert(willInsertViewController, at: 1)
+                object.navigationController?.setViewControllers(viewControllers, animated: false)
+                if let destination = viewControllers.first(where: { $0 == willInsertViewController }) {
+                    object.navigationController?.popToViewController(destination, animated: true)
+                } else {
+                    object.navigationPop()
+                }
+            }
+            .disposed(by: cell.disposeBag)
         
         cell.rightTopSettingButton.rx.tap
-            .subscribe(with: self.moreButtonBottomSheetViewController) { bottomSheet, _ in
-                var wrapper: SwiftEntryKitViewControllerWrapper = bottomSheet.sek
-                wrapper.entryName = Text.moreBottomSheetEntryName
-                wrapper.showBottomNote(
-                    screenColor: .som.black.withAlphaComponent(0.7),
-                    screenInteraction: .dismiss,
-                    isHandleBar: true
-                )
+            .subscribe(with: self) { object, _ in
+                
+                if self.detailCard.isOwnCard {
+                    /// 자신의 카드일 때 카드 삭제하기
+                    object.reactor?.action.onNext(.delete)
+                } else {
+                    /// 자신의 카드가 아닐 때 차단/신고하기
+                    var wrapper: SwiftEntryKitViewControllerWrapper = object.moreButtonBottomSheetViewController.sek
+                    wrapper.entryName = Text.moreBottomSheetEntryName
+                    wrapper.showBottomNote(
+                        screenColor: .som.black.withAlphaComponent(0.7),
+                        screenInteraction: .dismiss,
+                        isHandleBar: true
+                    )
+                }
             }
             .disposed(by: cell.disposeBag)
         
@@ -230,7 +301,28 @@ extension DetailViewController: UICollectionViewDataSource {
                     for: indexPath
                 ) as! DetailViewFooter
             
-            footer.setData(self.commentCards, like: 0, comment: 0)
+            footer.setDatas(self.commentCards, cardSummary: self.cardSummary)
+            
+            guard let reactor = self.reactor else { return footer }
+            
+            footer.didTap
+                .subscribe(with: self) { object, _ in
+                    let willRemoveViewController = object.navigationController?.viewControllers.last as? DetailViewController
+                    let selectedId = footer.commentCards[indexPath.row].id
+                    let viewController = DetailViewController()
+                    viewController.reactor = reactor.reactorForPush(selectedId)
+                    object.navigationPush(viewController, animated: true) { _ in
+                        object.navigationController?.viewControllers.removeAll(where: { $0 == willRemoveViewController })
+                    }
+                }
+                .disposed(by: footer.disposeBag)
+            
+            footer.likeAndCommentView.likeBackgroundButton.rx.tap
+                .withLatestFrom(reactor.state.map(\.isLike))
+                .subscribe(onNext: { isLike in
+                    reactor.action.onNext(.updateLike(isLike))
+                })
+                .disposed(by: footer.disposeBag)
             return footer
         } else {
             return .init(frame: .zero)

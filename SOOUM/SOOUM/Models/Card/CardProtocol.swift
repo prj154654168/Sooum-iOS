@@ -8,31 +8,6 @@
 import Foundation
 
 
-/// 서버 응답 코드가 204 or response.data == nil일 때
-protocol EmptyInitializable {
-    static func empty() -> Self
-}
-
-/// 서버 응답 status
-struct Status: Codable {
-    let httpCode: Int
-    let httpStatus: String
-    let responseMessage: String
-    
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.httpCode = try container.decode(Int.self, forKey: .httpCode)
-        self.httpStatus = try container.decode(String.self, forKey: .httpStatus)
-        self.responseMessage = try container.decode(String.self, forKey: .responseMessage)
-    }
-    
-    init() {
-        self.httpCode = 0
-        self.httpStatus = ""
-        self.responseMessage = ""
-    }
-}
-
 protocol CardProtocol: Equatable, Codable {
     var id: String { get }
     var content: String { get }
@@ -42,20 +17,35 @@ protocol CardProtocol: Equatable, Codable {
     var createdAt: Date { get }
     var storyExpirationTime: Date? { get }
     
+    var likeCnt: Int { get }
+    var commentCnt: Int { get }
+    
     var backgroundImgURL: URLString { get }
     
     var font: Font { get }
+    var fontSize: FontSize { get }
     
-    var isStory: Bool { get }
+    var isLiked: Bool { get }
+    var isCommentWritten: Bool { get }
 }
 
 /// 다음 카드 URL
 struct Next: Codable {
     let next: URLString
 }
+extension Next {
+    init() {
+        self.next = .init()
+    }
+}
 /// 상세보기 카드 URL
 struct Detail: Codable {
     let detail: URLString
+}
+extension Detail {
+    init() {
+        self.detail = .init()
+    }
 }
 /// 실제 urlString
 struct URLString: Codable {
@@ -65,6 +55,12 @@ struct URLString: Codable {
         case url = "href"
     }
 }
+extension URLString {
+    init() {
+        self.url = ""
+    }
+}
+
 /// 사용하는 폰트
 enum Font: String, Codable {
     case pretendard = "PRETENDARD"

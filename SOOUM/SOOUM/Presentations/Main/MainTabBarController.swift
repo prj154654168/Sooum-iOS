@@ -86,11 +86,6 @@ extension MainTabBarController: LocationManagerDelegate {
         didUpdateCoordinate coordinate: CLLocationCoordinate2D
     ) {
         print("ℹ️ Update location coordinate: \(coordinate)")
-        
-        let latitude = coordinate.latitude.description
-        let longitude = coordinate.longitude.description
-        
-        self.mainHomeViewController.reactor?.action.onNext(.coordinate(latitude, longitude))
     }
     
     func locationManager(_ manager: LocationManager, didChangeAuthStatus status: AuthStatus) {

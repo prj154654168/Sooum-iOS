@@ -6,7 +6,7 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>ec2-43-203-217-225.ap-northeast-2.compute.amazonaws.com</key>
+			<key>ec2-54-180-232-54.ap-northeast-2.compute.amazonaws.com</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>

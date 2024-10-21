@@ -100,7 +100,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         let placeholderTitleLabel = UILabel().then {
             $0.typography = .init(
-                fontContainer: Pretendard(size: 16, weight: .semibold),
+                fontContainer: BuiltInFont(size: 16, weight: .semibold),
                 lineHeight: 22,
                 letterSpacing: 0.005
             )
@@ -116,7 +116,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         let placeholderSubTitleLabel = UILabel().then {
             $0.typography = .init(
-                fontContainer: Pretendard(size: 14, weight: .semibold),
+                fontContainer: BuiltInFont(size: 14, weight: .semibold),
                 lineHeight: 18,
                 letterSpacing: 0.005
             )
@@ -203,14 +203,6 @@ class MainHomeViewController: BaseNavigationViewController, View {
                 object.cards = cards
                 self.placeholderView.isHidden = !cards.isEmpty
                 object.tableView.reloadData()
-            }
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.coordinate)
-            .distinctUntilChanged({ $0.0 == $1.0 && $0.1 == $1.1 })
-            .map { ($0.0 ?? "", $0.1 ?? "") }
-            .subscribe(with: self.detailViewController) { detailViewController, coordinate in
-                detailViewController.reactor?.action.onNext(.coordinate(coordinate.0, coordinate.1))
             }
             .disposed(by: self.disposeBag)
     }

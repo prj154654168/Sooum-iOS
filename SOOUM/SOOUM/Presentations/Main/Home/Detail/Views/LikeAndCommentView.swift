@@ -22,13 +22,12 @@ class LikeAndCommentView: UIView {
         $0.textColor = .som.black
         $0.textAlignment = .center
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .medium),
+            fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 17,
             letterSpacing: -0.04
         )
     }
     
-    let commentBackgroundButton = UIButton()
     private let commentImageView = UIImageView().then {
         $0.image = .init(.icon(.outlined(.commentAdd)))
         $0.tintColor = .som.black
@@ -37,7 +36,7 @@ class LikeAndCommentView: UIView {
         $0.textColor = .som.black
         $0.textAlignment = .center
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .medium),
+            fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 17,
             letterSpacing: -0.04
         )
@@ -91,10 +90,6 @@ class LikeAndCommentView: UIView {
         commentContainer.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().offset(-20)
-        }
-        self.addSubviews(self.commentBackgroundButton)
-        self.commentBackgroundButton.snp.makeConstraints {
-            $0.edges.equalTo(commentContainer)
         }
         
         let likeContainer = UIStackView(
