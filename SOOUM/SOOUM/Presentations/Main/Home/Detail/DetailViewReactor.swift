@@ -48,7 +48,7 @@ class DetailViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     private let locationManager = LocationManager.shared
     
-    private var selectedCardIds: [String]
+    var selectedCardIds: [String]
     
     /// id가 nil이면 pop, nil이 아니면 push
     /// selectedCardIds.count == 1 이면 isFrom == .mainHome, 아니면 isFrom == .detailComment
@@ -163,5 +163,9 @@ extension DetailViewReactor {
     
     func reactorForPop() -> DetailViewReactor {
         return DetailViewReactor(self.selectedCardIds.dropLast())
+    }
+    
+    func reactorForReport(_ id: String) -> ReportViewReactor {
+        return ReportViewReactor(id)
     }
 }

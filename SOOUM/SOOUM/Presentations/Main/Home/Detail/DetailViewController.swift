@@ -127,6 +127,18 @@ import RxSwift
              }
              .disposed(by: self.disposeBag)
          
+         /// navigationPush
+         self.moreButtonBottomSheetViewController.reportBackgroundButton.rx.tap
+             .compactMap { _ in reactor.selectedCardIds.last }
+             .map(reactor.reactorForReport)
+             .subscribe(with: self) { object, reactor in
+                 if SwiftEntryKit.isCurrentlyDisplaying { SwiftEntryKit.dismiss() }
+                 let viewController = ReportViewController()
+                 viewController.reactor = reactor
+                 object.navigationPush(viewController, animated: true)
+             }
+             .disposed(by: self.disposeBag)
+         
          /// Action
          self.rx.viewWillAppear
              .map { _ in Reactor.Action.refresh }

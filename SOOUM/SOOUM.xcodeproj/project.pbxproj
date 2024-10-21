@@ -573,9 +573,9 @@
 			children = (
 				3880097A2CABEE3D002A9209 /* DetailViewController.swift */,
 				3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */,
-				2AE6B1472CBC157200FA5C3C /* Report */,
 				38B8A5862CAEA5DD000AFE83 /* Cells */,
 				38AA00002CAD1BB2002C5F1E /* Views */,
+				2AE6B1472CBC157200FA5C3C /* Report */,
 			);
 			path = Detail;
 			sourceTree = "<group>";

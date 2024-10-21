@@ -109,7 +109,7 @@ class ReportViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isDialogPresented)
             .distinctUntilChanged()
             .subscribe(with: self) { object, state in
-               print("state", state)
+               // TODO: alert
             }
             .disposed(by: self.disposeBag)
     }

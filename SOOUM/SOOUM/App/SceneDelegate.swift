@@ -22,12 +22,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         
-//        let viewController = LaunchScreenViewController()
-//        viewController.reactor = LaunchScreenViewReactor()
-        let viewController = ReportViewController()
-        viewController.reactor = ReportViewReactor("110")
+        let viewController = LaunchScreenViewController()
+        viewController.reactor = LaunchScreenViewReactor()
         window?.rootViewController = viewController
-//        window?.backgroundColor = .white
+        window?.backgroundColor = .white
         window?.makeKeyAndVisible()
     }
 

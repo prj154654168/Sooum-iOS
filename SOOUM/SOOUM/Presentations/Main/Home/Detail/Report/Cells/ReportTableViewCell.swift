@@ -25,7 +25,7 @@ class ReportTableViewCell: UITableViewCell {
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
-        print("\(type(of: self)) - \(#function)")
+        print("ℹ️ \(type(of: self)) - \(#function)")
         updateIsSelected(isSelected: selected, animated: true)
     }
     
