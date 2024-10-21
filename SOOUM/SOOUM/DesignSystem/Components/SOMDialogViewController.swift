@@ -88,7 +88,7 @@ class SOMDialogViewController: UIViewController {
         $0.text = ""
         $0.textColor = .som.black
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 16,
                 weight: .semibold
             ),
@@ -101,7 +101,7 @@ class SOMDialogViewController: UIViewController {
     let subTitleLabel = UILabel().then {
         $0.textColor = .som.gray01
         $0.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 14,
                 weight: .semibold
             ),
@@ -121,7 +121,7 @@ class SOMDialogViewController: UIViewController {
     let leftButton = UIButton().then {
         $0.layer.cornerRadius = 10
         $0.titleLabel?.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 16,
                 weight: .semibold
             ),
@@ -133,7 +133,7 @@ class SOMDialogViewController: UIViewController {
     let rightButton = UIButton().then {
         $0.layer.cornerRadius = 10
         $0.titleLabel?.typography = .init(
-            fontContainer: Pretendard(
+            fontContainer: BuiltInFont(
                 size: 16,
                 weight: .semibold
             ),
