@@ -88,7 +88,6 @@ class ReportViewController: BaseNavigationViewController, View {
     override func setupNaviBar() {
         super.setupNaviBar()
         self.navigationBar.titleLabel.text = "신고하기"
-        self.navigationBar.isHideBackButton = false
     }
     
     func bind(reactor: ReportViewReactor) {
