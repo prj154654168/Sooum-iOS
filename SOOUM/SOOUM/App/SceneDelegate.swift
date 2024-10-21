@@ -21,36 +21,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        
-        let viewController = SOMDialogViewController()
-        viewController.setData(
-            title: "카드를 삭제할까요?",
-            subTitle: "삭제한 카드는 복구할 수 없어요",
-            leftAction: .init(
-                mode: .cancel,
-                handler: {
-                    print("취소 버튼 클릭")
-                }
-            ),
-            rightAction: .init(
-                mode: .ok,
-                handler: {
-                    print("확인 버튼 클릭")
-                }
-            ),
-            dimViewAction: .init(
-                mode: nil,
-                handler: {
-                    print("딤뷰 클릭")
-                }
-            )
-        )
-        
-//        let viewController = LaunchScreenViewController()
-//        viewController.reactor = LaunchScreenViewReactor()
+
+        let viewController = LaunchScreenViewController()
+        viewController.reactor = LaunchScreenViewReactor()
         
         window?.rootViewController = viewController
-//        window?.backgroundColor = .white
+        window?.backgroundColor = .white
         window?.makeKeyAndVisible()
     }
 
