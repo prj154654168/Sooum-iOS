@@ -11,7 +11,7 @@ import SnapKit
 import Then
 
 
-protocol SOMTabBarControllerDelegate: NSObjectProtocol {
+protocol SOMTabBarControllerDelegate: AnyObject {
     func tabBarController(
         _ tabBarController: SOMTabBarController,
         didSelect viewController: UIViewController
@@ -64,6 +64,12 @@ extension SOMTabBarController: SOMTabBarDelegate {
     
     func tabBar(_ tabBar: SOMTabBar, didSelectTabAt index: Int) {
         
+        let viewController = self.viewControllers[index]
+        self.delegate?.tabBarController(self, didSelect: viewController)
+        
+        // 글추가 탭은 탭바 변경 없이 네비게이션으로 표시
+        guard index != 1 else { return }
+        
         if self.children.isEmpty == false {
             self.children.forEach {
                 $0.willMove(toParent: nil)
@@ -73,8 +79,6 @@ extension SOMTabBarController: SOMTabBarDelegate {
         }
         self.prevSelectedIndex = self.selectedIndex
         
-        let viewController = self.viewControllers[index]
-        self.delegate?.tabBarController(self, didSelect: viewController)
         self.addChild(viewController)
         viewController.view.frame = self.container.bounds
         self.container.addSubview(viewController.view)
