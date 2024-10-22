@@ -231,6 +231,8 @@
 		38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */; };
 		38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */; };
 		38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */; };
+		38F131882CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */; };
+		38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */; };
 		38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */; };
 		38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */; };
 		38FDC2BB2C9E74AD00C094C2 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 38FDC2BA2C9E74AD00C094C2 /* RxCocoa */; };
@@ -354,6 +356,7 @@
 		38D6F1852CC24C4F00E11530 /* WriteCardTextViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardTextViewDelegate.swift; sourceTree = "<group>"; };
 		38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBar.swift; sourceTree = "<group>"; };
 		38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
+		38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedTagResponse.swift; sourceTree = "<group>"; };
 		38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -903,6 +906,7 @@
 				38608B2F2CB5195D0066BB40 /* Card.swift */,
 				380AF0932CB57930004781F7 /* MainHome */,
 				380AF0942CB57941004781F7 /* Detail */,
+				38F131862CC7B7AB000D0475 /* WriteCard */,
 			);
 			path = Card;
 			sourceTree = "<group>";
@@ -942,6 +946,14 @@
 				38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */,
 			);
 			path = SOMHomeTabBar;
+			sourceTree = "<group>";
+		};
+		38F131862CC7B7AB000D0475 /* WriteCard */ = {
+			isa = PBXGroup;
+			children = (
+				38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */,
+			);
+			path = WriteCard;
 			sourceTree = "<group>";
 		};
 		38FDC2B42C9E745B00C094C2 /* Base */ = {
@@ -1176,6 +1188,7 @@
 				38608B342CB519A80066BB40 /* DetailCardResponse.swift in Sources */,
 				2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				3880098B2CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift in Sources */,
+				38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
 				38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				2AE6B1512CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
@@ -1311,6 +1324,7 @@
 				38D6F1802CC2413400E11530 /* WriteCardTextView.swift in Sources */,
 				385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				388009842CABF11F002A9209 /* SwiftEntryKit.swift in Sources */,
+				38F131882CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				38405CCB2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
 				38B6AAD82CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
 				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
