@@ -23,6 +23,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)</string>
+    <key>NSCameraUsageDescription</key>
+    <string>$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -37,6 +37,8 @@
 		2AFADC442CB6B22F00083D30 /* CommentCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFADC422CB6B22F00083D30 /* CommentCardResponse.swift */; };
 		2AFADC462CB6B23F00083D30 /* CardSummaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFADC452CB6B23F00083D30 /* CardSummaryResponse.swift */; };
 		2AFADC472CB6B23F00083D30 /* CardSummaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFADC452CB6B23F00083D30 /* CardSummaryResponse.swift */; };
+		2A57D6EE2CC7BFA000DAD0F3 /* YPImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 2A57D6ED2CC7BFA000DAD0F3 /* YPImagePicker */; };
+		2A57D6F02CC7BFA900DAD0F3 /* YPImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 2A57D6EF2CC7BFA900DAD0F3 /* YPImagePicker */; };
 		2AE6B1632CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1622CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift */; };
 		2AE6B1642CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1622CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift */; };
 		2AE6B1662CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1652CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift */; };
@@ -399,6 +401,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A57D6EE2CC7BFA000DAD0F3 /* YPImagePicker in Frameworks */,
 				38FDC2C12C9E74B700C094C2 /* RxCocoa in Frameworks */,
 				38CE94C42C904E4A0004B238 /* SnapKit in Frameworks */,
 				2AE6B1582CBEA80B00FA5C3C /* RxGesture in Frameworks */,
@@ -417,6 +420,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				38FDC2BB2C9E74AD00C094C2 /* RxCocoa in Frameworks */,
+				2A57D6F02CC7BFA900DAD0F3 /* YPImagePicker in Frameworks */,
 				38CE94C62C904E5E0004B238 /* SnapKit in Frameworks */,
 				38B6AAC82CA3F73B00CE6DB6 /* ReactorKit in Frameworks */,
 				38FDC2BD2C9E74AD00C094C2 /* RxSwift in Frameworks */,
@@ -1085,7 +1089,8 @@
 				38B6AAC92CA3F74300CE6DB6 /* ReactorKit */,
 				384972A82CA54E2F0012FCA1 /* Kingfisher */,
 				388009802CABF0F7002A9209 /* SwiftEntryKit */,
-				2AE6B1572CBEA80B00FA5C3C /* RxGesture */,
+				2AE6B1692CBFBC1E00FA5C3C /* RxGesture */,
+				2A57D6ED2CC7BFA000DAD0F3 /* YPImagePicker */,
 			);
 			productName = SOOUM;
 			productReference = 3854419A2C870544004E2BB0 /* SOOUM-Dev.app */;
@@ -1114,6 +1119,7 @@
 				38B6AAC72CA3F73B00CE6DB6 /* ReactorKit */,
 				384972A62CA54E2A0012FCA1 /* Kingfisher */,
 				3880097E2CABF0F0002A9209 /* SwiftEntryKit */,
+				2A57D6EF2CC7BFA900DAD0F3 /* YPImagePicker */,
 			);
 			productName = SOOUM;
 			productReference = 387FBAEC2C8702C100A5E139 /* SOOUM.app */;
@@ -1153,7 +1159,8 @@
 				38B6AAC62CA3F73000CE6DB6 /* XCRemoteSwiftPackageReference "ReactorKit" */,
 				384972A52CA54E1F0012FCA1 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				3880097D2CABF0E0002A9209 /* XCRemoteSwiftPackageReference "SwiftEntryKit" */,
-				2AE6B1562CBEA80B00FA5C3C /* XCRemoteSwiftPackageReference "RxGesture" */,
+				2AE6B1682CBFBC1E00FA5C3C /* XCRemoteSwiftPackageReference "RxGesture" */,
+				2A57D6EC2CC7BF9400DAD0F3 /* XCRemoteSwiftPackageReference "YPImagePicker" */,
 			);
 			productRefGroup = 387FBAED2C8702C100A5E139 /* Products */;
 			projectDirPath = "";
@@ -1498,6 +1505,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 39JATSZXJT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "[D]SOOUM";
@@ -1534,6 +1542,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 39JATSZXJT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "[D]SOOUM";
@@ -1623,6 +1632,7 @@
 				SDKROOT = iphoneos;
 				SOOUM_DISPLAY_NAME = "";
 				SOOUM_LOCATION_DESCRIPTION = "";
+				SOOUM_PHOTO_LIBRARY_DESCRIPTION = "사진 업로드를 위해 갤러리 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1682,6 +1692,7 @@
 				SDKROOT = iphoneos;
 				SOOUM_DISPLAY_NAME = "";
 				SOOUM_LOCATION_DESCRIPTION = "";
+				SOOUM_PHOTO_LIBRARY_DESCRIPTION = "사진 업로드를 위해 갤러리 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
@@ -1779,7 +1790,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2AE6B1562CBEA80B00FA5C3C /* XCRemoteSwiftPackageReference "RxGesture" */ = {
+		2A57D6EC2CC7BF9400DAD0F3 /* XCRemoteSwiftPackageReference "YPImagePicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Yummypets/YPImagePicker.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.2.2;
+			};
+		};
+		2AE6B1682CBFBC1E00FA5C3C /* XCRemoteSwiftPackageReference "RxGesture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RxSwiftCommunity/RxGesture.git";
 			requirement = {
@@ -1862,7 +1881,17 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2AE6B1572CBEA80B00FA5C3C /* RxGesture */ = {
+		2A57D6ED2CC7BFA000DAD0F3 /* YPImagePicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A57D6EC2CC7BF9400DAD0F3 /* XCRemoteSwiftPackageReference "YPImagePicker" */;
+			productName = YPImagePicker;
+		};
+		2A57D6EF2CC7BFA900DAD0F3 /* YPImagePicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A57D6EC2CC7BF9400DAD0F3 /* XCRemoteSwiftPackageReference "YPImagePicker" */;
+			productName = YPImagePicker;
+		};
+		2AE6B1692CBFBC1E00FA5C3C /* RxGesture */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2AE6B1562CBEA80B00FA5C3C /* XCRemoteSwiftPackageReference "RxGesture" */;
 			productName = RxGesture;
