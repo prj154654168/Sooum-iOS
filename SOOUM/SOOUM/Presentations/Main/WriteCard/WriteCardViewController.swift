@@ -124,7 +124,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     func bind(reactor: WriteCardViewReactor) {
         
         /// Set tags
-        let writtenTagText = self.writeCardView.writeTagTextField.rx.text.orEmpty.distinctUntilChanged()
+        let writtenTagText = self.writeCardView.writeTagTextField.rx.text.orEmpty.distinctUntilChanged().share()
         self.writeCardView.writeTagTextField.addTagButton.rx.tap
             .withLatestFrom(writtenTagText)
             .filter { $0.isEmpty == false }
@@ -141,13 +141,37 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     $0.height.equalTo(58)
                 }
                 
+                self.view.layoutIfNeeded()
+                
                 return object.writtenTagModels
             }
             .bind(to: self.writeCardView.writtenTags.rx.models())
             .disposed(by: self.disposeBag)
         
         /// Action
+        writtenTagText
+            .map(Reactor.Action.relatedTags)
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
         
+        /// State
+        reactor.state.map(\.relatedTags)
+            .distinctUntilChanged()
+            .map { relatedTags in
+                let toModels: [SOMTagModel] = relatedTags.map { relatedTag in
+                    let toModel: SOMTagModel = .init(
+                        id: UUID().uuidString,
+                        originalText: relatedTag.content,
+                        count: "\(relatedTag.count)",
+                        isRemovable: false,
+                        configuration: .verticalWithoutRemove
+                    )
+                    return toModel
+                }
+                return toModels
+            }
+            .bind(to: self.writeCardView.relatedTags.rx.models())
+            .disposed(by: self.disposeBag)
     }
 }
 
