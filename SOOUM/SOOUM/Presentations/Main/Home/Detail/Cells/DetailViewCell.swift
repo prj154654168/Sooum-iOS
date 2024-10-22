@@ -194,7 +194,7 @@ class DetailViewCell: UICollectionViewCell {
     
     func setDatas(_ model: SOMCardModel, tags: [SOMTagModel]) {
         self.cardView.setModel(model: model)
-        self.tags.setDatas(tags)
+        self.tags.setModels(tags)
         self.tags.snp.updateConstraints {
             $0.height.equalTo(tags.isEmpty ? 40 : 59)
         }
