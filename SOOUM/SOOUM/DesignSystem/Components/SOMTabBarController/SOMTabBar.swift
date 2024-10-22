@@ -109,7 +109,12 @@ class SOMTabBar: UIView {
     
     private func didSelectTab(_ index: Int ) {
         
-        guard index + 1 != selectedIndex else { return }
+        guard index + 1 != self.selectedIndex else { return }
+        self.delegate?.tabBar(self, didSelectTabAt: index)
+        
+        // 글추가 탭은 탭바 변경 없이 네비게이션으로 표시
+        guard index != 1 else { return }
+        
         self.tabBarItemContainer.arrangedSubviews.enumerated().forEach {
             guard let tabView = $1 as? SOMTabBarItem else { return }
             ($0 == index ? tabView.tabBarItemSelected : tabView.tabBarItemNotSelected)()
@@ -117,8 +122,6 @@ class SOMTabBar: UIView {
         
         self.prevSelectedIndex = self.selectedIndex
         self.selectedIndex = index + 1
-        
-        self.delegate?.tabBar(self, didSelectTabAt: index)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
