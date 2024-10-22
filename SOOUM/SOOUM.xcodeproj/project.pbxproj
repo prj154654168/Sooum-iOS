@@ -52,6 +52,14 @@
 		3816C05D2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816C05B2CCDDF3D00C8688C /* ReAuthenticationResponse.swift */; };
 		3816C0602CCDE35300C8688C /* ErrorInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */; };
 		3816C0612CCDE35300C8688C /* ErrorInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */; };
+		381A1D652CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D642CC38E7D005FDB8E /* WriteTagTextField.swift */; };
+		381A1D662CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D642CC38E7D005FDB8E /* WriteTagTextField.swift */; };
+		381A1D6A2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D692CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift */; };
+		381A1D6B2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D692CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift */; };
+		381A1D742CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */; };
+		381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */; };
+		381A1D772CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */; };
+		381A1D782CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */; };
 		382C58752CA64F8F00CEF814 /* PopularCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382C58742CA64F8F00CEF814 /* PopularCardResponse.swift */; };
 		382C58762CA64F8F00CEF814 /* PopularCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382C58742CA64F8F00CEF814 /* PopularCardResponse.swift */; };
 		382C58782CA651E800CEF814 /* CardProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382C58772CA651E800CEF814 /* CardProtocol.swift */; };
@@ -143,6 +151,12 @@
 		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 		388C96362CCE41700061C598 /* AuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C96352CCE41700061C598 /* AuthInfo.swift */; };
 		388C96372CCE41700061C598 /* AuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C96352CCE41700061C598 /* AuthInfo.swift */; };
+		3887D0332CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */; };
+		3887D0342CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */; };
+		3887D0362CC5335D00FB52E1 /* WriteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0352CC5335D00FB52E1 /* WriteCardView.swift */; };
+		3887D0372CC5335D00FB52E1 /* WriteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0352CC5335D00FB52E1 /* WriteCardView.swift */; };
+		3887D0392CC5504500FB52E1 /* UITextField+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0382CC5504500FB52E1 /* UITextField+Typography.swift */; };
+		3887D03A2CC5504500FB52E1 /* UITextField+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0382CC5504500FB52E1 /* UITextField+Typography.swift */; };
 		388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FA2C8F521000A9DD56 /* FontContainer.swift */; };
 		388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FA2C8F521000A9DD56 /* FontContainer.swift */; };
 		388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FD2C8F526C00A9DD56 /* UIFont.swift */; };
@@ -187,6 +201,8 @@
 		38B8A58C2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A58A2CAEA79A000AFE83 /* DetailViewFooter.swift */; };
 		38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */; };
 		38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */; };
+		38BE72172CC696E9002662DD /* WriteTagTextField+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BE72162CC696E9002662DD /* WriteTagTextField+Rx.swift */; };
+		38BE72182CC696E9002662DD /* WriteTagTextField+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BE72162CC696E9002662DD /* WriteTagTextField+Rx.swift */; };
 		38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
 		38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
 		38CE94C42C904E4A0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C32C904E4A0004B238 /* SnapKit */; };
@@ -203,6 +219,14 @@
 		38D5CE102CBCFA070054AB9A /* DetailCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D5CE0E2CBCFA070054AB9A /* DetailCard.swift */; };
 		38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
 		38D8E2922CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
+		38D6F17C2CC2406700E11530 /* WriteCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F17B2CC2406700E11530 /* WriteCardViewController.swift */; };
+		38D6F17D2CC2406700E11530 /* WriteCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F17B2CC2406700E11530 /* WriteCardViewController.swift */; };
+		38D6F1802CC2413400E11530 /* WriteCardTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F17F2CC2413400E11530 /* WriteCardTextView.swift */; };
+		38D6F1812CC2413400E11530 /* WriteCardTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F17F2CC2413400E11530 /* WriteCardTextView.swift */; };
+		38D6F1832CC243DB00E11530 /* UITextView+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F1822CC243DB00E11530 /* UITextView+Typography.swift */; };
+		38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F1822CC243DB00E11530 /* UITextView+Typography.swift */; };
+		38D6F1862CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F1852CC24C4F00E11530 /* WriteCardTextViewDelegate.swift */; };
+		38D6F1872CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F1852CC24C4F00E11530 /* WriteCardTextViewDelegate.swift */; };
 		38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */; };
 		38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */; };
 		38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */; };
@@ -242,6 +266,10 @@
 		38121E332CA6DA4000602499 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		3816C05B2CCDDF3D00C8688C /* ReAuthenticationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReAuthenticationResponse.swift; sourceTree = "<group>"; };
 		3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorInterceptor.swift; sourceTree = "<group>"; };
+		381A1D642CC38E7D005FDB8E /* WriteTagTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteTagTextField.swift; sourceTree = "<group>"; };
+		381A1D692CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteTagTextFieldDelegate.swift; sourceTree = "<group>"; };
+		381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsDelegate.swift; sourceTree = "<group>"; };
+		381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayout.swift; sourceTree = "<group>"; };
 		382C58742CA64F8F00CEF814 /* PopularCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularCardResponse.swift; sourceTree = "<group>"; };
 		382C58772CA651E800CEF814 /* CardProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardProtocol.swift; sourceTree = "<group>"; };
 		3836ACB32C8F045300A3C566 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
@@ -288,6 +316,9 @@
 		388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SOOUM.swift"; sourceTree = "<group>"; };
 		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		388C96352CCE41700061C598 /* AuthInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInfo.swift; sourceTree = "<group>"; };
+		3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardViewReactor.swift; sourceTree = "<group>"; };
+		3887D0352CC5335D00FB52E1 /* WriteCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardView.swift; sourceTree = "<group>"; };
+		3887D0382CC5504500FB52E1 /* UITextField+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Typography.swift"; sourceTree = "<group>"; };
 		388DA0FA2C8F521000A9DD56 /* FontContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontContainer.swift; sourceTree = "<group>"; };
 		388DA0FD2C8F526C00A9DD56 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PretendardVariable.ttf; sourceTree = "<group>"; };
@@ -310,12 +341,17 @@
 		38B8A5872CAEA5F9000AFE83 /* DetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewCell.swift; sourceTree = "<group>"; };
 		38B8A58A2CAEA79A000AFE83 /* DetailViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooter.swift; sourceTree = "<group>"; };
 		38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooterCell.swift; sourceTree = "<group>"; };
+		38BE72162CC696E9002662DD /* WriteTagTextField+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteTagTextField+Rx.swift"; sourceTree = "<group>"; };
 		38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMNavigationBar.swift; sourceTree = "<group>"; };
 		38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hakgyoansim-Bold.ttf"; sourceTree = "<group>"; };
 		38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hakgyoansim-Light.ttf"; sourceTree = "<group>"; };
 		38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleDefaults.swift; sourceTree = "<group>"; };
 		38D5CE0E2CBCFA070054AB9A /* DetailCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCard.swift; sourceTree = "<group>"; };
 		38D8E2902CCD232B00CE2E0A /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		38D6F17B2CC2406700E11530 /* WriteCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardViewController.swift; sourceTree = "<group>"; };
+		38D6F17F2CC2413400E11530 /* WriteCardTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardTextView.swift; sourceTree = "<group>"; };
+		38D6F1822CC243DB00E11530 /* UITextView+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Typography.swift"; sourceTree = "<group>"; };
+		38D6F1852CC24C4F00E11530 /* WriteCardTextViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardTextViewDelegate.swift; sourceTree = "<group>"; };
 		38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBar.swift; sourceTree = "<group>"; };
 		38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
 		38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -450,6 +486,25 @@
 			path = Interceptor;
 			sourceTree = "<group>";
 		};
+		381A1D672CC38E8E005FDB8E /* TextView */ = {
+			isa = PBXGroup;
+			children = (
+				38D6F17F2CC2413400E11530 /* WriteCardTextView.swift */,
+				38D6F1852CC24C4F00E11530 /* WriteCardTextViewDelegate.swift */,
+			);
+			path = TextView;
+			sourceTree = "<group>";
+		};
+		381A1D682CC38E9B005FDB8E /* TextField */ = {
+			isa = PBXGroup;
+			children = (
+				381A1D642CC38E7D005FDB8E /* WriteTagTextField.swift */,
+				381A1D692CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift */,
+				38BE72162CC696E9002662DD /* WriteTagTextField+Rx.swift */,
+			);
+			path = TextField;
+			sourceTree = "<group>";
+		};
 		3836ACB12C8F042C00A3C566 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -469,6 +524,8 @@
 				388DA0FA2C8F521000A9DD56 /* FontContainer.swift */,
 				3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */,
 				3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */,
+				3887D0382CC5504500FB52E1 /* UITextField+Typography.swift */,
+				38D6F1822CC243DB00E11530 /* UITextView+Typography.swift */,
 			);
 			path = Typography;
 			sourceTree = "<group>";
@@ -650,7 +707,9 @@
 		3880098C2CABF4AD002A9209 /* SOMTags */ = {
 			isa = PBXGroup;
 			children = (
+				381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */,
 				388009902CABF855002A9209 /* SOMTagModel.swift */,
+				381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */,
 				3880098D2CABF4C2002A9209 /* SOMTag.swift */,
 				388009932CABFAAA002A9209 /* SOMTags.swift */,
 				388009962CAC20EC002A9209 /* SOMTags+Rx.swift */,
@@ -733,6 +792,7 @@
 				38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */,
 				38B6AAE12CA4787200CE6DB6 /* MainTabBarReactor.swift */,
 				38B6AACF2CA411DE00CE6DB6 /* Home */,
+				38D6F17A2CC2401700E11530 /* WriteCard */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -853,6 +913,26 @@
 				38D8E2902CCD232B00CE2E0A /* AuthManager.swift */,
 			);
 			path = AuthManager;
+			sourceTree = "<group>";
+		};
+		38D6F17A2CC2401700E11530 /* WriteCard */ = {
+			isa = PBXGroup;
+			children = (
+				38D6F17E2CC2412500E11530 /* Views */,
+				38D6F17B2CC2406700E11530 /* WriteCardViewController.swift */,
+				3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */,
+			);
+			path = WriteCard;
+			sourceTree = "<group>";
+		};
+		38D6F17E2CC2412500E11530 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				381A1D682CC38E9B005FDB8E /* TextField */,
+				381A1D672CC38E8E005FDB8E /* TextView */,
+				3887D0352CC5335D00FB52E1 /* WriteCardView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		38ED2AB32C985AB400920B53 /* SOMHomeTabBar */ = {
@@ -1057,6 +1137,7 @@
 				2AFADC442CB6B22F00083D30 /* CommentCardResponse.swift in Sources */,
 				38D8E2922CCD232B00CE2E0A /* AuthManager.swift in Sources */,
 				38B8A5892CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
+				381A1D662CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */,
 				382C58792CA651E800CEF814 /* CardProtocol.swift in Sources */,
 				385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				38B6AAD22CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */,
@@ -1073,9 +1154,13 @@
 				388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */,
 				384972A12CA4DEC00012FCA1 /* CardRequest.swift in Sources */,
 				38B6AAE72CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */,
+				38BE72182CC696E9002662DD /* WriteTagTextField+Rx.swift in Sources */,
 				38B6AADC2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				38608B312CB5195D0066BB40 /* Card.swift in Sources */,
+				38608B312CB5195D0066BB40 /* Card.swift in Sources */,
+				3887D0342CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */,
+				38D6F17D2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				3816C05D2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */,
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
@@ -1087,9 +1172,11 @@
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				388C96372CCE41700061C598 /* AuthInfo.swift in Sources */,
 				38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
+				3887D03A2CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				38608B342CB519A80066BB40 /* DetailCardResponse.swift in Sources */,
 				2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				3880098B2CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift in Sources */,
+				38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
 				38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				2AE6B1512CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
@@ -1123,13 +1210,16 @@
 				2AE6B1552CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
 				38405CCC2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
+				381A1D6B2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
 				38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
 				38121E2E2CA6C53300602499 /* distanceCardResponse.swift in Sources */,
 				2AFADC472CB6B23F00083D30 /* CardSummaryResponse.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				389681112CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
 				38121E352CA6DA4000602499 /* Date.swift in Sources */,
+				381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
+				38D6F1872CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
 				38389B9D2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				385E65A42CBE56D00032E120 /* Coordinate.swift in Sources */,
@@ -1137,15 +1227,18 @@
 				3878F4752CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				38B6AAE02CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
+				3887D0372CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
 				38B8A58C2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
 				2AE6B15F2CBEB2D800FA5C3C /* ReportResponse.swift in Sources */,
 				384972A42CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
+				38D6F1812CC2413400E11530 /* WriteCardTextView.swift in Sources */,
 				3878F4722CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				38B6AAE32CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
 				38B8A5852CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */,
+				381A1D782CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1164,6 +1257,7 @@
 				38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */,
+				38D6F17C2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
 				2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */,
 				388009872CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */,
@@ -1175,13 +1269,17 @@
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				38B6AAE62CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */,
 				38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
+				3887D0392CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
+				381A1D6A2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				388009942CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
+				38D6F1832CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
+				38D6F1862CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */,
 				38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */,
 				3880098E2CABF4C2002A9209 /* SOMTag.swift in Sources */,
 				2A44A4372CAC227300DC463E /* BaseAuthResponse.swift in Sources */,
@@ -1189,10 +1287,14 @@
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				3816C0602CCDE35300C8688C /* ErrorInterceptor.swift in Sources */,
 				2A44A42D2CAC14C800DC463E /* SignInResponse.swift in Sources */,
+				38BE72172CC696E9002662DD /* WriteTagTextField+Rx.swift in Sources */,
 				38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
+				381A1D772CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */,
 				38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
+				381A1D652CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */,
 				38B8A58B2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
 				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
+				381A1D742CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				3850719A2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				38121E342CA6DA4000602499 /* Date.swift in Sources */,
@@ -1204,7 +1306,9 @@
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
 				2AE6B1492CBC15BF00FA5C3C /* ReportViewController.swift in Sources */,
+				3887D0332CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */,
 				38608B332CB519A80066BB40 /* DetailCardResponse.swift in Sources */,
+				38D6F1802CC2413400E11530 /* WriteCardTextView.swift in Sources */,
 				385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				388009842CABF11F002A9209 /* SwiftEntryKit.swift in Sources */,
 				38405CCB2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
@@ -1219,6 +1323,7 @@
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				2AE6B1502CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
+				3887D0362CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
 				385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
 				382C58782CA651E800CEF814 /* CardProtocol.swift in Sources */,
