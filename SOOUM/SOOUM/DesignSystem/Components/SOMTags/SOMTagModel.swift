@@ -25,7 +25,7 @@ class SOMTagModel {
         static let horizontalWithRemove = Self(
             lineSpacing: 0,
             interSpacing: 10,
-            inset: .init(top: 12, left: 0, bottom: 16, right: 20)
+            inset: .init(top: 12, left: 20, bottom: 16, right: 20)
         )
         static let verticalWithoutRemove = Self(
             direction: .vertical,
@@ -34,7 +34,6 @@ class SOMTagModel {
             inset: .init(top: 0, left: 20, bottom: 0, right: 20)
         )
     }
-    
     
     let id: String
     let originalText: String
