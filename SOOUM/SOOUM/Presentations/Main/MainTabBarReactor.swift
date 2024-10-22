@@ -27,4 +27,8 @@ extension MainTabBarReactor {
     func reactorForMainHome() -> MainHomeViewReactor {
         MainHomeViewReactor()
     }
+    
+    func reactorForWriteCard() -> WriteCardViewReactor {
+        WriteCardViewReactor()
+    }
 }

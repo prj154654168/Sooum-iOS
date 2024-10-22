@@ -26,6 +26,8 @@ class MainTabBarController: SOMTabBarController, View {
     
     let mainHomeViewController = MainHomeViewController()
     
+    let writeCardViewController = WriteCardViewController()
+    
     var disposeBag = DisposeBag()
     
     func bind(reactor: MainTabBarReactor) {
@@ -49,8 +51,8 @@ class MainTabBarController: SOMTabBarController, View {
             selectedImage: nil
         )
         
-        let addCardViewController = UIViewController()
-        addCardViewController.tabBarItem = .init(
+        self.writeCardViewController.reactor = reactor.reactorForWriteCard()
+        self.writeCardViewController.tabBarItem = .init(
             title: Text.addCardTitle,
             image: .init(.icon(.outlined(.addCard))),
             selectedImage: nil
@@ -71,11 +73,22 @@ class MainTabBarController: SOMTabBarController, View {
         )
         
         self.viewControllers = [
-            mainHomeViewController,
-            addCardViewController,
+            self.mainHomeViewController,
+            self.writeCardViewController,
             tagViewcontroller,
             profileViewController
         ]
+        
+        self.delegate = self
+    }
+}
+
+extension MainTabBarController: SOMTabBarControllerDelegate {
+    
+    func tabBarController(_ tabBarController: SOMTabBarController, didSelect viewController: UIViewController) {
+        
+        guard viewController == self.writeCardViewController else { return }
+        self.navigationPush(self.writeCardViewController, animated: true)
     }
 }
 
