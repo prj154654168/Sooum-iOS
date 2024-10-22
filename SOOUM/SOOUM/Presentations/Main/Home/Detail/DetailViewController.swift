@@ -243,7 +243,7 @@ extension DetailViewController: UICollectionViewDataSource {
         let model: SOMCardModel = .init(data: card)
         
         let tags: [SOMTagModel] = self.detailCard.tags.map {
-            SOMTagModel(id: $0.id, originalText: $0.content)
+            SOMTagModel(id: $0.id, originalText: $0.content, isRemovable: false)
         }
         cell.setDatas(model, tags: tags)
         
