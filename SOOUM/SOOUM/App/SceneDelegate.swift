@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         
         let viewController = UploadCardBottomSheetViewController()
-//        viewController.reactor = LaunchScreenViewReactor()
+        viewController.reactor = UploadCardBottomSheetViewReactor()
         
         window?.rootViewController = viewController
         window?.backgroundColor = .white

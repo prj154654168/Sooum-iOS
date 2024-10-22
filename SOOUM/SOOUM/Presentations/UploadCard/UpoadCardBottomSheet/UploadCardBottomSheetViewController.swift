@@ -8,13 +8,15 @@
 import UIKit
 
 import ReactorKit
+import RxCocoa
 import RxGesture
 import RxSwift
 
 import SnapKit
 import Then
+import YPImagePicker
 
-class UploadCardBottomSheetViewController: UIViewController {
+class UploadCardBottomSheetViewController: BaseViewController, View {    
     
     enum Section: CaseIterable {
         case imageSegment
@@ -45,6 +47,15 @@ class UploadCardBottomSheetViewController: UIViewController {
         }
     }
     
+    /// 사용자가 선택한 사진, 모드
+    var selectedImage: (image: UIImage, segment: BottomSheetSegmentTableViewCell.ImageSegment)?
+    /// 이미지 피커 띄우기 이벤트
+    var sholdShowImagePicker = PublishSubject<Void>()
+    /// 선택된 이미지를 방출
+    var imageSelected = PublishRelay<UIImage>()
+    /// 이미지 이름 방출
+    var imageNameSeleted = PublishRelay<String>()
+    /// 기본이미지&내 이미지 토글
     var segmentState = BottomSheetSegmentTableViewCell.ImageSegment.defaultImage
     
     lazy var tableView = UITableView(frame: .zero, style: .plain).then {
@@ -83,21 +94,21 @@ class UploadCardBottomSheetViewController: UIViewController {
         setupConstraints()
     }
     
-    func setupConstraints() {
-//        self.view.addSubview(segmentView)
-//        segmentView.snp.makeConstraints {
-//            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-//            $0.leading.equalToSuperview().offset(8)
-//            $0.trailing.equalToSuperview().offset(-14)
-//            $0.height.equalTo(32)
-//        }
-        
+    override func setupConstraints() {
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
+    }
+    
+    func bind(reactor: UploadCardBottomSheetViewReactor) {
+        sholdShowImagePicker
+            .subscribe(with: self) { object, _ in
+                object.presentPicker()
+            }
+            .disposed(by: self.disposeBag)
     }
 }
 
@@ -176,6 +187,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! SelectMyImageTableViewCell
+        cell.setData(image: self.selectedImage?.image, sholdShowImagePicker: sholdShowImagePicker)
         return cell
     }
     
@@ -202,5 +214,50 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
         
         cell.setData(settingOption: Section.OtherSettings.allCases[indexPath.item], state: false)
         return cell
+    }
+}
+
+// MARK: - YPImagePicker
+extension UploadCardBottomSheetViewController {
+    func presentPicker() {
+        var config = YPImagePickerConfiguration()
+
+        config.library.options = nil
+        config.library.onlySquare = false
+        config.library.isSquareByDefault = true
+        config.library.minWidthForItem = nil
+        config.library.mediaType = YPlibraryMediaType.photo
+        config.library.defaultMultipleSelection = false
+        config.library.maxNumberOfItems = 1
+        config.library.minNumberOfItems = 1
+        config.library.numberOfItemsInRow = 4
+        config.library.spacingBetweenItems = 1.0
+        config.showsCrop = .rectangle(ratio: 1)
+        config.showsPhotoFilters = false
+        config.library.skipSelectionsGallery = false
+        config.library.preselectedItems = nil
+        config.library.preSelectItemOnMultipleSelection = true
+        config.startOnScreen = .library
+        config.shouldSaveNewPicturesToAlbum = false
+        
+        config.wordings.next = "다음"
+        config.wordings.cancel = "취소"
+        config.wordings.save = "저장"
+        config.wordings.albumsTitle = "앨범"
+        config.wordings.cameraTitle = "카메라"
+        config.wordings.libraryTitle = "갤러리"
+        config.wordings.crop = "자르기"
+        
+        let picker = YPImagePicker(configuration: config)
+        picker.didFinishPicking { [unowned picker] items, _ in
+            guard let image = items.singlePhoto?.image  else {
+                picker.dismiss(animated: true, completion: nil)
+                return
+            }
+            self.selectedImage = (image, self.segmentState)
+            picker.dismiss(animated: true, completion: nil)
+            self.tableView.reloadSections(IndexSet([1]), with: .automatic)
+        }
+        present(picker, animated: true, completion: nil)
     }
 }

@@ -16,12 +16,15 @@ import Then
 
 class SelectMyImageTableViewCell: UITableViewCell {
     
+    var sholdShowImagePicker: PublishSubject<Void>?
+    
     var disposeBag = DisposeBag()
     
     let rootImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
         $0.backgroundColor = .som.gray04
         $0.layer.cornerRadius = 8
+        $0.clipsToBounds = true
     }
     
     let plusIconImageView = UIImageView().then {
@@ -46,7 +49,14 @@ class SelectMyImageTableViewCell: UITableViewCell {
     }
     
     // MARK: - setData
-    func setData() {
+    func setData(image: UIImage?, sholdShowImagePicker: PublishSubject<Void>) {
+        if let image = image {
+            self.rootImageView.image = image
+            self.plusIconImageView.isHidden = true
+        } else {
+            self.plusIconImageView.isHidden = false
+        }
+        self.sholdShowImagePicker = sholdShowImagePicker
         action()
     }
     
@@ -55,7 +65,8 @@ class SelectMyImageTableViewCell: UITableViewCell {
         rootImageView.rx.tapGesture()
             .when(.recognized)
             .subscribe { _ in
-                // TODO: - 이미지 선택
+                print("self.sholdShowImagePicker.onNext(())")
+                self.sholdShowImagePicker?.onNext(())
             }
             .disposed(by: disposeBag)
     }
