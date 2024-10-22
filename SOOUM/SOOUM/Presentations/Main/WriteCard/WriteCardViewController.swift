@@ -68,6 +68,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         $0.writeCardTextView.delegate = self
         $0.writeTagTextField.delegate = self
         $0.writtenTags.delegate = self
+        $0.relatedTags.delegate = self
     }
     
     override var navigationBarHeight: CGFloat {
@@ -129,6 +130,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .withLatestFrom(writtenTagText)
             .filter { $0.isEmpty == false }
             .withUnretained(self)
+            .do(onNext: { object, _ in object.writeCardView.writeTagTextField.text = nil })
             .map { object, writtenTagText in
                 let toModel: SOMTagModel = .init(
                     id: UUID().uuidString,
@@ -212,6 +214,13 @@ extension WriteCardViewController: WriteTagTextFieldDelegate {
                 .disposed(by: self.disposeBag)
         }
     }
+    
+    func textFieldReturnKeyClicked(_ textField: WriteTagTextField) {
+        
+        if self.writeCardView.writeTagTextField.isFirstResponder {
+            self.writeCardView.writeTagTextField.addTagButton.sendActions(for: .touchUpInside)
+        }
+    }
 }
 
 extension WriteCardViewController: SOMTagsDelegate {
@@ -224,5 +233,10 @@ extension WriteCardViewController: SOMTagsDelegate {
                 $0.height.equalTo(12)
             }
         }
+    }
+    
+    func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
+        
+        self.writeCardView.writeTagTextField.text = model.originalText
     }
 }
