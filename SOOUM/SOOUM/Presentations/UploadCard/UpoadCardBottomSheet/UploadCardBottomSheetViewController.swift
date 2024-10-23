@@ -56,7 +56,7 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     /// 이미지 이름 방출
     var imageNameSeleted = PublishRelay<String>()
     /// 기본이미지&내 이미지 토글
-    var segmentState = BottomSheetSegmentTableViewCell.ImageSegment.defaultImage
+    var segmentState = BehaviorRelay<BottomSheetSegmentTableViewCell.ImageSegment>(value: .defaultImage)
     
     lazy var tableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
@@ -109,6 +109,12 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
                 object.presentPicker()
             }
             .disposed(by: self.disposeBag)
+        
+        segmentState
+            .subscribe { segment in
+                self.tableView.reloadSections(IndexSet([1, 2, 3]), with: .automatic)
+            }
+            .disposed(by: self.disposeBag)
     }
 }
 
@@ -135,7 +141,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
             return createBottomSheetSegmentTableViewCell(indexPath: indexPath)
             
         case .selectImage:
-            switch segmentState {
+            switch segmentState.value {
             case .defaultImage:
                 return createSelectDefaultImageTableViewCell(indexPath: indexPath)
             case .myImage:
@@ -159,12 +165,6 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
             for: indexPath
         ) as! BottomSheetSegmentTableViewCell
         cell.setData(segmentState: segmentState)
-        cell.imageSegmentChanged
-            .subscribe { segment in
-                self.segmentState = segment
-                self.tableView.reloadSections(IndexSet([1, 2, 3]), with: .automatic)
-            }
-            .disposed(by: cell.disposeBag)
         return cell
     }
     
@@ -254,7 +254,7 @@ extension UploadCardBottomSheetViewController {
                 picker.dismiss(animated: true, completion: nil)
                 return
             }
-            self.selectedImage = (image, self.segmentState)
+            self.selectedImage = (image, self.segmentState.value)
             picker.dismiss(animated: true, completion: nil)
             self.tableView.reloadSections(IndexSet([1]), with: .automatic)
         }

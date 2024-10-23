@@ -8,6 +8,7 @@
 import UIKit
 
 import ReactorKit
+import RxCocoa
 import RxGesture
 import RxSwift
 
@@ -21,7 +22,7 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
         case myImage
     }
     
-    let imageSegmentChanged = PublishSubject<ImageSegment>()
+    var imageSegment: BehaviorRelay<ImageSegment>?
     
     var selectedSegment: ImageSegment = .defaultImage
     
@@ -97,9 +98,10 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     }
     
     // MARK: - setData
-    func setData(segmentState: ImageSegment) {
+    func setData(segmentState: BehaviorRelay<ImageSegment>) {
         action()
-        updateImageSegment(segment: segmentState, animated: false)
+        self.imageSegment = segmentState
+        updateImageSegment(segment: segmentState.value, animated: false)
     }
     
     // MARK: - action
@@ -107,7 +109,7 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
         defualtImageButtonLabel.rx.tapGesture()
             .when(.recognized)
             .subscribe { _ in
-                self.imageSegmentChanged.onNext(.defaultImage)
+                self.imageSegment?.accept(.defaultImage)
                 self.updateImageSegment(segment: .defaultImage, animated: true)
             }
             .disposed(by: disposeBag)
@@ -115,7 +117,7 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
         myImageButtonLabel.rx.tapGesture()
             .when(.recognized)
             .subscribe { _ in
-                self.imageSegmentChanged.onNext(.myImage)
+                self.imageSegment?.accept(.myImage)
                 self.updateImageSegment(segment: .myImage, animated: true)
             }
             .disposed(by: disposeBag)
