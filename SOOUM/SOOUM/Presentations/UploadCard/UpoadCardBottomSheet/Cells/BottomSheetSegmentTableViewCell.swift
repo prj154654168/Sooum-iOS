@@ -85,7 +85,6 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
         setupConstraint()
-        updateImageSegment(segment: .defaultImage, animated: false)
     }
     
     required init?(coder: NSCoder) {
