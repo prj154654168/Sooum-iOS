@@ -47,14 +47,18 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         }
     }
     
-    /// 사용자가 선택한 사진, 모드
-    var selectedImage: (image: UIImage, segment: BottomSheetSegmentTableViewCell.ImageSegment)?
-    /// 이미지 피커 띄우기 이벤트
-    var sholdShowImagePicker = PublishSubject<Void>()
+    // 이전 뷰컨에 전달할 이벤트
     /// 선택된 이미지를 방출
     var imageSelected = PublishRelay<UIImage>()
     /// 이미지 이름 방출
     var imageNameSeleted = PublishRelay<String>()
+    /// 카드 옵션 변경 방출
+    var cardOptionChanged = PublishRelay<[Section.OtherSettings: Bool]>()
+
+    /// 사용자가 선택한 사진, 모드
+    var selectedImage: (image: UIImage, segment: BottomSheetSegmentTableViewCell.ImageSegment)?
+    /// 이미지 피커 띄우기 이벤트
+    var sholdShowImagePicker = PublishSubject<Void>()
     /// 기본이미지&내 이미지 토글
     var segmentState = BehaviorRelay<BottomSheetSegmentTableViewCell.ImageSegment>(value: .defaultImage)
     
@@ -62,7 +66,7 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
-        
+        $0.rowHeight = UITableView.automaticDimension
         $0.register(
             BottomSheetSegmentTableViewCell.self,
             forCellReuseIdentifier: String(describing: BottomSheetSegmentTableViewCell.self)
@@ -104,6 +108,14 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     }
     
     func bind(reactor: UploadCardBottomSheetViewReactor) {
+        self.rx.viewDidLoad
+            .map({ _ in
+                print(" Reactor.Action.fetchNewDefaultImage")
+                return Reactor.Action.fetchNewDefaultImage
+            })
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+
         sholdShowImagePicker
             .subscribe(with: self) { object, _ in
                 object.presentPicker()
@@ -215,6 +227,27 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
         cell.setData(settingOption: Section.OtherSettings.allCases[indexPath.item], state: false)
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch Section.allCases[indexPath.section] {
+        case .imageSegment:
+            return UITableView.automaticDimension
+
+        case .selectImage:
+            switch self.segmentState.value {
+            case .defaultImage:
+                return ((UIScreen.main.bounds.width - 40) / 2) + 28
+            case .myImage:
+                return UITableView.automaticDimension
+            }
+
+        case .selectFont:
+            return UITableView.automaticDimension
+
+        case .otherSettings:
+            return 56
+        }
+    }
 }
 
 // MARK: - YPImagePicker
@@ -232,7 +265,7 @@ extension UploadCardBottomSheetViewController {
         config.library.minNumberOfItems = 1
         config.library.numberOfItemsInRow = 4
         config.library.spacingBetweenItems = 1.0
-        config.showsCrop = .rectangle(ratio: 1)
+        config.showsCrop = .rectangle(ratio: 10 / 9)
         config.showsPhotoFilters = false
         config.library.skipSelectionsGallery = false
         config.library.preselectedItems = nil

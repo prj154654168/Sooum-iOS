@@ -9,6 +9,10 @@ import UIKit
 
 class UploadCardSettingTableViewCell: UITableViewCell {
     
+    let titleStackContainerView = UIView().then {
+        $0.backgroundColor = .clear
+    }
+    
     let titleStack = UIStackView().then {
         $0.axis = .vertical
         $0.spacing = 6
@@ -38,6 +42,7 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
+        self.contentView.autoresizingMask = .flexibleHeight
         setupConstraint()
     }
     
@@ -53,21 +58,28 @@ class UploadCardSettingTableViewCell: UITableViewCell {
 
     // MARK: - setupConstraint
     private func setupConstraint() {
-        contentView.addSubview(titleStack)
-        titleStack.addArrangedSubviews(titleLabel, descLabel)
-        titleStack.snp.makeConstraints {
+        contentView.addSubview(togglebView)
+        togglebView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(20)
+            $0.bottom.equalToSuperview().offset(-4)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(32)
+            $0.width.equalTo(48)
+        }
+        
+        contentView.addSubview(titleStackContainerView)
+        titleStackContainerView.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(20)
             $0.top.equalToSuperview().offset(20)
             $0.height.equalTo(36)
             $0.bottom.equalToSuperview()
         }
-
-        contentView.addSubview(togglebView)
-        togglebView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-16)
-            $0.height.equalTo(32)
-            $0.width.equalTo(48)
+        
+        titleStackContainerView.addSubview(titleStack)
+        titleStack.addArrangedSubviews(titleLabel, descLabel)
+        titleStack.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
         }
     }
 }
