@@ -68,6 +68,7 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         disposeBag = DisposeBag()
+        toggleView.prepareForReuse()
     }
     
     // MARK: - setData
@@ -91,13 +92,16 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     func bind() {
         print("\(type(of: self)) - \(#function)")
 
-        cellToggleState.subscribe(with: self) { object, state in
-            if var updatedOptions = self.selectedCardOption?.value {
-                updatedOptions[self.option] = self.cellToggleState.value
-                self.selectedCardOption?.accept(updatedOptions)
+        cellToggleState
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, state in
+                print(self.cellToggleState)
+                if var updatedOptions = self.selectedCardOption?.value {
+                    updatedOptions[self.option] = self.cellToggleState.value
+                    self.selectedCardOption?.accept(updatedOptions)
+                }
             }
-        }
-        .disposed(by: disposeBag)
+            .disposed(by: disposeBag)
     }
 
     // MARK: - setupConstraint

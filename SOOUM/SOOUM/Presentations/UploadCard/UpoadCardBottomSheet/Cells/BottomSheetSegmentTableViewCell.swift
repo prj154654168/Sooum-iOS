@@ -22,6 +22,8 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
         case myImage
     }
     
+    var imageReloadButtonTapped: PublishSubject<BottomSheetSegmentTableViewCell.ImageSegment>?
+    
     var imageSegment: BehaviorRelay<ImageSegment>?
     
     var selectedSegment: ImageSegment = .defaultImage
@@ -97,9 +99,15 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     }
     
     // MARK: - setData
-    func setData(segmentState: BehaviorRelay<ImageSegment>) {
-        action()
+    func setData(
+        segmentState: BehaviorRelay<ImageSegment>,
+        imageReloadButtonTapped: PublishSubject<BottomSheetSegmentTableViewCell.ImageSegment>?
+    ) {
         self.imageSegment = segmentState
+        self.imageReloadButtonTapped = imageReloadButtonTapped
+        
+        action()
+        
         updateImageSegment(segment: segmentState.value, animated: false)
     }
     
@@ -118,6 +126,13 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
             .subscribe { _ in
                 self.imageSegment?.accept(.myImage)
                 self.updateImageSegment(segment: .myImage, animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        chageImageButtonStack.rx.tapGesture()
+            .when(.recognized)
+            .subscribe { _ in
+                self.imageReloadButtonTapped?.onNext(self.selectedSegment)
             }
             .disposed(by: disposeBag)
     }

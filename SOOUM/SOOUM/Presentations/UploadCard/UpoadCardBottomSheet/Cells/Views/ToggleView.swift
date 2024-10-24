@@ -18,7 +18,7 @@ class ToggleView: UIView {
     
     var toggleState: BehaviorRelay<Bool>?
     
-    let disposeBag = DisposeBag()
+    var disposeBag = DisposeBag()
         
     private let backgroundView = UIView().then {
         $0.backgroundColor = .som.gray04
@@ -38,6 +38,10 @@ class ToggleView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func prepareForReuse() {
+        disposeBag = DisposeBag()
     }
     
     func setData(toggleState: BehaviorRelay<Bool>) {
