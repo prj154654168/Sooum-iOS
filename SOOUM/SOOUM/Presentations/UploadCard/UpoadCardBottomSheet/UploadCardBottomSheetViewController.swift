@@ -47,14 +47,6 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         }
     }
     
-    // 이전 뷰컨에 전달할 이벤트
-    /// 선택된 이미지 url을 방출
-    var imageSelected = PublishRelay<String>()
-    /// 이미지 이름 방출
-    var imageNameSeleted = PublishRelay<String>()
-    /// 카드 옵션 변경 방출
-    var cardOptionChanged = PublishRelay<[Section.OtherSettings: Bool]>()
-
     /// 기본 서버 이미지
     var defaultImages: [ImageURLWithName] = []
     /// 사용자가 선택한 사진, 모드
@@ -66,6 +58,15 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     var sholdShowImagePicker = PublishSubject<Void>()
     /// 기본이미지&내 이미지 토글
     var segmentState = BehaviorRelay<BottomSheetSegmentTableViewCell.ImageSegment>(value: .defaultImage)
+   
+    // 이전 뷰컨에 전달할 이벤트
+    /// 선택된 이미지 url을 방출
+    var imageSelected = PublishRelay<String>()
+    /// 이미지 이름 방출
+    var imageNameSeleted = PublishRelay<String>()
+    var selectedFont = BehaviorRelay<SelectFontTableViewCell.FontType>(value: .gothic)
+    /// 카드 옵션 변경 방출
+    var cardOptionChanged = PublishRelay<[Section.OtherSettings: Bool]>()
     
     lazy var tableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
@@ -133,19 +134,33 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.defaultImages)
-            .subscribe(with: self) { object, imageWithNames in
-                object.defaultImages = imageWithNames
-                object.tableView.reloadSections(IndexSet([1]), with: .automatic)
-            }
-            .disposed(by: self.disposeBag)
-        
         selectedDefaultImage
             .compactMap {
                 print("imageSelected 변경", $0.imageWithName?.urlString)
                 return $0.imageWithName?.urlString
             }
             .bind(to: imageSelected)
+            .disposed(by: self.disposeBag)
+        
+        selectedDefaultImage
+            .compactMap {
+                print("imageNameSeleted 변경", $0.imageWithName?.name)
+                return $0.imageWithName?.name
+            }
+            .bind(to: imageNameSeleted)
+            .disposed(by: self.disposeBag)
+        
+        // TODO: 삭제
+        selectedFont.subscribe { font in
+            print("selectedFont 변경", font)
+        }
+        .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.defaultImages)
+            .subscribe(with: self) { object, imageWithNames in
+                object.defaultImages = imageWithNames
+                object.tableView.reloadSections(IndexSet([1]), with: .automatic)
+            }
             .disposed(by: self.disposeBag)
     }
 }
@@ -232,7 +247,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! SelectFontTableViewCell
-        cell.setData()
+        cell.setData(selectedFont: self.selectedFont)
         return cell
     }
     
