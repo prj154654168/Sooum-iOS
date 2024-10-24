@@ -9,6 +9,8 @@ import UIKit
 
 class SelectDefaultImageTableViewCell: UITableViewCell {
     
+    var defaultImages: [UploadCardBottomSheetViewReactor.ImageURLWithName] = []
+    
     private let flowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
         $0.minimumLineSpacing = 0
@@ -24,10 +26,7 @@ class SelectDefaultImageTableViewCell: UITableViewCell {
         $0.dataSource = self
         $0.delegate = self
     }
-    
-    let images: [UIImage] = [
-    ]
-    
+
     // 초기화 코드
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -37,6 +36,11 @@ class SelectDefaultImageTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setData(imageWithNames: [UploadCardBottomSheetViewReactor.ImageURLWithName]) {
+        defaultImages = imageWithNames
+        imageCollectionView.reloadData()
     }
     
     // 뷰 설정
@@ -67,7 +71,9 @@ extension SelectDefaultImageTableViewCell: UICollectionViewDataSource, UICollect
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectionViewCell", for: indexPath) as! ImageCollectionViewCell
-//        cell.setData(image: images[indexPath.item])  // 셀에 이미지 설정
+        if defaultImages.indices.contains(indexPath.item) {
+            cell.setData(imageURLStr: defaultImages[indexPath.item].urlString)
+        }
         return cell
     }
     
