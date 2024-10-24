@@ -10,10 +10,6 @@ import UIKit
 import ReactorKit
 
  class UploadCardBottomSheetViewReactor: Reactor {
-     struct ImageURLWithName {
-         var name: String
-         var urlString: String
-     }
      
      enum Action: Equatable {
          /// 처음, 이미지 변경 눌렀을때 호출
@@ -69,10 +65,9 @@ import ReactorKit
          let request: UploadRequest = .defaultImages
          
          return self.networkManager.request(DefaultCardImageResponse.self, request: request)
-             .map(\.embedded.imgURLInfoList)  // embedded 내의 imgURLInfoList를 가져옵니다.
+             .map(\.embedded.imgURLInfoList)
              .map { imageInfoList in
                  print("fetchDefaultImages", imageInfoList)
-                 // imgURLInfoList를 ImageURLWithName 배열로 변환
                  let images = imageInfoList.map { ImageURLWithName(name: $0.imgName, urlString: $0.url.href) }
                  return Mutation.defaultImages(images)
              }
