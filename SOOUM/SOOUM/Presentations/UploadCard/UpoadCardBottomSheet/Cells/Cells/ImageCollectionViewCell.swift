@@ -33,7 +33,27 @@ class ImageCollectionViewCell: UICollectionViewCell {
     }
     
     // 이미지 설정 메서드
-    func setData(imageURLStr: String) {
+    func setData(idx: Int, imageURLStr: String) {
         imageView.setImage(strUrl: imageURLStr)
+        applyCornerRadius(for: idx)
     }
-}
+    
+    private func applyCornerRadius(for idx: Int) {
+         let cornerRadius: CGFloat = 10
+         
+         imageView.layer.cornerRadius = cornerRadius
+         imageView.layer.maskedCorners = [] // 초기화
+         
+         switch idx {
+         case 0:
+             imageView.layer.maskedCorners = [.layerMinXMinYCorner] // 왼쪽 위
+         case 3:
+             imageView.layer.maskedCorners = [.layerMaxXMinYCorner] // 오른쪽 위
+         case 4:
+             imageView.layer.maskedCorners = [.layerMinXMaxYCorner] // 왼쪽 아래
+         case 7:
+             imageView.layer.maskedCorners = [.layerMaxXMaxYCorner] // 오른쪽 아래
+         default:
+             imageView.layer.maskedCorners = []
+         }
+     }}
