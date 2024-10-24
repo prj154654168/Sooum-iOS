@@ -1551,7 +1551,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = "ec2-13-125-230-18.ap-northeast-2.compute.amazonaws.com:8080";
+				SOOUM_SERVER_ENDPOINT = "ec2-54-180-232-54.ap-northeast-2.compute.amazonaws.com:8080";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1588,7 +1588,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = "ec2-13-125-230-18.ap-northeast-2.compute.amazonaws.com:8080";
+				SOOUM_SERVER_ENDPOINT = "ec2-54-180-232-54.ap-northeast-2.compute.amazonaws.com:8080";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
