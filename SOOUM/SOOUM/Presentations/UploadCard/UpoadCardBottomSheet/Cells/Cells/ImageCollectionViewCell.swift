@@ -33,7 +33,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
     }
     
     // 이미지 설정 메서드
-    func setData(image: UIImage) {
-        imageView.image = image
+    func setData(imageURLStr: String) {
+        imageView.setImage(strUrl: imageURLStr)
     }
 }
