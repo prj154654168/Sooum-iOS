@@ -27,8 +27,9 @@ enum CardRequest: BaseRequest {
     case deleteCard(id: String)
     /// 상세보기 - 좋아요 업데이트
     case updateLike(id: String, isLike: Bool)
+    /// 글추가 - 관련 태그 조회
+    case relatedTag(keyword: String, size: Int)
     
-
     var path: String {
         switch self {
         case let .latestCard(id, _, _):
@@ -60,12 +61,14 @@ enum CardRequest: BaseRequest {
             return "/cards/\(id)"
         case let .updateLike(id, _):
             return "/cards/\(id)/like"
+        case .relatedTag(_, _):
+            return "/tags/search"
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .latestCard, .popularCard, .distancCard, .detailCard, .commentCard, .cardSummary:
+        case .latestCard, .popularCard, .distancCard, .detailCard, .commentCard, .cardSummary, .relatedTag:
             return .get
         case .deleteCard:
             return .delete
@@ -106,6 +109,9 @@ enum CardRequest: BaseRequest {
             } else {
                 return [:]
             }
+            
+        case let .relatedTag(keyword, size):
+            return ["keyword": keyword, "size": size]
         
         case .cardSummary, .updateLike, .deleteCard:
             return [:]
