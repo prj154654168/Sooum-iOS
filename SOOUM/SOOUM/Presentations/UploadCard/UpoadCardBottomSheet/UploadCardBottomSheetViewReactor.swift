@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Alamofire
 import Kingfisher
 import ReactorKit
 
@@ -54,8 +55,7 @@ class UploadCardBottomSheetViewReactor: Reactor {
         case .fetchNewDefaultImage:
             return fetchDefaultImages()
         case let .seleteMyImage(myImage):
-            // 내 이미지 업로드 로직 구현 필요
-            return Observable.empty()
+            return uploadMyImage(myImage: myImage)
         }
     }
     
@@ -95,7 +95,7 @@ class UploadCardBottomSheetViewReactor: Reactor {
             }
     }
     
-    func downloadImage(imageURLWithName: ImageURLWithName) -> Observable<ImageWithName?> {
+    private func downloadImage(imageURLWithName: ImageURLWithName) -> Observable<ImageWithName?> {
         guard let url = URL(string: imageURLWithName.urlString) else {
             return Observable.just(nil)
         }
@@ -118,5 +118,58 @@ class UploadCardBottomSheetViewReactor: Reactor {
                 task?.cancel()
             }
         }
+    }
+    
+    func uploadMyImage(myImage: UIImage) -> Observable<Mutation> {
+        print("\(type(of: self)) - \(#function)")
+
+        let presignedURLRequest: UploadRequest = .presignedURL
+        
+        return self.networkManager.request(PresignedStorageResponse.self, request: presignedURLRequest)
+            .flatMap { [weak self] presignedResponse -> Observable<Mutation> in
+                guard let self = self else { return Observable.just(Mutation.myImageName("")) }
+                
+                // 2. presigned URL을 통해 이미지를 업로드합니다.
+                guard let url = URL(string: presignedResponse.url.href) else {
+                    print("\(type(of: self)) - \(#function)url없음")
+                    return Observable.just(Mutation.myImageName(""))
+                }
+                
+                return Observable.create { observer in
+                    self.uploadImageToURL(image: myImage, url: url) { result in
+                        switch result {
+                        case .success:
+                            observer.onNext(Mutation.myImageName(presignedResponse.imgName))
+                            observer.onCompleted()
+                        case .failure(let error):
+                            // 4. 실패 시 에러 방출
+                            observer.onError(error)
+                        }
+                    }
+                    
+                    return Disposables.create()
+                }
+            }
+    }
+    
+    func uploadImageToURL(image: UIImage, url: URL, completion: @escaping (Result<Void, Error>) -> Void) {
+        print("\(type(of: self)) - \(#function)")
+
+        // 이미지를 JPEG로 변환
+        guard let imageData = image.jpegData(compressionQuality: 0.5) else {
+            completion(.failure(NSError(domain: "ImageConversionError", code: 0, userInfo: nil)))
+            return
+        }
+        
+        AF.upload(imageData, to: url, method: .put)
+            .validate(statusCode: 200..<300)
+            .response { response in
+                switch response.result {
+                case .success:
+                    completion(.success(()))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
     }
 }
