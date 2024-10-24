@@ -7,6 +7,7 @@
 
 import UIKit
 
+import RxCocoa
 import RxGesture
 import RxSwift
 
@@ -15,10 +16,10 @@ import Then
 
 class ToggleView: UIView {
     
+    var toggleState: BehaviorRelay<Bool>?
+    
     let disposeBag = DisposeBag()
-    
-    private var isOn: Bool = false
-    
+        
     private let backgroundView = UIView().then {
         $0.backgroundColor = .som.gray04
         $0.layer.cornerRadius = 12
@@ -32,12 +33,17 @@ class ToggleView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupConstraint()
-        action()
-        updateToggle(isOn, animated: false)
+        updateToggleView(toggleState?.value ?? false, animated: false)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setData(toggleState: BehaviorRelay<Bool>) {
+        self.toggleState = toggleState
+        
+        action()
     }
 
     private func setupConstraint() {
@@ -60,13 +66,15 @@ class ToggleView: UIView {
         self.rx.tapGesture()
             .when(.recognized)
             .subscribe { _ in
-                self.isOn.toggle()
-                self.updateToggle(self.isOn, animated: true)
+                if let toggleState = self.toggleState {
+                    toggleState.accept(!toggleState.value)
+                    self.updateToggleView(toggleState.value, animated: true)
+                }
             }
             .disposed(by: disposeBag)
     }
     
-    func updateToggle(_ state: Bool, animated: Bool) {
+    func updateToggleView(_ state: Bool, animated: Bool) {
         UIView.animate(
             withDuration: animated ? 0.2 : 0.0,
             delay: 0,

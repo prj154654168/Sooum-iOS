@@ -54,6 +54,8 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     
     /// 선택된 기본 이미지
     var selectedDefaultImage = BehaviorRelay<(idx: Int, imageWithName: ImageURLWithName?)>(value: (idx: 0, imageWithName: nil))
+    /// 선택한 폰트
+    var selectedFont = BehaviorRelay<SelectFontTableViewCell.FontType>(value: .gothic)
     /// 이미지 피커 띄우기 이벤트
     var sholdShowImagePicker = PublishSubject<Void>()
     /// 기본이미지&내 이미지 토글
@@ -64,9 +66,14 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     var imageSelected = PublishRelay<String>()
     /// 이미지 이름 방출
     var imageNameSeleted = PublishRelay<String>()
-    var selectedFont = BehaviorRelay<SelectFontTableViewCell.FontType>(value: .gothic)
     /// 카드 옵션 변경 방출
-    var cardOptionChanged = PublishRelay<[Section.OtherSettings: Bool]>()
+    var cardOptionState = BehaviorRelay<[Section.OtherSettings: Bool]>(
+        value: [
+            .timeLimit: false,
+            .distanceLimit: false,
+            .privateCard: false
+        ]
+    )
     
     lazy var tableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
@@ -153,6 +160,11 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         // TODO: 삭제
         selectedFont.subscribe { font in
             print("selectedFont 변경", font)
+        }
+        .disposed(by: self.disposeBag)
+        
+        cardOptionState.subscribe(with: self) { object, state in
+            print("토글 바뀜", state)
         }
         .disposed(by: self.disposeBag)
         
@@ -259,8 +271,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! UploadCardSettingTableViewCell
-        
-        cell.setData(settingOption: Section.OtherSettings.allCases[indexPath.item], state: false)
+        cell.setData(cellOption: Section.OtherSettings.allCases[indexPath.item], settingState: cardOptionState)
         return cell
     }
     

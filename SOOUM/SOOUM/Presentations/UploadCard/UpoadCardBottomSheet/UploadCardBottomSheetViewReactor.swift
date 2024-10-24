@@ -67,7 +67,6 @@ import ReactorKit
          return self.networkManager.request(DefaultCardImageResponse.self, request: request)
              .map(\.embedded.imgURLInfoList)
              .map { imageInfoList in
-                 print("fetchDefaultImages", imageInfoList)
                  let images = imageInfoList.map { ImageURLWithName(name: $0.imgName, urlString: $0.url.href) }
                  return Mutation.defaultImages(images)
              }
