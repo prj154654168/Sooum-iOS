@@ -48,8 +48,8 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     }
     
     // 이전 뷰컨에 전달할 이벤트
-    /// 선택된 이미지를 방출
-    var imageSelected = PublishRelay<UIImage>()
+    /// 선택된 이미지 url을 방출
+    var imageSelected = PublishRelay<String>()
     /// 이미지 이름 방출
     var imageNameSeleted = PublishRelay<String>()
     /// 카드 옵션 변경 방출
@@ -138,6 +138,14 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
                 object.defaultImages = imageWithNames
                 object.tableView.reloadSections(IndexSet([1]), with: .automatic)
             }
+            .disposed(by: self.disposeBag)
+        
+        selectedDefaultImage
+            .compactMap {
+                print("imageSelected 변경", $0.imageWithName?.urlString)
+                return $0.imageWithName?.urlString
+            }
+            .bind(to: imageSelected)
             .disposed(by: self.disposeBag)
     }
 }
