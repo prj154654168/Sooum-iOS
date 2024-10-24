@@ -47,11 +47,11 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         }
     }
     
-    /// 기본 서버 이미지
+    /// 기본 서버 이미지 배열
     var defaultImages: [ImageWithName] = []
-    /// 사용자가 선택한 사진
-    var selectedMyImage: UIImage?
-
+    
+    /// 선택된 사용자 이미지 ->  bottomSheetImageSelected 로 부모 뷰컨에 전달
+    var selectedMyImage = BehaviorRelay<ImageWithName?>(value: nil)
     /// 선택된 기본 이미지 -> bottomSheetImageSelected 로 부모 뷰컨에 전달
     var selectedDefaultImage = BehaviorRelay<(idx: Int, imageWithName: ImageWithName?)>(value: (idx: 0, imageWithName: nil))
     /// 기본이미지&내 이미지 토글
@@ -140,13 +140,23 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         
         imageModeSegmentState
             .subscribe { segment in
-                self.tableView.reloadSections(IndexSet([1, 2, 3]), with: .automatic)
+                self.tableView.reloadSections(IndexSet([1]), with: .automatic)
+                switch segment {
+                case .defaultImage:
+                    self.bottomSheetImageNameSeleted.accept(self.selectedDefaultImage.value.imageWithName?.name ?? "")
+                    self.bottomSheetImageSelected.accept(self.selectedDefaultImage.value.imageWithName?.image ?? .init())
+                case .myImage:
+                    if let selectedMyImage = self.selectedMyImage.value {
+                        self.bottomSheetImageNameSeleted.accept(selectedMyImage.name)
+                        self.bottomSheetImageSelected.accept(selectedMyImage.image)
+                    }
+                }
             }
             .disposed(by: self.disposeBag)
         
         selectedDefaultImage
             .compactMap {
-                print("imageSelected 변경")
+//                print("selectedDefaultImage 변경")
                 return $0.imageWithName?.image
             }
             .bind(to: bottomSheetImageSelected)
@@ -154,7 +164,7 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         
         selectedDefaultImage
             .compactMap {
-                print("imageNameSeleted 변경", $0.imageWithName?.name)
+//                print("imageNameSeleted 변경", $0.imageWithName?.name)
                 return $0.imageWithName?.name
             }
             .bind(to: bottomSheetImageNameSeleted)
@@ -166,37 +176,60 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        selectedMyImage
+            .subscribe(with: self, onNext: { object, imageWithName in
+                if let name = imageWithName?.name {
+                    object.bottomSheetImageNameSeleted.accept(name)
+                }
+            })
+            .disposed(by: self.disposeBag)
+        
+        // TODO: 삭제
+        bottomSheetImageSelected.subscribe { font in
+            print("⭕️ 바텀시트 이미지 변경", font)
+        }
+        .disposed(by: self.disposeBag)
+        
+        // TODO: 삭제
+        bottomSheetImageNameSeleted.subscribe { font in
+            print("⭕️ 바텀시트 이미지 이름 변경", font)
+        }
+        .disposed(by: self.disposeBag)
         
         // TODO: 삭제
         bottomSheetFontState.subscribe { font in
-            print("selectedFont 변경", font)
+            print("⭕️ 바텀시트 폰트 변경", font)
         }
         .disposed(by: self.disposeBag)
         
         // TODO: 삭제
         bottomSheetOptionState.subscribe(with: self) { object, state in
-            print("토글 바뀜", state)
+            print("⭕️ 바텀시트 옵션 변경")
         }
         .disposed(by: self.disposeBag)
         
         // MARK: - state
         reactor.state.map(\.defaultImages)
             .subscribe(with: self) { object, imageWithNames in
+                let idx = object.selectedDefaultImage.value.idx
+                if imageWithNames.indices.contains(idx) {
+                    object.selectedDefaultImage.accept((idx: idx, imageWithName: imageWithNames[idx]))
+                }
                 object.defaultImages = imageWithNames
                 object.tableView.reloadSections(IndexSet([1]), with: .automatic)
             }
             .disposed(by: self.disposeBag)
-        
+
         reactor.state.map(\.myImageName)
-            .compactMap({ imageName in
-                print("reactor.state.map(myImageName)", imageName)
+            .subscribe(with: self) { object, imageName in
                 if let imageName = imageName, !imageName.isEmpty {
-                    return imageName
+                    if let image = object.selectedMyImage.value?.image {
+                        object.selectedMyImage.accept(.init(name: imageName, image: image))
+                    }
                 } else {
-                    return nil
+                    return
                 }
-            })
-            .bind(to: bottomSheetImageNameSeleted)
+            }
             .disposed(by: self.disposeBag)
     }
 }
@@ -271,7 +304,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! SelectMyImageTableViewCell
-        cell.setData(image: self.selectedMyImage, sholdShowImagePicker: sholdShowImagePicker)
+        cell.setData(image: self.selectedMyImage.value?.image, sholdShowImagePicker: sholdShowImagePicker)
         return cell
     }
     
@@ -358,7 +391,7 @@ extension UploadCardBottomSheetViewController {
                 picker.dismiss(animated: true, completion: nil)
                 return
             }
-            self.selectedMyImage = image
+            self.selectedMyImage.accept(.init(name: "", image: image))
             picker.dismiss(animated: true, completion: nil)
             // 이미지 업로드
             if let reactor = self.reactor {
