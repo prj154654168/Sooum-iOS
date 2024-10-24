@@ -16,9 +16,9 @@ class ImageCollectionViewCell: UICollectionViewCell {
     /// 현재 셀 인덱스
     var idx: Int?
     /// 현재 셀 이미지
-    var imageWithName: ImageURLWithName?
+    var imageWithName: ImageWithName?
     /// 넘겨받은 현재선택 인덱스&이미지
-    var selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageURLWithName?)>?
+    var selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageWithName?)>?
 
     var disposeBag = DisposeBag()
     
@@ -49,13 +49,13 @@ class ImageCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - setData
-    func setData(idx: Int, imageWithName: ImageURLWithName?, selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageURLWithName?)>?) {
+    func setData(idx: Int, imageWithName: ImageWithName?, selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageWithName?)>?) {
         self.idx = idx
         self.imageWithName = imageWithName
         self.selectedDefaultImage = selectedDefaultImage
         
         action()
-        imageView.setImage(strUrl: imageWithName?.urlString)
+        imageView.image = imageWithName?.image
         applyCornerRadius(for: idx)
         updateBorderColor()
     }

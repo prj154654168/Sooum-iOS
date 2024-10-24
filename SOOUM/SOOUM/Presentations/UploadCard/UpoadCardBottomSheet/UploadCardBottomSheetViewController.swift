@@ -48,26 +48,24 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     }
     
     /// 기본 서버 이미지
-    var defaultImages: [ImageURLWithName] = []
+    var defaultImages: [ImageWithName] = []
     /// 사용자가 선택한 사진, 모드
-    var selectedImage: (image: UIImage, segment: BottomSheetSegmentTableViewCell.ImageSegment)?
-    
-    /// 선택된 기본 이미지
-    var selectedDefaultImage = BehaviorRelay<(idx: Int, imageWithName: ImageURLWithName?)>(value: (idx: 0, imageWithName: nil))
-    /// 선택한 폰트
-    var selectedFont = BehaviorRelay<SelectFontTableViewCell.FontType>(value: .gothic)
-    /// 이미지 피커 띄우기 이벤트
-    var sholdShowImagePicker = PublishSubject<Void>()
+    var selectedMyImage: (image: UIImage, segment: BottomSheetSegmentTableViewCell.ImageSegment)?
+
+    /// 선택된 기본 이미지 -> bottomSheetImageSelected 로 부모 뷰컨에 전달
+    var selectedDefaultImage = BehaviorRelay<(idx: Int, imageWithName: ImageWithName?)>(value: (idx: 0, imageWithName: nil))
     /// 기본이미지&내 이미지 토글
-    var segmentState = BehaviorRelay<BottomSheetSegmentTableViewCell.ImageSegment>(value: .defaultImage)
+    var imageModeSegmentState = BehaviorRelay<BottomSheetSegmentTableViewCell.ImageSegment>(value: .defaultImage)
    
-    // 이전 뷰컨에 전달할 이벤트
-    /// 선택된 이미지 url을 방출
-    var imageSelected = PublishRelay<String>()
+    //  부모 뷰컨에 전달할 이벤트
+    /// 선택한 폰트
+    var bottomSheetFontState = BehaviorRelay<SelectFontTableViewCell.FontType>(value: .gothic)
+    /// 선택된 이미지 방출
+    var bottomSheetImageSelected = PublishRelay<UIImage>()
     /// 이미지 이름 방출
-    var imageNameSeleted = PublishRelay<String>()
-    /// 카드 옵션 변경 방출
-    var cardOptionState = BehaviorRelay<[Section.OtherSettings: Bool]>(
+    var bottomSheetImageNameSeleted = PublishRelay<String>()
+    /// 바텀싯 옵션 변경 방출
+    var bottomSheetOptionState = BehaviorRelay<[Section.OtherSettings: Bool]>(
         value: [
             .timeLimit: false,
             .distanceLimit: false,
@@ -75,6 +73,9 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         ]
     )
     
+    /// 방출시 이미지 피커 띄움
+    var sholdShowImagePicker = PublishSubject<Void>()
+    /// 이미지 재설정 버튼 클릭 이벤트
     let imageReloadButtonTapped = PublishSubject<BottomSheetSegmentTableViewCell.ImageSegment>()
     
     lazy var tableView = UITableView(frame: .zero, style: .plain).then {
@@ -137,7 +138,7 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        segmentState
+        imageModeSegmentState
             .subscribe { segment in
                 self.tableView.reloadSections(IndexSet([1, 2, 3]), with: .automatic)
             }
@@ -145,10 +146,10 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         
         selectedDefaultImage
             .compactMap {
-                print("imageSelected 변경", $0.imageWithName?.urlString)
-                return $0.imageWithName?.urlString
+                print("imageSelected 변경")
+                return $0.imageWithName?.image
             }
-            .bind(to: imageSelected)
+            .bind(to: bottomSheetImageSelected)
             .disposed(by: self.disposeBag)
         
         selectedDefaultImage
@@ -156,7 +157,7 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
                 print("imageNameSeleted 변경", $0.imageWithName?.name)
                 return $0.imageWithName?.name
             }
-            .bind(to: imageNameSeleted)
+            .bind(to: bottomSheetImageNameSeleted)
             .disposed(by: self.disposeBag)
         
         imageReloadButtonTapped
@@ -166,15 +167,17 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
         
         // TODO: 삭제
-        selectedFont.subscribe { font in
+        bottomSheetFontState.subscribe { font in
             print("selectedFont 변경", font)
         }
         .disposed(by: self.disposeBag)
         
-        cardOptionState.subscribe(with: self) { object, state in
+        // TODO: 삭제
+        bottomSheetOptionState.subscribe(with: self) { object, state in
             print("토글 바뀜", state)
         }
         .disposed(by: self.disposeBag)
+        
         
         reactor.state.map(\.defaultImages)
             .subscribe(with: self) { object, imageWithNames in
@@ -208,7 +211,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
             return createBottomSheetSegmentTableViewCell(indexPath: indexPath)
             
         case .selectImage:
-            switch segmentState.value {
+            switch imageModeSegmentState.value {
             case .defaultImage:
                 return createSelectDefaultImageTableViewCell(indexPath: indexPath)
             case .myImage:
@@ -231,7 +234,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! BottomSheetSegmentTableViewCell
-        cell.setData(segmentState: segmentState, imageReloadButtonTapped: imageReloadButtonTapped)
+        cell.setData(imageModeSegmentState: imageModeSegmentState, imageReloadButtonTapped: imageReloadButtonTapped)
         return cell
     }
     
@@ -255,7 +258,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! SelectMyImageTableViewCell
-        cell.setData(image: self.selectedImage?.image, sholdShowImagePicker: sholdShowImagePicker)
+        cell.setData(image: self.selectedMyImage?.image, sholdShowImagePicker: sholdShowImagePicker)
         return cell
     }
     
@@ -267,7 +270,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! SelectFontTableViewCell
-        cell.setData(selectedFont: self.selectedFont)
+        cell.setData(selectedFont: self.bottomSheetFontState)
         return cell
     }
     
@@ -279,7 +282,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! UploadCardSettingTableViewCell
-        cell.setData(cellOption: Section.OtherSettings.allCases[indexPath.item], settingState: cardOptionState)
+        cell.setData(cellOption: Section.OtherSettings.allCases[indexPath.item], globalCardOptionState: bottomSheetOptionState)
         return cell
     }
     
@@ -289,7 +292,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
             return UITableView.automaticDimension
 
         case .selectImage:
-            switch self.segmentState.value {
+            switch self.imageModeSegmentState.value {
             case .defaultImage:
                 return ((UIScreen.main.bounds.width - 40) / 2) + 28
             case .myImage:
@@ -342,7 +345,7 @@ extension UploadCardBottomSheetViewController {
                 picker.dismiss(animated: true, completion: nil)
                 return
             }
-            self.selectedImage = (image, self.segmentState.value)
+            self.selectedMyImage = (image, self.imageModeSegmentState.value)
             picker.dismiss(animated: true, completion: nil)
             self.tableView.reloadSections(IndexSet([1]), with: .automatic)
         }

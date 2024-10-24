@@ -15,10 +15,9 @@ import RxSwift
 class UploadCardSettingTableViewCell: UITableViewCell {
     
     /// 현재 셀 옵션
-    var option: UploadCardBottomSheetViewController.Section.OtherSettings = .timeLimit
-    
+    var cellOption: UploadCardBottomSheetViewController.Section.OtherSettings = .timeLimit
     /// 뷰컨으로부터 받은 전체 옵션 상태
-    var selectedCardOption: BehaviorRelay<[UploadCardBottomSheetViewController.Section.OtherSettings: Bool]>?
+    var globalCardOption: BehaviorRelay<[UploadCardBottomSheetViewController.Section.OtherSettings: Bool]>?
     /// 현재 셀 토글 값
     let cellToggleState = BehaviorRelay<Bool>(value: false)
     
@@ -74,15 +73,15 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     // MARK: - setData
     func setData(
         cellOption: UploadCardBottomSheetViewController.Section.OtherSettings,
-        settingState: BehaviorRelay<[UploadCardBottomSheetViewController.Section.OtherSettings: Bool]>
+        globalCardOptionState: BehaviorRelay<[UploadCardBottomSheetViewController.Section.OtherSettings: Bool]>
     ) {
-        print("\(type(of: self)) - \(#function)", settingState)
+        print("\(type(of: self)) - \(#function)", globalCardOptionState)
 
-        self.option = cellOption
+        self.cellOption = cellOption
         titleLabel.text = cellOption.title
         descLabel.text = cellOption.description
-        self.selectedCardOption = settingState
-        cellToggleState.accept(settingState.value[cellOption] ?? false)
+        self.globalCardOption = globalCardOptionState
+        cellToggleState.accept(globalCardOptionState.value[cellOption] ?? false)
         
         bind()
         
@@ -96,9 +95,9 @@ class UploadCardSettingTableViewCell: UITableViewCell {
             .distinctUntilChanged()
             .subscribe(with: self) { object, state in
                 print(self.cellToggleState)
-                if var updatedOptions = self.selectedCardOption?.value {
-                    updatedOptions[self.option] = self.cellToggleState.value
-                    self.selectedCardOption?.accept(updatedOptions)
+                if var updatedOptions = self.globalCardOption?.value {
+                    updatedOptions[self.cellOption] = self.cellToggleState.value
+                    self.globalCardOption?.accept(updatedOptions)
                 }
             }
             .disposed(by: disposeBag)
