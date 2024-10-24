@@ -7,10 +7,17 @@
 
 import UIKit
 
+import RxCocoa
+import RxGesture
+import RxSwift
+
 class SelectDefaultImageTableViewCell: UITableViewCell {
     
-    var defaultImages: [UploadCardBottomSheetViewReactor.ImageURLWithName] = []
-    
+    var defaultImages: [ImageURLWithName] = []
+    var selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageURLWithName?)>?
+        
+    var disposeBag = DisposeBag()
+
     private let flowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
         $0.minimumLineSpacing = 0
@@ -38,9 +45,30 @@ class SelectDefaultImageTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setData(imageWithNames: [UploadCardBottomSheetViewReactor.ImageURLWithName]) {
-        defaultImages = imageWithNames
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
+    
+    // MARK: - setData
+    func setData(imageWithNames: [ImageURLWithName], selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageURLWithName?)>) {
+        print("\(type(of: self)) - \(#function)", selectedDefaultImage)
+        
+        self.defaultImages = imageWithNames
+        self.selectedDefaultImage = selectedDefaultImage
+        
+        bind()
+        
         imageCollectionView.reloadData()
+    }
+    
+    // MARK: - setData
+    private func bind() {
+        selectedDefaultImage?
+            .subscribe(with: self, onNext: { object, _ in
+                object.imageCollectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
     }
     
     // 뷰 설정
@@ -73,7 +101,7 @@ extension SelectDefaultImageTableViewCell: UICollectionViewDataSource, UICollect
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectionViewCell", for: indexPath) as! ImageCollectionViewCell
         let idx = indexPath.item
         if defaultImages.indices.contains(idx) {
-            cell.setData(idx: idx, imageURLStr: defaultImages[idx].urlString)
+            cell.setData(idx: idx, imageWithName: defaultImages[idx], selectedDefaultImage: selectedDefaultImage)
         }
         return cell
     }

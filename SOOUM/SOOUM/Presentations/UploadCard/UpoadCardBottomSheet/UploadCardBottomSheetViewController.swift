@@ -56,9 +56,12 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     var cardOptionChanged = PublishRelay<[Section.OtherSettings: Bool]>()
 
     /// 기본 서버 이미지
-    var defaultImages: [UploadCardBottomSheetViewReactor.ImageURLWithName] = []
+    var defaultImages: [ImageURLWithName] = []
     /// 사용자가 선택한 사진, 모드
     var selectedImage: (image: UIImage, segment: BottomSheetSegmentTableViewCell.ImageSegment)?
+    
+    /// 선택된 기본 이미지
+    var selectedDefaultImage = BehaviorRelay<(idx: Int, imageWithName: ImageURLWithName?)>(value: (idx: 0, imageWithName: nil))
     /// 이미지 피커 띄우기 이벤트
     var sholdShowImagePicker = PublishSubject<Void>()
     /// 기본이미지&내 이미지 토글
@@ -197,7 +200,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! SelectDefaultImageTableViewCell
-        cell.setData(imageWithNames: defaultImages)
+        cell.setData(imageWithNames: defaultImages, selectedDefaultImage: selectedDefaultImage)
         return cell
     }
     
