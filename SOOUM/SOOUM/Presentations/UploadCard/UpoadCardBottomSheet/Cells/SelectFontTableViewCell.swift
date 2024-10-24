@@ -8,6 +8,7 @@
 import UIKit
 
 import ReactorKit
+import RxCocoa
 import RxGesture
 import RxSwift
 
@@ -21,7 +22,7 @@ class SelectFontTableViewCell: UITableViewCell {
         case handwriting
     }
     
-    var selectedFont: FontType = .gothic
+    var selectedFont: BehaviorRelay<SelectFontTableViewCell.FontType>?
     
     var disposeBag = DisposeBag()
 
@@ -76,8 +77,6 @@ class SelectFontTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .none
         setupConstraint()
-        //  TODO: 삭제
-        setData()
     }
     
     required init?(coder: NSCoder) {
@@ -90,7 +89,9 @@ class SelectFontTableViewCell: UITableViewCell {
     }
     
     // MARK: - setData
-    func setData() {
+    func setData(selectedFont: BehaviorRelay<SelectFontTableViewCell.FontType>) {
+        self.selectedFont = selectedFont
+        
         action()
     }
     
@@ -112,7 +113,7 @@ class SelectFontTableViewCell: UITableViewCell {
     }
     
     private func updateFont(font: FontType, animated: Bool) {
-        self.selectedFont = font
+        self.selectedFont?.accept(font)
         let duration = animated ? 0.2 : 0.0
         
         UIView.animate(withDuration: duration) {
