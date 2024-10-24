@@ -7,7 +7,22 @@
 
 import UIKit
 
+import ReactorKit
+import RxCocoa
+import RxGesture
+import RxSwift
+
 class UploadCardSettingTableViewCell: UITableViewCell {
+    
+    /// 현재 셀 옵션
+    var option: UploadCardBottomSheetViewController.Section.OtherSettings = .timeLimit
+    
+    /// 뷰컨으로부터 받은 전체 옵션 상태
+    var selectedCardOption: BehaviorRelay<[UploadCardBottomSheetViewController.Section.OtherSettings: Bool]>?
+    /// 현재 셀 토글 값
+    let cellToggleState = BehaviorRelay<Bool>(value: false)
+    
+    var disposeBag = DisposeBag()
     
     let titleStackContainerView = UIView().then {
         $0.backgroundColor = .clear
@@ -36,7 +51,7 @@ class UploadCardSettingTableViewCell: UITableViewCell {
         $0.text = "태그를 사용할 수 없고, 24시간 뒤 모든 카드가 삭제돼요"
     }
     
-    let togglebView = ToggleView()
+    let toggleView = ToggleView()
     
     // MARK: - init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -50,16 +65,45 @@ class UploadCardSettingTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setData(settingOption: UploadCardBottomSheetViewController.Section.OtherSettings, state: Bool) {
-        titleLabel.text = settingOption.title
-        descLabel.text = settingOption.description
-        togglebView.updateToggle(state, animated: false)
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
+    
+    // MARK: - setData
+    func setData(
+        cellOption: UploadCardBottomSheetViewController.Section.OtherSettings,
+        settingState: BehaviorRelay<[UploadCardBottomSheetViewController.Section.OtherSettings: Bool]>
+    ) {
+        print("\(type(of: self)) - \(#function)", settingState)
+
+        self.option = cellOption
+        titleLabel.text = cellOption.title
+        descLabel.text = cellOption.description
+        self.selectedCardOption = settingState
+        cellToggleState.accept(settingState.value[cellOption] ?? false)
+        
+        bind()
+        
+        toggleView.setData(toggleState: cellToggleState)
+    }
+    
+    func bind() {
+        print("\(type(of: self)) - \(#function)")
+
+        cellToggleState.subscribe(with: self) { object, state in
+            if var updatedOptions = self.selectedCardOption?.value {
+                updatedOptions[self.option] = self.cellToggleState.value
+                self.selectedCardOption?.accept(updatedOptions)
+            }
+        }
+        .disposed(by: disposeBag)
     }
 
     // MARK: - setupConstraint
     private func setupConstraint() {
-        contentView.addSubview(togglebView)
-        togglebView.snp.makeConstraints {
+        contentView.addSubview(toggleView)
+        toggleView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(20)
             $0.bottom.equalToSuperview().offset(-4)
             $0.trailing.equalToSuperview().offset(-16)

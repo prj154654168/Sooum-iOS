@@ -78,7 +78,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
         let cornerRadius: CGFloat = 10
         
         imageView.layer.cornerRadius = cornerRadius
-        imageView.layer.maskedCorners = [] // 초기화
+        imageView.layer.maskedCorners = []
         
         switch idx {
         case 0:
