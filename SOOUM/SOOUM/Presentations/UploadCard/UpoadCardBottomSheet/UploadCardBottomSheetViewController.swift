@@ -75,6 +75,8 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         ]
     )
     
+    let imageReloadButtonTapped = PublishSubject<BottomSheetSegmentTableViewCell.ImageSegment>()
+    
     lazy var tableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
@@ -157,6 +159,12 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
             .bind(to: imageNameSeleted)
             .disposed(by: self.disposeBag)
         
+        imageReloadButtonTapped
+            .filter { $0 == .defaultImage }
+            .map { _ in Reactor.Action.fetchNewDefaultImage }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
         // TODO: 삭제
         selectedFont.subscribe { font in
             print("selectedFont 변경", font)
@@ -223,7 +231,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! BottomSheetSegmentTableViewCell
-        cell.setData(segmentState: segmentState)
+        cell.setData(segmentState: segmentState, imageReloadButtonTapped: imageReloadButtonTapped)
         return cell
     }
     
