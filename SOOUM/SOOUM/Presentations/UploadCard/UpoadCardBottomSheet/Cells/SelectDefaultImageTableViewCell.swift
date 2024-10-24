@@ -71,8 +71,9 @@ extension SelectDefaultImageTableViewCell: UICollectionViewDataSource, UICollect
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCollectionViewCell", for: indexPath) as! ImageCollectionViewCell
-        if defaultImages.indices.contains(indexPath.item) {
-            cell.setData(imageURLStr: defaultImages[indexPath.item].urlString)
+        let idx = indexPath.item
+        if defaultImages.indices.contains(idx) {
+            cell.setData(idx: idx, imageURLStr: defaultImages[idx].urlString)
         }
         return cell
     }
