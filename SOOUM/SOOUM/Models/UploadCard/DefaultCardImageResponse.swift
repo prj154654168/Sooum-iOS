@@ -37,6 +37,11 @@ struct DefaultCardImageResponse: Codable {
     struct Links: Codable {
         let next: Next
     }
+    
+    // MARK: - Next
+    struct Next: Codable {
+        let href: String
+    }
 }
 
 

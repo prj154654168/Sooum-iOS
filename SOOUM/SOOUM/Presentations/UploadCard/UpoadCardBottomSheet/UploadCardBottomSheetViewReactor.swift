@@ -73,7 +73,7 @@ import ReactorKit
              .map { imageInfoList in
                  print("fetchDefaultImages", imageInfoList)
                  // imgURLInfoList를 ImageURLWithName 배열로 변환
-                 let images = imageInfoList.map { ImageURLWithName(name: $0.imgName, urlString: $0.url.next.url) }
+                 let images = imageInfoList.map { ImageURLWithName(name: $0.imgName, urlString: $0.url.href) }
                  return Mutation.defaultImages(images)
              }
      }
