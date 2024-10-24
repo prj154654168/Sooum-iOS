@@ -7,7 +7,4 @@
 
 import Foundation
 
-struct ImageURLWithName {
-    var name: String
-    var urlString: String
-}
+

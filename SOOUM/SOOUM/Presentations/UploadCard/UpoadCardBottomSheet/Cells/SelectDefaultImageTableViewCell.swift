@@ -13,8 +13,8 @@ import RxSwift
 
 class SelectDefaultImageTableViewCell: UITableViewCell {
     
-    var defaultImages: [ImageURLWithName] = []
-    var selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageURLWithName?)>?
+    var defaultImages: [ImageWithName] = []
+    var selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageWithName?)>?
         
     var disposeBag = DisposeBag()
 
@@ -51,7 +51,7 @@ class SelectDefaultImageTableViewCell: UITableViewCell {
     }
     
     // MARK: - setData
-    func setData(imageWithNames: [ImageURLWithName], selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageURLWithName?)>) {
+    func setData(imageWithNames: [ImageWithName], selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageWithName?)>) {
         print("\(type(of: self)) - \(#function)", selectedDefaultImage)
         
         self.defaultImages = imageWithNames

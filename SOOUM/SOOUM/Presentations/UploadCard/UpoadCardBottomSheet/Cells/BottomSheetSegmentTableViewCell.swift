@@ -100,15 +100,15 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     
     // MARK: - setData
     func setData(
-        segmentState: BehaviorRelay<ImageSegment>,
+        imageModeSegmentState: BehaviorRelay<ImageSegment>,
         imageReloadButtonTapped: PublishSubject<BottomSheetSegmentTableViewCell.ImageSegment>?
     ) {
-        self.imageSegment = segmentState
+        self.imageSegment = imageModeSegmentState
         self.imageReloadButtonTapped = imageReloadButtonTapped
         
         action()
         
-        updateImageSegment(segment: segmentState.value, animated: false)
+        updateImageSegment(segment: imageModeSegmentState.value, animated: false)
     }
     
     // MARK: - action
