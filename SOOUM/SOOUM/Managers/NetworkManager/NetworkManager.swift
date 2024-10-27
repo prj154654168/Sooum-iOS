@@ -72,7 +72,10 @@ class NetworkManager {
     init() {
         
         self.configuration = Configuration()
-        self.session = .init(configuration: configuration.sessionConfiguration)
+        self.session = .init(
+            configuration: configuration.sessionConfiguration,
+            interceptor: ErrorInterceptor()
+        )
         self.decoder = configuration.decoder
         self.encoder = configuration.encoder
     }
