@@ -116,6 +116,7 @@ class AuthManager: AuthManagerDelegate {
         2. 서버의 토큰이 만료된 상태(하지만 클라에서는 호출이 이루어지지 않아 만료 상태를 모르는 상태)에서 2개 이상의
         호출이 일어날 경우 동시에 재인증 과정이 진행될 수 있기 때문에, isReAuthenticating 플래그로 인증 중에 진입하는 경우 재시도하도록 한다.
         3. 재인증 완료된 후, 이전의 호출이 이전 토큰을 가지고 시도할 수 있기 때문에, 호출의 토큰과 현재 토큰이 같은 때만 통과시킨다
+        4. RefreshToken 도 유효하지 않다면 로그인 시도
      */
     func reAuthenticate(_ accessToken: String, _ completion: @escaping (AuthResult) -> Void) {
         
@@ -164,9 +165,29 @@ class AuthManager: AuthManagerDelegate {
                     object.isReAuthenticating = false
                 },
                 onError: { object, error in
-                    completion(.failure(error))
-                
-                    object.isReAuthenticating = false
+                    networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
+                        .map(\.publicKey)
+                        .subscribe(onNext: { publicKey in
+                            
+                            if let secKey = object.convertPEMToSecKey(pemString: publicKey),
+                               let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
+                                let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
+                                networkManager.request(SignInResponse.self, request: request)
+                                    .subscribe(onNext: { signInResponse in
+                                        
+                                        if signInResponse.isRegistered, let token = signInResponse.token {
+                                            object.updateTokens(token)
+                                            completion(.success)
+                                        } else {
+                                            completion(.failure(error))
+                                        }
+                                        object.isReAuthenticating = false
+                                        return
+                                    })
+                                    .disposed(by: object.disposeBag)
+                            }
+                        })
+                        .disposed(by: object.disposeBag)
                 }
             )
             .disposed(by: self.disposeBag)
