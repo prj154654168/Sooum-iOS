@@ -16,6 +16,6 @@ struct Links: Codable {
 
 // MARK: - Token
 struct Token: Codable {
-    let accessToken: String
-    let refreshToken: String
+    var accessToken: String
+    var refreshToken: String
 }

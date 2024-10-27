@@ -141,6 +141,8 @@
 		388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
 		388372012C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
+		388C96362CCE41700061C598 /* AuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C96352CCE41700061C598 /* AuthInfo.swift */; };
+		388C96372CCE41700061C598 /* AuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C96352CCE41700061C598 /* AuthInfo.swift */; };
 		388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FA2C8F521000A9DD56 /* FontContainer.swift */; };
 		388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FA2C8F521000A9DD56 /* FontContainer.swift */; };
 		388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FD2C8F526C00A9DD56 /* UIFont.swift */; };
@@ -285,6 +287,7 @@
 		388371F82C8C8EB1004212EB /* SooumStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SooumStyle.swift; sourceTree = "<group>"; };
 		388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SOOUM.swift"; sourceTree = "<group>"; };
 		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		388C96352CCE41700061C598 /* AuthInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInfo.swift; sourceTree = "<group>"; };
 		388DA0FA2C8F521000A9DD56 /* FontContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontContainer.swift; sourceTree = "<group>"; };
 		388DA0FD2C8F526C00A9DD56 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PretendardVariable.ttf; sourceTree = "<group>"; };
@@ -513,6 +516,7 @@
 		385620EC2CA19C0D00E0AB5A /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				388C96342CCE415B0061C598 /* DBManager */,
 				38D8E28F2CCD22E900CE2E0A /* AuthManager */,
 				38026E3D2CA2B44B0045E1CE /* LocationManager */,
 				385620ED2CA19C2200E0AB5A /* NetworkManager */,
@@ -696,6 +700,14 @@
 				38121E282CA6A52400602499 /* UIRefreshControl.swift */,
 			);
 			path = Cocoa;
+			sourceTree = "<group>";
+		};
+		388C96342CCE415B0061C598 /* DBManager */ = {
+			isa = PBXGroup;
+			children = (
+				388C96352CCE41700061C598 /* AuthInfo.swift */,
+			);
+			path = DBManager;
 			sourceTree = "<group>";
 		};
 		38AA00002CAD1BB2002C5F1E /* Views */ = {
@@ -1073,6 +1085,7 @@
 				388009922CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
+				388C96372CCE41700061C598 /* AuthInfo.swift in Sources */,
 				38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				38608B342CB519A80066BB40 /* DetailCardResponse.swift in Sources */,
 				2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
@@ -1157,6 +1170,7 @@
 				2AE6B14C2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */,
 				388009912CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				38608B302CB5195D0066BB40 /* Card.swift in Sources */,
+				388C96362CCE41700061C598 /* AuthInfo.swift in Sources */,
 				2AE6B15A2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				38B6AAE62CA47EBA00CE6DB6 /* LatestCardResponse.swift in Sources */,
@@ -1275,7 +1289,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = "ec2-54-180-232-54.ap-northeast-2.compute.amazonaws.com:8080";
+				SOOUM_SERVER_ENDPOINT = "ec2-13-125-230-18.ap-northeast-2.compute.amazonaws.com:8080";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1311,7 +1325,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = "ec2-54-180-232-54.ap-northeast-2.compute.amazonaws.com:8080";
+				SOOUM_SERVER_ENDPOINT = "ec2-13-125-230-18.ap-northeast-2.compute.amazonaws.com:8080";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

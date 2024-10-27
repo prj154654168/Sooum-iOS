@@ -18,8 +18,7 @@ enum AuthResult {
 
 protocol AuthManagerDelegate: AnyObject {
     
-    var deviceId: Data { get }
-    var token: Token { get }
+    var authInfo: AuthInfo { get }
     var hasToken: Bool { get }
     func convertPEMToSecKey(pemString: String) -> SecKey?
     func encryptUUIDWithPublicKey(publicKey: SecKey) -> String?
@@ -37,36 +36,14 @@ class AuthManager: AuthManagerDelegate {
     
     private var disposeBag = DisposeBag()
     
-    var deviceId: Data {
-        if let deviceId = AuthKeyChain.shared.load(.deviceId) {
-            print("ℹ️ Call Info: DeviceId: \(String(data: deviceId, encoding: .utf8) ?? "")")
-            return deviceId
-        } else {
-            let deviceId = UUID().uuidString
-            let toData = deviceId.data(using: .utf8)!
-            AuthKeyChain.shared.save(.deviceId, data: toData)
-            print("ℹ️ Call Info: DeviceId: \(deviceId)")
-            return toData
-        }
-    }
-    
-    var token: Token {
-        var accessToken = ""
-        if let data = AuthKeyChain.shared.load(.accessToken),
-           let toString = String(data: data, encoding: .utf8) {
-            accessToken = toString
-        }
-        var refreshToken = ""
-        if let data = AuthKeyChain.shared.load(.refreshToken),
-           let toString = String(data: data, encoding: .utf8) {
-            refreshToken = toString
-        }
-        print("ℹ️ Call Info: Authenticate token\n AccessToken: \(accessToken)\n RefreshToken: \(refreshToken)")
-        return Token(accessToken: accessToken, refreshToken: refreshToken)
+    var authInfo: AuthInfo {
+        var authInfo = AuthInfo()
+        authInfo = AuthInfo.loadInfo(authInfo)
+        return authInfo
     }
     
     var hasToken: Bool {
-        return self.token.accessToken.isEmpty == false && self.token.refreshToken.isEmpty == false
+        return !self.authInfo.token.accessToken.isEmpty && !self.authInfo.token.refreshToken.isEmpty
     }
     
     func convertPEMToSecKey(pemString: String) -> SecKey? {
@@ -101,7 +78,7 @@ class AuthManager: AuthManagerDelegate {
         guard let encryptedData = SecKeyCreateEncryptedData(
             publicKey,
             .rsaEncryptionPKCS1,
-            self.deviceId as CFData,
+            self.authInfo.deviceId as CFData,
             &error
         ) else {
             print("Error encrypting UUID: \(error?.takeRetainedValue().localizedDescription ?? "unknown error")")
@@ -120,7 +97,7 @@ class AuthManager: AuthManagerDelegate {
      */
     func reAuthenticate(_ accessToken: String, _ completion: @escaping (AuthResult) -> Void) {
         
-        guard self.token.refreshToken.isEmpty == false else {
+        guard self.authInfo.token.refreshToken.isEmpty == false else {
             let error = NSError(
                 domain: "TARAS",
                 code: -99,
@@ -130,7 +107,7 @@ class AuthManager: AuthManagerDelegate {
             return
         }
         
-        guard self.isReAuthenticating == false, accessToken == self.token.accessToken else {
+        guard self.isReAuthenticating == false, accessToken == self.authInfo.token.accessToken else {
             completion(.success)
             return
         }
@@ -156,7 +133,7 @@ class AuthManager: AuthManagerDelegate {
                         object.updateTokens(
                             .init(
                                 accessToken: accessToken,
-                                refreshToken: self.token.refreshToken
+                                refreshToken: self.authInfo.token.refreshToken
                             )
                         )
                         completion(.success)
@@ -194,20 +171,14 @@ class AuthManager: AuthManagerDelegate {
     }
     
     func updateTokens(_ token: Token) {
-        AuthKeyChain.shared.save(.accessToken, data: token.accessToken.data(using: .utf8))
-        AuthKeyChain.shared.save(.refreshToken, data: token.refreshToken.data(using: .utf8))
+        self.authInfo.updateToken(token)
     }
     
     func authPayloadByAccess() -> [String: String] {
-        return ["Authorization": "Bearer \(self.token.accessToken)"]
+        return ["Authorization": "Bearer \(self.authInfo.token.accessToken)"]
     }
     
     func authPayloadByRefresh() -> [String: String] {
-        return ["Authorization-refresh": "Bearer \(self.token.refreshToken)"]
-    }
-    
-    func tempLog(type tokenType: String, _ string: String) {
-        
-        print("ℹ️ Call Info: \(tokenType) : \(string)")
+        return ["Authorization-refresh": "Bearer \(self.authInfo.token.refreshToken)"]
     }
 }
