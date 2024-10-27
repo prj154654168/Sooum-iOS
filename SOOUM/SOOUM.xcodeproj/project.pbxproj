@@ -63,6 +63,10 @@
 		3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */; };
 		3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */; };
 		3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */; };
+		38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38389B9B2CCCF98B006728AF /* AuthRequest.swift */; };
+		38389B9D2CCCF98B006728AF /* AuthRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38389B9B2CCCF98B006728AF /* AuthRequest.swift */; };
+		38389B9F2CCCFB7D006728AF /* AuthKeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38389B9E2CCCFB7D006728AF /* AuthKeyChain.swift */; };
+		38389BA02CCCFB7D006728AF /* AuthKeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38389B9E2CCCFB7D006728AF /* AuthKeyChain.swift */; };
 		38405CCB2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38405CCA2CC611FD00612D1E /* BaseEmptyAndHeader.swift */; };
 		38405CCC2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38405CCA2CC611FD00612D1E /* BaseEmptyAndHeader.swift */; };
 		3849729E2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3849729D2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift */; };
@@ -227,8 +231,6 @@
 		2A44A4262CAC06BD00DC463E /* RSAKeyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyRequest.swift; sourceTree = "<group>"; };
 		2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyResponse.swift; sourceTree = "<group>"; };
 		2A44A42C2CAC14C800DC463E /* SigninResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninResponse.swift; sourceTree = "<group>"; };
-		2A44A42F2CAC159F00DC463E /* SigninRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninRequest.swift; sourceTree = "<group>"; };
-		2A44A4312CAC1DC000DC463E /* SignupRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupRequest.swift; sourceTree = "<group>"; };
 		2A44A4332CAC21A500DC463E /* SignupResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupResponse.swift; sourceTree = "<group>"; };
 		2A44A4362CAC227300DC463E /* CommonResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonResponse.swift; sourceTree = "<group>"; };
 		2A44A4392CAC233800DC463E /* BaseSigninResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSigninResponse.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 		3836ACB32C8F045300A3C566 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Observer.swift"; sourceTree = "<group>"; };
 		3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Typography.swift"; sourceTree = "<group>"; };
+		38389B9B2CCCF98B006728AF /* AuthRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRequest.swift; sourceTree = "<group>"; };
 		38405CCA2CC611FD00612D1E /* BaseEmptyAndHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseEmptyAndHeader.swift; sourceTree = "<group>"; };
 		3849729D2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeViewReactor.swift; sourceTree = "<group>"; };
 		384972A02CA4DEC00012FCA1 /* CardRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRequest.swift; sourceTree = "<group>"; };
@@ -755,9 +758,7 @@
 			children = (
 				384972A02CA4DEC00012FCA1 /* CardRequest.swift */,
 				2AE6B1592CBEAEC000FA5C3C /* ReportRequest.swift */,
-				2A44A4262CAC06BD00DC463E /* RSAKeyRequest.swift */,
-				2A44A42F2CAC159F00DC463E /* SigninRequest.swift */,
-				2A44A4312CAC1DC000DC463E /* SignupRequest.swift */,
+				38389B9B2CCCF98B006728AF /* AuthRequest.swift */,
 			);
 			path = Develop;
 			sourceTree = "<group>";
@@ -1049,7 +1050,6 @@
 				2AE6B1512CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				38B8A5812CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
-				2A44A4322CAC1DC000DC463E /* SignupRequest.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
@@ -1058,7 +1058,6 @@
 				2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */,
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
-				2A44A4282CAC06BD00DC463E /* RSAKeyRequest.swift in Sources */,
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
@@ -1087,6 +1086,7 @@
 				38121E352CA6DA4000602499 /* Date.swift in Sources */,
 				2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
+				38389B9D2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				385E65A42CBE56D00032E120 /* Coordinate.swift in Sources */,
 				388009952CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				3878F4752CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
@@ -1101,7 +1101,6 @@
 				38B6AAE32CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
 				38B8A5852CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */,
-				2A44A4302CAC159F00DC463E /* SigninRequest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1120,6 +1119,7 @@
 				2A44A43A2CAC233800DC463E /* BaseSigninResponse.swift in Sources */,
 				38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
 				2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */,
 				388009872CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */,
