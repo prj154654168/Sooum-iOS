@@ -1,5 +1,5 @@
 //
-//  SigninResponse.swift
+//  SignInResponse.swift
 //  SOOUM
 //
 //  Created by JDeoks on 10/1/24.
@@ -7,8 +7,8 @@
 
 import Foundation
 
-// MARK: - SigninResponse
-struct SigninResponse: Codable {
+
+struct SignInResponse: Codable {
     let status: Status
     let isRegistered: Bool
     let token: Token?
@@ -22,9 +22,8 @@ struct SigninResponse: Codable {
     }
 }
 
-
-
-// MARK: - SignupLink
-struct SignupLink: Codable {
-    let href: String
+extension SignInResponse: EmptyInitializable {
+    static func empty() -> SignInResponse {
+        return .init(status: .init(), isRegistered: false, token: nil, links: nil)
+    }
 }
