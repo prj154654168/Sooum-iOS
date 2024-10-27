@@ -8,6 +8,7 @@
 import UIKit
 
 import ReactorKit
+import RxCocoa
 import RxSwift
 
 import SnapKit
@@ -17,7 +18,7 @@ import Then
 class LaunchScreenViewController: BaseViewController, View {
     
     /// 런치스크린 애니메이션 완료 이벤트
-    let animationCompleted = PublishSubject<Void>()
+    let animationCompleted = PublishRelay<Bool>()
     
     let viewForAnimation = UIView().then {
         $0.backgroundColor = UIColor(hex: "#A2E3FF")
@@ -50,6 +51,7 @@ class LaunchScreenViewController: BaseViewController, View {
     }
     
     func bind(reactor: LaunchScreenViewReactor) {
+        
         self.rx.viewDidLoad
             .map { Reactor.Action.launch }
             .bind(to: reactor.action)
@@ -58,29 +60,30 @@ class LaunchScreenViewController: BaseViewController, View {
         // 애니메이션이 끝나면 이벤트 방출
         self.rx.viewDidLayoutSubviews
             .subscribe(with: self) { object, _ in
-                object.animate(to: 45) { _ in
-                    let viewController = MainTabBarController()
-                    viewController.reactor = reactor.reactorForMainTabBar()
-                    let navigationController = UINavigationController(
-                        rootViewController: viewController
-                    )
-                    object.view.window?.rootViewController = navigationController
+                object.animate(to: 45) { completion in
+                    object.animationCompleted.accept(completion)
                 }
             }
             .disposed(by: self.disposeBag)
 
-        // 애니메이션 완료 이벤트 && 로그인/회원가입 성공 시 홈 화면으로 전환
-        Observable.combineLatest(
-            animationCompleted, // 애니메이션 완료 시
-            reactor.state.filter { $0.signinSuccess || $0.signupSuccess } // 로그인/회원가입 성공 시
-        )
-        .observe(on: MainScheduler.instance)
-        .subscribe(with: self) { object, _ in
-            let viewController = MainTabBarController()
-            viewController.reactor = reactor.reactorForMainTabBar()
-            object.view.window?.rootViewController = viewController
-        }
-        .disposed(by: self.disposeBag)
+        // 1. 애니메이션 완료 이벤트
+        // 2. 로그인/회원가입 성공 시 홈 화면으로 전환
+        self.animationCompleted
+            .distinctUntilChanged()
+            .withLatestFrom(
+                reactor.state.map(\.isRegistered).distinctUntilChanged(),
+                resultSelector: { $0 && $1 }
+            )
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                let viewController = MainTabBarController()
+                viewController.reactor = reactor.reactorForMainTabBar()
+                let navigationController = UINavigationController(
+                    rootViewController: viewController
+                )
+                object.view.window?.rootViewController = navigationController
+            }
+            .disposed(by: self.disposeBag)
     }
     
     private func animate(to height: CGFloat, completion: @escaping ((Bool) -> Void)) {
