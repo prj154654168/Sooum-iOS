@@ -39,6 +39,7 @@ class AuthKeyChain {
         
         // 이미 저장된 항목이 있으면 삭제 후 다시 저장
         SecItemDelete(query as CFDictionary)
+        SecItemAdd(query as CFDictionary, nil)
     }
     
     /// 키체인에서 토큰을 불러옴
