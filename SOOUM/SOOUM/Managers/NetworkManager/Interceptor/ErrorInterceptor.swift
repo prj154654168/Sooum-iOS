@@ -62,9 +62,16 @@ class ErrorInterceptor: RequestInterceptor {
             case .failure(let error):
                 print("❌ ReAuthenticate failed. \(error.localizedDescription)")
                 self?.requestsToRetry.forEach { $0(.doNotRetry) }
+                self?.goBackToSignUp()
             }
             
             self?.requestsToRetry.removeAll()
         }
+    }
+    
+    func goBackToSignUp() {
+        // 로컬 token 초기화
+        AuthManager.shared.initializeAuthInfo()
+        // TODO: 회원가입 화면으로 전환
     }
 }
