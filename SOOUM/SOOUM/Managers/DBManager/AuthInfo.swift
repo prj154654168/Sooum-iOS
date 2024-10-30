@@ -18,6 +18,16 @@ class AuthInfo {
 
 extension AuthInfo {
     
+    func initAuthInfo() {
+        AuthKeyChain.shared.delete(.accessToken)
+        AuthKeyChain.shared.delete(.refreshToken)
+    }
+    
+    func updateToken(_ token: Token) {
+        AuthKeyChain.shared.save(.accessToken, data: token.accessToken.data(using: .utf8))
+        AuthKeyChain.shared.save(.refreshToken, data: token.refreshToken.data(using: .utf8))
+    }
+    
     static func loadInfo(_ authInfo: AuthInfo) -> AuthInfo {
         
         if let deviceId = AuthKeyChain.shared.load(.deviceId) {
@@ -48,10 +58,5 @@ extension AuthInfo {
         """)
         
         return authInfo
-    }
-    
-    func updateToken(_ token: Token) {
-        AuthKeyChain.shared.save(.accessToken, data: token.accessToken.data(using: .utf8))
-        AuthKeyChain.shared.save(.refreshToken, data: token.refreshToken.data(using: .utf8))
     }
 }
