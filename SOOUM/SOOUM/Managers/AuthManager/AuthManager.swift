@@ -22,6 +22,7 @@ protocol AuthManagerDelegate: AnyObject {
     var hasToken: Bool { get }
     func convertPEMToSecKey(pemString: String) -> SecKey?
     func encryptUUIDWithPublicKey(publicKey: SecKey) -> String?
+    func certification() -> Observable<Bool>
     func reAuthenticate(_ accessToken: String, _ completion: @escaping(AuthResult) -> Void)
     func updateTokens(_ token: Token)
     func authPayloadByAccess() -> [String: String]
@@ -87,6 +88,31 @@ class AuthManager: AuthManagerDelegate {
         
         return (encryptedData as Data).base64EncodedString()
     }
+    
+    func certification() -> Observable<Bool> {
+        
+        let networkManager = NetworkManager.shared
+        return networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
+            .map(\.publicKey)
+            .withUnretained(self)
+            .flatMapLatest { object, publicKey -> Observable<Bool> in
+                
+                if let secKey = object.convertPEMToSecKey(pemString: publicKey),
+                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
+                    
+                    let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
+                    return networkManager.request(SignInResponse.self, request: request)
+                        .map { response in
+                            if response.isRegistered, let token = response.token {
+                                object.authInfo.updateToken(token)
+                                return true
+                            }
+                            return false
+                        }
+                }
+                return .just(false)
+            }
+    }
 
     /*
         1. RefreshToken 이 KeyChain 에 존재하는지 확인
@@ -99,7 +125,7 @@ class AuthManager: AuthManagerDelegate {
         
         guard self.authInfo.token.refreshToken.isEmpty == false else {
             let error = NSError(
-                domain: "TARAS",
+                domain: "SOOUM",
                 code: -99,
                 userInfo: [NSLocalizedDescriptionKey: "Refresh token not found"]
             )
@@ -142,29 +168,16 @@ class AuthManager: AuthManagerDelegate {
                     object.isReAuthenticating = false
                 },
                 onError: { object, error in
-                    networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
-                        .map(\.publicKey)
-                        .subscribe(onNext: { publicKey in
-                            
-                            if let secKey = object.convertPEMToSecKey(pemString: publicKey),
-                               let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
-                                let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
-                                networkManager.request(SignInResponse.self, request: request)
-                                    .subscribe(onNext: { signInResponse in
-                                        
-                                        if signInResponse.isRegistered, let token = signInResponse.token {
-                                            object.updateTokens(token)
-                                            completion(.success)
-                                        } else {
-                                            completion(.failure(error))
-                                        }
-                                        object.isReAuthenticating = false
-                                        return
-                                    })
-                                    .disposed(by: object.disposeBag)
+                    
+                    object.certification()
+                        .subscribe(onNext: { isRegistered in
+                            if isRegistered {
+                                completion(.success)
+                            } else {
+                                completion(.failure(error))
                             }
                         })
-                        .disposed(by: object.disposeBag)
+                        .disposed(by: self.disposeBag)
                 }
             )
             .disposed(by: self.disposeBag)
