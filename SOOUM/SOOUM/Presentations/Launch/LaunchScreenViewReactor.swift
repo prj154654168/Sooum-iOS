@@ -80,33 +80,8 @@ class LaunchScreenViewReactor: Reactor {
 extension LaunchScreenViewReactor {
     
     private func login() -> Observable<Mutation> {
-        
-        let request: AuthRequest = .getPublicKey
-        return self.networkManager.request(RSAKeyResponse.self, request: request)
-            .map(\.publicKey)
-            .withUnretained(self)
-            .flatMapLatest { object, publicKey -> Observable<Mutation> in
-                
-                if let secKey = object.authManager.convertPEMToSecKey(pemString: publicKey),
-                   let encryptedDeviceId = object.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
-                    let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
-                    return object.networkManager.request(SignInResponse.self, request: request)
-                        .flatMapLatest { singInResponse -> Observable<Mutation> in
-                            
-                            if singInResponse.isRegistered, let token = singInResponse.token {
-                                object.authManager.updateTokens(token)
-                                return .just(.updateIsRegistered(true))
-                            } else {
-                                return object.signUp(with: encryptedDeviceId)
-                            }
-                        }
-                } else {
-                    return Observable.error(NSError(domain: "EncryptionError", code: -1, userInfo: nil))
-                }
-            }
-            .catch { error in
-                return .just(.updateError(error.localizedDescription))
-            }
+        return self.authManager.certification()
+            .map(Mutation.updateIsRegistered)
     }
     
     private func signUp(with encryptedDeviceId: String) -> Observable<Mutation> {
