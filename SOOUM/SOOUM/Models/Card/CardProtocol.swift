@@ -47,19 +47,6 @@ extension Detail {
         self.detail = .init()
     }
 }
-/// 실제 urlString
-struct URLString: Codable {
-    let url: String
-    
-    enum CodingKeys: String, CodingKey {
-        case url = "href"
-    }
-}
-extension URLString {
-    init() {
-        self.url = ""
-    }
-}
 
 /// 사용하는 폰트
 enum Font: String, Codable {

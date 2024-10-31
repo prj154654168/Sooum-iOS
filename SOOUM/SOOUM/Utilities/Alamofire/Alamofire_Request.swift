@@ -16,4 +16,11 @@ protocol BaseRequest: URLRequestConvertible {
     var path: String { get }
     var parameters: Parameters { get }
     var encoding: ParameterEncoding { get }
+    var authorizationType: AuthorizationType { get }
+}
+
+enum AuthorizationType {
+    case access
+    case refresh
+    case none
 }

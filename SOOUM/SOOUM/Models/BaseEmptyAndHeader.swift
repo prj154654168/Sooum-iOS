@@ -33,3 +33,17 @@ extension Status: EmptyInitializable {
         return .init()
     }
 }
+
+/// 실제 urlString
+struct URLString: Codable {
+    let url: String
+    
+    enum CodingKeys: String, CodingKey {
+        case url = "href"
+    }
+}
+extension URLString {
+    init() {
+        self.url = ""
+    }
+}

@@ -49,6 +49,7 @@ disabled_rules:
   - nesting
   # - no_fallthrough_only
   # - no_space_in_method_call ⭕️
+  - non_optional_string_data_conversion
   - notification_center_detachment
   - nsobject_prefer_isequal
   # - opening_brace ⭕️
