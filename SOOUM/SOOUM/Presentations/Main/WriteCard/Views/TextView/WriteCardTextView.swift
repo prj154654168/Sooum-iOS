@@ -27,7 +27,7 @@ class WriteCardTextView: UIView {
         $0.addGestureRecognizer(gestureRecognizer)
     }
     
-    private lazy var textView = UITextView().then {
+    lazy var textView = UITextView().then {
         $0.keyboardAppearance = .light
         $0.backgroundColor = .clear
         

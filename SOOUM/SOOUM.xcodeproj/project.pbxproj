@@ -60,6 +60,8 @@
 		381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */; };
 		381A1D772CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */; };
 		381A1D782CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */; };
+		381DEA8B2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DEA8A2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift */; };
+		381DEA8C2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DEA8A2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift */; };
 		382C58752CA64F8F00CEF814 /* PopularCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382C58742CA64F8F00CEF814 /* PopularCardResponse.swift */; };
 		382C58762CA64F8F00CEF814 /* PopularCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382C58742CA64F8F00CEF814 /* PopularCardResponse.swift */; };
 		382C58782CA651E800CEF814 /* CardProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382C58772CA651E800CEF814 /* CardProtocol.swift */; };
@@ -149,14 +151,14 @@
 		388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
 		388372012C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
-		388C96362CCE41700061C598 /* AuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C96352CCE41700061C598 /* AuthInfo.swift */; };
-		388C96372CCE41700061C598 /* AuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C96352CCE41700061C598 /* AuthInfo.swift */; };
 		3887D0332CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */; };
 		3887D0342CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */; };
 		3887D0362CC5335D00FB52E1 /* WriteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0352CC5335D00FB52E1 /* WriteCardView.swift */; };
 		3887D0372CC5335D00FB52E1 /* WriteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0352CC5335D00FB52E1 /* WriteCardView.swift */; };
 		3887D0392CC5504500FB52E1 /* UITextField+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0382CC5504500FB52E1 /* UITextField+Typography.swift */; };
 		3887D03A2CC5504500FB52E1 /* UITextField+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0382CC5504500FB52E1 /* UITextField+Typography.swift */; };
+		388C96362CCE41700061C598 /* AuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C96352CCE41700061C598 /* AuthInfo.swift */; };
+		388C96372CCE41700061C598 /* AuthInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388C96352CCE41700061C598 /* AuthInfo.swift */; };
 		388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FA2C8F521000A9DD56 /* FontContainer.swift */; };
 		388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FA2C8F521000A9DD56 /* FontContainer.swift */; };
 		388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA0FD2C8F526C00A9DD56 /* UIFont.swift */; };
@@ -217,8 +219,6 @@
 		38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */; };
 		38D5CE0F2CBCFA070054AB9A /* DetailCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D5CE0E2CBCFA070054AB9A /* DetailCard.swift */; };
 		38D5CE102CBCFA070054AB9A /* DetailCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D5CE0E2CBCFA070054AB9A /* DetailCard.swift */; };
-		38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
-		38D8E2922CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
 		38D6F17C2CC2406700E11530 /* WriteCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F17B2CC2406700E11530 /* WriteCardViewController.swift */; };
 		38D6F17D2CC2406700E11530 /* WriteCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F17B2CC2406700E11530 /* WriteCardViewController.swift */; };
 		38D6F1802CC2413400E11530 /* WriteCardTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F17F2CC2413400E11530 /* WriteCardTextView.swift */; };
@@ -227,6 +227,8 @@
 		38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F1822CC243DB00E11530 /* UITextView+Typography.swift */; };
 		38D6F1862CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F1852CC24C4F00E11530 /* WriteCardTextViewDelegate.swift */; };
 		38D6F1872CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D6F1852CC24C4F00E11530 /* WriteCardTextViewDelegate.swift */; };
+		38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
+		38D8E2922CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
 		38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */; };
 		38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */; };
 		38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */; };
@@ -272,6 +274,7 @@
 		381A1D692CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteTagTextFieldDelegate.swift; sourceTree = "<group>"; };
 		381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsDelegate.swift; sourceTree = "<group>"; };
 		381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayout.swift; sourceTree = "<group>"; };
+		381DEA8A2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteCardTextView+Rx.swift"; sourceTree = "<group>"; };
 		382C58742CA64F8F00CEF814 /* PopularCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularCardResponse.swift; sourceTree = "<group>"; };
 		382C58772CA651E800CEF814 /* CardProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardProtocol.swift; sourceTree = "<group>"; };
 		3836ACB32C8F045300A3C566 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
@@ -317,10 +320,10 @@
 		388371F82C8C8EB1004212EB /* SooumStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SooumStyle.swift; sourceTree = "<group>"; };
 		388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SOOUM.swift"; sourceTree = "<group>"; };
 		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
-		388C96352CCE41700061C598 /* AuthInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInfo.swift; sourceTree = "<group>"; };
 		3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardViewReactor.swift; sourceTree = "<group>"; };
 		3887D0352CC5335D00FB52E1 /* WriteCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardView.swift; sourceTree = "<group>"; };
 		3887D0382CC5504500FB52E1 /* UITextField+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Typography.swift"; sourceTree = "<group>"; };
+		388C96352CCE41700061C598 /* AuthInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthInfo.swift; sourceTree = "<group>"; };
 		388DA0FA2C8F521000A9DD56 /* FontContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontContainer.swift; sourceTree = "<group>"; };
 		388DA0FD2C8F526C00A9DD56 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PretendardVariable.ttf; sourceTree = "<group>"; };
@@ -349,11 +352,11 @@
 		38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hakgyoansim-Light.ttf"; sourceTree = "<group>"; };
 		38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleDefaults.swift; sourceTree = "<group>"; };
 		38D5CE0E2CBCFA070054AB9A /* DetailCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCard.swift; sourceTree = "<group>"; };
-		38D8E2902CCD232B00CE2E0A /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		38D6F17B2CC2406700E11530 /* WriteCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardViewController.swift; sourceTree = "<group>"; };
 		38D6F17F2CC2413400E11530 /* WriteCardTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardTextView.swift; sourceTree = "<group>"; };
 		38D6F1822CC243DB00E11530 /* UITextView+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Typography.swift"; sourceTree = "<group>"; };
 		38D6F1852CC24C4F00E11530 /* WriteCardTextViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardTextViewDelegate.swift; sourceTree = "<group>"; };
+		38D8E2902CCD232B00CE2E0A /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBar.swift; sourceTree = "<group>"; };
 		38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
 		38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedTagResponse.swift; sourceTree = "<group>"; };
@@ -494,6 +497,7 @@
 			children = (
 				38D6F17F2CC2413400E11530 /* WriteCardTextView.swift */,
 				38D6F1852CC24C4F00E11530 /* WriteCardTextViewDelegate.swift */,
+				381DEA8A2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift */,
 			);
 			path = TextView;
 			sourceTree = "<group>";
@@ -911,14 +915,6 @@
 			path = Card;
 			sourceTree = "<group>";
 		};
-		38D8E28F2CCD22E900CE2E0A /* AuthManager */ = {
-			isa = PBXGroup;
-			children = (
-				38D8E2902CCD232B00CE2E0A /* AuthManager.swift */,
-			);
-			path = AuthManager;
-			sourceTree = "<group>";
-		};
 		38D6F17A2CC2401700E11530 /* WriteCard */ = {
 			isa = PBXGroup;
 			children = (
@@ -937,6 +933,14 @@
 				3887D0352CC5335D00FB52E1 /* WriteCardView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		38D8E28F2CCD22E900CE2E0A /* AuthManager */ = {
+			isa = PBXGroup;
+			children = (
+				38D8E2902CCD232B00CE2E0A /* AuthManager.swift */,
+			);
+			path = AuthManager;
 			sourceTree = "<group>";
 		};
 		38ED2AB32C985AB400920B53 /* SOMHomeTabBar */ = {
@@ -1230,6 +1234,7 @@
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				389681112CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
 				38121E352CA6DA4000602499 /* Date.swift in Sources */,
+				381DEA8C2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
 				38D6F1872CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */,
@@ -1346,6 +1351,7 @@
 				384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
 				3816C05C2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */,
+				381DEA8B2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				3880098A2CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift in Sources */,
 				3878F4742CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				38B6AADF2CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
