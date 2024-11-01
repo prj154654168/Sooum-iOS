@@ -18,7 +18,6 @@ import RxSwift
 
 class WriteCardViewController: BaseNavigationViewController, View {
     
-    
     enum Text {
         static let timeLimitLabelText: String = "시간제한 카드"
         static let wirteButtonTitle: String = "작성하기"
@@ -77,6 +76,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     var writtenTagModels = [SOMTagModel]()
     
+    var keyboardHeight: CGFloat = 0
+    
     
     // MARK: - Life Cycles
     
@@ -108,6 +109,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
         super.updatedKeyboard(withoutBottomSafeInset: height)
+        
+        self.keyboardHeight = height == 0 ? self.keyboardHeight : height
         
         let isTextFieldFirstResponder = self.writeCardView.writeTagTextField.isFirstResponder
         UIView.animate(withDuration: 0.25) {
@@ -185,13 +188,10 @@ extension WriteCardViewController: WriteCardTextViewDelegate {
         
         if self.writeCardView.writeCardTextView.isFirstResponder {
             
-            RxKeyboard.instance.visibleHeight
-                .drive(with: self) { object, height in
-                    let connectedScene: UIScene? = UIApplication.shared.connectedScenes.first
-                    let sceneDelegate: SceneDelegate? = connectedScene?.delegate as? SceneDelegate
-                    let safeAreaInsetBottom: CGFloat = sceneDelegate?.window?.safeAreaInsets.bottom ?? 0
-                    let withoutBottomSafeInset: CGFloat = max(0, height - safeAreaInsetBottom)
-                    object.updatedKeyboard(withoutBottomSafeInset: withoutBottomSafeInset)
+            RxKeyboard.instance.isHidden
+                .filter { $0 == false }
+                .drive(with: self) { object, _ in
+                    object.updatedKeyboard(withoutBottomSafeInset: object.keyboardHeight)
                 }
                 .disposed(by: self.disposeBag)
         }
@@ -204,13 +204,10 @@ extension WriteCardViewController: WriteTagTextFieldDelegate {
         
         if self.writeCardView.writeTagTextField.isFirstResponder {
             
-            RxKeyboard.instance.visibleHeight
-                .drive(with: self) { object, height in
-                    let connectedScene: UIScene? = UIApplication.shared.connectedScenes.first
-                    let sceneDelegate: SceneDelegate? = connectedScene?.delegate as? SceneDelegate
-                    let safeAreaInsetBottom: CGFloat = sceneDelegate?.window?.safeAreaInsets.bottom ?? 0
-                    let withoutBottomSafeInset: CGFloat = max(0, height - safeAreaInsetBottom)
-                    object.updatedKeyboard(withoutBottomSafeInset: withoutBottomSafeInset)
+            RxKeyboard.instance.isHidden
+                .filter { $0 == false }
+                .drive(with: self) { object, _ in
+                    object.updatedKeyboard(withoutBottomSafeInset: object.keyboardHeight)
                 }
                 .disposed(by: self.disposeBag)
         }
