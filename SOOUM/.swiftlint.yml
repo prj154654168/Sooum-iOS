@@ -114,7 +114,6 @@ opt_in_rules:
   - empty_count
   - empty_string
   - empty_xctest_method
-  - enum_case_associated_values_count
   - extension_access_modifier
   - fallthrough
   - fatal_error_message

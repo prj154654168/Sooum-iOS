@@ -9,9 +9,9 @@ import RxSwift
 
 extension Reactive where Base: SOMTags {
 
-    func datas<T: SOMTagModel>() -> Binder<[T]> {
-        return Binder(self.base) { tags, datas in
-            tags.setDatas(datas)
+    func models<T: SOMTagModel>() -> Binder<[T]> {
+        return Binder(self.base) { tags, models in
+            tags.setModels(models)
         }
     }
 }

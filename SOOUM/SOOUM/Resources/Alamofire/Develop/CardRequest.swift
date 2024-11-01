@@ -28,8 +28,22 @@ enum CardRequest: BaseRequest {
     case deleteCard(id: String)
     /// 상세보기 - 좋아요 업데이트
     case updateLike(id: String, isLike: Bool)
+    /// 글추가
+    case writeCard(
+        isDistanceShared: Bool,
+        latitude: String,
+        longitude: String,
+        isPublic: Bool,
+        isStory: Bool,
+        content: String,
+        font: String,
+        imgType: String,
+        imgName: String,
+        feedTags: [String]
+    )
+    /// 글추가 - 관련 태그 조회
+    case relatedTag(keyword: String, size: Int)
     
-
     var path: String {
         switch self {
         case let .latestCard(id, _, _):
@@ -57,21 +71,31 @@ enum CardRequest: BaseRequest {
             
         case let .cardSummary(id):
             return "/cards/current/\(id)/summary"
+            
         case let .deleteCard(id):
             return "/cards/\(id)"
+            
         case let .updateLike(id, _):
             return "/cards/\(id)/like"
+            
+        case .writeCard:
+            return "/cards"
+            
+        case .relatedTag:
+            return "/tags/search"
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .latestCard, .popularCard, .distancCard, .detailCard, .commentCard, .cardSummary:
-            return .get
         case .deleteCard:
             return .delete
+        case .writeCard:
+            return .post
         case let .updateLike(_, isLike):
             return isLike ? .post : .delete
+        default:
+            return .get
         }
     }
 
@@ -107,16 +131,46 @@ enum CardRequest: BaseRequest {
             } else {
                 return [:]
             }
+            
+        case let .writeCard(
+            isDistanceShared,
+            latitude,
+            longitude,
+            isPublic,
+            isStory,
+            content,
+            font,
+            imgType,
+            imgName,
+            feedTags
+        ):
+            return [
+                "isDistanceShared": isDistanceShared,
+                "latitude": latitude,
+                "longitude": longitude,
+                "isPublic": isPublic,
+                "isStory": isStory,
+                "content": content,
+                "font": font,
+                "imgType": imgType,
+                "imgName": imgName,
+                "feedTags": feedTags
+            ]
+            
+        case let .relatedTag(keyword, size):
+            return ["keyword": keyword, "size": size]
         
-        case .cardSummary, .updateLike, .deleteCard:
+        default:
             return [:]
         }
     }
 
     var encoding: ParameterEncoding {
         switch self {
+        case .updateLike, .writeCard:
+            return JSONEncoding.default
         default:
-            return URLEncoding.queryString
+            return URLEncoding.default
         }
     }
     

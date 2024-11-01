@@ -13,6 +13,7 @@ extension SOOUMStyle where Base == UIColor {
     
     // Primary
     static let primary = UIColor(hex: "#0BC7F2")
+    static let secondary = UIColor(hex: "#AFE5FD")
     
     // Blue
     static let blue50 = UIColor(hex: "#E7F9FE")
