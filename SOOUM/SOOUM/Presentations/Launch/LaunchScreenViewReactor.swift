@@ -81,26 +81,14 @@ extension LaunchScreenViewReactor {
     
     private func login() -> Observable<Mutation> {
         return self.authManager.certification()
-            .map(Mutation.updateIsRegistered)
-    }
-    
-    private func signUp(with encryptedDeviceId: String) -> Observable<Mutation> {
-        
-        let request: AuthRequest = .signUp(
-            encryptedDeviceId: encryptedDeviceId,
-            // TODO: 추후 fcm 등록 후 추가
-            firebaseToken: "example_firebase_token",
-            isAllowNotify: true,
-            isAllowTermOne: true,
-            isAllowTermTwo: true,
-            isAllowTermThree: true
-        )
-        return self.networkManager.request(SignUpResponse.self, request: request)
             .withUnretained(self)
-            .flatMapLatest { object, signUpResponse -> Observable<Mutation> in
-                let token = signUpResponse.token
-                object.authManager.updateTokens(token)
-                return .just(.updateIsRegistered(true))
+            .flatMapLatest { object, isRegistered -> Observable<Mutation> in
+                if isRegistered {
+                    return .just(.updateIsRegistered(true))
+                } else {
+                    return object.authManager.join()
+                        .map(Mutation.updateIsRegistered)
+                }
             }
     }
 }
