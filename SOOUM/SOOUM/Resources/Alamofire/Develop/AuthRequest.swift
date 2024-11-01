@@ -99,7 +99,6 @@ enum AuthRequest: BaseRequest {
     }
     
     func asURLRequest() throws -> URLRequest {
-        
         if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
             var request = URLRequest(url: url)
             request.method = self.method

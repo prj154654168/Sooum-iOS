@@ -34,7 +34,7 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     
     let titleLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .medium),
+            fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 16
          )
         $0.textColor = .som.black
@@ -43,7 +43,7 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     
     let descLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 12, weight: .medium),
+            fontContainer: BuiltInFont(size: 12, weight: .medium),
             lineHeight: 14.4
          )
         $0.textColor = .som.gray02

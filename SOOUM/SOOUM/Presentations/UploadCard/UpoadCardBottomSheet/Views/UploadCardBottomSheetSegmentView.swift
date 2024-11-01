@@ -27,7 +27,7 @@ class UploadCardBottomSheetSegmentView: UIView {
     
     let defualtImageButtonLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .medium),
+            fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 20
          )
         $0.textAlignment = .center
@@ -37,7 +37,7 @@ class UploadCardBottomSheetSegmentView: UIView {
     
     let myImageButtonLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .medium),
+            fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 20
          )
         $0.textAlignment = .center
@@ -55,7 +55,7 @@ class UploadCardBottomSheetSegmentView: UIView {
     
     let chagneImageLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .medium),
+            fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 14
          )
         $0.textColor = .som.gray03

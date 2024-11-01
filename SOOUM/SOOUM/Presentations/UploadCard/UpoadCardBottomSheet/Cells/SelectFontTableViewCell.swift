@@ -28,7 +28,7 @@ class SelectFontTableViewCell: UITableViewCell {
 
     let titleLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .medium),
+            fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 16
          )
         $0.textAlignment = .center
@@ -44,7 +44,7 @@ class SelectFontTableViewCell: UITableViewCell {
     
     let gothicButtonLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .medium),
+            fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 16
          )
         $0.textAlignment = .center
@@ -57,7 +57,7 @@ class SelectFontTableViewCell: UITableViewCell {
 
     let handwritingButtonLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .medium),
+            fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 16
          )
         $0.textAlignment = .center

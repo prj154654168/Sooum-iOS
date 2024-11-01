@@ -42,7 +42,7 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     
     let defualtImageButtonLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .medium),
+            fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 20
          )
         $0.textAlignment = .center
@@ -52,7 +52,7 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     
     let myImageButtonLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 16, weight: .medium),
+            fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 20
          )
         $0.textAlignment = .center
@@ -70,7 +70,7 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     
     let chagneImageLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: Pretendard(size: 14, weight: .medium),
+            fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 14
          )
         $0.textColor = .som.gray03
