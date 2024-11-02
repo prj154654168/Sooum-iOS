@@ -21,7 +21,7 @@ class MoreBottomSheetViewController: BaseViewController {
     let blockBackgroundButton = UIButton()
     private let blockLabel = UILabel().then {
         $0.text = Text.blockButtonTitle
-        $0.textColor = .som.black
+        $0.textColor = .som.red
         $0.textAlignment = .center
         $0.typography = .init(
             fontContainer: BuiltInFont(size: 16, weight: .medium),
@@ -33,7 +33,7 @@ class MoreBottomSheetViewController: BaseViewController {
     let reportBackgroundButton = UIButton()
     private let reportLabel = UILabel().then {
         $0.text = Text.reportButtonTitle
-        $0.textColor = .som.black
+        $0.textColor = .som.red
         $0.textAlignment = .center
         $0.typography = .init(
             fontContainer: BuiltInFont(size: 16, weight: .medium),

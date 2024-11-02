@@ -80,7 +80,7 @@ class SOMTabBarItem: UIView {
             lineHeight: 12
         )
         self.imageView.tintColor = .som.white
-        self.backgroundView.backgroundColor = .som.primary
+        self.backgroundView.backgroundColor = .som.p300
     }
     
     func tabBarItemNotSelected() {

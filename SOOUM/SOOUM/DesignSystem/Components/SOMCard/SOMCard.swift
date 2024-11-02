@@ -388,20 +388,20 @@ class SOMCard: UIView {
         likeImageView.image = model.data.likeCnt != 0 ?
             .init(.icon(.filled(.heart))) :
             .init(.icon(.outlined(.heart)))
-        likeImageView.tintColor = model.data.likeCnt != 0 ? .som.primary : .som.white
+        likeImageView.tintColor = model.data.likeCnt != 0 ? .som.p300 : .som.white
         commentImageView.image = model.data.commentCnt != 0 ?
             .init(.icon(.filled(.comment))) :
             .init(.icon(.outlined(.comment)))
-        commentImageView.tintColor = model.data.commentCnt != 0 ? .som.primary : .som.white
+        commentImageView.tintColor = model.data.commentCnt != 0 ? .som.p300 : .som.white
         
         /// 임시 시간 어떻게 표시하는 지 물어봐야 함
         timeLabel.text = model.data.createdAt.infoReadableTimeTakenFromThis(to: Date())
         distanceInfoStackView.isHidden = model.data.distance == nil
         distanceLabel.text = (model.data.distance ?? 0).infoReadableDistanceRangeFromThis()
         likeLabel.text = "\(model.data.likeCnt)"
-        likeLabel.textColor = model.data.isLiked ? .som.primary : .som.white
+        likeLabel.textColor = model.data.isLiked ? .som.p300 : .som.white
         commentLabel.text = "\(model.data.commentCnt)"
-        commentLabel.textColor = model.data.commentCnt != 0 ? .som.primary : .som.white
+        commentLabel.textColor = model.data.commentCnt != 0 ? .som.p300 : .som.white
         
         // 스토리 정보 설정
         cardPungTimeBackgroundView.isHidden = model.data.storyExpirationTime == nil

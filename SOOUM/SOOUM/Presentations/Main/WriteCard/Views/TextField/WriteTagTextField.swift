@@ -43,7 +43,7 @@ class WriteTagTextField: UIView {
             lineHeight: 24,
             letterSpacing: -0.04
         ).font
-        $0.tintColor = .som.primary
+        $0.tintColor = .som.p300
         
         $0.enablesReturnKeyAutomatically = true
         $0.returnKeyType = .go
@@ -183,7 +183,7 @@ extension WriteTagTextField: UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         let shouldBeginEditing = self.delegate?.textFieldShouldBeginEditing(self) ?? true
-        self.animate(outlineColor: .som.primary)
+        self.animate(outlineColor: .som.p300)
         self.addTagButton.isHidden = false
         return shouldBeginEditing
     }

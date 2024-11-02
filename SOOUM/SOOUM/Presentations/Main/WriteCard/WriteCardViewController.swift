@@ -26,7 +26,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     }
     
     let timeLimitBackgroundView = UIView().then {
-        $0.backgroundColor = .som.secondary
+        $0.backgroundColor = .som.p200
         $0.layer.cornerRadius = 22 * 0.5
         $0.clipsToBounds = true
         $0.isHidden = true
@@ -50,7 +50,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         )
         var attributes = typography.attributes
         attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.primary, forKey: .foregroundColor)
+        attributes.updateValue(UIColor.som.p300, forKey: .foregroundColor)
         var config = UIButton.Configuration.plain()
         config.attributedTitle = .init(
             Text.wirteButtonTitle,

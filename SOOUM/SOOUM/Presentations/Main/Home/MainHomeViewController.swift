@@ -24,7 +24,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
     
     let logo = UIImageView().then {
         $0.image = .init(.logo)
-        $0.tintColor = .som.primary
+        $0.tintColor = .som.p300
         $0.contentMode = .scaleAspectFit
     }
     

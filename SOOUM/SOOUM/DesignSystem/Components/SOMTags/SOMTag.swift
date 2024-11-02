@@ -95,7 +95,7 @@ class SOMTag: UICollectionViewCell {
         if let count = model.count {
             let string = model.text + " \(count)"
             let attributedString = NSMutableAttributedString(string: string).then {
-                let textColor = UIColor.som.primary
+                let textColor = UIColor.som.p300
                 let typography = Typography(
                     fontContainer: BuiltInFont(size: 15, weight: .medium),
                     lineHeight: 24,

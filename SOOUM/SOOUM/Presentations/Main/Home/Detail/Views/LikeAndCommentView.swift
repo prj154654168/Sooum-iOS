@@ -117,7 +117,7 @@ class LikeAndCommentView: UIView {
     func updateLikeContainerColor(_ isSelected: Bool) {
         
         self.likeImageView.image = .init(.icon(isSelected ? .filled(.heart) : .outlined(.heart)))
-        self.likeImageView.tintColor = isSelected ? .som.primary : .som.gray800
-        self.likeCountLabel.textColor = isSelected ? .som.primary : .som.gray800
+        self.likeImageView.tintColor = isSelected ? .som.p300 : .som.gray800
+        self.likeCountLabel.textColor = isSelected ? .som.p300 : .som.gray800
     }
 }

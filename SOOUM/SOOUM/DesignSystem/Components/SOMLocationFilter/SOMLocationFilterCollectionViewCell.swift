@@ -19,7 +19,7 @@ class SOMLocationFilterCollectionViewCell: UICollectionViewCell {
             lineHeight: 14,
             letterSpacing: 0.07
         )
-        $0.textColor = .som.primary
+        $0.textColor = .som.p300
     }
     
     override init(frame: CGRect) {
@@ -33,9 +33,9 @@ class SOMLocationFilterCollectionViewCell: UICollectionViewCell {
     
     func setData(distance: SOMLocationFilter.Distance, isSelected: Bool) {
         label.text = distance.text
-        label.textColor = isSelected ? .som.primary : .som.gray600
+        label.textColor = isSelected ? .som.p300 : .som.gray600
         contentView.layer.borderColor = isSelected
-            ? UIColor.som.primary.cgColor
+            ? UIColor.som.p300.cgColor
             : UIColor.som.gray300.cgColor
     }
     
@@ -44,7 +44,7 @@ class SOMLocationFilterCollectionViewCell: UICollectionViewCell {
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = contentView.frame.height / 2
         contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = UIColor.som.primary.cgColor
+        contentView.layer.borderColor = UIColor.som.p300.cgColor
         addSubviews()
         initConstraint()
     }

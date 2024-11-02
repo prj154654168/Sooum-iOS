@@ -37,7 +37,7 @@ class SOMDialogViewController: UIViewController {
             case .cancel:
                 .som.gray300
             case .ok, .delete, .report:
-                .som.primary
+                .som.p300
             }
         }
         
@@ -230,7 +230,7 @@ class SOMDialogViewController: UIViewController {
         // 우측 버튼 설정
         if let rightAction = rightAction {
             rightButton.setTitle(rightAction.mode?.text ?? "확인", for: .normal)
-            rightButton.backgroundColor = rightAction.mode?.bgColor ?? .som.primary
+            rightButton.backgroundColor = rightAction.mode?.bgColor ?? .som.p300
             rightButton.setTitleColor(rightAction.mode?.textColor ?? .som.white, for: .normal)
         } else {
             rightButton.removeFromSuperview()

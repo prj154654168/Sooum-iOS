@@ -56,7 +56,7 @@ class ReportViewController: BaseNavigationViewController, View {
         $0.textColor = .som.white
         $0.isUserInteractionEnabled = false
         $0.textAlignment = .center
-        $0.backgroundColor = .som.primary
+        $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
     }
