@@ -31,8 +31,8 @@ class MainHomeViewController: BaseNavigationViewController, View {
     let rightAlamButton = UIButton().then {
         var config = UIButton.Configuration.plain()
         config.image = .init(.icon(.outlined(.alarm)))
-        config.image?.withTintColor(.som.gray03)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray03 }
+        config.image?.withTintColor(.som.gray700)
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray700 }
         $0.configuration = config
     }
     
@@ -122,7 +122,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
             )
             $0.numberOfLines = 0
             $0.text = Text.subTitle
-            $0.textColor = .som.gray02
+            $0.textColor = .som.gray500
             $0.textAlignment = .center
         }
         self.placeholderView.addSubview(placeholderSubTitleLabel)

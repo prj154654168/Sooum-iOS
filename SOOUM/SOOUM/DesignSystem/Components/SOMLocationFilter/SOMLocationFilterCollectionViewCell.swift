@@ -33,10 +33,10 @@ class SOMLocationFilterCollectionViewCell: UICollectionViewCell {
     
     func setData(distance: SOMLocationFilter.Distance, isSelected: Bool) {
         label.text = distance.text
-        label.textColor = isSelected ? .som.primary : .som.gray01
-        contentView.layer.borderColor = isSelected 
+        label.textColor = isSelected ? .som.primary : .som.gray600
+        contentView.layer.borderColor = isSelected
             ? UIColor.som.primary.cgColor
-            : UIColor.som.gray03.cgColor
+            : UIColor.som.gray300.cgColor
     }
     
     // MARK: - initUI

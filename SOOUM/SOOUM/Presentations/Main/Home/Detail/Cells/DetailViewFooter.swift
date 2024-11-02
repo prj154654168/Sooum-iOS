@@ -25,7 +25,7 @@ class DetailViewFooter: UICollectionReusableView {
     let noContentBackgroundView = UIImageView()
     let noContentLabel = UILabel().then {
         $0.text = Text.noContentText
-        $0.textColor = .som.gray02
+        $0.textColor = .som.gray400
         $0.textAlignment = .center
         $0.typography = .init(
             fontContainer: BuiltInFont(size: 16, weight: .semibold),
@@ -80,7 +80,7 @@ class DetailViewFooter: UICollectionReusableView {
     private func setupConstraints() {
         
         let topSeperatorView = UIView().then {
-            $0.backgroundColor = .som.gray03
+            $0.backgroundColor = .som.gray200
         }
         
         self.addSubview(topSeperatorView)

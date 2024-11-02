@@ -28,7 +28,7 @@ class ReportViewController: BaseNavigationViewController, View {
             lineHeight: 22.4,
             letterSpacing: 0
         )
-        $0.textColor = .som.black
+        $0.textColor = .som.gray800
         $0.text = "신고 사유 선택"
     }
         

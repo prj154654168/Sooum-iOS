@@ -54,7 +54,7 @@ class MoreBottomSheetViewController: BaseViewController {
         let handle = UIView().then {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 8
-            $0.backgroundColor = .som.gray02
+            $0.backgroundColor = .som.gray400
         }
         self.view.addSubview(handle)
         handle.snp.makeConstraints {

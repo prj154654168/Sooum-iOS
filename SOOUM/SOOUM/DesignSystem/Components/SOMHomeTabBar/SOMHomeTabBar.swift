@@ -65,7 +65,7 @@ class SOMHomeTabBar: UIView {
         }
         
         let bottomSeperator = UIView().then {
-            $0.backgroundColor = .som.gray03
+            $0.backgroundColor = .som.gray200
         }
         backgroudView.addSubview(bottomSeperator)
         bottomSeperator.snp.makeConstraints {

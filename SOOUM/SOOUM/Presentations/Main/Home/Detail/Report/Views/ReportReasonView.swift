@@ -14,7 +14,7 @@ class ReportReasonView: UIView {
     
     let rootContainerView = UIView().then {
         $0.backgroundColor = .som.white
-        $0.layer.borderColor = UIColor.som.gray04.cgColor
+        $0.layer.borderColor = UIColor.som.gray200.cgColor
         $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 12
     }
@@ -32,7 +32,7 @@ class ReportReasonView: UIView {
             lineHeight: 22,
             letterSpacing: 0
         )
-        $0.textColor = .som.black
+        $0.textColor = .som.gray800
     }
     
     let descLabel = UILabel().then {
@@ -44,7 +44,7 @@ class ReportReasonView: UIView {
             lineHeight: 17,
             letterSpacing: 0
         )
-        $0.textColor = .som.gray02
+        $0.textColor = .som.gray600
     }
     
     // MARK: - init

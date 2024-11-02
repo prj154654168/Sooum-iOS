@@ -35,7 +35,7 @@ class SOMTag: UICollectionViewCell {
     }
     
     private let label = UILabel().then {
-        $0.textColor = .som.gray01
+        $0.textColor = .som.gray500
         $0.typography = .init(
             fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 22,
@@ -85,8 +85,8 @@ class SOMTag: UICollectionViewCell {
     
     private func updateBackground(direction: UICollectionView.ScrollDirection) {
         
-        self.contentView.backgroundColor = direction == .horizontal ? .som.gray04 : .white
-        self.contentView.layer.borderColor = direction == .horizontal ? UIColor.som.gray04.cgColor : UIColor.som.gray01.cgColor
+        self.contentView.backgroundColor = direction == .horizontal ? .som.gray200 : .white
+        self.contentView.layer.borderColor = direction == .horizontal ? UIColor.som.gray200.cgColor : UIColor.som.gray200.cgColor
     }
     
     func setModel(_ model: SOMTagModel) {

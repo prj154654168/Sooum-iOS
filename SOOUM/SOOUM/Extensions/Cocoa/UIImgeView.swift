@@ -12,7 +12,7 @@ import Kingfisher
 
 extension UIImageView {
 
-    static let placeholder: UIImage? = UIColor.som.gray02.toImage
+    static let placeholder: UIImage? = UIColor.som.gray400.toImage
     static let label: UILabel = .init()
 
     func setImage(strUrl: String?) {

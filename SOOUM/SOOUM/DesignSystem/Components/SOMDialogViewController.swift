@@ -35,7 +35,7 @@ class SOMDialogViewController: UIViewController {
         var bgColor: UIColor {
             switch self {
             case .cancel:
-                .som.gray02
+                .som.gray300
             case .ok, .delete, .report:
                 .som.primary
             }
@@ -44,7 +44,7 @@ class SOMDialogViewController: UIViewController {
         var textColor: UIColor {
             switch self {
             case .cancel:
-                .som.dimForCard
+                .som.gray700
             case .ok, .delete, .report:
                 .som.white
             }
@@ -99,7 +99,7 @@ class SOMDialogViewController: UIViewController {
     
     /// 부제목 표시 라벨
     let subTitleLabel = UILabel().then {
-        $0.textColor = .som.gray01
+        $0.textColor = .som.gray600
         $0.typography = .init(
             fontContainer: BuiltInFont(
                 size: 14,
@@ -221,7 +221,7 @@ class SOMDialogViewController: UIViewController {
         // 좌측 버튼 설정
         if let leftAction = leftAction {
             leftButton.setTitle(leftAction.mode?.text ?? "취소", for: .normal)
-            leftButton.backgroundColor = leftAction.mode?.bgColor ?? .som.gray02
+            leftButton.backgroundColor = leftAction.mode?.bgColor ?? .som.gray300
             leftButton.setTitleColor(leftAction.mode?.textColor ?? .som.black, for: .normal)
         } else {
             leftButton.removeFromSuperview()

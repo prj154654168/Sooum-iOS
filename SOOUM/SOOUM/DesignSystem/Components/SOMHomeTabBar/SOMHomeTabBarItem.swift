@@ -17,7 +17,7 @@ class SOMHomeTabBarItem: UIView {
     
     private let titleLabel = UILabel().then {
         $0.textAlignment = .center
-        $0.textColor = .som.gray01
+        $0.textColor = .som.gray600
         $0.typography = .init(
             fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 14,
@@ -68,7 +68,7 @@ class SOMHomeTabBarItem: UIView {
     
     func homeTabBarItemNotSelected() {
         
-        self.titleLabel.textColor = .som.gray01
+        self.titleLabel.textColor = .som.gray600
         self.titleLabel.typography = .init(
             fontContainer: BuiltInFont(size: 14, weight: .medium),
             lineHeight: 14,

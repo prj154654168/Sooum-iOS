@@ -52,7 +52,7 @@ class SOMCard: UIView {
     /// pungTime != nil
     /// 삭제(펑 됐을 때) 배경
     let pungedCardInMainHomeBackgroundView = UIView().then {
-        $0.backgroundColor = .som.black.withAlphaComponent(0.7)
+        $0.backgroundColor = .som.gray700.withAlphaComponent(0.7)
         $0.isHidden = true
     }
     /// 삭제(펑 됐을 때) 라벨

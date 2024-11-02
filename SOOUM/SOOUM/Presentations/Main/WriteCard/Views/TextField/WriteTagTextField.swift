@@ -15,7 +15,7 @@ class WriteTagTextField: UIView {
     
     private lazy var backgroundView = UIView().then {
         $0.backgroundColor = .clear
-        $0.layer.borderColor = UIColor.som.gray01.cgColor
+        $0.layer.borderColor = UIColor.som.gray200.cgColor
         $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 12
         $0.clipsToBounds = true
@@ -37,7 +37,7 @@ class WriteTagTextField: UIView {
     lazy var textField = UITextField().then {
         let paragraphStyle = NSMutableParagraphStyle()
         $0.defaultTextAttributes[.paragraphStyle] = paragraphStyle
-        $0.defaultTextAttributes[.foregroundColor] = UIColor.som.gray01
+        $0.defaultTextAttributes[.foregroundColor] = UIColor.som.gray600
         $0.defaultTextAttributes[.font] = Typography(
             fontContainer: BuiltInFont(size: 16, weight: .medium),
             lineHeight: 24,
@@ -61,8 +61,8 @@ class WriteTagTextField: UIView {
     let addTagButton = UIButton().then {
         var config = UIButton.Configuration.plain()
         config.image = .init(.icon(.outlined(.plus)))
-        config.image?.withTintColor(.som.gray01)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray01 }
+        config.image?.withTintColor(.som.gray600)
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray600 }
         $0.configuration = config
         
         $0.isHidden = true
@@ -92,7 +92,7 @@ class WriteTagTextField: UIView {
                 self.textField.attributedPlaceholder = NSAttributedString(
                     string: string,
                     attributes: [
-                        .foregroundColor: UIColor.som.gray01,
+                        .foregroundColor: UIColor.som.gray500,
                         .font: Typography(
                             fontContainer: BuiltInFont(size: 16, weight: .medium),
                             lineHeight: 24,
@@ -194,7 +194,7 @@ extension WriteTagTextField: UITextFieldDelegate {
     
     func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
         let shouldEndEditing = self.delegate?.textFieldShouldEndEditing(self) ?? true
-        self.animate(outlineColor: .som.gray01)
+        self.animate(outlineColor: .som.gray200)
         self.addTagButton.isHidden = true
         return shouldEndEditing
     }

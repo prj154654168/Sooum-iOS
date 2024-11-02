@@ -16,10 +16,10 @@ class LikeAndCommentView: UIView {
     let likeBackgroundButton = UIButton()
     private let likeImageView = UIImageView().then {
         $0.image = .init(.icon(.outlined(.heart)))
-        $0.tintColor = .som.black
+        $0.tintColor = .som.gray800
     }
     private let likeCountLabel = UILabel().then {
-        $0.textColor = .som.black
+        $0.textColor = .som.gray800
         $0.textAlignment = .center
         $0.typography = .init(
             fontContainer: BuiltInFont(size: 14, weight: .medium),
@@ -30,10 +30,10 @@ class LikeAndCommentView: UIView {
     
     private let commentImageView = UIImageView().then {
         $0.image = .init(.icon(.outlined(.commentAdd)))
-        $0.tintColor = .som.black
+        $0.tintColor = .som.gray800
     }
     private let commentCountLabel = UILabel().then {
-        $0.textColor = .som.black
+        $0.textColor = .som.gray800
         $0.textAlignment = .center
         $0.typography = .init(
             fontContainer: BuiltInFont(size: 14, weight: .medium),
@@ -117,7 +117,7 @@ class LikeAndCommentView: UIView {
     func updateLikeContainerColor(_ isSelected: Bool) {
         
         self.likeImageView.image = .init(.icon(isSelected ? .filled(.heart) : .outlined(.heart)))
-        self.likeImageView.tintColor = isSelected ? .som.primary : .som.black
-        self.likeCountLabel.textColor = isSelected ? .som.primary : .som.black
+        self.likeImageView.tintColor = isSelected ? .som.primary : .som.gray800
+        self.likeCountLabel.textColor = isSelected ? .som.primary : .som.gray800
     }
 }
