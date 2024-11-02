@@ -12,8 +12,12 @@ extension UIColor: SOOUMStyleCompatible { }
 extension SOOUMStyle where Base == UIColor {
     
     // Primary
-    static let primary = UIColor(hex: "#0BC7F2")
-    static let secondary = UIColor(hex: "#AFE5FD")
+    static let p100 = UIColor(hex: "#EFFAFF")
+    static let p200 = UIColor(hex: "#AFE5FD")
+    static let p300 = UIColor(hex: "#0BC7F2")
+    
+    // Secondary
+    static let red = UIColor(hex: "#FF2424")
     
     // Blue
     static let blue50 = UIColor(hex: "#E7F9FE")
