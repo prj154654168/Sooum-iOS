@@ -17,30 +17,6 @@ class ErrorInterceptor: RequestInterceptor {
     
     private let authManager = AuthManager.shared
     
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, any Error>) -> Void) {
-        
-        guard let request = urlRequest as? BaseRequest else {
-            completion(.success(urlRequest))
-            return
-        }
-        
-        var urlRequest = urlRequest
-        switch request.authorizationType {
-        case .access:
-            let authPayload = self.authManager.authPayloadByAccess()
-            let authKey = authPayload.keys.first! as String
-            urlRequest.setValue(authPayload[authKey], forHTTPHeaderField: authKey)
-        case .refresh:
-            let authPayload = self.authManager.authPayloadByRefresh()
-            let authKey = authPayload.keys.first! as String
-            urlRequest.setValue(authPayload[authKey], forHTTPHeaderField: authKey)
-        case .none:
-            break
-        }
-        
-        completion(.success(urlRequest))
-    }
-    
     func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
         self.lock.lock(); defer { self.lock.unlock() }
         

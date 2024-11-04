@@ -25,11 +25,10 @@ class CompositeInterceptor: RequestInterceptor {
     func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, any Error>) -> Void) {
         
         // ErrorInterceptor의 인증헤더 적용
-        self.errorInterceptor.adapt(urlRequest, for: session) { [weak self] result in
+        self.timeoutInterceptor.adapt(urlRequest, for: session) { result in
             switch result {
             case .success(let request):
-                // TimeoutInterceptor 적용
-                self?.timeoutInterceptor.adapt(request, for: session, completion: completion)
+                completion(.success(request))
             case .failure(let error):
                 completion(.failure(error))
             }

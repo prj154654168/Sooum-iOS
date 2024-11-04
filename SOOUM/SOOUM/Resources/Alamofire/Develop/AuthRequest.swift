@@ -103,6 +103,15 @@ enum AuthRequest: BaseRequest {
             var request = URLRequest(url: url)
             request.method = self.method
             
+            switch self.authorizationType {
+            case .refresh:
+                let authPayload = AuthManager.shared.authPayloadByRefresh()
+                let authKey = authPayload.keys.first! as String
+                request.setValue(authPayload[authKey], forHTTPHeaderField: authKey)
+            default:
+                break
+            }
+            
             request.setValue(
                 Constants.ContentType.json.rawValue,
                 forHTTPHeaderField: Constants.HTTPHeader.contentType.rawValue
