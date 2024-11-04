@@ -99,11 +99,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         }
         
         let placeholderTitleLabel = UILabel().then {
-            $0.typography = .init(
-                fontContainer: BuiltInFont(size: 16, weight: .semibold),
-                lineHeight: 22,
-                letterSpacing: 0.005
-            )
+            $0.typography = .som.body1WithBold
             $0.text = Text.title
             $0.textColor = .som.black
             $0.textAlignment = .center
@@ -115,11 +111,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         }
         
         let placeholderSubTitleLabel = UILabel().then {
-            $0.typography = .init(
-                fontContainer: BuiltInFont(size: 14, weight: .semibold),
-                lineHeight: 18,
-                letterSpacing: 0.005
-            )
+            $0.typography = .som.body2WithBold
             $0.numberOfLines = 0
             $0.text = Text.subTitle
             $0.textColor = .som.gray500

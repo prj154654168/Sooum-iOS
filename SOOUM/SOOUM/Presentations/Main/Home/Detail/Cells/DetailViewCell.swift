@@ -43,11 +43,7 @@ class DetailViewCell: UICollectionViewCell {
         $0.text = Text.prevCardTitle
         $0.textColor = .som.white
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .medium),
-            lineHeight: 15.56,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body2WithBold
     }
     
     /// 상세보기, 상단 오른쪽 (더보기/삭제) 버튼, 기본 = 더보기
@@ -76,11 +72,7 @@ class DetailViewCell: UICollectionViewCell {
         $0.text = Text.deletedCardInDetailText
         $0.textColor = .som.gray500
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .semibold),
-            lineHeight: 26,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body1WithBold
     }
     
     lazy var tags = SOMTags()

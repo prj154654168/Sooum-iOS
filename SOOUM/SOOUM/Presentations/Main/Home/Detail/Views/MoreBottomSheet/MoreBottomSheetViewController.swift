@@ -23,11 +23,7 @@ class MoreBottomSheetViewController: BaseViewController {
         $0.text = Text.blockButtonTitle
         $0.textColor = .som.red
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 29,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body1WithBold
     }
     
     let reportBackgroundButton = UIButton()
@@ -35,11 +31,7 @@ class MoreBottomSheetViewController: BaseViewController {
         $0.text = Text.reportButtonTitle
         $0.textColor = .som.red
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 29,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body1WithBold
     }
     
     override func setupConstraints() {

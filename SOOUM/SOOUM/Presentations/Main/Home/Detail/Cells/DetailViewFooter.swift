@@ -27,11 +27,7 @@ class DetailViewFooter: UICollectionReusableView {
         $0.text = Text.noContentText
         $0.textColor = .som.gray400
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .semibold),
-            lineHeight: 26,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body1WithBold
     }
     
     private let flowLayout = UICollectionViewFlowLayout().then {

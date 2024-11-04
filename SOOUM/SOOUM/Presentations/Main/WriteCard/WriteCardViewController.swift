@@ -35,19 +35,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
     let timeLimitLabel = UILabel().then {
         $0.text = Text.timeLimitLabelText
         $0.textColor = .som.black
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .semibold),
-            lineHeight: 14,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body2WithBold
     }
     
     let writeButton = UIButton().then {
-        let typography = Typography(
-            fontContainer: BuiltInFont(size: 14, weight: .semibold),
-            lineHeight: 14,
-            letterSpacing: -0.02
-        )
+        let typography = Typography.som.body2WithBold
         var attributes = typography.attributes
         attributes.updateValue(typography.font, forKey: .font)
         attributes.updateValue(UIColor.som.p300, forKey: .foregroundColor)

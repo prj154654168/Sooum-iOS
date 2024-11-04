@@ -24,11 +24,7 @@ class MoveTopButtonView: UIView {
     private let titleLabel = UILabel().then {
         $0.text = Text.title
         $0.textColor = .som.gray600
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .bold),
-            lineHeight: 17,
-            letterSpacing: -0.56
-        )
+        $0.typography = .som.body2WithBold
     }
     
     private let imageView = UIImageView().then {

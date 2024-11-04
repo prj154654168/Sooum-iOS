@@ -52,11 +52,7 @@ class SOMNavigationBar: UIView {
     /// 타이틀 (text == label / logo == image)
     let titleLabel = UILabel().then {
         $0.textColor = .som.black
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 18, weight: .semibold),
-            lineHeight: 18,
-            letterSpacing: 0.005
-        )
+        $0.typography = .som.body1WithBold
     }
     var title: String? {
         set { self.titleLabel.text = newValue }

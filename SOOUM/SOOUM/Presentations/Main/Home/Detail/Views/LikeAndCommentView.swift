@@ -21,11 +21,7 @@ class LikeAndCommentView: UIView {
     private let likeCountLabel = UILabel().then {
         $0.textColor = .som.gray800
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .medium),
-            lineHeight: 17,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body2WithRegular
     }
     
     private let commentImageView = UIImageView().then {
@@ -35,11 +31,7 @@ class LikeAndCommentView: UIView {
     private let commentCountLabel = UILabel().then {
         $0.textColor = .som.gray800
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .medium),
-            lineHeight: 17,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body2WithRegular
     }
     
     private var inputLikeCount: Int = 0

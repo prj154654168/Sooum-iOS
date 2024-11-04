@@ -36,11 +36,7 @@ class SOMTag: UICollectionViewCell {
     
     private let label = UILabel().then {
         $0.textColor = .som.gray500
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .medium),
-            lineHeight: 22,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body2WithRegular
     }
     
     var removeButtonWidthConstraint: Constraint?
@@ -96,13 +92,8 @@ class SOMTag: UICollectionViewCell {
             let string = model.text + " \(count)"
             let attributedString = NSMutableAttributedString(string: string).then {
                 let textColor = UIColor.som.p300
-                let typography = Typography(
-                    fontContainer: BuiltInFont(size: 15, weight: .medium),
-                    lineHeight: 24,
-                    letterSpacing: -0.04
-                )
                 let range = (count as NSString).range(of: model.text)
-                $0.addAttributes([.foregroundColor: textColor, .font: typography.font], range: range)
+                $0.addAttributes([.foregroundColor: textColor], range: range)
             }
             self.label.attributedText = attributedString
         } else {

@@ -24,26 +24,12 @@ class ReportReasonView: UIView {
     }
     
     let titleLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 16,
-                weight: .regular
-            ),
-            lineHeight: 22,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body2WithBold
         $0.textColor = .som.gray800
     }
     
     let descLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 12,
-                weight: .regular
-            ),
-            lineHeight: 17,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body3WithRegular
         $0.textColor = .som.gray600
     }
     

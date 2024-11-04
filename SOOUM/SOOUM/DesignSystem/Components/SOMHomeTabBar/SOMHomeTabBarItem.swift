@@ -18,11 +18,7 @@ class SOMHomeTabBarItem: UIView {
     private let titleLabel = UILabel().then {
         $0.textAlignment = .center
         $0.textColor = .som.gray600
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .medium),
-            lineHeight: 14,
-            letterSpacing: 0.07
-        )
+        $0.typography = .som.body2WithBold
     }
     var text: String? {
         set { self.titleLabel.text = newValue }
@@ -59,20 +55,10 @@ class SOMHomeTabBarItem: UIView {
     func homeTabBarItemSelected() {
         
         self.titleLabel.textColor = .som.black
-        self.titleLabel.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .bold),
-            lineHeight: 14,
-            letterSpacing: 0.07
-        )
     }
     
     func homeTabBarItemNotSelected() {
         
         self.titleLabel.textColor = .som.gray600
-        self.titleLabel.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .medium),
-            lineHeight: 14,
-            letterSpacing: 0.07
-        )
     }
 }

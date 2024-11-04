@@ -30,9 +30,10 @@ extension UIImageView {
             self.image = Self.placeholder
             Self.label.text = "Loading..."
             Self.label.textColor = .som.white
+            // 고정된 타이포그래피 없음
             Self.label.typography = .init(
                 fontContainer: BuiltInFont(size: 18, weight: .medium),
-                lineHeight: 21.48,
+                lineHeight: 21,
                 letterSpacing: -0.04
             )
             

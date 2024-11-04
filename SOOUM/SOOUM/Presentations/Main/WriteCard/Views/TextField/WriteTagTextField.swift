@@ -38,11 +38,7 @@ class WriteTagTextField: UIView {
         let paragraphStyle = NSMutableParagraphStyle()
         $0.defaultTextAttributes[.paragraphStyle] = paragraphStyle
         $0.defaultTextAttributes[.foregroundColor] = UIColor.som.gray600
-        $0.defaultTextAttributes[.font] = Typography(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 24,
-            letterSpacing: -0.04
-        ).font
+        $0.defaultTextAttributes[.font] = Typography.som.body1WithRegular.font
         $0.tintColor = .som.p300
         
         $0.enablesReturnKeyAutomatically = true
@@ -93,11 +89,7 @@ class WriteTagTextField: UIView {
                     string: string,
                     attributes: [
                         .foregroundColor: UIColor.som.gray500,
-                        .font: Typography(
-                            fontContainer: BuiltInFont(size: 16, weight: .medium),
-                            lineHeight: 24,
-                            letterSpacing: -0.04
-                        ).font
+                        .font: Typography.som.body1WithRegular.font
                     ]
                 )
             } else {

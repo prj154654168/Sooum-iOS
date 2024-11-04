@@ -87,27 +87,13 @@ class SOMDialogViewController: UIViewController {
     let titleLabel = UILabel().then {
         $0.text = ""
         $0.textColor = .som.black
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 16,
-                weight: .semibold
-            ),
-            lineHeight: 19,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body1WithBold
     }
     
     /// 부제목 표시 라벨
     let subTitleLabel = UILabel().then {
         $0.textColor = .som.gray600
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 14,
-                weight: .semibold
-            ),
-            lineHeight: 17,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body2WithRegular
     }
     
     /// 버튼 스택 뷰
@@ -120,26 +106,12 @@ class SOMDialogViewController: UIViewController {
     
     let leftButton = UIButton().then {
         $0.layer.cornerRadius = 10
-        $0.titleLabel?.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 16,
-                weight: .semibold
-            ),
-            lineHeight: 19,
-            letterSpacing: 0
-        )
+        $0.titleLabel?.typography = .som.body1WithBold
     }
     
     let rightButton = UIButton().then {
         $0.layer.cornerRadius = 10
-        $0.titleLabel?.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 16,
-                weight: .semibold
-            ),
-            lineHeight: 19,
-            letterSpacing: 0
-        )
+        $0.titleLabel?.typography = .som.body1WithBold
     }
     
     // MARK: - LifeCycle
