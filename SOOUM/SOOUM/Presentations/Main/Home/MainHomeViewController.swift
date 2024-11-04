@@ -177,7 +177,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
-                    tableView.refreshControl?.manualyBeginRefreshing()
+                    tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()
                 }

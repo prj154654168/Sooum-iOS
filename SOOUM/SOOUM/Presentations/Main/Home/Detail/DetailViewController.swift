@@ -153,7 +153,7 @@ import RxSwift
              .distinctUntilChanged()
              .subscribe(with: self.collectionView) { collectionView, isLoading in
                  if isLoading {
-                     collectionView.refreshControl?.manualyBeginRefreshing()
+                     collectionView.refreshControl?.beginRefreshingFromTop()
                  } else {
                      collectionView.refreshControl?.endRefreshing()
                  }
