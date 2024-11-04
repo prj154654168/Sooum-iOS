@@ -75,8 +75,6 @@ class UploadCardSettingTableViewCell: UITableViewCell {
         cellOption: UploadCardBottomSheetViewController.Section.OtherSettings,
         globalCardOptionState: BehaviorRelay<[UploadCardBottomSheetViewController.Section.OtherSettings: Bool]>
     ) {
-        print("\(type(of: self)) - \(#function)", globalCardOptionState)
-
         self.cellOption = cellOption
         titleLabel.text = cellOption.title
         descLabel.text = cellOption.description
@@ -89,12 +87,9 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     }
     
     func bind() {
-        print("\(type(of: self)) - \(#function)")
-
         cellToggleState
             .distinctUntilChanged()
             .subscribe(with: self) { object, state in
-                print(self.cellToggleState)
                 if var updatedOptions = self.globalCardOption?.value {
                     updatedOptions[self.cellOption] = self.cellToggleState.value
                     self.globalCardOption?.accept(updatedOptions)

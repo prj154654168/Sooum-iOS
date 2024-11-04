@@ -65,7 +65,6 @@ class SelectMyImageTableViewCell: UITableViewCell {
         rootImageView.rx.tapGesture()
             .when(.recognized)
             .subscribe { _ in
-                print("self.sholdShowImagePicker.onNext(())")
                 self.sholdShowImagePicker?.onNext(())
             }
             .disposed(by: disposeBag)
