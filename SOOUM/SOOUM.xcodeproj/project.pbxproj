@@ -680,7 +680,6 @@
 		385071972CA2956D00A7905A /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
-				2AE6B1602CBFB7C000FA5C3C /* UploadCard */,
 				385071982CA2958100A7905A /* Launch */,
 				38B6AACB2CA410C000CE6DB6 /* Main */,
 			);
@@ -1041,9 +1040,10 @@
 		38D6F17A2CC2401700E11530 /* WriteCard */ = {
 			isa = PBXGroup;
 			children = (
-				38D6F17E2CC2412500E11530 /* Views */,
 				38D6F17B2CC2406700E11530 /* WriteCardViewController.swift */,
 				3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */,
+				38D6F17E2CC2412500E11530 /* Views */,
+				2AE6B1602CBFB7C000FA5C3C /* UploadCard */,
 			);
 			path = WriteCard;
 			sourceTree = "<group>";
