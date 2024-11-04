@@ -22,14 +22,14 @@ class SelectMyImageTableViewCell: UITableViewCell {
     
     let rootImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
-        $0.backgroundColor = .som.gray04
+        $0.backgroundColor = .som.gray200
         $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
     }
     
     let plusIconImageView = UIImageView().then {
         $0.image = .init(systemName: "plus")
-        $0.tintColor = .som.gray01
+        $0.tintColor = .som.gray500
     }
     
     // MARK: - init

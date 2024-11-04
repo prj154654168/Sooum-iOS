@@ -33,20 +33,14 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     }
     
     let titleLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 16
-         )
-        $0.textColor = .som.black
+        $0.typography = .som.body1WithRegular
+        $0.textColor = .som.gray700
         $0.text = "시간 제한"
     }
     
     let descLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 12, weight: .medium),
-            lineHeight: 14.4
-         )
-        $0.textColor = .som.gray02
+        $0.typography = .som.body3WithRegular
+        $0.textColor = .som.gray400
         $0.text = "태그를 사용할 수 없고, 24시간 뒤 모든 카드가 삭제돼요"
     }
     

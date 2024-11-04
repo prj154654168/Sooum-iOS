@@ -23,8 +23,8 @@ class ImageCollectionViewCell: UICollectionViewCell {
     var disposeBag = DisposeBag()
     
     private let imageView = UIImageView().then {
-        $0.backgroundColor = .som.gray04
-        $0.layer.borderColor = UIColor.som.primary.cgColor
+        $0.backgroundColor = .som.gray200
+        $0.layer.borderColor = UIColor.som.p300.cgColor
         $0.layer.borderWidth = 0
         $0.contentMode = .scaleAspectFill
         $0.clipsToBounds = true

@@ -41,22 +41,16 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     }
     
     let defualtImageButtonLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 20
-         )
+        $0.typography = .som.body1WithBold
         $0.textAlignment = .center
         $0.textColor = .som.black
         $0.text = "기본 이미지"
     }
     
     let myImageButtonLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 20
-         )
+        $0.typography = .som.body1WithRegular
         $0.textAlignment = .center
-        $0.textColor = .som.black
+        $0.textColor = .som.gray400
         $0.text = "내 사진"
     }
     
@@ -69,17 +63,14 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     }
     
     let chagneImageLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .medium),
-            lineHeight: 14
-         )
-        $0.textColor = .som.gray03
+        $0.typography = .som.body2WithRegular
+        $0.textColor = .som.gray400
         $0.text = "이미지 변경"
     }
     
     let chageImageImageView = UIImageView().then {
         $0.image = .init(systemName: "gobackward")
-        $0.tintColor = .som.gray03
+        $0.tintColor = .som.gray400
     }
     
     // MARK: - init
@@ -146,7 +137,7 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
             duration: duration,
             options: .transitionCrossDissolve,
             animations: {
-                self.defualtImageButtonLabel.textColor = segment == .defaultImage ? .som.black : .som.gray04
+                self.defualtImageButtonLabel.textColor = segment == .defaultImage ? .som.black : .som.gray400
             },
             completion: nil
         )
@@ -156,7 +147,7 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
             duration: duration,
             options: .transitionCrossDissolve,
             animations: {
-                self.myImageButtonLabel.textColor = segment == .myImage ? .som.black : .som.gray04
+                self.myImageButtonLabel.textColor = segment == .myImage ? .som.black : .som.gray400
             },
             completion: nil
         )
