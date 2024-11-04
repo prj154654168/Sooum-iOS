@@ -72,6 +72,67 @@ fileprivate extension UIFont {
     }
 }
 
-// TODO: 추후 폰트의 size, weight, lineHeight가 정해지면 작성
 extension Typography: SOOUMStyleCompatible { }
-extension SOOUMStyle where Base == Typography { }
+extension SOOUMStyle where Base == Typography {
+    
+    static var head1WithBold: Typography = .init(
+        fontContainer: BuiltInFont(size: 22, weight: .semibold),
+        lineHeight: 23,
+        letterSpacing: -0.003
+    )
+    static var head1WithRegular: Typography = .init(
+        fontContainer: BuiltInFont(size: 22, weight: .medium),
+        lineHeight: 28,
+        letterSpacing: -0.003
+    )
+    
+    static var head2WithBold: Typography = .init(
+        fontContainer: BuiltInFont(size: 18, weight: .semibold),
+        lineHeight: 24,
+        letterSpacing: -0.003
+    )
+    static var head2WithRegular: Typography = .init(
+        fontContainer: BuiltInFont(size: 18, weight: .regular),
+        lineHeight: 24,
+        letterSpacing: -0.003
+    )
+    
+    static var body1WithBold: Typography = .init(
+        fontContainer: BuiltInFont(size: 16, weight: .semibold),
+        lineHeight: 24,
+        letterSpacing: -0.004
+    )
+    static var body1WithRegular: Typography = .init(
+        fontContainer: BuiltInFont(size: 16, weight: .regular),
+        lineHeight: 24,
+        letterSpacing: -0.004
+    )
+    
+    static var body2WithBold: Typography = .init(
+        fontContainer: BuiltInFont(size: 14, weight: .medium),
+        lineHeight: 20,
+        letterSpacing: -0.004
+    )
+    static var body2WithRegular: Typography = .init(
+        fontContainer: BuiltInFont(size: 14, weight: .regular),
+        lineHeight: 20,
+        letterSpacing: -0.004
+    )
+    
+    static var body3WithBold: Typography = .init(
+        fontContainer: BuiltInFont(size: 12, weight: .medium),
+        lineHeight: 17,
+        letterSpacing: -0.004
+    )
+    static var body3WithRegular: Typography = .init(
+        fontContainer: BuiltInFont(size: 12, weight: .regular),
+        lineHeight: 17,
+        letterSpacing: -0.004
+    )
+    
+    static var caption: Typography = .init(
+        fontContainer: BuiltInFont(size: 10, weight: .medium),
+        lineHeight: 14,
+        letterSpacing: -0.004
+    )
+}
