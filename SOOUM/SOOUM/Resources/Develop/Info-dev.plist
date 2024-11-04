@@ -6,7 +6,7 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>ec2-13-125-230-18.ap-northeast-2.compute.amazonaws.com</key>
+			<key>ec2-54-180-232-54.ap-northeast-2.compute.amazonaws.com</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
@@ -25,6 +25,10 @@
 	<array>
 		<string>PretendardVariable.ttf</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

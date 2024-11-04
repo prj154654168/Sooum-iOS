@@ -15,7 +15,7 @@ struct Constants {
     }
     
     static var endpoint: String {
-        return self.serverEndpoint(scheme: "http://")
+        return self.serverEndpoint(scheme: "https://")
     }
     
     enum HTTPHeader: String {

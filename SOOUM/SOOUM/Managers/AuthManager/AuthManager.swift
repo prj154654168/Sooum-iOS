@@ -90,6 +90,37 @@ class AuthManager: AuthManagerDelegate {
         return (encryptedData as Data).base64EncodedString()
     }
     
+    // TODO: 회원가입 시 매개변수 추가
+    func join() -> Observable<Bool> {
+        
+        let networkManager = NetworkManager.shared
+        return networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
+            .map(\.publicKey)
+            .withUnretained(self)
+            .flatMapLatest { object, publicKey -> Observable<Bool> in
+                
+                if let secKey = object.convertPEMToSecKey(pemString: publicKey),
+                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
+                    
+                    let request: AuthRequest = .signUp(
+                        encryptedDeviceId: encryptedDeviceId,
+                        // TODO: 추후 fcm 등록 후 추가
+                        firebaseToken: "example_firebase_token",
+                        isAllowNotify: true,
+                        isAllowTermOne: true,
+                        isAllowTermTwo: true,
+                        isAllowTermThree: true
+                    )
+                    return networkManager.request(SignUpResponse.self, request: request)
+                        .map { response in
+                            object.authInfo.updateToken(response.token)
+                            return true
+                        }
+                }
+                return .just(false)
+            }
+    }
+    
     func certification() -> Observable<Bool> {
         
         let networkManager = NetworkManager.shared
