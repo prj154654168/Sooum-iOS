@@ -18,7 +18,7 @@ class BaseViewController: UIViewController {
 
     var disposeBag = DisposeBag()
     
-    let activityIndicatorView = UIActivityIndicatorView(style: .large)
+    let activityIndicatorView = SOMActivityIndicatorView()
 
     private(set) var isEndEditingWhenWillDisappear: Bool = true
 

@@ -225,6 +225,8 @@
 		38CE94C62C904E5E0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C52C904E5E0004B238 /* SnapKit */; };
 		38CE94C92C904E940004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C82C904E940004B238 /* Then */; };
 		38CE94CB2C904E990004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94CA2C904E990004B238 /* Then */; };
+		38D055C32CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */; };
+		38D055C42CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */; };
 		38D3CB162CC2362B001EC280 /* Hakgyoansim-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */; };
 		38D3CB172CC2362B001EC280 /* Hakgyoansim-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */; };
 		38D3CB182CC2362B001EC280 /* Hakgyoansim-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */; };
@@ -387,6 +389,7 @@
 		38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooterCell.swift; sourceTree = "<group>"; };
 		38BE72162CC696E9002662DD /* WriteTagTextField+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteTagTextField+Rx.swift"; sourceTree = "<group>"; };
 		38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMNavigationBar.swift; sourceTree = "<group>"; };
+		38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMActivityIndicatorView.swift; sourceTree = "<group>"; };
 		38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hakgyoansim-Bold.ttf"; sourceTree = "<group>"; };
 		38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hakgyoansim-Light.ttf"; sourceTree = "<group>"; };
 		38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleDefaults.swift; sourceTree = "<group>"; };
@@ -991,6 +994,7 @@
 				38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */,
 				2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */,
 				38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */,
+				38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1323,6 +1327,7 @@
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				2AE6B1802CBFEA5200FA5C3C /* ToggleView.swift in Sources */,
 				38B8A5812CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
+				38D055C42CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
@@ -1456,6 +1461,7 @@
 				381A1D742CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				2AE6B1782CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */,
 				3850719A2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
+				38D055C32CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				38121E342CA6DA4000602499 /* Date.swift in Sources */,
 				38F720A52CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
