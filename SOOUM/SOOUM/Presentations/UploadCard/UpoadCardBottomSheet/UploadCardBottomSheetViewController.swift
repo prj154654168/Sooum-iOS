@@ -109,8 +109,6 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     }
     
     override func viewDidLoad() {
-        print("\(type(of: self)) - \(#function)")
-
         setupConstraints()
     }
     
@@ -126,7 +124,6 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     func bind(reactor: UploadCardBottomSheetViewReactor) {
         self.rx.viewDidLoad
             .map({ _ in
-                print(" Reactor.Action.fetchNewDefaultImage")
                 return Reactor.Action.fetchNewDefaultImage
             })
             .bind(to: reactor.action)
@@ -154,17 +151,17 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
         
+        // 기본 이미지 선택 시 이미지 선택 이벤트 방출
         selectedDefaultImage
             .compactMap {
-//                print("selectedDefaultImage 변경")
                 return $0.imageWithName?.image
             }
             .bind(to: bottomSheetImageSelected)
             .disposed(by: self.disposeBag)
         
+        // 기본 이미지 선택 시 이름 이벤트 방출
         selectedDefaultImage
             .compactMap {
-//                print("imageNameSeleted 변경", $0.imageWithName?.name)
                 return $0.imageWithName?.name
             }
             .bind(to: bottomSheetImageNameSeleted)
@@ -183,30 +180,6 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
                 }
             })
             .disposed(by: self.disposeBag)
-        
-        // TODO: 삭제
-        bottomSheetImageSelected.subscribe { font in
-            print("⭕️ 바텀시트 이미지 변경", font)
-        }
-        .disposed(by: self.disposeBag)
-        
-        // TODO: 삭제
-        bottomSheetImageNameSeleted.subscribe { font in
-            print("⭕️ 바텀시트 이미지 이름 변경", font)
-        }
-        .disposed(by: self.disposeBag)
-        
-        // TODO: 삭제
-        bottomSheetFontState.subscribe { font in
-            print("⭕️ 바텀시트 폰트 변경", font)
-        }
-        .disposed(by: self.disposeBag)
-        
-        // TODO: 삭제
-        bottomSheetOptionState.subscribe(with: self) { object, state in
-            print("⭕️ 바텀시트 옵션 변경")
-        }
-        .disposed(by: self.disposeBag)
         
         // MARK: - state
         reactor.state.map(\.defaultImages)

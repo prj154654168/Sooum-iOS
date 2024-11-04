@@ -51,9 +51,7 @@ class SelectDefaultImageTableViewCell: UITableViewCell {
     }
     
     // MARK: - setData
-    func setData(imageWithNames: [ImageWithName], selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageWithName?)>) {
-        print("\(type(of: self)) - \(#function)", selectedDefaultImage)
-        
+    func setData(imageWithNames: [ImageWithName], selectedDefaultImage: BehaviorRelay<(idx: Int, imageWithName: ImageWithName?)>) {        
         self.defaultImages = imageWithNames
         self.selectedDefaultImage = selectedDefaultImage
         

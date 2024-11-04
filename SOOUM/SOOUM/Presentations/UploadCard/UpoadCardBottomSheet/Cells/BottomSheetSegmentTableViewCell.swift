@@ -138,8 +138,6 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     }
     
     private func updateImageSegment(segment: ImageSegment, animated: Bool) {
-        print("\(type(of: self)) - \(#function)")
-
         self.selectedSegment = segment
         let duration = animated ? 0.2 : 0.0
 
