@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Alamofire
+
 
 struct DistanceCardResponse: Codable {
     let embedded: DistanceCardEmbedded
@@ -20,16 +22,6 @@ struct DistanceCardResponse: Codable {
     }
 }
 
-extension DistanceCardResponse: EmptyInitializable {
-    static func empty() -> DistanceCardResponse {
-        return .init(
-            embedded: .init(cards: []),
-            links: .init(),
-            status: .init()
-        )
-    }
-}
-
 struct DistanceCardEmbedded: Codable {
     let cards: [Card]
     
@@ -37,3 +29,20 @@ struct DistanceCardEmbedded: Codable {
         case cards = "distanceCardDtoList"
     }
 }
+
+extension DistanceCardResponse {
+    
+    init() {
+        self.embedded = .init(cards: [])
+        self.links = .init()
+        self.status = .init()
+    }
+}
+
+extension DistanceCardResponse: EmptyResponse {
+    static func emptyValue() -> DistanceCardResponse {
+        DistanceCardResponse.init()
+    }
+}
+
+

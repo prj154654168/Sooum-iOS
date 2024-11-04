@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Alamofire
+
 
 struct RelatedTagResponse: Codable {
     let embedded: RelatedTagEmbedded
@@ -16,6 +18,19 @@ struct RelatedTagResponse: Codable {
         case embedded = "_embedded"
         case status
     }
+}
+
+struct RelatedTagEmbedded: Equatable, Codable {
+    let relatedTags: [RelatedTag]
+    
+    enum CodingKeys: String, CodingKey {
+        case relatedTags = "relatedTagList"
+    }
+}
+
+struct RelatedTag: Equatable, Codable {
+    let count: Int
+    let content: String
 }
 
 extension RelatedTagResponse {
@@ -32,21 +47,8 @@ extension RelatedTagResponse {
     }
 }
 
-extension RelatedTagResponse: EmptyInitializable {
-    static func empty() -> RelatedTagResponse {
-        return .init(embedded: .init(relatedTags: []), status: .init())
+extension RelatedTagResponse: EmptyResponse {
+    static func emptyValue() -> RelatedTagResponse {
+        RelatedTagResponse.init()
     }
-}
-
-struct RelatedTagEmbedded: Equatable, Codable {
-    let relatedTags: [RelatedTag]
-    
-    enum CodingKeys: String, CodingKey {
-        case relatedTags = "relatedTagList"
-    }
-}
-
-struct RelatedTag: Equatable, Codable {
-    let count: Int
-    let content: String
 }

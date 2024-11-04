@@ -53,6 +53,8 @@ class NetworkManager {
         ) {
             
             self.sessionConfiguration = sessionConfiguration
+            self.sessionConfiguration.timeoutIntervalForRequest = 20.0
+            
             self.sessionDelegate = sessionDelegate
             self.sessionDelegateQueue = sessionDelegateQueue
             
@@ -74,7 +76,8 @@ class NetworkManager {
         self.configuration = Configuration()
         self.session = .init(
             configuration: configuration.sessionConfiguration,
-            interceptor: ErrorInterceptor()
+            interceptor: CompositeInterceptor(),
+            eventMonitors: [LogginMonitor()]
         )
         self.decoder = configuration.decoder
         self.encoder = configuration.encoder
@@ -101,56 +104,17 @@ extension NetworkManager: NetworkManagerDelegate {
                 .responseDecodable(
                     of: object,
                     decoder: self?.decoder ?? JSONDecoder(),
-                    emptyResponseCodes: [204, 205]
+                    emptyResponseCodes: [200, 204, 205]
                 ) { response in
-                    guard let httpStatusCode = response.response?.statusCode else { return }
-                    
-                    /// 서버 응답이 204 No Content 이거나 null일 때, error 방출전에 빈 모델 방출
-                    if [204, 205].contains(httpStatusCode) || response.data == nil,
-                       let emptyValue = (object as? EmptyInitializable.Type)?.empty() as? T {
-                        
-                        print(
-                            "⚠️ Server response is No content or null Request server, " +
-                            "request: \(request.self) " +
-                            "method: \(request.method.rawValue)"
-                        )
-                        observer.onNext(emptyValue)
-                        observer.onCompleted()
-                        return
-                    }
-                    
                     switch response.result {
                     case .success(let value):
                         if let error = response.error {
-                            
-                            let error: NSError = self?.setupError(
-                                "❌ Alamofire errors: \(error)"
-                            ) ?? .init()
                             observer.onError(error)
                         } else {
-                            print(
-                                "⭕️ Success request server, " +
-                                "request: \(request.self) " +
-                                "method: \(request.method.rawValue)"
-                            )
-                            
-                            /// 서버 응답을 그대로 확인하고 디버깅하기 위해 출력
-                            if let json = try? JSONSerialization.jsonObject(with: response.data ?? .init()),
-                               let pretty = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted),
-                               let toString = String(data: pretty, encoding: .utf8) {
-                                print("data: \n \(toString)")
-                            }
-                            
                             observer.onNext(value)
                             observer.onCompleted()
                         }
                     case .failure(let error):
-                        print(
-                            "ℹ️ Request server, " +
-                            "request: \(request.self) " +
-                            "method: \(request.method.rawValue)"
-                        )
-                        
                         print("❌ Network or response format error: \(error)")
                         observer.onError(error)
                     }

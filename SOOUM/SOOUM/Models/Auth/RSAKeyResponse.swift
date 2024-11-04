@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Alamofire
+
 
 struct RSAKeyResponse: Codable {
     let status: Status
@@ -20,8 +22,17 @@ struct RSAKeyResponse: Codable {
     }
 }
 
-extension RSAKeyResponse: EmptyInitializable {
-    static func empty() -> RSAKeyResponse {
-        return .init(status: .init(), publicKey: "", links: .init(login: nil, home: nil))
+extension RSAKeyResponse {
+    
+    init() {
+        self.status = .init()
+        self.publicKey = ""
+        self.links = .init(login: nil, home: nil)
+    }
+}
+
+extension RSAKeyResponse: EmptyResponse {
+    static func emptyValue() -> RSAKeyResponse {
+        RSAKeyResponse.init()
     }
 }

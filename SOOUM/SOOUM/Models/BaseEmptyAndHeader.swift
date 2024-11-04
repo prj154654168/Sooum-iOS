@@ -7,11 +7,8 @@
 
 import Foundation
 
+import Alamofire
 
-/// 서버 응답 코드가 204 or response.data == nil일 때
-protocol EmptyInitializable {
-    static func empty() -> Self
-}
 
 /// 서버 응답 status
 struct Status: Codable {
@@ -28,9 +25,9 @@ extension Status {
     }
 }
 
-extension Status: EmptyInitializable {
-    static func empty() -> Status {
-        return .init()
+extension Status: EmptyResponse {
+    static func emptyValue() -> Status {
+        Status.init()
     }
 }
 
