@@ -41,8 +41,7 @@ class LogginMonitor: EventMonitor {
         }
     }
     
-    func request(_ request: DataRequest, didParseResponse response: DataResponse<Data?, AFError>) {
-        
+    func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
         let currentTime = formatter.string(from: Date())
         print("\n📡 RESPONSE [\(currentTime)]")
         
