@@ -20,9 +20,7 @@ class ErrorInterceptor: RequestInterceptor {
     func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
         self.lock.lock(); defer { self.lock.unlock() }
         
-        guard let response = request.task?.response as? HTTPURLResponse,
-              response.statusCode == 401
-        else {
+        guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 401 else {
             completion(.doNotRetry)
             return
         }
