@@ -26,19 +26,19 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
         $0.typography = .init(
             fontContainer: BuiltInFont(
                 size: 16,
-                weight: .medium
+                weight: .regular
             ),
             lineHeight: 24,
             letterSpacing: 0
         )
-        $0.textColor = .som.gray02
+        $0.textColor = .som.gray01
         $0.text = "[필수] 서비스 이용약관"
     }
     
     let nextImageView = UIImageView().then {
         $0.image = .next
         $0.contentMode = .scaleAspectFill
-        $0.tintColor = .som.gray02
+        $0.tintColor = .som.gray01
     }
     
     // MARK: - init

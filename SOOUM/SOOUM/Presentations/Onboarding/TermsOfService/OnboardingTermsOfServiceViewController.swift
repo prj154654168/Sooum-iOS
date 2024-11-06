@@ -22,6 +22,8 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
         $0.descLabel.isHidden = true
     }
     
+    let agreeAllButtonView = TermsOfServiceAgreeButtonView()
+    
     lazy var termOfServiceTableView = UITableView().then {
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
@@ -36,6 +38,8 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
         $0.delegate = self
     }
     
+    let nextButtonView = PrimaryButtonView()
+    
     override func setupConstraints() {
         view.addSubview(guideLabelView)
         guideLabelView.snp.makeConstraints {
@@ -43,12 +47,26 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(28)
         }
         
+        view.addSubview(agreeAllButtonView)
+        agreeAllButtonView.snp.makeConstraints {
+            $0.top.equalTo(guideLabelView.snp.bottom).offset(44)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+        }
+        
         view.addSubview(termOfServiceTableView)
         termOfServiceTableView.snp.makeConstraints {
-            $0.top.equalTo(guideLabelView.snp.bottom).offset(30)
+            $0.top.equalTo(agreeAllButtonView.snp.bottom).offset(30)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        view.addSubview(nextButtonView)
+        nextButtonView.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-13)
         }
     }
 }
@@ -65,5 +83,59 @@ extension OnboardingTermsOfServiceViewController: UITableViewDataSource, UITable
         as! OnboardingTermsOfServiceTableViewCell
         
         return cell
+    }
+}
+
+
+class TermsOfServiceAgreeButtonView: UIView {
+    let checkImageView = UIImageView().then {
+        $0.image = .termsOfServiceCheck
+        $0.tintColor = .som.gray01
+    }
+    
+    let titleLabel = UILabel().then {
+        $0.typography = .init(
+            fontContainer: BuiltInFont(
+                size: 18,
+                weight: .regular
+            ),
+            lineHeight: 24.5,
+            letterSpacing: 0
+        )
+        $0.text = "약관 전체 동의"
+        $0.textColor = .som.gray01
+    }
+    
+    // MARK: - init
+    convenience init() {
+        self.init(frame: .zero)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        initConstraint()
+        self.layer.borderColor = UIColor.som.gray01.cgColor
+        self.layer.borderWidth = 1
+        self.layer.cornerRadius = 12
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - initConstraint
+    private func initConstraint() {
+        self.addSubviews(checkImageView)
+        checkImageView.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(16)
+            $0.top.equalToSuperview().offset(18)
+            $0.centerY.equalToSuperview()
+        }
+        
+        self.addSubviews(titleLabel)
+        titleLabel.snp.makeConstraints {
+            $0.leading.equalTo(checkImageView.snp.trailing).offset(6)
+            $0.centerY.equalToSuperview()
+        }
     }
 }
