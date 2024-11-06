@@ -22,8 +22,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
 
-        let viewController = LaunchScreenViewController()
-        viewController.reactor = LaunchScreenViewReactor()
+//        let viewController = LaunchScreenViewController()
+//        viewController.reactor = LaunchScreenViewReactor()
+        // TODO: - 삭제
+        let viewController = OnboardingTermsOfServiceViewController()
+
         window?.rootViewController = viewController
         window?.backgroundColor = .white
         window?.makeKeyAndVisible()
