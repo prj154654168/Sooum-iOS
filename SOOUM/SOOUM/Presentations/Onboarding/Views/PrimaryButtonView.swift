@@ -15,6 +15,7 @@ import RxSwift
 import SnapKit
 import Then
 
+/// 하단 확인 버튼
 class PrimaryButtonView: UIView {
     
     let label = UILabel().then {

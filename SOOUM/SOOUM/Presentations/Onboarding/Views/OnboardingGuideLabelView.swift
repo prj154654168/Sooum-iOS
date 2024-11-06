@@ -15,6 +15,7 @@ import RxSwift
 import SnapKit
 import Then
 
+/// 상단 설명 라벨 스택뷰
 class OnboardingGuideLabelView: UIView {
     
     let labelStackView = UIStackView().then {
