@@ -963,7 +963,6 @@
 				38389B9A2CCCF4D2006728AF /* Auth */,
 				38D5CE0D2CBCF7210054AB9A /* Card */,
 				2AE6B15C2CBEB2BE00FA5C3C /* Report */,
-				2ACBD4152CC9631B0057C013 /* UploadCard */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1083,6 +1082,7 @@
 			isa = PBXGroup;
 			children = (
 				38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */,
+				2ACBD4152CC9631B0057C013 /* UploadCard */,
 			);
 			path = WriteCard;
 			sourceTree = "<group>";
