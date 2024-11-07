@@ -508,9 +508,9 @@
 		2A5BB7BB2CDB86DD00E1C799 /* TermsOfService */ = {
 			isa = PBXGroup;
 			children = (
+				2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */,
 				2A5BB7D32CDCA5BE00E1C799 /* Views */,
 				2A5BB7C02CDB893D00E1C799 /* Cells */,
-				2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */,
 			);
 			path = TermsOfService;
 			sourceTree = "<group>";

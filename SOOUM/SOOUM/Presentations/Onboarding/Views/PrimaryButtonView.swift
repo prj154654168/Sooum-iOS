@@ -58,4 +58,13 @@ class PrimaryButtonView: UIView {
             $0.center.equalToSuperview()
         }
     }
+    
+    func updateState(state: Bool, animated: Bool = true) {
+        UIView.animate(withDuration: animated ? 0.2 : 0) {
+            self.backgroundColor = state ? .som.primary : .som.gray03
+        }
+        UIView.transition(with: label, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
+            self.label.textColor = state ? .som.white : .som.black
+        }
+    }
 }

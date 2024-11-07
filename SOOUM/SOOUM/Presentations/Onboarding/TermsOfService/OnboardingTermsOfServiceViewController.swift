@@ -42,6 +42,10 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
         ]
     )
     
+    var allAgreed: Bool {
+        return agreementStatus.value.values.allSatisfy { $0 == true }
+    }
+
     let guideLabelView = OnboardingGuideLabelView().then {
         $0.titleLabel.text = "숨을 시작하기 위해서는\n약관 동의가 필요해요"
         $0.descLabel.isHidden = true
@@ -96,18 +100,31 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
     }
     
     override func bind() {
+        super.bind()
+        
         agreeAllButtonView.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
-                let allAgreed = object.agreementStatus.value.values.allSatisfy { $0 == true }
-                object.updateAllAgreements(to: !allAgreed)
+                object.updateAllAgreements(to: !self.allAgreed)
             }
             .disposed(by: disposeBag)
         
-        agreementStatus.subscribe(with: self) { object, state in
-            self.updateAgreeAllButtonState()
-        }
-        .disposed(by: disposeBag)
+        agreementStatus
+            .subscribe(with: self) { object, state in
+                self.updateAgreeAllButtonState()
+                self.nextButtonView.updateState(state: self.allAgreed)
+            }
+            .disposed(by: disposeBag)
+        
+        nextButtonView.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, _ in
+                if self.allAgreed {
+                    let nicknameSettingVC = OnboardingNicknameSettingViewController()
+                    self.navigationController?.pushViewController(nicknameSettingVC, animated: true)
+                }
+            }
+            .disposed(by: disposeBag)
     }
     
     /// 선택 상태 전부 업데이트
@@ -125,8 +142,6 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
     /// 전체 동의 버튼 업데이트
     private func updateAgreeAllButtonState() {
         print("\(type(of: self)) - \(#function)")
-
-        let allAgreed = agreementStatus.value.values.allSatisfy { $0 == true }
         agreeAllButtonView.updateState(isOn: allAgreed)
     }
 }

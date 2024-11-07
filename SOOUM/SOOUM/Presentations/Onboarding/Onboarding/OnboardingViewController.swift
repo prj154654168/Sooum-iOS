@@ -74,6 +74,7 @@ class OnboardingViewController: BaseNavigationViewController {
     }
     
     override func bind() {
+        super.bind()
         startButtonLabel.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
