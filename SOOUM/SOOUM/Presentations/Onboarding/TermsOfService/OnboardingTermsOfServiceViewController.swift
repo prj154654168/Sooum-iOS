@@ -103,6 +103,11 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
                 object.updateAllAgreements(to: !allAgreed)
             }
             .disposed(by: disposeBag)
+        
+        agreementStatus.subscribe(with: self) { object, state in
+            self.updateAgreeAllButtonState()
+        }
+        .disposed(by: disposeBag)
     }
     
     /// 선택 상태 전부 업데이트
@@ -116,9 +121,8 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
         ]
         agreementStatus.accept(newStatus)
         updateAgreeAllButtonState()
-        termOfServiceTableView.reloadData()
     }
-    
+    /// 전체 동의 버튼 업데이트
     private func updateAgreeAllButtonState() {
         print("\(type(of: self)) - \(#function)")
 
@@ -141,5 +145,12 @@ extension OnboardingTermsOfServiceViewController: UITableViewDataSource, UITable
         as! OnboardingTermsOfServiceTableViewCell
         cell.setData(state: self.agreementStatus, term: TermsOfService.allCases[indexPath.row])
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let term = TermsOfService.allCases[indexPath.row]
+        var newState = agreementStatus.value
+        newState[term]?.toggle()
+        agreementStatus.accept(newState)
     }
 }
