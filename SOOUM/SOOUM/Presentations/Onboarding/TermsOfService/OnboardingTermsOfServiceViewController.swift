@@ -121,6 +121,8 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
             .subscribe(with: self) { object, _ in
                 if self.allAgreed {
                     let nicknameSettingVC = OnboardingNicknameSettingViewController()
+                    let reactor = OnboardingNicknameSettingViewReactor()
+                    nicknameSettingVC.reactor = reactor
                     self.navigationController?.pushViewController(nicknameSettingVC, animated: true)
                 }
             }
