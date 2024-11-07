@@ -32,6 +32,8 @@
 		2A5BB7CA2CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */; };
 		2A5BB7CD2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */; };
 		2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */; };
+		2A5BB7D12CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */; };
+		2A5BB7D22CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */; };
 		2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4122CC944FB0057C013 /* UploadRequest.swift */; };
@@ -311,6 +313,7 @@
 		2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonView.swift; sourceTree = "<group>"; };
 		2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameSettingViewController.swift; sourceTree = "<group>"; };
 		2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSettingViewController.swift; sourceTree = "<group>"; };
+		2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
 		2ACBD4122CC944FB0057C013 /* UploadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadRequest.swift; sourceTree = "<group>"; };
 		2ACBD4162CC963390057C013 /* DefaultCardImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCardImageResponse.swift; sourceTree = "<group>"; };
@@ -490,6 +493,7 @@
 		2A5BB7B72CDB856D00E1C799 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				2A5BB7CF2CDC7AC400E1C799 /* Onboarding */,
 				2A5BB7CB2CDBB7B200E1C799 /* ProfileImageSetting */,
 				2A5BB7C72CDBA4F400E1C799 /* NicknameSetting */,
 				2A5BB7BB2CDB86DD00E1C799 /* TermsOfService */,
@@ -538,6 +542,14 @@
 				2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */,
 			);
 			path = ProfileImageSetting;
+			sourceTree = "<group>";
+		};
+		2A5BB7CF2CDC7AC400E1C799 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		2ACBD4152CC9631B0057C013 /* UploadCard */ = {
@@ -1421,6 +1433,7 @@
 				38D055C42CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
+				2A5BB7D22CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */,
 				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */,
@@ -1526,6 +1539,7 @@
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				2AE6B17B2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,
 				38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
+				2A5BB7D12CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */,
 				3887D0392CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
