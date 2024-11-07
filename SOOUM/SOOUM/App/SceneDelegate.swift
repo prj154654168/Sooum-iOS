@@ -25,7 +25,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        let viewController = LaunchScreenViewController()
 //        viewController.reactor = LaunchScreenViewReactor()
         // TODO: - 삭제
-        let viewController = OnboardingViewController()
+        let viewController = UINavigationController(
+            rootViewController: OnboardingViewController()
+        )
 
         window?.rootViewController = viewController
         window?.backgroundColor = .white

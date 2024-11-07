@@ -494,9 +494,9 @@
 			isa = PBXGroup;
 			children = (
 				2A5BB7CF2CDC7AC400E1C799 /* Onboarding */,
-				2A5BB7CB2CDBB7B200E1C799 /* ProfileImageSetting */,
-				2A5BB7C72CDBA4F400E1C799 /* NicknameSetting */,
 				2A5BB7BB2CDB86DD00E1C799 /* TermsOfService */,
+				2A5BB7C72CDBA4F400E1C799 /* NicknameSetting */,
+				2A5BB7CB2CDBB7B200E1C799 /* ProfileImageSetting */,
 				2A5BB7BC2CDB86E500E1C799 /* Views */,
 			);
 			path = Onboarding;

@@ -68,9 +68,19 @@ class OnboardingViewController: BaseNavigationViewController {
         $0.backgroundColor = .clear
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func setupNaviBar() {
+        super.setupNaviBar()
         self.isNavigationBarHidden = true
+    }
+    
+    override func bind() {
+        startButtonLabel.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, _ in
+                let termsOfServiceVC = OnboardingTermsOfServiceViewController()
+                self.navigationController?.pushViewController(termsOfServiceVC, animated: true)
+            }
+            .disposed(by: disposeBag)
     }
     
     override func setupConstraints() {
