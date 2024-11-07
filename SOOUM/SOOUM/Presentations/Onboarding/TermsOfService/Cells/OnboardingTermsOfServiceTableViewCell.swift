@@ -17,6 +17,13 @@ import Then
 
 class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
     
+//    /// 전체 선택 상황
+    var agreementStatus: BehaviorRelay<[OnboardingTermsOfServiceViewController.TermsOfService: Bool]>?
+    /// 현재 셀의 항목
+    var term: OnboardingTermsOfServiceViewController.TermsOfService = .termsOfService
+    
+    var disposeBag = DisposeBag()
+    
     let checkBoxImageView = UIImageView().then {
         $0.image = .checkboxOutlined
         $0.contentMode = .scaleAspectFill
@@ -32,7 +39,7 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
             letterSpacing: 0
         )
         $0.textColor = .som.gray01
-        $0.text = "[필수] 서비스 이용약관"
+        $0.text = ""
     }
     
     let nextImageView = UIImageView().then {
@@ -50,6 +57,23 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setData(
+        state: BehaviorRelay<[OnboardingTermsOfServiceViewController.TermsOfService: Bool]>,
+        term: OnboardingTermsOfServiceViewController.TermsOfService
+    ) {
+        disposeBag = DisposeBag()
+
+        agreementStatus = state
+        self.term = term
+        titleLabel.text = term.text
+        updateState(isOn: state.value[term] ?? false)
+        
+        agreementStatus?.subscribe(with: self) { object, state in
+            object.updateState(isOn: state[term] ?? false, animated: true)
+        }
+        .disposed(by: self.disposeBag)
     }
 
     // MARK: - setupConstraint
@@ -75,6 +99,19 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
             $0.top.equalToSuperview().offset(11)
             $0.bottom.equalToSuperview().offset(-11)
             $0.size.equalTo(24)
+        }
+    }
+    
+    func updateState(isOn: Bool, animated: Bool = false) {
+        print("\(type(of: self)) - \(#function)")
+        UIView.transition(with: checkBoxImageView, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
+            self.checkBoxImageView.image = isOn ? .checkboxFilled : .checkboxOutlined
+        }
+        UIView.animate(withDuration: animated ? animated ? 0.2 : 0 : 0) {
+            self.nextImageView.tintColor = isOn ? .som.primary : .som.gray01
+        }
+        UIView.transition(with: titleLabel, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
+            self.titleLabel.textColor = isOn ? .som.primary : .som.gray01
         }
     }
 }

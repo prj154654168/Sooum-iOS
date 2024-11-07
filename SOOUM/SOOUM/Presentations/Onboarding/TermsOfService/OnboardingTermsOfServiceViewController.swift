@@ -21,13 +21,26 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
         case termsOfService
         case locationService
         case privacyPolicy
+        
+        var text: String {
+            switch self {
+            case .termsOfService:
+                "[필수] 서비스 이용 약관"
+            case .locationService:
+                "[필수] 위치정보 이용 약관"
+            case .privacyPolicy:
+                "[필수] 개인정보 처리 방침"
+            }
+        }
     }
     
-    private var agreementStatus: [TermsOfService: Bool] = [
-        .termsOfService: false,
-        .locationService: false,
-        .privacyPolicy: false
-    ]
+    private var agreementStatus = BehaviorRelay<[TermsOfService: Bool]>(
+        value: [
+            .termsOfService: false,
+            .locationService: false,
+            .privacyPolicy: false
+        ]
+    )
     
     let guideLabelView = OnboardingGuideLabelView().then {
         $0.titleLabel.text = "숨을 시작하기 위해서는\n약관 동의가 필요해요"
@@ -86,7 +99,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
         agreeAllButtonView.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
-                let allAgreed = object.agreementStatus.values.allSatisfy { $0 == true }
+                let allAgreed = object.agreementStatus.value.values.allSatisfy { $0 == true }
                 object.updateAllAgreements(to: !allAgreed)
             }
             .disposed(by: disposeBag)
@@ -94,15 +107,22 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
     
     /// 선택 상태 전부 업데이트
     private func updateAllAgreements(to isAgreed: Bool) {
-        TermsOfService.allCases.forEach { agreementStatus[$0] = isAgreed }
-        
+        print("\(type(of: self)) - \(#function) isAgreed", isAgreed)
+
+        let newStatus: [TermsOfService: Bool] = [
+            .termsOfService: isAgreed,
+            .locationService: isAgreed,
+            .privacyPolicy: isAgreed
+        ]
+        agreementStatus.accept(newStatus)
         updateAgreeAllButtonState()
-        
         termOfServiceTableView.reloadData()
     }
     
     private func updateAgreeAllButtonState() {
-        let allAgreed = agreementStatus.values.allSatisfy { $0 == true }
+        print("\(type(of: self)) - \(#function)")
+
+        let allAgreed = agreementStatus.value.values.allSatisfy { $0 == true }
         agreeAllButtonView.updateState(isOn: allAgreed)
     }
 }
@@ -110,7 +130,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
 extension OnboardingTermsOfServiceViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        3
+        TermsOfService.allCases.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -119,7 +139,7 @@ extension OnboardingTermsOfServiceViewController: UITableViewDataSource, UITable
             for: indexPath
         )
         as! OnboardingTermsOfServiceTableViewCell
-        
+        cell.setData(state: self.agreementStatus, term: TermsOfService.allCases[indexPath.row])
         return cell
     }
 }
