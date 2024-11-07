@@ -23,12 +23,10 @@
 	<string>$(SOOUM_SERVER_ENDPOINT)</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Hakgyoansim-Bold.ttf</string>
+		<string>Hakgyoansim-Light.ttf</string>
 		<string>PretendardVariable.ttf</string>
 	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)</string>
-	<key>NSCameraUsageDescription</key>
-	<string>$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
