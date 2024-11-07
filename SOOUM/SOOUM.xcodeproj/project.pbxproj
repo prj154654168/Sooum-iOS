@@ -36,6 +36,10 @@
 		2A5BB7D22CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */; };
 		2A5BB7D52CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */; };
 		2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */; };
+		2A5BB7D92CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */; };
+		2A5BB7DA2CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */; };
+		2A5BB7DD2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */; };
+		2A5BB7DE2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */; };
 		2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4122CC944FB0057C013 /* UploadRequest.swift */; };
@@ -317,6 +321,8 @@
 		2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSettingViewController.swift; sourceTree = "<group>"; };
 		2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceAgreeButtonView.swift; sourceTree = "<group>"; };
+		2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameTextFieldView.swift; sourceTree = "<group>"; };
+		2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingProfileImageSettingView.swift; sourceTree = "<group>"; };
 		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
 		2ACBD4122CC944FB0057C013 /* UploadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadRequest.swift; sourceTree = "<group>"; };
 		2ACBD4162CC963390057C013 /* DefaultCardImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCardImageResponse.swift; sourceTree = "<group>"; };
@@ -536,6 +542,7 @@
 			isa = PBXGroup;
 			children = (
 				2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */,
+				2A5BB7D72CDCBA7C00E1C799 /* Views */,
 			);
 			path = NicknameSetting;
 			sourceTree = "<group>";
@@ -544,6 +551,7 @@
 			isa = PBXGroup;
 			children = (
 				2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */,
+				2A5BB7DB2CDCBB5C00E1C799 /* Views */,
 			);
 			path = ProfileImageSetting;
 			sourceTree = "<group>";
@@ -560,6 +568,22 @@
 			isa = PBXGroup;
 			children = (
 				2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2A5BB7D72CDCBA7C00E1C799 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2A5BB7DB2CDCBB5C00E1C799 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1493,6 +1517,7 @@
 				381DEA8C2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
+				2A5BB7DE2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */,
 				38F720A62CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
 				38D6F1872CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
@@ -1504,6 +1529,7 @@
 				2ACBD41B2CCA03790057C013 /* ImageURLWithName.swift in Sources */,
 				38B6AAE02CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				2ACBD41E2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
+				2A5BB7DA2CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */,
 				2AE6B1792CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */,
 				381701792CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
@@ -1618,6 +1644,7 @@
 				38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				2A44A42A2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
 				2A5BB7B92CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
+				2A5BB7DD2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */,
 				2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38F720AD2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */,
@@ -1640,6 +1667,7 @@
 				381DEA8B2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				2ACBD41A2CCA03790057C013 /* ImageURLWithName.swift in Sources */,
 				3878F4742CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
+				2A5BB7D92CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */,
 				38B6AADF2CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				389681102CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
