@@ -23,6 +23,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let wirteButtonTitle: String = "작성하기"
         static let wirteTagPlacholder: String = "#태그를 입력해주세요!"
         static let relatedTagsTitle: String = "#관련태그"
+        
+        static let uploadCardBottomSheetEntryName: String = "uploadCardBottomSheetViewController"
     }
     
     let timeLimitBackgroundView = UIView().then {
@@ -65,6 +67,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
     override var navigationBarHeight: CGFloat {
         58
     }
+    
+    let uploadCardBottomSheetViewController = UploadCardBottomSheetViewController()
     
     var writtenTagModels = [SOMTagModel]()
     
@@ -119,6 +123,55 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     func bind(reactor: WriteCardViewReactor) {
         
+        // Life Cycle
+        self.rx.viewWillAppear
+            .subscribe(with: self) { object, _ in
+                object.uploadCardBottomSheetViewController.reactor = reactor.reactorForUploadCard()
+                object.presentBottomSheet(
+                    object.uploadCardBottomSheetViewController,
+                    screenColor: nil,
+                    neverDismiss: true,
+                    handleViewHeight: 34,
+                    maxHeight: 550,
+                    initalHeight: 20 + 34 + 32 + 100 * 2,
+                    completion: { object.writeCardView.writeCardTextView.becomeFirstResponder() }
+                )
+            }
+            .disposed(by: self.disposeBag)
+        
+        // Update image for textView
+        self.uploadCardBottomSheetViewController.bottomSheetImageSelected
+            .distinctUntilChanged()
+            .bind(to: self.writeCardView.writeCardTextView.rx.image)
+            .disposed(by: self.disposeBag)
+        
+        // Update time limit view
+        self.uploadCardBottomSheetViewController.bottomSheetOptionState
+            .compactMap { $0[.timeLimit] }
+            .distinctUntilChanged()
+            .map { !$0 }
+            .bind(to: self.timeLimitBackgroundView.rx.isHidden)
+            .disposed(by: self.disposeBag)
+        
+        // Keyboard, bottomSheet interaction
+        RxKeyboard.instance.isHidden
+            .distinctUntilChanged()
+            .drive(with: self) { object, isHidden in
+                if isHidden {
+                    object.uploadCardBottomSheetViewController.reactor = reactor.reactorForUploadCard()
+                    object.presentBottomSheet(
+                        object.uploadCardBottomSheetViewController,
+                        screenColor: nil,
+                        neverDismiss: true,
+                        handleViewHeight: 34,
+                        maxHeight: 550,
+                        initalHeight: 20 + 34 + 32 + 100 * 2,
+                        completion: { object.writeCardView.writeCardTextView.becomeFirstResponder() }
+                    )
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
         /// Set tags
         let writtenTagText = self.writeCardView.writeTagTextField.rx.text.orEmpty.distinctUntilChanged().share()
         self.writeCardView.writeTagTextField.addTagButton.rx.tap
@@ -150,6 +203,31 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .filter { $0.isEmpty == false }
             .map(Reactor.Action.relatedTags)
             .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        let optionState = self.uploadCardBottomSheetViewController.bottomSheetOptionState.distinctUntilChanged().share()
+        let imageName = self.uploadCardBottomSheetViewController.bottomSheetImageNameSeleted.distinctUntilChanged().share()
+        let imageType = imageName.map { $0.count < 14 ? "DEFAULT" : "USER" }
+        let font = self.uploadCardBottomSheetViewController.bottomSheetFontState.map { $0 == .gothic ? Font.pretendard : Font.school }
+        let content = self.writeCardView.writeCardTextView.rx.text.orEmpty.distinctUntilChanged().share()
+        
+        self.writeButton.rx.tap
+            .withLatestFrom(Observable.combineLatest(optionState, imageName, imageType, font, content))
+            .subscribe(onNext: { optionState, imageName, imageType, font, content in
+                let feedTags = self.writtenTagModels.map { $0.originalText }
+                reactor.action.onNext(
+                    .writeCard(
+                        isDistanceShared: optionState[.distanceLimit] ?? false,
+                        isPublic: optionState[.privateCard] ?? false,
+                        isStory: optionState[.timeLimit] ?? false,
+                        content: content,
+                        font: font.rawValue,
+                        imgType: imageType,
+                        imgName: imageName,
+                        feedTags: feedTags
+                    )
+                )
+            })
             .disposed(by: self.disposeBag)
         
         /// State
