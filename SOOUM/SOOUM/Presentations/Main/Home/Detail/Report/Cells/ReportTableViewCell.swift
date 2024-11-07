@@ -37,7 +37,7 @@ class ReportTableViewCell: UITableViewCell {
     }
     
     func updateIsSelected(isSelected: Bool, animated: Bool) {
-        let borderColor = isSelected ? UIColor.som.blue600.cgColor : UIColor.som.gray04.cgColor
+        let borderColor = isSelected ? UIColor.som.blue600.cgColor : UIColor.som.gray200.cgColor
         let toggleImage: UIImage = isSelected ? .radioFilled : .radioOutlined
         let durationTime: TimeInterval = 0.3
         if animated {

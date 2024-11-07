@@ -75,6 +75,12 @@
 		3816C05D2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816C05B2CCDDF3D00C8688C /* ReAuthenticationResponse.swift */; };
 		3816C0602CCDE35300C8688C /* ErrorInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */; };
 		3816C0612CCDE35300C8688C /* ErrorInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */; };
+		3817016E2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3817016D2CD882C2005FC220 /* TimeoutInterceptor.swift */; };
+		3817016F2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3817016D2CD882C2005FC220 /* TimeoutInterceptor.swift */; };
+		381701712CD88374005FC220 /* CompositeInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381701702CD88374005FC220 /* CompositeInterceptor.swift */; };
+		381701722CD88374005FC220 /* CompositeInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381701702CD88374005FC220 /* CompositeInterceptor.swift */; };
+		381701782CD88854005FC220 /* LogginMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381701772CD88854005FC220 /* LogginMonitor.swift */; };
+		381701792CD88854005FC220 /* LogginMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381701772CD88854005FC220 /* LogginMonitor.swift */; };
 		381A1D652CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D642CC38E7D005FDB8E /* WriteTagTextField.swift */; };
 		381A1D662CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D642CC38E7D005FDB8E /* WriteTagTextField.swift */; };
 		381A1D6A2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D692CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift */; };
@@ -225,6 +231,8 @@
 		38CE94C62C904E5E0004B238 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C52C904E5E0004B238 /* SnapKit */; };
 		38CE94C92C904E940004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94C82C904E940004B238 /* Then */; };
 		38CE94CB2C904E990004B238 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 38CE94CA2C904E990004B238 /* Then */; };
+		38D055C32CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */; };
+		38D055C42CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */; };
 		38D3CB162CC2362B001EC280 /* Hakgyoansim-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */; };
 		38D3CB172CC2362B001EC280 /* Hakgyoansim-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */; };
 		38D3CB182CC2362B001EC280 /* Hakgyoansim-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */; };
@@ -314,6 +322,9 @@
 		38121E332CA6DA4000602499 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		3816C05B2CCDDF3D00C8688C /* ReAuthenticationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReAuthenticationResponse.swift; sourceTree = "<group>"; };
 		3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorInterceptor.swift; sourceTree = "<group>"; };
+		3817016D2CD882C2005FC220 /* TimeoutInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutInterceptor.swift; sourceTree = "<group>"; };
+		381701702CD88374005FC220 /* CompositeInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeInterceptor.swift; sourceTree = "<group>"; };
+		381701772CD88854005FC220 /* LogginMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogginMonitor.swift; sourceTree = "<group>"; };
 		381A1D642CC38E7D005FDB8E /* WriteTagTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteTagTextField.swift; sourceTree = "<group>"; };
 		381A1D692CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteTagTextFieldDelegate.swift; sourceTree = "<group>"; };
 		381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsDelegate.swift; sourceTree = "<group>"; };
@@ -387,6 +398,7 @@
 		38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooterCell.swift; sourceTree = "<group>"; };
 		38BE72162CC696E9002662DD /* WriteTagTextField+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteTagTextField+Rx.swift"; sourceTree = "<group>"; };
 		38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMNavigationBar.swift; sourceTree = "<group>"; };
+		38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMActivityIndicatorView.swift; sourceTree = "<group>"; };
 		38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hakgyoansim-Bold.ttf"; sourceTree = "<group>"; };
 		38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hakgyoansim-Light.ttf"; sourceTree = "<group>"; };
 		38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleDefaults.swift; sourceTree = "<group>"; };
@@ -583,9 +595,19 @@
 		3816C05E2CCDE33C00C8688C /* Interceptor */ = {
 			isa = PBXGroup;
 			children = (
+				381701702CD88374005FC220 /* CompositeInterceptor.swift */,
 				3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */,
+				3817016D2CD882C2005FC220 /* TimeoutInterceptor.swift */,
 			);
 			path = Interceptor;
+			sourceTree = "<group>";
+		};
+		381701762CD88837005FC220 /* Monitor */ = {
+			isa = PBXGroup;
+			children = (
+				381701772CD88854005FC220 /* LogginMonitor.swift */,
+			);
+			path = Monitor;
 			sourceTree = "<group>";
 		};
 		381A1D672CC38E8E005FDB8E /* TextView */ = {
@@ -690,6 +712,7 @@
 			children = (
 				385620EE2CA19C9500E0AB5A /* NetworkManager.swift */,
 				3816C05E2CCDE33C00C8688C /* Interceptor */,
+				381701762CD88837005FC220 /* Monitor */,
 			);
 			path = NetworkManager;
 			sourceTree = "<group>";
@@ -991,6 +1014,7 @@
 				38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */,
 				2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */,
 				38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */,
+				38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1280,6 +1304,7 @@
 				381DEA8E2CD4BE55009F1FE9 /* SignInResponse.swift in Sources */,
 				381A1D662CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */,
 				385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
+				3817016F2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
 				38B6AAD22CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */,
 				2AE6B1672CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift in Sources */,
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
@@ -1323,6 +1348,7 @@
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				2AE6B1802CBFEA5200FA5C3C /* ToggleView.swift in Sources */,
 				38B8A5812CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
+				38D055C42CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
@@ -1332,6 +1358,7 @@
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				2AE6B1902CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
+				381701722CD88374005FC220 /* CompositeInterceptor.swift in Sources */,
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				38F720AA2CD4F15900DF32B5 /* DetailCard.swift in Sources */,
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
@@ -1381,6 +1408,7 @@
 				38B6AAE02CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				2ACBD41E2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
 				2AE6B1792CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */,
+				381701792CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				3887D0372CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
 				38B8A58C2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
@@ -1415,6 +1443,7 @@
 				38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				38D6F17C2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
+				381701782CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */,
 				388009872CABF155002A9209 /* SwiftEntryKit_Show.swift in Sources */,
 				2AE6B14C2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */,
@@ -1440,6 +1469,7 @@
 				38D6F1832CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
 				38D6F1862CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */,
 				38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */,
+				3817016E2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
 				3880098E2CABF4C2002A9209 /* SOMTag.swift in Sources */,
 				2A44A4372CAC227300DC463E /* BaseAuthResponse.swift in Sources */,
 				38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */,
@@ -1456,6 +1486,7 @@
 				381A1D742CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				2AE6B1782CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */,
 				3850719A2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
+				38D055C32CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				38121E342CA6DA4000602499 /* Date.swift in Sources */,
 				38F720A52CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
@@ -1473,6 +1504,7 @@
 				388009842CABF11F002A9209 /* SwiftEntryKit.swift in Sources */,
 				38F131882CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				38405CCB2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
+				381701712CD88374005FC220 /* CompositeInterceptor.swift in Sources */,
 				38B6AAD82CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
 				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38B8A5802CAE9363000AFE83 /* SOMCardModel.swift in Sources */,

@@ -31,6 +31,7 @@ class DetailViewCell: UICollectionViewCell {
     }
     /// 상세보기, 전글 배경
     let prevCardBackgroundImageView = UIImageView().then {
+        $0.backgroundColor = .clear
         $0.layer.borderColor = UIColor.som.white.cgColor
         $0.layer.borderWidth = 2
         $0.layer.cornerRadius = 14
@@ -42,19 +43,15 @@ class DetailViewCell: UICollectionViewCell {
         $0.text = Text.prevCardTitle
         $0.textColor = .som.white
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .medium),
-            lineHeight: 15.56,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body2WithBold
     }
     
     /// 상세보기, 상단 오른쪽 (더보기/삭제) 버튼, 기본 = 더보기
     let rightTopSettingButton = UIButton().then {
         var config = UIButton.Configuration.plain()
         config.image = .init(.icon(.outlined(.more)))
-        config.image?.withTintColor(.som.gray04)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray04 }
+        config.image?.withTintColor(.som.gray300)
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray300 }
         $0.configuration = config
     }
     
@@ -68,18 +65,14 @@ class DetailViewCell: UICollectionViewCell {
     /// 상세보기, 카드 삭제 됐을 때 이미지
     let deletedCardInDetailImageView = UIImageView().then {
         $0.image = .init(.icon(.outlined(.trash)))
-        $0.tintColor = .som.gray02
+        $0.tintColor = .som.gray300
     }
     /// 상세보기, 카드 삭제 됐을 때 라벨
     let deletedCardInDetailLabel = UILabel().then {
         $0.text = Text.deletedCardInDetailText
-        $0.textColor = .som.gray02
+        $0.textColor = .som.gray500
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .semibold),
-            lineHeight: 26,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body1WithBold
     }
     
     lazy var tags = SOMTags()

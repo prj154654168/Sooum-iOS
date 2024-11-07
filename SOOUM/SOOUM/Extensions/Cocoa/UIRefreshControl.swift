@@ -9,7 +9,7 @@ import UIKit
 
 extension UIRefreshControl {
 
-    func manualyBeginRefreshing() {
+    func beginRefreshingFromTop() {
         if let scrollView: UIScrollView = superview as? UIScrollView {
             let offset = CGPoint(x: 0, y: -frame.size.height)
             scrollView.setContentOffset(offset, animated: true)

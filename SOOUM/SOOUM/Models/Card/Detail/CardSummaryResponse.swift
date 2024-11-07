@@ -7,6 +7,9 @@
 
 import Foundation
 
+import Alamofire
+
+
 struct CardSummaryResponse: Codable {
     let cardSummary: CardSummary
     let status: Status
@@ -17,7 +20,27 @@ struct CardSummaryResponse: Codable {
     }
 }
 
+struct CardSummary: Equatable, Codable {
+    let commentCnt: Int
+    let cardLikeCnt: Int
+    let isLiked: Bool
+}
+
+extension CardSummary {
+    
+    init() {
+        commentCnt = 0
+        cardLikeCnt = 0
+        isLiked = false
+    }
+}
+
 extension CardSummaryResponse {
+    
+    init() {
+        self.cardSummary = .init()
+        self.status = .init()
+    }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -32,29 +55,10 @@ extension CardSummaryResponse {
         try container.encode(cardSummary, forKey: .cardSummary)
         try container.encode(status, forKey: .status)
     }
-    
-    init() {
-        self.cardSummary = .init()
-        self.status = .init()
-    }
 }
 
-extension CardSummaryResponse: EmptyInitializable {
-    static func empty() -> CardSummaryResponse {
-        return .init()
-    }
-}
-
-struct CardSummary: Equatable, Codable {
-    let commentCnt: Int
-    let cardLikeCnt: Int
-    let isLiked: Bool
-}
-
-extension CardSummary {
-    init() {
-        commentCnt = 0
-        cardLikeCnt = 0
-        isLiked = false
+extension CardSummaryResponse: EmptyResponse {
+    static func emptyValue() -> CardSummaryResponse {
+        CardSummaryResponse.init()
     }
 }

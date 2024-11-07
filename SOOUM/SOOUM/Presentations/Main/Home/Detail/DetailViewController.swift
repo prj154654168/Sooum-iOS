@@ -29,11 +29,7 @@ import RxSwift
      let titleLabel = UILabel().then {
          $0.textColor = .som.black
          $0.textAlignment = .center
-         $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .bold),
-            lineHeight: 16,
-            letterSpacing: -0.02
-         )
+         $0.typography = .som.body1WithBold
      }
      
      let rightHomeButton = UIButton().then {
@@ -157,7 +153,7 @@ import RxSwift
              .distinctUntilChanged()
              .subscribe(with: self.collectionView) { collectionView, isLoading in
                  if isLoading {
-                     collectionView.refreshControl?.manualyBeginRefreshing()
+                     collectionView.refreshControl?.beginRefreshingFromTop()
                  } else {
                      collectionView.refreshControl?.endRefreshing()
                  }

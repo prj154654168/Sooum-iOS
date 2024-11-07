@@ -24,15 +24,15 @@ class MainHomeViewController: BaseNavigationViewController, View {
     
     let logo = UIImageView().then {
         $0.image = .init(.logo)
-        $0.tintColor = .som.primary
+        $0.tintColor = .som.p300
         $0.contentMode = .scaleAspectFit
     }
     
     let rightAlamButton = UIButton().then {
         var config = UIButton.Configuration.plain()
         config.image = .init(.icon(.outlined(.alarm)))
-        config.image?.withTintColor(.som.gray03)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray03 }
+        config.image?.withTintColor(.som.gray700)
+        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray700 }
         $0.configuration = config
     }
     
@@ -99,11 +99,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         }
         
         let placeholderTitleLabel = UILabel().then {
-            $0.typography = .init(
-                fontContainer: BuiltInFont(size: 16, weight: .semibold),
-                lineHeight: 22,
-                letterSpacing: 0.005
-            )
+            $0.typography = .som.body1WithBold
             $0.text = Text.title
             $0.textColor = .som.black
             $0.textAlignment = .center
@@ -115,14 +111,10 @@ class MainHomeViewController: BaseNavigationViewController, View {
         }
         
         let placeholderSubTitleLabel = UILabel().then {
-            $0.typography = .init(
-                fontContainer: BuiltInFont(size: 14, weight: .semibold),
-                lineHeight: 18,
-                letterSpacing: 0.005
-            )
+            $0.typography = .som.body2WithBold
             $0.numberOfLines = 0
             $0.text = Text.subTitle
-            $0.textColor = .som.gray02
+            $0.textColor = .som.gray500
             $0.textAlignment = .center
         }
         self.placeholderView.addSubview(placeholderSubTitleLabel)
@@ -185,7 +177,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
-                    tableView.refreshControl?.manualyBeginRefreshing()
+                    tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()
                 }

@@ -21,25 +21,17 @@ class MoreBottomSheetViewController: BaseViewController {
     let blockBackgroundButton = UIButton()
     private let blockLabel = UILabel().then {
         $0.text = Text.blockButtonTitle
-        $0.textColor = .som.black
+        $0.textColor = .som.red
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 29,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body1WithBold
     }
     
     let reportBackgroundButton = UIButton()
     private let reportLabel = UILabel().then {
         $0.text = Text.reportButtonTitle
-        $0.textColor = .som.black
+        $0.textColor = .som.red
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 29,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body1WithBold
     }
     
     override func setupConstraints() {
@@ -54,7 +46,7 @@ class MoreBottomSheetViewController: BaseViewController {
         let handle = UIView().then {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 8
-            $0.backgroundColor = .som.gray02
+            $0.backgroundColor = .som.gray400
         }
         self.view.addSubview(handle)
         handle.snp.makeConstraints {

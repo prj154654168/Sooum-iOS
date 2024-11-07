@@ -21,7 +21,7 @@ class ToggleView: UIView {
     var disposeBag = DisposeBag()
         
     private let backgroundView = UIView().then {
-        $0.backgroundColor = .som.gray04
+        $0.backgroundColor = .som.gray400
         $0.layer.cornerRadius = 12
     }
     
@@ -88,8 +88,8 @@ class ToggleView: UIView {
                     $0.leading.equalToSuperview().offset(state ? 18 : 2)
                 }
                 self.layoutIfNeeded()
-                self.backgroundView.backgroundColor = state ? .som.primary : .som.gray04
-            }, 
+                self.backgroundView.backgroundColor = state ? .som.p300 : .som.gray400
+            },
             completion: nil
         )
     }

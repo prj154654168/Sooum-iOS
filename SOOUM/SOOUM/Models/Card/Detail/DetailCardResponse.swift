@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Alamofire
+
 
 struct DetailCardResponse: Codable {
     let detailCard: DetailCard
@@ -19,6 +21,11 @@ struct DetailCardResponse: Codable {
 }
 
 extension DetailCardResponse {
+    
+    init() {
+        self.detailCard = .init()
+        self.status = .init()
+    }
     
     init(from decoder: any Decoder) throws {
         let singleContainer = try decoder.singleValueContainer()
@@ -34,15 +41,10 @@ extension DetailCardResponse {
         try container.encode(self.detailCard)
         try container.encode(self.status)
     }
-    
-    init() {
-        self.detailCard = .init()
-        self.status = .init()
-    }
 }
 
-extension DetailCardResponse: EmptyInitializable {
-    static func empty() -> DetailCardResponse {
-        return .init()
+extension DetailCardResponse: EmptyResponse {
+    static func emptyValue() -> DetailCardResponse {
+        DetailCardResponse.init()
     }
 }

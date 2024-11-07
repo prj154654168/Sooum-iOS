@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Alamofire
+
 
 struct SignInResponse: Codable {
     let status: Status
@@ -22,8 +24,18 @@ struct SignInResponse: Codable {
     }
 }
 
-extension SignInResponse: EmptyInitializable {
-    static func empty() -> SignInResponse {
-        return .init(status: .init(), isRegistered: false, token: nil, links: nil)
+extension SignInResponse {
+    
+    init() {
+        self.status = .init()
+        self.isRegistered = false
+        self.token = nil
+        self.links = nil
+    }
+}
+
+extension SignInResponse: EmptyResponse {
+    static func emptyValue() -> SignInResponse {
+        SignInResponse.init()
     }
 }

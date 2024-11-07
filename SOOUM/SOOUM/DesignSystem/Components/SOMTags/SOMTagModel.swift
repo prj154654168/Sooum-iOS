@@ -78,23 +78,7 @@ extension SOMTagModel: Hashable {
 
 extension SOMTagModel {
     
-    private static let horizontalTextTypo: Typography = .init(
-        fontContainer: BuiltInFont(size: 14, weight: .medium),
-        lineHeight: 22,
-        letterSpacing: -0.04
-    )
-    
-    private static let verticalTextTypo: Typography = .init(
-        fontContainer: BuiltInFont(size: 14, weight: .regular),
-        lineHeight: 22,
-        letterSpacing: -0.04
-    )
-    
-    private static let verticalCountTypo: Typography = .init(
-        fontContainer: BuiltInFont(size: 15, weight: .medium),
-        lineHeight: 24,
-        letterSpacing: -0.04
-    )
+    private static let typography: Typography = .som.body2WithRegular
     
     var tagSize: CGSize {
         
@@ -102,7 +86,7 @@ extension SOMTagModel {
         
         let removeButtonWidth: CGFloat = self.isRemovable ? 16 + 8 : 0 /// 버튼 width + spacing
         
-        let typography = self.configuration.direction == .horizontal ? Self.horizontalTextTypo : Self.verticalTextTypo
+        let typography = Self.typography
         let textWidth: CGFloat = (self.text as NSString).boundingRect(
             with: .init(width: .infinity, height: typography.lineHeight),
             options: .usesLineFragmentOrigin,
@@ -110,12 +94,15 @@ extension SOMTagModel {
             context: nil
         ).width
         
-        let countWidth: CGFloat = ((self.count ?? "") as NSString).boundingRect(
-            with: .init(width: .infinity, height: Self.verticalCountTypo.lineHeight),
-            options: .usesLineFragmentOrigin,
-            attributes: [.font: Self.verticalCountTypo.font],
-            context: nil
-        ).width
+        var countWidth: CGFloat = 0
+        if let count = self.count {
+            countWidth = (count as NSString).boundingRect(
+                with: .init(width: .infinity, height: typography.lineHeight),
+                options: .usesLineFragmentOrigin,
+                attributes: [.font: typography.font],
+                context: nil
+            ).width
+        }
         
         let traillingOffset: CGFloat = self.configuration.direction == .horizontal ? 16 : 8
         

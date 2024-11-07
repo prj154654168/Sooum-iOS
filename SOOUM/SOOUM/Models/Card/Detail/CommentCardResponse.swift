@@ -7,6 +7,9 @@
 
 import Foundation
 
+import Alamofire
+
+
 struct CommentCardResponse: Codable {
     let embedded: CommentCardEmbedded
     let links: Next
@@ -19,20 +22,25 @@ struct CommentCardResponse: Codable {
     }
 }
 
-extension CommentCardResponse: EmptyInitializable {
-    static func empty() -> CommentCardResponse {
-        return .init(
-            embedded: .init(commentCards: []),
-            links: .init(),
-            status: .init()
-        )
-    }
-}
-
 struct CommentCardEmbedded: Codable {
     let commentCards: [Card]
     
     enum CodingKeys: String, CodingKey {
         case commentCards = "commentCardsInfoList"
+    }
+}
+
+extension CommentCardResponse {
+    
+    init() {
+        self.embedded = .init(commentCards: [])
+        self.links = .init()
+        self.status = .init()
+    }
+}
+
+extension CommentCardResponse: EmptyResponse {
+    static func emptyValue() -> CommentCardResponse {
+        CommentCardResponse.init()
     }
 }

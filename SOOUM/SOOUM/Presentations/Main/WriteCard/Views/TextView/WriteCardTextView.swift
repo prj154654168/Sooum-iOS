@@ -31,11 +31,7 @@ class WriteCardTextView: UIView {
         $0.keyboardAppearance = .light
         $0.backgroundColor = .clear
         
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .bold),
-            lineHeight: 29,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body1WithBold
         $0.textColor = .init(hex: "#FEFEFE")
         
         $0.textContainerInset = .init(top: 14, left: 16, bottom: 14, right: 16)
@@ -56,6 +52,7 @@ class WriteCardTextView: UIView {
     
     private let characterLabel = UILabel().then {
         $0.textColor = .init(hex: "#D6D6D6")
+        // 고정된 타이포그래피가 없음
         $0.typography = .init(
             fontContainer: BuiltInFont(size: 14, weight: .semibold),
             lineHeight: 17,

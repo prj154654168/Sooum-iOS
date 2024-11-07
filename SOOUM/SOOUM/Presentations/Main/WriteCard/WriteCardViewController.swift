@@ -26,7 +26,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     }
     
     let timeLimitBackgroundView = UIView().then {
-        $0.backgroundColor = .som.secondary
+        $0.backgroundColor = .som.p200
         $0.layer.cornerRadius = 22 * 0.5
         $0.clipsToBounds = true
         $0.isHidden = true
@@ -35,22 +35,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
     let timeLimitLabel = UILabel().then {
         $0.text = Text.timeLimitLabelText
         $0.textColor = .som.black
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .semibold),
-            lineHeight: 14,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body2WithBold
     }
     
     let writeButton = UIButton().then {
-        let typography = Typography(
-            fontContainer: BuiltInFont(size: 14, weight: .semibold),
-            lineHeight: 14,
-            letterSpacing: -0.02
-        )
+        let typography = Typography.som.body2WithBold
         var attributes = typography.attributes
         attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.primary, forKey: .foregroundColor)
+        attributes.updateValue(UIColor.som.p300, forKey: .foregroundColor)
         var config = UIButton.Configuration.plain()
         config.attributedTitle = .init(
             Text.wirteButtonTitle,

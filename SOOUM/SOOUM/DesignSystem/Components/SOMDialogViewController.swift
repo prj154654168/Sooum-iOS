@@ -35,16 +35,16 @@ class SOMDialogViewController: UIViewController {
         var bgColor: UIColor {
             switch self {
             case .cancel:
-                .som.gray02
+                .som.gray300
             case .ok, .delete, .report:
-                .som.primary
+                .som.p300
             }
         }
         
         var textColor: UIColor {
             switch self {
             case .cancel:
-                .som.dimForCard
+                .som.gray700
             case .ok, .delete, .report:
                 .som.white
             }
@@ -87,27 +87,13 @@ class SOMDialogViewController: UIViewController {
     let titleLabel = UILabel().then {
         $0.text = ""
         $0.textColor = .som.black
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 16,
-                weight: .semibold
-            ),
-            lineHeight: 19,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body1WithBold
     }
     
     /// 부제목 표시 라벨
     let subTitleLabel = UILabel().then {
-        $0.textColor = .som.gray01
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 14,
-                weight: .semibold
-            ),
-            lineHeight: 17,
-            letterSpacing: 0
-        )
+        $0.textColor = .som.gray600
+        $0.typography = .som.body2WithRegular
     }
     
     /// 버튼 스택 뷰
@@ -120,26 +106,12 @@ class SOMDialogViewController: UIViewController {
     
     let leftButton = UIButton().then {
         $0.layer.cornerRadius = 10
-        $0.titleLabel?.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 16,
-                weight: .semibold
-            ),
-            lineHeight: 19,
-            letterSpacing: 0
-        )
+        $0.titleLabel?.typography = .som.body1WithBold
     }
     
     let rightButton = UIButton().then {
         $0.layer.cornerRadius = 10
-        $0.titleLabel?.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 16,
-                weight: .semibold
-            ),
-            lineHeight: 19,
-            letterSpacing: 0
-        )
+        $0.titleLabel?.typography = .som.body1WithBold
     }
     
     // MARK: - LifeCycle
@@ -221,7 +193,7 @@ class SOMDialogViewController: UIViewController {
         // 좌측 버튼 설정
         if let leftAction = leftAction {
             leftButton.setTitle(leftAction.mode?.text ?? "취소", for: .normal)
-            leftButton.backgroundColor = leftAction.mode?.bgColor ?? .som.gray02
+            leftButton.backgroundColor = leftAction.mode?.bgColor ?? .som.gray300
             leftButton.setTitleColor(leftAction.mode?.textColor ?? .som.black, for: .normal)
         } else {
             leftButton.removeFromSuperview()
@@ -230,7 +202,7 @@ class SOMDialogViewController: UIViewController {
         // 우측 버튼 설정
         if let rightAction = rightAction {
             rightButton.setTitle(rightAction.mode?.text ?? "확인", for: .normal)
-            rightButton.backgroundColor = rightAction.mode?.bgColor ?? .som.primary
+            rightButton.backgroundColor = rightAction.mode?.bgColor ?? .som.p300
             rightButton.setTitleColor(rightAction.mode?.textColor ?? .som.white, for: .normal)
         } else {
             rightButton.removeFromSuperview()

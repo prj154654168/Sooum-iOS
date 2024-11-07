@@ -37,14 +37,7 @@ class SOMCard: UIView {
     }
     /// 카드 펑 남은시간 표시 라벨
     let cardPungTimeLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 14,
-                weight: .bold
-            ),
-            lineHeight: 16.7,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body2WithBold
         $0.textColor = .som.white
         $0.textAlignment = .center
     }
@@ -52,7 +45,7 @@ class SOMCard: UIView {
     /// pungTime != nil
     /// 삭제(펑 됐을 때) 배경
     let pungedCardInMainHomeBackgroundView = UIView().then {
-        $0.backgroundColor = .som.black.withAlphaComponent(0.7)
+        $0.backgroundColor = .som.gray700.withAlphaComponent(0.7)
         $0.isHidden = true
     }
     /// 삭제(펑 됐을 때) 라벨
@@ -60,11 +53,7 @@ class SOMCard: UIView {
         $0.text = Text.pungedCardInMainHomeText
         $0.textColor = .som.white
         $0.textAlignment = .center
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .bold),
-            lineHeight: 19,
-            letterSpacing: -0.04
-        )
+        $0.typography = .som.body1WithBold
     }
     
     /// cardTextContentLabel를 감싸는 불투명 컨테이너 뷰
@@ -81,14 +70,7 @@ class SOMCard: UIView {
     }
     /// 본문 표시 라벨
     let cardTextContentLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 16,
-                weight: .bold
-            ),
-            lineHeight: 30,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body1WithBold
         $0.textColor = .som.white
         $0.numberOfLines = 0
         $0.textAlignment = .center
@@ -118,14 +100,7 @@ class SOMCard: UIView {
     }
     
     let timeLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 10,
-                weight: .bold
-            ),
-            lineHeight: 11,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body3WithRegular
         $0.textColor = .som.white
     }
     
@@ -141,14 +116,7 @@ class SOMCard: UIView {
     }
     
     let distanceLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 10,
-                weight: .bold
-            ),
-            lineHeight: 11,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body3WithRegular
         $0.textColor = .som.white
     }
     
@@ -164,14 +132,7 @@ class SOMCard: UIView {
     }
     
     let likeLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 10,
-                weight: .bold
-            ),
-            lineHeight: 11,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body3WithRegular
         $0.textColor = .som.white
     }
     
@@ -187,14 +148,7 @@ class SOMCard: UIView {
     }
     
     let commentLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 10,
-                weight: .bold
-            ),
-            lineHeight: 11,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body3WithRegular
         $0.textColor = .som.white
     }
     
@@ -388,20 +342,20 @@ class SOMCard: UIView {
         likeImageView.image = model.data.likeCnt != 0 ?
             .init(.icon(.filled(.heart))) :
             .init(.icon(.outlined(.heart)))
-        likeImageView.tintColor = model.data.likeCnt != 0 ? .som.primary : .som.white
+        likeImageView.tintColor = model.data.likeCnt != 0 ? .som.p300 : .som.white
         commentImageView.image = model.data.commentCnt != 0 ?
             .init(.icon(.filled(.comment))) :
             .init(.icon(.outlined(.comment)))
-        commentImageView.tintColor = model.data.commentCnt != 0 ? .som.primary : .som.white
+        commentImageView.tintColor = model.data.commentCnt != 0 ? .som.p300 : .som.white
         
         /// 임시 시간 어떻게 표시하는 지 물어봐야 함
         timeLabel.text = model.data.createdAt.infoReadableTimeTakenFromThis(to: Date())
         distanceInfoStackView.isHidden = model.data.distance == nil
         distanceLabel.text = (model.data.distance ?? 0).infoReadableDistanceRangeFromThis()
         likeLabel.text = "\(model.data.likeCnt)"
-        likeLabel.textColor = model.data.isLiked ? .som.primary : .som.white
+        likeLabel.textColor = model.data.isLiked ? .som.p300 : .som.white
         commentLabel.text = "\(model.data.commentCnt)"
-        commentLabel.textColor = model.data.commentCnt != 0 ? .som.primary : .som.white
+        commentLabel.textColor = model.data.commentCnt != 0 ? .som.p300 : .som.white
         
         // 스토리 정보 설정
         cardPungTimeBackgroundView.isHidden = model.data.storyExpirationTime == nil

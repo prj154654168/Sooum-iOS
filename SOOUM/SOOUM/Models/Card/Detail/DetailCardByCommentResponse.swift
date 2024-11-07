@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Alamofire
+
 
 struct DetailCardByCommentResponse: Codable {
     let detailCard: DetailCard
@@ -17,38 +19,6 @@ struct DetailCardByCommentResponse: Codable {
         case detailCard
         case prevCard
         case status
-    }
-}
-
-extension DetailCardByCommentResponse {
-    
-    init(from decoder: any Decoder) throws {
-        let singleContainer = try decoder.singleValueContainer()
-        self.detailCard = try singleContainer.decode(DetailCard.self)
-        self.prevCard = try singleContainer.decode(PrevCard.self)
-        
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.status = try container.decode(Status.self, forKey: .status)
-    }
-    
-    func encode(to encoder: any Encoder) throws {
-        var container = encoder.singleValueContainer()
-        
-        try container.encode(self.detailCard)
-        try container.encode(self.prevCard)
-        try container.encode(self.status)
-    }
-    
-    init() {
-        self.detailCard = .init()
-        self.prevCard = .init()
-        self.status = .init()
-    }
-}
-
-extension DetailCardByCommentResponse: EmptyInitializable {
-    static func empty() -> DetailCardByCommentResponse {
-        return .init()
     }
 }
 
@@ -74,5 +44,37 @@ extension PrevCard {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.previousCardId = try container.decode(String.self, forKey: .previousCardId)
         self.previousCardImgLink = try container.decode(URLString.self, forKey: .previousCardImgLink)
+    }
+}
+
+extension DetailCardByCommentResponse {
+    
+    init() {
+        self.detailCard = .init()
+        self.prevCard = .init()
+        self.status = .init()
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let singleContainer = try decoder.singleValueContainer()
+        self.detailCard = try singleContainer.decode(DetailCard.self)
+        self.prevCard = try singleContainer.decode(PrevCard.self)
+        
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.status = try container.decode(Status.self, forKey: .status)
+    }
+    
+    func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        
+        try container.encode(self.detailCard)
+        try container.encode(self.prevCard)
+        try container.encode(self.status)
+    }
+}
+
+extension DetailCardByCommentResponse: EmptyResponse {
+    static func emptyValue() -> DetailCardByCommentResponse {
+        DetailCardByCommentResponse.init()
     }
 }

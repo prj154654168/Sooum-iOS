@@ -78,11 +78,7 @@ class WriteCardView: UIView {
             $0.text = Text.relatedTagsTitle
             $0.textColor = UIColor(hex: "#303030")
             $0.textAlignment = .center
-            $0.typography = .init(
-                fontContainer: BuiltInFont(size: 15, weight: .semibold),
-                lineHeight: 24,
-                letterSpacing: -0.04
-            )
+            $0.typography = .som.body2WithBold
         }
         self.relatedTagsBackgroundView.addSubview(relatedTagsLabel)
         relatedTagsLabel.snp.makeConstraints {

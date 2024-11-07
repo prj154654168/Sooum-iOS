@@ -27,12 +27,9 @@ class SelectFontTableViewCell: UITableViewCell {
     var disposeBag = DisposeBag()
 
     let titleLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 16
-         )
+        $0.typography = .som.body1WithRegular
         $0.textAlignment = .center
-        $0.textColor = .som.black
+        $0.textColor = .som.gray700
         $0.text = "글씨체"
     }
     
@@ -43,13 +40,10 @@ class SelectFontTableViewCell: UITableViewCell {
     }
     
     let gothicButtonLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 16
-         )
+        $0.typography = .som.body1WithBold
         $0.textAlignment = .center
         $0.textColor = .som.white
-        $0.backgroundColor = .som.primary
+        $0.backgroundColor = .som.p300
         $0.text = "고딕체"
         $0.layer.cornerRadius = 6
         $0.clipsToBounds = true
@@ -57,19 +51,20 @@ class SelectFontTableViewCell: UITableViewCell {
 
     let handwritingButtonLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .medium),
-            lineHeight: 16
+            fontContainer: BuiltInFont(.school, size: 18, weight: .medium),
+            lineHeight: 18,
+            letterSpacing: 0.05
          )
         $0.textAlignment = .center
-        $0.textColor = .som.gray01
-        $0.backgroundColor = .som.gray04
+        $0.textColor = .som.gray600
+        $0.backgroundColor = .som.gray300
         $0.text = "손글씨체"
         $0.layer.cornerRadius = 6
         $0.clipsToBounds = true
     }
     
     let seperatorView = UIView().then {
-        $0.backgroundColor = .som.gray04
+        $0.backgroundColor = .som.gray200
     }
     
     // MARK: - init
@@ -117,8 +112,8 @@ class SelectFontTableViewCell: UITableViewCell {
         let duration = animated ? 0.2 : 0.0
         
         UIView.animate(withDuration: duration) {
-            self.gothicButtonLabel.backgroundColor = font == .gothic ? .som.primary : .som.gray04
-            self.handwritingButtonLabel.backgroundColor = font == .handwriting ? .som.primary : .som.gray04
+            self.gothicButtonLabel.backgroundColor = font == .gothic ? .som.p300 : .som.gray300
+            self.handwritingButtonLabel.backgroundColor = font == .handwriting ? .som.p300 : .som.gray300
         }
         
         UIView.transition(
@@ -126,8 +121,8 @@ class SelectFontTableViewCell: UITableViewCell {
             duration: duration,
             options: .transitionCrossDissolve,
             animations: {
-                self.gothicButtonLabel.textColor = font == .gothic ? .som.white : .som.gray01
-            }, 
+                self.gothicButtonLabel.textColor = font == .gothic ? .som.white : .som.gray600
+            },
             completion: nil
         )
         
@@ -136,7 +131,7 @@ class SelectFontTableViewCell: UITableViewCell {
             duration: duration,
             options: .transitionCrossDissolve,
             animations: {
-                self.handwritingButtonLabel.textColor = font == .handwriting ? .som.white : .som.gray01
+                self.handwritingButtonLabel.textColor = font == .handwriting ? .som.white : .som.gray600
             }, 
             completion: nil
         )

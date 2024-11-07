@@ -154,13 +154,7 @@ extension SOMLocationFilter:
         
         let label = UILabel().then {
             let distance = distances[indexPath.item]
-            $0.typography = .init(
-                fontContainer: BuiltInFont(
-                    size: 12,
-                    weight: .bold
-                ),
-                lineHeight: 14.32
-            )
+            $0.typography = .som.body3WithRegular
             $0.text = distance.text
         }
         label.sizeToFit()

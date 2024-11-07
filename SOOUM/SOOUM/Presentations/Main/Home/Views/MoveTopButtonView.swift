@@ -23,17 +23,13 @@ class MoveTopButtonView: UIView {
     
     private let titleLabel = UILabel().then {
         $0.text = Text.title
-        $0.textColor = .som.gray01
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .bold),
-            lineHeight: 17,
-            letterSpacing: -0.56
-        )
+        $0.textColor = .som.gray600
+        $0.typography = .som.body2WithBold
     }
     
     private let imageView = UIImageView().then {
         $0.image = .init(.icon(.outlined(.arrowTop)))
-        $0.tintColor = .som.gray01
+        $0.tintColor = .som.gray600
     }
     
     override init(frame: CGRect) {
@@ -50,7 +46,7 @@ class MoveTopButtonView: UIView {
         let backgroundView = UIView().then {
             $0.backgroundColor = .som.white
             $0.layer.cornerRadius = 40 * 0.5
-            $0.layer.borderColor = UIColor.som.gray03.cgColor
+            $0.layer.borderColor = UIColor.som.gray300.cgColor
             $0.layer.borderWidth = 1
         }
         

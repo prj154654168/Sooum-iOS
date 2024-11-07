@@ -181,7 +181,7 @@ class AuthManager: AuthManagerDelegate {
                 onNext: { object, accessToken in
                     if accessToken.isEmpty {
                         let error = NSError(
-                            domain: "TARAS",
+                            domain: "SOOUM",
                             code: -99,
                             userInfo: [NSLocalizedDescriptionKey: "Session not refresh"]
                         )

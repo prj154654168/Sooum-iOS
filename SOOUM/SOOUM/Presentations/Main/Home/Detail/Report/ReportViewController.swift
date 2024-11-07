@@ -20,15 +20,8 @@ class ReportViewController: BaseNavigationViewController, View {
     var selectedReason: ReportViewReactor.ReportType?
         
     let tableViewTitleLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 16,
-                weight: .semibold
-            ),
-            lineHeight: 22.4,
-            letterSpacing: 0
-        )
-        $0.textColor = .som.black
+        $0.typography = .som.body1WithBold
+        $0.textColor = .som.gray800
         $0.text = "신고 사유 선택"
     }
         
@@ -44,19 +37,12 @@ class ReportViewController: BaseNavigationViewController, View {
     }
     
     let uploadReportButtonLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 16,
-                weight: .bold
-            ),
-            lineHeight: 19.1,
-            letterSpacing: 0
-        )
+        $0.typography = .som.body1WithBold
         $0.text = "신고하기"
         $0.textColor = .som.white
         $0.isUserInteractionEnabled = false
         $0.textAlignment = .center
-        $0.backgroundColor = .som.primary
+        $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
     }
