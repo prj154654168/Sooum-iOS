@@ -197,6 +197,8 @@
 		38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
 		38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
 		38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
+		38B0292A2CDB6E5C00851EB0 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B029292CDB6E5C00851EB0 /* BottomSheetViewController.swift */; };
+		38B0292B2CDB6E5C00851EB0 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B029292CDB6E5C00851EB0 /* BottomSheetViewController.swift */; };
 		38B6AAC82CA3F73B00CE6DB6 /* ReactorKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38B6AAC72CA3F73B00CE6DB6 /* ReactorKit */; };
 		38B6AACA2CA3F74300CE6DB6 /* ReactorKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38B6AAC92CA3F74300CE6DB6 /* ReactorKit */; };
 		38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
@@ -384,6 +386,7 @@
 		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
 		38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndCommentView.swift; sourceTree = "<group>"; };
 		38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreBottomSheetViewController.swift; sourceTree = "<group>"; };
+		38B029292CDB6E5C00851EB0 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeViewController.swift; sourceTree = "<group>"; };
 		38B6AAD42CA41B3C00CE6DB6 /* MainHomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeHeaderView.swift; sourceTree = "<group>"; };
@@ -1054,6 +1057,7 @@
 				381A1D682CC38E9B005FDB8E /* TextField */,
 				381A1D672CC38E8E005FDB8E /* TextView */,
 				3887D0352CC5335D00FB52E1 /* WriteCardView.swift */,
+				38B029292CDB6E5C00851EB0 /* BottomSheetViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1402,6 +1406,7 @@
 				38389B9D2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				385E65A42CBE56D00032E120 /* Coordinate.swift in Sources */,
 				388009952CABFAAA002A9209 /* SOMTags.swift in Sources */,
+				38B0292B2CDB6E5C00851EB0 /* BottomSheetViewController.swift in Sources */,
 				3878F4752CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				2ACBD4142CC944FB0057C013 /* UploadRequest.swift in Sources */,
 				2ACBD41B2CCA03790057C013 /* ImageURLWithName.swift in Sources */,
@@ -1537,6 +1542,7 @@
 				3880098A2CABF2CF002A9209 /* SwiftEntryKit_ViewController.swift in Sources */,
 				3878F4742CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				38B6AADF2CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
+				38B0292A2CDB6E5C00851EB0 /* BottomSheetViewController.swift in Sources */,
 				389681102CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
