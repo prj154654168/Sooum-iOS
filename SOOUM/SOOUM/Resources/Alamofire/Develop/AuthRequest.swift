@@ -63,7 +63,7 @@ enum AuthRequest: BaseRequest {
             isAllowTermThree
         ):
             return [
-                "member": [
+                "memberInfo": [
                     "encryptedDeviceId": encryptedDeviceId,
                     "deviceType": "IOS",
                     "firebaseToken": firebaseToken,

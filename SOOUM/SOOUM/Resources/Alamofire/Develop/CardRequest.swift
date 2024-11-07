@@ -144,18 +144,31 @@ enum CardRequest: BaseRequest {
             imgName,
             feedTags
         ):
-            return [
-                "isDistanceShared": isDistanceShared,
-                "latitude": latitude,
-                "longitude": longitude,
-                "isPublic": isPublic,
-                "isStory": isStory,
-                "content": content,
-                "font": font,
-                "imgType": imgType,
-                "imgName": imgName,
-                "feedTags": feedTags
-            ]
+            if isDistanceShared {
+                return [
+                    "isDistanceShared": true,
+                    "latitude": latitude,
+                    "longitude": longitude,
+                    "isPublic": isPublic,
+                    "isStory": isStory,
+                    "content": content,
+                    "font": font,
+                    "imgType": imgType,
+                    "imgName": imgName,
+                    "feedTags": feedTags
+                ]
+            } else {
+                return [
+                    "isDistanceShared": false,
+                    "isPublic": isPublic,
+                    "isStory": isStory,
+                    "content": content,
+                    "font": font,
+                    "imgType": imgType,
+                    "imgName": imgName,
+                    "feedTags": feedTags
+                ]
+            }
             
         case let .relatedTag(keyword, size):
             return ["keyword": keyword, "size": size]
