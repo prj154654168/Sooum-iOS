@@ -12,21 +12,21 @@ class BuiltInFont: FontConrainer {
     
     enum FontType: String {
         case pretendard = "PretendardVariable"
-        case school = "Hakgyoansim"
+        case school = "HakgyoansimChilpanjiugaeTTF"
     }
     
     var type: FontType
 
-    init(_ type: FontType = .pretendard, size fontSize: CGFloat, weight: UIFont.Weight) {
-        self.type = type
-        let fontName = UIFont.builtInFontName(type.rawValue, with: weight)
+    init(type fontType: FontType = .pretendard, size fontSize: CGFloat, weight: UIFont.Weight) {
+        self.type = fontType
+        let fontName = UIFont.builtInFontName(type: type, with: weight)
         let font = UIFont(name: fontName, size: fontSize)!
         super.init(font)
     }
 
     override var weight: UIFont.Weight {
         set {
-            self.font = .builtInFont(self.type.rawValue, ofSize: self.size, weight: newValue)
+            self.font = .builtInFont(type: self.type, ofSize: self.size, weight: newValue)
         }
         get {
             return super.weight
@@ -35,7 +35,7 @@ class BuiltInFont: FontConrainer {
 
     override var size: CGFloat {
         set {
-            self.font = .builtInFont(self.type.rawValue, ofSize: newValue, weight: self.weight)
+            self.font = .builtInFont(type: self.type, ofSize: newValue, weight: self.weight)
         }
         get {
             return super.size
@@ -49,25 +49,25 @@ class BuiltInFont: FontConrainer {
 
 fileprivate extension UIFont {
 
-    static func builtInFontName(_ name: String, with weight: Weight) -> String {
+    static func builtInFontName(type fontType: BuiltInFont.FontType, with weight: Weight) -> String {
         let weightName: String = {
             switch weight {
             case .thin: return "Thin"
             case .ultraLight: return "ExtraLight"
-            case .light: return "Light"
+            case .light: return fontType == .pretendard ? "Light" : "L"
             case .medium: return "Medium"
             case .semibold: return "SemiBold"
-            case .bold: return "Bold"
+            case .bold: return fontType == .pretendard ? "Bold" : "B"
             case .heavy: return "ExtraBold"
             case .black: return "Black"
             default: return "Regular"
             }
         }()
-        return "\(name)-\(weightName)"
+        return "\(fontType.rawValue)-\(weightName)"
     }
 
-    static func builtInFont(_ name: String, ofSize fontSize: CGFloat, weight: Weight) -> UIFont {
-        let fontName = self.builtInFontName(name, with: weight)
+    static func builtInFont(type fontType: BuiltInFont.FontType, ofSize fontSize: CGFloat, weight: Weight) -> UIFont {
+        let fontName = self.builtInFontName(type: fontType, with: weight)
         return .init(name: fontName, size: fontSize)!
     }
 }
