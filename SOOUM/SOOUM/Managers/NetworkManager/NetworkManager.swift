@@ -104,7 +104,7 @@ extension NetworkManager: NetworkManagerDelegate {
                 .responseDecodable(
                     of: object,
                     decoder: self?.decoder ?? JSONDecoder(),
-                    emptyResponseCodes: [200, 204, 205]
+                    emptyResponseCodes: [200, 201, 204, 205]
                 ) { response in
                     switch response.result {
                     case .success(let value):
