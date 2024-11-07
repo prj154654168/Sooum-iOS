@@ -62,9 +62,9 @@ class WriteCardTextView: UIView {
     
     weak var delegate: WriteCardTextViewDelegate?
     
-    var imageUrl: String? {
+    var image: UIImage? {
         didSet {
-            self.backgroundImageView.setImage(strUrl: imageUrl)
+            self.backgroundImageView.image = self.image
         }
     }
     

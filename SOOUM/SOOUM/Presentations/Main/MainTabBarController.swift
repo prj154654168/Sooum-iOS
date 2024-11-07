@@ -51,7 +51,6 @@ class MainTabBarController: SOMTabBarController, View {
             selectedImage: nil
         )
         
-        self.writeCardViewController.reactor = reactor.reactorForWriteCard()
         self.writeCardViewController.tabBarItem = .init(
             title: Text.addCardTitle,
             image: .init(.icon(.outlined(.addCard))),
@@ -88,6 +87,7 @@ extension MainTabBarController: SOMTabBarControllerDelegate {
     func tabBarController(_ tabBarController: SOMTabBarController, didSelect viewController: UIViewController) {
         
         guard viewController == self.writeCardViewController else { return }
+        self.writeCardViewController.reactor = self.reactor?.reactorForWriteCard()
         self.navigationPush(self.writeCardViewController, animated: true)
     }
 }
