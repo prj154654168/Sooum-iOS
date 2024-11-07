@@ -34,6 +34,8 @@
 		2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */; };
 		2A5BB7D12CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */; };
 		2A5BB7D22CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */; };
+		2A5BB7D52CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */; };
+		2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */; };
 		2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4122CC944FB0057C013 /* UploadRequest.swift */; };
@@ -314,6 +316,7 @@
 		2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameSettingViewController.swift; sourceTree = "<group>"; };
 		2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSettingViewController.swift; sourceTree = "<group>"; };
 		2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceAgreeButtonView.swift; sourceTree = "<group>"; };
 		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
 		2ACBD4122CC944FB0057C013 /* UploadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadRequest.swift; sourceTree = "<group>"; };
 		2ACBD4162CC963390057C013 /* DefaultCardImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCardImageResponse.swift; sourceTree = "<group>"; };
@@ -505,6 +508,7 @@
 		2A5BB7BB2CDB86DD00E1C799 /* TermsOfService */ = {
 			isa = PBXGroup;
 			children = (
+				2A5BB7D32CDCA5BE00E1C799 /* Views */,
 				2A5BB7C02CDB893D00E1C799 /* Cells */,
 				2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */,
 			);
@@ -550,6 +554,14 @@
 				2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */,
 			);
 			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		2A5BB7D32CDCA5BE00E1C799 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		2ACBD4152CC9631B0057C013 /* UploadCard */ = {
@@ -1469,6 +1481,7 @@
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
 				38405CCC2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
 				381A1D6B2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
+				2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				2AE6B17C2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,
 				38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
 				2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
@@ -1640,6 +1653,7 @@
 				2AE6B16D2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */,
 				38F720A72CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */,
 				38B6AAE22CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
+				2A5BB7D52CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
 				38F720B32CD4F15900DF32B5 /* LatestCardResponse.swift in Sources */,
 				38B8A5882CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
