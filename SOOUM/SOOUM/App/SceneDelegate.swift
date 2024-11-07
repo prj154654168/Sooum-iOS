@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //        let viewController = LaunchScreenViewController()
 //        viewController.reactor = LaunchScreenViewReactor()
         // TODO: - 삭제
-        let viewController = OnboardingTermsOfServiceViewController()
+        let viewController = ProfileImageSettingViewController()
 
         window?.rootViewController = viewController
         window?.backgroundColor = .white

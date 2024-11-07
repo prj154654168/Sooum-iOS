@@ -28,6 +28,10 @@
 		2A5BB7C32CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */; };
 		2A5BB7C52CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */; };
 		2A5BB7C62CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */; };
+		2A5BB7C92CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */; };
+		2A5BB7CA2CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */; };
+		2A5BB7CD2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */; };
+		2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */; };
 		2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4122CC944FB0057C013 /* UploadRequest.swift */; };
@@ -305,6 +309,8 @@
 		2A5BB7BD2CDB870000E1C799 /* OnboardingGuideLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingGuideLabelView.swift; sourceTree = "<group>"; };
 		2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceTableViewCell.swift; sourceTree = "<group>"; };
 		2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonView.swift; sourceTree = "<group>"; };
+		2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameSettingViewController.swift; sourceTree = "<group>"; };
+		2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSettingViewController.swift; sourceTree = "<group>"; };
 		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
 		2ACBD4122CC944FB0057C013 /* UploadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadRequest.swift; sourceTree = "<group>"; };
 		2ACBD4162CC963390057C013 /* DefaultCardImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCardImageResponse.swift; sourceTree = "<group>"; };
@@ -484,8 +490,10 @@
 		2A5BB7B72CDB856D00E1C799 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				2A5BB7BC2CDB86E500E1C799 /* Views */,
+				2A5BB7CB2CDBB7B200E1C799 /* ProfileImageSetting */,
+				2A5BB7C72CDBA4F400E1C799 /* NicknameSetting */,
 				2A5BB7BB2CDB86DD00E1C799 /* TermsOfService */,
+				2A5BB7BC2CDB86E500E1C799 /* Views */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -514,6 +522,22 @@
 				2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		2A5BB7C72CDBA4F400E1C799 /* NicknameSetting */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */,
+			);
+			path = NicknameSetting;
+			sourceTree = "<group>";
+		};
+		2A5BB7CB2CDBB7B200E1C799 /* ProfileImageSetting */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */,
+			);
+			path = ProfileImageSetting;
 			sourceTree = "<group>";
 		};
 		2ACBD4152CC9631B0057C013 /* UploadCard */ = {
@@ -1386,6 +1410,7 @@
 				38F720AC2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift in Sources */,
 				3887D03A2CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
+				2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */,
 				38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
 				38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
@@ -1403,6 +1428,7 @@
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				2AE6B1902CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
 				381701722CD88374005FC220 /* CompositeInterceptor.swift in Sources */,
+				2A5BB7CA2CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				38F720AA2CD4F15900DF32B5 /* DetailCard.swift in Sources */,
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
@@ -1544,6 +1570,7 @@
 				3849729E2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
+				2A5BB7C92CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				2AE6B1492CBC15BF00FA5C3C /* ReportViewController.swift in Sources */,
 				3887D0332CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */,
 				38D6F1802CC2413400E11530 /* WriteCardTextView.swift in Sources */,
@@ -1573,6 +1600,7 @@
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */,
 				3887D0362CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
+				2A5BB7CD2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */,
 				385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
 				2A048E7B2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
