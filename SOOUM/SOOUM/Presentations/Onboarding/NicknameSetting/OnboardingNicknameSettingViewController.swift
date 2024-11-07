@@ -16,8 +16,8 @@ import SnapKit
 import Then
 
 // MARK: - OnboardingNicknameSettingViewController
-class OnboardingNicknameSettingViewController: BaseNavigationViewController {
-    
+class OnboardingNicknameSettingViewController: BaseNavigationViewController, View {
+
     let guideLabelView = OnboardingGuideLabelView().then {
         $0.titleLabel.text = "반가워요!\n당신을 어떻게 부르면 될까요?"
         $0.descLabel.text = "닉네임은 추후 변경이 가능해요"
@@ -47,5 +47,17 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController {
             $0.trailing.equalToSuperview().offset(-20)
             $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-13)
         }
+    }
+    
+    override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
+        super.updatedKeyboard(withoutBottomSafeInset: height)
+                
+        UIView.animate(withDuration: 0.25) {
+            self.nextButtonView.snp.updateConstraints {
+                let offset = -height - 13
+                $0.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(offset)
+            }
+        }
+        self.view.layoutIfNeeded()
     }
 }
