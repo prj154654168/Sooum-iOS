@@ -128,14 +128,36 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 object.uploadCardBottomSheetViewController.reactor = reactor.reactorForUploadCard()
                 object.presentBottomSheet(
-                    object.uploadCardBottomSheetViewController,
-                    screenColor: nil,
+                    presented: object.uploadCardBottomSheetViewController,
+                    isHandleBar: true,
                     neverDismiss: true,
-                    handleViewHeight: 34,
                     maxHeight: 550,
                     initalHeight: 20 + 34 + 32 + 100 * 2,
-                    completion: { object.writeCardView.writeCardTextView.becomeFirstResponder() }
+                    completion: nil
                 )
+            }
+            .disposed(by: self.disposeBag)
+        
+        // Keyboard, bottomSheet interaction
+        RxKeyboard.instance.isHidden
+            .distinctUntilChanged()
+            .filter { $0 }
+            .drive(with: self) { object, _ in
+                object.uploadCardBottomSheetViewController.reactor = reactor.reactorForUploadCard()
+                object.presentBottomSheet(
+                    presented: object.uploadCardBottomSheetViewController,
+                    isHandleBar: true,
+                    neverDismiss: true,
+                    maxHeight: 550,
+                    initalHeight: 20 + 34 + 32 + 100 * 2,
+                    completion: nil
+                )
+            }
+            .disposed(by: self.disposeBag)
+        
+        RxKeyboard.instance.willShowVisibleHeight
+            .drive(with: self) { objcet, _ in
+                objcet.dismissBottomSheet()
             }
             .disposed(by: self.disposeBag)
         
@@ -153,26 +175,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .bind(to: self.timeLimitBackgroundView.rx.isHidden)
             .disposed(by: self.disposeBag)
         
-        // Keyboard, bottomSheet interaction
-        RxKeyboard.instance.isHidden
-            .distinctUntilChanged()
-            .drive(with: self) { object, isHidden in
-                if isHidden {
-                    object.uploadCardBottomSheetViewController.reactor = reactor.reactorForUploadCard()
-                    object.presentBottomSheet(
-                        object.uploadCardBottomSheetViewController,
-                        screenColor: nil,
-                        neverDismiss: true,
-                        handleViewHeight: 34,
-                        maxHeight: 550,
-                        initalHeight: 20 + 34 + 32 + 100 * 2,
-                        completion: { object.writeCardView.writeCardTextView.becomeFirstResponder() }
-                    )
-                }
-            }
-            .disposed(by: self.disposeBag)
-        
-        /// Set tags
+        // Set tags
         let writtenTagText = self.writeCardView.writeTagTextField.rx.text.orEmpty.distinctUntilChanged().share()
         self.writeCardView.writeTagTextField.addTagButton.rx.tap
             .withLatestFrom(writtenTagText)
@@ -213,8 +216,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         self.writeButton.rx.tap
             .withLatestFrom(Observable.combineLatest(optionState, imageName, imageType, font, content))
-            .subscribe(onNext: { optionState, imageName, imageType, font, content in
-                let feedTags = self.writtenTagModels.map { $0.originalText }
+            .subscribe(onNext: { [weak self] optionState, imageName, imageType, font, content in
+                let feedTags = self?.writtenTagModels.map { $0.originalText }
                 reactor.action.onNext(
                     .writeCard(
                         isDistanceShared: optionState[.distanceLimit] ?? false,
@@ -224,7 +227,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                         font: font.rawValue,
                         imgType: imageType,
                         imgName: imageName,
-                        feedTags: feedTags
+                        feedTags: feedTags ?? []
                     )
                 )
             })
