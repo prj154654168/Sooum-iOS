@@ -108,10 +108,6 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         $0.delegate = self
     }
     
-    override func viewDidLoad() {
-        setupConstraints()
-    }
-    
     override func setupConstraints() {
         
         self.view.backgroundColor = .som.white
@@ -137,7 +133,8 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     }
     
     func bind(reactor: UploadCardBottomSheetViewReactor) {
-        self.rx.viewDidLoad
+        
+        self.rx.viewWillAppear
             .map({ _ in
                 return Reactor.Action.fetchNewDefaultImage
             })
@@ -374,18 +371,18 @@ extension UploadCardBottomSheetViewController {
         config.wordings.crop = "자르기"
         
         let picker = YPImagePicker(configuration: config)
-        picker.didFinishPicking { [unowned picker] items, _ in
+        picker.didFinishPicking { [weak self] items, _ in
             guard let image = items.singlePhoto?.image  else {
                 picker.dismiss(animated: true, completion: nil)
                 return
             }
-            self.selectedMyImage.accept(.init(name: "", image: image))
+            self?.selectedMyImage.accept(.init(name: "", image: image))
             picker.dismiss(animated: true, completion: nil)
             // 이미지 업로드
-            if let reactor = self.reactor {
+            if let reactor = self?.reactor {
                 reactor.action.onNext(.seleteMyImage(image))
             }
-            self.tableView.reloadSections(IndexSet([1]), with: .automatic)
+            self?.tableView.reloadSections(IndexSet([1]), with: .automatic)
         }
         present(picker, animated: true, completion: nil)
     }
