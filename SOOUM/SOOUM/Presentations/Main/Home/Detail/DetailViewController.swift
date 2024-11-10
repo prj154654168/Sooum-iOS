@@ -8,7 +8,6 @@
 import UIKit
 
 import SnapKit
-import SwiftEntryKit
 import Then
 
 import ReactorKit
@@ -128,7 +127,7 @@ import RxSwift
              .compactMap { _ in reactor.selectedCardIds.last }
              .map(reactor.reactorForReport)
              .subscribe(with: self) { object, reactor in
-                 if SwiftEntryKit.isCurrentlyDisplaying { SwiftEntryKit.dismiss() }
+                 object.dismissBottomSheet()
                  let viewController = ReportViewController()
                  viewController.reactor = reactor
                  object.navigationPush(viewController, animated: true)
