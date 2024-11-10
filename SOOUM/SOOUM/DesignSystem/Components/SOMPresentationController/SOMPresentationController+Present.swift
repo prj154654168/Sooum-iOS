@@ -12,14 +12,16 @@ extension UIViewController {
     
     func presentBottomSheet(
         presented viewController: UIViewController,
+        dismissWhenScreenDidTap: Bool = false,
         isHandleBar: Bool,
         neverDismiss: Bool,
-        maxHeight: CGFloat?,
+        maxHeight: CGFloat? = nil,
         initalHeight: CGFloat,
-        completion: (() -> Void)?
+        completion: (() -> Void)? = nil
     ) {
         
         let transitioningDelegate = SOMTransitioningDelegate(
+            dismissWhenScreenDidTap: dismissWhenScreenDidTap,
             isHandleBar: isHandleBar,
             neverDismiss: neverDismiss,
             maxHeight: maxHeight,
@@ -42,13 +44,13 @@ extension UIViewController {
         self.present(viewController, animated: true)
     }
     
-    func dismissBottomSheet(animated: Bool = true) {
+    func dismissBottomSheet(animated: Bool = true, completion: (() -> Void)? = nil) {
         
         withUnsafePointer(to: SOMTransitioningDelegate.AssociatedKeys.transitioningDelegate) {
             if let transitioningDelegate = objc_getAssociatedObject(self, $0) as? SOMTransitioningDelegate {
-                transitioningDelegate.dismiss(animated: animated)
+                transitioningDelegate.dismiss(animated: animated, completion: completion)
             } else {
-                self.dismiss(animated: animated)
+                self.dismiss(animated: animated, completion: completion)
             }
         }
     }

@@ -31,6 +31,7 @@ class SOMPresentationController: UIPresentationController {
         return view
     }()
     
+    private var dismissWhenScreenDidTap: Bool
     private var isHandleBar: Bool
     private var neverDismiss: Bool
     
@@ -46,12 +47,14 @@ class SOMPresentationController: UIPresentationController {
     init(
         presentedViewController: UIViewController,
         presenting presentingViewController: UIViewController?,
+        dismissWhenScreenDidTap: Bool,
         isHandleBar: Bool,
         neverDismiss: Bool,
         maxHeight: CGFloat?,
         initalHeight: CGFloat,
         completion: (() -> Void)?
     ) {
+        self.dismissWhenScreenDidTap = dismissWhenScreenDidTap
         self.isHandleBar = isHandleBar
         self.neverDismiss = neverDismiss
         
@@ -71,6 +74,11 @@ class SOMPresentationController: UIPresentationController {
         if isHandleBar {
             let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handleGesture))
             self.presentedView?.addGestureRecognizer(panGesture)
+        }
+        
+        if dismissWhenScreenDidTap {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.screenDidTap))
+            self.screenView.addGestureRecognizer(tapGesture)
         }
     }
     
@@ -182,6 +190,11 @@ class SOMPresentationController: UIPresentationController {
     
     
     // MARK: Gesture
+    
+    @objc
+    private func screenDidTap(_ sender: UITapGestureRecognizer) {
+        self.presentedViewController.dismiss(animated: true)
+    }
     
     @objc
     private func handleGesture(_ gesture: UIPanGestureRecognizer) {

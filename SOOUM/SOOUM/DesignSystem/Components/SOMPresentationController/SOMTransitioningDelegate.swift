@@ -14,6 +14,7 @@ class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate 
         static var transitioningDelegate = "BottomSheetTransitioningDelegate"
     }
     
+    private var dismissWhenScreenDidTap: Bool
     private var isHandleBar: Bool
     private var neverDismiss: Bool
     
@@ -26,12 +27,14 @@ class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate 
 
 
     init(
+        dismissWhenScreenDidTap: Bool,
         isHandleBar: Bool,
         neverDismiss: Bool,
         maxHeight: CGFloat?,
         initalHeight: CGFloat,
         completion: (() -> Void)?
     ) {
+        self.dismissWhenScreenDidTap = dismissWhenScreenDidTap
         self.isHandleBar = isHandleBar
         self.neverDismiss = neverDismiss
         self.maxHeight = maxHeight
@@ -48,6 +51,7 @@ class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate 
         let presentationController = SOMPresentationController(
             presentedViewController: presented,
             presenting: presenting,
+            dismissWhenScreenDidTap: self.dismissWhenScreenDidTap,
             isHandleBar: self.isHandleBar,
             neverDismiss: self.neverDismiss,
             maxHeight: self.maxHeight,
@@ -59,9 +63,9 @@ class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate 
         return presentationController
     }
     
-    func dismiss(animated: Bool) {
+    func dismiss(animated: Bool, completion: (() -> Void)?) {
         guard let presentedController = self.presentationController?.presentedViewController else { return }
         
-        presentedController.dismiss(animated: animated)
+        presentedController.dismiss(animated: animated, completion: completion)
     }
 }
