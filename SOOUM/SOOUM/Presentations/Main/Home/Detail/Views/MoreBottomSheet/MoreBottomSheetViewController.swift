@@ -18,35 +18,47 @@ class MoreBottomSheetViewController: BaseViewController {
         static let reportButtonTitle: String = "신고하기"
     }
     
-    let blockBackgroundButton = UIButton()
-    private let blockLabel = UILabel().then {
-        $0.text = Text.blockButtonTitle
-        $0.textColor = .som.red
-        $0.textAlignment = .center
-        $0.typography = .som.body1WithBold
+    let blockLabelButton = UIButton().then {
+        let typography = Typography.som.body1WithBold
+        var attributes = typography.attributes
+        attributes.updateValue(typography.font, forKey: .font)
+        attributes.updateValue(UIColor.som.red, forKey: .foregroundColor)
+        var config = UIButton.Configuration.plain()
+        config.attributedTitle = .init(
+            Text.blockButtonTitle,
+            attributes: AttributeContainer(attributes)
+        )
+        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
+            AttributeContainer(attributes)
+        }
+        config.contentInsets = .zero
+        $0.configuration = config
     }
     
-    let reportBackgroundButton = UIButton()
-    private let reportLabel = UILabel().then {
-        $0.text = Text.reportButtonTitle
-        $0.textColor = .som.red
-        $0.textAlignment = .center
-        $0.typography = .som.body1WithBold
+    let reportLabelButton = UIButton().then {
+        let typography = Typography.som.body1WithBold
+        var attributes = typography.attributes
+        attributes.updateValue(typography.font, forKey: .font)
+        attributes.updateValue(UIColor.som.red, forKey: .foregroundColor)
+        var config = UIButton.Configuration.plain()
+        config.attributedTitle = .init(
+            Text.reportButtonTitle,
+            attributes: AttributeContainer(attributes)
+        )
+        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
+            AttributeContainer(attributes)
+        }
+        config.contentInsets = .zero
+        $0.configuration = config
     }
     
     override func setupConstraints() {
         
         self.view.backgroundColor = .som.white
-        self.view.layer.cornerRadius = 20
-        self.view.snp.makeConstraints {
-            $0.width.equalTo(UIScreen.main.bounds.width)
-            $0.height.equalTo(178 - 21)
-        }
         
         let handle = UIView().then {
-            $0.clipsToBounds = true
+            $0.backgroundColor = UIColor(hex: "#B4B4B4")
             $0.layer.cornerRadius = 8
-            $0.backgroundColor = .som.gray400
         }
         self.view.addSubview(handle)
         handle.snp.makeConstraints {
@@ -63,31 +75,22 @@ class MoreBottomSheetViewController: BaseViewController {
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(66)
         }
-        blockBackgroundView.addSubview(self.blockLabel)
-        self.blockLabel.snp.makeConstraints {
+        blockBackgroundView.addSubview(self.blockLabelButton)
+        self.blockLabelButton.snp.makeConstraints {
             $0.center.equalToSuperview()
-        }
-        blockBackgroundView.addSubview(self.blockBackgroundButton)
-        self.blockBackgroundButton.snp.makeConstraints {
-            $0.edges.equalTo(self.blockLabel.snp.edges)
         }
         
         let reportBackgroundView = UIView()
         self.view.addSubview(reportBackgroundView)
         reportBackgroundView.snp.makeConstraints {
             $0.top.equalTo(blockBackgroundView.snp.bottom)
-            $0.bottom.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-21 )
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(66)
         }
-        
-        reportBackgroundView.addSubview(self.reportLabel)
-        self.reportLabel.snp.makeConstraints {
+        reportBackgroundView.addSubview(self.reportLabelButton)
+        self.reportLabelButton.snp.makeConstraints {
             $0.center.equalToSuperview()
-        }
-        reportBackgroundView.addSubview(self.reportBackgroundButton)
-        self.reportBackgroundButton.snp.makeConstraints {
-            $0.edges.equalTo(self.reportLabel.snp.edges)
         }
     }
 }
