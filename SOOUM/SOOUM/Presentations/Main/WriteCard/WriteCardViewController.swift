@@ -146,8 +146,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     isHandleBar: true,
                     neverDismiss: true,
                     maxHeight: 550,
-                    initalHeight: 20 + 34 + 32 + 100 * 2,
-                    completion: nil
+                    initalHeight: 20 + 34 + 32 + 100 * 2
                 )
             }
             .disposed(by: self.disposeBag)
@@ -163,8 +162,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     isHandleBar: true,
                     neverDismiss: true,
                     maxHeight: 550,
-                    initalHeight: 20 + 34 + 32 + 100 * 2,
-                    completion: nil
+                    initalHeight: 20 + 34 + 32 + 100 * 2
                 )
             }
             .disposed(by: self.disposeBag)

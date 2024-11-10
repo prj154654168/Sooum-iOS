@@ -124,7 +124,7 @@ import RxSwift
              .disposed(by: self.disposeBag)
          
          /// navigationPush
-         self.moreButtonBottomSheetViewController.reportBackgroundButton.rx.tap
+         self.moreButtonBottomSheetViewController.reportLabelButton.rx.tap
              .compactMap { _ in reactor.selectedCardIds.last }
              .map(reactor.reactorForReport)
              .subscribe(with: self) { object, reactor in
@@ -265,16 +265,17 @@ extension DetailViewController: UICollectionViewDataSource {
             .subscribe(with: self) { object, _ in
                 
                 if self.detailCard.isOwnCard {
+                    // TODO: api 요청 전 alert 표시
                     /// 자신의 카드일 때 카드 삭제하기
                     object.reactor?.action.onNext(.delete)
                 } else {
                     /// 자신의 카드가 아닐 때 차단/신고하기
-                    var wrapper: SwiftEntryKitViewControllerWrapper = object.moreButtonBottomSheetViewController.sek
-                    wrapper.entryName = Text.moreBottomSheetEntryName
-                    wrapper.showBottomNote(
-                        screenColor: .som.black.withAlphaComponent(0.7),
-                        screenInteraction: .dismiss,
-                        isHandleBar: true
+                    object.presentBottomSheet(
+                        presented: object.moreButtonBottomSheetViewController,
+                        dismissWhenScreenDidTap: true,
+                        isHandleBar: true,
+                        neverDismiss: false,
+                        initalHeight: 178
                     )
                 }
             }
