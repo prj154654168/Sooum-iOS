@@ -118,6 +118,20 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.view.layoutIfNeeded()
     }
     
+    override func bind() {
+        
+        self.backButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                object.dismissBottomSheet(completion: {
+                    object.navigationPop(
+                        animated: true,
+                        bottomBarHidden: object.navigationPopWithBottomBarHidden
+                    )
+                })
+            }
+            .disposed(by: self.disposeBag)
+    }
+    
     
     // MARK: - ReactorKit
     
