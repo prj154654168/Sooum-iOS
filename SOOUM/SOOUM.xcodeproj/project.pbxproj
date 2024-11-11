@@ -46,6 +46,7 @@
 		2A5BB7E42CDCD97300E1C799 /* JoinRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7E22CDCD97300E1C799 /* JoinRequest.swift */; };
 		2A5BB7E72CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */; };
 		2A5BB7E82CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */; };
+		2A5BB7FA2CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */; };
 		2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4122CC944FB0057C013 /* UploadRequest.swift */; };
@@ -332,6 +333,7 @@
 		2A5BB7DF2CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameSettingViewReactor.swift; sourceTree = "<group>"; };
 		2A5BB7E22CDCD97300E1C799 /* JoinRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinRequest.swift; sourceTree = "<group>"; };
 		2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameValidationResponse.swift; sourceTree = "<group>"; };
+		2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSettingViewReactor.swift; sourceTree = "<group>"; };
 		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
 		2ACBD4122CC944FB0057C013 /* UploadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadRequest.swift; sourceTree = "<group>"; };
 		2ACBD4162CC963390057C013 /* DefaultCardImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCardImageResponse.swift; sourceTree = "<group>"; };
@@ -561,6 +563,7 @@
 			isa = PBXGroup;
 			children = (
 				2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */,
+				2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */,
 				2A5BB7DB2CDCBB5C00E1C799 /* Views */,
 			);
 			path = ProfileImageSetting;
@@ -1700,6 +1703,7 @@
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
 				2AE6B15E2CBEB2D800FA5C3C /* ReportResponse.swift in Sources */,
+				2A5BB7FA2CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift in Sources */,
 				38B8A5842CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				38F720A92CD4F15900DF32B5 /* DetailCard.swift in Sources */,
 				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,

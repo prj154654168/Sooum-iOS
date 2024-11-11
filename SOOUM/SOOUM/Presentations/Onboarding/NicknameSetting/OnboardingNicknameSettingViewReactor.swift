@@ -10,6 +10,8 @@ import RxCocoa
 import RxSwift
 
 class OnboardingNicknameSettingViewReactor: Reactor {
+    
+    enum 
 
     enum Action {
         case textChanged(String)
