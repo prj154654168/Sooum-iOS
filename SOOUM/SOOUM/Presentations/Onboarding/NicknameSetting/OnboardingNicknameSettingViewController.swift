@@ -31,7 +31,10 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         // MARK: - Action Binding
         // nicknameTextField의 텍스트가 변경될 때마다 Reactor에 전달
         nicknameTextField.textField.rx.text.orEmpty
-//            .debounce(.milliseconds(300), scheduler: MainScheduler.instance) // 디바운스를 뷰컨트롤러에 적용
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance) // 디바운스 적용
+            .compactMap { str in
+                return str.isEmpty ? nil : str
+            }
             .distinctUntilChanged() // 중복된 텍스트 입력 방지
             .map {
                 print("Reactor.Action.textChanged($0)", $0)
