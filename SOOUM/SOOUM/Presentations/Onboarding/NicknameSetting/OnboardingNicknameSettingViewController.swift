@@ -16,31 +16,86 @@ import SnapKit
 import Then
 
 class OnboardingNicknameSettingViewController: BaseNavigationViewController, View {
+    
+    private let maxCount = 8
 
-    let guideLabelView = OnboardingGuideLabelView().then {
+    private let guideLabelView = OnboardingGuideLabelView().then {
         $0.titleLabel.text = "반가워요!\n당신을 어떻게 부르면 될까요?"
         $0.descLabel.text = "닉네임은 추후 변경이 가능해요"
     }
     
-    let nicknameTextField = OnboardingNicknameTextFieldView()
-    let nextButtonView = PrimaryButtonView()
+    private let nicknameTextField = OnboardingNicknameTextFieldView().then {
+        $0.textField.text = "부끄러운 하마"
+    }
+    
+    private let errorLogStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.spacing = 4
+        $0.alignment = .center
+        
+        let imageView = UIImageView().then {
+            $0.image = .error
+            $0.contentMode = .scaleAspectFit
+        }
+        $0.addArrangedSubviews(imageView)
+        $0.isHidden = true
+    }
+    
+    private let errorLogLabel = UILabel().then {
+        $0.typography = .init(
+            fontContainer: BuiltInFont(
+                size: 14,
+                weight: .regular
+            ),
+            lineHeight: 19.6,
+            letterSpacing: 0
+        )
+        // TODO: - 색 수정 필요
+        $0.textColor = .red
+        $0.text = "한 글자 이상 입력해주세요"
+    }
+    
+    private let nicknameCountLabel = UILabel().then {
+        $0.typography = .init(
+            fontContainer: BuiltInFont(
+                size: 14,
+                weight: .regular
+            ),
+            lineHeight: 19.6,
+            letterSpacing: 0
+        )
+        // TODO: - 색 수정 필요
+        $0.textColor = .som.gray02
+        $0.text = "1/8"
+    }
+    
+    private let nextButtonView = PrimaryButtonView()
     
     // Reactor를 연결하고, 액션과 상태를 바인딩합니다.
     func bind(reactor: OnboardingNicknameSettingViewReactor) {
         
-        // MARK: - Action Binding
-        // nicknameTextField의 텍스트가 변경될 때마다 Reactor에 전달
         nicknameTextField.textField.rx.text.orEmpty
-            .debounce(.milliseconds(300), scheduler: MainScheduler.instance) // 디바운스 적용
-            .compactMap { str in
-                return str.isEmpty ? nil : str
-            }
-            .distinctUntilChanged() // 중복된 텍스트 입력 방지
-            .map {
-                print("Reactor.Action.textChanged($0)", $0)
-                return Reactor.Action.textChanged($0)
-            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] str in
+                guard let self = self else { return }
+                self.nicknameCountLabel.text = "\(str.count)/\(self.maxCount)"
+            })
+            .disposed(by: disposeBag)
+        
+        nicknameTextField.textField.rx.text.orEmpty
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .map { Reactor.Action.textChanged($0) }
             .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        nicknameTextField.clearButtonView.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, _ in
+                object.nicknameCountLabel.text = "0/\(object.maxCount)"
+                object.nicknameTextField.textField.text?.removeAll()
+                object.reactor?.action.onNext(.textChanged(""))
+            }
             .disposed(by: disposeBag)
 
         // MARK: - State Binding
@@ -48,16 +103,14 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         reactor.state
             .map { $0.isNicknameValid ?? false }
             .subscribe(with: self, onNext: { object, isValid in
-                print("$0.isNicknameValid", isValid)
                 object.nextButtonView.updateState(state: isValid)
+                object.errorLogStackView.isHidden = isValid
             })
             .disposed(by: disposeBag)
         
-        // 에러 메시지 표시
         reactor.state
             .map { $0.errorMessage }
             .subscribe(onNext: { [weak self] errorMessage in
-                print("$0.errorMessage", errorMessage)
                 if let message = errorMessage {
                     self?.showErrorAlert(message)
                 }
@@ -78,6 +131,19 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
             $0.top.equalTo(guideLabelView.snp.bottom).offset(24)
+        }
+        
+        view.addSubview(errorLogStackView)
+        errorLogStackView.addArrangedSubview(errorLogLabel)
+        errorLogStackView.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(20)
+            $0.top.equalTo(nicknameTextField.snp.bottom).offset(10)
+        }
+        
+        view.addSubview(nicknameCountLabel)
+        nicknameCountLabel.snp.makeConstraints {
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.top.equalTo(nicknameTextField.snp.bottom).offset(12)
         }
         
         view.addSubview(nextButtonView)

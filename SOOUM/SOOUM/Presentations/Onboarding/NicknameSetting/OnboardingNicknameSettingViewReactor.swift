@@ -61,7 +61,12 @@ class OnboardingNicknameSettingViewReactor: Reactor {
     private func validateNickname(_ nickname: String) -> Observable<Result<(nickname: String, isValid: Bool), Error>> {
         let request: JoinRequest = .validateNickname(nickname: nickname)
         print("\(type(of: self)) - \(#function)", nickname)
-
+        
+        if nickname.isEmpty {
+            // 닉네임이 비어있다면 유효하지 않음을 즉시 반환
+            return Observable.just(.success((nickname: nickname, isValid: false)))
+        }
+        
         return networkManager.request(NicknameValidationResponse.self, request: request)
             .map { response in
                 Result.success((nickname: nickname, isValid: response.isAvailable))
