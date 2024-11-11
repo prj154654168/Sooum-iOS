@@ -28,6 +28,11 @@ class ProfileImageSettingViewController: BaseNavigationViewController {
     
     let passButton = PrimaryButtonView()
     
+    func bind(reactor: ProfileImageSettingViewReactor) {
+        
+    }
+
+    
     override func setupConstraints() {
         view.addSubview(guideLabelView)
         guideLabelView.snp.makeConstraints {
