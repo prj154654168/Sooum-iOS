@@ -263,6 +263,19 @@ class WriteCardViewController: BaseNavigationViewController, View {
             }
             .bind(to: self.writeCardView.relatedTags.rx.models())
             .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isWrite)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                object.dismissBottomSheet(completion: {
+                    object.navigationPop(
+                        animated: true,
+                        bottomBarHidden: object.navigationPopWithBottomBarHidden
+                    )
+                })
+            }
+            .disposed(by: self.disposeBag)
     }
 }
 
