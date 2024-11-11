@@ -11,19 +11,34 @@ import RxSwift
 
 class OnboardingNicknameSettingViewReactor: Reactor {
     
-    enum 
+    enum NicknameState {
+        case vaild
+        case emptyName
+        case invalid
+        
+        var desc: String {
+            switch self {
+            case .vaild:
+                ""
+            case .emptyName:
+                "한 글자 이상 입력해주세요."
+            case .invalid:
+                "부적절한 닉네임입니다."
+            }
+        }
+    }
 
     enum Action {
         case textChanged(String)
     }
 
     enum Mutation {
-        case setNicknameResult(Result<(nickname: String, isValid: Bool), Error>)
+        case setNicknameResult(Result<(nickname: String, isValid: NicknameState), Error>)
     }
 
     struct State {
         var nickname: String = ""
-        var isNicknameValid: Bool?
+        var isNicknameValid: NicknameState?
         var errorMessage: String?
     }
 
@@ -53,25 +68,25 @@ class OnboardingNicknameSettingViewReactor: Reactor {
                 newState.isNicknameValid = isValid
                 newState.errorMessage = nil
             case .failure(let error):
-                newState.isNicknameValid = false
+                newState.isNicknameValid = .invalid
                 newState.errorMessage = error.localizedDescription
             }
         }
         return newState
     }
     
-    private func validateNickname(_ nickname: String) -> Observable<Result<(nickname: String, isValid: Bool), Error>> {
+    private func validateNickname(_ nickname: String) -> Observable<Result<(nickname: String, isValid: NicknameState), Error>> {
         let request: JoinRequest = .validateNickname(nickname: nickname)
         print("\(type(of: self)) - \(#function)", nickname)
         
         if nickname.isEmpty {
             // 닉네임이 비어있다면 유효하지 않음을 즉시 반환
-            return Observable.just(.success((nickname: nickname, isValid: false)))
+            return Observable.just(.success((nickname: nickname, isValid: .emptyName)))
         }
         
         return networkManager.request(NicknameValidationResponse.self, request: request)
             .map { response in
-                Result.success((nickname: nickname, isValid: response.isAvailable))
+                Result.success((nickname: nickname, isValid: response.isAvailable ? .vaild : .invalid))
             }
             .catch { error in
                 Observable.just(Result.failure(error))

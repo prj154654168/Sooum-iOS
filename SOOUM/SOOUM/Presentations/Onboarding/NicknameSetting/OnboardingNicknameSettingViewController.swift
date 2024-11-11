@@ -83,7 +83,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             .disposed(by: disposeBag)
         
         nicknameTextField.textField.rx.text.orEmpty
-            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
             .map { Reactor.Action.textChanged($0) }
             .bind(to: reactor.action)
@@ -101,10 +101,10 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         // MARK: - State Binding
         // 닉네임 유효성 검사 결과에 따라 nextButton의 활성화 상태 업데이트
         reactor.state
-            .map { $0.isNicknameValid ?? false }
+            .map { $0.isNicknameValid ?? OnboardingNicknameSettingViewReactor.NicknameState.invalid }
             .subscribe(with: self, onNext: { object, isValid in
-                object.nextButtonView.updateState(state: isValid)
-                object.errorLogStackView.isHidden = isValid
+                object.nextButtonView.updateState(state: isValid == .vaild)
+                object.errorLogStackView.isHidden = isValid == .vaild
             })
             .disposed(by: disposeBag)
         
