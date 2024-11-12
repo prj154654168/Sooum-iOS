@@ -97,6 +97,16 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
                 object.reactor?.action.onNext(.textChanged(""))
             }
             .disposed(by: disposeBag)
+        
+        nextButtonView.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, _ in
+                let profileImageVC = ProfileImageSettingViewController()
+                let profileImageReactor = ProfileImageSettingViewReactor(nickname: self.nicknameTextField.textField.text!)
+                profileImageVC.reactor = profileImageReactor
+                self.navigationController?.pushViewController(profileImageVC, animated: true)
+            }
+            .disposed(by: disposeBag)
 
         // MARK: - State Binding
         // 닉네임 유효성 검사 결과에 따라 nextButton의 활성화 상태 업데이트

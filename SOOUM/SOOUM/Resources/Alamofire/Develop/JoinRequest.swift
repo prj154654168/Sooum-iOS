@@ -12,17 +12,20 @@ import Alamofire
 enum JoinRequest: BaseRequest {
     
     case validateNickname(nickname: String)
+    case profileImagePresignedURL
     
     var path: String {
         switch self {
         case .validateNickname(let nickname):
             return "/profiles/nickname/\(nickname)/available"
+        case .profileImagePresignedURL:
+            return "/imgs/profiels/upload"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .validateNickname:
+        case .validateNickname, .profileImagePresignedURL:
             return .get
         }
     }
@@ -31,6 +34,8 @@ enum JoinRequest: BaseRequest {
         switch self {
         case .validateNickname:
             return [:]
+        case .profileImagePresignedURL:
+            return [ "extension": "jpeg" ]
         default:
             return [:]
         }
@@ -38,7 +43,7 @@ enum JoinRequest: BaseRequest {
         
     var encoding: ParameterEncoding {
         switch self {
-        case .validateNickname:
+        case .validateNickname, .profileImagePresignedURL:
             return URLEncoding.queryString
         default:
             return URLEncoding.queryString
@@ -49,6 +54,8 @@ enum JoinRequest: BaseRequest {
         switch self {
         case .validateNickname:
             return .none
+        case .profileImagePresignedURL:
+            return .access
         default:
             return .none
         }
