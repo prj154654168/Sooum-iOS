@@ -10,7 +10,10 @@ import ReactorKit
 
 class MainHomeViewReactor: Reactor {
     
+    typealias LoadingWithOffset = (isLoading: Bool, isOffset: Bool)
+    
     enum Action: Equatable {
+        case landing
         case refresh
         case moreFind(lastId: String?, selectedIndex: Int)
         case homeTabBarItemDidTap(index: Int)
@@ -22,7 +25,7 @@ class MainHomeViewReactor: Reactor {
         case more([Card])
         case updateSelectedIndex(Int)
         case updateDistanceFilter(String)
-        case updateIsLoading(Bool)
+        case updateIsLoading(LoadingWithOffset)
         case updateIsProcessing(Bool)
         case updateError(String?)
     }
@@ -31,7 +34,7 @@ class MainHomeViewReactor: Reactor {
         var cards: [Card]
         var selectedIndex: Int
         var distanceFilter: String
-        var isLoading: Bool
+        var isLoading: LoadingWithOffset
         var isProcessing: Bool
         var errorMessage: String?
     }
@@ -40,7 +43,7 @@ class MainHomeViewReactor: Reactor {
         cards: [],
         selectedIndex: 0,
         distanceFilter: "UNDER_1",
-        isLoading: false,
+        isLoading: (isLoading: false, isOffset: false),
         isProcessing: false,
         errorMessage: nil
     )
@@ -54,11 +57,17 @@ class MainHomeViewReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .landing:
+            return .concat([
+                .just(.updateIsLoading((isLoading: true, isOffset: false))),
+                self.refresh(),
+                .just(.updateIsLoading((isLoading: false, isOffset: false)))
+            ])
         case .refresh:
             return .concat([
-                .just(.updateIsLoading(true)),
+                .just(.updateIsLoading((isLoading: true, isOffset: true))),
                 self.refresh(),
-                .just(.updateIsLoading(false))
+                .just(.updateIsLoading((isLoading: false, isOffset: true)))
             ])
         case let .moreFind(lastId, selectedIndex):
             return .concat([
@@ -68,17 +77,17 @@ class MainHomeViewReactor: Reactor {
             ])
         case let .homeTabBarItemDidTap(index):
             return .concat([
-                .just(.updateIsLoading(true)),
+                .just(.updateIsLoading((isLoading: true, isOffset: false))),
                 .just(.updateSelectedIndex(index)),
                 self.refresh(index),
-                .just(.updateIsLoading(false))
+                .just(.updateIsLoading((isLoading: false, isOffset: false)))
             ])
         case let .distanceFilter(distanceFilter):
             return .concat([
-                .just(.updateIsLoading(true)),
+                .just(.updateIsLoading((isLoading: true, isOffset: false))),
                 .just(.updateDistanceFilter(distanceFilter)),
                 self.refresh(2),
-                .just(.updateIsLoading(false))
+                .just(.updateIsLoading((isLoading: false, isOffset: false)))
             ])
         }
     }

@@ -115,11 +115,10 @@ import RxSwift
          }
      }
      
-     
-     // MARK: - Bind
-     
-     func bind(reactor: DetailViewReactor) {
-         /// Navigation pop to root
+     override func bind() {
+         super.bind()
+         
+         // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
                  object.navigationPop(to: MainHomeViewController.self, animated: false)
@@ -128,34 +127,55 @@ import RxSwift
          
          /// navigationPush
          self.moreButtonBottomSheetViewController.reportLabelButton.rx.tap
-             .compactMap { _ in reactor.selectedCardIds.last }
-             .map(reactor.reactorForReport)
-             .subscribe(with: self) { object, reactor in
-                 object.dismissBottomSheet()
-                 let viewController = ReportViewController()
-                 viewController.reactor = reactor
-                 object.navigationPush(viewController, animated: true)
+             .subscribe(with: self) { object, _ in
+                 if let reactor = object.reactor,
+                    let lastId = reactor.selectedCardIds.last {
+                     
+                     object.dismissBottomSheet()
+                     let viewController = ReportViewController()
+                     viewController.reactor = reactor.reactorForReport(lastId)
+                     object.navigationPush(viewController, animated: true)
+                 }
              }
              .disposed(by: self.disposeBag)
+     }
+     
+     
+     // MARK: - Bind
+     
+     func bind(reactor: DetailViewReactor) {
          
-         /// Action
+         // Action
          self.rx.viewWillAppear
-             .map { _ in Reactor.Action.refresh }
+             .map { _ in Reactor.Action.landing }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
          self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
              .withLatestFrom(reactor.state.map(\.isLoading))
-             .filter { $0 == false }
+             .filter { $0.isLoading == false }
              .map { _ in Reactor.Action.refresh }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
-         /// State
-         reactor.state.map(\.isLoading)
-             .distinctUntilChanged()
+         // State
+         let isLoading = reactor.state.map(\.isLoading)
+             .distinctUntilChanged({ $0.isLoading == $1.isLoading })
+             .share()
+         isLoading
+             .filter { $0.isOffset == false }
              .subscribe(with: self.collectionView) { collectionView, isLoading in
-                 if isLoading {
+                 if isLoading.isLoading {
+                     collectionView.refreshControl?.beginRefreshing()
+                 } else {
+                     collectionView.refreshControl?.endRefreshing()
+                 }
+             }
+             .disposed(by: self.disposeBag)
+         isLoading
+             .filter { $0.isOffset }
+             .subscribe(with: self.collectionView) { collectionView, isLoading in
+                 if isLoading.isLoading {
                      collectionView.refreshControl?.beginRefreshingFromTop()
                  } else {
                      collectionView.refreshControl?.endRefreshing()

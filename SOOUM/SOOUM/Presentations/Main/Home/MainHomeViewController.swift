@@ -134,28 +134,32 @@ class MainHomeViewController: BaseNavigationViewController, View {
         }
     }
     
-    
-    // MARK: Bind
-    
-    func bind(reactor: MainHomeViewReactor) {
+    override func bind() {
+        super.bind()
         
-        /// tableView 상단 이동
+        // tableView 상단 이동
         self.moveTopButton.backgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
                 let indexPath = IndexPath(row: 0, section: 0)
                 object.tableView.scrollToRow(at: indexPath, at: .top, animated: false)
             }
             .disposed(by: self.disposeBag)
+    }
+    
+    
+    // MARK: Bind
+    
+    func bind(reactor: MainHomeViewReactor) {
         
-        /// Action
+        // Action
         self.rx.viewDidLoad
-            .map { _ in Reactor.Action.refresh }
+            .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(reactor.state.map(\.isLoading))
-            .filter { $0 == false }
+            .filter { $0.isLoading == false }
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -172,11 +176,24 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        /// State
-        reactor.state.map(\.isLoading)
-            .distinctUntilChanged()
+        // State
+        let isLoading = reactor.state.map(\.isLoading)
+            .distinctUntilChanged({ $0.isLoading == $1.isLoading })
+            .share()
+        isLoading
+            .filter { $0.isOffset == false }
             .subscribe(with: self.tableView) { tableView, isLoading in
-                if isLoading {
+                if isLoading.isLoading {
+                    tableView.refreshControl?.beginRefreshing()
+                } else {
+                    tableView.refreshControl?.endRefreshing()
+                }
+            }
+            .disposed(by: self.disposeBag)
+        isLoading
+            .filter { $0.isOffset }
+            .subscribe(with: self.tableView) { tableView, isLoading in
+                if isLoading.isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()

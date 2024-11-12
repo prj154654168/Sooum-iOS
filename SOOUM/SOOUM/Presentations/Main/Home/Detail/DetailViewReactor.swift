@@ -10,7 +10,10 @@ import ReactorKit
 
 class DetailViewReactor: Reactor {
     
+    typealias LoadingWithOffset = (isLoading: Bool, isOffset: Bool)
+    
     enum Action: Equatable {
+        case landing
         case refresh
         case delete
         case updateLike(Bool)
@@ -22,7 +25,7 @@ class DetailViewReactor: Reactor {
         case cardSummary(CardSummary)
         case updateIsDeleted(Bool)
         case updateLike(Bool)
-        case updateIsLoading(Bool)
+        case updateIsLoading(LoadingWithOffset)
         case updateError(String?)
     }
     
@@ -33,7 +36,7 @@ class DetailViewReactor: Reactor {
         var cardSummary: CardSummary
         var isDeleted: Bool
         var isLike: Bool
-        var isLoading: Bool
+        var isLoading: LoadingWithOffset
         var errorMessage: String?
     }
     
@@ -44,7 +47,7 @@ class DetailViewReactor: Reactor {
         cardSummary: .init(),
         isDeleted: false,
         isLike: false,
-        isLoading: false,
+        isLoading: (isLoading: false, isOffset: false),
         errorMessage: nil
     )
     
@@ -61,9 +64,9 @@ class DetailViewReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .refresh:
+        case .landing:
             return .concat([
-                .just(.updateIsLoading(true)),
+                .just(.updateIsLoading((isLoading: true, isOffset: false))),
                 Observable.zip(
                     self.fetchDetailCard(),
                     self.fetchCommentCards(),
@@ -72,7 +75,20 @@ class DetailViewReactor: Reactor {
                 .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
                     Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
                 },
-                .just(.updateIsLoading(false))
+                .just(.updateIsLoading((isLoading: false, isOffset: false)))
+            ])
+        case .refresh:
+            return .concat([
+                .just(.updateIsLoading((isLoading: true, isOffset: true))),
+                Observable.zip(
+                    self.fetchDetailCard(),
+                    self.fetchCommentCards(),
+                    self.fetchCardSummary()
+                )
+                .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
+                    Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
+                },
+                .just(.updateIsLoading((isLoading: false, isOffset: true)))
             ])
         case .delete:
             guard let id = self.selectedCardIds.last else { return .empty() }
