@@ -63,8 +63,6 @@ class MainHomeViewController: BaseNavigationViewController, View {
     
     var tableViewTopConstraint: Constraint?
     
-    let detailViewController = DetailViewController()
-    
     
     // MARK: - Life Cycles
     
@@ -248,8 +246,9 @@ extension MainHomeViewController: UITableViewDataSource {
      func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
          let selectedId = self.cards[indexPath.row].id
          
-         self.detailViewController.reactor = self.reactor?.reactorForDetail(selectedId)
-         self.navigationPush(self.detailViewController, animated: true)
+         let detailViewController = DetailViewController()
+         detailViewController.reactor = self.reactor?.reactorForDetail(selectedId)
+         self.navigationPush(detailViewController, animated: true)
      }
      
      func tableView(
