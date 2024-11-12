@@ -70,6 +70,10 @@ import RxSwift
          58
      }
      
+     override var navigationPopGestureEnabled: Bool {
+         false
+     }
+     
      var detailCard = DetailCard()
      var prevCard = PrevCard()
      

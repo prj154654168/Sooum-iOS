@@ -23,6 +23,7 @@ class DetailViewReactor: Reactor {
         case updateIsDeleted(Bool)
         case updateLike(Bool)
         case updateIsLoading(Bool)
+        case updateError(String?)
     }
     
     struct State {
@@ -33,6 +34,7 @@ class DetailViewReactor: Reactor {
         var isDeleted: Bool
         var isLike: Bool
         var isLoading: Bool
+        var errorMessage: String?
     }
     
     var initialState: State = .init(
@@ -42,7 +44,8 @@ class DetailViewReactor: Reactor {
         cardSummary: .init(),
         isDeleted: false,
         isLike: false,
-        isLoading: false
+        isLoading: false,
+        errorMessage: nil
     )
     
     private let networkManager = NetworkManager.shared
@@ -103,6 +106,8 @@ class DetailViewReactor: Reactor {
             state.isLike = isLike
         case let .updateIsLoading(isLoading):
             state.isLoading = isLoading
+        case let .updateError(errorMessage):
+            state.errorMessage = errorMessage
         }
         return state
     }
@@ -117,14 +122,19 @@ class DetailViewReactor: Reactor {
             longitude: longitude
         )
         
-        if self.selectedCardIds.count < 2 {
+        switch self.selectedCardIds.count {
+        case ...1:
             return self.networkManager.request(DetailCardResponse.self, request: requset)
                 .map(\.detailCard)
                 .map { .detailCard($0, .init()) }
-        } else {
+                .catch { _ in .just(.updateError("에러발생 비상~~")) }
+        case 2...:
             return self.networkManager.request(DetailCardByCommentResponse.self, request: requset)
                 .map { ($0.detailCard, $0.prevCard) }
                 .map { .detailCard($0, $1) }
+                .catch { _ in .just(.updateError("에러발생 비상~~")) }
+        default:
+            return .just(.updateError("selectedCardIds.count index error"))
         }
     }
     
@@ -140,6 +150,7 @@ class DetailViewReactor: Reactor {
         return self.networkManager.request(CommentCardResponse.self, request: requset)
             .map(\.embedded.commentCards)
             .map { .commentCards($0) }
+            .catch { _ in .just(.updateError("에러발생 비상~~")) }
     }
     
     func fetchCardSummary() -> Observable<Mutation> {
@@ -147,6 +158,7 @@ class DetailViewReactor: Reactor {
         return self.networkManager.request(CardSummaryResponse.self, request: requset)
             .map(\.cardSummary)
             .map { .cardSummary($0) }
+            .catch { _ in .just(.updateError("에러발생 비상~~")) }
     }
 }
 

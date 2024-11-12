@@ -24,6 +24,7 @@ class MainHomeViewReactor: Reactor {
         case updateDistanceFilter(String)
         case updateIsLoading(Bool)
         case updateIsProcessing(Bool)
+        case updateError(String?)
     }
     
     struct State {
@@ -32,6 +33,7 @@ class MainHomeViewReactor: Reactor {
         var distanceFilter: String
         var isLoading: Bool
         var isProcessing: Bool
+        var errorMessage: String?
     }
     
     var initialState: State = .init(
@@ -39,7 +41,8 @@ class MainHomeViewReactor: Reactor {
         selectedIndex: 0,
         distanceFilter: "UNDER_1",
         isLoading: false,
-        isProcessing: false
+        isProcessing: false,
+        errorMessage: nil
     )
     
     private var countPerLoading: Int = 10
@@ -95,6 +98,8 @@ class MainHomeViewReactor: Reactor {
             state.isLoading = isLoading
         case let .updateIsProcessing(isProcessing):
             state.isProcessing = isProcessing
+        case let .updateError(errorMessage):
+            state.errorMessage = errorMessage
         }
         return state
     }
@@ -125,18 +130,24 @@ extension MainHomeViewReactor {
             }
         }
         
-        if selectedIndex == 0 {
+        switch selectedIndex {
+        case 0:
             return self.networkManager.request(LatestCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .cards($0) }
-        } else if selectedIndex == 1 {
+                .catch { _ in .just(.updateError("에러발생 비상~~")) }
+        case 1:
             return self.networkManager.request(PopularCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .cards($0) }
-        } else {
+                .catch { _ in .just(.updateError("에러발생 비상~~")) }
+        case 2:
             return self.networkManager.request(DistanceCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .cards($0) }
+                .catch { _ in .just(.updateError("에러발생 비상~~")) }
+        default:
+            return .just(.updateError("selectedIndex error"))
         }
     }
     
