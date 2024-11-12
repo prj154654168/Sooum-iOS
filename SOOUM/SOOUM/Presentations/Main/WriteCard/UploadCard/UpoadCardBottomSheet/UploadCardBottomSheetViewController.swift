@@ -108,21 +108,33 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         $0.delegate = self
     }
     
-    override func viewDidLoad() {
-        setupConstraints()
-    }
-    
     override func setupConstraints() {
+        
+        self.view.backgroundColor = .som.white
+        
+        let handle = UIView().then {
+            $0.backgroundColor = UIColor(hex: "#B4B4B4")
+            $0.layer.cornerRadius = 8
+        }
+        self.view.addSubview(handle)
+        handle.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(8)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(68)
+            $0.height.equalTo(2)
+        }
+        
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            $0.top.equalTo(handle.snp.bottom).offset(24)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
     }
     
     func bind(reactor: UploadCardBottomSheetViewReactor) {
-        self.rx.viewDidLoad
+        
+        self.rx.viewWillAppear
             .map({ _ in
                 return Reactor.Action.fetchNewDefaultImage
             })
@@ -359,18 +371,18 @@ extension UploadCardBottomSheetViewController {
         config.wordings.crop = "자르기"
         
         let picker = YPImagePicker(configuration: config)
-        picker.didFinishPicking { [unowned picker] items, _ in
+        picker.didFinishPicking { [weak self] items, _ in
             guard let image = items.singlePhoto?.image  else {
                 picker.dismiss(animated: true, completion: nil)
                 return
             }
-            self.selectedMyImage.accept(.init(name: "", image: image))
+            self?.selectedMyImage.accept(.init(name: "", image: image))
             picker.dismiss(animated: true, completion: nil)
             // 이미지 업로드
-            if let reactor = self.reactor {
+            if let reactor = self?.reactor {
                 reactor.action.onNext(.seleteMyImage(image))
             }
-            self.tableView.reloadSections(IndexSet([1]), with: .automatic)
+            self?.tableView.reloadSections(IndexSet([1]), with: .automatic)
         }
         present(picker, animated: true, completion: nil)
     }

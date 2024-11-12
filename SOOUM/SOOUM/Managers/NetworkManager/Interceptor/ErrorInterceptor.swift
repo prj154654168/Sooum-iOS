@@ -45,7 +45,7 @@ class ErrorInterceptor: RequestInterceptor {
     
     func goBackToSignUp() {
         // 로컬 token 초기화
-        AuthManager.shared.initializeAuthInfo()
+        // AuthManager.shared.initializeAuthInfo()
         // TODO: 회원가입 화면으로 전환
     }
 }

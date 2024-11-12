@@ -51,7 +51,7 @@ class SelectFontTableViewCell: UITableViewCell {
 
     let handwritingButtonLabel = UILabel().then {
         $0.typography = .init(
-            fontContainer: BuiltInFont(.school, size: 18, weight: .medium),
+            fontContainer: BuiltInFont(type: .school, size: 18, weight: .bold),
             lineHeight: 18,
             letterSpacing: 0.05
          )

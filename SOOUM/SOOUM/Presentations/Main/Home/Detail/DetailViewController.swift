@@ -8,7 +8,6 @@
 import UIKit
 
 import SnapKit
-import SwiftEntryKit
 import Then
 
 import ReactorKit
@@ -71,6 +70,10 @@ import RxSwift
          58
      }
      
+     override var navigationPopGestureEnabled: Bool {
+         false
+     }
+     
      var detailCard = DetailCard()
      var prevCard = PrevCard()
      
@@ -112,11 +115,10 @@ import RxSwift
          }
      }
      
-     
-     // MARK: - Bind
-     
-     func bind(reactor: DetailViewReactor) {
-         /// Navigation pop to root
+     override func bind() {
+         super.bind()
+         
+         // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
                  object.navigationPop(to: MainHomeViewController.self, animated: false)
@@ -124,35 +126,56 @@ import RxSwift
              .disposed(by: self.disposeBag)
          
          /// navigationPush
-         self.moreButtonBottomSheetViewController.reportBackgroundButton.rx.tap
-             .compactMap { _ in reactor.selectedCardIds.last }
-             .map(reactor.reactorForReport)
-             .subscribe(with: self) { object, reactor in
-                 if SwiftEntryKit.isCurrentlyDisplaying { SwiftEntryKit.dismiss() }
-                 let viewController = ReportViewController()
-                 viewController.reactor = reactor
-                 object.navigationPush(viewController, animated: true)
+         self.moreButtonBottomSheetViewController.reportLabelButton.rx.tap
+             .subscribe(with: self) { object, _ in
+                 if let reactor = object.reactor,
+                    let lastId = reactor.selectedCardIds.last {
+                     
+                     object.dismissBottomSheet()
+                     let viewController = ReportViewController()
+                     viewController.reactor = reactor.reactorForReport(lastId)
+                     object.navigationPush(viewController, animated: true)
+                 }
              }
              .disposed(by: self.disposeBag)
+     }
+     
+     
+     // MARK: - Bind
+     
+     func bind(reactor: DetailViewReactor) {
          
-         /// Action
+         // Action
          self.rx.viewWillAppear
-             .map { _ in Reactor.Action.refresh }
+             .map { _ in Reactor.Action.landing }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
          self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
              .withLatestFrom(reactor.state.map(\.isLoading))
-             .filter { $0 == false }
+             .filter { $0.isLoading == false }
              .map { _ in Reactor.Action.refresh }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
-         /// State
-         reactor.state.map(\.isLoading)
-             .distinctUntilChanged()
+         // State
+         let isLoading = reactor.state.map(\.isLoading)
+             .distinctUntilChanged({ $0.isLoading == $1.isLoading })
+             .share()
+         isLoading
+             .filter { $0.isOffset == false }
              .subscribe(with: self.collectionView) { collectionView, isLoading in
-                 if isLoading {
+                 if isLoading.isLoading {
+                     collectionView.refreshControl?.beginRefreshing()
+                 } else {
+                     collectionView.refreshControl?.endRefreshing()
+                 }
+             }
+             .disposed(by: self.disposeBag)
+         isLoading
+             .filter { $0.isOffset }
+             .subscribe(with: self.collectionView) { collectionView, isLoading in
+                 if isLoading.isLoading {
                      collectionView.refreshControl?.beginRefreshingFromTop()
                  } else {
                      collectionView.refreshControl?.endRefreshing()
@@ -265,16 +288,17 @@ extension DetailViewController: UICollectionViewDataSource {
             .subscribe(with: self) { object, _ in
                 
                 if self.detailCard.isOwnCard {
+                    // TODO: api 요청 전 alert 표시
                     /// 자신의 카드일 때 카드 삭제하기
                     object.reactor?.action.onNext(.delete)
                 } else {
                     /// 자신의 카드가 아닐 때 차단/신고하기
-                    var wrapper: SwiftEntryKitViewControllerWrapper = object.moreButtonBottomSheetViewController.sek
-                    wrapper.entryName = Text.moreBottomSheetEntryName
-                    wrapper.showBottomNote(
-                        screenColor: .som.black.withAlphaComponent(0.7),
-                        screenInteraction: .dismiss,
-                        isHandleBar: true
+                    object.presentBottomSheet(
+                        presented: object.moreButtonBottomSheetViewController,
+                        dismissWhenScreenDidTap: true,
+                        isHandleBar: true,
+                        neverDismiss: false,
+                        initalHeight: 178
                     )
                 }
             }

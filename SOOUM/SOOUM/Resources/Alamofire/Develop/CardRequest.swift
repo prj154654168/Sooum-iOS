@@ -144,18 +144,26 @@ enum CardRequest: BaseRequest {
             imgName,
             feedTags
         ):
-            return [
+            var parameters: [String: Any] = [
                 "isDistanceShared": isDistanceShared,
-                "latitude": latitude,
-                "longitude": longitude,
                 "isPublic": isPublic,
                 "isStory": isStory,
                 "content": content,
                 "font": font,
                 "imgType": imgType,
                 "imgName": imgName,
-                "feedTags": feedTags
             ]
+            
+            if isDistanceShared {
+                parameters.updateValue(latitude, forKey: "latitude")
+                parameters.updateValue(longitude, forKey: "longitude")
+            }
+            
+            if isStory == false {
+                parameters.updateValue(feedTags, forKey: "feedTags")
+            }
+            
+            return parameters
             
         case let .relatedTag(keyword, size):
             return ["keyword": keyword, "size": size]

@@ -30,8 +30,8 @@ class SOMTagModel {
         static let verticalWithoutRemove = Self(
             direction: .vertical,
             lineSpacing: 12,
-            interSpacing: 18,
-            inset: .init(top: 0, left: 20, bottom: 0, right: 20)
+            interSpacing: 12,
+            inset: .zero
         )
     }
     
@@ -87,26 +87,19 @@ extension SOMTagModel {
         let removeButtonWidth: CGFloat = self.isRemovable ? 16 + 8 : 0 /// 버튼 width + spacing
         
         let typography = Self.typography
-        let textWidth: CGFloat = (self.text as NSString).boundingRect(
-            with: .init(width: .infinity, height: typography.lineHeight),
-            options: .usesLineFragmentOrigin,
-            attributes: [.font: typography.font],
-            context: nil
+        let textWidth: CGFloat = (self.text as NSString).size(
+            withAttributes: [.font: typography.font]
         ).width
         
-        var countWidth: CGFloat = 0
+        var countWidth: CGFloat = 0 /// text width + spacing
         if let count = self.count {
-            countWidth = (count as NSString).boundingRect(
-                with: .init(width: .infinity, height: typography.lineHeight),
-                options: .usesLineFragmentOrigin,
-                attributes: [.font: typography.font],
-                context: nil
-            ).width
+            countWidth = (count as NSString).size(withAttributes: [.font: typography.font]).width
+            countWidth += 2
         }
         
-        let traillingOffset: CGFloat = self.configuration.direction == .horizontal ? 16 : 8
+        let traillingOffset: CGFloat = self.configuration.direction == .horizontal ? 16 : 6
         
-        let tagWidth: CGFloat = leadingOffset + ceil(textWidth) + ceil(countWidth) + removeButtonWidth + traillingOffset
+        let tagWidth: CGFloat = leadingOffset + removeButtonWidth + ceil(textWidth) + ceil(countWidth) + traillingOffset
         let tagHeight: CGFloat = self.configuration.direction == .horizontal ? 30 : 32
         return CGSize(width: tagWidth, height: tagHeight)
     }

@@ -12,6 +12,7 @@ class WriteCardViewReactor: Reactor {
     
     enum Action: Equatable {
         case writeCard(
+            isDistanceShared: Bool,
             isPublic: Bool,
             isStory: Bool,
             content: String,
@@ -46,6 +47,7 @@ class WriteCardViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case let .writeCard(
+            isDistanceShared,
             isPublic,
             isStory,
             content,
@@ -54,7 +56,23 @@ class WriteCardViewReactor: Reactor {
             imgName,
             feedTags
         ):
-            return .empty()
+            let coordinate = self.locationManager.coordinate
+            
+            let request: CardRequest = .writeCard(
+                isDistanceShared: isDistanceShared,
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+                isPublic: isPublic,
+                isStory: isStory,
+                content: content,
+                font: font,
+                imgType: imgType,
+                imgName: imgName,
+                feedTags: feedTags
+            )
+            
+            return self.networkManager.request(Status.self, request: request)
+                .map { .writeCard($0.httpCode == 201) }
         case let .relatedTags(keyword):
             
             let request: CardRequest = .relatedTag(keyword: keyword, size: 5)
@@ -73,5 +91,12 @@ class WriteCardViewReactor: Reactor {
             state.relatedTags = relatedTags
         }
         return state
+    }
+}
+
+extension WriteCardViewReactor {
+    
+    func reactorForUploadCard() -> UploadCardBottomSheetViewReactor {
+        UploadCardBottomSheetViewReactor.init()
     }
 }

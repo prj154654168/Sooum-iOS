@@ -25,7 +25,6 @@ class MainTabBarController: SOMTabBarController, View {
     }
     
     let mainHomeViewController = MainHomeViewController()
-    
     let writeCardViewController = WriteCardViewController()
     
     var disposeBag = DisposeBag()
@@ -51,7 +50,6 @@ class MainTabBarController: SOMTabBarController, View {
             selectedImage: nil
         )
         
-        self.writeCardViewController.reactor = reactor.reactorForWriteCard()
         self.writeCardViewController.tabBarItem = .init(
             title: Text.addCardTitle,
             image: .init(.icon(.outlined(.addCard))),
@@ -86,9 +84,11 @@ class MainTabBarController: SOMTabBarController, View {
 extension MainTabBarController: SOMTabBarControllerDelegate {
     
     func tabBarController(_ tabBarController: SOMTabBarController, didSelect viewController: UIViewController) {
-        
         guard viewController == self.writeCardViewController else { return }
-        self.navigationPush(self.writeCardViewController, animated: true)
+        
+        let viewController = WriteCardViewController()
+        viewController.reactor = self.reactor?.reactorForWriteCard()
+        self.navigationPush(viewController, animated: true)
     }
 }
 

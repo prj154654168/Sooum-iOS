@@ -23,6 +23,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let wirteButtonTitle: String = "작성하기"
         static let wirteTagPlacholder: String = "#태그를 입력해주세요!"
         static let relatedTagsTitle: String = "#관련태그"
+        
+        static let uploadCardBottomSheetEntryName: String = "uploadCardBottomSheetViewController"
     }
     
     let timeLimitBackgroundView = UIView().then {
@@ -65,6 +67,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
     override var navigationBarHeight: CGFloat {
         58
     }
+    
+    let uploadCardBottomSheetViewController = UploadCardBottomSheetViewController()
     
     var writtenTagModels = [SOMTagModel]()
     
@@ -114,12 +118,76 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.view.layoutIfNeeded()
     }
     
+    override func bind() {
+        
+        self.backButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                object.dismissBottomSheet(completion: {
+                    object.navigationPop(
+                        animated: true,
+                        bottomBarHidden: object.navigationPopWithBottomBarHidden
+                    )
+                })
+            }
+            .disposed(by: self.disposeBag)
+        
+        self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
+    }
+    
     
     // MARK: - ReactorKit
     
     func bind(reactor: WriteCardViewReactor) {
         
-        /// Set tags
+        // Life Cycle
+        self.rx.viewWillAppear
+            .subscribe(with: self) { object, _ in
+                object.presentBottomSheet(
+                    presented: object.uploadCardBottomSheetViewController,
+                    isHandleBar: true,
+                    neverDismiss: true,
+                    maxHeight: 550,
+                    initalHeight: 20 + 34 + 32 + 100 * 2
+                )
+            }
+            .disposed(by: self.disposeBag)
+        
+        // Keyboard, bottomSheet interaction
+        RxKeyboard.instance.isHidden
+            .distinctUntilChanged()
+            .filter { $0 }
+            .drive(with: self) { object, _ in
+                object.presentBottomSheet(
+                    presented: object.uploadCardBottomSheetViewController,
+                    isHandleBar: true,
+                    neverDismiss: true,
+                    maxHeight: 550,
+                    initalHeight: 20 + 34 + 32 + 100 * 2
+                )
+            }
+            .disposed(by: self.disposeBag)
+        
+        RxKeyboard.instance.willShowVisibleHeight
+            .drive(with: self) { objcet, _ in
+                objcet.dismissBottomSheet()
+            }
+            .disposed(by: self.disposeBag)
+        
+        // Update image for textView
+        self.uploadCardBottomSheetViewController.bottomSheetImageSelected
+            .distinctUntilChanged()
+            .bind(to: self.writeCardView.writeCardTextView.rx.image)
+            .disposed(by: self.disposeBag)
+        
+        // Update time limit view
+        self.uploadCardBottomSheetViewController.bottomSheetOptionState
+            .compactMap { $0[.timeLimit] }
+            .distinctUntilChanged()
+            .map { !$0 }
+            .bind(to: self.timeLimitBackgroundView.rx.isHidden)
+            .disposed(by: self.disposeBag)
+        
+        // Set tags
         let writtenTagText = self.writeCardView.writeTagTextField.rx.text.orEmpty.distinctUntilChanged().share()
         self.writeCardView.writeTagTextField.addTagButton.rx.tap
             .withLatestFrom(writtenTagText)
@@ -133,7 +201,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     isRemovable: true,
                     configuration: .horizontalWithRemove
                 )
-                object.writtenTagModels.insert(toModel, at: 0)
+                object.writtenTagModels.append(toModel)
                 object.writeCardView.writtenTags.snp.updateConstraints {
                     $0.height.equalTo(58)
                 }
@@ -152,15 +220,44 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        let optionState = self.uploadCardBottomSheetViewController.bottomSheetOptionState.distinctUntilChanged().share()
+        let imageName = self.uploadCardBottomSheetViewController.bottomSheetImageNameSeleted.distinctUntilChanged().share()
+        let imageType = imageName.map { $0.count < 14 ? "DEFAULT" : "USER" }
+        let font = self.uploadCardBottomSheetViewController.bottomSheetFontState.map { $0 == .gothic ? Font.pretendard : Font.school }
+        let content = self.writeCardView.writeCardTextView.rx.text.orEmpty.distinctUntilChanged().share()
+        
+        self.writeButton.rx.tap
+            .withLatestFrom(Observable.combineLatest(optionState, imageName, imageType, font, content))
+            .subscribe(onNext: { [weak self] optionState, imageName, imageType, font, content in
+                let feedTags = self?.writtenTagModels.map { $0.originalText }
+                reactor.action.onNext(
+                    .writeCard(
+                        isDistanceShared: optionState[.distanceLimit] ?? false,
+                        isPublic: optionState[.privateCard] ?? false,
+                        isStory: optionState[.timeLimit] ?? false,
+                        content: content,
+                        font: font.rawValue,
+                        imgType: imageType,
+                        imgName: imageName,
+                        feedTags: feedTags ?? []
+                    )
+                )
+            })
+            .disposed(by: self.disposeBag)
+        
         /// State
-        reactor.state.map(\.relatedTags)
-            .distinctUntilChanged()
+        let relatedTags = reactor.state.map(\.relatedTags).distinctUntilChanged().share()
+        relatedTags
+            .map { $0.isEmpty }
+            .bind(to: self.writeCardView.relatedTagsBackgroundView.rx.isHidden)
+            .disposed(by: self.disposeBag)
+        relatedTags
             .map { relatedTags in
                 let toModels: [SOMTagModel] = relatedTags.map { relatedTag in
                     let toModel: SOMTagModel = .init(
                         id: UUID().uuidString,
                         originalText: relatedTag.content,
-                        count: "\(relatedTag.count)",
+                        count: "0\(relatedTag.count)",
                         isRemovable: false,
                         configuration: .verticalWithoutRemove
                     )
@@ -169,6 +266,19 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 return toModels
             }
             .bind(to: self.writeCardView.relatedTags.rx.models())
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isWrite)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                object.dismissBottomSheet(completion: {
+                    object.navigationPop(
+                        animated: true,
+                        bottomBarHidden: object.navigationPopWithBottomBarHidden
+                    )
+                })
+            }
             .disposed(by: self.disposeBag)
     }
 }

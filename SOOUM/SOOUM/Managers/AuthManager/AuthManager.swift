@@ -155,7 +155,9 @@ class AuthManager: AuthManagerDelegate {
      */
     func reAuthenticate(_ accessToken: String, _ completion: @escaping (AuthResult) -> Void) {
         
-        guard self.authInfo.token.refreshToken.isEmpty == false else {
+        let authInfo = self.authInfo
+        
+        guard authInfo.token.refreshToken.isEmpty == false else {
             let error = NSError(
                 domain: "SOOUM",
                 code: -99,
@@ -165,7 +167,7 @@ class AuthManager: AuthManagerDelegate {
             return
         }
         
-        guard self.isReAuthenticating == false, accessToken == self.authInfo.token.accessToken else {
+        guard self.isReAuthenticating == false, accessToken == authInfo.token.accessToken else {
             completion(.success)
             return
         }
@@ -191,7 +193,7 @@ class AuthManager: AuthManagerDelegate {
                         object.updateTokens(
                             .init(
                                 accessToken: accessToken,
-                                refreshToken: self.authInfo.token.refreshToken
+                                refreshToken: authInfo.token.refreshToken
                             )
                         )
                         completion(.success)
@@ -228,6 +230,6 @@ class AuthManager: AuthManagerDelegate {
     }
     
     func authPayloadByRefresh() -> [String: String] {
-        return ["Authorization-refresh": "Bearer \(self.authInfo.token.refreshToken)"]
+        return ["Authorization": "Bearer \(self.authInfo.token.refreshToken)"]
     }
 }

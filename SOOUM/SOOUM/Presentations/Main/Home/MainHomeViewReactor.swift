@@ -10,7 +10,10 @@ import ReactorKit
 
 class MainHomeViewReactor: Reactor {
     
+    typealias LoadingWithOffset = (isLoading: Bool, isOffset: Bool)
+    
     enum Action: Equatable {
+        case landing
         case refresh
         case moreFind(lastId: String?, selectedIndex: Int)
         case homeTabBarItemDidTap(index: Int)
@@ -22,24 +25,27 @@ class MainHomeViewReactor: Reactor {
         case more([Card])
         case updateSelectedIndex(Int)
         case updateDistanceFilter(String)
-        case updateIsLoading(Bool)
+        case updateIsLoading(LoadingWithOffset)
         case updateIsProcessing(Bool)
+        case updateError(String?)
     }
     
     struct State {
         var cards: [Card]
         var selectedIndex: Int
         var distanceFilter: String
-        var isLoading: Bool
+        var isLoading: LoadingWithOffset
         var isProcessing: Bool
+        var errorMessage: String?
     }
     
     var initialState: State = .init(
         cards: [],
         selectedIndex: 0,
         distanceFilter: "UNDER_1",
-        isLoading: false,
-        isProcessing: false
+        isLoading: (isLoading: false, isOffset: false),
+        isProcessing: false,
+        errorMessage: nil
     )
     
     private var countPerLoading: Int = 10
@@ -51,11 +57,17 @@ class MainHomeViewReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .landing:
+            return .concat([
+                .just(.updateIsLoading((isLoading: true, isOffset: false))),
+                self.refresh(),
+                .just(.updateIsLoading((isLoading: false, isOffset: false)))
+            ])
         case .refresh:
             return .concat([
-                .just(.updateIsLoading(true)),
+                .just(.updateIsLoading((isLoading: true, isOffset: true))),
                 self.refresh(),
-                .just(.updateIsLoading(false))
+                .just(.updateIsLoading((isLoading: false, isOffset: true)))
             ])
         case let .moreFind(lastId, selectedIndex):
             return .concat([
@@ -65,17 +77,17 @@ class MainHomeViewReactor: Reactor {
             ])
         case let .homeTabBarItemDidTap(index):
             return .concat([
-                .just(.updateIsLoading(true)),
+                .just(.updateIsLoading((isLoading: true, isOffset: false))),
                 .just(.updateSelectedIndex(index)),
                 self.refresh(index),
-                .just(.updateIsLoading(false))
+                .just(.updateIsLoading((isLoading: false, isOffset: false)))
             ])
         case let .distanceFilter(distanceFilter):
             return .concat([
-                .just(.updateIsLoading(true)),
+                .just(.updateIsLoading((isLoading: true, isOffset: false))),
                 .just(.updateDistanceFilter(distanceFilter)),
                 self.refresh(2),
-                .just(.updateIsLoading(false))
+                .just(.updateIsLoading((isLoading: false, isOffset: false)))
             ])
         }
     }
@@ -95,6 +107,8 @@ class MainHomeViewReactor: Reactor {
             state.isLoading = isLoading
         case let .updateIsProcessing(isProcessing):
             state.isProcessing = isProcessing
+        case let .updateError(errorMessage):
+            state.errorMessage = errorMessage
         }
         return state
     }
@@ -125,18 +139,24 @@ extension MainHomeViewReactor {
             }
         }
         
-        if selectedIndex == 0 {
+        switch selectedIndex {
+        case 0:
             return self.networkManager.request(LatestCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .cards($0) }
-        } else if selectedIndex == 1 {
+                .catch { _ in .just(.updateError("에러발생 비상~~")) }
+        case 1:
             return self.networkManager.request(PopularCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .cards($0) }
-        } else {
+                .catch { _ in .just(.updateError("에러발생 비상~~")) }
+        case 2:
             return self.networkManager.request(DistanceCardResponse.self, request: request)
                 .map(\.embedded.cards)
                 .map { .cards($0) }
+                .catch { _ in .just(.updateError("에러발생 비상~~")) }
+        default:
+            return .just(.updateError("selectedIndex error"))
         }
     }
     
