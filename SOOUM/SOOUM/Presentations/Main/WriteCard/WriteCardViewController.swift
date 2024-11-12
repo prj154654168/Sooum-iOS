@@ -130,6 +130,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 })
             }
             .disposed(by: self.disposeBag)
+        
+        self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
     }
     
     
@@ -140,7 +142,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
         // Life Cycle
         self.rx.viewWillAppear
             .subscribe(with: self) { object, _ in
-                object.uploadCardBottomSheetViewController.reactor = reactor.reactorForUploadCard()
                 object.presentBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
                     isHandleBar: true,
@@ -156,7 +157,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .filter { $0 }
             .drive(with: self) { object, _ in
-                object.uploadCardBottomSheetViewController.reactor = reactor.reactorForUploadCard()
                 object.presentBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
                     isHandleBar: true,
@@ -246,14 +246,18 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         /// State
-        reactor.state.map(\.relatedTags)
-            .distinctUntilChanged()
+        let relatedTags = reactor.state.map(\.relatedTags).distinctUntilChanged().share()
+        relatedTags
+            .map { $0.isEmpty }
+            .bind(to: self.writeCardView.relatedTagsBackgroundView.rx.isHidden)
+            .disposed(by: self.disposeBag)
+        relatedTags
             .map { relatedTags in
                 let toModels: [SOMTagModel] = relatedTags.map { relatedTag in
                     let toModel: SOMTagModel = .init(
                         id: UUID().uuidString,
                         originalText: relatedTag.content,
-                        count: "\(relatedTag.count)",
+                        count: "0\(relatedTag.count)",
                         isRemovable: false,
                         configuration: .verticalWithoutRemove
                     )

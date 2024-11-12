@@ -35,12 +35,14 @@ class SOMTag: UICollectionViewCell {
     }
     
     private let label = UILabel().then {
-        $0.textColor = .som.gray500
+        $0.textColor = .som.gray600
         $0.typography = .som.body2WithRegular
     }
     
+    var removeButtonLeadingConstraint: Constraint?
     var removeButtonWidthConstraint: Constraint?
     var betweenSpacing: Constraint?
+    var labelTrailingConstraint: Constraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -53,6 +55,7 @@ class SOMTag: UICollectionViewCell {
     
     private func setupConstraints() {
         
+        self.contentView.layer.borderColor = UIColor.som.gray200.cgColor
         self.contentView.layer.borderWidth = 0.8
         self.contentView.layer.cornerRadius = 4
         self.contentView.clipsToBounds = true
@@ -60,7 +63,7 @@ class SOMTag: UICollectionViewCell {
         self.contentView.addSubview(self.removeButton)
         self.removeButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(16)
+            self.removeButtonLeadingConstraint = $0.leading.equalToSuperview().offset(16).constraint
             self.removeButtonWidthConstraint = $0.width.equalTo(16).constraint
             $0.height.equalTo(16)
         }
@@ -69,7 +72,8 @@ class SOMTag: UICollectionViewCell {
         self.label.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             self.betweenSpacing = $0.leading.equalTo(self.removeButton.snp.trailing).offset(8).constraint
-            $0.trailing.equalToSuperview().offset(-16)
+            self.labelTrailingConstraint = $0.trailing.equalToSuperview().offset(-16).constraint
+            $0.height.equalTo(20)
         }
     }
     
@@ -81,26 +85,34 @@ class SOMTag: UICollectionViewCell {
     
     private func updateBackground(direction: UICollectionView.ScrollDirection) {
         
-        self.contentView.backgroundColor = direction == .horizontal ? .som.gray200 : .white
-        self.contentView.layer.borderColor = direction == .horizontal ? UIColor.som.gray200.cgColor : UIColor.som.gray200.cgColor
+        self.contentView.backgroundColor = direction == .horizontal ? .som.gray200 : .clear
     }
     
     func setModel(_ model: SOMTagModel) {
         
         self.model = model
         if let count = model.count {
+            let typography = Typography.som.body2WithRegular
             let string = model.text + " \(count)"
-            let attributedString = NSMutableAttributedString(string: string).then {
+            let attributedString = NSMutableAttributedString(
+                string: string,
+                attributes: typography.attributes
+            ).then {
                 let textColor = UIColor.som.p300
-                let range = (count as NSString).range(of: model.text)
-                $0.addAttributes([.foregroundColor: textColor], range: range)
+                let range = (string as NSString).range(of: count)
+                $0.addAttribute(.foregroundColor, value: textColor, range: range)
             }
             self.label.attributedText = attributedString
         } else {
             self.label.text = model.text
         }
-        self.updateBackground(direction: model.configuration.direction)
+        
+        let isHorizontal = model.configuration.direction == .horizontal
+        self.contentView.backgroundColor = isHorizontal ? .som.gray200 : .clear
+        
+        self.removeButtonLeadingConstraint?.update(offset: isHorizontal ? 16 : 10)
         self.removeButtonWidthConstraint?.update(offset: model.isRemovable ? 16 : 0)
         self.betweenSpacing?.update(offset: model.isRemovable ? 8 : 0)
+        self.labelTrailingConstraint?.update(offset: isHorizontal ? -16 : -6)
     }
 }
