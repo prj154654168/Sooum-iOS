@@ -131,7 +131,7 @@ class SOMTags: UIView {
                 
                 if !insertedIndices.isEmpty {
                     self.collectionView.insertItems(at: insertedIndices)
-                    inserted.forEach { self.models.insert($0, at: 0) }
+                    inserted.forEach { self.models.append($0) }
                 }
             } completion: { _ in
                 if self.collectionView.numberOfItems(inSection: 0) != self.models.count {

@@ -201,7 +201,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     isRemovable: true,
                     configuration: .horizontalWithRemove
                 )
-                object.writtenTagModels.insert(toModel, at: 0)
+                object.writtenTagModels.append(toModel)
                 object.writeCardView.writtenTags.snp.updateConstraints {
                     $0.height.equalTo(58)
                 }
