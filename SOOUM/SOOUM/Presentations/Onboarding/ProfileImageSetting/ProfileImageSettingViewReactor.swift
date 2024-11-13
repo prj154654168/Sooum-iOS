@@ -17,13 +17,16 @@ class ProfileImageSettingViewReactor: Reactor {
     
     enum Action {
         case imageChanged(image: UIImage)
+        case registerUser
     }
     
     enum Mutation {
         case uploadImageResult(Result<Void, Error>)
+        case registerUser(Result<Void, Error>)
     }
     
     struct State {
+        var imageUploaded = false
         var shouldNavigate = false
     }
     
@@ -42,6 +45,8 @@ class ProfileImageSettingViewReactor: Reactor {
         switch action {
         case .imageChanged(let image):
             return registerProfileImage(image)
+        case .registerUser:
+            return registerUser(userName: nickname, imageName: imageName ?? "")
         }
     }
     
@@ -49,6 +54,10 @@ class ProfileImageSettingViewReactor: Reactor {
         var newState = state
         switch mutation {
         case .uploadImageResult(let result):
+            // TODO: - 로딩뷰 삭제
+            break
+            
+        case .registerUser(let result):
             switch result {
             case .success:
                 newState.shouldNavigate = true
@@ -113,5 +122,18 @@ class ProfileImageSettingViewReactor: Reactor {
                 }
             return Disposables.create()
         }
+    }
+    
+    private func registerUser(userName: String, imageName: String) -> Observable<Mutation> {
+        let request: JoinRequest = .registerUser(userName: userName, imageName: imageName)
+        
+        return NetworkManager.shared.request(RegisterUserResponse.self, request: request)
+            .map { _ in
+                print("\(type(of: self)) - \(#function) 성공")
+                return Mutation.registerUser(.success(()))
+            }
+            .catch { error in
+                Observable.just(Mutation.registerUser(.failure(error)))
+            }
     }
 }

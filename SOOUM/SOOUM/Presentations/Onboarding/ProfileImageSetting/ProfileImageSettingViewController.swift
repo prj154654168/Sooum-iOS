@@ -45,22 +45,37 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
 
         okButton.rx.tapGesture()
             .when(.recognized)
-            .subscribe(with: self) { object, _ in
-                if object.okButton.isEnabled {
-                    let viewController = MainTabBarController()
-                    viewController.reactor = MainTabBarReactor()
-                    let navigationController = UINavigationController(
-                        rootViewController: viewController
-                    )
-                    object.view.window?.rootViewController = navigationController
-                }
+            .compactMap { _ in
+                self.okButton.isEnabled ? Reactor.Action.registerUser : nil
             }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+
+        passButton.rx.tapGesture()
+            .when(.recognized)
+            .asObservable()
+            .map { _ in
+                Reactor.Action.registerUser
+            }
+            .bind(to: reactor.action)
             .disposed(by: disposeBag)
 
         reactor.state.map(\.shouldNavigate)
             .distinctUntilChanged()
             .subscribe(with: self) { object, shouldNavigate in
-                // TODO: - 다음화면 보이기
+                let viewController = MainTabBarController()
+                viewController.reactor = MainTabBarReactor()
+                let navigationController = UINavigationController(
+                    rootViewController: viewController
+                )
+                object.view.window?.rootViewController = navigationController
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state.map(\.imageUploaded)
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, imageUploaded in
+                object.okButton.updateState(state: imageUploaded)
             }
             .disposed(by: disposeBag)
     }

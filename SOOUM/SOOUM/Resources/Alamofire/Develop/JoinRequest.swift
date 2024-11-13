@@ -13,6 +13,7 @@ enum JoinRequest: BaseRequest {
     
     case validateNickname(nickname: String)
     case profileImagePresignedURL
+    case registerUser(userName: String, imageName: String)
     
     var path: String {
         switch self {
@@ -20,6 +21,8 @@ enum JoinRequest: BaseRequest {
             return "/profiles/nickname/\(nickname)/available"
         case .profileImagePresignedURL:
             return "/imgs/profiles/upload"
+        case .registerUser:
+            return "/profiles"
         }
     }
     
@@ -27,6 +30,8 @@ enum JoinRequest: BaseRequest {
         switch self {
         case .validateNickname, .profileImagePresignedURL:
             return .get
+        case .registerUser:
+            return .post
         }
     }
     
@@ -36,8 +41,11 @@ enum JoinRequest: BaseRequest {
             return [:]
         case .profileImagePresignedURL:
             return [ "extension": "JPEG" ]
-        default:
-            return [:]
+        case .registerUser(let nickname, let profileImg):
+            return [
+                "nickname": nickname,
+                "profileImg": profileImg
+            ]
         }
     }
         
@@ -45,8 +53,8 @@ enum JoinRequest: BaseRequest {
         switch self {
         case .validateNickname, .profileImagePresignedURL:
             return URLEncoding.queryString
-        default:
-            return URLEncoding.queryString
+        case .registerUser:
+            return JSONEncoding.default
         }
     }
     
@@ -54,10 +62,8 @@ enum JoinRequest: BaseRequest {
         switch self {
         case .validateNickname:
             return .none
-        case .profileImagePresignedURL:
+        case .profileImagePresignedURL, .registerUser:
             return .access
-        default:
-            return .none
         }
     }
         
