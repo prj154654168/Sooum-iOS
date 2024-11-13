@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Alamofire
+
 // MARK: - PresignedStorageResponse
 struct PresignedStorageResponse: Codable {
     let imgName: String
@@ -19,4 +21,8 @@ struct PresignedStorageResponse: Codable {
     }
 }
 
-
+extension PresignedStorageResponse: EmptyResponse {
+    static func emptyValue() -> PresignedStorageResponse {
+        PresignedStorageResponse.init(imgName: "", url: .init(href: ""), status: .init())
+    }
+}
