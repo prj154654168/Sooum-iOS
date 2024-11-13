@@ -75,6 +75,7 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
         reactor.state.map(\.imageUploaded)
             .distinctUntilChanged()
             .subscribe(with: self) { object, imageUploaded in
+                print("reactor.state.map(imageUploaded), ", imageUploaded)
                 object.okButton.updateState(state: imageUploaded)
             }
             .disposed(by: disposeBag)

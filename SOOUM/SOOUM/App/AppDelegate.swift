@@ -16,9 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        AuthKeyChain.shared.delete(.accessToken)
+        AuthKeyChain.shared.delete(.deviceId)
+        AuthKeyChain.shared.delete(.refreshToken)
         return true
     }
-
+    
     // MARK: UISceneSession Lifecycle
 
     func application(

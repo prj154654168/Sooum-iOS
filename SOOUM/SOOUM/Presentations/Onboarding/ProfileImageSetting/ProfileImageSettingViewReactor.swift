@@ -54,8 +54,8 @@ class ProfileImageSettingViewReactor: Reactor {
         var newState = state
         switch mutation {
         case .uploadImageResult(let result):
-            // TODO: - 로딩뷰 삭제
-            break
+            // TODO: - 로딩뷰 삭제 로직 추가
+            newState.imageUploaded = true
             
         case .registerUser(let result):
             switch result {
