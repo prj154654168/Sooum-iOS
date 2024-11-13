@@ -292,7 +292,7 @@ extension DetailViewController: UICollectionViewDataSource {
             .subscribe(with: self) { object, _ in
                 
                 if self.detailCard.isOwnCard {
-                    
+                    /// 자신의 카드일 때 카드 삭제하기
                     let presented = SOMDialogViewController()
                     presented.setData(
                         title: Text.dialogTitle,
@@ -300,10 +300,7 @@ extension DetailViewController: UICollectionViewDataSource {
                         leftAction: .init(mode: .cancel, handler: { object.dismiss(animated: true) }),
                         rightAction: .init(
                             mode: .delete,
-                            handler: {
-                                /// 자신의 카드일 때 카드 삭제하기
-                                object.reactor?.action.onNext(.delete)
-                            }
+                            handler: { object.reactor?.action.onNext(.delete) }
                         ),
                         dimViewAction: nil
                     )
@@ -358,11 +355,12 @@ extension DetailViewController: UICollectionViewDataSource {
                 .disposed(by: footer.disposeBag)
             
             footer.likeAndCommentView.likeBackgroundButton.rx.tap
-                .withLatestFrom(reactor.state.map(\.isLike))
+                .withLatestFrom(reactor.state.map(\.cardSummary.isLiked))
                 .subscribe(onNext: { isLike in
-                    reactor.action.onNext(.updateLike(isLike))
+                    reactor.action.onNext(.updateLike(!isLike))
                 })
                 .disposed(by: footer.disposeBag)
+            
             return footer
         } else {
             return .init(frame: .zero)
