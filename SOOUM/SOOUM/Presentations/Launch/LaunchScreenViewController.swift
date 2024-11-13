@@ -67,7 +67,7 @@ class LaunchScreenViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
 
         // 1. 애니메이션 완료 이벤트
-        // 2. 로그인/회원가입 성공 시 홈 화면으로 전환
+        // 2. 로그인 성공 시 홈 화면으로 전환
         self.animationCompleted
             .distinctUntilChanged()
             .withLatestFrom(
@@ -78,6 +78,23 @@ class LaunchScreenViewController: BaseViewController, View {
             .subscribe(with: self) { object, _ in
                 let viewController = MainTabBarController()
                 viewController.reactor = reactor.reactorForMainTabBar()
+                let navigationController = UINavigationController(
+                    rootViewController: viewController
+                )
+                object.view.window?.rootViewController = navigationController
+            }
+            .disposed(by: self.disposeBag)
+        
+        // 3. 로그인 실패 시 온보딩 화면으로 전환
+        self.animationCompleted
+            .distinctUntilChanged()
+            .withLatestFrom(
+                reactor.state.map(\.isRegistered).distinctUntilChanged(),
+                resultSelector: { $0 && $1 }
+            )
+            .filter { $0 == false }
+            .subscribe(with: self) { object, _ in
+                let viewController = OnboardingViewController()
                 let navigationController = UINavigationController(
                     rootViewController: viewController
                 )
