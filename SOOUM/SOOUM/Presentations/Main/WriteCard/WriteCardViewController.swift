@@ -25,6 +25,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let relatedTagsTitle: String = "#관련태그"
         
         static let uploadCardBottomSheetEntryName: String = "uploadCardBottomSheetViewController"
+        
+        static let dialogTitle: String = "카드를 작성할까요?"
+        static let dialogSubTitle: String = "추가한 카드는 수정할 수 없어요"
     }
     
     let timeLimitBackgroundView = UIView().then {
@@ -229,19 +232,41 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.writeButton.rx.tap
             .withLatestFrom(Observable.combineLatest(optionState, imageName, imageType, font, content))
             .subscribe(onNext: { [weak self] optionState, imageName, imageType, font, content in
-                let feedTags = self?.writtenTagModels.map { $0.originalText }
-                reactor.action.onNext(
-                    .writeCard(
-                        isDistanceShared: optionState[.distanceLimit] ?? false,
-                        isPublic: optionState[.privateCard] ?? false,
-                        isStory: optionState[.timeLimit] ?? false,
-                        content: content,
-                        font: font.rawValue,
-                        imgType: imageType,
-                        imgName: imageName,
-                        feedTags: feedTags ?? []
-                    )
+                
+                let presented = SOMDialogViewController()
+                presented.setData(
+                    title: Text.dialogTitle,
+                    subTitle: Text.dialogSubTitle,
+                    leftAction: .init(mode: .cancel, handler: { self?.dismiss(animated: true) }),
+                    rightAction: .init(
+                        mode: .ok,
+                        handler: {
+                            
+                            let feedTags = self?.writtenTagModels.map { $0.originalText }
+                            reactor.action.onNext(
+                                .writeCard(
+                                    isDistanceShared: optionState[.distanceLimit] ?? false,
+                                    isPublic: optionState[.privateCard] ?? false,
+                                    isStory: optionState[.timeLimit] ?? false,
+                                    content: content,
+                                    font: font.rawValue,
+                                    imgType: imageType,
+                                    imgName: imageName,
+                                    feedTags: feedTags ?? []
+                                )
+                            )
+                            
+                            self?.dismiss(animated: true)
+                        }
+                    ),
+                    dimViewAction: nil
                 )
+                presented.modalPresentationStyle = .custom
+                presented.modalTransitionStyle = .crossDissolve
+                
+                self?.dismissBottomSheet(completion: {
+                    self?.present(presented, animated: true)
+                })
             })
             .disposed(by: self.disposeBag)
         

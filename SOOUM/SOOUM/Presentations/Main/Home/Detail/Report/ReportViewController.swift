@@ -95,7 +95,22 @@ class ReportViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isDialogPresented)
             .distinctUntilChanged()
             .subscribe(with: self) { object, state in
-               // TODO: alert
+                
+                let presented = SOMDialogViewController()
+                presented.setData(
+                    title: "신고가 접수 되었어요",
+                    subTitle: "신고 내용을 확인한 후 조치할 예정이에요",
+                    leftAction: nil,
+                    rightAction: .init(
+                        mode: .ok,
+                        handler: { object.dismiss(animated: false) }
+                    ),
+                    dimViewAction: nil
+                )
+                presented.modalPresentationStyle = .custom
+                presented.modalTransitionStyle = .crossDissolve
+                
+                object.present(presented, animated: true)
             }
             .disposed(by: self.disposeBag)
     }

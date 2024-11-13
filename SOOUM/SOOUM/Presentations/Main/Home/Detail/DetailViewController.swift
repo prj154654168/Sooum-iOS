@@ -18,7 +18,10 @@ import RxSwift
  class DetailViewController: BaseNavigationViewController, View {
      
      enum Text {
-         static let moreBottomSheetEntryName = "moreButtonBottomSheetViewController"
+         static let moreBottomSheetEntryName: String = "moreButtonBottomSheetViewController"
+         
+         static let dialogTitle: String = "카드를 삭제할까요?"
+         static let dialogSubTitle: String = "삭제한 카드는 복구할 수 없어요"
      }
     
      let titleImageView = UIImageView().then {
@@ -215,6 +218,7 @@ import RxSwift
          reactor.state.map(\.isDeleted)
              .distinctUntilChanged()
              .subscribe(with: self) { object, isDeleted in
+                 object.dismiss(animated: true)
                  object.isDeleted = isDeleted
                  object.collectionView.reloadData()
              }
@@ -288,9 +292,25 @@ extension DetailViewController: UICollectionViewDataSource {
             .subscribe(with: self) { object, _ in
                 
                 if self.detailCard.isOwnCard {
-                    // TODO: api 요청 전 alert 표시
-                    /// 자신의 카드일 때 카드 삭제하기
-                    object.reactor?.action.onNext(.delete)
+                    
+                    let presented = SOMDialogViewController()
+                    presented.setData(
+                        title: Text.dialogTitle,
+                        subTitle: Text.dialogSubTitle,
+                        leftAction: .init(mode: .cancel, handler: { object.dismiss(animated: true) }),
+                        rightAction: .init(
+                            mode: .delete,
+                            handler: {
+                                /// 자신의 카드일 때 카드 삭제하기
+                                object.reactor?.action.onNext(.delete)
+                            }
+                        ),
+                        dimViewAction: nil
+                    )
+                    presented.modalPresentationStyle = .custom
+                    presented.modalTransitionStyle = .crossDissolve
+                    
+                    object.present(presented, animated: true)
                 } else {
                     /// 자신의 카드가 아닐 때 차단/신고하기
                     object.presentBottomSheet(
