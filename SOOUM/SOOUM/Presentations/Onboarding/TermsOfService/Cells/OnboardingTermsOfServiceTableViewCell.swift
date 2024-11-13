@@ -38,14 +38,14 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
             lineHeight: 24,
             letterSpacing: 0
         )
-        $0.textColor = .som.gray01
+        $0.textColor = .som.gray500
         $0.text = ""
     }
     
     let nextImageView = UIImageView().then {
         $0.image = .next
         $0.contentMode = .scaleAspectFill
-        $0.tintColor = .som.gray01
+        $0.tintColor = .som.gray500
     }
     
     // MARK: - init
@@ -108,10 +108,10 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
             self.checkBoxImageView.image = isOn ? .checkboxFilled : .checkboxOutlined
         }
         UIView.animate(withDuration: animated ? animated ? 0.2 : 0 : 0) {
-            self.nextImageView.tintColor = isOn ? .som.primary : .som.gray01
+            self.nextImageView.tintColor = isOn ? .som.p300 : .som.gray500
         }
         UIView.transition(with: titleLabel, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
-            self.titleLabel.textColor = isOn ? .som.primary : .som.gray01
+            self.titleLabel.textColor = isOn ? .som.p300 : .som.gray500
         }
     }
 }

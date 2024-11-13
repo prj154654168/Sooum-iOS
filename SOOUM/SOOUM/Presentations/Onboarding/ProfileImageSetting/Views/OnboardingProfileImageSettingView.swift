@@ -26,7 +26,7 @@ class OnboardingProfileImageSettingView: UIView {
     }
     
     let changeImageButtonView = UIView().then {
-        $0.backgroundColor = .som.gray03
+        $0.backgroundColor = .som.gray400
         $0.layer.cornerRadius = 16
     }
     

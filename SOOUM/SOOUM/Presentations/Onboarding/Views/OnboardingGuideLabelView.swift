@@ -45,7 +45,7 @@ class OnboardingGuideLabelView: UIView {
             lineHeight: 19.6,
             letterSpacing: 0
         )
-        $0.textColor = .som.gray01
+        $0.textColor = .som.gray500
     }
     
     // MARK: - init

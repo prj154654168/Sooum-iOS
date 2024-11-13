@@ -15,10 +15,10 @@ import RxSwift
 import SnapKit
 import Then
 
-class OnboardingViewController: BaseNavigationViewController {
+class OnboardingViewController: BaseViewController {
     
     let backgroundImageView = UIImageView().then {
-        $0.image = .onboardingBackground
+        $0.image = .init(.image(.login))
         $0.contentMode = .scaleAspectFill
     }
     
@@ -31,7 +31,7 @@ class OnboardingViewController: BaseNavigationViewController {
             lineHeight: 35.2,
             letterSpacing: 0
         )
-        $0.textColor = .som.primary
+        $0.textColor = .som.p300
         $0.numberOfLines = 0
         $0.text = "당신의 소중한 이야기를\n익명의 친구들에게 들려주세요"
     }
@@ -42,13 +42,13 @@ class OnboardingViewController: BaseNavigationViewController {
                 size: 16,
                 weight: .semibold
             ),
-            lineHeight: 35.2,
+            lineHeight: 35.2, 
             letterSpacing: 0
         )
         $0.text = "숨 시작하기"
         $0.layer.cornerRadius = 12
         $0.textAlignment = .center
-        $0.backgroundColor = .som.primary
+        $0.backgroundColor = .som.p300
         $0.textColor = .som.white
         $0.layer.cornerRadius = 12
         $0.clipsToBounds = true
@@ -62,19 +62,14 @@ class OnboardingViewController: BaseNavigationViewController {
             ), lineHeight: 20
         )
         $0.text = "기존 계정이 있으신가요?"
-        $0.textColor = .som.gray01
+        $0.textColor = UIColor(hex: "#B4B4B4")
         $0.layer.cornerRadius = 12
         $0.textAlignment = .center
         $0.backgroundColor = .clear
     }
     
-    override func setupNaviBar() {
-        super.setupNaviBar()
-        self.isNavigationBarHidden = true
-    }
-    
     override func bind() {
-        super.bind()
+        
         startButtonLabel.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in

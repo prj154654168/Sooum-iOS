@@ -18,7 +18,7 @@ import Then
 class TermsOfServiceAgreeButtonView: UIView {
     let checkImageView = UIImageView().then {
         $0.image = .termsOfServiceCheck
-        $0.tintColor = .som.gray01
+        $0.tintColor = .som.gray600
     }
     
     let titleLabel = UILabel().then {
@@ -31,7 +31,7 @@ class TermsOfServiceAgreeButtonView: UIView {
             letterSpacing: 0
         )
         $0.text = "약관 전체 동의"
-        $0.textColor = .som.gray01
+        $0.textColor = .som.gray600
     }
     
     // MARK: - init
@@ -42,7 +42,7 @@ class TermsOfServiceAgreeButtonView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         initConstraint()
-        self.layer.borderColor = UIColor.som.gray01.cgColor
+        self.layer.borderColor = UIColor.som.gray300.cgColor
         self.layer.borderWidth = 1
         self.layer.cornerRadius = 12
     }
@@ -69,11 +69,11 @@ class TermsOfServiceAgreeButtonView: UIView {
     
     func updateState(isOn: Bool) {
         UIView.animate(withDuration: 0.2) {
-            self.layer.borderColor = isOn ? UIColor.som.primary.cgColor : UIColor.som.gray01.cgColor
-            self.checkImageView.tintColor = isOn ? .som.primary : .som.gray01
+            self.layer.borderColor = isOn ? UIColor.som.p300.cgColor : UIColor.som.gray300.cgColor
+            self.checkImageView.tintColor = isOn ? .som.p300 : .som.gray300
         }
         UIView.transition(with: titleLabel, duration: 0.2, options: .transitionCrossDissolve) {
-            self.titleLabel.textColor = isOn ? .som.primary : .som.gray01
+            self.titleLabel.textColor = isOn ? .som.p300 : .som.gray600
         }
     }
 }

@@ -40,6 +40,8 @@ class OnboardingNicknameTextFieldView: UIView {
         $0.tintColor = .som.black
     }
     
+    var disposeBag = DisposeBag()
+    
     // MARK: - init
     convenience init() {
         self.init(frame: .zero)
@@ -48,13 +50,22 @@ class OnboardingNicknameTextFieldView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.layer.cornerRadius = 12
-        self.backgroundColor = .som.gray04
+        self.backgroundColor = .som.gray50
         initConstraint()
+        
+        self.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { gesture in
+                self.textField.becomeFirstResponder()
+            })
+            .disposed(by: self.disposeBag)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { }
     
     // MARK: - initConstraint
     private func initConstraint() {
