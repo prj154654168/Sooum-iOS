@@ -18,6 +18,8 @@ import Then
 /// 하단 확인 버튼
 class PrimaryButtonView: UIView {
     
+    var isEnabled: Bool = true
+    
     let label = UILabel().then {
         $0.typography = .init(
             fontContainer: BuiltInFont(
@@ -32,8 +34,9 @@ class PrimaryButtonView: UIView {
     }
     
     // MARK: - init
-    convenience init() {
+    convenience init(isEnabled: Bool) {
         self.init(frame: .zero)
+        self.isEnabled = isEnabled
     }
     
     override init(frame: CGRect) {
@@ -60,6 +63,7 @@ class PrimaryButtonView: UIView {
     }
     
     func updateState(state: Bool, animated: Bool = true) {
+        self.isEnabled = state
         UIView.animate(withDuration: animated ? 0.2 : 0) {
             self.backgroundColor = state ? .som.primary : .som.gray03
         }

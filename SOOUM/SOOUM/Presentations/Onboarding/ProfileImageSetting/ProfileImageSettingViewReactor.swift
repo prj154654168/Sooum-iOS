@@ -82,6 +82,7 @@ class ProfileImageSettingViewReactor: Reactor {
 
         let request: JoinRequest = .profileImagePresignedURL
         
+        
         return NetworkManager.shared.request(PresignedStorageResponse.self, request: request)
             .map { response in
                 self.imageName = response.imgName

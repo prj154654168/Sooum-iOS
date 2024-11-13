@@ -19,7 +19,7 @@ enum JoinRequest: BaseRequest {
         case .validateNickname(let nickname):
             return "/profiles/nickname/\(nickname)/available"
         case .profileImagePresignedURL:
-            return "/imgs/profiels/upload"
+            return "/imgs/profiles/upload"
         }
     }
     
@@ -35,7 +35,7 @@ enum JoinRequest: BaseRequest {
         case .validateNickname:
             return [:]
         case .profileImagePresignedURL:
-            return [ "extension": "jpeg" ]
+            return [ "extension": "JPEG" ]
         default:
             return [:]
         }
@@ -76,6 +76,8 @@ enum JoinRequest: BaseRequest {
             )
             
             let encoded = try self.encoding.encode(request, with: self.parameters)
+            print("\(type(of: self)) - \(#function)", encoded)
+
             return encoded
         } else {
             return URLRequest(url: URL(string: "")!)

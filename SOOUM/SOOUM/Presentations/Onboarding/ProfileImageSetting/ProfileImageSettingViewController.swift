@@ -25,9 +25,15 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
     
     let profileImageSettingView = OnboardingProfileImageSettingView()
         
-    let okButton = PrimaryButtonView()
+    let okButton = PrimaryButtonView().then {
+        $0.updateState(state: false)
+        $0.label.text = "확인"
+    }
     
-    let passButton = PrimaryButtonView()
+    let passButton = PrimaryButtonView().then {
+        $0.updateState(state: false)
+        $0.label.text = "다음에 변경하기"
+    }
      
     func bind(reactor: ProfileImageSettingViewReactor) {
         profileImageSettingView.rx.tapGesture()
@@ -35,14 +41,28 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 object.presentPicker()
             }
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
+
+        okButton.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, _ in
+                if object.okButton.isEnabled {
+                    let viewController = MainTabBarController()
+                    viewController.reactor = MainTabBarReactor()
+                    let navigationController = UINavigationController(
+                        rootViewController: viewController
+                    )
+                    object.view.window?.rootViewController = navigationController
+                }
+            }
+            .disposed(by: disposeBag)
 
         reactor.state.map(\.shouldNavigate)
             .distinctUntilChanged()
             .subscribe(with: self) { object, shouldNavigate in
                 // TODO: - 다음화면 보이기
             }
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
     }
     
     override func setupConstraints() {
