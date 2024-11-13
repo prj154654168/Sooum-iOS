@@ -65,7 +65,7 @@ class SOMCard: UIView {
     let cardTextBackgroundBlurView = UIVisualEffectView().then {
         let blurEffect = UIBlurEffect(style: .dark)
         $0.effect = blurEffect
-        $0.backgroundColor = .som.dimForCard
+        $0.backgroundColor = .som.dim
         $0.alpha = 0.8
     }
     /// 본문 표시 라벨
