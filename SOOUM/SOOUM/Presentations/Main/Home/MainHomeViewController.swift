@@ -20,6 +20,9 @@ class MainHomeViewController: BaseNavigationViewController, View {
     enum Text {
         static let title: String = "아직 등록된 카드가 없어요"
         static let subTitle: String = "사소하지만 말 못 한 이야기를\n카드로 만들어 볼까요?"
+        
+        static let dialogTitle: String = "위치 정보 사용 설정"
+        static let dialogSubTitle: String = "위치 확인을 위해 권한 설정이 필요해요"
     }
     
     let logo = UIImageView().then {
@@ -36,7 +39,10 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.configuration = config
     }
     
-    let headerView = MainHomeHeaderView()
+    lazy var headerView = MainHomeHeaderView().then {
+        $0.homeTabBar.delegate = self
+        $0.locationFilter.delegate = self
+    }
     
     let moveTopButton = MoveTopButtonView().then {
         $0.isHidden = true
@@ -135,6 +141,9 @@ class MainHomeViewController: BaseNavigationViewController, View {
     override func bind() {
         super.bind()
         
+        // homeTabBar 시작 인덱스
+        self.headerView.homeTabBar.didSelectTab(0)
+        
         // tableView 상단 이동
         self.moveTopButton.backgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
@@ -159,18 +168,6 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .withLatestFrom(reactor.state.map(\.isLoading))
             .filter { $0.isLoading == false }
             .map { _ in Reactor.Action.refresh }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
-        self.headerView.homeTabBarDidTap
-            .distinctUntilChanged()
-            .map { index in Reactor.Action.homeTabBarItemDidTap(index: index) }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
-        self.headerView.locationFilterDidTap
-            .distinctUntilChanged()
-            .map { Reactor.Action.distanceFilter($0) }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -263,8 +260,7 @@ extension MainHomeViewController: UITableViewDataSource {
              
              if let cell = cell as? MainHomeViewCell {
                  let lastId = cell.cardView.model?.data.id
-                 let selectedIndex = self.reactor?.currentState.selectedIndex ?? 0
-                 self.reactor?.action.onNext(.moreFind(lastId: lastId, selectedIndex: selectedIndex))
+                 self.reactor?.action.onNext(.moreFind(lastId: lastId))
              }
          }
      }
@@ -291,3 +287,54 @@ extension MainHomeViewController: UITableViewDataSource {
          }
      }
  }
+
+
+// MARK: MainHomeHeaderView Delegate
+
+extension MainHomeViewController: SOMHomeTabBarDelegate {
+    
+    func tabBar(_ tabBar: SOMHomeTabBar, prevSelectedTabAt prev: Int, didSelectTabAt curr: Int) {
+        
+        self.headerView.isLocationFilterHidden = curr != 2
+        
+        if curr == 2, LocationManager.shared.checkLocationAuthStatus() == .denied {
+            
+            let presented = SOMDialogViewController()
+            presented.setData(
+                title: Text.dialogTitle,
+                subTitle: Text.dialogSubTitle,
+                leftAction: .init(mode: .cancel, handler: { self.dismiss(animated: true) }),
+                rightAction: .init(
+                    mode: .setting,
+                    handler: {
+                        let application = UIApplication.shared
+                        let openSettingsURLString: String = UIApplication.openSettingsURLString
+                        if let settingsURL = URL(string: openSettingsURLString),
+                            application.canOpenURL(settingsURL) {
+                                application.open(settingsURL)
+                        }
+                        self.dismiss(animated: false)
+                    }
+                ),
+                dimViewAction: nil
+            )
+            presented.modalPresentationStyle = .custom
+            presented.modalTransitionStyle = .crossDissolve
+            
+            self.present(presented, animated: true)
+        } else {
+            guard prev != curr else { return }
+            
+            self.reactor?.action.onNext(.homeTabBarItemDidTap(index: curr))
+        }
+    }
+}
+
+extension MainHomeViewController: SOMLocationFilterDelegate {
+    
+    func filter(_ filter: SOMLocationFilter, didSelectDistanceAt distance: SOMLocationFilter.Distance) {
+        guard filter.prevDistance != distance else { return }
+        
+        self.reactor?.action.onNext(.distanceFilter(distance.rawValue))
+    }
+}
