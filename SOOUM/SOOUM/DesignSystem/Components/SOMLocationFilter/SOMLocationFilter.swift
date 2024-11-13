@@ -49,6 +49,8 @@ class SOMLocationFilter: UIView {
     /// 거리 이넘 정보 들어있는 배열
     let distances: [Distance] = [.under1Km, .under5Km, .under10Km, .under20Km, .under50Km]
     
+    /// 이전에 선택된 필터
+    var prevDistance: Distance = .under1Km
     /// 현재 선택된 필터
     var selectedDistance: Distance = .under1Km
     
@@ -140,6 +142,7 @@ extension SOMLocationFilter:
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         /// 새로 선택된 거리 필터
         let newDistance = distances[indexPath.item]
+        self.prevDistance = self.selectedDistance
         self.selectedDistance = newDistance
         self.locationFilterCollectionView.reloadData()
         self.delegate?.filter(self, didSelectDistanceAt: newDistance)
