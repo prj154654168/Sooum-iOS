@@ -15,7 +15,7 @@ import RxSwift
 import SnapKit
 import Then
 
-class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
+class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View {
     
     enum TermsOfService: CaseIterable {
         case termsOfService
@@ -99,7 +99,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
         }
     }
     
-    override func bind() {
+    func bind(reactor: OnboardingTermsOfServiceViewReactor) {
         super.bind()
         
         agreeAllButtonView.rx.tapGesture()
@@ -118,7 +118,12 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController {
         
         nextButtonView.rx.tapGesture()
             .when(.recognized)
-            .subscribe(with: self) { object, _ in
+            .map { _ in Reactor.Action.signUp }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        reactor.state.map(\.shoulNavigate)
+            .subscribe(with: self) { object, result in
                 if self.allAgreed {
                     let nicknameSettingVC = OnboardingNicknameSettingViewController()
                     let reactor = OnboardingNicknameSettingViewReactor()

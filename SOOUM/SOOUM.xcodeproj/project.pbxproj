@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A032EFD2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A032EFC2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift */; };
+		2A032EFE2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A032EFC2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift */; };
 		2A048E7B2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */; };
 		2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */; };
 		2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */; };
@@ -317,6 +319,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A032EFC2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceViewReactor.swift; sourceTree = "<group>"; };
 		2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilter.swift; sourceTree = "<group>"; };
 		2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilterCollectionViewCell.swift; sourceTree = "<group>"; };
 		2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyResponse.swift; sourceTree = "<group>"; };
@@ -530,6 +533,7 @@
 			isa = PBXGroup;
 			children = (
 				2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */,
+				2A032EFC2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift */,
 				2A5BB7D32CDCA5BE00E1C799 /* Views */,
 				2A5BB7C02CDB893D00E1C799 /* Cells */,
 			);
@@ -1479,6 +1483,7 @@
 				3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				2A5BB7E82CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
+				2A032EFE2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */,
 				2A5BB7C32CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */,
 				388C96372CCE41700061C598 /* AuthInfo.swift in Sources */,
 				38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
@@ -1722,6 +1727,7 @@
 				2A5BB7D52CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
 				38F720B32CD4F15900DF32B5 /* LatestCardResponse.swift in Sources */,
+				2A032EFD2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */,
 				38B8A5882CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
 				388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 			);
