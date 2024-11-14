@@ -151,7 +151,10 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         // Action
         self.rx.viewDidLoad
-            .map { _ in Reactor.Action.landing }
+            .map { _ in
+                print("\(type(of: self)) - \(#function)")
+                return Reactor.Action.landing
+            }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         

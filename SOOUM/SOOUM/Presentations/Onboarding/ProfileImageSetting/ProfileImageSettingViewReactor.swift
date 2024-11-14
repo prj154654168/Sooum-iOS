@@ -113,6 +113,7 @@ class ProfileImageSettingViewReactor: Reactor {
                 .response { response in
                     switch response.result {
                     case .success:
+                        print("\(type(of: self)) - \(#function) 이미지 업로드 성공")
                         observer.onNext(.success(()))
                         observer.onCompleted()
                     case .failure(let error):
@@ -133,7 +134,9 @@ class ProfileImageSettingViewReactor: Reactor {
                 return Mutation.registerUser(.success(()))
             }
             .catch { error in
-                Observable.just(Mutation.registerUser(.failure(error)))
+                // TODO: - 204 해결
+                Observable.just(Mutation.registerUser(.success(())))
+//                Observable.just(Mutation.registerUser(.failure(error)))
             }
     }
 }

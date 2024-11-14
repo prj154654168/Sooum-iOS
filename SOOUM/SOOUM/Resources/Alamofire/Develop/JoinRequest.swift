@@ -31,7 +31,7 @@ enum JoinRequest: BaseRequest {
         case .validateNickname, .profileImagePresignedURL:
             return .get
         case .registerUser:
-            return .post
+            return .patch
         }
     }
     

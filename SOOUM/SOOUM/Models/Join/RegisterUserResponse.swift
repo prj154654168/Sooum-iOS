@@ -11,10 +11,10 @@ struct RegisterUserResponse: Codable {
     
     // MARK: - Status
     struct Status: Codable {
-        let code: Int
-        let message: String
+        let code: Int?
+        let message: String?
     }
     
-    let status: Status
+    let status: Status?
 }
 
