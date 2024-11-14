@@ -37,7 +37,7 @@ class SOMTabBar: UIView {
     private let blurView = UIVisualEffectView().then {
         let blurEffect = UIBlurEffect(style: .regular)
         $0.effect = blurEffect
-        $0.backgroundColor = .som.dimForTabBar
+        $0.backgroundColor = UIColor.som.white.withAlphaComponent(0.7)
         $0.alpha = 0.9
     }
     

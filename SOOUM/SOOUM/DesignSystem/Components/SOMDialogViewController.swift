@@ -18,6 +18,7 @@ class SOMDialogViewController: UIViewController {
         case ok
         case delete
         case report
+        case setting
         
         var text: String {
             switch self {
@@ -29,6 +30,8 @@ class SOMDialogViewController: UIViewController {
                 "삭제하기"
             case .report:
                 "신고하기"
+            case .setting:
+                "설정"
             }
         }
         
@@ -36,7 +39,7 @@ class SOMDialogViewController: UIViewController {
             switch self {
             case .cancel:
                 .som.gray300
-            case .ok, .delete, .report:
+            default:
                 .som.p300
             }
         }
@@ -45,7 +48,7 @@ class SOMDialogViewController: UIViewController {
             switch self {
             case .cancel:
                 .som.gray700
-            case .ok, .delete, .report:
+            default:
                 .som.white
             }
         }
@@ -139,7 +142,7 @@ class SOMDialogViewController: UIViewController {
     
     // MARK: - initUI
     private func initUI() {
-        self.view.backgroundColor = .som.dimForTabBar
+        self.view.backgroundColor = .som.dim
         addSubviews()
         initConstraint()
     }

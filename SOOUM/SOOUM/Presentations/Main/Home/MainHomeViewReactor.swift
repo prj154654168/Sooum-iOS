@@ -15,7 +15,7 @@ class MainHomeViewReactor: Reactor {
     enum Action: Equatable {
         case landing
         case refresh
-        case moreFind(lastId: String?, selectedIndex: Int)
+        case moreFind(lastId: String?)
         case homeTabBarItemDidTap(index: Int)
         case distanceFilter(String)
     }
@@ -48,8 +48,6 @@ class MainHomeViewReactor: Reactor {
         errorMessage: nil
     )
     
-    private var countPerLoading: Int = 10
-    
     private let networkManager = NetworkManager.shared
     private let locationManager = LocationManager.shared
     
@@ -69,10 +67,10 @@ class MainHomeViewReactor: Reactor {
                 self.refresh(),
                 .just(.updateIsLoading((isLoading: false, isOffset: true)))
             ])
-        case let .moreFind(lastId, selectedIndex):
+        case let .moreFind(lastId):
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.moreFind(lastId, index: selectedIndex),
+                self.moreFind(lastId),
                 .just(.updateIsProcessing(false))
             ])
         case let .homeTabBarItemDidTap(index):
@@ -160,8 +158,9 @@ extension MainHomeViewReactor {
         }
     }
     
-    func moreFind(_ lastId: String?, index selectedIndex: Int) -> Observable<Mutation> {
+    func moreFind(_ lastId: String?) -> Observable<Mutation> {
         
+        let selectedIndex = self.currentState.selectedIndex
         if selectedIndex == 1 { return .empty() }
         
         let lastId = lastId ?? ""

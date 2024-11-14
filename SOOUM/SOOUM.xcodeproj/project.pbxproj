@@ -482,10 +482,10 @@
 		2AE6B1472CBC157200FA5C3C /* Report */ = {
 			isa = PBXGroup;
 			children = (
-				2AE6B1522CBCC32100FA5C3C /* Views */,
-				2AE6B14E2CBCC2C700FA5C3C /* Cells */,
 				2AE6B1482CBC15BF00FA5C3C /* ReportViewController.swift */,
 				2AE6B14B2CBC160C00FA5C3C /* ReportViewReactor.swift */,
+				2AE6B1522CBCC32100FA5C3C /* Views */,
+				2AE6B14E2CBCC2C700FA5C3C /* Cells */,
 			);
 			path = Report;
 			sourceTree = "<group>";
