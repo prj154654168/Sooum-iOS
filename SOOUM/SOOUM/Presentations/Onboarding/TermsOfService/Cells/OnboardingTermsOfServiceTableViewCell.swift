@@ -103,7 +103,6 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
     }
     
     func updateState(isOn: Bool, animated: Bool = false) {
-        print("\(type(of: self)) - \(#function)")
         UIView.transition(with: checkBoxImageView, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
             self.checkBoxImageView.image = isOn ? .checkboxFilled : .checkboxOutlined
         }

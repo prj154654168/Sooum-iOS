@@ -70,12 +70,9 @@ class ProfileImageSettingViewReactor: Reactor {
     
     /// 프로필 이미지 등록 루트 함수
     private func registerProfileImage(_ image: UIImage) -> Observable<Mutation> {
-        print("\(type(of: self)) - \(#function)")
-
         return fetchPresignedURL()
             .flatMap { urlWithName -> Observable<Result<Void, Error>> in
                 guard let url = URL(string: urlWithName.urlStr) else {
-                    print("\(type(of: self)) - \(#function) url 없음")
                     return Observable.just(.failure(NSError(domain: "presignedURL 없음", code: 0, userInfo: nil)))
                 }
                 return self.uploadImage(image, to: url)
@@ -87,10 +84,7 @@ class ProfileImageSettingViewReactor: Reactor {
     
     /// 프리사인 URL을 fetch
     private func fetchPresignedURL() -> Observable<(urlStr: String, imageName: String)> {
-        print("\(type(of: self)) - \(#function)")
-
         let request: JoinRequest = .profileImagePresignedURL
-        
         
         return NetworkManager.shared.request(PresignedStorageResponse.self, request: request)
             .map { response in
@@ -101,7 +95,6 @@ class ProfileImageSettingViewReactor: Reactor {
     
     /// 프리사인 URL로 이미지 업로드
     private func uploadImage(_ image: UIImage, to url: URL) -> Observable<Result<Void, Error>> {
-        print("\(type(of: self)) - \(#function)")
 
         guard let imageData = image.jpegData(compressionQuality: 0.5) else {
             return Observable.just(.failure(NSError(domain: "ImageConversionError", code: 0, userInfo: nil)))
@@ -113,7 +106,6 @@ class ProfileImageSettingViewReactor: Reactor {
                 .response { response in
                     switch response.result {
                     case .success:
-                        print("\(type(of: self)) - \(#function) 이미지 업로드 성공")
                         observer.onNext(.success(()))
                         observer.onCompleted()
                     case .failure(let error):
@@ -130,7 +122,6 @@ class ProfileImageSettingViewReactor: Reactor {
         
         return NetworkManager.shared.request(RegisterUserResponse.self, request: request)
             .map { _ in
-                print("\(type(of: self)) - \(#function) 성공")
                 return Mutation.registerUser(.success(()))
             }
             .catch { error in

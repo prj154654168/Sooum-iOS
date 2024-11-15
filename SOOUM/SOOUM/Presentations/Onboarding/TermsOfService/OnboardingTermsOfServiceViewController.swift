@@ -136,7 +136,6 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
     
     /// 선택 상태 전부 업데이트
     private func updateAllAgreements(to isAgreed: Bool) {
-        print("\(type(of: self)) - \(#function) isAgreed", isAgreed)
 
         let newStatus: [TermsOfService: Bool] = [
             .termsOfService: isAgreed,
@@ -148,7 +147,6 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
     }
     /// 전체 동의 버튼 업데이트
     private func updateAgreeAllButtonState() {
-        print("\(type(of: self)) - \(#function)")
         agreeAllButtonView.updateState(isOn: allAgreed)
     }
 }

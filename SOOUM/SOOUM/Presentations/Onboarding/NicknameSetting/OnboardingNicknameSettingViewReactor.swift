@@ -46,8 +46,6 @@ class OnboardingNicknameSettingViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
 
     func mutate(action: Action) -> Observable<Mutation> {
-        print("\(type(of: self)) - \(#function)", action)
-
         switch action {
         case .textChanged(let nickname):
             return validateNickname(nickname)
@@ -59,7 +57,6 @@ class OnboardingNicknameSettingViewReactor: Reactor {
     
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
-        print("\(type(of: self)) - \(#function)", mutation)
         switch mutation {
         case .setNicknameResult(let result):
             switch result {
@@ -77,7 +74,6 @@ class OnboardingNicknameSettingViewReactor: Reactor {
     
     private func validateNickname(_ nickname: String) -> Observable<Result<(nickname: String, isValid: NicknameState), Error>> {
         let request: JoinRequest = .validateNickname(nickname: nickname)
-        print("\(type(of: self)) - \(#function)", nickname)
         
         if nickname.isEmpty {
             // 닉네임이 비어있다면 유효하지 않음을 즉시 반환
