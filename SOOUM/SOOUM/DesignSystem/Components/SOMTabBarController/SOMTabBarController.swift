@@ -34,9 +34,6 @@ class SOMTabBarController: UIViewController {
     
     weak var delegate: SOMTabBarControllerDelegate?
     
-    private var selectedIndex: Int = 0
-    private var prevSelectedIndex: Int = 0
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupConstraints()
@@ -67,9 +64,6 @@ extension SOMTabBarController: SOMTabBarDelegate {
         let viewController = self.viewControllers[index]
         self.delegate?.tabBarController(self, didSelect: viewController)
         
-        // 글추가 탭은 탭바 변경 없이 네비게이션으로 표시
-        guard index != 1 else { return }
-        
         if self.children.isEmpty == false {
             self.children.forEach {
                 $0.willMove(toParent: nil)
@@ -77,12 +71,10 @@ extension SOMTabBarController: SOMTabBarDelegate {
                 $0.removeFromParent()
             }
         }
-        self.prevSelectedIndex = self.selectedIndex
         
         self.addChild(viewController)
         viewController.view.frame = self.container.bounds
         self.container.addSubview(viewController.view)
         viewController.didMove(toParent: self)
-        self.selectedIndex = index + 1
     }
 }

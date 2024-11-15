@@ -27,8 +27,6 @@ class SOMHomeTabBar: UIView {
     
     private let homeTabBarItemContainer = UIStackView().then {
         $0.axis = .horizontal
-        $0.distribution = .equalSpacing
-        $0.isLayoutMarginsRelativeArrangement = true
         $0.spacing = 2
     }
     
@@ -48,15 +46,18 @@ class SOMHomeTabBar: UIView {
     
     private func setupConstraints() {
         
-        let backgroudView = UIView()
+        let backgroundView = UIView()
+        self.addSubview(backgroundView)
+        backgroundView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
         
         Title.allCases.forEach {
-            let homeTabBarItem = SOMHomeTabBarItem()
-            homeTabBarItem.text = $0.rawValue
+            let homeTabBarItem = SOMHomeTabBarItem(title: $0.rawValue)
             self.homeTabBarItemContainer.addArrangedSubview(homeTabBarItem)
         }
         
-        backgroudView.addSubview(self.homeTabBarItemContainer)
+        backgroundView.addSubview(self.homeTabBarItemContainer)
         self.homeTabBarItemContainer.snp.makeConstraints {
             $0.top.equalToSuperview().offset(4)
             $0.bottom.equalToSuperview().offset(-10)
@@ -67,15 +68,10 @@ class SOMHomeTabBar: UIView {
         let bottomSeperator = UIView().then {
             $0.backgroundColor = .som.gray200
         }
-        backgroudView.addSubview(bottomSeperator)
+        backgroundView.addSubview(bottomSeperator)
         bottomSeperator.snp.makeConstraints {
             $0.bottom.leading.trailing.equalToSuperview()
             $0.height.equalTo(0.4)
-        }
-        
-        self.addSubview(backgroudView)
-        backgroudView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
         }
     }
     
@@ -83,11 +79,7 @@ class SOMHomeTabBar: UIView {
         
         self.homeTabBarItemContainer.arrangedSubviews.enumerated().forEach {
             guard let homeTabView = $1 as? SOMHomeTabBarItem else { return }
-            if $0 == index {
-                homeTabView.homeTabBarItemSelected()
-            } else {
-                homeTabView.homeTabBarItemNotSelected()
-            }
+            homeTabView.updateItemColor($0 == index)
         }
 
         self.prevSelectedIndex = self.selectedIndex

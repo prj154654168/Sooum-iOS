@@ -20,9 +20,10 @@ class SOMHomeTabBarItem: UIView {
         $0.textColor = .som.gray600
         $0.typography = .som.body2WithBold
     }
-    var text: String? {
-        set { self.titleLabel.text = newValue }
-        get { self.titleLabel.text }
+    
+    convenience init(title: String) {
+        self.init(frame: .zero)
+        self.titleLabel.text = title
     }
     
     override init(frame: CGRect) {
@@ -36,29 +37,22 @@ class SOMHomeTabBarItem: UIView {
     
     private func setupConstraints() {
         
-        let backgraoundView = UIView()
+        let backgrounView = UIView()
+        self.addSubviews(backgrounView)
+        backgrounView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
         
-        backgraoundView.addSubview(self.titleLabel)
+        backgrounView.addSubview(self.titleLabel)
         self.titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(6)
-            $0.bottom.equalToSuperview().offset(-6)
+            $0.bottom.equalToSuperview()
             $0.leading.equalToSuperview().offset(8)
             $0.trailing.equalToSuperview().offset(-8)
         }
-        
-        self.addSubview(backgraoundView)
-        backgraoundView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
     }
     
-    func homeTabBarItemSelected() {
-        
-        self.titleLabel.textColor = .som.black
-    }
-    
-    func homeTabBarItemNotSelected() {
-        
-        self.titleLabel.textColor = .som.gray600
+    func updateItemColor(_ isSelected: Bool) {
+        self.titleLabel.textColor = isSelected ? .som.black : .som.gray600
     }
 }

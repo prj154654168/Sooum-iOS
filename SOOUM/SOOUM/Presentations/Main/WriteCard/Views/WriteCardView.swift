@@ -19,21 +19,21 @@ class WriteCardView: UIView {
         static let relatedTagsTitle: String = "#관련태그"
     }
     
-    let writeCardTextView = WriteCardTextView().then {
+    lazy var writeCardTextView = WriteCardTextView().then {
         $0.maxCharacter = 1000
     }
     
-    let writeTagTextField = WriteTagTextField().then {
+    lazy var writeTagTextField = WriteTagTextField().then {
         $0.placeholder = Text.wirteTagPlacholder
     }
     
-    let writtenTags = SOMTags()
+    lazy var writtenTags = SOMTags()
     
     let relatedTagsBackgroundView = UIView().then {
         $0.isHidden = true
     }
     
-    let relatedTags = SOMTags()
+    lazy var relatedTags = SOMTags()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

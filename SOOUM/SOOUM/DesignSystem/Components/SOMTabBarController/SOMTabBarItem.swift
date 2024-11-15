@@ -32,7 +32,7 @@ class SOMTabBarItem: UIView {
     
     private let backgroundView = UIView().then {
         $0.backgroundColor = .clear
-        $0.layer.cornerRadius = 52 * 0.5
+        $0.layer.cornerRadius = 50 * 0.5
     }
     
     convenience init() {

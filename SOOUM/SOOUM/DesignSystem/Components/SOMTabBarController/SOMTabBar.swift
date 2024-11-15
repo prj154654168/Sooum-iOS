@@ -17,7 +17,7 @@ protocol SOMTabBarDelegate: AnyObject {
 
 class SOMTabBar: UIView {
 
-    static let height: CGFloat = 60
+    static let height: CGFloat = 58
     
     private var tabBarItemContainer = UIStackView().then {
         $0.axis = .horizontal
@@ -25,12 +25,12 @@ class SOMTabBar: UIView {
         $0.alignment = .center
         $0.layoutMargins = .init(top: 4, left: 4, bottom: 4, right: 4)
         $0.isLayoutMarginsRelativeArrangement = true
-        $0.layer.cornerRadius = (60 - 4 * 2) * 0.5
+        $0.layer.cornerRadius = (58 - 4 * 2) * 0.5
     }
     
     private let tabBarBackgroundView = UIView().then {
         $0.backgroundColor = .clear
-        $0.layer.cornerRadius = 60 * 0.5
+        $0.layer.cornerRadius = 58 * 0.5
         $0.clipsToBounds = true
     }
     
@@ -61,7 +61,7 @@ class SOMTabBar: UIView {
         self.width / CGFloat(self.numberOfItems)
     }
     
-    var numberOfItems: Int {
+    private var numberOfItems: Int {
         self.viewControllers.count
     }
     
@@ -83,7 +83,7 @@ class SOMTabBar: UIView {
         self.blurView.snp.makeConstraints {
             $0.edges.equalToSuperview()
             $0.width.equalTo(self.width)
-            $0.height.equalTo(60)
+            $0.height.equalTo(58)
         }
         
         self.tabBarBackgroundView.addSubview(self.tabBarItemContainer)

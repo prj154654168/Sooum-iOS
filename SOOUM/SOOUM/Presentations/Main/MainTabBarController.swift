@@ -29,6 +29,12 @@ class MainTabBarController: SOMTabBarController, View {
     
     var disposeBag = DisposeBag()
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.delegate = self
+    }
+    
     func bind(reactor: MainTabBarReactor) {
         
         /// 위치 권한 요청
@@ -76,8 +82,6 @@ class MainTabBarController: SOMTabBarController, View {
             tagViewcontroller,
             profileViewController
         ]
-        
-        self.delegate = self
     }
 }
 

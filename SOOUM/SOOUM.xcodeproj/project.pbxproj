@@ -222,8 +222,6 @@
 		38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
 		38B6AAD12CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */; };
 		38B6AAD22CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */; };
-		38B6AAD52CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD42CA41B3C00CE6DB6 /* MainHomeHeaderView.swift */; };
-		38B6AAD62CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD42CA41B3C00CE6DB6 /* MainHomeHeaderView.swift */; };
 		38B6AAD82CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */; };
 		38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */; };
 		38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AADA2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift */; };
@@ -416,7 +414,6 @@
 		38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreBottomSheetViewController.swift; sourceTree = "<group>"; };
 		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeViewController.swift; sourceTree = "<group>"; };
-		38B6AAD42CA41B3C00CE6DB6 /* MainHomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeHeaderView.swift; sourceTree = "<group>"; };
 		38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTopButtonView.swift; sourceTree = "<group>"; };
 		38B6AADA2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewReactor.swift; sourceTree = "<group>"; };
 		38B6AADE2CA4777200CE6DB6 /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
@@ -1060,7 +1057,6 @@
 		38B6AAD32CA41B2C00CE6DB6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				38B6AAD42CA41B3C00CE6DB6 /* MainHomeHeaderView.swift */,
 				38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */,
 			);
 			path = Views;
@@ -1562,7 +1558,6 @@
 				3880097C2CABEE3D002A9209 /* DetailViewController.swift in Sources */,
 				2AE6B1762CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */,
 				2AE6B1642CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */,
-				38B6AAD62CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
 				2AE6B1722CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift in Sources */,
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				2A45B3702CE4C5510071026A /* RegisterUserResponse.swift in Sources */,
@@ -1713,7 +1708,6 @@
 				38B6AAD82CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
 				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38B8A5802CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
-				38B6AAD52CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
 				2AE6B1712CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift in Sources */,
 				2AE6B1662CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift in Sources */,
 				2ACBD41D2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
