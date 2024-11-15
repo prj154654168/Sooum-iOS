@@ -16,10 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        // TODO: - 삭제
-        AuthKeyChain.shared.delete(.deviceId)
-        AuthKeyChain.shared.delete(.accessToken)
-        AuthKeyChain.shared.delete(.refreshToken)
         return true
     }
     

@@ -66,8 +66,7 @@ class AuthKeyChain {
     /// - Parameter tokenType: 삭제할 토큰의 타입 (accessToken, refreshToken 등)
     /// - Returns: 토큰 삭제가 성공하면 `true`, 실패하면 `false`를 반환함.
     func delete(_ tokenType: TokenType) {
-        // TODO: - 주석 삭제
-//        guard tokenType != .deviceId else { return }
+        guard tokenType != .deviceId else { return }
         
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
