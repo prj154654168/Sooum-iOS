@@ -45,14 +45,14 @@ class ReportTableViewCell: UITableViewCell {
                 with: reasonView.toggleView,
                 duration: durationTime,
                 options: .transitionCrossDissolve,
-                animations: {
-                    self.reasonView.toggleView.image = toggleImage
+                animations: { [weak self] in
+                    self?.reasonView.toggleView.image = toggleImage
                 },
                 completion: nil
             )
             
-            UIView.animate(withDuration: durationTime) {
-                self.reasonView.rootContainerView.layer.borderColor = borderColor
+            UIView.animate(withDuration: durationTime) { [weak self] in
+                self?.reasonView.rootContainerView.layer.borderColor = borderColor
             }
         } else {
             reasonView.toggleView.image = toggleImage

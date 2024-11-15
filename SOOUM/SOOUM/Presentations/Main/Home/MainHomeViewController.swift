@@ -196,29 +196,15 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(reactor.state.map(\.isLoading))
-            .filter { $0.isLoading == false }
+            .filter { $0 == false }
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        let isLoading = reactor.state.map(\.isLoading)
-            .distinctUntilChanged({ $0.isLoading == $1.isLoading })
-            .share()
-        isLoading
-            .filter { $0.isOffset == false }
+        reactor.state.map(\.isLoading)
             .subscribe(with: self.tableView) { tableView, isLoading in
-                if isLoading.isLoading {
-                    tableView.refreshControl?.beginRefreshing()
-                } else {
-                    tableView.refreshControl?.endRefreshing()
-                }
-            }
-            .disposed(by: self.disposeBag)
-        isLoading
-            .filter { $0.isOffset }
-            .subscribe(with: self.tableView) { tableView, isLoading in
-                if isLoading.isLoading {
+                if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()
@@ -302,10 +288,12 @@ extension MainHomeViewController: UITableViewDataSource {
      }
      
      func scrollViewDidScroll(_ scrollView: UIScrollView) {
+         guard self.cards.isEmpty == false else { return }
+         
          let offset = scrollView.contentOffset.y
          
          // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
-         self.headerContainer.isHidden = offset < self.currentOffset
+         self.headerContainer.isHidden = offset > 0 && offset < self.currentOffset
          self.tableViewTopConstraint?.deactivate()
          self.tableView.snp.makeConstraints {
              let top = self.headerContainer.isHidden ? self.view.safeAreaLayoutGuide.snp.top : self.headerContainer.snp.bottom
@@ -330,12 +318,12 @@ extension MainHomeViewController: SOMHomeTabBarDelegate {
         self.locationFilterHeightConstraint?.deactivate()
         self.headerLocationFilter.snp.makeConstraints {
             let height: CGFloat = curr != 2 ? 0 : SOMLocationFilter.height
-            self.locationFilterHeightConstraint = $0.height.equalTo(height).constraint
+            self.locationFilterHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
         }
         self.headerContainerHeightConstraint?.deactivate()
         self.headerContainer.snp.makeConstraints {
             let height: CGFloat = curr != 2 ? SOMHomeTabBar.height : SOMHomeTabBar.height + SOMLocationFilter.height
-            self.headerContainerHeightConstraint = $0.height.equalTo(height).constraint
+            self.headerContainerHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
         }
         
         if curr == 2, LocationManager.shared.checkLocationAuthStatus() == .denied {
