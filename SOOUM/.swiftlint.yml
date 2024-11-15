@@ -154,6 +154,7 @@ analyzer_rules: # rules run by `swiftlint analyze`
 
 # 👉🏻 lint검사를 하지 않을 Group을 나열합니다.
 excluded:
+  - Pods
   - SOOUM/Resources
   - SOOUM/Models
 

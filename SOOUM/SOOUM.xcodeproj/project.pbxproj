@@ -37,7 +37,7 @@
 		2AE6B1512CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B14F2CBCC2F600FA5C3C /* ReportTableViewCell.swift */; };
 		2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1532CBCC34B00FA5C3C /* ReportReasonView.swift */; };
 		2AE6B1552CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1532CBCC34B00FA5C3C /* ReportReasonView.swift */; };
-		2AE6B1582CBEA80B00FA5C3C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		2AE6B1582CBEA80B00FA5C3C /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		2AE6B15A2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1592CBEAEC000FA5C3C /* ReportRequest.swift */; };
 		2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1592CBEAEC000FA5C3C /* ReportRequest.swift */; };
 		2AE6B15E2CBEB2D800FA5C3C /* ReportResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B15D2CBEB2D800FA5C3C /* ReportResponse.swift */; };
@@ -417,7 +417,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2AE6B1582CBEA80B00FA5C3C /* BuildFile in Frameworks */,
+				2AE6B1582CBEA80B00FA5C3C /* (null) in Frameworks */,
 				A40D6E37CF713608CA27DF02 /* Pods_SOOUM_Dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,7 +552,6 @@
 				88CF807688D4DA437BBA2076 /* Pods-SOOUM-Dev.debug.xcconfig */,
 				294DA89A179AE3234F3E293F /* Pods-SOOUM-Dev.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -1261,7 +1260,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nSWIFT_PACKAGE_DIR=\"${BUILD_DIR%Build/*}SourcePackages/artifacts\"\nSWIFTLINT_CMD=$(ls \"$SWIFT_PACKAGE_DIR\"/swiftlintplugins/SwiftLintBinary/SwiftLintBinary.artifactbundle/swiftlint-*/bin/swiftlint | head -n 1)\n\nif test -f \"$SWIFTLINT_CMD\" 2>&1\nthen\n    \"$SWIFTLINT_CMD\" --fix\nelse\n    echo \"warning: `swiftlint` command not found - See https://github.com/realm/SwiftLint#installation for installation instructions.\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n${PODS_ROOT}/SwiftLint/swiftlint lint\n";
 		};
 		381FBAB32C8C6FE9004354C3 /* Run SwiftLint Linting */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1280,7 +1279,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nSWIFT_PACKAGE_DIR=\"${BUILD_DIR%Build/*}SourcePackages/artifacts\"\nSWIFTLINT_CMD=$(ls \"$SWIFT_PACKAGE_DIR\"/swiftlintplugins/SwiftLintBinary/SwiftLintBinary.artifactbundle/swiftlint-*/bin/swiftlint | head -n 1)\n\nif test -f \"$SWIFTLINT_CMD\" 2>&1\nthen\n    \"$SWIFTLINT_CMD\"\nelse\n    echo \"warning: `swiftlint` command not found - See https://github.com/realm/SwiftLint#installation for installation instructions.\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n${PODS_ROOT}/SwiftLint/swiftlint lint\n";
 		};
 		63E8EF9638A3441082507A5C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
