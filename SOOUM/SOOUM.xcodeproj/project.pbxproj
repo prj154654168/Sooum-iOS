@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2192C5356D8F39905D0A8181 /* Pods_SOOUM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74194BC62F22BC2F5596D850 /* Pods_SOOUM.framework */; };
 		2A048E7B2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */; };
 		2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */; };
 		2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */; };
@@ -36,7 +37,7 @@
 		2AE6B1512CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B14F2CBCC2F600FA5C3C /* ReportTableViewCell.swift */; };
 		2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1532CBCC34B00FA5C3C /* ReportReasonView.swift */; };
 		2AE6B1552CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1532CBCC34B00FA5C3C /* ReportReasonView.swift */; };
-		2AE6B1582CBEA80B00FA5C3C /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		2AE6B1582CBEA80B00FA5C3C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		2AE6B15A2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1592CBEAEC000FA5C3C /* ReportRequest.swift */; };
 		2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1592CBEAEC000FA5C3C /* ReportRequest.swift */; };
 		2AE6B15E2CBEB2D800FA5C3C /* ReportResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B15D2CBEB2D800FA5C3C /* ReportResponse.swift */; };
@@ -265,9 +266,11 @@
 		38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */; };
 		38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */; };
 		38FDC2C82C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */; };
+		A40D6E37CF713608CA27DF02 /* Pods_SOOUM_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		294DA89A179AE3234F3E293F /* Pods-SOOUM-Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SOOUM-Dev.release.xcconfig"; path = "Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev.release.xcconfig"; sourceTree = "<group>"; };
 		2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilter.swift; sourceTree = "<group>"; };
 		2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilterCollectionViewCell.swift; sourceTree = "<group>"; };
 		2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyResponse.swift; sourceTree = "<group>"; };
@@ -295,6 +298,7 @@
 		2AE6B17E2CBFEA5200FA5C3C /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		2AE6B18E2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetSegmentTableViewCell.swift; sourceTree = "<group>"; };
 		2AE6B1912CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMyImageTableViewCell.swift; sourceTree = "<group>"; };
+		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
 		38121E302CA6C77500602499 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
@@ -402,6 +406,10 @@
 		38F720B72CD4F16500DF32B5 /* CardProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardProtocol.swift; sourceTree = "<group>"; };
 		38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationViewController.swift; sourceTree = "<group>"; };
+		4C597C004C07775E636659FE /* Pods-SOOUM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SOOUM.release.xcconfig"; path = "Target Support Files/Pods-SOOUM/Pods-SOOUM.release.xcconfig"; sourceTree = "<group>"; };
+		74194BC62F22BC2F5596D850 /* Pods_SOOUM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		79FB23C15AD70915D59D7DC3 /* Pods-SOOUM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SOOUM.debug.xcconfig"; path = "Target Support Files/Pods-SOOUM/Pods-SOOUM.debug.xcconfig"; sourceTree = "<group>"; };
+		88CF807688D4DA437BBA2076 /* Pods-SOOUM-Dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SOOUM-Dev.debug.xcconfig"; path = "Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -409,7 +417,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2AE6B1582CBEA80B00FA5C3C /* (null) in Frameworks */,
+				2AE6B1582CBEA80B00FA5C3C /* BuildFile in Frameworks */,
+				A40D6E37CF713608CA27DF02 /* Pods_SOOUM_Dev.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +426,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2192C5356D8F39905D0A8181 /* Pods_SOOUM.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -532,6 +542,18 @@
 				2AE6B17E2CBFEA5200FA5C3C /* ToggleView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		2DAC60EF30AB4D54BFEBDF3B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				79FB23C15AD70915D59D7DC3 /* Pods-SOOUM.debug.xcconfig */,
+				4C597C004C07775E636659FE /* Pods-SOOUM.release.xcconfig */,
+				88CF807688D4DA437BBA2076 /* Pods-SOOUM-Dev.debug.xcconfig */,
+				294DA89A179AE3234F3E293F /* Pods-SOOUM-Dev.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		38026E3D2CA2B44B0045E1CE /* LocationManager */ = {
@@ -698,6 +720,7 @@
 				387FBAEE2C8702C100A5E139 /* SOOUM */,
 				387FBAED2C8702C100A5E139 /* Products */,
 				38CE94C22C904E4A0004B238 /* Frameworks */,
+				2DAC60EF30AB4D54BFEBDF3B /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -980,6 +1003,8 @@
 			isa = PBXGroup;
 			children = (
 				38B9E4692CE72CC1008A24C8 /* Accelerate.framework */,
+				74194BC62F22BC2F5596D850 /* Pods_SOOUM.framework */,
+				365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1082,19 +1107,19 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 385441972C870544004E2BB0 /* Build configuration list for PBXNativeTarget "SOOUM-Dev" */;
 			buildPhases = (
+				BB3C7DBC6EAB775DB30BD89D /* [CP] Check Pods Manifest.lock */,
 				381FBAB22C8C6DFC004354C3 /* Run SwiftLint AutoCorrection */,
 				3854418F2C870544004E2BB0 /* Sources */,
 				381FBAB32C8C6FE9004354C3 /* Run SwiftLint Linting */,
 				385441932C870544004E2BB0 /* Frameworks */,
 				385441942C870544004E2BB0 /* Resources */,
+				63E8EF9638A3441082507A5C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = "SOOUM-Dev";
-			packageProductDependencies = (
-			);
 			productName = SOOUM;
 			productReference = 3854419A2C870544004E2BB0 /* SOOUM-Dev.app */;
 			productType = "com.apple.product-type.application";
@@ -1103,17 +1128,17 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 387FBB002C8702C200A5E139 /* Build configuration list for PBXNativeTarget "SOOUM" */;
 			buildPhases = (
+				346EE67DF6BC1B5F1119B18C /* [CP] Check Pods Manifest.lock */,
 				387FBAE82C8702C100A5E139 /* Sources */,
 				387FBAE92C8702C100A5E139 /* Frameworks */,
 				387FBAEA2C8702C100A5E139 /* Resources */,
+				01B3B59D7CDD858E2D75CB04 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = SOOUM;
-			packageProductDependencies = (
-			);
 			productName = SOOUM;
 			productReference = 387FBAEC2C8702C100A5E139 /* SOOUM.app */;
 			productType = "com.apple.product-type.application";
@@ -1142,8 +1167,6 @@
 				Base,
 			);
 			mainGroup = 387FBAE32C8702C100A5E139;
-			packageReferences = (
-			);
 			productRefGroup = 387FBAED2C8702C100A5E139 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1182,6 +1205,45 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		01B3B59D7CDD858E2D75CB04 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		346EE67DF6BC1B5F1119B18C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SOOUM-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		381FBAB22C8C6DFC004354C3 /* Run SwiftLint AutoCorrection */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -1219,6 +1281,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nSWIFT_PACKAGE_DIR=\"${BUILD_DIR%Build/*}SourcePackages/artifacts\"\nSWIFTLINT_CMD=$(ls \"$SWIFT_PACKAGE_DIR\"/swiftlintplugins/SwiftLintBinary/SwiftLintBinary.artifactbundle/swiftlint-*/bin/swiftlint | head -n 1)\n\nif test -f \"$SWIFTLINT_CMD\" 2>&1\nthen\n    \"$SWIFTLINT_CMD\"\nelse\n    echo \"warning: `swiftlint` command not found - See https://github.com/realm/SwiftLint#installation for installation instructions.\"\nfi\n";
+		};
+		63E8EF9638A3441082507A5C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BB3C7DBC6EAB775DB30BD89D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SOOUM-Dev-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1500,6 +1601,7 @@
 /* Begin XCBuildConfiguration section */
 		385441982C870544004E2BB0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 88CF807688D4DA437BBA2076 /* Pods-SOOUM-Dev.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1544,6 +1646,7 @@
 		};
 		385441992C870544004E2BB0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 294DA89A179AE3234F3E293F /* Pods-SOOUM-Dev.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1715,6 +1818,7 @@
 		};
 		387FBB012C8702C200A5E139 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 79FB23C15AD70915D59D7DC3 /* Pods-SOOUM.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1745,6 +1849,7 @@
 		};
 		387FBB022C8702C200A5E139 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C597C004C07775E636659FE /* Pods-SOOUM.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
