@@ -7,6 +7,9 @@
 
 import UIKit
 
+import RxSwift
+
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -16,9 +19,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+        
+        // RxSwift Resource count
+        #if DEBUG
+        _ = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { _ in
+                print("Resource count \(RxSwift.Resources.total)")
+            })
+        #endif
+        
         return true
     }
 
+    
     // MARK: UISceneSession Lifecycle
 
     func application(
