@@ -17,34 +17,16 @@ import Then
 
 class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View {
     
-    enum TermsOfService: CaseIterable {
-        case termsOfService
-        case locationService
-        case privacyPolicy
-        
-        var text: String {
-            switch self {
-            case .termsOfService:
-                "[필수] 서비스 이용 약관"
-            case .locationService:
-                "[필수] 위치정보 이용 약관"
-            case .privacyPolicy:
-                "[필수] 개인정보 처리 방침"
-            }
-        }
-    }
+
     
-    private var agreementStatus = BehaviorRelay<[TermsOfService: Bool]>(
-        value: [
-            .termsOfService: false,
-            .locationService: false,
-            .privacyPolicy: false
-        ]
-    )
+//    private var agreementStatus = BehaviorRelay<[TermsOfService: Bool]>(
+//        value: [
+//            .termsOfService: false,
+//            .locationService: false,
+//            .privacyPolicy: false
+//        ]
+//    )
     
-    var allAgreed: Bool {
-        return agreementStatus.value.values.allSatisfy { $0 == true }
-    }
 
     let guideLabelView = OnboardingGuideLabelView().then {
         $0.titleLabel.text = "숨을 시작하기 위해서는\n약관 동의가 필요해요"
@@ -102,19 +84,19 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
     func bind(reactor: OnboardingTermsOfServiceViewReactor) {
         super.bind()
         
-        agreeAllButtonView.rx.tapGesture()
-            .when(.recognized)
-            .subscribe(with: self) { object, _ in
-                object.updateAllAgreements(to: !self.allAgreed)
-            }
-            .disposed(by: disposeBag)
+//        agreeAllButtonView.rx.tapGesture()
+//            .when(.recognized)
+//            .subscribe(with: self) { object, _ in
+//                object.updateAllAgreements(to: !self.allAgreed)
+//            }
+//            .disposed(by: disposeBag)
         
-        agreementStatus
-            .subscribe(with: self) { object, state in
-                self.updateAgreeAllButtonState()
-                self.nextButtonView.updateState(state: self.allAgreed)
-            }
-            .disposed(by: disposeBag)
+//        agreementStatus
+//            .subscribe(with: self) { object, state in
+//                self.updateAgreeAllButtonState()
+//                self.nextButtonView.updateState(state: self.allAgreed)
+//            }
+//            .disposed(by: disposeBag)
         
         nextButtonView.rx.tapGesture()
             .when(.recognized)
@@ -122,33 +104,39 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        reactor.state.map(\.shoulNavigate)
-            .subscribe(with: self) { object, result in
-                if self.allAgreed {
-                    let nicknameSettingVC = OnboardingNicknameSettingViewController()
-                    let reactor = OnboardingNicknameSettingViewReactor()
-                    nicknameSettingVC.reactor = reactor
-                    self.navigationController?.pushViewController(nicknameSettingVC, animated: true)
-                }
+//        reactor.state.map(\.shoulNavigate)
+//            .subscribe(with: self) { object, result in
+//                if self.allAgreed {
+//                    let nicknameSettingVC = OnboardingNicknameSettingViewController()
+//                    let reactor = OnboardingNicknameSettingViewReactor()
+//                    nicknameSettingVC.reactor = reactor
+//                    self.navigationController?.pushViewController(nicknameSettingVC, animated: true)
+//                }
+//            }
+//            .disposed(by: disposeBag)
+        reactor.state.map { $0.isAgreedStats }
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, statsDict in
+                object.termOfServiceTableView.reloadData()
             }
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
     }
     
     /// 선택 상태 전부 업데이트
-    private func updateAllAgreements(to isAgreed: Bool) {
-
-        let newStatus: [TermsOfService: Bool] = [
-            .termsOfService: isAgreed,
-            .locationService: isAgreed,
-            .privacyPolicy: isAgreed
-        ]
-        agreementStatus.accept(newStatus)
-        updateAgreeAllButtonState()
-    }
+//    private func updateAllAgreements(to isAgreed: Bool) {
+//
+//        let newStatus: [TermsOfService: Bool] = [
+//            .termsOfService: isAgreed,
+//            .locationService: isAgreed,
+//            .privacyPolicy: isAgreed
+//        ]
+//        agreementStatus.accept(newStatus)
+//        updateAgreeAllButtonState()
+//    }
     /// 전체 동의 버튼 업데이트
-    private func updateAgreeAllButtonState() {
-        agreeAllButtonView.updateState(isOn: allAgreed)
-    }
+//    private func updateAgreeAllButtonState() {
+//        agreeAllButtonView.updateState(isOn: allAgreed)
+//    }
 }
 
 extension OnboardingTermsOfServiceViewController: UITableViewDataSource, UITableViewDelegate {
@@ -163,14 +151,35 @@ extension OnboardingTermsOfServiceViewController: UITableViewDataSource, UITable
             for: indexPath
         )
         as! OnboardingTermsOfServiceTableViewCell
-        cell.setData(state: self.agreementStatus, term: TermsOfService.allCases[indexPath.row])
+
+        guard let reactor = self.reactor else {
+            return UITableViewCell()
+        }
+        
+        cell.setData(
+            state: reactor.currentState.isAgreedStats[TermsOfService.allCases[indexPath.row]] ?? false,
+            term: TermsOfService.allCases[indexPath.row]
+        )
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let term = TermsOfService.allCases[indexPath.row]
-        var newState = agreementStatus.value
-        newState[term]?.toggle()
-        agreementStatus.accept(newState)
+        
+        switch TermsOfService.allCases[indexPath.row] {
+        case .termsOfService:
+            self.reactor?.action.onNext(.termsOfServiceAgree)
+            
+        case .locationService:
+            self.reactor?.action.onNext(.locationAgree)
+
+        case .privacyPolicy:
+            self.reactor?.action.onNext(.privacyPolicyAgree)
+        }
+//        
+//        let term = TermsOfService.allCases[indexPath.row]
+//        var newState = agreementStatus.value
+//        newState[term]?.toggle()
+//        agreementStatus.accept(newState)
     }
 }

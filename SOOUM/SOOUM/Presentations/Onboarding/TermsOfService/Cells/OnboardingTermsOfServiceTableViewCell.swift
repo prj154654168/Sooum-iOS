@@ -17,10 +17,10 @@ import Then
 
 class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
     
-//    /// 전체 선택 상황
-    var agreementStatus: BehaviorRelay<[OnboardingTermsOfServiceViewController.TermsOfService: Bool]>?
+    /// 전체 선택 상황
+    var agreementStatus: BehaviorRelay<[TermsOfService: Bool]>?
     /// 현재 셀의 항목
-    var term: OnboardingTermsOfServiceViewController.TermsOfService = .termsOfService
+    var term: TermsOfService = .termsOfService
     
     var disposeBag = DisposeBag()
     
@@ -59,21 +59,30 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+//    func setData(
+//        state: BehaviorRelay<[OnboardingTermsOfServiceViewController.TermsOfService: Bool]>,
+//        term: OnboardingTermsOfServiceViewController.TermsOfService
+//    ) {
+//        disposeBag = DisposeBag()
+//
+//        agreementStatus = state
+//        self.term = term
+//        titleLabel.text = term.text
+//        updateState(isOn: state.value[term] ?? false)
+//        
+//        agreementStatus?.subscribe(with: self) { object, state in
+//            object.updateState(isOn: state[term] ?? false, animated: true)
+//        }
+//        .disposed(by: self.disposeBag)
+//    }
+    
     func setData(
-        state: BehaviorRelay<[OnboardingTermsOfServiceViewController.TermsOfService: Bool]>,
-        term: OnboardingTermsOfServiceViewController.TermsOfService
+        state: Bool,
+        term: TermsOfService
     ) {
-        disposeBag = DisposeBag()
-
-        agreementStatus = state
         self.term = term
         titleLabel.text = term.text
-        updateState(isOn: state.value[term] ?? false)
-        
-        agreementStatus?.subscribe(with: self) { object, state in
-            object.updateState(isOn: state[term] ?? false, animated: true)
-        }
-        .disposed(by: self.disposeBag)
+        updateState(isOn: state)
     }
 
     // MARK: - setupConstraint
