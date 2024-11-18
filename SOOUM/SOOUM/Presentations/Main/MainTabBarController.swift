@@ -41,7 +41,7 @@ class MainTabBarController: SOMTabBarController, View {
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
                 let locationManager = LocationManager.shared
-                locationManager.delegate = self
+                locationManager.delegate = object
                 if locationManager.checkLocationAuthStatus() == .notDetermined {
                     locationManager.requestLocationPermission()
                 }

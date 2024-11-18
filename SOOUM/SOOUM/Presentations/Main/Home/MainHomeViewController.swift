@@ -221,7 +221,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .subscribe(with: self) { object, cards in
                 object.cards = cards
-                self.placeholderView.isHidden = !cards.isEmpty
+                object.placeholderView.isHidden = !cards.isEmpty
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)

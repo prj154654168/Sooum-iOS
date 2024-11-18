@@ -291,7 +291,7 @@ extension DetailViewController: UICollectionViewDataSource {
         cell.rightTopSettingButton.rx.tap
             .subscribe(with: self) { object, _ in
                 
-                if self.detailCard.isOwnCard {
+                if object.detailCard.isOwnCard {
                     /// 자신의 카드일 때 카드 삭제하기
                     let presented = SOMDialogViewController()
                     presented.setData(

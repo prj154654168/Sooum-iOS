@@ -98,7 +98,8 @@ class DetailViewReactor: Reactor {
             return .concat([
                 self.networkManager.request(Status.self, request: request)
                     .filter { $0.httpCode != 400 }
-                    .flatMapLatest { _ in self.fetchCardSummary() }
+                    .withUnretained(self)
+                    .flatMapLatest { object, _ in object.fetchCardSummary() }
             ])
         }
     }
