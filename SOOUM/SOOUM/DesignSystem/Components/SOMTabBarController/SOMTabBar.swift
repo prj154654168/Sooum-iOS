@@ -12,7 +12,8 @@ import Then
 
 
 protocol SOMTabBarDelegate: AnyObject {
-     func tabBar(_ tabBar: SOMTabBar, didSelectTabAt index: Int)
+    func tabBar(_ tabBar: SOMTabBar, shouldSelectTabAt index: Int) -> Bool
+    func tabBar(_ tabBar: SOMTabBar, didSelectTabAt index: Int)
 }
 
 class SOMTabBar: UIView {
@@ -23,9 +24,6 @@ class SOMTabBar: UIView {
         $0.axis = .horizontal
         $0.distribution = .equalSpacing
         $0.alignment = .center
-        $0.layoutMargins = .init(top: 4, left: 4, bottom: 4, right: 4)
-        $0.isLayoutMarginsRelativeArrangement = true
-        $0.layer.cornerRadius = (58 - 4 * 2) * 0.5
     }
     
     private let tabBarBackgroundView = UIView().then {
@@ -54,8 +52,8 @@ class SOMTabBar: UIView {
     
     private let width: CGFloat = UIScreen.main.bounds.width - 20 * 2
     
-    private var selectedIndex: Int = 0
-    private var prevSelectedIndex: Int = 0
+    private var selectedIndex: Int = -1
+    private var prevSelectedIndex: Int = -1
     
     private var tabWidth: CGFloat {
         self.width / CGFloat(self.numberOfItems)
@@ -88,7 +86,10 @@ class SOMTabBar: UIView {
         
         self.tabBarBackgroundView.addSubview(self.tabBarItemContainer)
         self.tabBarItemContainer.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.equalToSuperview().offset(4)
+            $0.bottom.equalToSuperview().offset(-4)
+            $0.leading.equalToSuperview().offset(4)
+            $0.trailing.equalToSuperview().offset(-4)
         }
         
         self.addSubview(self.tabBarBackgroundView)
@@ -109,11 +110,8 @@ class SOMTabBar: UIView {
     
     private func didSelectTab(_ index: Int ) {
         
-        guard index + 1 != self.selectedIndex else { return }
+        guard index != self.selectedIndex else { return }
         self.delegate?.tabBar(self, didSelectTabAt: index)
-        
-        // 글추가 탭은 탭바 변경 없이 네비게이션으로 표시
-        guard index != 1 else { return }
         
         self.tabBarItemContainer.arrangedSubviews.enumerated().forEach {
             guard let tabView = $1 as? SOMTabBarItem else { return }
@@ -121,7 +119,7 @@ class SOMTabBar: UIView {
         }
         
         self.prevSelectedIndex = self.selectedIndex
-        self.selectedIndex = index + 1
+        self.selectedIndex = index
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -129,6 +127,8 @@ class SOMTabBar: UIView {
         
         guard let touchArea = touches.first?.location(in: self).x else { return }
         let index = Int(floor(touchArea / self.tabWidth))
-        self.didSelectTab(index)
+        if self.delegate?.tabBar(self, shouldSelectTabAt: index) ?? false {
+            self.didSelectTab(index)
+        }
     }
 }

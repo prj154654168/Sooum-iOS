@@ -12,6 +12,13 @@ import Then
 
 
 protocol SOMTabBarControllerDelegate: AnyObject {
+    
+    func tabBarController(
+        _ tabBarController: SOMTabBarController,
+        shouldSelect viewController: UIViewController
+    ) -> Bool
+    
+    
     func tabBarController(
         _ tabBarController: SOMTabBarController,
         didSelect viewController: UIViewController
@@ -59,10 +66,13 @@ class SOMTabBarController: UIViewController {
 
 extension SOMTabBarController: SOMTabBarDelegate {
     
+    func tabBar(_ tabBar: SOMTabBar, shouldSelectTabAt index: Int) -> Bool {
+        return self.delegate?.tabBarController(self, shouldSelect: self.viewControllers[index]) ?? true
+    }
+    
     func tabBar(_ tabBar: SOMTabBar, didSelectTabAt index: Int) {
         
         let viewController = self.viewControllers[index]
-        self.delegate?.tabBarController(self, didSelect: viewController)
         
         if self.children.isEmpty == false {
             self.children.forEach {
@@ -76,5 +86,7 @@ extension SOMTabBarController: SOMTabBarDelegate {
         viewController.view.frame = self.container.bounds
         self.container.addSubview(viewController.view)
         viewController.didMove(toParent: self)
+        
+        self.delegate?.tabBarController(self, didSelect: viewController)
     }
 }
