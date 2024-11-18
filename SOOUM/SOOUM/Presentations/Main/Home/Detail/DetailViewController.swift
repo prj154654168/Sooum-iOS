@@ -85,6 +85,7 @@ import RxSwift
      
      var isDeleted = false
      
+     
      // MARK: - Life Cycles
      
      override func setupNaviBar() {
@@ -156,29 +157,21 @@ import RxSwift
          
          self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
              .withLatestFrom(reactor.state.map(\.isLoading))
-             .filter { $0.isLoading == false }
+             .filter { $0 == false }
              .map { _ in Reactor.Action.refresh }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
          // State
-         let isLoading = reactor.state.map(\.isLoading)
-             .distinctUntilChanged({ $0.isLoading == $1.isLoading })
-             .share()
-         isLoading
-             .filter { $0.isOffset == false }
-             .subscribe(with: self.collectionView) { collectionView, isLoading in
-                 if isLoading.isLoading {
-                     collectionView.refreshControl?.beginRefreshing()
-                 } else {
-                     collectionView.refreshControl?.endRefreshing()
-                 }
-             }
+         reactor.state.map(\.isProcessing)
+             .distinctUntilChanged()
+             .bind(to: self.activityIndicatorView.rx.isAnimating)
              .disposed(by: self.disposeBag)
-         isLoading
-             .filter { $0.isOffset }
+         
+         reactor.state.map(\.isLoading)
+             .distinctUntilChanged()
              .subscribe(with: self.collectionView) { collectionView, isLoading in
-                 if isLoading.isLoading {
+                 if isLoading {
                      collectionView.refreshControl?.beginRefreshingFromTop()
                  } else {
                      collectionView.refreshControl?.endRefreshing()
@@ -297,7 +290,10 @@ extension DetailViewController: UICollectionViewDataSource {
                     presented.setData(
                         title: Text.dialogTitle,
                         subTitle: Text.dialogSubTitle,
-                        leftAction: .init(mode: .cancel, handler: { object.dismiss(animated: true) }),
+                        leftAction: .init(
+                            mode: .cancel,
+                            handler: { object.dismiss(animated: true) }
+                        ),
                         rightAction: .init(
                             mode: .delete,
                             handler: { object.reactor?.action.onNext(.delete) }
@@ -344,12 +340,18 @@ extension DetailViewController: UICollectionViewDataSource {
             
             footer.didTap
                 .subscribe(with: self) { object, _ in
-                    let willRemoveViewController = object.navigationController?.viewControllers.last as? DetailViewController
+                    let willRemoveViewController = object.navigationController?
+                        .viewControllers
+                        .last as? DetailViewController
                     let selectedId = footer.commentCards[indexPath.row].id
                     let viewController = DetailViewController()
                     viewController.reactor = reactor.reactorForPush(selectedId)
                     object.navigationPush(viewController, animated: true) { _ in
-                        object.navigationController?.viewControllers.removeAll(where: { $0 == willRemoveViewController })
+                        object.navigationController?
+                            .viewControllers
+                            .removeAll(
+                                where: { $0 == willRemoveViewController }
+                            )
                     }
                 }
                 .disposed(by: footer.disposeBag)

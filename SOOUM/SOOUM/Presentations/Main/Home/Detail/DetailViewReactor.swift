@@ -10,8 +10,6 @@ import ReactorKit
 
 class DetailViewReactor: Reactor {
     
-    typealias LoadingWithOffset = (isLoading: Bool, isOffset: Bool)
-    
     enum Action: Equatable {
         case landing
         case refresh
@@ -24,7 +22,8 @@ class DetailViewReactor: Reactor {
         case commentCards([Card])
         case cardSummary(CardSummary)
         case updateIsDeleted(Bool)
-        case updateIsLoading(LoadingWithOffset)
+        case updateIsLoading(Bool)
+        case updateIsProcessing(Bool)
         case updateError(String?)
     }
     
@@ -34,7 +33,8 @@ class DetailViewReactor: Reactor {
         var commentCards: [Card]
         var cardSummary: CardSummary
         var isDeleted: Bool
-        var isLoading: LoadingWithOffset
+        var isLoading: Bool
+        var isProcessing: Bool
         var errorMessage: String?
     }
     
@@ -44,7 +44,8 @@ class DetailViewReactor: Reactor {
         commentCards: [],
         cardSummary: .init(),
         isDeleted: false,
-        isLoading: (isLoading: false, isOffset: false),
+        isLoading: false,
+        isProcessing: false,
         errorMessage: nil
     )
     
@@ -63,7 +64,7 @@ class DetailViewReactor: Reactor {
         switch action {
         case .landing:
             return .concat([
-                .just(.updateIsLoading((isLoading: true, isOffset: false))),
+                .just(.updateIsProcessing(true)),
                 Observable.zip(
                     self.fetchDetailCard(),
                     self.fetchCommentCards(),
@@ -72,11 +73,11 @@ class DetailViewReactor: Reactor {
                 .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
                     Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
                 },
-                .just(.updateIsLoading((isLoading: false, isOffset: false)))
+                .just(.updateIsProcessing(false))
             ])
         case .refresh:
             return .concat([
-                .just(.updateIsLoading((isLoading: true, isOffset: true))),
+                .just(.updateIsLoading(true)),
                 Observable.zip(
                     self.fetchDetailCard(),
                     self.fetchCommentCards(),
@@ -85,7 +86,7 @@ class DetailViewReactor: Reactor {
                 .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
                     Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
                 },
-                .just(.updateIsLoading((isLoading: false, isOffset: true)))
+                .just(.updateIsLoading(false))
             ])
         case .delete:
             guard let id = self.selectedCardIds.last else { return .empty() }
@@ -118,6 +119,8 @@ class DetailViewReactor: Reactor {
             state.isDeleted = isDeleted
         case let .updateIsLoading(isLoading):
             state.isLoading = isLoading
+        case let .updateIsProcessing(isProcessing):
+            state.isProcessing = isProcessing
         case let .updateError(errorMessage):
             state.errorMessage = errorMessage
         }

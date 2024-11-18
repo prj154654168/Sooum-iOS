@@ -203,8 +203,9 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         // State
         reactor.state.map(\.isLoading)
+            .distinctUntilChanged()
             .subscribe(with: self.tableView) { tableView, isLoading in
-                if isLoading {
+                if (tableView.refreshControl?.isRefreshing ?? false) && isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()
