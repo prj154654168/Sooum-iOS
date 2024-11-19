@@ -112,13 +112,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.keyboardHeight = height == 0 ? self.keyboardHeight : height
         
         let isTextFieldFirstResponder = self.writeCardView.writeTagTextField.isFirstResponder
-        UIView.animate(withDuration: 0.25) {
-            self.writeCardView.snp.updateConstraints {
-                $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(isTextFieldFirstResponder ? -height : 0)
-                $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(isTextFieldFirstResponder ? -height : 0)
-            }
+        self.writeCardView.snp.updateConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(isTextFieldFirstResponder ? -height : 0)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(isTextFieldFirstResponder ? -height : 0)
         }
-        self.view.layoutIfNeeded()
+        
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     override func bind() {

@@ -98,7 +98,6 @@ class LaunchScreenViewController: BaseViewController, View {
             options: [.beginFromCurrentState, .curveEaseOut],
             animations: {
                 self.viewForAnimation.transform = .init(translationX: 0, y: height)
-                self.view.layoutIfNeeded()
             },
             completion: completion
         )

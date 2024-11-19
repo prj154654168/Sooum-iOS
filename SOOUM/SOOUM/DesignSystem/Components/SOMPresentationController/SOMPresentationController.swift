@@ -174,12 +174,11 @@ class SOMPresentationController: UIPresentationController {
         self.currentHeight = height
         if self.currentHeight == 0 { self.presentedViewController.dismiss(animated: true) }
         
+        let isMax = self.currentHeight == self.maxHeight
+        self.updateScreenColor(isMax ? .som.dim : .clear)
+        
         let animationDuration: TimeInterval = animated ? 0.25 : 0
         UIView.animate(withDuration: animationDuration) {
-            
-            let isMax = self.currentHeight == self.maxHeight
-            self.updateScreenColor(isMax ? .som.dim : .clear)
-            
             self.containerViewDidLayoutSubviews()
         }
     }
