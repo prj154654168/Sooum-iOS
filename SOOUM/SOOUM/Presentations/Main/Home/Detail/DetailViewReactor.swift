@@ -65,6 +65,7 @@ class DetailViewReactor: Reactor {
         case .landing:
             return .concat([
                 .just(.updateIsProcessing(true)),
+                
                 Observable.zip(
                     self.fetchDetailCard(),
                     self.fetchCommentCards(),
@@ -72,12 +73,15 @@ class DetailViewReactor: Reactor {
                 )
                 .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
                     Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
-                },
+                }
+                .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
+                
                 .just(.updateIsProcessing(false))
             ])
         case .refresh:
             return .concat([
                 .just(.updateIsLoading(true)),
+                
                 Observable.zip(
                     self.fetchDetailCard(),
                     self.fetchCommentCards(),
@@ -85,7 +89,9 @@ class DetailViewReactor: Reactor {
                 )
                 .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
                     Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
-                },
+                }
+                .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
+                
                 .just(.updateIsLoading(false))
             ])
         case .delete:

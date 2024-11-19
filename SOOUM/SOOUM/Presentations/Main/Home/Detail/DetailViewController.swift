@@ -163,20 +163,23 @@ import RxSwift
              .disposed(by: self.disposeBag)
          
          // State
-         reactor.state.map(\.isProcessing)
-             .distinctUntilChanged()
-             .bind(to: self.activityIndicatorView.rx.isAnimating)
-             .disposed(by: self.disposeBag)
-         
          reactor.state.map(\.isLoading)
              .distinctUntilChanged()
              .subscribe(with: self.collectionView) { collectionView, isLoading in
-                 if isLoading {
+                 if (collectionView.refreshControl?.isRefreshing ?? false) && isLoading {
                      collectionView.refreshControl?.beginRefreshingFromTop()
                  } else {
                      collectionView.refreshControl?.endRefreshing()
                  }
              }
+             .disposed(by: self.disposeBag)
+         
+         let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
+         isProcessing
+             .bind(to: self.collectionView.rx.isHidden)
+             .disposed(by: self.disposeBag)
+         isProcessing
+             .bind(to: self.activityIndicatorView.rx.isAnimating)
              .disposed(by: self.disposeBag)
          
          Observable.combineLatest(

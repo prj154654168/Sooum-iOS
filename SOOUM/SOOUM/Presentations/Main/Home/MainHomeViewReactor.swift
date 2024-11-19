@@ -56,33 +56,38 @@ class MainHomeViewReactor: Reactor {
         case .landing:
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.refresh(),
+                self.refresh()
+                    .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case .refresh:
             return .concat([
                 .just(.updateIsLoading(true)),
-                self.refresh(),
+                self.refresh()
+                    .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.moreFind(lastId),
+                self.moreFind(lastId)
+                    .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case let .homeTabBarItemDidTap(index):
             return .concat([
                 .just(.updateIsProcessing(true)),
                 .just(.updateSelectedIndex(index)),
-                self.refresh(index),
+                self.refresh(index)
+                    .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case let .distanceFilter(distanceFilter):
             return .concat([
                 .just(.updateIsProcessing(true)),
                 .just(.updateDistanceFilter(distanceFilter)),
-                self.refresh(2),
+                self.refresh(2)
+                    .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         }
