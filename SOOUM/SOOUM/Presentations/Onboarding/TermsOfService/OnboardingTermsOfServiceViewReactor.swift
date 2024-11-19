@@ -64,18 +64,19 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
     struct State {
         /// 다음 화면으로 넘어가기 필요 여부
         fileprivate(set) var shoulNavigate: Bool = false
-        /// 전체동의 여부
-        var isAllAgreed: Bool {
-            return self.isTermsOfServiceAgreed
-                && self.isLocationAgreed
-                && self.isPrivacyPolicyAgreed
-        }
         /// 이용약관 동의 여부
         fileprivate(set) var isTermsOfServiceAgreed = false
         /// 위치 동의 여부
         fileprivate(set) var isLocationAgreed = false
         /// 개인정보 처리 동의 여부
         fileprivate(set) var isPrivacyPolicyAgreed = false
+        
+        /// 전체동의 여부
+        var isAllAgreed: Bool {
+            return self.isTermsOfServiceAgreed
+                && self.isLocationAgreed
+                && self.isPrivacyPolicyAgreed
+        }
     }
         
     var initialState = State()
