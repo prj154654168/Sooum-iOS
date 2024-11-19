@@ -69,6 +69,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.isHidden = true
     }
     
+    
     /// tableView에 표시될 카드 정보
     private var cards = [Card]()
     
@@ -213,7 +214,16 @@ class MainHomeViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isProcessing)
+        let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
+        isProcessing
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                object.tableView.isHidden = true
+                object.placeholderView.isHidden = true
+            }
+            .disposed(by: self.disposeBag)
+        
+        isProcessing
             .distinctUntilChanged()
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
@@ -222,6 +232,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .subscribe(with: self) { object, cards in
                 object.cards = cards
+                object.tableView.isHidden = cards.isEmpty
                 object.placeholderView.isHidden = !cards.isEmpty
                 object.tableView.reloadData()
             }
