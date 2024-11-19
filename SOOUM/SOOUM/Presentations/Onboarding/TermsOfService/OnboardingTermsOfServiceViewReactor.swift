@@ -9,6 +9,23 @@ import ReactorKit
 import RxCocoa
 import RxSwift
 
+enum TermsOfService: CaseIterable {
+    case termsOfService
+    case locationService
+    case privacyPolicy
+    
+    var text: String {
+        switch self {
+        case .termsOfService:
+            "[필수] 서비스 이용 약관"
+        case .locationService:
+            "[필수] 위치정보 이용 약관"
+        case .privacyPolicy:
+            "[필수] 개인정보 처리 방침"
+        }
+    }
+}
+
 class OnboardingTermsOfServiceViewReactor: Reactor {
         
     enum Action {
@@ -20,7 +37,9 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
     }
     
     enum Mutation {
+        /// 약관동의 전 가입 api 결과
         case signUpResult(Bool)
+        
         case setIsAllAgreed(Bool)
         case setIsTermsOfServiceAgreed(Bool)
         case setIsLocationAgreed(Bool)
@@ -133,22 +152,5 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
         ]
 
         return .just(.setIsAgreedStats(newStats))
-    }
-}
-
-enum TermsOfService: CaseIterable {
-    case termsOfService
-    case locationService
-    case privacyPolicy
-    
-    var text: String {
-        switch self {
-        case .termsOfService:
-            "[필수] 서비스 이용 약관"
-        case .locationService:
-            "[필수] 위치정보 이용 약관"
-        case .privacyPolicy:
-            "[필수] 개인정보 처리 방침"
-        }
     }
 }

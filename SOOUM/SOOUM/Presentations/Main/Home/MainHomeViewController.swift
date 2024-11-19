@@ -142,6 +142,17 @@ class MainHomeViewController: BaseNavigationViewController, View {
                 object.tableView.scrollToRow(at: indexPath, at: .top, animated: false)
             }
             .disposed(by: self.disposeBag)
+        
+        #if DEVELOP
+        logo.rx.longPressGesture()
+            .when(.began)
+            .subscribe(with: self) { object, _ in
+                AuthKeyChain.shared.delete(.deviceId)
+                AuthKeyChain.shared.delete(.refreshToken)
+                AuthKeyChain.shared.delete(.accessToken)
+            }
+            .disposed(by: self.disposeBag)
+        #endif
     }
     
     
