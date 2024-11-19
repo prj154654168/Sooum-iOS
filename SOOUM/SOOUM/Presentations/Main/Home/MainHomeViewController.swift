@@ -314,21 +314,9 @@ extension MainHomeViewController: UITableViewDataSource {
 
 extension MainHomeViewController: SOMHomeTabBarDelegate {
     
-    func tabBar(_ tabBar: SOMHomeTabBar, prevSelectedTabAt prev: Int, didSelectTabAt curr: Int) {
+    func tabBar(_ tabBar: SOMHomeTabBar, shouldSelectTabAt index: Int) -> Bool {
         
-        self.headerLocationFilter.isHidden = curr != 2
-        self.locationFilterHeightConstraint?.deactivate()
-        self.headerLocationFilter.snp.makeConstraints {
-            let height: CGFloat = curr != 2 ? 0 : SOMLocationFilter.height
-            self.locationFilterHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
-        }
-        self.headerContainerHeightConstraint?.deactivate()
-        self.headerContainer.snp.makeConstraints {
-            let height: CGFloat = curr != 2 ? SOMHomeTabBar.height : SOMHomeTabBar.height + SOMLocationFilter.height
-            self.headerContainerHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
-        }
-        
-        if curr == 2, LocationManager.shared.checkLocationAuthStatus() == .denied {
+        if index == 2, self.reactor?.locationManager.checkLocationAuthStatus() == .denied {
             
             let presented = SOMDialogViewController()
             presented.setData(
@@ -356,11 +344,27 @@ extension MainHomeViewController: SOMHomeTabBarDelegate {
             presented.modalTransitionStyle = .crossDissolve
             
             self.present(presented, animated: true)
-        } else {
-            guard prev != curr else { return }
-            
-            self.reactor?.action.onNext(.homeTabBarItemDidTap(index: curr))
+            return false
         }
+        
+        return true
+    }
+    
+    func tabBar(_ tabBar: SOMHomeTabBar, didSelectTabAt index: Int) {
+        
+        self.headerLocationFilter.isHidden = index != 2
+        self.locationFilterHeightConstraint?.deactivate()
+        self.headerLocationFilter.snp.makeConstraints {
+            let height: CGFloat = index != 2 ? 0 : SOMLocationFilter.height
+            self.locationFilterHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+        }
+        self.headerContainerHeightConstraint?.deactivate()
+        self.headerContainer.snp.makeConstraints {
+            let height: CGFloat = index != 2 ? SOMHomeTabBar.height : SOMHomeTabBar.height + SOMLocationFilter.height
+            self.headerContainerHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+        }
+        
+        self.reactor?.action.onNext(.homeTabBarItemDidTap(index: index))
     }
 }
 

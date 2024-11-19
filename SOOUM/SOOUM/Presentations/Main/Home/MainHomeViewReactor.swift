@@ -47,7 +47,7 @@ class MainHomeViewReactor: Reactor {
     )
     
     private let networkManager = NetworkManager.shared
-    private let locationManager = LocationManager.shared
+    let locationManager = LocationManager.shared
     
     init() { }
     
