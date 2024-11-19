@@ -59,39 +59,28 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
         case setIsLocationAgreed(Bool)
         /// 개인정보 동의 설정
         case setIsPrivacyPolicyAgreed(Bool)
-//        case setIsAgreedStats([TermsOfService: Bool])
     }
     
     struct State {
         /// 다음 화면으로 넘어가기 필요 여부
         fileprivate(set) var shoulNavigate: Bool = false
         /// 전체동의 여부
-//        fileprivate(set) var isAllAgreed: Bool = false
-        
         var isAllAgreed: Bool {
             return self.isTermsOfServiceAgreed
                 && self.isLocationAgreed
                 && self.isPrivacyPolicyAgreed
         }
-
         /// 이용약관 동의 여부
         fileprivate(set) var isTermsOfServiceAgreed = false
         /// 위치 동의 여부
         fileprivate(set) var isLocationAgreed = false
         /// 개인정보 처리 동의 여부
         fileprivate(set) var isPrivacyPolicyAgreed = false
-//        fileprivate(set) var isAgreedStats: [TermsOfService: Bool] = [
-//            TermsOfService.termsOfService: false,
-//            TermsOfService.locationService: false,
-//            TermsOfService.privacyPolicy: false
-//        ]
     }
         
     var initialState = State()
 
     func mutate(action: Action) -> Observable<Mutation> {
-        print("\(type(of: self)) - \(#function)", action)
-
         switch action {
         case .signUp:
             return join()
@@ -107,7 +96,6 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
             
         case .allAgree:
             let isAgreed: Bool = !self.currentState.isAllAgreed
-            print("isAgreed", isAgreed)
             return .concat([
                 .just(.setIsTermsOfServiceAgreed(isAgreed)),
                 .just(.setIsLocationAgreed(isAgreed)),
@@ -117,8 +105,6 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        print("\(type(of: self)) - \(#function)", mutation)
-
         var newState = state
         switch mutation {
         case let .signUpResult(result):

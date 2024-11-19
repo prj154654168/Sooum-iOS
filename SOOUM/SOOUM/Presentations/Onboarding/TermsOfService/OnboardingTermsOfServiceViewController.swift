@@ -17,14 +17,6 @@ import Then
 
 class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View {
     
-//    private var agreementStatus = BehaviorRelay<[TermsOfService: Bool]>(
-//        value: [
-//            .termsOfService: false,
-//            .locationService: false,
-//            .privacyPolicy: false
-//        ]
-//    )
-    
     let guideLabelView = OnboardingGuideLabelView().then {
         $0.titleLabel.text = "숨을 시작하기 위해서는\n약관 동의가 필요해요"
         $0.descLabel.isHidden = true
@@ -89,19 +81,15 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             }
             .disposed(by: disposeBag)
         
-//        agreementStatus
-//            .subscribe(with: self) { object, state in
-//                self.updateAgreeAllButtonState()
-//                self.nextButtonView.updateState(state: self.allAgreed)
-//            }
-//            .disposed(by: disposeBag)
-        
         nextButtonView.rx.tapGesture()
             .when(.recognized)
-            .map { _ in Reactor.Action.signUp }
-            .bind(to: reactor.action)
+            .subscribe(with: self, onNext: { object, _ in
+                if reactor.currentState.isAllAgreed {
+                    reactor.action.onNext(.signUp)
+                }
+            })
             .disposed(by: disposeBag)
-        
+
         reactor.state.map(\.shoulNavigate)
             .distinctUntilChanged()
             .filter { [weak self] shouldNavigate in
@@ -117,6 +105,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .distinctUntilChanged()
             .subscribe(with: self) { object, state in
                 object.agreeAllButtonView.updateState(isOn: state)
+                object.nextButtonView.updateState(state: state)
             }
             .disposed(by: self.disposeBag)
 
@@ -159,17 +148,6 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
                 cell.updateState(isOn: state, animated: true)
             }
             .disposed(by: self.disposeBag)
-        
-//        reactor.state.map { $0.isAgreedStats }
-//            .distinctUntilChanged()
-//            .subscribe(with: self) { object, statsDict in
-//                let isOn = statsDict[.termsOfService] ?? false 
-//                    && statsDict[.locationService] ?? false
-//                    && statsDict[.privacyPolicy] ?? false
-//                object.updateAgreeAllButtonState(isOn: isOn)
-//                object.termOfServiceTableView.reloadData()
-//            }
-//            .disposed(by: self.disposeBag)
     }
     
     private func navigateToNicknameSetting() {
@@ -178,17 +156,6 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
         navigationController?.pushViewController(nicknameSettingVC, animated: true)
     }
 
-    /// 선택 상태 전부 업데이트
-//    private func updateAllAgreements(to isAgreed: Bool) {
-//
-//        let newStatus: [TermsOfService: Bool] = [
-//            .termsOfService: isAgreed,
-//            .locationService: isAgreed,
-//            .privacyPolicy: isAgreed
-//        ]
-//        agreementStatus.accept(newStatus)
-//        updateAgreeAllButtonState()
-//    }
     /// 전체 동의 버튼 업데이트
     private func updateAgreeAllButtonState(isOn: Bool) {
         agreeAllButtonView.updateState(isOn: isOn)
