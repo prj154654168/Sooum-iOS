@@ -24,15 +24,7 @@ class CompositeInterceptor: RequestInterceptor {
     
     func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, any Error>) -> Void) {
         
-        // ErrorInterceptor의 인증헤더 적용
-        self.timeoutInterceptor.adapt(urlRequest, for: session) { result in
-            switch result {
-            case .success(let request):
-                completion(.success(request))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
+        self.timeoutInterceptor.adapt(urlRequest, for: session, completion: completion)
     }
     
     func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
@@ -43,7 +35,7 @@ class CompositeInterceptor: RequestInterceptor {
             case .retry:
                 completion(.retry)
             default:
-                completion(.doNotRetry)
+                completion(.doNotRetryWithError(error))
             }
         }
     }
