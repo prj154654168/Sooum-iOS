@@ -112,16 +112,64 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             }
             .disposed(by: disposeBag)
         
-        reactor.state.map { $0.isAgreedStats }
+        reactor.state
+            .map(\.isAllAgreed)
             .distinctUntilChanged()
-            .subscribe(with: self) { object, statsDict in
-                let isOn = statsDict[.termsOfService] ?? false 
-                    && statsDict[.locationService] ?? false
-                    && statsDict[.privacyPolicy] ?? false
-                object.updateAgreeAllButtonState(isOn: isOn)
-                object.termOfServiceTableView.reloadData()
+            .subscribe(with: self) { object, state in
+                object.agreeAllButtonView.updateState(isOn: state)
             }
             .disposed(by: self.disposeBag)
+
+        
+        reactor.state
+            .map(\.isTermsOfServiceAgreed)
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, state in
+                guard let cell = object.termOfServiceTableView.cellForRow(
+                    at: TermsOfService.termsOfService.indexPath
+                ) as? OnboardingTermsOfServiceTableViewCell else {
+                    return
+                }
+                cell.updateState(isOn: state, animated: true)
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state
+            .map(\.isLocationAgreed)
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, state in
+                guard let cell = object.termOfServiceTableView.cellForRow(
+                    at: TermsOfService.locationService.indexPath
+                ) as? OnboardingTermsOfServiceTableViewCell else {
+                    return
+                }
+                cell.updateState(isOn: state, animated: true)
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state
+            .map(\.isPrivacyPolicyAgreed)
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, state in
+                guard let cell = object.termOfServiceTableView.cellForRow(
+                    at: TermsOfService.privacyPolicy.indexPath
+                ) as? OnboardingTermsOfServiceTableViewCell else {
+                    return
+                }
+                cell.updateState(isOn: state, animated: true)
+            }
+            .disposed(by: self.disposeBag)
+        
+//        reactor.state.map { $0.isAgreedStats }
+//            .distinctUntilChanged()
+//            .subscribe(with: self) { object, statsDict in
+//                let isOn = statsDict[.termsOfService] ?? false 
+//                    && statsDict[.locationService] ?? false
+//                    && statsDict[.privacyPolicy] ?? false
+//                object.updateAgreeAllButtonState(isOn: isOn)
+//                object.termOfServiceTableView.reloadData()
+//            }
+//            .disposed(by: self.disposeBag)
     }
     
     private func navigateToNicknameSetting() {
@@ -164,8 +212,18 @@ extension OnboardingTermsOfServiceViewController: UITableViewDataSource, UITable
             return UITableViewCell()
         }
         
+        let state: Bool
+        switch TermsOfService.allCases[indexPath.row] {
+        case .termsOfService:
+            state = reactor.currentState.isTermsOfServiceAgreed
+        case .locationService:
+            state = reactor.currentState.isLocationAgreed
+        case .privacyPolicy:
+            state = reactor.currentState.isPrivacyPolicyAgreed
+        }
+        
         cell.setData(
-            state: reactor.currentState.isAgreedStats[TermsOfService.allCases[indexPath.row]] ?? false,
+            state: state,
             term: TermsOfService.allCases[indexPath.row]
         )
         
@@ -184,10 +242,5 @@ extension OnboardingTermsOfServiceViewController: UITableViewDataSource, UITable
         case .privacyPolicy:
             self.reactor?.action.onNext(.privacyPolicyAgree)
         }
-//        
-//        let term = TermsOfService.allCases[indexPath.row]
-//        var newState = agreementStatus.value
-//        newState[term]?.toggle()
-//        agreementStatus.accept(newState)
     }
 }

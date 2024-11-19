@@ -5,6 +5,8 @@
 //  Created by JDeoks on 11/14/24.
 //
 
+import UIKit
+
 import ReactorKit
 import RxCocoa
 import RxSwift
@@ -24,40 +26,65 @@ enum TermsOfService: CaseIterable {
             "[필수] 개인정보 처리 방침"
         }
     }
+    var indexPath: IndexPath {
+        switch self {
+        case .termsOfService: IndexPath(row: 0, section: 0)
+        case .locationService: IndexPath(row: 1, section: 0)
+        case .privacyPolicy: IndexPath(row: 2, section: 0)
+        }
+    }
 }
 
 class OnboardingTermsOfServiceViewReactor: Reactor {
         
     enum Action {
+        /// 약관동의 전 회원가입
         case signUp
+        /// 모두 동의 버튼 클릭
         case allAgree
+        /// 이용약관 버튼 클릭
         case termsOfServiceAgree
+        /// 위치 정보 동의 버튼 클릭
         case locationAgree
+        /// 개인정보 동의 버튼 클릭
         case privacyPolicyAgree
     }
     
     enum Mutation {
         /// 약관동의 전 가입 api 결과
         case signUpResult(Bool)
-        
-        case setIsAllAgreed(Bool)
+        /// 이용약관 설정
         case setIsTermsOfServiceAgreed(Bool)
+        /// 위치 동의 설정
         case setIsLocationAgreed(Bool)
+        /// 개인정보 동의 설정
         case setIsPrivacyPolicyAgreed(Bool)
-        case setIsAgreedStats([TermsOfService: Bool])
+//        case setIsAgreedStats([TermsOfService: Bool])
     }
     
     struct State {
+        /// 다음 화면으로 넘어가기 필요 여부
         fileprivate(set) var shoulNavigate: Bool = false
-        fileprivate(set) var isAllAgreed: Bool = false
+        /// 전체동의 여부
+//        fileprivate(set) var isAllAgreed: Bool = false
+        
+        var isAllAgreed: Bool {
+            return self.isTermsOfServiceAgreed
+                && self.isLocationAgreed
+                && self.isPrivacyPolicyAgreed
+        }
+
+        /// 이용약관 동의 여부
         fileprivate(set) var isTermsOfServiceAgreed = false
+        /// 위치 동의 여부
         fileprivate(set) var isLocationAgreed = false
+        /// 개인정보 처리 동의 여부
         fileprivate(set) var isPrivacyPolicyAgreed = false
-        fileprivate(set) var isAgreedStats: [TermsOfService: Bool] = [
-            TermsOfService.termsOfService: false,
-            TermsOfService.locationService: false,
-            TermsOfService.privacyPolicy: false
-        ]
+//        fileprivate(set) var isAgreedStats: [TermsOfService: Bool] = [
+//            TermsOfService.termsOfService: false,
+//            TermsOfService.locationService: false,
+//            TermsOfService.privacyPolicy: false
+//        ]
     }
         
     var initialState = State()
@@ -70,35 +97,28 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
             return join()
             
         case .termsOfServiceAgree:
-            return .concat([
-                .just(.setIsTermsOfServiceAgreed(!self.currentState.isTermsOfServiceAgreed)),
-                self.checkIsAllAgreed(type: .termsOfService)
-            ])
+            return .just(.setIsTermsOfServiceAgreed(!self.currentState.isTermsOfServiceAgreed))
             
         case .locationAgree:
-            return .concat([
-                .just(.setIsLocationAgreed(!self.currentState.isLocationAgreed)),
-                self.checkIsAllAgreed(type: .locationService)
-            ])
+            return .just(.setIsLocationAgreed(!self.currentState.isLocationAgreed))
             
         case .privacyPolicyAgree:
-            return .concat([
-                .just(.setIsPrivacyPolicyAgreed(!self.currentState.isPrivacyPolicyAgreed)),
-                self.checkIsAllAgreed(type: .privacyPolicy)
-            ])
+            return .just(.setIsPrivacyPolicyAgreed(!self.currentState.isPrivacyPolicyAgreed))
             
         case .allAgree:
             let isAgreed: Bool = !self.currentState.isAllAgreed
+            print("isAgreed", isAgreed)
             return .concat([
                 .just(.setIsTermsOfServiceAgreed(isAgreed)),
                 .just(.setIsLocationAgreed(isAgreed)),
-                .just(.setIsPrivacyPolicyAgreed(isAgreed)),
-                .just(.setIsAllAgreed(isAgreed))
+                .just(.setIsPrivacyPolicyAgreed(isAgreed))
             ])
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
+        print("\(type(of: self)) - \(#function)", mutation)
+
         var newState = state
         switch mutation {
         case let .signUpResult(result):
@@ -112,12 +132,6 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
             
         case let .setIsPrivacyPolicyAgreed(isAgreed):
             newState.isPrivacyPolicyAgreed = isAgreed
-            
-        case let .setIsAllAgreed(isAgreed):
-            newState.isAllAgreed = isAgreed
-            
-        case let .setIsAgreedStats(statsDict):
-            newState.isAgreedStats = statsDict
         }
         return newState
     }
@@ -127,30 +141,5 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
             .map { result in
                 Mutation.signUpResult(result)
             }
-    }
-    
-    private func checkIsAllAgreed(type: TermsOfService) -> Observable<Mutation> {
-        var isTermsOfServiceAgreed = self.currentState.isTermsOfServiceAgreed
-        var isLocationAgreed = self.currentState.isLocationAgreed
-        var isPrivacyPolicyAgreed = self.currentState.isPrivacyPolicyAgreed
-        
-        switch type {
-        case .termsOfService:
-            isTermsOfServiceAgreed.toggle()
-            
-        case .locationService:
-            isLocationAgreed.toggle()
-            
-        case .privacyPolicy:
-            isPrivacyPolicyAgreed.toggle()
-        }
-        
-        let newStats: [TermsOfService: Bool] = [
-            TermsOfService.termsOfService: isTermsOfServiceAgreed,
-            TermsOfService.locationService: isLocationAgreed,
-            TermsOfService.privacyPolicy: isPrivacyPolicyAgreed
-        ]
-
-        return .just(.setIsAgreedStats(newStats))
     }
 }

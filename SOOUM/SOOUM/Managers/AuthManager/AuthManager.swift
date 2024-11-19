@@ -23,7 +23,7 @@ protocol AuthManagerDelegate: AnyObject {
     func convertPEMToSecKey(pemString: String) -> SecKey?
     func encryptUUIDWithPublicKey(publicKey: SecKey) -> String?
     func certification() -> Observable<Bool>
-    func reAuthenticate(_ accessToken: String, _ completion: @escaping(AuthResult) -> Void)
+    func reAuthenticate(_ accessToken: String, _ completion: @escaping (AuthResult) -> Void)
     func initializeAuthInfo()
     func updateTokens(_ token: Token)
     func authPayloadByAccess() -> [String: String]

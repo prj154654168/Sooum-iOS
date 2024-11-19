@@ -156,6 +156,7 @@ analyzer_rules: # rules run by `swiftlint analyze`
 excluded:
   - SOOUM/Resources
   - SOOUM/Models
+  - Pods
 
 # 👉🏻 Options
 # line_length: 100

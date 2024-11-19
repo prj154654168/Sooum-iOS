@@ -70,6 +70,7 @@ class LaunchScreenViewController: BaseViewController, View {
         // 2. 로그인 성공 시 홈 화면으로 전환
         self.animationCompleted
             .distinctUntilChanged()
+            .observe(on: MainScheduler.instance)
             .withLatestFrom(
                 reactor.state.map(\.isRegistered).distinctUntilChanged(),
                 resultSelector: { $0 && $1 }
