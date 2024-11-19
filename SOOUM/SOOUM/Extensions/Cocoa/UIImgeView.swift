@@ -9,40 +9,23 @@ import UIKit
 
 import Kingfisher
 
+import RxCocoa
+import RxSwift
+
 
 extension UIImageView {
 
     static let placeholder: UIImage? = UIColor.som.gray400.toImage
-    static let label: UILabel = .init()
 
     func setImage(strUrl: String?) {
         
         /// Image load
         if let strUrl: String = strUrl, let url = URL(string: strUrl) {
-            self.kf.setImage(with: url) { _ in
-                /// Delete label if image loading is successful
-                Self.label.removeFromSuperview()
-            }
+            self.kf.setImage(with: url)
             self.backgroundColor = .clear
         } else {
             self.kf.cancelDownloadTask()
-            /// Placeholder view
             self.image = Self.placeholder
-            Self.label.text = "Loading..."
-            Self.label.textColor = .som.white
-            // 고정된 타이포그래피 없음
-            Self.label.typography = .init(
-                fontContainer: BuiltInFont(size: 18, weight: .medium),
-                lineHeight: 21,
-                letterSpacing: -0.04
-            )
-            
-            self.addSubview(Self.label)
-            Self.label.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                Self.label.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-                Self.label.centerYAnchor.constraint(equalTo: self.centerYAnchor)
-            ])
         }
     }
 }
