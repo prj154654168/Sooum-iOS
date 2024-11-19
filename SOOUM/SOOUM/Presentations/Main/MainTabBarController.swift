@@ -55,9 +55,7 @@ class MainTabBarController: SOMTabBarController, View {
         // viewControllers
         let mainHomeViewController = MainHomeViewController()
         mainHomeViewController.reactor = reactor.reactorForMainHome()
-        
-        let mainHomeNavigationController = UINavigationController(rootViewController: mainHomeViewController)
-        mainHomeNavigationController.tabBarItem = .init(
+        mainHomeViewController.tabBarItem = .init(
             title: Text.mainHomeTitle,
             image: .init(.icon(.outlined(.home))),
             tag: 0
@@ -85,7 +83,7 @@ class MainTabBarController: SOMTabBarController, View {
         )
         
         self.viewControllers = [
-            mainHomeNavigationController,
+            mainHomeViewController,
             writeCardViewController,
             tagViewcontroller,
             profileViewController
