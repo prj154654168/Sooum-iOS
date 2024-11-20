@@ -74,7 +74,7 @@ class DetailViewReactor: Reactor {
                 .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
                     Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
                 }
-                .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 
                 .just(.updateIsProcessing(false))
             ])
@@ -90,7 +90,7 @@ class DetailViewReactor: Reactor {
                 .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
                     Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
                 }
-                .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 
                 .just(.updateIsLoading(false))
             ])
