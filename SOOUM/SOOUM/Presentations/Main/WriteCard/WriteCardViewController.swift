@@ -30,20 +30,20 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let dialogSubTitle: String = "추가한 카드는 수정할 수 없어요"
     }
     
-    let timeLimitBackgroundView = UIView().then {
+    private let timeLimitBackgroundView = UIView().then {
         $0.backgroundColor = .som.p200
         $0.layer.cornerRadius = 22 * 0.5
         $0.clipsToBounds = true
         $0.isHidden = true
     }
     
-    let timeLimitLabel = UILabel().then {
+    private let timeLimitLabel = UILabel().then {
         $0.text = Text.timeLimitLabelText
         $0.textColor = .som.black
         $0.typography = .som.body2WithBold
     }
     
-    let writeButton = UIButton().then {
+    private let writeButton = UIButton().then {
         let typography = Typography.som.body2WithBold
         var attributes = typography.attributes
         attributes.updateValue(typography.font, forKey: .font)
@@ -71,11 +71,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
         58
     }
     
-    let uploadCardBottomSheetViewController = UploadCardBottomSheetViewController()
+    private lazy var uploadCardBottomSheetViewController = UploadCardBottomSheetViewController()
     
-    var writtenTagModels = [SOMTagModel]()
+    private var writtenTagModels = [SOMTagModel]()
     
-    var keyboardHeight: CGFloat = 0
+    private var keyboardHeight: CGFloat = 0
     
     
     // MARK: - Life Cycles
@@ -199,19 +199,24 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .withLatestFrom(writtenTagText)
             .filter { $0.isEmpty == false }
             .withUnretained(self)
-            .do(onNext: { object, _ in object.writeCardView.writeTagTextField.text = nil })
+            .do(onNext: { object, writtenTagText in
+                object.writeCardView.writeTagTextField.text = nil
+                object.writeCardView.writeTagTextField.sendActionsToTextField(for: .editingChanged)
+            })
             .map { object, writtenTagText in
                 let toModel: SOMTagModel = .init(
                     id: UUID().uuidString,
                     originalText: writtenTagText,
                     isRemovable: true
                 )
+                
                 object.writtenTagModels.append(toModel)
-                object.writeCardView.writtenTags.snp.updateConstraints {
-                    $0.height.equalTo(58)
+                object.writeCardView.writtenTagsHeightConstraint?.deactivate()
+                object.writeCardView.writtenTags.snp.makeConstraints {
+                    object.writeCardView.writtenTagsHeightConstraint = $0.height.equalTo(58).constraint
                 }
                 
-                self.view.layoutIfNeeded()
+                object.view.layoutIfNeeded()
                 
                 return object.writtenTagModels
             }
@@ -220,7 +225,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         /// Action
         writtenTagText
-            .filter { $0.isEmpty == false }
             .map(Reactor.Action.relatedTags)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -356,8 +360,9 @@ extension WriteCardViewController: SOMTagsDelegate {
         
         self.writtenTagModels.removeAll(where: { $0 == model })
         if self.writtenTagModels.isEmpty {
-            self.writeCardView.writtenTags.snp.updateConstraints {
-                $0.height.equalTo(12)
+            self.writeCardView.writtenTagsHeightConstraint?.deactivate()
+            self.writeCardView.writtenTags.snp.makeConstraints {
+                self.writeCardView.writtenTagsHeightConstraint = $0.height.equalTo(12).constraint
             }
         }
     }
@@ -365,5 +370,6 @@ extension WriteCardViewController: SOMTagsDelegate {
     func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
         
         self.writeCardView.writeTagTextField.text = model.originalText
+        self.writeCardView.writeTagTextField.sendActionsToTextField(for: .editingChanged)
     }
 }
