@@ -13,12 +13,7 @@ import Then
 
 class SOMTags: UIView {
     
-    private let flowLayout = UICollectionViewFlowLayout().then {
-        $0.scrollDirection = .horizontal
-        $0.minimumInteritemSpacing = 10
-        $0.sectionInset = UIEdgeInsets(top: 12, left: 20, bottom: 17, right: 0)
-    }
-    
+    private let flowLayout = SOMTagsLayout()
     lazy var collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: self.flowLayout
@@ -31,11 +26,6 @@ class SOMTags: UIView {
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
         
-        $0.alwaysBounceVertical = self.flowLayout.scrollDirection == .vertical
-        $0.alwaysBounceHorizontal = self.flowLayout.scrollDirection == .horizontal
-        
-        $0.isScrollEnabled = self.flowLayout.scrollDirection == .horizontal
-        
         $0.register(SOMTag.self, forCellWithReuseIdentifier: SOMTag.cellIdentifier)
         
         $0.dataSource = self
@@ -44,15 +34,47 @@ class SOMTags: UIView {
     
     private(set) var models = [SOMTagModel]()
     
+    private var configuration: SOMTagsLayoutConfigure = .horizontalWithoutRemove
+    
     weak var delegate: SOMTagsDelegate?
+    
+    convenience init() {
+        self.init(configure: SOMTagsLayoutConfigure.horizontalWithoutRemove)
+    }
+    
+    init(configure: SOMTagsLayoutConfigure) {
+        super.init(frame: .zero)
+        self.configure(config: configure)
+        self.setupConstraints()
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.configure(config: .horizontalWithoutRemove)
         self.setupConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configure(config: SOMTagsLayoutConfigure) {
+        
+        self.configuration = config
+        
+        self.flowLayout.scrollDirection = config.direction
+        self.flowLayout.minimumLineSpacing = config.lineSpacing
+        self.flowLayout.minimumInteritemSpacing = config.interSpacing
+        self.flowLayout.sectionInset = config.inset
+        
+        self.flowLayout.estimatedItemSize = .zero
+        
+        self.collectionView.alwaysBounceVertical = config.direction == .vertical
+        self.collectionView.alwaysBounceHorizontal = config.direction == .horizontal
+        
+        self.collectionView.isScrollEnabled = config.direction == .horizontal
+        
+        self.collectionView.collectionViewLayout.invalidateLayout()
     }
     
     private func setupConstraints() {
@@ -79,69 +101,67 @@ class SOMTags: UIView {
      */
     func setModels(_ models: [SOMTagModel]) {
         
-        guard !models.isEmpty else {
+        guard models.isEmpty == false else {
             self.models = []
             self.collectionView.reloadData()
             return
         }
         
-        /// flowLayout 옵션 한 번만 업데이트
-        guard let configuration = models.first?.configuration else { return }
-        if self.flowLayout.scrollDirection != configuration.direction {
-            self.flowLayout.scrollDirection = configuration.direction
-        }
-        if self.flowLayout.minimumInteritemSpacing != configuration.interSpacing {
-            self.flowLayout.minimumInteritemSpacing = configuration.interSpacing
-        }
-        if self.flowLayout.minimumLineSpacing != configuration.lineSpacing {
-            self.flowLayout.minimumLineSpacing = configuration.lineSpacing
-        }
-        if self.flowLayout.sectionInset != configuration.inset {
-            self.flowLayout.sectionInset = configuration.inset
-        }
-        
         let current = self.models
-        let new = Array(NSOrderedSet(array: models)) as! [SOMTagModel]
-        /// 중복 제거
-        let deduplicatedCurrent = Set(current)
-        let deduplicatedNew = Set(new)
+        let new = models
         /// 변경사항이 없다면 종료
-        guard deduplicatedCurrent != deduplicatedNew else { return }
+        guard current != new else { return }
+        
         /// 새로운 태그가 유효한지 확인 (중복 여부 확인)
-        let isValid: Bool = models.count == deduplicatedNew.count
-        if !isValid { print("⚠️ 중복된 태그가 존재합니다. 태그의 순서를 유지하고 중복된 태그를 제거합니다.") }
+        let deduplicatedNew = Set(new)
+        if models.count != deduplicatedNew.count {
+            print("⚠️ 중복된 태그가 존재합니다. 태그의 순서를 유지하고 중복된 태그를 제거합니다.")
+        }
         /// 현재 태그 배열에서 삭제되어야 할 태그 및 삽입되어야 할 태그 찾기
-        let deleted = deduplicatedCurrent.subtracting(deduplicatedNew)
-        let inserted = deduplicatedNew.subtracting(deduplicatedCurrent)
+        let deleted = Set(current).subtracting(deduplicatedNew)
+        let inserted = deduplicatedNew.subtracting(current)
         /// 삭제 또는 삽입 되어야 할 태그 인덱스
         let deletedIndices = current.enumerated()
             .filter { deleted.contains($0.element) }
             .map { IndexPath(item: $0.offset, section: 0) }
-        let insertedIndices = new.enumerated()
+        let insertedIndices = deduplicatedNew.enumerated()
             .filter { inserted.contains($0.element) }
             .map { IndexPath(item: $0.offset, section: 0) }
-        
-        /// 삭제되어야 할 태그 삭제, 추가되어야 할 태그 추가, 태그 순서 변경, 후에 모델이 업데이트 되었으면 리로드, 모델 업데이트
-        if !deletedIndices.isEmpty || !insertedIndices.isEmpty {
-            self.collectionView.performBatchUpdates {
-                if !deletedIndices.isEmpty {
-                    self.collectionView.deleteItems(at: deletedIndices)
-                    self.models.removeAll(where: { deleted.contains($0) })
-                }
-                
-                if !insertedIndices.isEmpty {
-                    self.collectionView.insertItems(at: insertedIndices)
-                    inserted.forEach { self.models.append($0) }
-                }
-            } completion: { _ in
-                if self.collectionView.numberOfItems(inSection: 0) != self.models.count {
-                    self.collectionView.reloadData()
+        /// 변경되어야 할 인덱스
+        var moveIndeces: [(from: Int, to: Int)] = []
+        if current.count + deduplicatedNew.count > 0, deletedIndices.isEmpty, insertedIndices.isEmpty {
+            for currentItemIndex in 0..<current.count {
+                let currentItem = current[currentItemIndex]
+                if let newItemIndex = new.firstIndex(of: currentItem),
+                   currentItemIndex > newItemIndex {
+                    moveIndeces.append((currentItemIndex, newItemIndex))
                 }
             }
         }
+        
+        /// 삭제되어야 할 태그 삭제, 추가되어야 할 태그 추가, 태그 순서 변경, 모델 업데이트
+        if current.isEmpty == false {
+            self.collectionView.performBatchUpdates {
+                self.collectionView.deleteItems(at: deletedIndices)
+                self.models.removeAll(where: { deleted.contains($0) })
+                
+                self.collectionView.insertItems(at: insertedIndices)
+                inserted.forEach { self.models.append($0) }
+                
+                moveIndeces.forEach {
+                    self.collectionView.moveItem(
+                        at: .init(item: $0.from, section: 0),
+                        to: .init(item: $0.to, section: 0)
+                    )
+                }
+                self.models = moveIndeces.isEmpty ? self.models : new
+            }
+        } else {
+            self.models = new
+            self.collectionView.reloadData()
+        }
     }
 }
-
 
 extension SOMTags: UICollectionViewDataSource {
     
@@ -157,7 +177,7 @@ extension SOMTags: UICollectionViewDataSource {
         ) as! SOMTag
 
         let model = self.models[indexPath.item]
-        tag.setModel(model)
+        tag.setModel(model, direction: self.configuration.direction)
         
         tag.delegate = self
 
@@ -169,7 +189,9 @@ extension SOMTags: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let model = self.models[indexPath.row]
-        self.delegate?.tags(self, didTouch: model)
+        if model.isSelectable {
+            self.delegate?.tags(self, didTouch: model)
+        }
     }
     
     func collectionView(
@@ -177,7 +199,34 @@ extension SOMTags: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        return self.models[indexPath.item].tagSize
+        
+        let typography: Typography = .som.body2WithRegular
+        let model = self.models[indexPath.item]
+        
+        var tagSize: CGSize {
+            
+            let leadingOffset: CGFloat = self.configuration.direction == .horizontal ? 16 : 10
+            
+            let removeButtonWidth: CGFloat = model.isRemovable ? 16 + 8 : 0 /// 버튼 width + spacing
+            
+            let textWidth: CGFloat = (model.text as NSString).size(
+                withAttributes: [.font: typography.font]
+            ).width
+            
+            var countWidth: CGFloat = 0 /// text width + spacing
+            if let count = model.count {
+                countWidth = (count as NSString).size(withAttributes: [.font: typography.font]).width
+                countWidth += 2
+            }
+            
+            let traillingOffset: CGFloat = self.configuration.direction == .horizontal ? 16 : 6
+            
+            let tagWidth: CGFloat = leadingOffset + removeButtonWidth + ceil(textWidth) + ceil(countWidth) + traillingOffset
+            let tagHeight: CGFloat = self.configuration.direction == .horizontal ? 30 : 32
+            return CGSize(width: tagWidth, height: tagHeight)
+        }
+        
+        return tagSize
     }
 }
 

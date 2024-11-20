@@ -204,8 +204,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 let toModel: SOMTagModel = .init(
                     id: UUID().uuidString,
                     originalText: writtenTagText,
-                    isRemovable: true,
-                    configuration: .horizontalWithRemove
+                    isRemovable: true
                 )
                 object.writtenTagModels.append(toModel)
                 object.writeCardView.writtenTags.snp.updateConstraints {
@@ -286,8 +285,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
                         id: UUID().uuidString,
                         originalText: relatedTag.content,
                         count: "0\(relatedTag.count)",
-                        isRemovable: false,
-                        configuration: .verticalWithoutRemove
+                        isSelectable: true,
+                        isRemovable: false
                     )
                     return toModel
                 }

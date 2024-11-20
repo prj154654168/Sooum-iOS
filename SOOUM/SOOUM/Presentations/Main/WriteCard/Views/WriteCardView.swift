@@ -27,13 +27,13 @@ class WriteCardView: UIView {
         $0.placeholder = Text.wirteTagPlacholder
     }
     
-    lazy var writtenTags = SOMTags()
+    let writtenTags = SOMTags(configure: .horizontalWithRemove)
+    var writtenTagsHeightConstraint: Constraint?
     
     let relatedTagsBackgroundView = UIView().then {
         $0.isHidden = true
     }
-    
-    lazy var relatedTags = SOMTags()
+    let relatedTags = SOMTags(configure: .verticalWithoutRemove)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,7 +57,7 @@ class WriteCardView: UIView {
         self.writtenTags.snp.makeConstraints {
             $0.top.equalTo(self.writeCardTextView.snp.bottom)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(12)
+            self.writtenTagsHeightConstraint = $0.height.equalTo(12).constraint
         }
         
         self.addSubview(self.writeTagTextField)
