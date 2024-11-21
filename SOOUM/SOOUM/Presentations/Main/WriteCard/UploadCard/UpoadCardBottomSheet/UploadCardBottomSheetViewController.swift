@@ -135,7 +135,7 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     
     func bind(reactor: UploadCardBottomSheetViewReactor) {
         
-        self.rx.viewWillAppear
+        self.rx.viewDidLoad
             .map({ _ in
                 return Reactor.Action.fetchNewDefaultImage
             })
@@ -187,8 +187,10 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
         
         selectedMyImage
+            .distinctUntilChanged({ $0?.name == $01?.name })
             .subscribe(with: self, onNext: { object, imageWithName in
-                if let name = imageWithName?.name {
+                if let name = imageWithName?.name, let image = imageWithName?.image {
+                    object.bottomSheetImageSelected.accept(image)
                     object.bottomSheetImageNameSeleted.accept(name)
                 }
             })
