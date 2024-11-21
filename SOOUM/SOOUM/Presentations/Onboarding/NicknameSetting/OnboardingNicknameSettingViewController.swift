@@ -86,7 +86,6 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             lineHeight: 19.6,
             letterSpacing: 0
         )
-        // TODO: - 색 수정 필요
         $0.textColor = .som.red
         $0.text = "한 글자 이상 입력해주세요"
     }
@@ -100,7 +99,6 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             lineHeight: 19.6,
             letterSpacing: 0
         )
-        // TODO: - 색 수정 필요
         $0.textColor = .som.gray500
         $0.text = "1/8"
     }

@@ -42,9 +42,10 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
         $0.text = ""
     }
     
-    let nextImageView = UIImageView().then {
-        $0.image = .next
-        $0.contentMode = .scaleAspectFill
+    let nextButton = UIButton().then {
+        var config = UIButton.Configuration.plain()
+        config.image = .next
+        $0.configuration = config
         $0.tintColor = .som.gray500
     }
     
@@ -59,30 +60,22 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    func setData(
-//        state: BehaviorRelay<[OnboardingTermsOfServiceViewController.TermsOfService: Bool]>,
-//        term: OnboardingTermsOfServiceViewController.TermsOfService
-//    ) {
-//        disposeBag = DisposeBag()
-//
-//        agreementStatus = state
-//        self.term = term
-//        titleLabel.text = term.text
-//        updateState(isOn: state.value[term] ?? false)
-//        
-//        agreementStatus?.subscribe(with: self) { object, state in
-//            object.updateState(isOn: state[term] ?? false, animated: true)
-//        }
-//        .disposed(by: self.disposeBag)
-//    }
-    
     func setData(
         state: Bool,
         term: TermsOfService
     ) {
+        self.disposeBag = DisposeBag()
         self.term = term
         titleLabel.text = term.text
         updateState(isOn: state)
+        
+        nextButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                if UIApplication.shared.canOpenURL(term.notionURL) {
+                    UIApplication.shared.open(term.notionURL, options: [:], completionHandler: nil)
+                }
+            }
+            .disposed(by: self.disposeBag)
     }
 
     // MARK: - setupConstraint
@@ -102,8 +95,8 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
             $0.bottom.equalToSuperview().offset(-11)
         }
         
-        contentView.addSubview(nextImageView)
-        nextImageView.snp.makeConstraints {
+        contentView.addSubview(nextButton)
+        nextButton.snp.makeConstraints {
             $0.trailing.equalToSuperview().offset(-16)
             $0.top.equalToSuperview().offset(11)
             $0.bottom.equalToSuperview().offset(-11)
@@ -116,7 +109,7 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
             self.checkBoxImageView.image = isOn ? .checkboxFilled : .checkboxOutlined
         }
         UIView.animate(withDuration: animated ? animated ? 0.2 : 0 : 0) {
-            self.nextImageView.tintColor = isOn ? .som.p300 : .som.gray500
+            self.nextButton.tintColor = isOn ? .som.p300 : .som.gray500
         }
         UIView.transition(with: titleLabel, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
             self.titleLabel.textColor = isOn ? .som.p300 : .som.gray500

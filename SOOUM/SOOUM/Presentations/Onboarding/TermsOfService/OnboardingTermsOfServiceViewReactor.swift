@@ -26,11 +26,25 @@ enum TermsOfService: CaseIterable {
             "[필수] 개인정보 처리 방침"
         }
     }
+    
     var indexPath: IndexPath {
         switch self {
         case .termsOfService: IndexPath(row: 0, section: 0)
         case .locationService: IndexPath(row: 1, section: 0)
         case .privacyPolicy: IndexPath(row: 2, section: 0)
+        }
+    }
+    
+    var notionURL: URL {
+        switch self {
+        case .termsOfService:
+            return URL(string: "https://tiny-viscount-552.notion.site/78a2178a3c7f46d18bbfa45c880c11a5?pvs=4")!
+
+        case .locationService:
+            return URL(string: "https://tiny-viscount-552.notion.site/b529a2cfe4034baa89a64c64b17216a7?pvs=4")!
+            
+        case .privacyPolicy:
+            return URL(string: "https://tiny-viscount-552.notion.site/73ff608593ff42e0830c6bc772e0ffc1?pvs=4")!
         }
     }
 }

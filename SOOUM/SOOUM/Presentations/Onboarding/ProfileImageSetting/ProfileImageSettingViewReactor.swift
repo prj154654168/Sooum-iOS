@@ -120,14 +120,15 @@ class ProfileImageSettingViewReactor: Reactor {
     private func registerUser(userName: String, imageName: String) -> Observable<Mutation> {
         let request: JoinRequest = .registerUser(userName: userName, imageName: imageName)
         
-        return NetworkManager.shared.request(RegisterUserResponse.self, request: request)
+        return NetworkManager.shared.request(Empty.self, request: request)
             .map { _ in
                 return Mutation.registerUser(.success(()))
             }
             .catch { error in
-                // TODO: - 204 해결
-                Observable.just(Mutation.registerUser(.success(())))
-//                Observable.just(Mutation.registerUser(.failure(error)))
+                Observable.just(Mutation.registerUser(.failure(NSError(
+                    domain: "ProfileImageSettingViewReactor - registerUser 실패",
+                    code: -1)
+                )))
             }
     }
 }
