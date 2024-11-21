@@ -148,6 +148,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 object.presentBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
+                    dismissWhenScreenDidTap: true,
                     isHandleBar: true,
                     isScrollable: false,
                     neverDismiss: true,
@@ -164,6 +165,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .drive(with: self) { object, _ in
                 object.presentBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
+                    dismissWhenScreenDidTap: true,
                     isHandleBar: true,
                     isScrollable: false,
                     neverDismiss: true,

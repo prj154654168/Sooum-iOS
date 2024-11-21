@@ -220,7 +220,12 @@ class SOMPresentationController: UIPresentationController {
     
     @objc
     private func screenDidTap(_ sender: UITapGestureRecognizer) {
-        self.presentedViewController.dismiss(animated: true)
+        
+        if self.currentHeight == self.initalHeight {
+            self.presentedViewController.dismiss(animated: true)
+        } else {
+            self.updateHeight(self.initalHeight)
+        }
     }
     
     @objc
