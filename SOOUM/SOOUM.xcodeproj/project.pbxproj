@@ -24,8 +24,6 @@
 		2A45B36D2CE3A3E30071026A /* ProfileImageSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */; };
 		2A45B36F2CE4C5510071026A /* RegisterUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */; };
 		2A45B3702CE4C5510071026A /* RegisterUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */; };
-		2A57D6EE2CC7BFA000DAD0F3 /* YPImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 2A57D6ED2CC7BFA000DAD0F3 /* YPImagePicker */; };
-		2A57D6F02CC7BFA900DAD0F3 /* YPImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 2A57D6EF2CC7BFA900DAD0F3 /* YPImagePicker */; };
 		2A5BB7B92CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */; };
 		2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */; };
 		2A5BB7BE2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7BD2CDB870000E1C799 /* OnboardingGuideLabelView.swift */; };
@@ -1805,7 +1803,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 100000;
+				CURRENT_PROJECT_VERSION = 100001;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1851,7 +1849,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 100000;
+				CURRENT_PROJECT_VERSION = 100001;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
