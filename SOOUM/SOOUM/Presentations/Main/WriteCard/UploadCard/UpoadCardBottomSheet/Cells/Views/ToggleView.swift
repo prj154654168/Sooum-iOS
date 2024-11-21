@@ -46,6 +46,11 @@ class ToggleView: UIView {
     
     func setData(toggleState: BehaviorRelay<Bool>) {
         self.toggleState = toggleState
+        self.toggleState?
+            .subscribe(with: self) { object, toggleState in
+                object.updateToggleView(toggleState, animated: false)
+            }
+        .disposed(by: self.disposeBag)
         
         action()
     }
