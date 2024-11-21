@@ -136,9 +136,9 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             .when(.recognized)
             .subscribe(with: self) { object, _ in
                 let profileImageVC = ProfileImageSettingViewController()
-                let profileImageReactor = ProfileImageSettingViewReactor(nickname: self.nicknameTextField.textField.text!)
+                let profileImageReactor = ProfileImageSettingViewReactor(nickname: object.nicknameTextField.textField.text!)
                 profileImageVC.reactor = profileImageReactor
-                self.navigationController?.pushViewController(profileImageVC, animated: true)
+                object.navigationController?.pushViewController(profileImageVC, animated: true)
             }
             .disposed(by: disposeBag)
 
