@@ -94,15 +94,15 @@ class SelectFontTableViewCell: UITableViewCell {
     private func action() {
         gothicButtonLabel.rx.tapGesture()
             .when(.recognized)
-            .subscribe { _ in
-                self.updateFont(font: .gothic, animated: true)
+            .subscribe(with: self) { object, _ in
+                object.updateFont(font: .gothic, animated: true)
             }
             .disposed(by: disposeBag)
         
         handwritingButtonLabel.rx.tapGesture()
             .when(.recognized)
-            .subscribe { _ in
-                self.updateFont(font: .handwriting, animated: true)
+            .subscribe(with: self) { object, _ in
+                object.updateFont(font: .handwriting, animated: true)
             }
             .disposed(by: disposeBag)
     }

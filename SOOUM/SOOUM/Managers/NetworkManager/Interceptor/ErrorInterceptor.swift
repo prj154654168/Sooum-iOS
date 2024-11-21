@@ -28,7 +28,6 @@ class ErrorInterceptor: RequestInterceptor {
         self.requestsToRetry.append(completion)
         
         self.authManager.reAuthenticate(self.authManager.authInfo.token.accessToken) { [weak self] result in
-            self?.lock.lock(); defer { self?.lock.unlock() }
             
             switch result {
             case .success:

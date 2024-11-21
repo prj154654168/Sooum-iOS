@@ -14,6 +14,7 @@ extension UIViewController {
         presented viewController: UIViewController,
         dismissWhenScreenDidTap: Bool = false,
         isHandleBar: Bool,
+        isScrollable: Bool,
         neverDismiss: Bool,
         maxHeight: CGFloat? = nil,
         initalHeight: CGFloat,
@@ -23,6 +24,7 @@ extension UIViewController {
         let transitioningDelegate = SOMTransitioningDelegate(
             dismissWhenScreenDidTap: dismissWhenScreenDidTap,
             isHandleBar: isHandleBar,
+            isScrollable: isScrollable,
             neverDismiss: neverDismiss,
             maxHeight: maxHeight,
             initalHeight: initalHeight,

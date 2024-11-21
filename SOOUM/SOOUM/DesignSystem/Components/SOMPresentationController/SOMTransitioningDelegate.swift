@@ -16,6 +16,7 @@ class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate 
     
     private var dismissWhenScreenDidTap: Bool
     private var isHandleBar: Bool
+    private var isScrollable: Bool
     private var neverDismiss: Bool
     
     private var maxHeight: CGFloat?
@@ -29,6 +30,7 @@ class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate 
     init(
         dismissWhenScreenDidTap: Bool,
         isHandleBar: Bool,
+        isScrollable: Bool,
         neverDismiss: Bool,
         maxHeight: CGFloat?,
         initalHeight: CGFloat,
@@ -36,6 +38,7 @@ class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate 
     ) {
         self.dismissWhenScreenDidTap = dismissWhenScreenDidTap
         self.isHandleBar = isHandleBar
+        self.isScrollable = isScrollable
         self.neverDismiss = neverDismiss
         self.maxHeight = maxHeight
         self.initalHeight = initalHeight
@@ -53,6 +56,7 @@ class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate 
             presenting: presenting,
             dismissWhenScreenDidTap: self.dismissWhenScreenDidTap,
             isHandleBar: self.isHandleBar,
+            isScrollable: self.isScrollable,
             neverDismiss: self.neverDismiss,
             maxHeight: self.maxHeight,
             initalHeight: self.initalHeight,

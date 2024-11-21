@@ -126,6 +126,8 @@
 		381DEA8C2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DEA8A2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift */; };
 		381DEA8D2CD4BE4A009F1FE9 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38608B2F2CB5195D0066BB40 /* Card.swift */; };
 		381DEA8E2CD4BE55009F1FE9 /* SignInResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A42C2CAC14C800DC463E /* SignInResponse.swift */; };
+		3830FFA62CEC6E3100ABA9FD /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3830FFA52CEC6E3100ABA9FD /* UIImage.swift */; };
+		3830FFA72CEC6E3100ABA9FD /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3830FFA52CEC6E3100ABA9FD /* UIImage.swift */; };
 		3836ACB42C8F045300A3C566 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB32C8F045300A3C566 /* Typography.swift */; };
 		3836ACB52C8F045300A3C566 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB32C8F045300A3C566 /* Typography.swift */; };
 		3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */; };
@@ -166,6 +168,8 @@
 		38608B302CB5195D0066BB40 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38608B2F2CB5195D0066BB40 /* Card.swift */; };
 		3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
 		3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
+		3866577E2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */; };
+		3866577F2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */; };
 		38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */; };
 		38773E7D2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */; };
 		3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4702CA3F03400AA46A2 /* SOMCard.swift */; };
@@ -214,6 +218,8 @@
 		389681112CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */; };
 		38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
+		38A627172CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A627162CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift */; };
+		38A627182CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A627162CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift */; };
 		38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
 		38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
 		38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
@@ -222,8 +228,6 @@
 		38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
 		38B6AAD12CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */; };
 		38B6AAD22CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */; };
-		38B6AAD52CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD42CA41B3C00CE6DB6 /* MainHomeHeaderView.swift */; };
-		38B6AAD62CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD42CA41B3C00CE6DB6 /* MainHomeHeaderView.swift */; };
 		38B6AAD82CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */; };
 		38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */; };
 		38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AADA2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift */; };
@@ -363,6 +367,7 @@
 		381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsDelegate.swift; sourceTree = "<group>"; };
 		381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayout.swift; sourceTree = "<group>"; };
 		381DEA8A2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteCardTextView+Rx.swift"; sourceTree = "<group>"; };
+		3830FFA52CEC6E3100ABA9FD /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		3836ACB32C8F045300A3C566 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Observer.swift"; sourceTree = "<group>"; };
 		3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Typography.swift"; sourceTree = "<group>"; };
@@ -383,6 +388,7 @@
 		385E65A22CBE56D00032E120 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		38608B2F2CB5195D0066BB40 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PushAndPop.swift"; sourceTree = "<group>"; };
+		3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Rx.swift"; sourceTree = "<group>"; };
 		38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMRefreshControl.swift; sourceTree = "<group>"; };
 		3878F4702CA3F03400AA46A2 /* SOMCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMCard.swift; sourceTree = "<group>"; };
 		3878F4732CA3F06C00AA46A2 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
@@ -412,11 +418,11 @@
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewReactor.swift; sourceTree = "<group>"; };
 		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
+		38A627162CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayoutConfigure.swift; sourceTree = "<group>"; };
 		38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndCommentView.swift; sourceTree = "<group>"; };
 		38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreBottomSheetViewController.swift; sourceTree = "<group>"; };
 		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeViewController.swift; sourceTree = "<group>"; };
-		38B6AAD42CA41B3C00CE6DB6 /* MainHomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeHeaderView.swift; sourceTree = "<group>"; };
 		38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTopButtonView.swift; sourceTree = "<group>"; };
 		38B6AADA2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewReactor.swift; sourceTree = "<group>"; };
 		38B6AADE2CA4777200CE6DB6 /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
@@ -957,6 +963,7 @@
 			children = (
 				381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */,
 				388009902CABF855002A9209 /* SOMTagModel.swift */,
+				38A627162CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift */,
 				381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */,
 				3880098D2CABF4C2002A9209 /* SOMTag.swift */,
 				388009932CABFAAA002A9209 /* SOMTags.swift */,
@@ -1005,6 +1012,7 @@
 				3878F4762CA3F08300AA46A2 /* UIView.swift */,
 				384972A22CA54DC10012FCA1 /* UIImgeView.swift */,
 				38121E282CA6A52400602499 /* UIRefreshControl.swift */,
+				3830FFA52CEC6E3100ABA9FD /* UIImage.swift */,
 			);
 			path = Cocoa;
 			sourceTree = "<group>";
@@ -1060,7 +1068,6 @@
 		38B6AAD32CA41B2C00CE6DB6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				38B6AAD42CA41B3C00CE6DB6 /* MainHomeHeaderView.swift */,
 				38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */,
 			);
 			path = Views;
@@ -1070,6 +1077,7 @@
 			isa = PBXGroup;
 			children = (
 				38B6AADE2CA4777200CE6DB6 /* UIViewController+Rx.swift */,
+				3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */,
 			);
 			path = RxCocoa;
 			sourceTree = "<group>";
@@ -1527,6 +1535,7 @@
 				38F720B62CD4F15900DF32B5 /* PopularCardResponse.swift in Sources */,
 				2A5BB7BF2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */,
 				38F720AC2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift in Sources */,
+				38A627182CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */,
 				3887D03A2CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */,
@@ -1545,6 +1554,7 @@
 				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */,
+				3866577F2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */,
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				2AE6B1902CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
@@ -1562,13 +1572,13 @@
 				3880097C2CABEE3D002A9209 /* DetailViewController.swift in Sources */,
 				2AE6B1762CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */,
 				2AE6B1642CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */,
-				38B6AAD62CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
 				2AE6B1722CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift in Sources */,
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				2A45B3702CE4C5510071026A /* RegisterUserResponse.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				2AE6B1932CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
+				3830FFA72CEC6E3100ABA9FD /* UIImage.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				2A44A4382CAC227300DC463E /* BaseAuthResponse.swift in Sources */,
 				385053562C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
@@ -1642,6 +1652,7 @@
 				38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				38D6F17C2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
+				3830FFA62CEC6E3100ABA9FD /* UIImage.swift in Sources */,
 				381701782CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				2A5BB7C52CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */,
 				2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */,
@@ -1713,7 +1724,6 @@
 				38B6AAD82CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
 				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				38B8A5802CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
-				38B6AAD52CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
 				2AE6B1712CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift in Sources */,
 				2AE6B1662CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift in Sources */,
 				2ACBD41D2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
@@ -1765,8 +1775,10 @@
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
 				38F720B32CD4F15900DF32B5 /* LatestCardResponse.swift in Sources */,
 				2A032EFD2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */,
+				38A627172CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */,
 				38B8A5882CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
 				388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
+				3866577E2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -85,6 +85,7 @@ import RxSwift
      
      var isDeleted = false
      
+     
      // MARK: - Life Cycles
      
      override func setupNaviBar() {
@@ -156,34 +157,29 @@ import RxSwift
          
          self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
              .withLatestFrom(reactor.state.map(\.isLoading))
-             .filter { $0.isLoading == false }
+             .filter { $0 == false }
              .map { _ in Reactor.Action.refresh }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
          // State
-         let isLoading = reactor.state.map(\.isLoading)
-             .distinctUntilChanged({ $0.isLoading == $1.isLoading })
-             .share()
-         isLoading
-             .filter { $0.isOffset == false }
+         reactor.state.map(\.isLoading)
+             .distinctUntilChanged()
              .subscribe(with: self.collectionView) { collectionView, isLoading in
-                 if isLoading.isLoading {
-                     collectionView.refreshControl?.beginRefreshing()
-                 } else {
-                     collectionView.refreshControl?.endRefreshing()
-                 }
-             }
-             .disposed(by: self.disposeBag)
-         isLoading
-             .filter { $0.isOffset }
-             .subscribe(with: self.collectionView) { collectionView, isLoading in
-                 if isLoading.isLoading {
+                 if (collectionView.refreshControl?.isRefreshing ?? false) && isLoading {
                      collectionView.refreshControl?.beginRefreshingFromTop()
                  } else {
                      collectionView.refreshControl?.endRefreshing()
                  }
              }
+             .disposed(by: self.disposeBag)
+         
+         let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
+         isProcessing
+             .bind(to: self.collectionView.rx.isHidden)
+             .disposed(by: self.disposeBag)
+         isProcessing
+             .bind(to: self.activityIndicatorView.rx.isAnimating)
              .disposed(by: self.disposeBag)
          
          Observable.combineLatest(
@@ -291,13 +287,16 @@ extension DetailViewController: UICollectionViewDataSource {
         cell.rightTopSettingButton.rx.tap
             .subscribe(with: self) { object, _ in
                 
-                if self.detailCard.isOwnCard {
+                if object.detailCard.isOwnCard {
                     /// 자신의 카드일 때 카드 삭제하기
                     let presented = SOMDialogViewController()
                     presented.setData(
                         title: Text.dialogTitle,
                         subTitle: Text.dialogSubTitle,
-                        leftAction: .init(mode: .cancel, handler: { object.dismiss(animated: true) }),
+                        leftAction: .init(
+                            mode: .cancel,
+                            handler: { object.dismiss(animated: true) }
+                        ),
                         rightAction: .init(
                             mode: .delete,
                             handler: { object.reactor?.action.onNext(.delete) }
@@ -314,6 +313,7 @@ extension DetailViewController: UICollectionViewDataSource {
                         presented: object.moreButtonBottomSheetViewController,
                         dismissWhenScreenDidTap: true,
                         isHandleBar: true,
+                        isScrollable: true,
                         neverDismiss: false,
                         initalHeight: 178
                     )
@@ -344,17 +344,23 @@ extension DetailViewController: UICollectionViewDataSource {
             
             footer.didTap
                 .subscribe(with: self) { object, _ in
-                    let willRemoveViewController = object.navigationController?.viewControllers.last as? DetailViewController
+                    let willRemoveViewController = object.navigationController?
+                        .viewControllers
+                        .last as? DetailViewController
                     let selectedId = footer.commentCards[indexPath.row].id
                     let viewController = DetailViewController()
                     viewController.reactor = reactor.reactorForPush(selectedId)
                     object.navigationPush(viewController, animated: true) { _ in
-                        object.navigationController?.viewControllers.removeAll(where: { $0 == willRemoveViewController })
+                        object.navigationController?
+                            .viewControllers
+                            .removeAll(
+                                where: { $0 == willRemoveViewController }
+                            )
                     }
                 }
                 .disposed(by: footer.disposeBag)
             
-            footer.likeAndCommentView.likeBackgroundButton.rx.tap
+            footer.likeAndCommentView.likeBackgroundButton.rx.throttleTap(.seconds(3))
                 .withLatestFrom(reactor.state.map(\.cardSummary.isLiked))
                 .subscribe(onNext: { isLike in
                     reactor.action.onNext(.updateLike(!isLike))

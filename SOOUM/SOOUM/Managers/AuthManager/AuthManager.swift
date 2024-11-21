@@ -134,7 +134,7 @@ class AuthManager: AuthManagerDelegate {
                     
                     let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
                     return networkManager.request(SignInResponse.self, request: request)
-                        .map { response in
+                        .map { response -> Bool in
                             if response.isRegistered, let token = response.token {
                                 object.authInfo.updateToken(token)
                                 return true

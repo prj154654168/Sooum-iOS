@@ -88,7 +88,7 @@ class SOMTag: UICollectionViewCell {
         self.contentView.backgroundColor = direction == .horizontal ? .som.gray200 : .clear
     }
     
-    func setModel(_ model: SOMTagModel) {
+    func setModel(_ model: SOMTagModel, direction: UICollectionView.ScrollDirection) {
         
         self.model = model
         if let count = model.count {
@@ -107,7 +107,7 @@ class SOMTag: UICollectionViewCell {
             self.label.text = model.text
         }
         
-        let isHorizontal = model.configuration.direction == .horizontal
+        let isHorizontal = direction == .horizontal
         self.contentView.backgroundColor = isHorizontal ? .som.gray200 : .clear
         
         self.removeButtonLeadingConstraint?.update(offset: isHorizontal ? 16 : 10)

@@ -24,72 +24,96 @@ class MainTabBarController: SOMTabBarController, View {
         static let profileTitle: String = "프로필"
     }
     
-    let mainHomeViewController = MainHomeViewController()
-    let writeCardViewController = WriteCardViewController()
-    
     var disposeBag = DisposeBag()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.navigationBar.isHidden = true
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    }
     
     func bind(reactor: MainTabBarReactor) {
         
-        /// 위치 권한 요청
+        // 위치 권한 요청
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
                 let locationManager = LocationManager.shared
-                locationManager.delegate = self
+                locationManager.delegate = object
                 if locationManager.checkLocationAuthStatus() == .notDetermined {
                     locationManager.requestLocationPermission()
                 }
             }
             .disposed(by: self.disposeBag)
         
-        /// viewControllers
-        self.mainHomeViewController.reactor = reactor.reactorForMainHome()
-        self.mainHomeViewController.tabBarItem = .init(
+        // viewControllers
+        let mainHomeViewController = MainHomeViewController()
+        mainHomeViewController.reactor = reactor.reactorForMainHome()
+        mainHomeViewController.tabBarItem = .init(
             title: Text.mainHomeTitle,
             image: .init(.icon(.outlined(.home))),
-            selectedImage: nil
+            tag: 0
         )
         
-        self.writeCardViewController.tabBarItem = .init(
+        let writeCardViewController = UIViewController()
+        writeCardViewController.tabBarItem = .init(
             title: Text.addCardTitle,
             image: .init(.icon(.outlined(.addCard))),
-            selectedImage: nil
+            tag: 1
         )
         
         let tagViewcontroller = UIViewController()
         tagViewcontroller.tabBarItem = .init(
             title: Text.tagTitle,
             image: .init(.icon(.outlined(.star))),
-            selectedImage: nil
+            tag: 2
         )
         
         let profileViewController = UIViewController()
         profileViewController.tabBarItem = .init(
             title: Text.profileTitle,
             image: .init(.icon(.outlined(.profile))),
-            selectedImage: nil
+            tag: 3
         )
         
         self.viewControllers = [
-            self.mainHomeViewController,
-            self.writeCardViewController,
+            mainHomeViewController,
+            writeCardViewController,
             tagViewcontroller,
             profileViewController
         ]
-        
-        self.delegate = self
     }
 }
 
 extension MainTabBarController: SOMTabBarControllerDelegate {
     
-    func tabBarController(_ tabBarController: SOMTabBarController, didSelect viewController: UIViewController) {
-        guard viewController == self.writeCardViewController else { return }
+    func tabBarController(
+        _ tabBarController: SOMTabBarController,
+        shouldSelect viewController: UIViewController
+    ) -> Bool {
         
-        let viewController = WriteCardViewController()
-        viewController.reactor = self.reactor?.reactorForWriteCard()
-        self.navigationPush(viewController, animated: true)
+        if viewController.tabBarItem.tag == 1 {
+            
+            let writeCardViewController = WriteCardViewController()
+            writeCardViewController.reactor = self.reactor?.reactorForWriteCard()
+            self.navigationPush(writeCardViewController, animated: true)
+            return false
+        }
+        
+        return true
     }
+    
+    
+    func tabBarController(
+        _ tabBarController: SOMTabBarController,
+        didSelect viewController: UIViewController
+    ) { }
 }
 
 extension MainTabBarController: LocationManagerDelegate {

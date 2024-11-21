@@ -43,6 +43,8 @@ class SOMLocationFilter: UIView {
         }
     }
     
+    static let height: CGFloat = 54
+    
     ///  델리게이트
     weak var delegate: SOMLocationFilterDelegate?
     

@@ -171,6 +171,13 @@ class WriteTagTextField: UIView {
     }
 }
 
+extension WriteTagTextField {
+    
+    func sendActionsToTextField(for controlEvents: UIControl.Event) {
+        self.textField.sendActions(for: controlEvents)
+    }
+}
+
 extension WriteTagTextField: UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {

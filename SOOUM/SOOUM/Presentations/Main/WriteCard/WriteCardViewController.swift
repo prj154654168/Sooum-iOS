@@ -30,20 +30,20 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let dialogSubTitle: String = "추가한 카드는 수정할 수 없어요"
     }
     
-    let timeLimitBackgroundView = UIView().then {
+    private let timeLimitBackgroundView = UIView().then {
         $0.backgroundColor = .som.p200
         $0.layer.cornerRadius = 22 * 0.5
         $0.clipsToBounds = true
         $0.isHidden = true
     }
     
-    let timeLimitLabel = UILabel().then {
+    private let timeLimitLabel = UILabel().then {
         $0.text = Text.timeLimitLabelText
         $0.textColor = .som.black
         $0.typography = .som.body2WithBold
     }
     
-    let writeButton = UIButton().then {
+    private let writeButton = UIButton().then {
         let typography = Typography.som.body2WithBold
         var attributes = typography.attributes
         attributes.updateValue(typography.font, forKey: .font)
@@ -71,11 +71,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
         58
     }
     
-    let uploadCardBottomSheetViewController = UploadCardBottomSheetViewController()
+    private lazy var uploadCardBottomSheetViewController = UploadCardBottomSheetViewController()
     
-    var writtenTagModels = [SOMTagModel]()
+    private var writtenTagModels = [SOMTagModel]()
     
-    var keyboardHeight: CGFloat = 0
+    private var keyboardHeight: CGFloat = 0
     
     
     // MARK: - Life Cycles
@@ -112,13 +112,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.keyboardHeight = height == 0 ? self.keyboardHeight : height
         
         let isTextFieldFirstResponder = self.writeCardView.writeTagTextField.isFirstResponder
-        UIView.animate(withDuration: 0.25) {
-            self.writeCardView.snp.updateConstraints {
-                $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(isTextFieldFirstResponder ? -height : 0)
-                $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(isTextFieldFirstResponder ? -height : 0)
-            }
+        self.writeCardView.snp.updateConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(isTextFieldFirstResponder ? -height : 0)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(isTextFieldFirstResponder ? -height : 0)
         }
-        self.view.layoutIfNeeded()
+        
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     override func bind() {
@@ -147,7 +148,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 object.presentBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
+                    dismissWhenScreenDidTap: true,
                     isHandleBar: true,
+                    isScrollable: false,
                     neverDismiss: true,
                     maxHeight: 550,
                     initalHeight: 20 + 34 + 32 + 100 * 2
@@ -162,7 +165,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .drive(with: self) { object, _ in
                 object.presentBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
+                    dismissWhenScreenDidTap: true,
                     isHandleBar: true,
+                    isScrollable: false,
                     neverDismiss: true,
                     maxHeight: 550,
                     initalHeight: 20 + 34 + 32 + 100 * 2
@@ -192,24 +197,28 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         // Set tags
         let writtenTagText = self.writeCardView.writeTagTextField.rx.text.orEmpty.distinctUntilChanged().share()
-        self.writeCardView.writeTagTextField.addTagButton.rx.tap
+        self.writeCardView.writeTagTextField.addTagButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(writtenTagText)
             .filter { $0.isEmpty == false }
             .withUnretained(self)
-            .do(onNext: { object, _ in object.writeCardView.writeTagTextField.text = nil })
+            .do(onNext: { object, writtenTagText in
+                object.writeCardView.writeTagTextField.text = nil
+                object.writeCardView.writeTagTextField.sendActionsToTextField(for: .editingChanged)
+            })
             .map { object, writtenTagText in
                 let toModel: SOMTagModel = .init(
                     id: UUID().uuidString,
                     originalText: writtenTagText,
-                    isRemovable: true,
-                    configuration: .horizontalWithRemove
+                    isRemovable: true
                 )
+                
                 object.writtenTagModels.append(toModel)
-                object.writeCardView.writtenTags.snp.updateConstraints {
-                    $0.height.equalTo(58)
+                object.writeCardView.writtenTagsHeightConstraint?.deactivate()
+                object.writeCardView.writtenTags.snp.makeConstraints {
+                    object.writeCardView.writtenTagsHeightConstraint = $0.height.equalTo(58).constraint
                 }
                 
-                self.view.layoutIfNeeded()
+                object.view.layoutIfNeeded()
                 
                 return object.writtenTagModels
             }
@@ -218,7 +227,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         /// Action
         writtenTagText
-            .filter { $0.isEmpty == false }
             .map(Reactor.Action.relatedTags)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -232,17 +240,21 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.writeButton.rx.tap
             .withLatestFrom(Observable.combineLatest(optionState, imageName, imageType, font, content))
             .subscribe(onNext: { [weak self] optionState, imageName, imageType, font, content in
+                guard let self = self else { return }
                 
                 let presented = SOMDialogViewController()
                 presented.setData(
                     title: Text.dialogTitle,
                     subTitle: Text.dialogSubTitle,
-                    leftAction: .init(mode: .cancel, handler: { self?.dismiss(animated: true) }),
+                    leftAction: .init(
+                        mode: .cancel,
+                        handler: { self.leftAction() }
+                    ),
                     rightAction: .init(
                         mode: .ok,
                         handler: {
                             
-                            let feedTags = self?.writtenTagModels.map { $0.originalText }
+                            let feedTags = self.writtenTagModels.map { $0.originalText }
                             reactor.action.onNext(
                                 .writeCard(
                                     isDistanceShared: optionState[.distanceLimit] ?? false,
@@ -252,11 +264,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
                                     font: font.rawValue,
                                     imgType: imageType,
                                     imgName: imageName,
-                                    feedTags: feedTags ?? []
+                                    feedTags: feedTags
                                 )
                             )
                             
-                            self?.dismiss(animated: true)
+                            self.dismiss(animated: true)
                         }
                     ),
                     dimViewAction: nil
@@ -264,8 +276,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 presented.modalPresentationStyle = .custom
                 presented.modalTransitionStyle = .crossDissolve
                 
-                self?.dismissBottomSheet(completion: {
-                    self?.present(presented, animated: true)
+                self.dismissBottomSheet(completion: {
+                    self.present(presented, animated: true)
                 })
             })
             .disposed(by: self.disposeBag)
@@ -283,8 +295,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
                         id: UUID().uuidString,
                         originalText: relatedTag.content,
                         count: "0\(relatedTag.count)",
-                        isRemovable: false,
-                        configuration: .verticalWithoutRemove
+                        isSelectable: true,
+                        isRemovable: false
                     )
                     return toModel
                 }
@@ -305,6 +317,20 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 })
             }
             .disposed(by: self.disposeBag)
+    }
+    
+    private func leftAction() {
+        
+        self.dismiss(animated: true, completion: {
+            self.presentBottomSheet(
+                presented: self.uploadCardBottomSheetViewController,
+                isHandleBar: true,
+                isScrollable: false,
+                neverDismiss: true,
+                maxHeight: 550,
+                initalHeight: 20 + 34 + 32 + 100 * 2
+            )
+        })
     }
 }
 
@@ -354,8 +380,9 @@ extension WriteCardViewController: SOMTagsDelegate {
         
         self.writtenTagModels.removeAll(where: { $0 == model })
         if self.writtenTagModels.isEmpty {
-            self.writeCardView.writtenTags.snp.updateConstraints {
-                $0.height.equalTo(12)
+            self.writeCardView.writtenTagsHeightConstraint?.deactivate()
+            self.writeCardView.writtenTags.snp.makeConstraints {
+                self.writeCardView.writtenTagsHeightConstraint = $0.height.equalTo(12).constraint
             }
         }
     }
@@ -363,5 +390,6 @@ extension WriteCardViewController: SOMTagsDelegate {
     func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
         
         self.writeCardView.writeTagTextField.text = model.originalText
+        self.writeCardView.writeTagTextField.sendActionsToTextField(for: .editingChanged)
     }
 }

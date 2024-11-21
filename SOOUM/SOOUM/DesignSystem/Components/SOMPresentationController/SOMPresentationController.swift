@@ -31,8 +31,22 @@ class SOMPresentationController: UIPresentationController {
         return view
     }()
     
+    private let handleBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        
+        return view
+    }()
+    
+    /*
+        isHandleBar 는 bottomSheet 의 높이가 동적인 여부
+        isScrollable 은 bottomSheet 의 제스처가 pan 인지 tap 인지 여부,
+        isScrollable == true 일 때, pan
+        isScrollable == false 일 떼, tap
+     */
     private var dismissWhenScreenDidTap: Bool
     private var isHandleBar: Bool
+    private var isScrollable: Bool
     private var neverDismiss: Bool
     
     private var maxHeight: CGFloat
@@ -49,6 +63,7 @@ class SOMPresentationController: UIPresentationController {
         presenting presentingViewController: UIViewController?,
         dismissWhenScreenDidTap: Bool,
         isHandleBar: Bool,
+        isScrollable: Bool,
         neverDismiss: Bool,
         maxHeight: CGFloat?,
         initalHeight: CGFloat,
@@ -56,6 +71,7 @@ class SOMPresentationController: UIPresentationController {
     ) {
         self.dismissWhenScreenDidTap = dismissWhenScreenDidTap
         self.isHandleBar = isHandleBar
+        self.isScrollable = isScrollable
         self.neverDismiss = neverDismiss
         
         self.maxHeight = maxHeight ?? initalHeight
@@ -72,8 +88,13 @@ class SOMPresentationController: UIPresentationController {
         )
         
         if isHandleBar {
-            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handleGesture))
-            self.presentedView?.addGestureRecognizer(panGesture)
+            if isScrollable {
+                let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handleGesture))
+                self.handleBar.addGestureRecognizer(panGesture)
+            } else {
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleBarDidTap))
+                self.handleBar.addGestureRecognizer(tapGesture)
+            }
         }
         
         if dismissWhenScreenDidTap {
@@ -108,6 +129,13 @@ class SOMPresentationController: UIPresentationController {
                 roundedRect: presentedView.bounds,
                 cornerRadius: 20
             ).cgPath
+            
+            if self.isHandleBar {
+                presentedView.addSubview(self.handleBar)
+                var size: CGSize = presentedView.frame.size
+                size.height = 30
+                self.handleBar.frame = .init(origin: .zero, size: size)
+            }
         }
         
         if let coordinator = self.presentedViewController.transitionCoordinator {
@@ -160,12 +188,11 @@ class SOMPresentationController: UIPresentationController {
         self.currentHeight = height
         if self.currentHeight == 0 { self.presentedViewController.dismiss(animated: true) }
         
+        let isMax = self.currentHeight == self.maxHeight
+        self.updateScreenColor(isMax ? .som.dim : .clear)
+        
         let animationDuration: TimeInterval = animated ? 0.25 : 0
         UIView.animate(withDuration: animationDuration) {
-            
-            let isMax = self.currentHeight == self.maxHeight
-            self.updateScreenColor(isMax ? .som.dim : .clear)
-            
             self.containerViewDidLayoutSubviews()
         }
     }
@@ -193,7 +220,26 @@ class SOMPresentationController: UIPresentationController {
     
     @objc
     private func screenDidTap(_ sender: UITapGestureRecognizer) {
-        self.presentedViewController.dismiss(animated: true)
+        
+        if self.currentHeight == self.initalHeight {
+            self.presentedViewController.dismiss(animated: true)
+        } else {
+            self.updateHeight(self.initalHeight)
+        }
+    }
+    
+    @objc
+    private func handleBarDidTap(_ sender: UITapGestureRecognizer) {
+        
+        /*
+            currentHeight == initalHeight 일 때, currentHeight = maxHeight
+            currentHeight == maxHeight 일 때, currentHeight = initalHeight
+         */
+        if self.currentHeight == self.initalHeight {
+            self.updateHeight(self.maxHeight)
+        } else if self.currentHeight == self.maxHeight {
+            self.updateHeight(self.initalHeight)
+        }
     }
     
     @objc
@@ -203,13 +249,13 @@ class SOMPresentationController: UIPresentationController {
         let translation = gesture.translation(in: presentedView)
         
         /*
-            항상 최대 높이는 maxheight
-            neverDismiss == true 일 때, 최소 높이는 initalHeight
-            neverDismiss == false 일 때, 최소 높이는 0, dismiss
-            위로 스크롤 시
-             - currentHeight > initalHeight + (maxHeight - inialHeight) * 0.5 이면, currentHeight = maxHeight
-            아래로 스크롤 시
-             - currentHeight < initalHeight * 0.5 이면, currentHeight = 0 or initalHeight
+         항상 최대 높이는 maxheight
+         neverDismiss == true 일 때, 최소 높이는 initalHeight
+         neverDismiss == false 일 때, 최소 높이는 0, dismiss
+         위로 스크롤 시
+         - currentHeight > initalHeight + (maxHeight - inialHeight) * 0.5 이면, currentHeight = maxHeight
+         아래로 스크롤 시
+         - currentHeight < initalHeight * 0.5 이면, currentHeight = 0 or initalHeight
          */
         let velocity = gesture.velocity(in: presentedView)
         let scrollDirection = velocity.y < 0 ? "top" : "bottom"

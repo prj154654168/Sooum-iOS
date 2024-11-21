@@ -10,8 +10,6 @@ import ReactorKit
 
 class MainHomeViewReactor: Reactor {
     
-    typealias LoadingWithOffset = (isLoading: Bool, isOffset: Bool)
-    
     enum Action: Equatable {
         case landing
         case refresh
@@ -25,7 +23,7 @@ class MainHomeViewReactor: Reactor {
         case more([Card])
         case updateSelectedIndex(Int)
         case updateDistanceFilter(String)
-        case updateIsLoading(LoadingWithOffset)
+        case updateIsLoading(Bool)
         case updateIsProcessing(Bool)
         case updateError(String?)
     }
@@ -34,7 +32,7 @@ class MainHomeViewReactor: Reactor {
         var cards: [Card]
         var selectedIndex: Int
         var distanceFilter: String
-        var isLoading: LoadingWithOffset
+        var isLoading: Bool
         var isProcessing: Bool
         var errorMessage: String?
     }
@@ -43,13 +41,13 @@ class MainHomeViewReactor: Reactor {
         cards: [],
         selectedIndex: 0,
         distanceFilter: "UNDER_1",
-        isLoading: (isLoading: false, isOffset: false),
+        isLoading: false,
         isProcessing: false,
         errorMessage: nil
     )
     
     private let networkManager = NetworkManager.shared
-    private let locationManager = LocationManager.shared
+    let locationManager = LocationManager.shared
     
     init() { }
     
@@ -57,35 +55,40 @@ class MainHomeViewReactor: Reactor {
         switch action {
         case .landing:
             return .concat([
-                .just(.updateIsLoading((isLoading: true, isOffset: false))),
-                self.refresh(),
-                .just(.updateIsLoading((isLoading: false, isOffset: false)))
+                .just(.updateIsProcessing(true)),
+                self.refresh()
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .just(.updateIsProcessing(false))
             ])
         case .refresh:
             return .concat([
-                .just(.updateIsLoading((isLoading: true, isOffset: true))),
-                self.refresh(),
-                .just(.updateIsLoading((isLoading: false, isOffset: true)))
+                .just(.updateIsLoading(true)),
+                self.refresh()
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.moreFind(lastId),
+                self.moreFind(lastId)
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case let .homeTabBarItemDidTap(index):
             return .concat([
-                .just(.updateIsLoading((isLoading: true, isOffset: false))),
+                .just(.updateIsProcessing(true)),
                 .just(.updateSelectedIndex(index)),
-                self.refresh(index),
-                .just(.updateIsLoading((isLoading: false, isOffset: false)))
+                self.refresh(index)
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .just(.updateIsProcessing(false))
             ])
         case let .distanceFilter(distanceFilter):
             return .concat([
-                .just(.updateIsLoading((isLoading: true, isOffset: false))),
+                .just(.updateIsProcessing(true)),
                 .just(.updateDistanceFilter(distanceFilter)),
-                self.refresh(2),
-                .just(.updateIsLoading((isLoading: false, isOffset: false)))
+                self.refresh(2)
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .just(.updateIsProcessing(false))
             ])
         }
     }

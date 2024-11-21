@@ -75,7 +75,7 @@ class DetailViewCell: UICollectionViewCell {
         $0.typography = .som.body1WithBold
     }
     
-    lazy var tags = SOMTags()
+    lazy var tags = SOMTags(configure: .horizontalWithoutRemove)
     
     var isOwnCard: Bool = false {
         didSet {

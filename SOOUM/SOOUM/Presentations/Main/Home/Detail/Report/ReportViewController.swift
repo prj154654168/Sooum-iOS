@@ -85,7 +85,8 @@ class ReportViewController: BaseNavigationViewController, View {
         uploadReportButtonLabel.rx
             .tapGesture()
             .when(.recognized)
-            .compactMap { _ in self.selectedReason }
+            .withUnretained(self)
+            .compactMap { object, _ in object.selectedReason }
             .map(Reactor.Action.report)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)

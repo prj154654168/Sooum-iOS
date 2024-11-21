@@ -17,9 +17,6 @@ import Then
 
 class LaunchScreenViewController: BaseViewController, View {
     
-    /// 런치스크린 애니메이션 완료 이벤트
-    let animationCompleted = PublishRelay<Bool>()
-    
     let viewForAnimation = UIView().then {
         $0.backgroundColor = UIColor(hex: "#A2E3FF")
     }
@@ -52,29 +49,18 @@ class LaunchScreenViewController: BaseViewController, View {
     
     func bind(reactor: LaunchScreenViewReactor) {
         
-        self.rx.viewDidLoad
-            .map { Reactor.Action.launch }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        // 애니메이션이 끝나면 이벤트 방출
+        // 애니메이션이 끝나면 launch action
         self.rx.viewDidLayoutSubviews
             .subscribe(with: self) { object, _ in
-                object.animate(to: 45) { completion in
-                    object.animationCompleted.accept(completion)
+                object.animate(to: 45) { _ in
+                    reactor.action.onNext(.launch)
                 }
             }
             .disposed(by: self.disposeBag)
 
-        // 1. 애니메이션 완료 이벤트
-        // 2. 로그인 성공 시 홈 화면으로 전환
-        self.animationCompleted
-            .distinctUntilChanged()
-            .observe(on: MainScheduler.instance)
-            .withLatestFrom(
-                reactor.state.map(\.isRegistered).distinctUntilChanged(),
-                resultSelector: { $0 && $1 }
-            )
+        // 로그인 성공 시 홈 화면으로 전환
+        let isRegistered = reactor.state.map(\.isRegistered).share()
+        isRegistered
             .filter { $0 }
             .subscribe(with: self) { object, _ in
                 let viewController = MainTabBarController()
@@ -85,14 +71,8 @@ class LaunchScreenViewController: BaseViewController, View {
                 object.view.window?.rootViewController = navigationController
             }
             .disposed(by: self.disposeBag)
-        
-        // 3. 로그인 실패 시 온보딩 화면으로 전환
-        self.animationCompleted
-            .distinctUntilChanged()
-            .withLatestFrom(
-                reactor.state.map(\.isRegistered).distinctUntilChanged(),
-                resultSelector: { $0 && $1 }
-            )
+        // 로그인 실패 시 온보딩 화면으로 전환
+        isRegistered
             .filter { $0 == false }
             .subscribe(with: self) { object, _ in
                 let viewController = OnboardingViewController()
@@ -112,7 +92,6 @@ class LaunchScreenViewController: BaseViewController, View {
             options: [.beginFromCurrentState, .curveEaseOut],
             animations: {
                 self.viewForAnimation.transform = .init(translationX: 0, y: height)
-                self.view.layoutIfNeeded()
             },
             completion: completion
         )

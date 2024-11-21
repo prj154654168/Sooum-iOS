@@ -83,8 +83,9 @@ class UploadCardBottomSheetViewReactor: Reactor {
                     ImageURLWithName(name: $0.imgName, urlString: $0.url.href)
                 }
                 return Observable.from(imageURLWithNames)
-                    .flatMap { imageURLWithName -> Observable<ImageWithName?> in
-                        self.downloadImage(imageURLWithName: imageURLWithName)
+                    .withUnretained(self)
+                    .flatMap { object, imageURLWithName -> Observable<ImageWithName?> in
+                        object.downloadImage(imageURLWithName: imageURLWithName)
                     } // 각 ImageURLWithName를 옵저버블<ImageURLWithName>로 바꾼 후
                     .compactMap { $0 } // nil 값 제거
                     .toArray()

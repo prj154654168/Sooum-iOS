@@ -12,7 +12,8 @@ import Then
 
 
 protocol SOMHomeTabBarDelegate: AnyObject {
-    func tabBar(_ tabBar: SOMHomeTabBar, prevSelectedTabAt prev: Int, didSelectTabAt curr: Int)
+    func tabBar(_ tabBar: SOMHomeTabBar, shouldSelectTabAt index: Int) -> Bool
+    func tabBar(_ tabBar: SOMHomeTabBar, didSelectTabAt index: Int)
 }
 
 class SOMHomeTabBar: UIView {
@@ -27,8 +28,6 @@ class SOMHomeTabBar: UIView {
     
     private let homeTabBarItemContainer = UIStackView().then {
         $0.axis = .horizontal
-        $0.distribution = .equalSpacing
-        $0.isLayoutMarginsRelativeArrangement = true
         $0.spacing = 2
     }
     
@@ -48,15 +47,18 @@ class SOMHomeTabBar: UIView {
     
     private func setupConstraints() {
         
-        let backgroudView = UIView()
+        let backgroundView = UIView()
+        self.addSubview(backgroundView)
+        backgroundView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
         
         Title.allCases.forEach {
-            let homeTabBarItem = SOMHomeTabBarItem()
-            homeTabBarItem.text = $0.rawValue
+            let homeTabBarItem = SOMHomeTabBarItem(title: $0.rawValue)
             self.homeTabBarItemContainer.addArrangedSubview(homeTabBarItem)
         }
         
-        backgroudView.addSubview(self.homeTabBarItemContainer)
+        backgroundView.addSubview(self.homeTabBarItemContainer)
         self.homeTabBarItemContainer.snp.makeConstraints {
             $0.top.equalToSuperview().offset(4)
             $0.bottom.equalToSuperview().offset(-10)
@@ -67,15 +69,10 @@ class SOMHomeTabBar: UIView {
         let bottomSeperator = UIView().then {
             $0.backgroundColor = .som.gray200
         }
-        backgroudView.addSubview(bottomSeperator)
+        backgroundView.addSubview(bottomSeperator)
         bottomSeperator.snp.makeConstraints {
             $0.bottom.leading.trailing.equalToSuperview()
             $0.height.equalTo(0.4)
-        }
-        
-        self.addSubview(backgroudView)
-        backgroudView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
         }
     }
     
@@ -83,21 +80,13 @@ class SOMHomeTabBar: UIView {
         
         self.homeTabBarItemContainer.arrangedSubviews.enumerated().forEach {
             guard let homeTabView = $1 as? SOMHomeTabBarItem else { return }
-            if $0 == index {
-                homeTabView.homeTabBarItemSelected()
-            } else {
-                homeTabView.homeTabBarItemNotSelected()
-            }
+            homeTabView.updateItemColor($0 == index)
         }
 
         self.prevSelectedIndex = self.selectedIndex
         self.selectedIndex = index
 
-        self.delegate?.tabBar(
-            self,
-            prevSelectedTabAt: self.prevSelectedIndex,
-            didSelectTabAt: self.selectedIndex
-        )
+        self.delegate?.tabBar(self, didSelectTabAt: self.selectedIndex)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -108,7 +97,10 @@ class SOMHomeTabBar: UIView {
         if self.homeTabBarItemContainer.frame.contains(touchArea) {
             let convertTouchAreaInContainer = convert(touchArea, to: self.homeTabBarItemContainer).x
             let index = Int(floor(convertTouchAreaInContainer / SOMHomeTabBarItem.width))
-            self.didSelectTab(index)
+            if self.selectedIndex != index,
+               self.delegate?.tabBar(self, shouldSelectTabAt: index) ?? true {
+                self.didSelectTab(index)
+            }
         }
     }
 }

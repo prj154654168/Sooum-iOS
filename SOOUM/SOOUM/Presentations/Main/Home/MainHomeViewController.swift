@@ -25,13 +25,13 @@ class MainHomeViewController: BaseNavigationViewController, View {
         static let dialogSubTitle: String = "위치 확인을 위해 권한 설정이 필요해요"
     }
     
-    let logo = UIImageView().then {
+    private let logo = UIImageView().then {
         $0.image = .init(.logo)
         $0.tintColor = .som.p300
         $0.contentMode = .scaleAspectFit
     }
     
-    let rightAlamButton = UIButton().then {
+    private let rightAlamButton = UIButton().then {
         var config = UIButton.Configuration.plain()
         config.image = .init(.icon(.outlined(.alarm)))
         config.image?.withTintColor(.som.gray700)
@@ -39,12 +39,17 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.configuration = config
     }
     
-    lazy var headerView = MainHomeHeaderView().then {
-        $0.homeTabBar.delegate = self
-        $0.locationFilter.delegate = self
+    private let headerContainer = UIStackView().then {
+        $0.axis = .vertical
+    }
+    private lazy var headerHomeTabBar = SOMHomeTabBar().then {
+        $0.delegate = self
+    }
+    private lazy var headerLocationFilter = SOMLocationFilter().then {
+        $0.delegate = self
     }
     
-    let moveTopButton = MoveTopButtonView().then {
+    private let moveTopButton = MoveTopButtonView().then {
         $0.isHidden = true
     }
     
@@ -60,14 +65,19 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.delegate = self
     }
     
-    let placeholderView = UIView().then {
+    private let placeholderView = UIView().then {
         $0.isHidden = true
     }
     
-    /// tableView에 표시될 카드 정보
-    var cards = [Card]()
     
-    var tableViewTopConstraint: Constraint?
+    /// tableView에 표시될 카드 정보
+    private var cards = [Card]()
+    
+    private var headerContainerHeightConstraint: Constraint?
+    private var locationFilterHeightConstraint: Constraint?
+    private var tableViewTopConstraint: Constraint?
+    
+    private var currentOffset: CGFloat = 0
     
     
     // MARK: - Life Cycles
@@ -85,15 +95,24 @@ class MainHomeViewController: BaseNavigationViewController, View {
     override func setupConstraints() {
         super.setupConstraints()
         
-        self.view.addSubview(self.headerView)
-        self.headerView.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-            $0.leading.trailing.equalToSuperview()
+        self.view.addSubview(self.headerContainer)
+        self.headerContainer.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).priority(.high)
+            $0.leading.trailing.equalToSuperview().priority(.high)
+            self.headerContainerHeightConstraint = $0.height.equalTo(SOMHomeTabBar.height).constraint
+        }
+        self.headerContainer.addArrangedSubview(self.headerHomeTabBar)
+        self.headerHomeTabBar.snp.makeConstraints {
+            $0.height.equalTo(SOMHomeTabBar.height)
+        }
+        self.headerContainer.addArrangedSubview(self.headerLocationFilter)
+        self.headerLocationFilter.snp.makeConstraints {
+            self.locationFilterHeightConstraint = $0.height.equalTo(SOMLocationFilter.height).constraint
         }
         
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints {
-            self.tableViewTopConstraint = $0.top.equalTo(self.headerView.snp.bottom).constraint
+            self.tableViewTopConstraint = $0.top.equalTo(self.headerContainer.snp.bottom).constraint
             $0.bottom.leading.trailing.equalToSuperview()
         }
         
@@ -110,8 +129,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         }
         self.placeholderView.addSubview(placeholderTitleLabel)
         placeholderTitleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.centerX.equalToSuperview()
+            $0.top.leading.trailing.equalToSuperview()
         }
         
         let placeholderSubTitleLabel = UILabel().then {
@@ -142,13 +160,13 @@ class MainHomeViewController: BaseNavigationViewController, View {
         super.bind()
         
         // homeTabBar 시작 인덱스
-        self.headerView.homeTabBar.didSelectTab(0)
+        self.headerHomeTabBar.didSelectTab(0)
         
         // tableView 상단 이동
-        self.moveTopButton.backgroundButton.rx.tap
+        self.moveTopButton.backgroundButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 let indexPath = IndexPath(row: 0, section: 0)
-                object.tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+                object.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -179,29 +197,16 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(reactor.state.map(\.isLoading))
-            .filter { $0.isLoading == false }
+            .filter { $0 == false }
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        let isLoading = reactor.state.map(\.isLoading)
-            .distinctUntilChanged({ $0.isLoading == $1.isLoading })
-            .share()
-        isLoading
-            .filter { $0.isOffset == false }
+        reactor.state.map(\.isLoading)
+            .distinctUntilChanged()
             .subscribe(with: self.tableView) { tableView, isLoading in
-                if isLoading.isLoading {
-                    tableView.refreshControl?.beginRefreshing()
-                } else {
-                    tableView.refreshControl?.endRefreshing()
-                }
-            }
-            .disposed(by: self.disposeBag)
-        isLoading
-            .filter { $0.isOffset }
-            .subscribe(with: self.tableView) { tableView, isLoading in
-                if isLoading.isLoading {
+                if (tableView.refreshControl?.isRefreshing ?? false) && isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()
@@ -209,7 +214,16 @@ class MainHomeViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isProcessing)
+        let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
+        isProcessing
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                object.tableView.isHidden = true
+                object.placeholderView.isHidden = true
+            }
+            .disposed(by: self.disposeBag)
+        
+        isProcessing
             .distinctUntilChanged()
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
@@ -218,7 +232,8 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .subscribe(with: self) { object, cards in
                 object.cards = cards
-                self.placeholderView.isHidden = !cards.isEmpty
+                object.tableView.isHidden = cards.isEmpty
+                object.placeholderView.isHidden = !cards.isEmpty
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
@@ -244,7 +259,7 @@ extension MainHomeViewController: UITableViewDataSource {
         ) as! MainHomeViewCell
         cell.selectionStyle = .none
         cell.setModel(model)
-        /// card content stack order change
+        // 카드 하단 contents 스택 순서 변경
         cell.changeOrderInCardContentStack(self.reactor?.currentState.selectedIndex ?? 0)
         
         return cell
@@ -283,21 +298,25 @@ extension MainHomeViewController: UITableViewDataSource {
          let height: CGFloat = width + 10 /// 가로 + top inset
          return height
      }
-    
+     
      func scrollViewDidScroll(_ scrollView: UIScrollView) {
-         let offsetY = scrollView.contentOffset.y
-         let isTop = offsetY <= 0
-         self.moveTopButton.isHidden = isTop ? true : false
-         self.headerView.isHidden = !isTop
+         guard self.cards.isEmpty == false else { return }
+         
+         let offset = scrollView.contentOffset.y
+         
+         // offset이 currentOffset보다 크면 아래로 스크롤, 반대일 경우 위로 스크롤
+         // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
+         self.headerContainer.isHidden = offset <= 0 ? false : offset > self.currentOffset
          self.tableViewTopConstraint?.deactivate()
          self.tableView.snp.makeConstraints {
-             self.tableViewTopConstraint = $0.top.equalTo(
-                isTop ? self.headerView.snp.bottom : self.view.safeAreaLayoutGuide.snp.top
-             ).constraint
+             let top = self.headerContainer.isHidden ? self.view.safeAreaLayoutGuide.snp.top : self.headerContainer.snp.bottom
+             self.tableViewTopConstraint = $0.top.equalTo(top).constraint
          }
-         UIView.animate(withDuration: 0.1) {
-             self.view.layoutIfNeeded()
-         }
+         
+         // 최상단일 때만 moveToButton 숨김
+         self.moveTopButton.isHidden = offset <= 0
+         
+         self.currentOffset = offset
      }
  }
 
@@ -306,27 +325,28 @@ extension MainHomeViewController: UITableViewDataSource {
 
 extension MainHomeViewController: SOMHomeTabBarDelegate {
     
-    func tabBar(_ tabBar: SOMHomeTabBar, prevSelectedTabAt prev: Int, didSelectTabAt curr: Int) {
+    func tabBar(_ tabBar: SOMHomeTabBar, shouldSelectTabAt index: Int) -> Bool {
         
-        self.headerView.isLocationFilterHidden = curr != 2
-        
-        if curr == 2, LocationManager.shared.checkLocationAuthStatus() == .denied {
+        if index == 2, self.reactor?.locationManager.checkLocationAuthStatus() == .denied {
             
             let presented = SOMDialogViewController()
             presented.setData(
                 title: Text.dialogTitle,
                 subTitle: Text.dialogSubTitle,
-                leftAction: .init(mode: .cancel, handler: { self.dismiss(animated: true) }),
+                leftAction: .init(
+                    mode: .cancel,
+                    handler: { [weak self] in self?.dismiss(animated: true) }
+                ),
                 rightAction: .init(
                     mode: .setting,
-                    handler: {
+                    handler: { [weak self] in
                         let application = UIApplication.shared
                         let openSettingsURLString: String = UIApplication.openSettingsURLString
                         if let settingsURL = URL(string: openSettingsURLString),
                             application.canOpenURL(settingsURL) {
                                 application.open(settingsURL)
                         }
-                        self.dismiss(animated: false)
+                        self?.dismiss(animated: false)
                     }
                 ),
                 dimViewAction: nil
@@ -335,11 +355,27 @@ extension MainHomeViewController: SOMHomeTabBarDelegate {
             presented.modalTransitionStyle = .crossDissolve
             
             self.present(presented, animated: true)
-        } else {
-            guard prev != curr else { return }
-            
-            self.reactor?.action.onNext(.homeTabBarItemDidTap(index: curr))
+            return false
         }
+        
+        return true
+    }
+    
+    func tabBar(_ tabBar: SOMHomeTabBar, didSelectTabAt index: Int) {
+        
+        self.headerLocationFilter.isHidden = index != 2
+        self.locationFilterHeightConstraint?.deactivate()
+        self.headerLocationFilter.snp.makeConstraints {
+            let height: CGFloat = index != 2 ? 0 : SOMLocationFilter.height
+            self.locationFilterHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+        }
+        self.headerContainerHeightConstraint?.deactivate()
+        self.headerContainer.snp.makeConstraints {
+            let height: CGFloat = index != 2 ? SOMHomeTabBar.height : SOMHomeTabBar.height + SOMLocationFilter.height
+            self.headerContainerHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+        }
+        
+        self.reactor?.action.onNext(.homeTabBarItemDidTap(index: index))
     }
 }
 

@@ -216,23 +216,23 @@ class SOMDialogViewController: UIViewController {
     private func action() {
         self.view.rx.tapGesture()
             .when(.recognized)
-            .subscribe(onNext: { gesture in
-                if self.view.isTappedDirectly(gesture: gesture) {
-                    self.dimViewAction?.handler()
+            .subscribe(with: self) { object, gesture in
+                if object.view.isTappedDirectly(gesture: gesture) {
+                    object.dimViewAction?.handler()
                 }
-            })
+            }
             .disposed(by: disposeBag)
         
         leftButton.rx.tap
-            .subscribe(onNext: { _ in
-                self.leftAction?.handler()
-            })
+            .subscribe(with: self) { object, _ in
+                object.leftAction?.handler()
+            }
             .disposed(by: disposeBag)
         
         rightButton.rx.tap
-            .subscribe(onNext: { _ in
-                self.rightAction?.handler()
-            })
+            .subscribe(with: self) { object, _ in
+                object.rightAction?.handler()
+            }
             .disposed(by: disposeBag)
     }
 }
