@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2192C5356D8F39905D0A8181 /* Pods_SOOUM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74194BC62F22BC2F5596D850 /* Pods_SOOUM.framework */; };
+		2A032EFD2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A032EFC2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift */; };
+		2A032EFE2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A032EFC2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift */; };
 		2A048E7B2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */; };
 		2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */; };
 		2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */; };
@@ -19,6 +21,38 @@
 		2A44A4352CAC21A500DC463E /* SignUpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4332CAC21A500DC463E /* SignUpResponse.swift */; };
 		2A44A4372CAC227300DC463E /* BaseAuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4362CAC227300DC463E /* BaseAuthResponse.swift */; };
 		2A44A4382CAC227300DC463E /* BaseAuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4362CAC227300DC463E /* BaseAuthResponse.swift */; };
+		2A45B36D2CE3A3E30071026A /* ProfileImageSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */; };
+		2A45B36F2CE4C5510071026A /* RegisterUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */; };
+		2A45B3702CE4C5510071026A /* RegisterUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */; };
+		2A57D6EE2CC7BFA000DAD0F3 /* YPImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 2A57D6ED2CC7BFA000DAD0F3 /* YPImagePicker */; };
+		2A57D6F02CC7BFA900DAD0F3 /* YPImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 2A57D6EF2CC7BFA900DAD0F3 /* YPImagePicker */; };
+		2A5BB7B92CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */; };
+		2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */; };
+		2A5BB7BE2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7BD2CDB870000E1C799 /* OnboardingGuideLabelView.swift */; };
+		2A5BB7BF2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7BD2CDB870000E1C799 /* OnboardingGuideLabelView.swift */; };
+		2A5BB7C22CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */; };
+		2A5BB7C32CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */; };
+		2A5BB7C52CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */; };
+		2A5BB7C62CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */; };
+		2A5BB7C92CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */; };
+		2A5BB7CA2CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */; };
+		2A5BB7CD2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */; };
+		2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */; };
+		2A5BB7D12CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */; };
+		2A5BB7D22CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */; };
+		2A5BB7D52CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */; };
+		2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */; };
+		2A5BB7D92CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */; };
+		2A5BB7DA2CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */; };
+		2A5BB7DD2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */; };
+		2A5BB7DE2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */; };
+		2A5BB7E02CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7DF2CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift */; };
+		2A5BB7E12CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7DF2CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift */; };
+		2A5BB7E32CDCD97300E1C799 /* JoinRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7E22CDCD97300E1C799 /* JoinRequest.swift */; };
+		2A5BB7E42CDCD97300E1C799 /* JoinRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7E22CDCD97300E1C799 /* JoinRequest.swift */; };
+		2A5BB7E72CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */; };
+		2A5BB7E82CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */; };
+		2A5BB7FA2CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */; };
 		2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4122CC944FB0057C013 /* UploadRequest.swift */; };
@@ -271,12 +305,28 @@
 
 /* Begin PBXFileReference section */
 		294DA89A179AE3234F3E293F /* Pods-SOOUM-Dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SOOUM-Dev.release.xcconfig"; path = "Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev.release.xcconfig"; sourceTree = "<group>"; };
+		2A032EFC2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceViewReactor.swift; sourceTree = "<group>"; };
 		2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilter.swift; sourceTree = "<group>"; };
 		2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilterCollectionViewCell.swift; sourceTree = "<group>"; };
 		2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyResponse.swift; sourceTree = "<group>"; };
 		2A44A42C2CAC14C800DC463E /* SignInResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInResponse.swift; sourceTree = "<group>"; };
 		2A44A4332CAC21A500DC463E /* SignUpResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpResponse.swift; sourceTree = "<group>"; };
 		2A44A4362CAC227300DC463E /* BaseAuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAuthResponse.swift; sourceTree = "<group>"; };
+		2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUserResponse.swift; sourceTree = "<group>"; };
+		2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceViewController.swift; sourceTree = "<group>"; };
+		2A5BB7BD2CDB870000E1C799 /* OnboardingGuideLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingGuideLabelView.swift; sourceTree = "<group>"; };
+		2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceTableViewCell.swift; sourceTree = "<group>"; };
+		2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonView.swift; sourceTree = "<group>"; };
+		2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameSettingViewController.swift; sourceTree = "<group>"; };
+		2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSettingViewController.swift; sourceTree = "<group>"; };
+		2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceAgreeButtonView.swift; sourceTree = "<group>"; };
+		2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameTextFieldView.swift; sourceTree = "<group>"; };
+		2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingProfileImageSettingView.swift; sourceTree = "<group>"; };
+		2A5BB7DF2CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameSettingViewReactor.swift; sourceTree = "<group>"; };
+		2A5BB7E22CDCD97300E1C799 /* JoinRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinRequest.swift; sourceTree = "<group>"; };
+		2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameValidationResponse.swift; sourceTree = "<group>"; };
+		2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSettingViewReactor.swift; sourceTree = "<group>"; };
 		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
 		2ACBD4122CC944FB0057C013 /* UploadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadRequest.swift; sourceTree = "<group>"; };
 		2ACBD4162CC963390057C013 /* DefaultCardImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCardImageResponse.swift; sourceTree = "<group>"; };
@@ -440,6 +490,107 @@
 				2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */,
 			);
 			path = SOMLocationFilter;
+			sourceTree = "<group>";
+		};
+		2A5BB7B72CDB856D00E1C799 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7CF2CDC7AC400E1C799 /* Onboarding */,
+				2A5BB7BB2CDB86DD00E1C799 /* TermsOfService */,
+				2A5BB7C72CDBA4F400E1C799 /* NicknameSetting */,
+				2A5BB7CB2CDBB7B200E1C799 /* ProfileImageSetting */,
+				2A5BB7BC2CDB86E500E1C799 /* Views */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		2A5BB7BB2CDB86DD00E1C799 /* TermsOfService */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */,
+				2A032EFC2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift */,
+				2A5BB7D32CDCA5BE00E1C799 /* Views */,
+				2A5BB7C02CDB893D00E1C799 /* Cells */,
+			);
+			path = TermsOfService;
+			sourceTree = "<group>";
+		};
+		2A5BB7BC2CDB86E500E1C799 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7BD2CDB870000E1C799 /* OnboardingGuideLabelView.swift */,
+				2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2A5BB7C02CDB893D00E1C799 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		2A5BB7C72CDBA4F400E1C799 /* NicknameSetting */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */,
+				2A5BB7DF2CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift */,
+				2A5BB7D72CDCBA7C00E1C799 /* Views */,
+			);
+			path = NicknameSetting;
+			sourceTree = "<group>";
+		};
+		2A5BB7CB2CDBB7B200E1C799 /* ProfileImageSetting */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */,
+				2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */,
+				2A5BB7DB2CDCBB5C00E1C799 /* Views */,
+			);
+			path = ProfileImageSetting;
+			sourceTree = "<group>";
+		};
+		2A5BB7CF2CDC7AC400E1C799 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		2A5BB7D32CDCA5BE00E1C799 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2A5BB7D72CDCBA7C00E1C799 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2A5BB7DB2CDCBB5C00E1C799 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		2A5BB7E52CDCDC2B00E1C799 /* Join */ = {
+			isa = PBXGroup;
+			children = (
+				2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */,
+				2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */,
+			);
+			path = Join;
 			sourceTree = "<group>";
 		};
 		2ACBD4152CC9631B0057C013 /* UploadCard */ = {
@@ -659,6 +810,7 @@
 		385071972CA2956D00A7905A /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
+				2A5BB7B72CDB856D00E1C799 /* Onboarding */,
 				385071982CA2958100A7905A /* Launch */,
 				38B6AACB2CA410C000CE6DB6 /* Main */,
 			);
@@ -925,6 +1077,7 @@
 		38B6AAE42CA47E8D00CE6DB6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				2A5BB7E52CDCDC2B00E1C799 /* Join */,
 				38405CCA2CC611FD00612D1E /* BaseEmptyAndHeader.swift */,
 				385E65A22CBE56D00032E120 /* Coordinate.swift */,
 				38389B9A2CCCF4D2006728AF /* Auth */,
@@ -949,6 +1102,7 @@
 				2AE6B1592CBEAEC000FA5C3C /* ReportRequest.swift */,
 				38389B9B2CCCF98B006728AF /* AuthRequest.swift */,
 				2ACBD4122CC944FB0057C013 /* UploadRequest.swift */,
+				2A5BB7E22CDCD97300E1C799 /* JoinRequest.swift */,
 			);
 			path = Develop;
 			sourceTree = "<group>";
@@ -1354,6 +1508,7 @@
 				38D6F17D2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				3816C05D2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */,
+				2A5BB7C62CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */,
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				38CC49892CDE3972007A0145 /* SOMPresentationController+Present.swift in Sources */,
 				38F720B02CD4F15900DF32B5 /* DetailCommentCardResponse.swift in Sources */,
@@ -1364,12 +1519,17 @@
 				388009922CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
+				2A5BB7E82CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
+				2A032EFE2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */,
+				2A5BB7C32CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */,
 				388C96372CCE41700061C598 /* AuthInfo.swift in Sources */,
 				38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				38F720B62CD4F15900DF32B5 /* PopularCardResponse.swift in Sources */,
+				2A5BB7BF2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */,
 				38F720AC2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift in Sources */,
 				3887D03A2CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
+				2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */,
 				38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
 				38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
@@ -1380,6 +1540,8 @@
 				38D055C42CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
+				2A5BB7D22CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */,
+				2A45B36D2CE3A3E30071026A /* ProfileImageSettingViewReactor.swift in Sources */,
 				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */,
@@ -1387,7 +1549,9 @@
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				2AE6B1902CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
 				381701722CD88374005FC220 /* CompositeInterceptor.swift in Sources */,
+				2A5BB7CA2CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
+				2A5BB7E12CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */,
 				38F720AA2CD4F15900DF32B5 /* DetailCard.swift in Sources */,
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
@@ -1401,6 +1565,7 @@
 				38B6AAD62CA41B3C00CE6DB6 /* MainHomeHeaderView.swift in Sources */,
 				2AE6B1722CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift in Sources */,
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
+				2A45B3702CE4C5510071026A /* RegisterUserResponse.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				2AE6B1932CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
@@ -1414,8 +1579,10 @@
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
 				38405CCC2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
 				381A1D6B2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
+				2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				2AE6B17C2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,
 				38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
+				2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				38F720A82CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */,
 				389681112CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
@@ -1424,6 +1591,7 @@
 				381DEA8C2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
+				2A5BB7DE2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */,
 				38F720A62CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
 				38D6F1872CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
@@ -1435,12 +1603,14 @@
 				2ACBD41B2CCA03790057C013 /* ImageURLWithName.swift in Sources */,
 				38B6AAE02CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				2ACBD41E2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
+				2A5BB7DA2CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */,
 				2AE6B1792CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */,
 				381701792CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				3887D0372CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
 				38B8A58C2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
+				2A5BB7E42CDCD97300E1C799 /* JoinRequest.swift in Sources */,
 				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
 				381DEA8D2CD4BE4A009F1FE9 /* Card.swift in Sources */,
 				2AE6B15F2CBEB2D800FA5C3C /* ReportResponse.swift in Sources */,
@@ -1461,6 +1631,7 @@
 				2A44A4342CAC21A500DC463E /* SignUpResponse.swift in Sources */,
 				385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				38B6AAD12CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */,
+				2A5BB7BE2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */,
 				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
 				2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
 				385E65A32CBE56D00032E120 /* Coordinate.swift in Sources */,
@@ -1472,6 +1643,7 @@
 				38D6F17C2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
 				381701782CD88854005FC220 /* LogginMonitor.swift in Sources */,
+				2A5BB7C52CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */,
 				2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */,
 				2AE6B14C2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */,
 				388009912CABF855002A9209 /* SOMTagModel.swift in Sources */,
@@ -1481,6 +1653,7 @@
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				2AE6B17B2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,
 				38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
+				2A5BB7D12CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */,
 				3887D0392CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
@@ -1498,6 +1671,7 @@
 				38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */,
 				3817016E2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
 				3880098E2CABF4C2002A9209 /* SOMTag.swift in Sources */,
+				2A5BB7E32CDCD97300E1C799 /* JoinRequest.swift in Sources */,
 				2A44A4372CAC227300DC463E /* BaseAuthResponse.swift in Sources */,
 				38CC49822CDE3854007A0145 /* SOMPresentationController.swift in Sources */,
 				38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */,
@@ -1511,12 +1685,14 @@
 				38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				381A1D652CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */,
 				38B8A58B2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
+				2A5BB7E02CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */,
 				388371FC2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				381A1D742CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				2AE6B1782CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */,
 				3850719A2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38D055C32CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
+				2A45B36F2CE4C5510071026A /* RegisterUserResponse.swift in Sources */,
 				38121E342CA6DA4000602499 /* Date.swift in Sources */,
 				38F720A52CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
 				3880097B2CABEE3D002A9209 /* DetailViewController.swift in Sources */,
@@ -1525,6 +1701,7 @@
 				3849729E2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
+				2A5BB7C92CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				2AE6B1492CBC15BF00FA5C3C /* ReportViewController.swift in Sources */,
 				3887D0332CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */,
 				38D6F1802CC2413400E11530 /* WriteCardTextView.swift in Sources */,
@@ -1544,6 +1721,8 @@
 				38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				2A44A42A2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
+				2A5BB7B92CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
+				2A5BB7DD2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */,
 				2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38F720AD2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */,
@@ -1553,23 +1732,28 @@
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */,
 				3887D0362CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
+				2A5BB7CD2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */,
 				385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
 				2A048E7B2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
 				38121E312CA6C77500602499 /* Double.swift in Sources */,
 				2AE6B1752CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */,
+				2A5BB7C22CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */,
 				384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
+				2A5BB7E72CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
 				3816C05C2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */,
 				381DEA8B2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				2ACBD41A2CCA03790057C013 /* ImageURLWithName.swift in Sources */,
 				3878F4742CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
+				2A5BB7D92CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */,
 				38B6AADF2CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				389681102CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
 				2AE6B15E2CBEB2D800FA5C3C /* ReportResponse.swift in Sources */,
+				2A5BB7FA2CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift in Sources */,
 				38B8A5842CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				38F720A92CD4F15900DF32B5 /* DetailCard.swift in Sources */,
 				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,
@@ -1577,8 +1761,10 @@
 				2AE6B16D2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */,
 				38F720A72CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */,
 				38B6AAE22CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
+				2A5BB7D52CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
 				38F720B32CD4F15900DF32B5 /* LatestCardResponse.swift in Sources */,
+				2A032EFD2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */,
 				38B8A5882CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
 				388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 			);
@@ -1629,7 +1815,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "-D DEVELOP";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

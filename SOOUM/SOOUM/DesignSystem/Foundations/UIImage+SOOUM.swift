@@ -67,6 +67,7 @@ extension UIImage {
         enum ImageStyle: String {
             case refreshControl
             case cancel
+            case login
         }
         
         var imageName: String {

@@ -81,15 +81,7 @@ extension LaunchScreenViewReactor {
     
     private func login() -> Observable<Mutation> {
         return self.authManager.certification()
-            .withUnretained(self)
-            .flatMapLatest { object, isRegistered -> Observable<Mutation> in
-                if isRegistered {
-                    return .just(.updateIsRegistered(true))
-                } else {
-                    return object.authManager.join()
-                        .map(Mutation.updateIsRegistered)
-                }
-            }
+            .map { .updateIsRegistered($0) }
     }
 }
     

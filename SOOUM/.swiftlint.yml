@@ -157,6 +157,7 @@ excluded:
   - Pods
   - SOOUM/Resources
   - SOOUM/Models
+  - Pods
 
 # 👉🏻 Options
 # line_length: 100

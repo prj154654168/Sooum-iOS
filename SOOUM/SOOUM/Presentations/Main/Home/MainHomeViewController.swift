@@ -151,6 +151,17 @@ class MainHomeViewController: BaseNavigationViewController, View {
                 object.tableView.scrollToRow(at: indexPath, at: .top, animated: false)
             }
             .disposed(by: self.disposeBag)
+        
+        #if DEVELOP
+        logo.rx.longPressGesture()
+            .when(.began)
+            .subscribe(with: self) { object, _ in
+                AuthKeyChain.shared.delete(.deviceId)
+                AuthKeyChain.shared.delete(.refreshToken)
+                AuthKeyChain.shared.delete(.accessToken)
+            }
+            .disposed(by: self.disposeBag)
+        #endif
     }
     
     
@@ -160,7 +171,9 @@ class MainHomeViewController: BaseNavigationViewController, View {
         
         // Action
         self.rx.viewDidLoad
-            .map { _ in Reactor.Action.landing }
+            .map { _ in
+                return Reactor.Action.landing
+            }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
