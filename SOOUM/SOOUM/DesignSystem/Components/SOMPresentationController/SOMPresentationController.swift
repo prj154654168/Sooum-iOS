@@ -31,6 +31,13 @@ class SOMPresentationController: UIPresentationController {
         return view
     }()
     
+    private let handleBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        
+        return view
+    }()
+    
     /*
         isHandleBar 는 bottomSheet 의 높이가 동적인 여부
         isScrollable 은 bottomSheet 의 제스처가 pan 인지 tap 인지 여부,
@@ -83,10 +90,10 @@ class SOMPresentationController: UIPresentationController {
         if isHandleBar {
             if isScrollable {
                 let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handleGesture))
-                self.presentedView?.addGestureRecognizer(panGesture)
+                self.handleBar.addGestureRecognizer(panGesture)
             } else {
                 let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleBarDidTap))
-                self.presentedView?.addGestureRecognizer(tapGesture)
+                self.handleBar.addGestureRecognizer(tapGesture)
             }
         }
         
@@ -122,6 +129,13 @@ class SOMPresentationController: UIPresentationController {
                 roundedRect: presentedView.bounds,
                 cornerRadius: 20
             ).cgPath
+            
+            if self.isHandleBar {
+                presentedView.addSubview(self.handleBar)
+                var size: CGSize = presentedView.frame.size
+                size.height = 30
+                self.handleBar.frame = .init(origin: .zero, size: size)
+            }
         }
         
         if let coordinator = self.presentedViewController.transitionCoordinator {

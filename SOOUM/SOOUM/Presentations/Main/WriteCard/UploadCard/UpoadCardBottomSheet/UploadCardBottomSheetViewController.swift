@@ -82,6 +82,7 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
+        $0.isScrollEnabled = false
         $0.rowHeight = UITableView.automaticDimension
         $0.register(
             BottomSheetSegmentTableViewCell.self,
