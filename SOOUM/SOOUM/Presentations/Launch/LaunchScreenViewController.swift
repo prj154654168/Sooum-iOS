@@ -58,9 +58,9 @@ class LaunchScreenViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
 
-        // 로그인/회원가입 성공 시 홈 화면으로 전환
-        reactor.state.map(\.isRegistered)
-            .distinctUntilChanged()
+        // 로그인 성공 시 홈 화면으로 전환
+        let isRegistered = reactor.state.map(\.isRegistered).share()
+        isRegistered
             .filter { $0 }
             .subscribe(with: self) { object, _ in
                 let viewController = MainTabBarController()
@@ -71,14 +71,8 @@ class LaunchScreenViewController: BaseViewController, View {
                 object.view.window?.rootViewController = navigationController
             }
             .disposed(by: self.disposeBag)
-        
-        // 3. 로그인 실패 시 온보딩 화면으로 전환
-        self.animationCompleted
-            .distinctUntilChanged()
-            .withLatestFrom(
-                reactor.state.map(\.isRegistered).distinctUntilChanged(),
-                resultSelector: { $0 && $1 }
-            )
+        // 로그인 실패 시 온보딩 화면으로 전환
+        isRegistered
             .filter { $0 == false }
             .subscribe(with: self) { object, _ in
                 let viewController = OnboardingViewController()
