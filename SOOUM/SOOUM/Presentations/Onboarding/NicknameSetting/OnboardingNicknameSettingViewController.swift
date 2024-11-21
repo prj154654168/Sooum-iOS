@@ -154,9 +154,9 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         
         reactor.state
             .map { $0.errorMessage }
-            .subscribe(onNext: { [weak self] errorMessage in
+            .subscribe(with: self) { object, errorMessage in
                 if let message = errorMessage {
-                    self?.showErrorAlert(message)
+                    object.showErrorAlert(message)
                 }
             })
             .disposed(by: disposeBag)
