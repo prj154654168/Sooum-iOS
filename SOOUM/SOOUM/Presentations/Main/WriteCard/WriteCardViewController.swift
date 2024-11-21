@@ -238,17 +238,21 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.writeButton.rx.tap
             .withLatestFrom(Observable.combineLatest(optionState, imageName, imageType, font, content))
             .subscribe(onNext: { [weak self] optionState, imageName, imageType, font, content in
+                guard let self = self else { return }
                 
                 let presented = SOMDialogViewController()
                 presented.setData(
                     title: Text.dialogTitle,
                     subTitle: Text.dialogSubTitle,
-                    leftAction: .init(mode: .cancel, handler: { self?.dismiss(animated: true) }),
+                    leftAction: .init(
+                        mode: .cancel,
+                        handler: { self.leftAction() }
+                    ),
                     rightAction: .init(
                         mode: .ok,
                         handler: {
                             
-                            let feedTags = self?.writtenTagModels.map { $0.originalText }
+                            let feedTags = self.writtenTagModels.map { $0.originalText }
                             reactor.action.onNext(
                                 .writeCard(
                                     isDistanceShared: optionState[.distanceLimit] ?? false,
@@ -258,11 +262,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
                                     font: font.rawValue,
                                     imgType: imageType,
                                     imgName: imageName,
-                                    feedTags: feedTags ?? []
+                                    feedTags: feedTags
                                 )
                             )
                             
-                            self?.dismiss(animated: true)
+                            self.dismiss(animated: true)
                         }
                     ),
                     dimViewAction: nil
@@ -270,8 +274,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 presented.modalPresentationStyle = .custom
                 presented.modalTransitionStyle = .crossDissolve
                 
-                self?.dismissBottomSheet(completion: {
-                    self?.present(presented, animated: true)
+                self.dismissBottomSheet(completion: {
+                    self.present(presented, animated: true)
                 })
             })
             .disposed(by: self.disposeBag)
@@ -311,6 +315,20 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 })
             }
             .disposed(by: self.disposeBag)
+    }
+    
+    private func leftAction() {
+        
+        self.dismiss(animated: true, completion: {
+            self.presentBottomSheet(
+                presented: self.uploadCardBottomSheetViewController,
+                isHandleBar: true,
+                isScrollable: false,
+                neverDismiss: true,
+                maxHeight: 550,
+                initalHeight: 20 + 34 + 32 + 100 * 2
+            )
+        })
     }
 }
 
