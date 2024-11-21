@@ -110,10 +110,9 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         
         nicknameTextField.textField.rx.text.orEmpty
             .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] str in
-                guard let self = self else { return }
-                self.nicknameCountLabel.text = "\(str.count)/\(self.maxCount)"
-            })
+            .subscribe(with: self) { object, str in
+                object.nicknameCountLabel.text = "\(str.count)/\(self.maxCount)"
+            }
             .disposed(by: disposeBag)
         
         nicknameTextField.textField.rx.text.orEmpty
