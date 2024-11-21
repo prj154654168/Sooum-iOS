@@ -197,7 +197,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         // Set tags
         let writtenTagText = self.writeCardView.writeTagTextField.rx.text.orEmpty.distinctUntilChanged().share()
-        self.writeCardView.writeTagTextField.addTagButton.rx.tap
+        self.writeCardView.writeTagTextField.addTagButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(writtenTagText)
             .filter { $0.isEmpty == false }
             .withUnretained(self)

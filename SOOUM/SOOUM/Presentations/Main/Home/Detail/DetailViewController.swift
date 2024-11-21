@@ -360,7 +360,7 @@ extension DetailViewController: UICollectionViewDataSource {
                 }
                 .disposed(by: footer.disposeBag)
             
-            footer.likeAndCommentView.likeBackgroundButton.rx.tap
+            footer.likeAndCommentView.likeBackgroundButton.rx.throttleTap(.seconds(3))
                 .withLatestFrom(reactor.state.map(\.cardSummary.isLiked))
                 .subscribe(onNext: { isLike in
                     reactor.action.onNext(.updateLike(!isLike))

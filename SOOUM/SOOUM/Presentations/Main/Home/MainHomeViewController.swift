@@ -163,7 +163,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         self.headerHomeTabBar.didSelectTab(0)
         
         // tableView 상단 이동
-        self.moveTopButton.backgroundButton.rx.tap
+        self.moveTopButton.backgroundButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 let indexPath = IndexPath(row: 0, section: 0)
                 object.tableView.scrollToRow(at: indexPath, at: .top, animated: true)

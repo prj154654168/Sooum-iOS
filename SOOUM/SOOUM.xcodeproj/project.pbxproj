@@ -168,6 +168,8 @@
 		38608B302CB5195D0066BB40 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38608B2F2CB5195D0066BB40 /* Card.swift */; };
 		3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
 		3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
+		3866577E2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */; };
+		3866577F2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */; };
 		38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */; };
 		38773E7D2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */; };
 		3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4702CA3F03400AA46A2 /* SOMCard.swift */; };
@@ -386,6 +388,7 @@
 		385E65A22CBE56D00032E120 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		38608B2F2CB5195D0066BB40 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PushAndPop.swift"; sourceTree = "<group>"; };
+		3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Rx.swift"; sourceTree = "<group>"; };
 		38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMRefreshControl.swift; sourceTree = "<group>"; };
 		3878F4702CA3F03400AA46A2 /* SOMCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMCard.swift; sourceTree = "<group>"; };
 		3878F4732CA3F06C00AA46A2 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
@@ -1074,6 +1077,7 @@
 			isa = PBXGroup;
 			children = (
 				38B6AADE2CA4777200CE6DB6 /* UIViewController+Rx.swift */,
+				3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */,
 			);
 			path = RxCocoa;
 			sourceTree = "<group>";
@@ -1550,6 +1554,7 @@
 				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */,
+				3866577F2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */,
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				2AE6B1902CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
@@ -1773,6 +1778,7 @@
 				38A627172CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */,
 				38B8A5882CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
 				388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
+				3866577E2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
