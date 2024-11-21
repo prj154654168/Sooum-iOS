@@ -110,6 +110,7 @@ class DetailViewFooter: UICollectionReusableView {
     }
     
     func setDatas(_ datas: [Card], cardSummary: CardSummary) {
+        
         self.commentCards = datas
         self.likeAndCommentView.likeCount = cardSummary.cardLikeCnt
         self.likeAndCommentView.commentCount = cardSummary.commentCnt

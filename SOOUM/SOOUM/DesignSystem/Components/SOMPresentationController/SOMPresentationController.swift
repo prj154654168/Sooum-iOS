@@ -62,7 +62,7 @@ class SOMPresentationController: UIPresentationController {
         self.initalHeight = initalHeight
         self.currentHeight = initalHeight
         
-        self.screenView.backgroundColor = self.currentHeight == self.maxHeight ? .som.dimForCard : .clear
+        self.screenView.backgroundColor = self.currentHeight == self.maxHeight ? .som.dim : .clear
         
         self.completion = completion
         
@@ -112,7 +112,7 @@ class SOMPresentationController: UIPresentationController {
         
         if let coordinator = self.presentedViewController.transitionCoordinator {
             coordinator.animate { [weak self] _ in
-                self?.updateScreenColor(self?.currentHeight == self?.maxHeight ? .som.dimForCard : .clear)
+                self?.updateScreenColor(self?.currentHeight == self?.maxHeight ? .som.dim : .clear)
                 self?.shadowView.alpha = 1
                 self?.shadowView.layer.shadowOpacity = 1
             }
@@ -164,7 +164,7 @@ class SOMPresentationController: UIPresentationController {
         UIView.animate(withDuration: animationDuration) {
             
             let isMax = self.currentHeight == self.maxHeight
-            self.updateScreenColor(isMax ? .som.dimForCard : .clear)
+            self.updateScreenColor(isMax ? .som.dim : .clear)
             
             self.containerViewDidLayoutSubviews()
         }

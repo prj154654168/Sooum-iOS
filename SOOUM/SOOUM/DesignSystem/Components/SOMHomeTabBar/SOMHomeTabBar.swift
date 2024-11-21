@@ -12,7 +12,7 @@ import Then
 
 
 protocol SOMHomeTabBarDelegate: AnyObject {
-    func tabBar(_ tabBar: SOMHomeTabBar, didSelectTabAt index: Int)
+    func tabBar(_ tabBar: SOMHomeTabBar, prevSelectedTabAt prev: Int, didSelectTabAt curr: Int)
 }
 
 class SOMHomeTabBar: UIView {
@@ -81,8 +81,6 @@ class SOMHomeTabBar: UIView {
     
     func didSelectTab(_ index: Int) {
         
-        guard index + 1 != selectedIndex else { return }
-        
         self.homeTabBarItemContainer.arrangedSubviews.enumerated().forEach {
             guard let homeTabView = $1 as? SOMHomeTabBarItem else { return }
             if $0 == index {
@@ -93,14 +91,18 @@ class SOMHomeTabBar: UIView {
         }
 
         self.prevSelectedIndex = self.selectedIndex
-        self.selectedIndex = index + 1
+        self.selectedIndex = index
 
-        self.delegate?.tabBar(self, didSelectTabAt: index)
+        self.delegate?.tabBar(
+            self,
+            prevSelectedTabAt: self.prevSelectedIndex,
+            didSelectTabAt: self.selectedIndex
+        )
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
         guard let touchArea = touches.first?.location(in: self) else { return }
         
         if self.homeTabBarItemContainer.frame.contains(touchArea) {

@@ -45,6 +45,5 @@ extension SOOUMStyle where Base == UIColor {
     static let black = UIColor(hex: "#222222")
     
     // Dim
-    static let dimForCard = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-    static let dimForTabBar = UIColor(red: 1, green: 1, blue: 1, alpha: 0.7)
+    static let dim = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
 }
