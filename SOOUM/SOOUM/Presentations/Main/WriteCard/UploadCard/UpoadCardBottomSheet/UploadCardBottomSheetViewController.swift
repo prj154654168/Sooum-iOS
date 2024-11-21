@@ -148,16 +148,16 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
         
         imageModeSegmentState
-            .subscribe { segment in
-                self.tableView.reloadSections(IndexSet([1]), with: .automatic)
+            .subscribe(with: self) { object, segment in
+                object.tableView.reloadSections(IndexSet([1]), with: .automatic)
                 switch segment {
                 case .defaultImage:
-                    self.bottomSheetImageNameSeleted.accept(self.selectedDefaultImage.value.imageWithName?.name ?? "")
-                    self.bottomSheetImageSelected.accept(self.selectedDefaultImage.value.imageWithName?.image ?? .init())
+                    object.bottomSheetImageNameSeleted.accept(object.selectedDefaultImage.value.imageWithName?.name ?? "")
+                    object.bottomSheetImageSelected.accept(object.selectedDefaultImage.value.imageWithName?.image ?? .init())
                 case .myImage:
-                    if let selectedMyImage = self.selectedMyImage.value {
-                        self.bottomSheetImageNameSeleted.accept(selectedMyImage.name)
-                        self.bottomSheetImageSelected.accept(selectedMyImage.image)
+                    if let selectedMyImage = object.selectedMyImage.value {
+                        object.bottomSheetImageNameSeleted.accept(selectedMyImage.name)
+                        object.bottomSheetImageSelected.accept(selectedMyImage.image)
                     }
                 }
             }

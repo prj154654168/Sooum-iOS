@@ -64,10 +64,10 @@ class ImageCollectionViewCell: UICollectionViewCell {
     private func action() {
         imageView.rx.tapGesture()
             .when(.recognized)
-            .subscribe { _ in
-                if let idx = self.idx, let imageWithName = self.imageWithName {
-                    self.selectedDefaultImage?.accept((idx: idx, imageWithName: imageWithName))
-                    self.updateBorderColor()
+            .subscribe(with: self) { object, _ in
+                if let idx = object.idx, let imageWithName = object.imageWithName {
+                    object.selectedDefaultImage?.accept((idx: idx, imageWithName: imageWithName))
+                    object.updateBorderColor()
                 }
             }
             .disposed(by: disposeBag)

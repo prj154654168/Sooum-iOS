@@ -84,9 +84,9 @@ class UploadCardSettingTableViewCell: UITableViewCell {
         cellToggleState
             .distinctUntilChanged()
             .subscribe(with: self) { object, state in
-                if var updatedOptions = self.globalCardOption?.value {
-                    updatedOptions[self.cellOption] = self.cellToggleState.value
-                    self.globalCardOption?.accept(updatedOptions)
+                if var updatedOptions = object.globalCardOption?.value {
+                    updatedOptions[object.cellOption] = object.cellToggleState.value
+                    object.globalCardOption?.accept(updatedOptions)
                 }
             }
             .disposed(by: disposeBag)

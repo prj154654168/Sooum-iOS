@@ -69,10 +69,10 @@ class ToggleView: UIView {
     private func action() {
         self.rx.tapGesture()
             .when(.recognized)
-            .subscribe { _ in
-                if let toggleState = self.toggleState {
+            .subscribe(with: self) { object, _ in
+                if let toggleState = object.toggleState {
                     toggleState.accept(!toggleState.value)
-                    self.updateToggleView(toggleState.value, animated: true)
+                    object.updateToggleView(toggleState.value, animated: true)
                 }
             }
             .disposed(by: disposeBag)

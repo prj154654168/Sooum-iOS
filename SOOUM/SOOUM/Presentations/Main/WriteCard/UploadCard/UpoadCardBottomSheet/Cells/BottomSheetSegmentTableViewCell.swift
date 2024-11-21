@@ -106,24 +106,24 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     private func action() {
         defualtImageButtonLabel.rx.tapGesture()
             .when(.recognized)
-            .subscribe { _ in
-                self.imageSegment?.accept(.defaultImage)
-                self.updateImageSegment(segment: .defaultImage, animated: true)
+            .subscribe(with: self) { object, _ in
+                object.imageSegment?.accept(.defaultImage)
+                object.updateImageSegment(segment: .defaultImage, animated: true)
             }
             .disposed(by: disposeBag)
         
         myImageButtonLabel.rx.tapGesture()
             .when(.recognized)
-            .subscribe { _ in
-                self.imageSegment?.accept(.myImage)
-                self.updateImageSegment(segment: .myImage, animated: true)
+            .subscribe(with: self) { object, _ in
+                object.imageSegment?.accept(.myImage)
+                object.updateImageSegment(segment: .myImage, animated: true)
             }
             .disposed(by: disposeBag)
         
         chageImageButtonStack.rx.tapGesture()
             .when(.recognized)
-            .subscribe { _ in
-                self.imageReloadButtonTapped?.onNext(self.selectedSegment)
+            .subscribe(with: self) { object, _ in
+                object.imageReloadButtonTapped?.onNext(object.selectedSegment)
             }
             .disposed(by: disposeBag)
     }
