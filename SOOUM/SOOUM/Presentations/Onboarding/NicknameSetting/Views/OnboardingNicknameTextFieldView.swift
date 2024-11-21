@@ -56,7 +56,7 @@ class OnboardingNicknameTextFieldView: UIView {
         self.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
-                object.textField.becomeFirstResponder
+                object.textField.becomeFirstResponder()
             }
             .disposed(by: self.disposeBag)
     }

@@ -75,7 +75,7 @@ class OnboardingViewController: BaseViewController {
             .subscribe(with: self) { object, _ in
                 let termsOfServiceVC = OnboardingTermsOfServiceViewController()
                 termsOfServiceVC.reactor = OnboardingTermsOfServiceViewReactor()
-                self.navigationController?.pushViewController(termsOfServiceVC, animated: true)
+                object.navigationController?.pushViewController(termsOfServiceVC, animated: true)
             }
             .disposed(by: disposeBag)
     }

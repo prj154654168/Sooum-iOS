@@ -111,7 +111,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         nicknameTextField.textField.rx.text.orEmpty
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, str in
-                object.nicknameCountLabel.text = "\(str.count)/\(self.maxCount)"
+                object.nicknameCountLabel.text = "\(str.count)/\(object.maxCount)"
             }
             .disposed(by: disposeBag)
         
@@ -157,7 +157,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
                 if let message = errorMessage {
                     object.showErrorAlert(message)
                 }
-            })
+            }
             .disposed(by: disposeBag)
     }
     

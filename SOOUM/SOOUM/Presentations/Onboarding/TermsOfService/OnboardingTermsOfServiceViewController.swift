@@ -71,7 +71,6 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
     }
     
     func bind(reactor: OnboardingTermsOfServiceViewReactor) {
-        super.bind()
         
         // 전체 동의 버튼 클릭
         agreeAllButtonView.rx.tapGesture()

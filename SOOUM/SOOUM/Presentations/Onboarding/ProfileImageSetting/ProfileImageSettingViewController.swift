@@ -45,8 +45,9 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
 
         okButton.rx.tapGesture()
             .when(.recognized)
-            .compactMap { _ in
-                self.okButton.isEnabled ? Reactor.Action.registerUser : nil
+            .withUnretained(self)
+            .compactMap { object, _ in
+                object.okButton.isEnabled ? Reactor.Action.registerUser : nil
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -140,8 +141,8 @@ extension ProfileImageSettingViewController {
         config.wordings.crop = "자르기"
         
         let picker = YPImagePicker(configuration: config)
-        picker.didFinishPicking { [unowned picker] items, _ in
-            guard let image = items.singlePhoto?.image  else {
+        picker.didFinishPicking { [weak self] items, _ in
+            guard let self = self, let image = items.singlePhoto?.image  else {
                 picker.dismiss(animated: true, completion: nil)
                 return
             }
