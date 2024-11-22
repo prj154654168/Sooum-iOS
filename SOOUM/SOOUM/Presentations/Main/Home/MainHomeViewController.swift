@@ -9,6 +9,7 @@ import UIKit
 
 import ReactorKit
 import RxCocoa
+import RxGesture
 import RxSwift
 
 import SnapKit
@@ -177,6 +178,15 @@ class MainHomeViewController: BaseNavigationViewController, View {
                 AuthKeyChain.shared.delete(.deviceId)
                 AuthKeyChain.shared.delete(.refreshToken)
                 AuthKeyChain.shared.delete(.accessToken)
+                
+                DispatchQueue.main.async {
+                    if let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                       let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                        
+                        let viewController = OnboardingViewController()
+                        window.rootViewController = UINavigationController(rootViewController: viewController)
+                    }
+                }
             }
             .disposed(by: self.disposeBag)
         #endif
