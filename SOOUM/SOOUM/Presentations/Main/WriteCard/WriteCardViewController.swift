@@ -212,6 +212,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     isRemovable: true
                 )
                 
+                guard object.writtenTagModels.contains(toModel) == false else { return object.writtenTagModels }
+                
                 object.writtenTagModels.append(toModel)
                 object.writeCardView.writtenTagsHeightConstraint?.deactivate()
                 object.writeCardView.writtenTags.snp.makeConstraints {
@@ -376,20 +378,26 @@ extension WriteCardViewController: WriteTagTextFieldDelegate {
 
 extension WriteCardViewController: SOMTagsDelegate {
     
+    // writtenTags.tag == 0
+    // relatedTags.tag == 1
     func tags(_ tags: SOMTags, didRemove model: SOMTagModel) {
         
-        self.writtenTagModels.removeAll(where: { $0 == model })
-        if self.writtenTagModels.isEmpty {
-            self.writeCardView.writtenTagsHeightConstraint?.deactivate()
-            self.writeCardView.writtenTags.snp.makeConstraints {
-                self.writeCardView.writtenTagsHeightConstraint = $0.height.equalTo(12).constraint
+        if tags.tag == 0 {
+            self.writtenTagModels.removeAll(where: { $0 == model })
+            if self.writtenTagModels.isEmpty {
+                self.writeCardView.writtenTagsHeightConstraint?.deactivate()
+                self.writeCardView.writtenTags.snp.makeConstraints {
+                    self.writeCardView.writtenTagsHeightConstraint = $0.height.equalTo(12).constraint
+                }
             }
         }
     }
     
     func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
         
-        self.writeCardView.writeTagTextField.text = model.originalText
-        self.writeCardView.writeTagTextField.sendActionsToTextField(for: .editingChanged)
+        if tags.tag == 1 {
+            self.writeCardView.writeTagTextField.text = model.originalText
+            self.writeCardView.writeTagTextField.sendActionsToTextField(for: .editingChanged)
+        }
     }
 }

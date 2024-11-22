@@ -114,22 +114,22 @@ class SOMTags: UIView {
         
         /// 새로운 태그가 유효한지 확인 (중복 여부 확인)
         let deduplicatedNew = Set(new)
-        if models.count != deduplicatedNew.count {
+        if new.count != deduplicatedNew.count {
             print("⚠️ 중복된 태그가 존재합니다. 태그의 순서를 유지하고 중복된 태그를 제거합니다.")
         }
         /// 현재 태그 배열에서 삭제되어야 할 태그 및 삽입되어야 할 태그 찾기
-        let deleted = Set(current).subtracting(deduplicatedNew)
+        let deleted = Set(current).subtracting(new)
         let inserted = deduplicatedNew.subtracting(current)
         /// 삭제 또는 삽입 되어야 할 태그 인덱스
         let deletedIndices = current.enumerated()
             .filter { deleted.contains($0.element) }
             .map { IndexPath(item: $0.offset, section: 0) }
-        let insertedIndices = deduplicatedNew.enumerated()
+        let insertedIndices = new.enumerated()
             .filter { inserted.contains($0.element) }
             .map { IndexPath(item: $0.offset, section: 0) }
         /// 변경되어야 할 인덱스
         var moveIndeces: [(from: Int, to: Int)] = []
-        if current.count + deduplicatedNew.count > 0, deletedIndices.isEmpty, insertedIndices.isEmpty {
+        if current.count + new.count > 0, deletedIndices.isEmpty, insertedIndices.isEmpty {
             for currentItemIndex in 0..<current.count {
                 let currentItem = current[currentItemIndex]
                 if let newItemIndex = new.firstIndex(of: currentItem),
@@ -139,25 +139,21 @@ class SOMTags: UIView {
             }
         }
         
+        self.models = new
+        
         /// 삭제되어야 할 태그 삭제, 추가되어야 할 태그 추가, 태그 순서 변경, 모델 업데이트
         if current.isEmpty == false {
             self.collectionView.performBatchUpdates {
                 self.collectionView.deleteItems(at: deletedIndices)
-                self.models.removeAll(where: { deleted.contains($0) })
-                
                 self.collectionView.insertItems(at: insertedIndices)
-                inserted.forEach { self.models.append($0) }
-                
                 moveIndeces.forEach {
                     self.collectionView.moveItem(
                         at: .init(item: $0.from, section: 0),
                         to: .init(item: $0.to, section: 0)
                     )
                 }
-                self.models = moveIndeces.isEmpty ? self.models : new
             }
         } else {
-            self.models = new
             self.collectionView.reloadData()
         }
     }
