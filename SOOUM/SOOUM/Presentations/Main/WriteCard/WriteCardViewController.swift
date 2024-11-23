@@ -150,7 +150,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     presented: object.uploadCardBottomSheetViewController,
                     dismissWhenScreenDidTap: true,
                     isHandleBar: true,
-                    isScrollable: false,
                     neverDismiss: true,
                     maxHeight: 550,
                     initalHeight: 20 + 34 + 32 + 100 * 2
@@ -167,7 +166,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     presented: object.uploadCardBottomSheetViewController,
                     dismissWhenScreenDidTap: true,
                     isHandleBar: true,
-                    isScrollable: false,
                     neverDismiss: true,
                     maxHeight: 550,
                     initalHeight: 20 + 34 + 32 + 100 * 2
@@ -327,7 +325,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
             self.presentBottomSheet(
                 presented: self.uploadCardBottomSheetViewController,
                 isHandleBar: true,
-                isScrollable: false,
                 neverDismiss: true,
                 maxHeight: 550,
                 initalHeight: 20 + 34 + 32 + 100 * 2
