@@ -98,6 +98,8 @@
 		2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95542CF3222400CBFB12 /* TagsViewController.swift */; };
 		2AFF955A2CF3227900CBFB12 /* TagSearchTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */; };
 		2AFF955B2CF3227900CBFB12 /* TagSearchTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */; };
+		2AFF955D2CF328DE00CBFB12 /* FavoriteTagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF955C2CF328DE00CBFB12 /* FavoriteTagCell.swift */; };
+		2AFF955E2CF328DE00CBFB12 /* FavoriteTagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF955C2CF328DE00CBFB12 /* FavoriteTagCell.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
@@ -356,6 +358,7 @@
 		2AE6B1912CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMyImageTableViewCell.swift; sourceTree = "<group>"; };
 		2AFF95542CF3222400CBFB12 /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
 		2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchTextFieldView.swift; sourceTree = "<group>"; };
+		2AFF955C2CF328DE00CBFB12 /* FavoriteTagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagCell.swift; sourceTree = "<group>"; };
 		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
@@ -734,6 +737,7 @@
 		2AFF95582CF3225900CBFB12 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				2AFF955C2CF328DE00CBFB12 /* FavoriteTagCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1597,6 +1601,7 @@
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				2AE6B1902CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
+				2AFF955E2CF328DE00CBFB12 /* FavoriteTagCell.swift in Sources */,
 				381701722CD88374005FC220 /* CompositeInterceptor.swift in Sources */,
 				2A5BB7CA2CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
@@ -1802,6 +1807,7 @@
 				38B6AADF2CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				389681102CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
+				2AFF955D2CF328DE00CBFB12 /* FavoriteTagCell.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
 				2AE6B15E2CBEB2D800FA5C3C /* ReportResponse.swift in Sources */,
