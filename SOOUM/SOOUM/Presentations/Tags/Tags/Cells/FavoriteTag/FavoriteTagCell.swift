@@ -40,9 +40,13 @@ final class FavoriteTagCell: UITableViewCell {
         $0.tintColor = .som.blue300
     }
     
-    let cardPreviewCollectionView = UICollectionView().then {
-        $0.backgroundColor = .red
-    }
+    let cardPreviewCollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: UICollectionViewFlowLayout().then {
+            $0.scrollDirection = .horizontal
+        }).then {
+            $0.backgroundColor = .red
+        }
     
     // MARK: - init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -68,6 +72,7 @@ final class FavoriteTagCell: UITableViewCell {
         self.contentView.addSubview(tagsCountLabel)
         tagsCountLabel.snp.makeConstraints {
             $0.leading.equalTo(self.tagNameLabel.snp.trailing)
+            $0.top.equalTo(self.tagNameLabel)
             $0.height.equalTo(17)
         }
         
@@ -86,5 +91,4 @@ final class FavoriteTagCell: UITableViewCell {
             $0.bottom.equalToSuperview().offset(-15)
         }
     }
-
 }
