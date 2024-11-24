@@ -33,6 +33,7 @@ class FavoriteTagView: UIView {
     
     let moreImageView = UIImageView().then {
         $0.image = .next
+        $0.contentMode = .scaleAspectFit
         $0.tintColor = .som.blue300
     }
     
@@ -51,6 +52,7 @@ class FavoriteTagView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.clipsToBounds = true
         self.layer.cornerRadius = 28
         self.layer.borderColor = UIColor.som.gray200.cgColor
         self.layer.borderWidth = 1
@@ -70,7 +72,7 @@ class FavoriteTagView: UIView {
         
         self.addSubview(tagsCountLabel)
         tagsCountLabel.snp.makeConstraints {
-            $0.leading.equalTo(self.tagNameLabel.snp.trailing)
+            $0.leading.equalTo(self.tagNameLabel.snp.trailing).offset(2)
             $0.top.equalTo(self.tagNameLabel)
             $0.height.equalTo(17)
         }

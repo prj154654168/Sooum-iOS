@@ -13,6 +13,7 @@ class TagsViewController: BaseViewController {
     
     lazy var tableView = UITableView().then {
         $0.backgroundColor = .red
+        $0.separatorStyle = .none
         $0.register(
             FavoriteTagCell.self,
             forCellReuseIdentifier: String(
