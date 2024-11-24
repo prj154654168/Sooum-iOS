@@ -36,6 +36,7 @@ class TagSearchTextFieldView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.backgroundColor = .som.gray50
         self.layer.cornerRadius = 12
         setupConstraints()
         action()
