@@ -102,6 +102,8 @@
 		2AFF955E2CF328DE00CBFB12 /* FavoriteTagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF955C2CF328DE00CBFB12 /* FavoriteTagCell.swift */; };
 		2AFF95612CF33A3900CBFB12 /* FavoriteTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95602CF33A3900CBFB12 /* FavoriteTagView.swift */; };
 		2AFF95622CF33A3900CBFB12 /* FavoriteTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95602CF33A3900CBFB12 /* FavoriteTagView.swift */; };
+		2AFF95642CF33D9F00CBFB12 /* TagsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95632CF33D9F00CBFB12 /* TagsHeaderView.swift */; };
+		2AFF95652CF33D9F00CBFB12 /* TagsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95632CF33D9F00CBFB12 /* TagsHeaderView.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
@@ -362,6 +364,7 @@
 		2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchTextFieldView.swift; sourceTree = "<group>"; };
 		2AFF955C2CF328DE00CBFB12 /* FavoriteTagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagCell.swift; sourceTree = "<group>"; };
 		2AFF95602CF33A3900CBFB12 /* FavoriteTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagView.swift; sourceTree = "<group>"; };
+		2AFF95632CF33D9F00CBFB12 /* TagsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsHeaderView.swift; sourceTree = "<group>"; };
 		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
@@ -733,6 +736,7 @@
 			isa = PBXGroup;
 			children = (
 				2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */,
+				2AFF95632CF33D9F00CBFB12 /* TagsHeaderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1679,6 +1683,7 @@
 				38B8A58C2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				2A5BB7E42CDCD97300E1C799 /* JoinRequest.swift in Sources */,
+				2AFF95652CF33D9F00CBFB12 /* TagsHeaderView.swift in Sources */,
 				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
 				381DEA8D2CD4BE4A009F1FE9 /* Card.swift in Sources */,
 				2AE6B15F2CBEB2D800FA5C3C /* ReportResponse.swift in Sources */,
@@ -1718,6 +1723,7 @@
 				388009912CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				38608B302CB5195D0066BB40 /* Card.swift in Sources */,
 				388C96362CCE41700061C598 /* AuthInfo.swift in Sources */,
+				2AFF95642CF33D9F00CBFB12 /* TagsHeaderView.swift in Sources */,
 				2AE6B15A2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				2AE6B17B2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,

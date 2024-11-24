@@ -64,4 +64,19 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 228
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 60
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        switch EventMode(rawValue: section) {
+        case .memory:
+            return EventTitleHeaderView(mode: .memory)
+        case .todo:
+            return EventTitleHeaderView(mode: .todo)
+        case .none:
+            return nil
+        }
+    }
 }
