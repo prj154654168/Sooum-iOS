@@ -14,6 +14,7 @@ class TagsViewController: BaseViewController {
     lazy var tableView = UITableView().then {
         $0.backgroundColor = .red
         $0.separatorStyle = .none
+        $0.sectionHeaderTopPadding = 0
         $0.register(
             FavoriteTagCell.self,
             forCellReuseIdentifier: String(
@@ -70,13 +71,6 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        switch EventMode(rawValue: section) {
-        case .memory:
-            return EventTitleHeaderView(mode: .memory)
-        case .todo:
-            return EventTitleHeaderView(mode: .todo)
-        case .none:
-            return nil
-        }
+        return TagsHeaderView()
     }
 }

@@ -12,4 +12,29 @@ class TagsHeaderView: UIView {
         $0.typography = .som.body1WithBold
         $0.text = "내가 즐겨찾기한 태그"
     }
+    
+    // MARK: - init
+    convenience init() {
+        self.init(frame: .zero)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = .som.white
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - setupConstraints
+    private func setupConstraints() {
+        self.addSubview(titlelabel)
+        titlelabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(32)
+            $0.top.equalToSuperview().offset(20)
+            $0.height.equalTo(24)
+        }
+    }
 }
