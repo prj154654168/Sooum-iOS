@@ -9,6 +9,20 @@ import UIKit
 
 class TagsViewController: BaseViewController {
     
+    enum TagType: CaseIterable {
+        case favorite
+        case recommend
+        
+        var headerText: String {
+            switch self {
+            case .favorite:
+                return "내가 즐겨찾기한 태그"
+            case .recommend:
+                return "추천태그"
+            }
+        }
+    }
+    
     let tagSearchTextFieldView = TagSearchTextFieldView()
     
     lazy var tableView = UITableView().then {
@@ -16,9 +30,15 @@ class TagsViewController: BaseViewController {
         $0.separatorStyle = .none
         $0.sectionHeaderTopPadding = 0
         $0.register(
-            FavoriteTagCell.self,
+            FavoriteTagTableViewCell.self,
             forCellReuseIdentifier: String(
-                describing: FavoriteTagCell.self
+                describing: FavoriteTagTableViewCell.self
+            )
+        )
+        $0.register(
+            RecommendTagTableViewCell.self,
+            forCellReuseIdentifier: String(
+                describing: RecommendTagTableViewCell.self
             )
         )
         $0.dataSource = self
@@ -45,25 +65,51 @@ class TagsViewController: BaseViewController {
 }
 
 extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        1
+        2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 12
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: String(describing: FavoriteTagCell.self), 
-            for: indexPath
-        ) as! FavoriteTagCell
-        
-        return cell
+        switch TagType.allCases[indexPath.section] {
+        case .favorite:
+            return createFavoriteTagCell(indexPath: indexPath)
+            
+        case .recommend:
+            return createRecommendTagTableViewCell(indexPath: indexPath)
+        }
     }    
     
+    private func createFavoriteTagCell(indexPath: IndexPath) -> FavoriteTagTableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: String(describing: FavoriteTagTableViewCell.self),
+            for: indexPath
+        ) as! FavoriteTagTableViewCell
+        
+        return cell
+    }
+    
+    private func createRecommendTagTableViewCell(indexPath: IndexPath) -> RecommendTagTableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: String(describing: RecommendTagTableViewCell.self),
+            for: indexPath
+        ) as! RecommendTagTableViewCell
+        
+        return cell
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 228
+        switch TagType.allCases[indexPath.section] {
+        case .favorite:
+            return 228
+            
+        case .recommend:
+            return 57 + 12
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -71,6 +117,6 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return TagsHeaderView()
+        return TagsHeaderView(type: TagType.allCases[section])
     }
 }

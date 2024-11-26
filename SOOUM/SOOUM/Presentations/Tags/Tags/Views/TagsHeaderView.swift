@@ -15,13 +15,14 @@ class TagsHeaderView: UIView {
     }
     
     // MARK: - init
-    convenience init() {
-        self.init(frame: .zero)
+    convenience init(type: TagsViewController.TagType) {
+        self.init(frame: .zero, type: type)
     }
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, type: TagsViewController.TagType) {
         super.init(frame: frame)
         self.backgroundColor = .som.white
+        titlelabel.text = type.headerText
         setupConstraints()
     }
     

@@ -11,7 +11,7 @@ import RxCocoa
 import RxGesture
 import RxSwift
 
-final class FavoriteTagCell: UITableViewCell {
+final class FavoriteTagTableViewCell: UITableViewCell {
     
     let favoriteTagView = FavoriteTagView()
     
