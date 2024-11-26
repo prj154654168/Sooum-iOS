@@ -108,6 +108,8 @@
 		2AFF95692CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95672CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift */; };
 		2AFF956B2CF5E00600CBFB12 /* RecommendTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */; };
 		2AFF956C2CF5E00600CBFB12 /* RecommendTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */; };
+		2AFF95702CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF956F2CF5E8DE00CBFB12 /* TagSearchViewController.swift */; };
+		2AFF95712CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF956F2CF5E8DE00CBFB12 /* TagSearchViewController.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
@@ -371,6 +373,7 @@
 		2AFF95632CF33D9F00CBFB12 /* TagsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsHeaderView.swift; sourceTree = "<group>"; };
 		2AFF95672CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTagTableViewCell.swift; sourceTree = "<group>"; };
 		2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTagView.swift; sourceTree = "<group>"; };
+		2AFF956F2CF5E8DE00CBFB12 /* TagSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchViewController.swift; sourceTree = "<group>"; };
 		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
@@ -724,6 +727,7 @@
 			isa = PBXGroup;
 			children = (
 				2AFF95532CF3220A00CBFB12 /* Tags */,
+				2AFF956E2CF5E8A500CBFB12 /* TagSearch */,
 			);
 			path = Tags;
 			sourceTree = "<group>";
@@ -731,9 +735,9 @@
 		2AFF95532CF3220A00CBFB12 /* Tags */ = {
 			isa = PBXGroup;
 			children = (
-				2AFF95582CF3225900CBFB12 /* Cells */,
-				2AFF95572CF3225100CBFB12 /* Views */,
 				2AFF95542CF3222400CBFB12 /* TagsViewController.swift */,
+				2AFF95572CF3225100CBFB12 /* Views */,
+				2AFF95582CF3225900CBFB12 /* Cells */,
 			);
 			path = Tags;
 			sourceTree = "<group>";
@@ -772,6 +776,14 @@
 				2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */,
 			);
 			path = RecommendTag;
+			sourceTree = "<group>";
+		};
+		2AFF956E2CF5E8A500CBFB12 /* TagSearch */ = {
+			isa = PBXGroup;
+			children = (
+				2AFF956F2CF5E8DE00CBFB12 /* TagSearchViewController.swift */,
+			);
+			path = TagSearch;
 			sourceTree = "<group>";
 		};
 		2DAC60EF30AB4D54BFEBDF3B /* Pods */ = {
@@ -1600,6 +1612,7 @@
 				38F720B22CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */,
 				388009922CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
+				2AFF95712CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				2A5BB7E82CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
 				2AFF95622CF33A3900CBFB12 /* FavoriteTagView.swift in Sources */,
@@ -1835,6 +1848,7 @@
 				38121E312CA6C77500602499 /* Double.swift in Sources */,
 				2AE6B1752CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */,
 				2A5BB7C22CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */,
+				2AFF95702CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */,
 				384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
 				2A5BB7E72CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,

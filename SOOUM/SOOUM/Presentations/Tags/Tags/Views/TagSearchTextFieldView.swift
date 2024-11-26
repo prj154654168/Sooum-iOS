@@ -30,16 +30,18 @@ class TagSearchTextFieldView: UIView {
     }
     
     // MARK: - init
-    convenience init() {
-        self.init(frame: .zero)
+    convenience init(isInteractive: Bool) {
+        self.init(frame: .zero, isInteractive: isInteractive)
     }
     
-    override init(frame: CGRect) {
+    init(frame: CGRect, isInteractive: Bool) {
         super.init(frame: frame)
         self.backgroundColor = .som.gray50
         self.layer.cornerRadius = 12
         setupConstraints()
-        action()
+        if isInteractive {
+            action()
+        }
     }
     
     required init?(coder: NSCoder) {
