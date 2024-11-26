@@ -56,5 +56,7 @@ enum Font: String, Codable {
 /// 사용하는 폰트 사이즈
 enum FontSize: String, Codable {
     case big = "BIG"
+    case medium = "MEDIUM"
+    case small = "SMALL"
     case none = "NONE"
 }
