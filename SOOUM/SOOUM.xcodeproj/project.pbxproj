@@ -104,6 +104,10 @@
 		2AFF95622CF33A3900CBFB12 /* FavoriteTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95602CF33A3900CBFB12 /* FavoriteTagView.swift */; };
 		2AFF95642CF33D9F00CBFB12 /* TagsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95632CF33D9F00CBFB12 /* TagsHeaderView.swift */; };
 		2AFF95652CF33D9F00CBFB12 /* TagsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95632CF33D9F00CBFB12 /* TagsHeaderView.swift */; };
+		2AFF95682CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95672CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift */; };
+		2AFF95692CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95672CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift */; };
+		2AFF956B2CF5E00600CBFB12 /* RecommendTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */; };
+		2AFF956C2CF5E00600CBFB12 /* RecommendTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
@@ -365,6 +369,8 @@
 		2AFF955C2CF328DE00CBFB12 /* FavoriteTagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagCell.swift; sourceTree = "<group>"; };
 		2AFF95602CF33A3900CBFB12 /* FavoriteTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagView.swift; sourceTree = "<group>"; };
 		2AFF95632CF33D9F00CBFB12 /* TagsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsHeaderView.swift; sourceTree = "<group>"; };
+		2AFF95672CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTagTableViewCell.swift; sourceTree = "<group>"; };
+		2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTagView.swift; sourceTree = "<group>"; };
 		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
@@ -744,6 +750,7 @@
 		2AFF95582CF3225900CBFB12 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				2AFF95662CF5DFA500CBFB12 /* RecommendTag */,
 				2AFF955F2CF33A2B00CBFB12 /* FavoriteTag */,
 			);
 			path = Cells;
@@ -756,6 +763,15 @@
 				2AFF95602CF33A3900CBFB12 /* FavoriteTagView.swift */,
 			);
 			path = FavoriteTag;
+			sourceTree = "<group>";
+		};
+		2AFF95662CF5DFA500CBFB12 /* RecommendTag */ = {
+			isa = PBXGroup;
+			children = (
+				2AFF95672CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift */,
+				2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */,
+			);
+			path = RecommendTag;
 			sourceTree = "<group>";
 		};
 		2DAC60EF30AB4D54BFEBDF3B /* Pods */ = {
@@ -1605,6 +1621,7 @@
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				2AE6B1802CBFEA5200FA5C3C /* ToggleView.swift in Sources */,
 				38B8A5812CAE9363000AFE83 /* SOMCardModel.swift in Sources */,
+				2AFF956C2CF5E00600CBFB12 /* RecommendTagView.swift in Sources */,
 				38D055C42CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */,
@@ -1614,6 +1631,7 @@
 				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */,
+				2AFF95692CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift in Sources */,
 				3866577F2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */,
 				3849729F2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
@@ -1735,6 +1753,7 @@
 				38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				381A1D6A2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
+				2AFF956B2CF5E00600CBFB12 /* RecommendTagView.swift in Sources */,
 				38F720B12CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */,
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				2AE6B17F2CBFEA5200FA5C3C /* ToggleView.swift in Sources */,
@@ -1771,6 +1790,7 @@
 				2A45B36F2CE4C5510071026A /* RegisterUserResponse.swift in Sources */,
 				38121E342CA6DA4000602499 /* Date.swift in Sources */,
 				38F720A52CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
+				2AFF95682CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift in Sources */,
 				3880097B2CABEE3D002A9209 /* DetailViewController.swift in Sources */,
 				385620F22CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				38389B9F2CCCFB7D006728AF /* AuthKeyChain.swift in Sources */,
