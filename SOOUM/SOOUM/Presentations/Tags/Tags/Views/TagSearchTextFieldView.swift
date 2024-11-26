@@ -38,14 +38,23 @@ class TagSearchTextFieldView: UIView {
         super.init(frame: frame)
         self.backgroundColor = .som.gray50
         self.layer.cornerRadius = 12
+        
         setupConstraints()
-        if isInteractive {
-            action()
-        }
+        setInteractive(isInteractive)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setInteractive(_ isInteractive: Bool) {
+        if isInteractive {
+            action()
+            self.layer.borderColor = UIColor.som.blue300.cgColor
+            self.layer.borderWidth = 1
+            magnifyingGlassImageView.tintColor = .som.blue300
+        }
+        self.textField.isUserInteractionEnabled = isInteractive
     }
     
     // MARK: - setupConstraints
@@ -78,5 +87,4 @@ class TagSearchTextFieldView: UIView {
             }
             .disposed(by: disposeBag)
     }
-    
 }

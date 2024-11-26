@@ -23,7 +23,7 @@ class TagsViewController: BaseViewController {
         }
     }
     
-    let tagSearchTextFieldView = TagSearchTextFieldView()
+    let tagSearchTextFieldView = TagSearchTextFieldView(isInteractive: false)
     
     lazy var tableView = UITableView().then {
         $0.backgroundColor = .red
@@ -43,6 +43,18 @@ class TagsViewController: BaseViewController {
         )
         $0.dataSource = self
         $0.delegate = self
+    }
+    
+    override func bind() {
+        tagSearchTextFieldView.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, _ in
+                let searchVC = TagSearchViewController()
+                searchVC.modalTransitionStyle = .crossDissolve
+                searchVC.modalPresentationStyle = .overFullScreen
+                object.present(searchVC, animated: true)
+            }
+            .disposed(by: self.disposeBag)
     }
     
     override func setupConstraints() {

@@ -9,10 +9,9 @@ import UIKit
 
 class TagSearchViewController: BaseViewController {
     
-    let tagSearchTextFieldView = TagSearchTextFieldView()
+    let tagSearchTextFieldView = TagSearchTextFieldView(isInteractive: true)
 
     lazy var tableView = UITableView().then {
-        $0.backgroundColor = .red
         $0.separatorStyle = .none
         $0.sectionHeaderTopPadding = 0
         $0.contentInset.top = 28
@@ -24,6 +23,10 @@ class TagSearchViewController: BaseViewController {
         )
         $0.dataSource = self
         $0.delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        tagSearchTextFieldView.textField.becomeFirstResponder()
     }
     
     override func setupConstraints() {
@@ -53,6 +56,10 @@ extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         createRecommendTagTableViewCell(indexPath: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 57 + 12
     }
     
     private func createRecommendTagTableViewCell(indexPath: IndexPath) -> RecommendTagTableViewCell {
