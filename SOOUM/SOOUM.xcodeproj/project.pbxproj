@@ -110,6 +110,10 @@
 		2AFF956C2CF5E00600CBFB12 /* RecommendTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */; };
 		2AFF95702CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF956F2CF5E8DE00CBFB12 /* TagSearchViewController.swift */; };
 		2AFF95712CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF956F2CF5E8DE00CBFB12 /* TagSearchViewController.swift */; };
+		2AFF95742CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95732CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift */; };
+		2AFF95752CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95732CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift */; };
+		2AFF95782CF5F0B000CBFB12 /* TagPreviewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95772CF5F0B000CBFB12 /* TagPreviewCardView.swift */; };
+		2AFF95792CF5F0B000CBFB12 /* TagPreviewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95772CF5F0B000CBFB12 /* TagPreviewCardView.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
@@ -374,6 +378,8 @@
 		2AFF95672CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTagTableViewCell.swift; sourceTree = "<group>"; };
 		2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTagView.swift; sourceTree = "<group>"; };
 		2AFF956F2CF5E8DE00CBFB12 /* TagSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchViewController.swift; sourceTree = "<group>"; };
+		2AFF95732CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPreviewCardCollectionViewCell.swift; sourceTree = "<group>"; };
+		2AFF95772CF5F0B000CBFB12 /* TagPreviewCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPreviewCardView.swift; sourceTree = "<group>"; };
 		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
@@ -763,6 +769,7 @@
 		2AFF955F2CF33A2B00CBFB12 /* FavoriteTag */ = {
 			isa = PBXGroup;
 			children = (
+				2AFF95722CF5F05000CBFB12 /* Cells */,
 				2AFF955C2CF328DE00CBFB12 /* FavoriteTagTableViewCell.swift */,
 				2AFF95602CF33A3900CBFB12 /* FavoriteTagView.swift */,
 			);
@@ -784,6 +791,23 @@
 				2AFF956F2CF5E8DE00CBFB12 /* TagSearchViewController.swift */,
 			);
 			path = TagSearch;
+			sourceTree = "<group>";
+		};
+		2AFF95722CF5F05000CBFB12 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				2AFF95762CF5F09F00CBFB12 /* TagPreviewCard */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		2AFF95762CF5F09F00CBFB12 /* TagPreviewCard */ = {
+			isa = PBXGroup;
+			children = (
+				2AFF95732CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift */,
+				2AFF95772CF5F0B000CBFB12 /* TagPreviewCardView.swift */,
+			);
+			path = TagPreviewCard;
 			sourceTree = "<group>";
 		};
 		2DAC60EF30AB4D54BFEBDF3B /* Pods */ = {
@@ -1629,6 +1653,7 @@
 				2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */,
 				38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
+				2AFF95792CF5F0B000CBFB12 /* TagPreviewCardView.swift in Sources */,
 				38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				2AE6B1512CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
@@ -1656,6 +1681,7 @@
 				2A5BB7E12CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */,
 				38F720AA2CD4F15900DF32B5 /* DetailCard.swift in Sources */,
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
+				2AFF95752CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */,
 				38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
 				2AE6B16E2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */,
 				38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
@@ -1754,6 +1780,7 @@
 				388009912CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				38608B302CB5195D0066BB40 /* Card.swift in Sources */,
 				388C96362CCE41700061C598 /* AuthInfo.swift in Sources */,
+				2AFF95742CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */,
 				2AFF95642CF33D9F00CBFB12 /* TagsHeaderView.swift in Sources */,
 				2AE6B15A2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
@@ -1874,6 +1901,7 @@
 				38F720A72CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */,
 				38B6AAE22CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
 				2A5BB7D52CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
+				2AFF95782CF5F0B000CBFB12 /* TagPreviewCardView.swift in Sources */,
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
 				38F720B32CD4F15900DF32B5 /* LatestCardResponse.swift in Sources */,
 				2A032EFD2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */,
