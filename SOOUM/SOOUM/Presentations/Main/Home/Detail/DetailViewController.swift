@@ -313,7 +313,6 @@ extension DetailViewController: UICollectionViewDataSource {
                         presented: object.moreButtonBottomSheetViewController,
                         dismissWhenScreenDidTap: true,
                         isHandleBar: true,
-                        isScrollable: true,
                         neverDismiss: false,
                         initalHeight: 178
                     )
