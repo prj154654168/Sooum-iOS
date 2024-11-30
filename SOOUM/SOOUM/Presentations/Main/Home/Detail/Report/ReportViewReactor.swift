@@ -100,6 +100,6 @@ class ReportViewReactor: Reactor {
         
         let request = ReportRequest.reportCard(id: id, reportType: reportType)
         return self.networkManager.request(Status.self, request: request)
-            .map { _ in .updateDialogPresent(true) }
+            .map { .updateDialogPresent($0.httpCode == 201) }
     }
 }

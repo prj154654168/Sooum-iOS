@@ -17,6 +17,14 @@ import Then
 
 class ReportViewController: BaseNavigationViewController, View {
     
+    enum Text {
+        static let successDialogTitle: String = "신고가 접수 되었어요"
+        static let successDialogSubTitle: String = "신고 내용을 확인한 후 조치할 예정이에요"
+        
+        static let failedDialogTitle: String = "이미 신고를 한 카드에요"
+        static let failedDialogSubTitle: String = "이전 신고가 접수되어 처리 중이에요"
+    }
+    
     var selectedReason: ReportViewReactor.ReportType?
         
     let tableViewTitleLabel = UILabel().then {
@@ -93,21 +101,22 @@ class ReportViewController: BaseNavigationViewController, View {
     }
     
     private func bindState(reactor: ReportViewReactor) {
+        
         reactor.state.map(\.isDialogPresented)
-            .distinctUntilChanged()
-            .subscribe(with: self) { object, state in
+            .subscribe(with: self) { object, isDialogPresented in
                 
                 let presented = SOMDialogViewController()
                 presented.setData(
-                    title: "신고가 접수 되었어요",
-                    subTitle: "신고 내용을 확인한 후 조치할 예정이에요",
+                    title: isDialogPresented == true ? Text.successDialogTitle : Text.failedDialogTitle,
+                    subTitle: isDialogPresented == true ? Text.successDialogSubTitle : Text.failedDialogSubTitle,
                     leftAction: nil,
                     rightAction: .init(
                         mode: .ok,
-                        handler: { object.dismiss(animated: false) }
+                        handler: { object.dismiss(animated: false) { object.navigationPop() } }
                     ),
                     dimViewAction: nil
                 )
+                
                 presented.modalPresentationStyle = .custom
                 presented.modalTransitionStyle = .crossDissolve
                 
