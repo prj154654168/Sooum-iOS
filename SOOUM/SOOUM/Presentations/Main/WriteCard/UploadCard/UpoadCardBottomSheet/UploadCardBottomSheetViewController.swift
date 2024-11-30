@@ -135,7 +135,8 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     
     func bind(reactor: UploadCardBottomSheetViewReactor) {
         
-        self.rx.viewDidLoad
+        self.rx.viewWillAppear
+            .take(1)
             .map({ _ in
                 return Reactor.Action.fetchNewDefaultImage
             })

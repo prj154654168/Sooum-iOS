@@ -29,6 +29,6 @@ extension MainTabBarReactor {
     }
     
     func reactorForWriteCard() -> WriteCardViewReactor {
-        WriteCardViewReactor()
+        WriteCardViewReactor(type: .card)
     }
 }
