@@ -106,7 +106,7 @@ extension DetailCard {
 struct Member: Codable {
     let id: String
     let nickname: String
-    let profileImgUrl: String?
+    let profileImgUrl: URLString?
     
     init() {
         self.id = ""

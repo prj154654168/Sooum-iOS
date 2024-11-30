@@ -8,7 +8,7 @@
 import Foundation
 
 
-class SOMCardModel {
+struct SOMCardModel {
     
     /// 카드 정보
     let data: Card
