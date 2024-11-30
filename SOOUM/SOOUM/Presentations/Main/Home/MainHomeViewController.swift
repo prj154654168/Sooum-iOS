@@ -62,6 +62,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
         
         $0.refreshControl = SOMRefreshControl()
+        
         $0.dataSource = self
         $0.delegate = self
     }
@@ -72,7 +73,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
     
     
     /// tableView에 표시될 카드 정보
-    private var cards = [Card]()
+    private var displayedCards = [Card]()
     
     private var headerContainerHeightConstraint: Constraint?
     private var locationFilterHeightConstraint: Constraint?
@@ -163,6 +164,39 @@ class MainHomeViewController: BaseNavigationViewController, View {
         // homeTabBar 시작 인덱스
         self.headerHomeTabBar.didSelectTab(0)
         
+        // 탭바 표시
+        self.rx.viewWillAppear
+            .subscribe(with: self) { object, _ in
+                object.hidesBottomBarWhenPushed = false
+            }
+            .disposed(by: self.disposeBag)
+        
+        // 스와이프 제스처
+        self.view.rx.swipeGesture(Set([.left, .right]))
+            .throttle(.seconds(1), scheduler: MainScheduler.instance)
+            .when(.recognized)
+            .withUnretained(self)
+            .filter { object, gesture in
+                let location = gesture.location(in: object.headerContainer)
+                
+                return object.headerContainer.bounds.contains(location) == false
+            }
+            .subscribe(onNext: { object, gesture in
+                let currentIndex = object.headerHomeTabBar.selectedIndex
+                
+                switch gesture.direction {
+                case .left:
+                    guard currentIndex != 2 else { return }
+                    object.headerHomeTabBar.didSelectTab(currentIndex + 1)
+                case .right:
+                    guard currentIndex != 0 else { return }
+                    object.headerHomeTabBar.didSelectTab(currentIndex - 1)
+                default:
+                    return
+                }
+            })
+            .disposed(by: self.disposeBag)
+        
         // tableView 상단 이동
         self.moveTopButton.backgroundButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
@@ -198,10 +232,8 @@ class MainHomeViewController: BaseNavigationViewController, View {
     func bind(reactor: MainHomeViewReactor) {
         
         // Action
-        self.rx.viewDidLoad
-            .map { _ in
-                return Reactor.Action.landing
-            }
+        self.rx.viewWillAppear
+            .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -216,7 +248,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isLoading)
             .distinctUntilChanged()
             .subscribe(with: self.tableView) { tableView, isLoading in
-                if (tableView.refreshControl?.isRefreshing ?? false) && isLoading {
+                if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()
@@ -238,12 +270,12 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.cards)
+        reactor.state.map(\.displayedCards)
             .distinctUntilChanged()
-            .subscribe(with: self) { object, cards in
-                object.cards = cards
-                object.tableView.isHidden = cards.isEmpty
-                object.placeholderView.isHidden = !cards.isEmpty
+            .subscribe(with: self) { object, displayedCards in
+                object.displayedCards = displayedCards
+                object.placeholderView.isHidden = displayedCards.isEmpty == false
+                object.tableView.isHidden = displayedCards.isEmpty
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
@@ -256,12 +288,12 @@ class MainHomeViewController: BaseNavigationViewController, View {
 extension MainHomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.cards.count
+        return self.displayedCards.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let model = SOMCardModel(data: self.cards[indexPath.row])
+        let model = SOMCardModel(data: self.displayedCards[indexPath.row])
         
         let cell: MainHomeViewCell = tableView.dequeueReusableCell(
             withIdentifier: "cell",
@@ -279,11 +311,12 @@ extension MainHomeViewController: UITableViewDataSource {
  extension MainHomeViewController: UITableViewDelegate {
      
      func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-         let selectedId = self.cards[indexPath.row].id
+         let selectedId = self.displayedCards[indexPath.row].id
          
          let detailViewController = DetailViewController()
          detailViewController.reactor = self.reactor?.reactorForDetail(selectedId)
-         self.navigationPush(detailViewController, animated: true)
+         // 탭바 숨김처리, bottomBarHidden = true
+         self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
      }
      
      func tableView(
@@ -294,11 +327,16 @@ extension MainHomeViewController: UITableViewDataSource {
          let lastSectionIndex = tableView.numberOfSections - 1
          let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
          
-         if indexPath.section == lastSectionIndex && indexPath.row == lastRowIndex {
+         if indexPath.section == lastSectionIndex,
+            indexPath.row == lastRowIndex,
+            let reactor = self.reactor {
              
-             if let cell = cell as? MainHomeViewCell {
+             if self.displayedCards.count < reactor.currentState.cards.count {
+                 reactor.action.onNext(.moreFind(lastId: nil))
+             } else {
+                 let cell = cell as! MainHomeViewCell
                  let lastId = cell.cardView.model?.data.id
-                 self.reactor?.action.onNext(.moreFind(lastId: lastId))
+                 reactor.action.onNext(.moreFind(lastId: lastId))
              }
          }
      }
@@ -310,7 +348,7 @@ extension MainHomeViewController: UITableViewDataSource {
      }
      
      func scrollViewDidScroll(_ scrollView: UIScrollView) {
-         guard self.cards.isEmpty == false else { return }
+         guard self.displayedCards.isEmpty == false else { return }
          
          let offset = scrollView.contentOffset.y
          
@@ -325,6 +363,11 @@ extension MainHomeViewController: UITableViewDataSource {
          
          // 최상단일 때만 moveToButton 숨김
          self.moveTopButton.isHidden = offset <= 0
+         
+         // Set homeTabBar hide animation
+         UIView.animate(withDuration: 0.5) {
+             self.view.layoutIfNeeded()
+         }
          
          self.currentOffset = offset
      }

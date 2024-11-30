@@ -20,7 +20,7 @@ class MainHomeViewReactor: Reactor {
     
     enum Mutation {
         case cards([Card])
-        case more([Card])
+        case more([Card]?)
         case updateSelectedIndex(Int)
         case updateDistanceFilter(String)
         case updateIsLoading(Bool)
@@ -30,6 +30,7 @@ class MainHomeViewReactor: Reactor {
     
     struct State {
         var cards: [Card]
+        var displayedCards: [Card]
         var selectedIndex: Int
         var distanceFilter: String
         var isLoading: Bool
@@ -39,6 +40,7 @@ class MainHomeViewReactor: Reactor {
     
     var initialState: State = .init(
         cards: [],
+        displayedCards: [],
         selectedIndex: 0,
         distanceFilter: "UNDER_1",
         isLoading: false,
@@ -49,25 +51,37 @@ class MainHomeViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     let locationManager = LocationManager.shared
     
-    init() { }
+    private let countPerLoading: Int = 10
+    
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.refresh()
+                self.refresh(self.currentState.selectedIndex)
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case .refresh:
+            let selectedIndex = self.currentState.selectedIndex
+            let distancFilter = self.currentState.distanceFilter
+            
             return .concat([
                 .just(.updateIsLoading(true)),
-                self.refresh()
+                self.refresh(selectedIndex, distancFilter)
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
+            guard let lastId = lastId else {
+                return .concat([
+                    .just(.updateIsProcessing(true)),
+                    .just(.more(nil)),
+                    .just(.updateIsProcessing(false))
+                ])
+            }
+            
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.moreFind(lastId)
@@ -86,7 +100,7 @@ class MainHomeViewReactor: Reactor {
             return .concat([
                 .just(.updateIsProcessing(true)),
                 .just(.updateDistanceFilter(distanceFilter)),
-                self.refresh(2)
+                self.refresh(2, distanceFilter)
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
@@ -98,8 +112,10 @@ class MainHomeViewReactor: Reactor {
         switch mutation {
         case let .cards(cards):
             state.cards = cards
+            state.displayedCards = self.separate(displayed: [], current: cards)
         case let .more(cards):
-            state.cards += cards
+            if let cards = cards { state.cards += cards }
+            state.displayedCards += self.separate(displayed: state.displayedCards, current: state.cards)
         case let .updateSelectedIndex(selectedIndex):
             state.selectedIndex = selectedIndex
         case let .updateDistanceFilter(distanceFilter):
@@ -117,12 +133,10 @@ class MainHomeViewReactor: Reactor {
 
 extension MainHomeViewReactor {
     
-    func refresh(_ selectedIndex: Int = 0) -> Observable<Mutation> {
+    func refresh(_ selectedIndex: Int, _ distanceFilter: String? = nil) -> Observable<Mutation> {
         
         let latitude = self.locationManager.coordinate.latitude
         let longitude = self.locationManager.coordinate.longitude
-        
-        let distanceFilter = self.currentState.distanceFilter
         
         var request: CardRequest {
             switch selectedIndex {
@@ -133,7 +147,7 @@ extension MainHomeViewReactor {
                     id: nil,
                     latitude: latitude,
                     longitude: longitude,
-                    distanceFilter: distanceFilter
+                    distanceFilter: distanceFilter ?? "UNDER_1"
                 )
             default:
                 return .latestCard(id: nil, latitude: latitude, longitude: longitude)
@@ -161,12 +175,10 @@ extension MainHomeViewReactor {
         }
     }
     
-    func moreFind(_ lastId: String?) -> Observable<Mutation> {
+    func moreFind(_ lastId: String) -> Observable<Mutation> {
         
         let selectedIndex = self.currentState.selectedIndex
         if selectedIndex == 1 { return .empty() }
-        
-        let lastId = lastId ?? ""
         
         let latitude = self.locationManager.coordinate.latitude
         let longitude = self.locationManager.coordinate.longitude
@@ -203,6 +215,15 @@ extension MainHomeViewReactor {
 extension MainHomeViewReactor {
     
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor([selectedId])
+        DetailViewReactor(type: .mainHome, selectedId)
+    }
+}
+
+extension MainHomeViewReactor {
+    
+    func separate(displayed displayedCards: [Card], current cards: [Card]) -> [Card] {
+        let count = displayedCards.count
+        let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
+        return displayedCards
     }
 }
