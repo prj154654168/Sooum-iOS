@@ -55,6 +55,7 @@ class ProfileImageSettingViewReactor: Reactor {
         switch mutation {
         case .uploadImageResult(let result):
             // TODO: - 로딩뷰 삭제 로직 추가
+            _ = result
             newState.imageUploaded = true
             
         case .registerUser(let result):
@@ -127,8 +128,8 @@ class ProfileImageSettingViewReactor: Reactor {
             .catch { error in
                 Observable.just(Mutation.registerUser(.failure(NSError(
                     domain: "ProfileImageSettingViewReactor - registerUser 실패",
-                    code: -1)
-                )))
+                    code: -1
+                ))))
             }
     }
 }

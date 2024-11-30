@@ -44,7 +44,7 @@ enum JoinRequest: BaseRequest {
         case .registerUser(let nickname, let profileImg):
             return [
                 "nickname": nickname,
-                "profileImg": profileImg.isEmpty ? nil : profileImg
+                "profileImg": profileImg
             ]
         }
     }
