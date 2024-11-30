@@ -39,10 +39,21 @@ class SOMTabBarController: UIViewController {
         didSet { self.tabBar.viewControllers = self.viewControllers }
     }
     
+    private var selectedIndex: Int = -1
+    var selectedViewController: UIViewController?
+    
     weak var delegate: SOMTabBarControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.hidesBottomBarWhenPushed(_:)),
+            name: .hidesBottomBarWhenPushedDidChange,
+            object: nil
+        )
+        
         self.setupConstraints()
     }
     
@@ -61,6 +72,19 @@ class SOMTabBarController: UIViewController {
             $0.trailing.equalToSuperview().offset(-20)
             $0.height.equalTo(SOMTabBar.height)
         }
+    }
+    
+    @objc
+    private func hidesBottomBarWhenPushed(_ notification: Notification) {
+        
+        // 탭바컨트롤러의 탭바의 숨김처리를 위해 추가
+        guard let viewController = notification.object as? UIViewController,
+              let selectedViewController = self.selectedViewController as? UINavigationController,
+              viewController == selectedViewController.topViewController
+        else { return }
+        
+        let hidesTabBar = viewController.hidesBottomBarWhenPushed
+        self.tabBar.isHidden = hidesTabBar
     }
 }
 
@@ -87,6 +111,8 @@ extension SOMTabBarController: SOMTabBarDelegate {
         self.container.addSubview(viewController.view)
         viewController.didMove(toParent: self)
         
+        self.selectedIndex = index
+        self.selectedViewController = viewController
         self.delegate?.tabBarController(self, didSelect: viewController)
     }
 }

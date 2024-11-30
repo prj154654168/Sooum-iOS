@@ -55,7 +55,10 @@ class MainTabBarController: SOMTabBarController, View {
         // viewControllers
         let mainHomeViewController = MainHomeViewController()
         mainHomeViewController.reactor = reactor.reactorForMainHome()
-        mainHomeViewController.tabBarItem = .init(
+        let mainHomeNavigationController = UINavigationController(
+            rootViewController: mainHomeViewController
+        )
+        mainHomeNavigationController.tabBarItem = .init(
             title: Text.mainHomeTitle,
             image: .init(.icon(.outlined(.home))),
             tag: 0
@@ -83,7 +86,7 @@ class MainTabBarController: SOMTabBarController, View {
         )
         
         self.viewControllers = [
-            mainHomeViewController,
+            mainHomeNavigationController,
             writeCardViewController,
             tagViewcontroller,
             profileViewController
@@ -99,13 +102,15 @@ extension MainTabBarController: SOMTabBarControllerDelegate {
     ) -> Bool {
         
         if viewController.tabBarItem.tag == 1 {
-            
+        
             let writeCardViewController = WriteCardViewController()
             writeCardViewController.reactor = self.reactor?.reactorForWriteCard()
-            self.navigationPush(writeCardViewController, animated: true)
+            if let selectedViewController = tabBarController.selectedViewController {
+                selectedViewController.navigationPush(writeCardViewController, animated: true)
+            }
             return false
         }
-        
+         
         return true
     }
     

@@ -21,6 +21,12 @@ class BaseViewController: UIViewController {
     let activityIndicatorView = SOMActivityIndicatorView()
 
     private(set) var isEndEditingWhenWillDisappear: Bool = true
+    
+    override var hidesBottomBarWhenPushed: Bool {
+        didSet {
+            NotificationCenter.default.post(name: .hidesBottomBarWhenPushedDidChange, object: self)
+        }
+    }
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -31,6 +37,11 @@ class BaseViewController: UIViewController {
     }
     /// Show deinit class name
     deinit {
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .hidesBottomBarWhenPushedDidChange,
+            object: nil
+        )
         print("ℹ️ Deinit: ", type(of: self).description().components(separatedBy: ".").last ?? "")
     }
 
