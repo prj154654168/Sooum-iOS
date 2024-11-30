@@ -45,7 +45,8 @@ class SOMCard: UIView {
     /// pungTime != nil
     /// 삭제(펑 됐을 때) 배경
     let pungedCardInMainHomeBackgroundView = UIView().then {
-        $0.backgroundColor = .som.gray700.withAlphaComponent(0.7)
+        $0.backgroundColor = UIColor(hex: "#303030").withAlphaComponent(0.7)
+        $0.layer.cornerRadius = 40
         $0.isHidden = true
     }
     /// 삭제(펑 됐을 때) 라벨
@@ -174,6 +175,9 @@ class SOMCard: UIView {
     /// 이 컴포넌트를 사용하는 재사용 셀에서 호출
     func prepareForReuse() {
         disposeBag = DisposeBag()
+        
+        // 셀이 재사용될 때 레이아웃도 초기화
+        resetConstraints()
     }
     
     // MARK: - initUI
@@ -193,7 +197,7 @@ class SOMCard: UIView {
     }
     
     private func addPungedCardInMainHomeView() {
-        rootContainerImageView.addSubview(pungedCardInMainHomeBackgroundView)
+        self.addSubview(pungedCardInMainHomeBackgroundView)
         pungedCardInMainHomeBackgroundView.addSubview(pungedCardInMainHomeLabel)
     }
     
@@ -246,7 +250,9 @@ class SOMCard: UIView {
         commentInfoStackView.addArrangedSubviews(commentImageView, commentLabel)
     }
     
+    
     // MARK: - initConstraint
+    
     private func initConstraint() {
         /// 홈피드 이미지 배경
         rootContainerImageView.snp.makeConstraints {
@@ -337,6 +343,8 @@ class SOMCard: UIView {
         
         // 카드 본문
         cardTextContentLabel.text = model.data.content
+        cardTextContentLabel.typography = model.data.font == .pretendard ? .som.body1WithBold : .som.schoolBody1WithBold
+        cardTextContentLabel.textAlignment = .center
         
         // 하단 정보
         likeImageView.image = model.data.isLiked ?
@@ -352,23 +360,53 @@ class SOMCard: UIView {
         timeLabel.text = model.data.createdAt.infoReadableTimeTakenFromThis(to: Date())
         distanceInfoStackView.isHidden = model.data.distance == nil
         distanceLabel.text = (model.data.distance ?? 0).infoReadableDistanceRangeFromThis()
-        likeLabel.text = "\(model.data.likeCnt)"
+        likeLabel.text = model.data.likeCnt > 99 ? "99+" : "\(model.data.likeCnt)"
         likeLabel.textColor = model.data.isLiked ? .som.p300 : .som.white
-        commentLabel.text = "\(model.data.commentCnt)"
+        commentLabel.text = model.data.commentCnt > 99 ? "99+" : "\(model.data.commentCnt)"
         commentLabel.textColor = model.data.isCommentWritten ? .som.p300 : .som.white
         
         // 스토리 정보 설정
         cardPungTimeBackgroundView.isHidden = model.data.storyExpirationTime == nil
         if let pungTime = model.pungTime {
             self.cardPungTimeLabel.text = getTimeOutStr(pungTime: pungTime)
-            self.updatePungUI()
             self.subscribePungTime()
         }
+        
+        if model.isPunged {
+            self.updatePungUI()
+        }
+    }
+    
+    func resetConstraints() {
+        
+        pungedCardInMainHomeBackgroundView.isHidden = true
+        
+        rootContainerImageView.snp.removeConstraints()
+        
+        pungedCardInMainHomeBackgroundView.snp.removeConstraints()
+        pungedCardInMainHomeLabel.snp.removeConstraints()
+        
+        cardPungTimeBackgroundView.snp.removeConstraints()
+        cardPungTimeLabel.snp.removeConstraints()
+        
+        cardTextBackgroundView.snp.removeConstraints()
+        cardTextBackgroundBlurView.snp.removeConstraints()
+        cardTextContentLabel.snp.removeConstraints()
+        
+        cardGradientView.snp.removeConstraints()
+        
+        cardContentStackView.snp.removeConstraints()
+        timeImageView.snp.removeConstraints()
+        distanceImageView.snp.removeConstraints()
+        likeImageView.snp.removeConstraints()
+        commentImageView.snp.removeConstraints()
+        
+        initUI()
     }
     
     /// 카드 모드에 따라 스택뷰 순서 변경
     func changeOrderInCardContentStack(_ selectedIndex: Int) {
-        self.cardContentStackView.subviews.forEach { $0.removeFromSuperview() }
+        cardContentStackView.subviews.forEach { $0.removeFromSuperview() }
         
         switch selectedIndex {
         case 1:
@@ -398,19 +436,26 @@ class SOMCard: UIView {
         }
     }
     
+    // 상세보기 일 때, 좋아요, 코맨트 제거
+    func removeLikeAndCommentInStack() {
+        
+        cardContentStackView.subviews.forEach { $0.removeFromSuperview() }
+        cardContentStackView.addArrangedSubviews(UIView(), distanceInfoStackView, timeInfoStackView)
+    }
+    
+    
     // MARK: - 카드 펑 로직
     
     /// 펑 이벤트 구독
     func subscribePungTime() {
         Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self, let pungTime = self.model?.pungTime else {
-                    return
-                }
-                if self.model?.isPunged == true {
-                    updatePungUI()
+            .withUnretained(self)
+            .subscribe(onNext: { object, _ in
+                guard let model = object.model, let pungTime = model.pungTime else { return }
+                if model.isPunged == true {
+                    object.updatePungUI()
                 } else {
-                    self.cardPungTimeLabel.text = self.getTimeOutStr(pungTime: pungTime)
+                    object.cardPungTimeLabel.text = object.getTimeOutStr(pungTime: pungTime)
                 }
             })
             .disposed(by: disposeBag)
