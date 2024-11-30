@@ -75,6 +75,7 @@ fileprivate extension UIFont {
 extension Typography: SOOUMStyleCompatible { }
 extension SOOUMStyle where Base == Typography {
     
+    // Pretendard
     static var head1WithBold: Typography = .init(
         fontContainer: BuiltInFont(size: 22, weight: .semibold),
         lineHeight: 23,
@@ -133,6 +134,20 @@ extension SOOUMStyle where Base == Typography {
     static var caption: Typography = .init(
         fontContainer: BuiltInFont(size: 10, weight: .medium),
         lineHeight: 14,
+        letterSpacing: -0.004
+    )
+    
+    // shcool
+    
+    static var schoolBody1WithBold: Typography = .init(
+        fontContainer: BuiltInFont(type: .school, size: 18, weight: .bold),
+        lineHeight: 25,
+        letterSpacing: -0.004
+    )
+    
+    static var schoolBody1WithLight: Typography = .init(
+        fontContainer: BuiltInFont(type: .school, size: 18, weight: .light),
+        lineHeight: 25,
         letterSpacing: -0.004
     )
 }
