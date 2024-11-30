@@ -33,8 +33,8 @@ class SOMHomeTabBar: UIView {
     
     weak var delegate: SOMHomeTabBarDelegate?
     
-    private var selectedIndex: Int = 0
-    private var prevSelectedIndex: Int = 0
+    var selectedIndex: Int = 0
+    var prevSelectedIndex: Int = 0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
