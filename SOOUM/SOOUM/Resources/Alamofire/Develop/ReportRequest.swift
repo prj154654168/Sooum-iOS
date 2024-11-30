@@ -13,18 +13,21 @@ import Alamofire
 enum ReportRequest: BaseRequest {
 
     case reportCard(id: String, reportType: ReportViewReactor.ReportType)
+    case blockMember(id: String)
     
 
     var path: String {
         switch self {
         case let .reportCard(id, _):
             return "/report/cards/\(id)"
+        case .blockMember:
+            return "/blocks"
         }
     }
 
     var method: HTTPMethod {
         switch self {
-        case .reportCard:
+        default:
             return .post
         }
     }
@@ -33,13 +36,15 @@ enum ReportRequest: BaseRequest {
         switch self {
         case let .reportCard(_, reportType):
             return ["reportType": reportType.rawValue]
+        case let .blockMember(id):
+            return ["toMemberId": id]
         }
     }
 
     var encoding: ParameterEncoding {
         switch self {
-        case .reportCard:
-            return URLEncoding.queryString
+        default:
+            return JSONEncoding.default
         }
     }
     

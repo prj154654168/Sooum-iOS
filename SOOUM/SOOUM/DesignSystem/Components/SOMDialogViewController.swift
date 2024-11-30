@@ -18,6 +18,7 @@ class SOMDialogViewController: UIViewController {
         case ok
         case delete
         case report
+        case block
         case setting
         
         var text: String {
@@ -30,6 +31,8 @@ class SOMDialogViewController: UIViewController {
                 "삭제하기"
             case .report:
                 "신고하기"
+            case .block:
+                "차단하기"
             case .setting:
                 "설정"
             }

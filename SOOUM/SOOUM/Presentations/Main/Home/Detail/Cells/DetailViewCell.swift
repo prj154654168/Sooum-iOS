@@ -21,7 +21,7 @@ class DetailViewCell: UICollectionViewCell {
         static let deletedCardInDetailText: String = "이 글은 삭제되었어요"
     }
     
-    let cardView = SOMCard().then {
+    private let cardView = SOMCard().then {
         $0.likeInfoStackView.isHidden = true
         $0.commentInfoStackView.isHidden = true
     }
@@ -30,7 +30,7 @@ class DetailViewCell: UICollectionViewCell {
         $0.isHidden = true
     }
     /// 상세보기, 전글 배경
-    let prevCardBackgroundImageView = UIImageView().then {
+    private let prevCardBackgroundImageView = UIImageView().then {
         $0.backgroundColor = .clear
         $0.layer.borderColor = UIColor.som.white.cgColor
         $0.layer.borderWidth = 2
@@ -39,7 +39,7 @@ class DetailViewCell: UICollectionViewCell {
         $0.isHidden = true
     }
     /// 상세보기, 전글 라벨
-    let prevCardTextLabel = UILabel().then {
+    private let prevCardTextLabel = UILabel().then {
         $0.text = Text.prevCardTitle
         $0.textColor = .som.white
         $0.textAlignment = .center
@@ -56,21 +56,33 @@ class DetailViewCell: UICollectionViewCell {
     }
     
     /// 상세보기, 카드 삭제 됐을 때 배경
-    let deletedCardInDetailBackgroundView = UIView().then {
+    private let deletedCardInDetailBackgroundView = UIView().then {
         $0.backgroundColor = .init(hex: "#F8F8F8")
         $0.layer.cornerRadius = 40
         $0.layer.masksToBounds = true
         $0.isHidden = true
     }
     /// 상세보기, 카드 삭제 됐을 때 이미지
-    let deletedCardInDetailImageView = UIImageView().then {
+    private let deletedCardInDetailImageView = UIImageView().then {
         $0.image = .init(.icon(.outlined(.trash)))
         $0.tintColor = .som.gray300
     }
     /// 상세보기, 카드 삭제 됐을 때 라벨
-    let deletedCardInDetailLabel = UILabel().then {
+    private let deletedCardInDetailLabel = UILabel().then {
         $0.text = Text.deletedCardInDetailText
         $0.textColor = .som.gray500
+        $0.textAlignment = .center
+        $0.typography = .som.body1WithBold
+    }
+    
+    private let memberImageView = UIImageView().then {
+        $0.backgroundColor = .clear
+        $0.layer.cornerRadius = 32 * 0.5
+        $0.clipsToBounds = true
+    }
+    
+    private let memberLabel = UILabel().then {
+        $0.textColor = .som.white
         $0.textAlignment = .center
         $0.typography = .som.body1WithBold
     }
@@ -94,6 +106,14 @@ class DetailViewCell: UICollectionViewCell {
             }
         }
     }
+    
+    var member: Member = .init() {
+        didSet {
+            self.memberImageView.setImage(strUrl: self.member.profileImgUrl?.url)
+            self.memberLabel.text = self.member.nickname
+        }
+    }
+    
     private var isPrevCardExist: Bool = false {
         didSet {
             self.prevCardBackgroundImageView.isHidden = !self.isPrevCardExist
@@ -152,6 +172,19 @@ class DetailViewCell: UICollectionViewCell {
             $0.size.equalTo(24)
         }
         
+        self.contentView.addSubview(self.memberImageView)
+        self.memberImageView.snp.makeConstraints {
+            $0.bottom.equalTo(self.cardView.snp.bottom).offset(-16)
+            $0.leading.equalTo(self.cardView.snp.leading).offset(16)
+            $0.size.equalTo(32)
+        }
+        
+        self.contentView.addSubview(self.memberLabel)
+        self.memberLabel.snp.makeConstraints {
+            $0.bottom.equalTo(self.cardView.snp.bottom).offset(-22)
+            $0.leading.equalTo(self.memberImageView.snp.trailing).offset(8)
+        }
+        
         self.contentView.addSubview(self.deletedCardInDetailBackgroundView)
         self.deletedCardInDetailBackgroundView.snp.makeConstraints {
             $0.top.equalToSuperview()
@@ -187,6 +220,7 @@ class DetailViewCell: UICollectionViewCell {
     
     func setDatas(_ model: SOMCardModel, tags: [SOMTagModel]) {
         self.cardView.setModel(model: model)
+        self.cardView.removeLikeAndCommentInStack()
         self.tags.setModels(tags)
         self.tags.snp.updateConstraints {
             $0.height.equalTo(tags.isEmpty ? 40 : 59)
@@ -196,6 +230,8 @@ class DetailViewCell: UICollectionViewCell {
     func isDeleted() {
         self.cardView.removeFromSuperview()
         self.rightTopSettingButton.removeFromSuperview()
+        self.memberImageView.removeFromSuperview()
+        self.memberLabel.removeFromSuperview()
         self.deletedCardInDetailBackgroundView.isHidden = false
     }
 }
