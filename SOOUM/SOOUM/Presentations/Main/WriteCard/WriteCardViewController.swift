@@ -307,7 +307,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     subTitle: Text.writeDialogSubTitle,
                     leftAction: .init(
                         mode: .cancel,
-                        handler: { object.leftAction() }
+                        handler: { object.dismiss(animated: true) }
                     ),
                     rightAction: .init(
                         mode: .ok,
@@ -380,7 +380,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.isWrite)
-            .skip(1)
             .distinctUntilChanged()
             .subscribe(with: self) { object, isWrite in
                 
@@ -407,19 +406,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 })
             }
             .disposed(by: self.disposeBag)
-    }
-    
-    private func leftAction() {
-        
-        self.dismiss(animated: true, completion: {
-            self.presentBottomSheet(
-                presented: self.uploadCardBottomSheetViewController,
-                isHandleBar: true,
-                neverDismiss: true,
-                maxHeight: self.maxHeight,
-                initalHeight: self.initalHeight
-            )
-        })
     }
 }
 

@@ -100,6 +100,7 @@ class SOMDialogViewController: UIViewController {
     let subTitleLabel = UILabel().then {
         $0.textColor = .som.gray600
         $0.typography = .som.body2WithRegular
+        $0.numberOfLines = 0
     }
     
     /// 버튼 스택 뷰
