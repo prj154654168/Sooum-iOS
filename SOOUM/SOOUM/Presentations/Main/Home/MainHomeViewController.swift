@@ -264,7 +264,12 @@ class MainHomeViewController: BaseNavigationViewController, View {
                 object.placeholderView.isHidden = true
             }
             .disposed(by: self.disposeBag)
-        
+        isProcessing
+            .filter { $0 == false }
+            .subscribe(with: self) { object, _ in
+                object.tableView.isHidden = false
+            }
+            .disposed(by: self.disposeBag)
         isProcessing
             .distinctUntilChanged()
             .bind(to: self.activityIndicatorView.rx.isAnimating)
