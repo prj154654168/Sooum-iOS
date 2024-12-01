@@ -60,9 +60,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         $0.descLabel.text = "닉네임은 추후 변경이 가능해요"
     }
     
-    private lazy var nicknameTextField = OnboardingNicknameTextFieldView().then {
-        $0.textField.text = adjectives.randomElement()! + " " + nouns.randomElement()!
-    }
+    private lazy var nicknameTextField = OnboardingNicknameTextFieldView()
     
     private let errorLogStackView = UIStackView().then {
         $0.axis = .horizontal
@@ -87,7 +85,6 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             letterSpacing: 0
         )
         $0.textColor = .som.red
-        $0.text = "한 글자 이상 입력해주세요"
     }
     
     private let nicknameCountLabel = UILabel().then {
@@ -108,19 +105,29 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
     // Reactor를 연결하고, 액션과 상태를 바인딩합니다.
     func bind(reactor: OnboardingNicknameSettingViewReactor) {
         
-        nicknameTextField.textField.rx.text.orEmpty
+        let nickname = nicknameTextField.textField.rx.text.orEmpty.distinctUntilChanged().share()
+        nickname
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, str in
                 object.nicknameCountLabel.text = "\(str.count)/\(object.maxCount)"
             }
             .disposed(by: disposeBag)
         
-        nicknameTextField.textField.rx.text.orEmpty
+        nickname
             .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
             .map { Reactor.Action.textChanged($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        self.rx.viewDidLoad
+            .subscribe(with: self) { object, _ in
+                object.nicknameTextField.textField.text = object.adjectives.randomElement()! +
+                " " +
+                object.nouns.randomElement()!
+                object.nicknameTextField.textField.sendActions(for: .editingChanged)
+            }
+            .disposed(by: self.disposeBag)
         
         nicknameTextField.clearButtonView.rx.tapGesture()
             .when(.recognized)
@@ -133,6 +140,8 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         
         nextButtonView.rx.tapGesture()
             .when(.recognized)
+            .withLatestFrom(reactor.state.map(\.isNicknameValid))
+            .filter { $0 == .vaild }
             .subscribe(with: self) { object, _ in
                 let profileImageVC = ProfileImageSettingViewController()
                 let profileImageReactor = ProfileImageSettingViewReactor(nickname: object.nicknameTextField.textField.text!)
@@ -144,7 +153,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         // MARK: - State Binding
         // 닉네임 유효성 검사 결과에 따라 nextButton의 활성화 상태 업데이트
         reactor.state
-            .map { $0.isNicknameValid ?? OnboardingNicknameSettingViewReactor.NicknameState.invalid }
+            .compactMap { $0.isNicknameValid }
             .subscribe(with: self, onNext: { object, isValid in
                 object.nextButtonView.updateState(state: isValid == .vaild)
                 object.errorLogStackView.isHidden = isValid == .vaild
@@ -155,7 +164,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             .map { $0.errorMessage }
             .subscribe(with: self) { object, errorMessage in
                 if let message = errorMessage {
-                    object.showErrorAlert(message)
+                    object.errorLogLabel.text = message
                 }
             }
             .disposed(by: disposeBag)
@@ -208,11 +217,5 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             }
         }
         self.view.layoutIfNeeded()
-    }
-    
-    private func showErrorAlert(_ message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
     }
 }

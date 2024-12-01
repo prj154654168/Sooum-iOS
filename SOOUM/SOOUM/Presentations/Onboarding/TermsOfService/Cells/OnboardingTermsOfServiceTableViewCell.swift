@@ -27,6 +27,7 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
     let checkBoxImageView = UIImageView().then {
         $0.image = .checkboxOutlined
         $0.contentMode = .scaleAspectFill
+        $0.tintColor = .som.gray500
     }
     
     let titleLabel = UILabel().then {
@@ -112,7 +113,7 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
             self.nextButton.tintColor = isOn ? .som.p300 : .som.gray500
         }
         UIView.transition(with: titleLabel, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
-            self.titleLabel.textColor = isOn ? .som.p300 : .som.gray500
+            self.titleLabel.textColor = isOn ? .som.p300 : .som.gray500 
         }
     }
 }

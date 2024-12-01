@@ -90,7 +90,6 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .disposed(by: disposeBag)
 
         reactor.state.map(\.shoulNavigate)
-            .distinctUntilChanged()
             .filter { [weak self] shouldNavigate in
                 shouldNavigate && ((self?.reactor?.currentState.isAllAgreed) != nil)
             }
