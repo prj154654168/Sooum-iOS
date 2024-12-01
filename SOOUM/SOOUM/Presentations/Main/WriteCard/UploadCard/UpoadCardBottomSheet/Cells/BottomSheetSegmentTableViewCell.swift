@@ -151,6 +151,9 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
             },
             completion: nil
         )
+        
+        self.chagneImageLabel.text = segment == .defaultImage ? "이미지 변경" : "사진 변경"
+        self.chageImageImageView.isHidden = segment == .myImage
     }
     
     // MARK: - setupConstraint
