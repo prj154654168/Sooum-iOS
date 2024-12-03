@@ -94,6 +94,8 @@
 		2AE6B1902CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B18E2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift */; };
 		2AE6B1922CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1912CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift */; };
 		2AE6B1932CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1912CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift */; };
+		2AFD05462CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05452CFF75DD007C84AD /* FavoriteTagsResponse.swift */; };
+		2AFD05472CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05452CFF75DD007C84AD /* FavoriteTagsResponse.swift */; };
 		2AFF95552CF3222400CBFB12 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95542CF3222400CBFB12 /* TagsViewController.swift */; };
 		2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95542CF3222400CBFB12 /* TagsViewController.swift */; };
 		2AFF955A2CF3227900CBFB12 /* TagSearchTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */; };
@@ -370,6 +372,7 @@
 		2AE6B17E2CBFEA5200FA5C3C /* ToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleView.swift; sourceTree = "<group>"; };
 		2AE6B18E2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetSegmentTableViewCell.swift; sourceTree = "<group>"; };
 		2AE6B1912CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectMyImageTableViewCell.swift; sourceTree = "<group>"; };
+		2AFD05452CFF75DD007C84AD /* FavoriteTagsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagsResponse.swift; sourceTree = "<group>"; };
 		2AFF95542CF3222400CBFB12 /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
 		2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchTextFieldView.swift; sourceTree = "<group>"; };
 		2AFF955C2CF328DE00CBFB12 /* FavoriteTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagTableViewCell.swift; sourceTree = "<group>"; };
@@ -727,6 +730,14 @@
 				2AE6B17E2CBFEA5200FA5C3C /* ToggleView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		2AFD05442CFF75CA007C84AD /* Tags */ = {
+			isa = PBXGroup;
+			children = (
+				2AFD05452CFF75DD007C84AD /* FavoriteTagsResponse.swift */,
+			);
+			path = Tags;
 			sourceTree = "<group>";
 		};
 		2AFF95522CF3207F00CBFB12 /* Tags */ = {
@@ -1195,6 +1206,7 @@
 		38B6AAE42CA47E8D00CE6DB6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				2AFD05442CFF75CA007C84AD /* Tags */,
 				2A5BB7E52CDCDC2B00E1C799 /* Join */,
 				38405CCA2CC611FD00612D1E /* BaseEmptyAndHeader.swift */,
 				385E65A22CBE56D00032E120 /* Coordinate.swift */,
@@ -1682,6 +1694,7 @@
 				38F720AA2CD4F15900DF32B5 /* DetailCard.swift in Sources */,
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				2AFF95752CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */,
+				2AFD05472CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */,
 				38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
 				2AE6B16E2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */,
 				38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
@@ -1857,6 +1870,7 @@
 				38ED2AB42C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				2A44A42A2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
 				2A5BB7B92CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
+				2AFD05462CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */,
 				2A5BB7DD2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */,
 				2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
