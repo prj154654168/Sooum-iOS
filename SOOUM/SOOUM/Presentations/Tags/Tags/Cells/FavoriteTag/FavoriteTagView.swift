@@ -43,7 +43,7 @@ class FavoriteTagView: UIView {
             $0.scrollDirection = .horizontal
         }
     ).then {
-        $0.backgroundColor = .red
+        $0.showsHorizontalScrollIndicator = false
     }
 
     // MARK: - init

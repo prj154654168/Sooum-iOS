@@ -26,7 +26,6 @@ class TagsViewController: BaseViewController {
     let tagSearchTextFieldView = TagSearchTextFieldView(isInteractive: false)
     
     lazy var tableView = UITableView().then {
-        $0.backgroundColor = .red
         $0.separatorStyle = .none
         $0.sectionHeaderTopPadding = 0
         $0.register(
