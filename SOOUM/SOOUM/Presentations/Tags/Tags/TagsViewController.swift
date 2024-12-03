@@ -51,7 +51,7 @@ class TagsViewController: BaseViewController {
                 let searchVC = TagSearchViewController()
                 searchVC.modalTransitionStyle = .crossDissolve
                 searchVC.modalPresentationStyle = .overFullScreen
-                object.present(searchVC, animated: true)
+                object.present(searchVC, animated: false)
             }
             .disposed(by: self.disposeBag)
     }

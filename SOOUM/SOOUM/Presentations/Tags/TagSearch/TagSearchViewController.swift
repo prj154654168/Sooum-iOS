@@ -9,6 +9,11 @@ import UIKit
 
 class TagSearchViewController: BaseViewController {
     
+    let backButton = UIButton().then {
+        $0.setImage(.arrowBackOutlined, for: .normal)
+        $0.tintColor = .som.black
+    }
+    
     let tagSearchTextFieldView = TagSearchTextFieldView(isInteractive: true)
 
     lazy var tableView = UITableView().then {
@@ -27,16 +32,44 @@ class TagSearchViewController: BaseViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         tagSearchTextFieldView.textField.becomeFirstResponder()
+        UIView.animate(withDuration: 0.1) {
+            self.backButton.snp.updateConstraints {
+                $0.size.equalTo(40)
+            }
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    override func bind() {
+        backButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                UIView.animate(withDuration: 0.1) {
+                    object.backButton.snp.updateConstraints {
+                        $0.size.equalTo(0)
+                    }
+                    object.view.layoutIfNeeded()
+                } completion: { _ in
+                    object.dismiss(animated: true)
+                }
+            }
+            .disposed(by: self.disposeBag)
     }
     
     override func setupConstraints() {
         super.setupConstraints()
         
+        self.view.addSubview(backButton)
+        backButton.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(16)
+            $0.size.equalTo(0)
+        }
+        
         self.view.addSubview(tagSearchTextFieldView)
         tagSearchTextFieldView.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(20)
-            $0.leading.equalToSuperview().offset(16)
+            $0.leading.equalTo(backButton.snp.trailing)
             $0.trailing.equalToSuperview().offset(-16)
+            $0.centerY.equalTo(backButton)
         }
         
         self.view.addSubview(tableView)
@@ -69,5 +102,37 @@ extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
         ) as! RecommendTagTableViewCell
         
         return cell
+    }
+    
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        if flag {
+            UIView.animate(
+                withDuration: 0.15,
+                delay: 0,
+                animations: {
+                    self.view.alpha = 0
+                },
+                completion: { _ in
+                    super.dismiss(animated: false, completion: completion)
+                }
+            )
+        } else {
+            super.dismiss(animated: false, completion: completion)
+        }
+    }
+    
+    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        if flag {
+            super.present(viewControllerToPresent, animated: false) {
+                self.view.alpha = 0
+                UIView.animate(withDuration: 0.15) {
+                    self.view.alpha = 1
+                } completion: { _ in
+                    completion?()
+                }
+            }
+        } else {
+            super.present(viewControllerToPresent, animated: false, completion: completion)
+        }
     }
 }
