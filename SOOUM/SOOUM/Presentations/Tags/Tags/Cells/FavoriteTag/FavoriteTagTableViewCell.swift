@@ -13,7 +13,16 @@ import RxSwift
 
 final class FavoriteTagTableViewCell: UITableViewCell {
     
-    let favoriteTagView = FavoriteTagView()
+  lazy var favoriteTagView = FavoriteTagView().then {
+    $0.cardPreviewCollectionView.delegate = self
+    $0.cardPreviewCollectionView.dataSource = self
+    $0.cardPreviewCollectionView.register(
+        TagPreviewCardCollectionViewCell.self,
+        forCellWithReuseIdentifier: String(
+            describing: TagPreviewCardCollectionViewCell.self
+        )
+    )
+  }
     
     // MARK: - init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -35,5 +44,28 @@ final class FavoriteTagTableViewCell: UITableViewCell {
             $0.top.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-12)
         }
+    }
+}
+
+extension FavoriteTagTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        3
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(
+            describing: TagPreviewCardCollectionViewCell.self
+        ), for: indexPath)
+        return cell
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let height = favoriteTagView.cardPreviewCollectionView.frame.height
+        return CGSize(width: height, height: height)
     }
 }

@@ -83,7 +83,10 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 12
+        switch TagType.allCases[section] {
+        case .favorite: 4
+        case .recommend: 12
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -117,7 +120,7 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch TagType.allCases[indexPath.section] {
         case .favorite:
-            return 228
+            return 228 + 12
             
         case .recommend:
             return 57 + 12

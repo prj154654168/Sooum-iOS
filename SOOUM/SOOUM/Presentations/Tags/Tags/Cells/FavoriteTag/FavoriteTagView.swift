@@ -41,9 +41,10 @@ class FavoriteTagView: UIView {
         frame: .zero,
         collectionViewLayout: UICollectionViewFlowLayout().then {
             $0.scrollDirection = .horizontal
-        }).then {
-            $0.backgroundColor = .red
         }
+    ).then {
+        $0.backgroundColor = .red
+    }
 
     // MARK: - init
     convenience init() {

@@ -118,7 +118,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         nicknameTextField.textField.rx.text.orEmpty
             .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
-            .map { Reactor.Action.textChanged($0) }
+            .map { Reactor.Action.checkNicknameValidation($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -127,7 +127,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             .subscribe(with: self) { object, _ in
                 object.nicknameCountLabel.text = "0/\(object.maxCount)"
                 object.nicknameTextField.textField.text?.removeAll()
-                object.reactor?.action.onNext(.textChanged(""))
+                object.reactor?.action.onNext(.checkNicknameValidation(""))
             }
             .disposed(by: disposeBag)
         

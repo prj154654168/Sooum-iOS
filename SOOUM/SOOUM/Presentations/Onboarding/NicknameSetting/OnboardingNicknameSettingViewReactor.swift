@@ -29,7 +29,7 @@ class OnboardingNicknameSettingViewReactor: Reactor {
     }
 
     enum Action {
-        case textChanged(String)
+        case checkNicknameValidation(String)
     }
 
     enum Mutation {
@@ -47,7 +47,7 @@ class OnboardingNicknameSettingViewReactor: Reactor {
 
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .textChanged(let nickname):
+        case .checkNicknameValidation(let nickname):
             return validateNickname(nickname)
                 .map { result in
                     Mutation.setNicknameResult(result)
