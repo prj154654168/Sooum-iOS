@@ -68,4 +68,9 @@ extension FavoriteTagTableViewCell: UICollectionViewDelegate, UICollectionViewDa
         let height = favoriteTagView.cardPreviewCollectionView.frame.height
         return CGSize(width: height, height: height)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+    }
+    
 }
