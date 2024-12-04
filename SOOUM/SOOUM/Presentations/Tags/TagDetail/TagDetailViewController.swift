@@ -69,4 +69,9 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
+        let height: CGFloat = width + 10 /// 가로 + top inset
+        return height
+    }
 }
