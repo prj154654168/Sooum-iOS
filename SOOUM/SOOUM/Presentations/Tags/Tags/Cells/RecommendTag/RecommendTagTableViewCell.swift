@@ -9,6 +9,8 @@ import UIKit
 
 class RecommendTagTableViewCell: UITableViewCell {
     
+    var recommendTag: RecommendTagsResponse.RecommendTag? = nil
+    
     let recommendTagView = RecommendTagView()
     
     // MARK: - init
@@ -20,6 +22,12 @@ class RecommendTagTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setData(recommendTag: RecommendTagsResponse.RecommendTag) {
+        self.recommendTag = recommendTag
+        self.recommendTagView.tagNameLabel.text = recommendTag.tagContent
+        self.recommendTagView.tagsCountLabel.text = recommendTag.tagUsageCnt
     }
     
     private func setupConstraint() {

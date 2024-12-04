@@ -19,14 +19,14 @@ class TagsViewReactor: Reactor {
         /// 즐겨찾기 태그 fetch
         case favoriteTags([FavoriteTagsResponse.FavoriteTagList])
         /// 추천 태그 fetch
-        case recommendTags([RecommendTagsResponse.RecommendTagList])
+        case recommendTags([RecommendTagsResponse.RecommendTag])
     }
     
     struct State {
         /// 즐겨찾기 태그 리스트
         fileprivate(set) var favoriteTags: [FavoriteTagsResponse.FavoriteTagList] = []
         /// 추천 태그 리스트
-        fileprivate(set) var recommendTags: [RecommendTagsResponse.RecommendTagList] = []
+        fileprivate(set) var recommendTags: [RecommendTagsResponse.RecommendTag] = []
     }
     
     var initialState = State()

@@ -103,9 +103,16 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let reactor = self.reactor else {
+            return 0
+        }
+        
         switch TagType.allCases[section] {
-        case .favorite: 4
-        case .recommend: 12
+        case .favorite:
+            return reactor.currentState.favoriteTags.count
+            
+        case .recommend:
+            return reactor.currentState.recommendTags.count
         }
     }
     
@@ -139,7 +146,12 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
             withIdentifier: String(describing: RecommendTagTableViewCell.self),
             for: indexPath
         ) as! RecommendTagTableViewCell
-        
+        guard let reactor = self.reactor else {
+            return cell
+        }
+        if reactor.currentState.recommendTags.indices.contains(indexPath.row) {
+            cell.setData(recommendTag: reactor.currentState.recommendTags[indexPath.row])
+        }
         return cell
     }
     

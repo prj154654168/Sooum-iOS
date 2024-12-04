@@ -11,11 +11,11 @@ struct RecommendTagsResponse: Codable {
     
     // MARK: - Embedded
     struct Embedded: Codable {
-        let recommendTagList: [RecommendTagList]
+        let recommendTagList: [RecommendTag]
     }
 
-    // MARK: - RecommendTagList
-    struct RecommendTagList: Codable {
+    // MARK: - RecommendTag
+    struct RecommendTag: Codable {
         let tagID, tagContent, tagUsageCnt: String
         let links: Links
 
