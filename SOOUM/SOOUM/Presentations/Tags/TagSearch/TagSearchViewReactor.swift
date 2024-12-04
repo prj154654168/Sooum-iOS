@@ -11,46 +11,55 @@ class TagSearchViewReactor: Reactor {
     
     enum Action {
         case searchTag(String)
-        case selectTag(String)
+//        case selectTag(String)
     }
     
     enum Mutation {
         /// 즐겨찾기 태그 fetch
-        case searchTags([])
-        case setSelectTagFinished
+        case searchTags([SearchTagsResponse.RelatedTag])
+//        case setSelectTagFinished
     }
     
     struct State {
         /// 즐겨찾기 태그 리스트
-        fileprivate(set) var searchTags: [FavoriteTagsResponse.FavoriteTagList] = []
+        fileprivate(set) var searchTags: [SearchTagsResponse.RelatedTag] = []
         /// 추천 태그 리스트
-        fileprivate(set) var recommendTags: [RecommendTagsResponse.RecommendTag] = []
+//        fileprivate(set) var recommendTags: [RecommendTagsResponse.RecommendTag] = []
     }
     
     var initialState = State()
-    var isFavoriteTagsEmpty: Bool {
-        self.currentState.favoriteTags.isEmpty
-    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .fetchTags:
-            return .concat([
-                self.fetchFavoriteTags(),
-                self.fetchRecommendTags()
-            ])
+        case let .searchTag(keyword):
+            return self.searchTags(keyword: keyword)
+            
+//        case .selectTag(String)
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case let .favoriteTags(favoriteTags):
-            newState.favoriteTags = favoriteTags
+        case let .searchTags(searchTags):
+            newState.searchTags = searchTags
             
-        case let .recommendTags(recommendTags):
-            newState.recommendTags = recommendTags
+//        case let .recommendTags(recommendTags):
+//            newState.recommendTags = recommendTags
         }
         return newState
+    }
+    
+    private func searchTags(keyword: String) -> Observable<Mutation> {
+        let request: TagRequest = .search(keyword: keyword)
+        
+        return NetworkManager.shared.request(SearchTagsResponse.self, request: request)
+            .map { response in
+                return Mutation.searchTags(response.embedded.relatedTagList)
+            }
+            .catch { _ in
+                print("\(type(of: self)) - \(#function) - catch")
+                return .just(.searchTags([]))
+            }
     }
 }

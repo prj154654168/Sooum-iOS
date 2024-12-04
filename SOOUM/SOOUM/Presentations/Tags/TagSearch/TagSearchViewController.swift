@@ -97,30 +97,6 @@ class TagSearchViewController: BaseViewController {
             $0.bottom.equalToSuperview()
         }
     }
-}
-
-extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        createRecommendTagTableViewCell(indexPath: indexPath)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 57 + 12
-    }
-    
-    private func createRecommendTagTableViewCell(indexPath: IndexPath) -> RecommendTagTableViewCell {
-        let cell = tableView.dequeueReusableCell(
-            withIdentifier: String(describing: RecommendTagTableViewCell.self),
-            for: indexPath
-        ) as! RecommendTagTableViewCell
-        
-        return cell
-    }
     
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         if flag {
@@ -152,5 +128,29 @@ extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
         } else {
             super.present(viewControllerToPresent, animated: false, completion: completion)
         }
+    }
+}
+
+extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        createRecommendTagTableViewCell(indexPath: indexPath)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 57 + 12
+    }
+    
+    private func createRecommendTagTableViewCell(indexPath: IndexPath) -> RecommendTagTableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: String(describing: RecommendTagTableViewCell.self),
+            for: indexPath
+        ) as! RecommendTagTableViewCell
+        
+        return cell
     }
 }
