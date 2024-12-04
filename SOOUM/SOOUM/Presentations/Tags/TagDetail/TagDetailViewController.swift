@@ -26,14 +26,24 @@ class TagDetailViewController: BaseViewController {
         
         $0.register(
             MainHomeViewCell.self,
-            forCellReuseIdentifier: String(describing:  MainHomeViewCell.self)
+            forCellReuseIdentifier: String(describing: MainHomeViewCell.self)
         )
         $0.dataSource = self
         $0.delegate = self
     }
     
     override func setupConstraints() {
-        <#code#>
+        self.view.addSubview(navBarView)
+        navBarView.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide)
+            $0.leading.trailing.equalToSuperview()
+        }
+        
+        self.view.addSubview(tableView)
+        tableView.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+            $0.top.equalTo(self.navBarView.snp.bottom)
+        }
     }
 }
 

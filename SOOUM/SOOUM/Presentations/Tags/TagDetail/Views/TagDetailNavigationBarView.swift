@@ -23,14 +23,16 @@ class TagDetailNavigationBarView: UIView {
     
     let titleLabel = UILabel().then {
         $0.typography = .som.body2WithBold
+        $0.text = "태그 제목"
     }
     
     let subtitleLabel = UILabel().then {
         $0.typography = .som.body3WithBold
+        $0.text = "태그 부제목"
     }
     
-    let favoriteButton = UIImageView().then {
-        $0.image = .starOutlined
+    let favoriteButton = UIButton().then {
+        $0.setImage(.starOutlined, for: .normal)
         $0.tintColor = .som.black
     }
 
