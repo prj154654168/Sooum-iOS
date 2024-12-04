@@ -9,7 +9,16 @@ import UIKit
 
 class RecommendTagTableViewCell: UITableViewCell {
     
+    /// 셀 사용 모드
+    enum Mode {
+        case recommendTag
+        case searchTag
+    }
+    
     var recommendTag: RecommendTagsResponse.RecommendTag? = nil
+    var searchTag: SearchTagsResponse.RelatedTag? = nil
+    
+    var mode: Mode = .recommendTag
     
     let recommendTagView = RecommendTagView()
     
@@ -24,10 +33,20 @@ class RecommendTagTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /// 추천 태그 setData
     func setData(recommendTag: RecommendTagsResponse.RecommendTag) {
+        self.mode = .recommendTag
         self.recommendTag = recommendTag
         self.recommendTagView.tagNameLabel.text = recommendTag.tagContent
         self.recommendTagView.tagsCountLabel.text = recommendTag.tagUsageCnt
+    }
+    
+    /// 검색 태그 setData
+    func setData(searchRelatedTag: SearchTagsResponse.RelatedTag) {
+        self.mode = .searchTag
+        self.searchTag = searchRelatedTag
+        self.recommendTagView.tagNameLabel.text = searchRelatedTag.content
+        self.recommendTagView.tagsCountLabel.text = "\(searchRelatedTag.count))"
     }
     
     private func setupConstraint() {

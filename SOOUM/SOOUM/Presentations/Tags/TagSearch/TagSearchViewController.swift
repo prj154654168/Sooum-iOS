@@ -159,7 +159,10 @@ class TagSearchViewController: BaseViewController, View {
 extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        guard let reactor = self.reactor else {
+            return 0
+        }
+        return reactor.currentState.searchTags.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -176,6 +179,9 @@ extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
             for: indexPath
         ) as! RecommendTagTableViewCell
         
+        guard let reactor = self.reactor else {
+            return cell
+        }
         return cell
     }
 }
