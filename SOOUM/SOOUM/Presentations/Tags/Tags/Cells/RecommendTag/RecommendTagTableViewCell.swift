@@ -7,6 +7,14 @@
 
 import UIKit
 
+import ReactorKit
+import RxCocoa
+import RxGesture
+import RxSwift
+
+import SnapKit
+import Then
+
 class RecommendTagTableViewCell: UITableViewCell {
     
     /// 셀 사용 모드
@@ -15,10 +23,12 @@ class RecommendTagTableViewCell: UITableViewCell {
         case searchTag
     }
     
-    var recommendTag: RecommendTagsResponse.RecommendTag? = nil
-    var searchTag: SearchTagsResponse.RelatedTag? = nil
-    
     var mode: Mode = .recommendTag
+    
+    var recommendTag: RecommendTagsResponse.RecommendTag?
+    var searchTag: SearchTagsResponse.RelatedTag?
+    
+    var disposeBag = DisposeBag()
     
     let recommendTagView = RecommendTagView()
     
@@ -35,7 +45,9 @@ class RecommendTagTableViewCell: UITableViewCell {
     
     /// 추천 태그 setData
     func setData(recommendTag: RecommendTagsResponse.RecommendTag) {
+        self.disposeBag = DisposeBag()
         self.mode = .recommendTag
+        
         self.recommendTag = recommendTag
         self.recommendTagView.tagNameLabel.text = recommendTag.tagContent
         self.recommendTagView.tagsCountLabel.text = recommendTag.tagUsageCnt

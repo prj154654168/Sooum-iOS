@@ -23,6 +23,7 @@ class RecommendTagView: UIView {
     
     let moreButtonStackView = UIStackView().then {
         $0.axis = .horizontal
+        $0.alignment = .center
     }
     
     let moreButtonLabel = UILabel().then {
@@ -73,6 +74,7 @@ class RecommendTagView: UIView {
         moreButtonStackView.snp.makeConstraints {
             $0.trailing.equalToSuperview().offset(-16)
             $0.centerY.equalToSuperview()
+            $0.height.equalTo(32)
         }
     }
 }

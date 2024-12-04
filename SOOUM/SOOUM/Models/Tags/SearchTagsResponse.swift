@@ -17,6 +17,7 @@ struct SearchTagsResponse: Codable {
 
     // MARK: - RelatedTagList
     struct RelatedTag: Codable {
+        let tagId: String
         let count: Int
         let content: String
     }

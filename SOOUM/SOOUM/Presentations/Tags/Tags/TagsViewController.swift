@@ -163,8 +163,18 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         guard let reactor = self.reactor else {
             return cell
         }
+        
         if reactor.currentState.recommendTags.indices.contains(indexPath.row) {
             cell.setData(recommendTag: reactor.currentState.recommendTags[indexPath.row])
+            
+            cell.contentView.rx.tapGesture()
+                .when(.recognized)
+                .subscribe(with: self) { object, _ in
+                    let tagDetailVC = TagDetailViewController()
+                    tagDetailVC.modalPresentationStyle = .overFullScreen
+                    object.present(tagDetailVC, animated: true)
+                }
+                .disposed(by: self.disposeBag)
         }
         return cell
     }

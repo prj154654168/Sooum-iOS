@@ -771,9 +771,9 @@
 		2AFF95522CF3207F00CBFB12 /* Tags */ = {
 			isa = PBXGroup;
 			children = (
-				2AFD05572D008D01007C84AD /* TagDetail */,
 				2AFF95532CF3220A00CBFB12 /* Tags */,
 				2AFF956E2CF5E8A500CBFB12 /* TagSearch */,
+				2AFD05572D008D01007C84AD /* TagDetail */,
 			);
 			path = Tags;
 			sourceTree = "<group>";
