@@ -41,18 +41,10 @@ class TagSearchViewController: BaseViewController {
     }
     
     func setupToolbar() {
-        // 툴바 생성
         let toolbar = UIToolbar()
-        toolbar.sizeToFit() // 툴바 크기를 자동으로 조정
-        
-        // 툴바 버튼 생성
-
+        toolbar.sizeToFit()
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil) // 가운데 공간 확보
-        
-        // 버튼 추가
         toolbar.items = [flexibleSpace, self.hideKeyboardUIBarButton]
-        
-        // 텍스트 필드에 툴바 추가
         self.tagSearchTextFieldView.textField.inputAccessoryView = toolbar
     }
     

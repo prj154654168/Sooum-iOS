@@ -12,6 +12,7 @@ import Alamofire
 enum TagRequest: BaseRequest {
     case favorite(last: String?)
     case recommend
+    case search(keyword: String)
     
     var path: String {
         switch self {
@@ -21,14 +22,18 @@ enum TagRequest: BaseRequest {
             } else {
                 return "/tags/favorites"
             }
+            
         case .recommend:
             return "/tags/recommendation"
+            
+        case let .search(keyword):
+            return "/tags/search"
         }
     }
         
     var method: HTTPMethod {
         switch self {
-        case .favorite, .recommend:
+        case .favorite, .recommend, .search:
             return .get
         }
     }
@@ -37,19 +42,23 @@ enum TagRequest: BaseRequest {
         switch self {
         case .favorite, .recommend:
             return [:]
+        case let .search(keyword):
+            return [
+                "keyword": keyword
+            ]
         }
     }
     
     var encoding: ParameterEncoding {
         switch self {
-        case .favorite, .recommend:
+        case .favorite, .recommend, .search:
             return URLEncoding.queryString
         }
     }
     
     var authorizationType: AuthorizationType {
         switch self {
-        case .favorite, .recommend:
+        case .favorite, .recommend, .search:
             return .access
         }
     }
