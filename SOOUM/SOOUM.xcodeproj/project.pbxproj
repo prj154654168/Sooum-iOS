@@ -106,6 +106,8 @@
 		2AFD05532D007F2F007C84AD /* TagSearchViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05512D007F2F007C84AD /* TagSearchViewReactor.swift */; };
 		2AFD05552D0082DE007C84AD /* SearchTagsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05542D0082DE007C84AD /* SearchTagsResponse.swift */; };
 		2AFD05562D0082DE007C84AD /* SearchTagsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05542D0082DE007C84AD /* SearchTagsResponse.swift */; };
+		2AFD05592D008D23007C84AD /* TagDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05582D008D23007C84AD /* TagDetailViewController.swift */; };
+		2AFD055A2D008D23007C84AD /* TagDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05582D008D23007C84AD /* TagDetailViewController.swift */; };
 		2AFF95552CF3222400CBFB12 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95542CF3222400CBFB12 /* TagsViewController.swift */; };
 		2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95542CF3222400CBFB12 /* TagsViewController.swift */; };
 		2AFF955A2CF3227900CBFB12 /* TagSearchTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */; };
@@ -388,6 +390,7 @@
 		2AFD054E2CFF79D8007C84AD /* TagsViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewReactor.swift; sourceTree = "<group>"; };
 		2AFD05512D007F2F007C84AD /* TagSearchViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchViewReactor.swift; sourceTree = "<group>"; };
 		2AFD05542D0082DE007C84AD /* SearchTagsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTagsResponse.swift; sourceTree = "<group>"; };
+		2AFD05582D008D23007C84AD /* TagDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailViewController.swift; sourceTree = "<group>"; };
 		2AFF95542CF3222400CBFB12 /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
 		2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchTextFieldView.swift; sourceTree = "<group>"; };
 		2AFF955C2CF328DE00CBFB12 /* FavoriteTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagTableViewCell.swift; sourceTree = "<group>"; };
@@ -757,9 +760,18 @@
 			path = Tags;
 			sourceTree = "<group>";
 		};
+		2AFD05572D008D01007C84AD /* TagDetail */ = {
+			isa = PBXGroup;
+			children = (
+				2AFD05582D008D23007C84AD /* TagDetailViewController.swift */,
+			);
+			path = TagDetail;
+			sourceTree = "<group>";
+		};
 		2AFF95522CF3207F00CBFB12 /* Tags */ = {
 			isa = PBXGroup;
 			children = (
+				2AFD05572D008D01007C84AD /* TagDetail */,
 				2AFF95532CF3220A00CBFB12 /* Tags */,
 				2AFF956E2CF5E8A500CBFB12 /* TagSearch */,
 			);
@@ -1741,6 +1753,7 @@
 				2AE6B14D2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */,
 				3880098F2CABF4C2002A9209 /* SOMTag.swift in Sources */,
 				2AE6B14A2CBC15BF00FA5C3C /* ReportViewController.swift in Sources */,
+				2AFD055A2D008D23007C84AD /* TagDetailViewController.swift in Sources */,
 				2AE6B1552CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */,
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
@@ -1796,6 +1809,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2AFD05592D008D23007C84AD /* TagDetailViewController.swift in Sources */,
 				2A44A4342CAC21A500DC463E /* SignUpResponse.swift in Sources */,
 				385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				38B6AAD12CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */,
