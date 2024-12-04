@@ -79,6 +79,13 @@ class TagSearchViewController: BaseViewController, View {
                 }
             }
             .disposed(by: self.disposeBag)
+        
+        hideKeyboardUIBarButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                object.view.endEditing(true)
+            }
+            .disposed(by: self.disposeBag)
+
     }
     
     func bind(reactor: TagSearchViewReactor) {
@@ -181,6 +188,9 @@ extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
         
         guard let reactor = self.reactor else {
             return cell
+        }
+        if reactor.currentState.searchTags.indices.contains(indexPath.row) {
+            cell.setData(searchRelatedTag: reactor.currentState.searchTags[indexPath.row])
         }
         return cell
     }
