@@ -51,8 +51,7 @@ class TagSearchViewController: BaseViewController, View {
     func setupToolbar() {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil) // 가운데 공간 확보
-        toolbar.items = [flexibleSpace, self.hideKeyboardUIBarButton]
+        toolbar.items = [self.hideKeyboardUIBarButton]
         self.tagSearchTextFieldView.textField.inputAccessoryView = toolbar
     }
     
@@ -85,7 +84,9 @@ class TagSearchViewController: BaseViewController, View {
         tagSearchTextFieldView.textField.rx.text.orEmpty
             .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
-            .map { Reactor.Action.searchTag($0) }
+            .compactMap {
+                $0.isEmpty ? nil : Reactor.Action.searchTag($0)
+            }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
