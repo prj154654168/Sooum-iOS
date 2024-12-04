@@ -14,6 +14,11 @@ class TagSearchViewController: BaseViewController {
         $0.tintColor = .som.black
     }
     
+    let hideKeyboardUIBarButton = UIBarButtonItem().then {
+        $0.title = "완료"
+        $0.style = .done
+    }
+    
     let tagSearchTextFieldView = TagSearchTextFieldView(isInteractive: true)
 
     lazy var tableView = UITableView().then {
@@ -28,6 +33,27 @@ class TagSearchViewController: BaseViewController {
         )
         $0.dataSource = self
         $0.delegate = self
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.setupToolbar()
+    }
+    
+    func setupToolbar() {
+        // 툴바 생성
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit() // 툴바 크기를 자동으로 조정
+        
+        // 툴바 버튼 생성
+
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil) // 가운데 공간 확보
+        
+        // 버튼 추가
+        toolbar.items = [flexibleSpace, self.hideKeyboardUIBarButton]
+        
+        // 텍스트 필드에 툴바 추가
+        self.tagSearchTextFieldView.textField.inputAccessoryView = toolbar
     }
     
     override func viewDidAppear(_ animated: Bool) {
