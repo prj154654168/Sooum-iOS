@@ -58,7 +58,7 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
 //        let model = SOMCardModel(data: self.cards[indexPath.row])
         
         let cell: MainHomeViewCell = tableView.dequeueReusableCell(
-            withIdentifier: String(describing:  MainHomeViewCell.self),
+            withIdentifier: String(describing: MainHomeViewCell.self),
             for: indexPath
         ) as! MainHomeViewCell
 //        cell.selectionStyle = .none
