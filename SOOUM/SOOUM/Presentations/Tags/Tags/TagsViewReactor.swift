@@ -30,6 +30,9 @@ class TagsViewReactor: Reactor {
     }
     
     var initialState = State()
+    var isFavoriteTagsEmpty: Bool {
+        self.currentState.favoriteTags.isEmpty
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {

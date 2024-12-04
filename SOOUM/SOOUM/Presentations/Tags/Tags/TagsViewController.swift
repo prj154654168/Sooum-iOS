@@ -6,6 +6,7 @@
 //
 
 import UIKit
+
 import ReactorKit
 
 class TagsViewController: BaseViewController, View {
@@ -99,13 +100,19 @@ class TagsViewController: BaseViewController, View {
 extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        2
+        guard let reactor = self.reactor else {
+            return 0
+        }
+        return reactor.isFavoriteTagsEmpty ? 1 : 2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let reactor = self.reactor else {
             return 0
         }
+        if reactor.isFavoriteTagsEmpty {
+            return reactor.currentState.recommendTags.count
+        } 
         
         switch TagType.allCases[section] {
         case .favorite:
@@ -117,6 +124,12 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let reactor = self.reactor else {
+            return UITableViewCell()
+        }
+        if reactor.isFavoriteTagsEmpty {
+            return createRecommendTagTableViewCell(indexPath: indexPath)
+        }
         switch TagType.allCases[indexPath.section] {
         case .favorite:
             return createFavoriteTagCell(indexPath: indexPath)
@@ -156,12 +169,20 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let favoriteTagHeight = CGFloat(228 + 12)
+        let recommendTagHeight = CGFloat(57 + 12)
+        guard let reactor = self.reactor else {
+            return 0
+        }
+        if reactor.isFavoriteTagsEmpty {
+            return recommendTagHeight
+        }
         switch TagType.allCases[indexPath.section] {
         case .favorite:
-            return 228 + 12
+            return favoriteTagHeight
             
         case .recommend:
-            return 57 + 12
+            return recommendTagHeight
         }
     }
     
