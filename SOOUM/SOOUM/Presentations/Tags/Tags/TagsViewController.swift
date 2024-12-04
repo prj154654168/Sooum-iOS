@@ -191,6 +191,12 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let reactor = self.reactor else {
+            return nil
+        }
+        if reactor.isFavoriteTagsEmpty {
+            return TagsHeaderView(type: TagType.recommend)
+        }
         return TagsHeaderView(type: TagType.allCases[section])
     }
 }
