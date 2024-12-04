@@ -49,11 +49,12 @@ class TagSearchViewController: BaseViewController, View {
     }
     
     func setupToolbar() {
-        let toolbar = UIToolbar()
-        toolbar.sizeToFit()
-        toolbar.items = [self.hideKeyboardUIBarButton]
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 0, height: 44))
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        toolbar.items = [space, self.hideKeyboardUIBarButton]
         self.tagSearchTextFieldView.textField.inputAccessoryView = toolbar
     }
+
     
     override func viewDidAppear(_ animated: Bool) {
         tagSearchTextFieldView.textField.becomeFirstResponder()
