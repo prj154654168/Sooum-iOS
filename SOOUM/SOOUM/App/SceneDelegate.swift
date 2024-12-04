@@ -23,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         // TODO: - 삭제
         let viewController = TagsViewController()
-        
+        viewController.reactor = TagsViewReactor()
         // TODO: - 주석 복구
 //        let viewController = LaunchScreenViewController()
 //        viewController.reactor = LaunchScreenViewReactor()

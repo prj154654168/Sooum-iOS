@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import ReactorKit
 
-class TagsViewController: BaseViewController {
+class TagsViewController: BaseViewController, View {
     
     enum TagType: CaseIterable {
         case favorite
@@ -52,6 +53,26 @@ class TagsViewController: BaseViewController {
                 searchVC.modalTransitionStyle = .crossDissolve
                 searchVC.modalPresentationStyle = .overFullScreen
                 object.present(searchVC, animated: false)
+            }
+            .disposed(by: self.disposeBag)
+    }
+    
+    func bind(reactor: TagsViewReactor) {
+        self.rx.viewDidLoad
+            .subscribe(with: self) { object, _ in
+                reactor.action.onNext(.fetchTags)
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.favoriteTags)
+            .subscribe(with: self) { object, _ in
+                object.tableView.reloadData()
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.favoriteTags)
+            .subscribe(with: self) { object, _ in
+                object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
     }
@@ -104,6 +125,12 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
             for: indexPath
         ) as! FavoriteTagTableViewCell
         
+        guard let reactor = self.reactor else {
+            return cell
+        }
+        if reactor.currentState.favoriteTags.indices.contains(indexPath.row) {
+            cell.setData(favoriteTag: reactor.currentState.favoriteTags[indexPath.row])
+        }
         return cell
     }
     

@@ -22,7 +22,7 @@ enum TagRequest: BaseRequest {
                 return "/tags/favorites"
             }
         case .recommend:
-            return "/imgs/cards/upload"
+            return "/tags/recommendation"
         }
     }
         
@@ -50,7 +50,7 @@ enum TagRequest: BaseRequest {
     var authorizationType: AuthorizationType {
         switch self {
         case .favorite, .recommend:
-                .access
+            return .access
         }
     }
         

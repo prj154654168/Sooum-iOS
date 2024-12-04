@@ -13,16 +13,18 @@ import RxSwift
 
 final class FavoriteTagTableViewCell: UITableViewCell {
     
-  lazy var favoriteTagView = FavoriteTagView().then {
-    $0.cardPreviewCollectionView.delegate = self
-    $0.cardPreviewCollectionView.dataSource = self
-    $0.cardPreviewCollectionView.register(
-        TagPreviewCardCollectionViewCell.self,
-        forCellWithReuseIdentifier: String(
-            describing: TagPreviewCardCollectionViewCell.self
+    var favoriteTag: FavoriteTagsResponse.FavoriteTagList? = nil
+    
+    lazy var favoriteTagView = FavoriteTagView().then {
+        $0.cardPreviewCollectionView.delegate = self
+        $0.cardPreviewCollectionView.dataSource = self
+        $0.cardPreviewCollectionView.register(
+            TagPreviewCardCollectionViewCell.self,
+            forCellWithReuseIdentifier: String(
+                describing: TagPreviewCardCollectionViewCell.self
+            )
         )
-    )
-  }
+    }
     
     // MARK: - init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -34,6 +36,12 @@ final class FavoriteTagTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setData(favoriteTag: FavoriteTagsResponse.FavoriteTagList) {
+        self.favoriteTag = favoriteTag
+        self.favoriteTagView.tagNameLabel.text = favoriteTag.tagContent
+        self.favoriteTagView.tagsCountLabel.text = favoriteTag.tagUsageCnt
     }
     
     private func setupConstraint() {
