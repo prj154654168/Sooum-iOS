@@ -51,6 +51,7 @@ class TagsViewController: BaseViewController, View {
             .when(.recognized)
             .subscribe(with: self) { object, _ in
                 let searchVC = TagSearchViewController()
+                searchVC.reactor = TagSearchViewReactor()
                 searchVC.modalTransitionStyle = .crossDissolve
                 searchVC.modalPresentationStyle = .overFullScreen
                 object.present(searchVC, animated: false)

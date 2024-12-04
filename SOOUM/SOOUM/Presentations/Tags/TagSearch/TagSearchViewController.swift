@@ -7,7 +7,15 @@
 
 import UIKit
 
-class TagSearchViewController: BaseViewController {
+import ReactorKit
+import RxCocoa
+import RxGesture
+import RxSwift
+
+import SnapKit
+import Then
+
+class TagSearchViewController: BaseViewController, View {
     
     let backButton = UIButton().then {
         $0.setImage(.arrowBackOutlined, for: .normal)
@@ -69,6 +77,21 @@ class TagSearchViewController: BaseViewController {
                 } completion: { _ in
                     object.dismiss(animated: true)
                 }
+            }
+            .disposed(by: self.disposeBag)
+    }
+    
+    func bind(reactor: TagSearchViewReactor) {
+        tagSearchTextFieldView.textField.rx.text.orEmpty
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .map { Reactor.Action.searchTag($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        reactor.state.map(\.searchTags)
+            .subscribe(with: self) { object, _ in
+                object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
     }

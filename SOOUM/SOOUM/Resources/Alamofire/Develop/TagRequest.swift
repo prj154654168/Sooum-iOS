@@ -44,7 +44,8 @@ enum TagRequest: BaseRequest {
             return [:]
         case let .search(keyword):
             return [
-                "keyword": keyword
+                "keyword": keyword,
+                "size": 20
             ]
         }
     }
