@@ -12,6 +12,19 @@ import Kingfisher
 
 extension UIImage {
     
+    func resized(_ size: CGSize, color: UIColor) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        draw(in: CGRect(origin: .zero, size: size))
+        
+        color.setFill()
+        UIRectFillUsingBlendMode(CGRect(origin: .zero, size: size), .sourceIn)
+
+        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return resizedImage
+    }
+    
     static let placeholder: UIImage? = UIColor.som.gray400.toImage
     
     func download(strUrl: String?, completion: @escaping (UIImage?) -> Void) {
