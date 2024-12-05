@@ -214,9 +214,12 @@ import RxSwift
          reactor.state.map(\.isDeleted)
              .distinctUntilChanged()
              .subscribe(with: self) { object, isDeleted in
-                 object.dismiss(animated: true)
-                 object.isDeleted = isDeleted
-                 object.collectionView.reloadData()
+                 object.dismiss(animated: true) {
+                     object.isDeleted = isDeleted
+                     object.collectionView.reloadData()
+                     
+                     object.navigationPop()
+                 }
              }
              .disposed(by: self.disposeBag)
          
