@@ -112,6 +112,8 @@
 		2AFD055E2D009513007C84AD /* TagDetailNavigationBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD055C2D009513007C84AD /* TagDetailNavigationBarView.swift */; };
 		2AFD05602D009FA1007C84AD /* TagDetailViewrReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD055F2D009FA1007C84AD /* TagDetailViewrReactor.swift */; };
 		2AFD05612D009FA1007C84AD /* TagDetailViewrReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD055F2D009FA1007C84AD /* TagDetailViewrReactor.swift */; };
+		2AFD05632D00A1E1007C84AD /* TagDetailCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05622D00A1E1007C84AD /* TagDetailCardResponse.swift */; };
+		2AFD05642D00A1E1007C84AD /* TagDetailCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05622D00A1E1007C84AD /* TagDetailCardResponse.swift */; };
 		2AFF95552CF3222400CBFB12 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95542CF3222400CBFB12 /* TagsViewController.swift */; };
 		2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95542CF3222400CBFB12 /* TagsViewController.swift */; };
 		2AFF955A2CF3227900CBFB12 /* TagSearchTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */; };
@@ -397,6 +399,7 @@
 		2AFD05582D008D23007C84AD /* TagDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailViewController.swift; sourceTree = "<group>"; };
 		2AFD055C2D009513007C84AD /* TagDetailNavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailNavigationBarView.swift; sourceTree = "<group>"; };
 		2AFD055F2D009FA1007C84AD /* TagDetailViewrReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailViewrReactor.swift; sourceTree = "<group>"; };
+		2AFD05622D00A1E1007C84AD /* TagDetailCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailCardResponse.swift; sourceTree = "<group>"; };
 		2AFF95542CF3222400CBFB12 /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
 		2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchTextFieldView.swift; sourceTree = "<group>"; };
 		2AFF955C2CF328DE00CBFB12 /* FavoriteTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagTableViewCell.swift; sourceTree = "<group>"; };
@@ -762,6 +765,7 @@
 				2AFD05452CFF75DD007C84AD /* FavoriteTagsResponse.swift */,
 				2AFD05482CFF7687007C84AD /* RecommendTagsResponse.swift */,
 				2AFD05542D0082DE007C84AD /* SearchTagsResponse.swift */,
+				2AFD05622D00A1E1007C84AD /* TagDetailCardResponse.swift */,
 			);
 			path = Tags;
 			sourceTree = "<group>";
@@ -770,8 +774,8 @@
 			isa = PBXGroup;
 			children = (
 				2AFD05582D008D23007C84AD /* TagDetailViewController.swift */,
-				2AFD055B2D0094F0007C84AD /* Views */,
 				2AFD055F2D009FA1007C84AD /* TagDetailViewrReactor.swift */,
+				2AFD055B2D0094F0007C84AD /* Views */,
 			);
 			path = TagDetail;
 			sourceTree = "<group>";
@@ -1701,6 +1705,7 @@
 				2AFD05502CFF79D8007C84AD /* TagsViewReactor.swift in Sources */,
 				3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				2AFF95712CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */,
+				2AFD05642D00A1E1007C84AD /* TagDetailCardResponse.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				2A5BB7E82CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
 				2AFF95622CF33A3900CBFB12 /* FavoriteTagView.swift in Sources */,
@@ -1833,6 +1838,7 @@
 				38B6AAD12CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */,
 				2A5BB7BE2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */,
 				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
+				2AFD05632D00A1E1007C84AD /* TagDetailCardResponse.swift in Sources */,
 				2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
 				385E65A32CBE56D00032E120 /* Coordinate.swift in Sources */,
 				2AE6B1632CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */,
