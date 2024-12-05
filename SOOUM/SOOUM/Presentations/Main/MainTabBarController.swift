@@ -78,8 +78,12 @@ class MainTabBarController: SOMTabBarController, View {
             tag: 2
         )
         
-        let profileViewController = UIViewController()
-        profileViewController.tabBarItem = .init(
+        let profileViewController = ProfileViewController()
+        profileViewController.reactor = reactor.reactorForProfile()
+        let profileNavigationController = UINavigationController(
+            rootViewController: profileViewController
+        )
+        profileNavigationController.tabBarItem = .init(
             title: Text.profileTitle,
             image: .init(.icon(.outlined(.profile))),
             tag: 3
@@ -89,7 +93,7 @@ class MainTabBarController: SOMTabBarController, View {
             mainHomeNavigationController,
             writeCardViewController,
             tagViewcontroller,
-            profileViewController
+            profileNavigationController
         ]
     }
 }

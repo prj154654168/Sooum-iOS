@@ -10,6 +10,14 @@ import Foundation
 
 extension Date {
     
+    func toString(_ format: String) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = .Korea
+        formatter.timeZone = .Korea
+        formatter.dateFormat = format
+        return formatter.string(from: self)
+    }
+    
     func infoReadableTimeTakenFromThis(to: Date) -> String {
 
         let from: TimeInterval = self.timeIntervalSince1970
@@ -33,6 +41,10 @@ extension Date {
             return "\(hours)시간전".trimmingCharacters(in: .whitespaces)
         }
         
+        if minutes > 59 {
+            return "\(hours)시간전".trimmingCharacters(in: .whitespaces)
+        }
+        
         if minutes > 9 && minutes < 60 {
             return "\(minutes % 100)0분전".trimmingCharacters(in: .whitespaces)
         }
@@ -47,4 +59,18 @@ extension Date {
 
         return ""
     }
+    
+    var banEndFormatted: String {
+        return self.toString("yyyy년 mm월 dd일")
+    }
+}
+
+extension Locale {
+
+    static let Korea = Locale(identifier: "ko_KR")
+}
+
+extension TimeZone {
+
+    static let Korea = TimeZone(identifier: "Asia/Seoul")!
 }

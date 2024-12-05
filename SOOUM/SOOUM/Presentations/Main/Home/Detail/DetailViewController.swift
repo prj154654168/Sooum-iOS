@@ -102,7 +102,7 @@ import RxSwift
          // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: MainHomeViewController.self, animated: false)
+                 object.navigationPop(to: MainTabBarController.self, animated: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -214,9 +214,12 @@ import RxSwift
          reactor.state.map(\.isDeleted)
              .distinctUntilChanged()
              .subscribe(with: self) { object, isDeleted in
-                 object.dismiss(animated: true)
-                 object.isDeleted = isDeleted
-                 object.collectionView.reloadData()
+                 object.dismiss(animated: true) {
+                     object.isDeleted = isDeleted
+                     object.collectionView.reloadData()
+                     
+                     object.navigationPop()
+                 }
              }
              .disposed(by: self.disposeBag)
          
@@ -319,6 +322,15 @@ extension DetailViewController: UICollectionViewDataSource {
             }
             .disposed(by: cell.disposeBag)
         
+        cell.memberBackgroundButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                let memberId = object.detailCard.member.id
+                let profileViewController = ProfileViewController()
+                profileViewController.reactor = object.reactor?.reactorForProfile(memberId)
+                object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+            }
+            .disposed(by: cell.disposeBag)
+        
         return cell
     }
     
@@ -341,9 +353,9 @@ extension DetailViewController: UICollectionViewDataSource {
             guard let reactor = self.reactor else { return footer }
             
             footer.didTap
-                .subscribe(with: self) { object, _ in
+                .subscribe(with: self) { object, selectedId in
                     let viewController = DetailViewController()
-                    viewController.reactor = reactor.reactorForPush(footer.commentCards[indexPath.row].id)
+                    viewController.reactor = reactor.reactorForPush(selectedId)
                     object.navigationPush(viewController, animated: true, bottomBarHidden: true)
                 }
                 .disposed(by: footer.disposeBag)

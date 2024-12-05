@@ -211,4 +211,8 @@ extension DetailViewReactor {
     func reactorForWriteCard() -> WriteCardViewReactor {
         WriteCardViewReactor(type: .comment, self.selectedCardId)
     }
+    
+    func reactorForProfile(_ memberId: String) -> ProfileViewReactor {
+        ProfileViewReactor.init(type: .other, memberId: memberId)
+    }
 }

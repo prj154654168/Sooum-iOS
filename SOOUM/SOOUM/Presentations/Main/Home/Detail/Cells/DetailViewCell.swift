@@ -75,12 +75,12 @@ class DetailViewCell: UICollectionViewCell {
         $0.typography = .som.body1WithBold
     }
     
+    let memberBackgroundButton = UIButton()
     private let memberImageView = UIImageView().then {
         $0.backgroundColor = .clear
         $0.layer.cornerRadius = 32 * 0.5
         $0.clipsToBounds = true
     }
-    
     private let memberLabel = UILabel().then {
         $0.textColor = .som.white
         $0.textAlignment = .center
@@ -109,7 +109,11 @@ class DetailViewCell: UICollectionViewCell {
     
     var member: Member = .init() {
         didSet {
-            self.memberImageView.setImage(strUrl: self.member.profileImgUrl?.url)
+            if let strUrl = self.member.profileImgUrl?.url {
+                self.memberImageView.setImage(strUrl: strUrl)
+            } else {
+                self.memberImageView.image = .init(.image(.sooumLogo))
+            }
             self.memberLabel.text = self.member.nickname
         }
     }
@@ -183,6 +187,14 @@ class DetailViewCell: UICollectionViewCell {
         self.memberLabel.snp.makeConstraints {
             $0.bottom.equalTo(self.cardView.snp.bottom).offset(-22)
             $0.leading.equalTo(self.memberImageView.snp.trailing).offset(8)
+        }
+        
+        self.contentView.addSubview(self.memberBackgroundButton)
+        self.memberBackgroundButton.snp.makeConstraints {
+            $0.top.equalTo(self.memberImageView.snp.top)
+            $0.bottom.equalTo(self.memberImageView.snp.bottom)
+            $0.leading.equalTo(self.memberImageView.snp.leading)
+            $0.trailing.equalTo(self.memberLabel.snp.trailing)
         }
         
         self.contentView.addSubview(self.deletedCardInDetailBackgroundView)

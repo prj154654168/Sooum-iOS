@@ -72,11 +72,12 @@ class ProfileImageSettingViewReactor: Reactor {
     /// 프로필 이미지 등록 루트 함수
     private func registerProfileImage(_ image: UIImage) -> Observable<Mutation> {
         return fetchPresignedURL()
-            .flatMap { urlWithName -> Observable<Result<Void, Error>> in
+            .withUnretained(self)
+            .flatMap { object, urlWithName -> Observable<Result<Void, Error>> in
                 guard let url = URL(string: urlWithName.urlStr) else {
                     return Observable.just(.failure(NSError(domain: "presignedURL 없음", code: 0, userInfo: nil)))
                 }
-                return self.uploadImage(image, to: url)
+                return object.uploadImage(image, to: url)
             }
             .map { result in
                 Mutation.uploadImageResult(result)
@@ -88,8 +89,9 @@ class ProfileImageSettingViewReactor: Reactor {
         let request: JoinRequest = .profileImagePresignedURL
         
         return NetworkManager.shared.request(PresignedStorageResponse.self, request: request)
-            .map { response in
-                self.imageName = response.imgName
+            .withUnretained(self)
+            .map { object, response in
+                object.imageName = response.imgName
                 return (urlStr: response.url.href, imageName: response.imgName)
             }
     }

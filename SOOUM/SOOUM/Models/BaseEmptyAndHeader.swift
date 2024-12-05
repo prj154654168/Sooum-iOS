@@ -32,7 +32,7 @@ extension Status: EmptyResponse {
 }
 
 /// 실제 urlString
-struct URLString: Codable {
+struct URLString: Equatable, Codable {
     let url: String
     
     enum CodingKeys: String, CodingKey {

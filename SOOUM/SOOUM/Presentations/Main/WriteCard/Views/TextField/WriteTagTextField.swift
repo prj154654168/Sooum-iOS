@@ -208,8 +208,6 @@ extension WriteTagTextField: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard !(textField.text ?? "").isEmpty else { return false }
-        self.delegate?.textFieldReturnKeyClicked(self)
-        textField.resignFirstResponder()
-        return true
+        return self.delegate?.textFieldReturnKeyClicked(self) ?? true
     }
 }

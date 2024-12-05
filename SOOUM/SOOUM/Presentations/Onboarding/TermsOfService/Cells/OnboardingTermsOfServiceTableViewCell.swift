@@ -25,7 +25,7 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
     var disposeBag = DisposeBag()
     
     let checkBoxImageView = UIImageView().then {
-        $0.image = .checkboxOutlined
+        $0.image = .init(.icon(.outlined(.checkBox)))
         $0.contentMode = .scaleAspectFill
         $0.tintColor = .som.gray500
     }
@@ -107,7 +107,7 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
     
     func updateState(isOn: Bool, animated: Bool = false) {
         UIView.transition(with: checkBoxImageView, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
-            self.checkBoxImageView.image = isOn ? .checkboxFilled : .checkboxOutlined
+            self.checkBoxImageView.image = isOn ? .checkboxFilled : .init(.icon(.outlined(.checkBox)))
         }
         UIView.animate(withDuration: animated ? animated ? 0.2 : 0 : 0) {
             self.nextButton.tintColor = isOn ? .som.p300 : .som.gray500
