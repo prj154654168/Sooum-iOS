@@ -441,11 +441,14 @@ extension WriteCardViewController: WriteTagTextFieldDelegate {
         }
     }
     
-    func textFieldReturnKeyClicked(_ textField: WriteTagTextField) {
+    func textFieldReturnKeyClicked(_ textField: WriteTagTextField) -> Bool {
         
         if self.writeCardView.writeTagTextField.isFirstResponder {
             self.writeCardView.writeTagTextField.addTagButton.sendActions(for: .touchUpInside)
+            return false
         }
+        
+        return true
     }
 }
 
