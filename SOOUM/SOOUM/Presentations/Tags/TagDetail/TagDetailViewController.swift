@@ -15,7 +15,7 @@ import RxSwift
 import SnapKit
 import Then
 
-class TagDetailViewController: BaseViewController {
+class TagDetailViewController: BaseViewController, View {
     
     let navBarView = TagDetailNavigationBarView()
     
@@ -45,12 +45,29 @@ class TagDetailViewController: BaseViewController {
             $0.top.equalTo(self.navBarView.snp.bottom)
         }
     }
+    
+    func bind(reactor: TagDetailViewrReactor) {
+        self.rx.viewDidLoad
+            .subscribe(with: self) { object, _ in
+                reactor.action.onNext(.fetchTagCards)
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.tagCards)
+            .subscribe(with: self) { object, cards in
+                object.tableView.reloadData()
+            }
+            .disposed(by: self.disposeBag)
+    }
 }
 
 extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        guard let reactor = self.reactor else {
+            return 0
+        }
+        return reactor.currentState.tagCards.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

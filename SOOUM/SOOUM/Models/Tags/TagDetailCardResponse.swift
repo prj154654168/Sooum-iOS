@@ -17,7 +17,9 @@ struct TagDetailCardResponse: Codable {
 
     // MARK: - TagFeedCardDtoList
     struct TagFeedCard: Codable {
-        let id, content, createdAt: String
+        let id: String
+        let content: String
+        let createdAt: Date
         let likeCnt, commentCnt: Int
         let backgroundImgURL: Next
         let font: Font

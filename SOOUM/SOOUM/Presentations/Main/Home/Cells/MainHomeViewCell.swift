@@ -48,6 +48,10 @@ class MainHomeViewCell: UITableViewCell {
         self.cardView.setModel(model: model)
     }
     
+    func setData(tagCard: TagDetailCardResponse.TagFeedCard) {
+        self.cardView.setData(tagCard: tagCard)
+    }
+    
     /// 컨텐츠 모드에 따라 정보 스택뷰 순서 변경
     func changeOrderInCardContentStack(_ selectedIndex: Int) {
         self.cardView.changeOrderInCardContentStack(selectedIndex)
