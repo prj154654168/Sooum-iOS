@@ -145,6 +145,13 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
     }
     
+    // 임시 방편
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.dismiss(animated: true)
+    }
+    
     
     // MARK: - ReactorKit
     
