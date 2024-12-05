@@ -170,7 +170,9 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
             cell.contentView.rx.tapGesture()
                 .when(.recognized)
                 .subscribe(with: self) { object, _ in
+                    let tagID = reactor.currentState.recommendTags[indexPath.row].tagID
                     let tagDetailVC = TagDetailViewController()
+                    tagDetailVC.reactor = TagDetailViewrReactor(tagID: tagID)
                     tagDetailVC.modalPresentationStyle = .overFullScreen
                     object.present(tagDetailVC, animated: true)
                 }

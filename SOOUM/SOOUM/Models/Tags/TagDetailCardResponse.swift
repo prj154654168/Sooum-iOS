@@ -42,14 +42,6 @@ struct TagDetailCardResponse: Codable {
         let href: String
     }
 
-    enum Font: String, Codable {
-        case pretendard = "PRETENDARD"
-    }
-
-    enum FontSize: String, Codable {
-        case big = "BIG"
-    }
-
     // MARK: - TagFeedCardDtoListLinks
     struct TagFeedCardDtoListLinks: Codable {
         let detail: Next

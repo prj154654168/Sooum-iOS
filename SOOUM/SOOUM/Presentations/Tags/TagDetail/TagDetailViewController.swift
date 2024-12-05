@@ -46,6 +46,15 @@ class TagDetailViewController: BaseViewController, View {
         }
     }
     
+    override func bind() {
+        navBarView.backButton.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, _ in
+                object.dismiss(animated: true)
+            }
+            .disposed(by: self.disposeBag)
+    }
+    
     func bind(reactor: TagDetailViewrReactor) {
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
@@ -78,11 +87,14 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
             withIdentifier: String(describing: MainHomeViewCell.self),
             for: indexPath
         ) as! MainHomeViewCell
-//        cell.selectionStyle = .none
-//        cell.setModel(model)
-        // 카드 하단 contents 스택 순서 변경
-//        cell.changeOrderInCardContentStack(self.reactor?.currentState.selectedIndex ?? 0)
         
+        guard let reactor = self.reactor else {
+            return cell
+        }
+        if reactor.currentState.tagCards.indices.contains(indexPath.row) {
+            cell.setData(tagCard: reactor.currentState.tagCards[indexPath.row])
+        }
+
         return cell
     }
     
