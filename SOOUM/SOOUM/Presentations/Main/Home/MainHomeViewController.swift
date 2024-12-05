@@ -256,6 +256,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
+        let displayedCards = reactor.state.map(\.displayedCards).distinctUntilChanged().share()
         let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
         isProcessing
             .filter { $0 }
@@ -266,8 +267,10 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         isProcessing
             .filter { $0 == false }
-            .subscribe(with: self) { object, _ in
-                object.tableView.isHidden = false
+            .withLatestFrom(displayedCards)
+            .subscribe(with: self) { object, displayedCards in
+                object.tableView.isHidden = displayedCards.isEmpty
+                object.placeholderView.isHidden = displayedCards.isEmpty == false
             }
             .disposed(by: self.disposeBag)
         isProcessing
@@ -275,12 +278,9 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.displayedCards)
-            .distinctUntilChanged()
+        displayedCards
             .subscribe(with: self) { object, displayedCards in
                 object.displayedCards = displayedCards
-                object.placeholderView.isHidden = displayedCards.isEmpty == false
-                object.tableView.isHidden = displayedCards.isEmpty
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
