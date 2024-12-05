@@ -353,9 +353,9 @@ extension DetailViewController: UICollectionViewDataSource {
             guard let reactor = self.reactor else { return footer }
             
             footer.didTap
-                .subscribe(with: self) { object, _ in
+                .subscribe(with: self) { object, selectedId in
                     let viewController = DetailViewController()
-                    viewController.reactor = reactor.reactorForPush(footer.commentCards[indexPath.row].id)
+                    viewController.reactor = reactor.reactorForPush(selectedId)
                     object.navigationPush(viewController, animated: true, bottomBarHidden: true)
                 }
                 .disposed(by: footer.disposeBag)
