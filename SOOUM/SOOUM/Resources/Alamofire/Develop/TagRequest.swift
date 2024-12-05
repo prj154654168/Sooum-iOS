@@ -13,6 +13,7 @@ enum TagRequest: BaseRequest {
     case favorite(last: String?)
     case recommend
     case search(keyword: String)
+    case tagCard(tagID: String)
     
     var path: String {
         switch self {
@@ -26,14 +27,17 @@ enum TagRequest: BaseRequest {
         case .recommend:
             return "/tags/recommendation"
             
-        case let .search(keyword):
+        case .search:
             return "/tags/search"
+            
+        case let .tagCard(tagID):
+            return "/cards/tags/\(tagID)"
         }
     }
         
     var method: HTTPMethod {
         switch self {
-        case .favorite, .recommend, .search:
+        case .favorite, .recommend, .search, .tagCard:
             return .get
         }
     }
@@ -42,24 +46,28 @@ enum TagRequest: BaseRequest {
         switch self {
         case .favorite, .recommend:
             return [:]
+            
         case let .search(keyword):
             return [
                 "keyword": keyword,
                 "size": 20
             ]
+            
+        case .tagCard:
+            return [:]
         }
     }
     
     var encoding: ParameterEncoding {
         switch self {
-        case .favorite, .recommend, .search:
+        case .favorite, .recommend, .search, .tagCard:
             return URLEncoding.queryString
         }
     }
     
     var authorizationType: AuthorizationType {
         switch self {
-        case .favorite, .recommend, .search:
+        case .favorite, .recommend, .search, .tagCard:
             return .access
         }
     }
