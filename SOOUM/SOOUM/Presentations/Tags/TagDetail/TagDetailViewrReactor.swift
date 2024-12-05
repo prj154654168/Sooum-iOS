@@ -12,9 +12,11 @@ class TagDetailViewrReactor: Reactor {
     
     enum Action {
         case fetchTagCards
+//        case fetchTagInfo
     }
     
     enum Mutation {
+//        case tagInfo
         /// 태그 카드 fetch
         case tagCards([TagDetailCardResponse.TagFeedCard])
     }

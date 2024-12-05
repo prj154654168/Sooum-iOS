@@ -80,9 +80,6 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-//        let model = SOMCardModel(data: self.cards[indexPath.row])
-        
         let cell: MainHomeViewCell = tableView.dequeueReusableCell(
             withIdentifier: String(describing: MainHomeViewCell.self),
             for: indexPath
