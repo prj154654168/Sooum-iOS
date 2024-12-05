@@ -14,11 +14,10 @@ import RxSwift
 protocol NetworkManagerDelegate: AnyObject {
     
     func request<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T>
-    func upload<T: Decodable>(
-        _ object: T.Type,
-        request: BaseRequest,
-        multipartFormData: @escaping (MultipartFormData) -> Void
-    ) -> Observable<T>
+    func upload(
+        _ data: Data,
+        to url: URLConvertible
+    ) -> Observable<Result<Void, Error>>
     func download<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<(T, URL)>
 }
 
@@ -127,48 +126,23 @@ extension NetworkManager: NetworkManagerDelegate {
         }
     }
     
-    func upload<T: Decodable>(
-        _ object: T.Type,
-        request: BaseRequest,
-        multipartFormData: @escaping (Alamofire.MultipartFormData) -> Void
-    ) -> Observable<T> {
+    func upload(
+        _ data: Data,
+        to url: URLConvertible
+    ) -> Observable<Result<Void, Error>> {
         return Observable.create { [weak self] observer -> Disposable in
             
-            let task = self?.session.upload(multipartFormData: multipartFormData, with: request)
+            let task = self?.session.upload(data, to: url, method: .put)
                 .validate(statusCode: 200..<500)
-                .responseDecodable(
-                    of: object,
-                    decoder: self?.decoder ?? JSONDecoder()
-                ) { response in
+                .response { response in
                     switch response.result {
-                    case .success(let value):
-                        
-                        guard let httpResponse = response.response else {
-                            
-                            let error: NSError = self?.setupError("❌ No HTTPResponse") ?? .init()
-                            observer.onError(error)
-                            return
-                        }
-                        
-                        guard (200..<300).contains(httpResponse.statusCode) else {
-                            
-                            let error: NSError = self?.setupError(
-                                "❌ Unacceptable status code: \(httpResponse.statusCode)"
-                            ) ?? .init()
-                            observer.onError(error)
-                            return
-                        }
-                        
+                    case .success(_):
                         if let error = response.error {
-                            
-                            let error: NSError = self?.setupError(
-                                "❌ Alamofire errors: \(error)"
-                            ) ?? .init()
                             observer.onError(error)
+                        } else {
+                            observer.onNext(.success(()))
+                            observer.onCompleted()
                         }
-                        
-                        observer.onNext(value)
-                        observer.onCompleted()
                     case .failure(let error):
                         print("❌ Network or response format error: \(error)")
                         observer.onError(error)
