@@ -102,7 +102,7 @@ import RxSwift
          // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: MainHomeViewController.self, animated: false)
+                 object.navigationPop(to: MainTabBarController.self, animated: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -316,6 +316,15 @@ extension DetailViewController: UICollectionViewDataSource {
                         initalHeight: 178
                     )
                 }
+            }
+            .disposed(by: cell.disposeBag)
+        
+        cell.memberBackgroundButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                let memberId = object.detailCard.member.id
+                let profileViewController = ProfileViewController()
+                profileViewController.reactor = object.reactor?.reactorForProfile(memberId)
+                object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: cell.disposeBag)
         
