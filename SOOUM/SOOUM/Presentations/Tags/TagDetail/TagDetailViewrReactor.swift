@@ -26,10 +26,17 @@ class TagDetailViewrReactor: Reactor {
     
     var initialState = State()
     
+    private let tagID: String
+    
+    init(initialState: State = State(), tagID: String) {
+        self.initialState = initialState
+        self.tagID = tagID
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .fetchTagCards:
+            return fetchTagCards()
         }
     }
     
@@ -43,15 +50,15 @@ class TagDetailViewrReactor: Reactor {
     }
     
     private func fetchTagCards() -> Observable<Mutation> {
-        let request: TagRequest = .
+        let request: TagRequest = .tagCard(tagID: tagID)
         
-        return NetworkManager.shared.request(FavoriteTagsResponse.self, request: request)
+        return NetworkManager.shared.request(TagDetailCardResponse.self, request: request)
             .map { response in
-                return Mutation.favoriteTags(response.embedded.favoriteTagList)
+                return Mutation.tagCards(response.embedded.tagFeedCardDtoList)
             }
             .catch { _ in
                 print("\(type(of: self)) - \(#function) - catch")
-                return .just(.favoriteTags([]))
+                return .just(.tagCards([]))
             }
     }
     
