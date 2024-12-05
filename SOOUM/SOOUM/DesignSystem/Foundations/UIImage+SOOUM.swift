@@ -23,11 +23,15 @@ extension UIImage {
                 case alarm
                 case arrowBack
                 case arrowTop
+                case camera
                 case cancel
                 case chatBubbleGrid
+                case checkBox
+                case checkBoxOn
                 case clock
                 case comment
                 case commentAdd
+                case hamburger
                 case heart
                 case home
                 case location
@@ -67,7 +71,10 @@ extension UIImage {
         enum ImageStyle: String {
             case refreshControl
             case cancel
+            case error
             case login
+            case next
+            case sooumLogo
         }
         
         var imageName: String {
