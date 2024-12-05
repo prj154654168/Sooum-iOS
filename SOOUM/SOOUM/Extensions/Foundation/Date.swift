@@ -41,6 +41,10 @@ extension Date {
             return "\(hours)시간전".trimmingCharacters(in: .whitespaces)
         }
         
+        if minutes > 59 {
+            return "\(hours)시간전".trimmingCharacters(in: .whitespaces)
+        }
+        
         if minutes > 9 && minutes < 60 {
             return "\(minutes % 100)0분전".trimmingCharacters(in: .whitespaces)
         }
