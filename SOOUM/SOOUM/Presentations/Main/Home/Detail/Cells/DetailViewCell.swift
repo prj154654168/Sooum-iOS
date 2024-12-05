@@ -109,7 +109,11 @@ class DetailViewCell: UICollectionViewCell {
     
     var member: Member = .init() {
         didSet {
-            self.memberImageView.setImage(strUrl: self.member.profileImgUrl?.url)
+            if let strUrl = self.member.profileImgUrl?.url {
+                self.memberImageView.setImage(strUrl: strUrl)
+            } else {
+                self.memberImageView.image = .init(.image(.sooumLogo))
+            }
             self.memberLabel.text = self.member.nickname
         }
     }
