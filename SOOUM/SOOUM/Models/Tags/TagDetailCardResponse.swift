@@ -12,11 +12,11 @@ struct TagDetailCardResponse: Codable {
     
     // MARK: - Embedded
     struct Embedded: Codable {
-        let tagFeedCardDtoList: [TagFeedCardDtoList]
+        let tagFeedCardDtoList: [TagFeedCard]
     }
 
     // MARK: - TagFeedCardDtoList
-    struct TagFeedCardDtoList: Codable {
+    struct TagFeedCard: Codable {
         let id, content, createdAt: String
         let likeCnt, commentCnt: Int
         let backgroundImgURL: Next
@@ -74,5 +74,3 @@ struct TagDetailCardResponse: Codable {
         case status
     }
 }
-
-
