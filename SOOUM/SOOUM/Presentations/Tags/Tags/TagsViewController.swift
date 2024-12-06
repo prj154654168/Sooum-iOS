@@ -176,7 +176,7 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
                     tagDetailVC.modalPresentationStyle = .overFullScreen
                     object.present(tagDetailVC, animated: true)
                 }
-                .disposed(by: self.disposeBag)
+                .disposed(by: cell.disposeBag)
         }
         return cell
     }

@@ -28,7 +28,7 @@ class TagSearchViewController: BaseViewController, View {
     }
     
     let tagSearchTextFieldView = TagSearchTextFieldView(isInteractive: true)
-
+    
     lazy var tableView = UITableView().then {
         $0.separatorStyle = .none
         $0.sectionHeaderTopPadding = 0
@@ -54,7 +54,7 @@ class TagSearchViewController: BaseViewController, View {
         toolbar.items = [space, self.hideKeyboardUIBarButton]
         self.tagSearchTextFieldView.textField.inputAccessoryView = toolbar
     }
-
+    
     
     override func viewDidAppear(_ animated: Bool) {
         tagSearchTextFieldView.textField.becomeFirstResponder()
@@ -85,7 +85,6 @@ class TagSearchViewController: BaseViewController, View {
                 object.view.endEditing(true)
             }
             .disposed(by: self.disposeBag)
-
     }
     
     func bind(reactor: TagSearchViewReactor) {
@@ -146,21 +145,6 @@ class TagSearchViewController: BaseViewController, View {
             super.dismiss(animated: false, completion: completion)
         }
     }
-    
-    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
-        if flag {
-            super.present(viewControllerToPresent, animated: false) {
-                self.view.alpha = 0
-                UIView.animate(withDuration: 0.15) {
-                    self.view.alpha = 1
-                } completion: { _ in
-                    completion?()
-                }
-            }
-        } else {
-            super.present(viewControllerToPresent, animated: false, completion: completion)
-        }
-    }
 }
 
 extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
@@ -191,6 +175,17 @@ extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
         }
         if reactor.currentState.searchTags.indices.contains(indexPath.row) {
             cell.setData(searchRelatedTag: reactor.currentState.searchTags[indexPath.row])
+            cell.contentView.rx.tapGesture()
+                .when(.recognized)
+                .subscribe(with: self) { object, _ in
+                    let tagID = reactor.currentState.searchTags[indexPath.row].tagId
+                    let tagDetailVC = TagDetailViewController()
+                    tagDetailVC.reactor = TagDetailViewrReactor(tagID: tagID)
+                    tagDetailVC.modalTransitionStyle = .coverVertical
+                    tagDetailVC.modalPresentationStyle = .overFullScreen
+                    object.present(tagDetailVC, animated: true)
+                }
+                .disposed(by: cell.disposeBag)
         }
         return cell
     }

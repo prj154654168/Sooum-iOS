@@ -55,6 +55,8 @@ class RecommendTagTableViewCell: UITableViewCell {
     
     /// 검색 태그 setData
     func setData(searchRelatedTag: SearchTagsResponse.RelatedTag) {
+        self.disposeBag = DisposeBag()
+        
         self.mode = .searchTag
         self.searchTag = searchRelatedTag
         self.recommendTagView.tagNameLabel.text = searchRelatedTag.content
