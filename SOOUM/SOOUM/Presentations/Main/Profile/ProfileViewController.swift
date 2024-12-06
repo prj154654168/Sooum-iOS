@@ -149,7 +149,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         // 탭바 표시
         self.rx.viewWillAppear
             .subscribe(with: self) { object, _ in
-                object.hidesBottomBarWhenPushed = false
+                object.hidesBottomBarWhenPushed = self.reactor?.entranceType == .my ? false : true
             }
             .disposed(by: self.disposeBag)
         
@@ -275,6 +275,22 @@ extension ProfileViewController: UICollectionViewDataSource {
                 }
                 .disposed(by: cell.disposeBag)
             
+            cell.followingButton.rx.tap
+                .subscribe(with: self) { object, _ in
+                    let followViewController = FollowViewController()
+                    followViewController.reactor = self.reactor?.reactorForFollow(type: .following)
+                    object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
+                }
+                .disposed(by: cell.disposeBag)
+            
+            cell.followerButton.rx.tap
+                .subscribe(with: self) { object, _ in
+                    let followViewController = FollowViewController()
+                    followViewController.reactor = self.reactor?.reactorForFollow(type: .follower)
+                    object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
+                }
+                .disposed(by: cell.disposeBag)
+            
             return cell
         case .other:
             let cell: OtherProfileViewCell = collectionView.dequeueReusableCell(
@@ -288,6 +304,22 @@ extension ProfileViewController: UICollectionViewDataSource {
                     object.reactor?.action.onNext(.follow)
                 }
                 .disposed(by: self.disposeBag)
+            
+            cell.followingButton.rx.tap
+                .subscribe(with: self) { object, _ in
+                    let followViewController = FollowViewController()
+                    followViewController.reactor = self.reactor?.reactorForFollow(type: .following)
+                    object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
+                }
+                .disposed(by: cell.disposeBag)
+            
+            cell.followerButton.rx.tap
+                .subscribe(with: self) { object, _ in
+                    let followViewController = FollowViewController()
+                    followViewController.reactor = self.reactor?.reactorForFollow(type: .follower)
+                    object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
+                }
+                .disposed(by: cell.disposeBag)
             
             return cell
         }

@@ -185,4 +185,9 @@ extension ProfileViewReactor {
     func ractorForDetail(_ selectedId: String) -> DetailViewReactor {
         DetailViewReactor(type: .mainHome, selectedId)
     }
+    
+    func reactorForFollow(type entranceType: FollowViewReactor.EntranceType) -> FollowViewReactor {
+        let viewType: FollowViewReactor.ViewType = self.entranceType == .my ? .my : .other
+        return FollowViewReactor(type: entranceType, view: viewType, memberId: self.memberId)
+    }
 }

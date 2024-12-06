@@ -38,6 +38,12 @@ class ResignViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     private let authManager = AuthManager.shared
     
+    let banEndAt: Date?
+    
+    init(banEndAt: Date? = nil) {
+        self.banEndAt = banEndAt
+    }
+    
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case let .check(isCheck):
@@ -56,7 +62,6 @@ class ResignViewReactor: Reactor {
                     },
                 .just(.updateIsProcessing(false))
             ])
-            
         }
     }
     

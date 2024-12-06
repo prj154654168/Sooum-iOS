@@ -62,6 +62,10 @@ extension SettingsViewReactor {
     }
     
     func reactorForResign() -> ResignViewReactor {
-        ResignViewReactor.init()
+        ResignViewReactor.init(banEndAt: self.currentState.banEndAt)
+    }
+    
+    func reactorForAnnouncement() -> AnnouncementViewReactor {
+        AnnouncementViewReactor.init()
     }
 }

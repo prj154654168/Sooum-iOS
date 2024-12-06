@@ -195,13 +195,12 @@ class UpdateProfileView: UIView {
         self.cameraBackgroundView.snp.makeConstraints {
             $0.top.equalTo(self.profileImageView.snp.top).offset(100)
             $0.leading.equalTo(self.profileImageView.snp.leading).offset(95)
-            $0.size.equalTo(24)
+            $0.size.equalTo(32)
         }
         self.cameraBackgroundView.addSubview(self.cameraImageView)
         self.cameraImageView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.width.equalTo(18)
-            $0.height.equalTo(16)
+            $0.size.equalTo(24)
         }
         self.cameraBackgroundView.addSubview(self.changeProfileButton)
         self.changeProfileButton.snp.makeConstraints {
