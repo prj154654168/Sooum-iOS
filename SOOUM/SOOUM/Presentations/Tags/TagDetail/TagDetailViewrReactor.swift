@@ -45,6 +45,7 @@ class TagDetailViewrReactor: Reactor {
             
         case .fetchTagInfo:
             return self.fetchTagInfo()
+            
         case .addFavorite:
             <#code#>
         }
@@ -80,6 +81,17 @@ class TagDetailViewrReactor: Reactor {
         
         return NetworkManager.shared.request(TagInfoResponse.self, request: request)
             .map { response in
+                return Mutation.tagInfo(response)
+            }
+    }
+    
+    private func addFavorite() -> Observable<Mutation> {
+        guard let isFavorite = self.currentState.tagInfo?.isFavorite else {
+            return .empty()
+        }
+        
+        return NetworkManager.shared.request(TagInfoResponse.self, request: request)
+            .map { _ in
                 return Mutation.tagInfo(response)
             }
     }
