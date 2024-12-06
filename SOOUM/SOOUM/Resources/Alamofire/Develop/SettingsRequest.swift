@@ -17,6 +17,7 @@ enum SettingsRequest: BaseRequest {
     case transferCode(isUpdate: Bool)
     case transferMember(transferId: String, encryptedDeviceId: String)
     case resign(token: Token)
+    case announcement
     
 
     var path: String {
@@ -27,6 +28,8 @@ enum SettingsRequest: BaseRequest {
             return "/members/comment-cards"
         case .resign:
             return "/members"
+        case .announcement:
+            return "/notices"
         default:
             return "/settings/transfer"
         }
