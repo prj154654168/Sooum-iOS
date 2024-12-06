@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - TagInfoResponse
-struct TagDetailCardResponse: Codable {
+struct TagInfoResponse: Codable {
     
     // MARK: - Status
     struct Status: Codable {

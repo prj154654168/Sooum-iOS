@@ -84,4 +84,9 @@ class TagDetailNavigationBarView: UIView {
             $0.size.equalTo(40)
         }
     }
+    
+    func setData(tagInfo: TagInfoResponse) {
+        titleLabel.text = tagInfo.content
+        subtitleLabel.text = "카드 \(tagInfo.cardCnt) 개"
+    }
 }

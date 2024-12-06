@@ -59,6 +59,7 @@ class TagDetailViewController: BaseViewController, View {
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.fetchTagCards)
+                reactor.action.onNext(.fetchTagInfo)
             }
             .disposed(by: self.disposeBag)
         
@@ -67,6 +68,19 @@ class TagDetailViewController: BaseViewController, View {
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.tagInfo)
+            .subscribe(with: self) { object, tagInfo in
+                guard let tagInfo = tagInfo else {
+                    return
+                }
+                object.updateTagInfo(tagInfo: tagInfo)
+            }
+            .disposed(by: self.disposeBag)
+    }
+    
+    func updateTagInfo(tagInfo: TagInfoResponse) {
+        self.navBarView.setData(tagInfo: tagInfo)
     }
 }
 

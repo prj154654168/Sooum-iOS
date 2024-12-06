@@ -58,7 +58,7 @@ class RecommendTagTableViewCell: UITableViewCell {
         self.mode = .searchTag
         self.searchTag = searchRelatedTag
         self.recommendTagView.tagNameLabel.text = searchRelatedTag.content
-        self.recommendTagView.tagsCountLabel.text = "\(searchRelatedTag.count))"
+        self.recommendTagView.tagsCountLabel.text = "\(searchRelatedTag.count)"
     }
     
     private func setupConstraint() {
