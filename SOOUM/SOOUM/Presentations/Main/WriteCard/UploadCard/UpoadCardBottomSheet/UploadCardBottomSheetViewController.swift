@@ -127,9 +127,8 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints {
-            $0.top.equalTo(handle.snp.bottom).offset(24)
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview()
+            $0.top.equalTo(handle.snp.bottom).offset(28)
+            $0.bottom.leading.trailing.equalToSuperview()
         }
     }
     
@@ -324,21 +323,21 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch Section.allCases[indexPath.section] {
         case .imageSegment:
-            return UITableView.automaticDimension
+            return 24
 
         case .selectImage:
             switch self.imageModeSegmentState.value {
             case .defaultImage:
                 return ((UIScreen.main.bounds.width - 40) / 2) + 28
             case .myImage:
-                return UITableView.automaticDimension
+                return 140
             }
 
         case .selectFont:
-            return UITableView.automaticDimension
+            return 92
 
         case .otherSettings:
-            return 56
+            return 74
         }
     }
 }
