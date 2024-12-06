@@ -9,6 +9,6 @@ import Foundation
 
 // MARK: - AddFavoriteTagResponse
 struct AddFavoriteTagResponse: Codable {
-    let httpCode: Int
-    let httpStatus, responseMessage: String
+    let httpCode: Int?
+    let httpStatus, responseMessage: String?
 }

@@ -13,7 +13,7 @@ class TagDetailViewrReactor: Reactor {
     enum Action {
         case fetchTagCards
         case fetchTagInfo
-        case addFavorite
+        case updateFavorite
     }
     
     enum Mutation {
@@ -21,6 +21,8 @@ class TagDetailViewrReactor: Reactor {
         case tagInfo(TagInfoResponse)
         /// 태그 카드 fetch
         case tagCards([TagDetailCardResponse.TagFeedCard])
+        /// 태그 즐겨찾기 여부 변경
+        case updateFavorite(TagInfoResponse)
     }
     
     struct State {
@@ -46,8 +48,8 @@ class TagDetailViewrReactor: Reactor {
         case .fetchTagInfo:
             return self.fetchTagInfo()
             
-        case .addFavorite:
-            <#code#>
+        case .updateFavorite:
+            return updateFavorite()
         }
     }
     
@@ -59,7 +61,11 @@ class TagDetailViewrReactor: Reactor {
             
         case let .tagInfo(tagInfo):
             newState.tagInfo = tagInfo
+            
+        case let .updateFavorite(tagInfo):
+            newState.tagInfo = tagInfo
         }
+        
         return newState
     }
     
@@ -85,16 +91,22 @@ class TagDetailViewrReactor: Reactor {
             }
     }
     
-    private func addFavorite() -> Observable<Mutation> {
-        guard let isFavorite = self.currentState.tagInfo?.isFavorite else {
+    private func updateFavorite() -> Observable<Mutation> {
+        guard let tagInfo = self.currentState.tagInfo else {
             return .empty()
         }
         
-        return NetworkManager.shared.request(TagInfoResponse.self, request: request)
+        let request: TagRequest = tagInfo.isFavorite ? .deleteFavorite(tagID: tagID) : .addFavorite(tagID: tagID)
+
+        return NetworkManager.shared.request(AddFavoriteTagResponse.self, request: request)
             .map { _ in
-                return Mutation.tagInfo(response)
+                let newTagInfo = TagInfoResponse(
+                    content: tagInfo.content,
+                    cardCnt: tagInfo.cardCnt,
+                    isFavorite: !tagInfo.isFavorite,
+                    status: tagInfo.status
+                )
+                return Mutation.updateFavorite(newTagInfo)
             }
     }
-    
-    
 }

@@ -65,7 +65,7 @@ class TagDetailViewController: BaseViewController, View {
         
         self.navBarView.favoriteButton.rx.tap
             .subscribe(with: self) { object, _ in
-                reactor.action.onNext(.addFavorite)
+                reactor.action.onNext(.updateFavorite)
             }
             .disposed(by: self.disposeBag)
         
