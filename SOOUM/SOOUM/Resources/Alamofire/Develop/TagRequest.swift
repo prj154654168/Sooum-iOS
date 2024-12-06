@@ -10,12 +10,15 @@ import Foundation
 import Alamofire
 
 enum TagRequest: BaseRequest {
+    
     case favorite(last: String?)
     case recommend
     case search(keyword: String)
     case tagInfo(tagID: String)
     case tagCard(tagID: String)
-    
+    case addFavorite(tagID: String)
+    case deleteFavorite(tagID: String)
+
     var path: String {
         switch self {
         case let .favorite(last):
@@ -36,6 +39,12 @@ enum TagRequest: BaseRequest {
             
         case let .tagCard(tagID):
             return "/cards/tags/\(tagID)"
+            
+        case let .addFavorite(tagID):
+            return "/tags/\(tagID)/favorite"
+
+        case let .deleteFavorite(tagID):
+            return "/tags/\(tagID)/favorite"
         }
     }
         
@@ -43,6 +52,12 @@ enum TagRequest: BaseRequest {
         switch self {
         case .favorite, .recommend, .search, .tagInfo, .tagCard:
             return .get
+            
+        case .addFavorite(tagID: let tagID):
+            return .post
+            
+        case .deleteFavorite(tagID: let tagID):
+            return .delete
         }
     }
     
@@ -57,21 +72,21 @@ enum TagRequest: BaseRequest {
                 "size": 20
             ]
             
-        case .tagInfo, .tagCard:
+        case .tagInfo, .tagCard, .addFavorite, .deleteFavorite:
             return [:]
         }
     }
     
     var encoding: ParameterEncoding {
         switch self {
-        case .favorite, .recommend, .search, .tagInfo, .tagCard:
+        case .favorite, .recommend, .search, .tagInfo, .tagCard, .addFavorite, .deleteFavorite:
             return URLEncoding.queryString
         }
     }
     
     var authorizationType: AuthorizationType {
         switch self {
-        case .favorite, .recommend, .search, .tagInfo, .tagCard:
+        case .favorite, .recommend, .search, .tagInfo, .tagCard, .addFavorite, .deleteFavorite:
             return .access
         }
     }

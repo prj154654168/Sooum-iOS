@@ -13,6 +13,7 @@ class TagDetailViewrReactor: Reactor {
     enum Action {
         case fetchTagCards
         case fetchTagInfo
+        case addFavorite
     }
     
     enum Mutation {
@@ -44,6 +45,8 @@ class TagDetailViewrReactor: Reactor {
             
         case .fetchTagInfo:
             return self.fetchTagInfo()
+        case .addFavorite:
+            <#code#>
         }
     }
     
@@ -80,4 +83,6 @@ class TagDetailViewrReactor: Reactor {
                 return Mutation.tagInfo(response)
             }
     }
+    
+    
 }
