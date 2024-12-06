@@ -63,6 +63,12 @@ class TagDetailViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
         
+        self.navBarView.favoriteButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                <#code#>
+            }
+            .disposed(by: self.disposeBag)
+        
         reactor.state.map(\.tagCards)
             .subscribe(with: self) { object, cards in
                 object.tableView.reloadData()

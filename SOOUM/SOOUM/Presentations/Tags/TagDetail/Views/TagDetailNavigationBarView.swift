@@ -88,5 +88,7 @@ class TagDetailNavigationBarView: UIView {
     func setData(tagInfo: TagInfoResponse) {
         titleLabel.text = tagInfo.content
         subtitleLabel.text = "카드 \(tagInfo.cardCnt) 개"
+        let favoriteImage: UIImage = tagInfo.isFavorite ? .starFilled : .starOutlined
+        favoriteButton.setImage(favoriteImage, for: .normal)
     }
 }
