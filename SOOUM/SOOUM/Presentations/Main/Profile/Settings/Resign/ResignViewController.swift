@@ -19,35 +19,57 @@ class ResignViewController: BaseNavigationViewController, View {
 
     enum Text {
         static let navigationTitle: String = "계정 탈퇴"
-        static let resignTitle: String = "탈퇴하기 전\n몇가지 안내가 있어요"
-        static let firstResignGuide: String = "• 지금까지 작성한 카드와 정보들이 모두 삭제될 예정이에요"
-        static let secondResignGuide: String = "• 재가입은 탈퇴 일자를 기준으로 일주일이후 가능해요"
+        static let firstResignTitle: String = "탈퇴하기 전"
+        static let secondResignTitle: String = "몇가지 안내가 있어요"
+        static let dot: String = "•"
+        static let firstResignGuide: String = "지금까지 작성한 카드와 정보들이 모두 삭제될 예정이에요"
+        static let secondResignGuide: String = "재가입은 탈퇴 일자를 기준으로 일주일이후 가능해요"
+        static let secondResignGuideWithBanFrom: String = "계정이 정지 상태 이므로, 정지 해지 날짜인"
+        static let secondResignGuideWithBanTo: String = "까지 재가입이 불가능해요"
         static let checkResignGuide: String = "위 안내사항을 모두 확인했습니다"
         static let resignButtonTitle: String = "탈퇴하기"
     }
     
-    private let resignTitleLabel = UILabel().then {
-        $0.text = Text.resignTitle
+    private let firstResignTitleLabel = UILabel().then {
+        $0.text = Text.firstResignTitle
         $0.textColor = .som.gray800
-        $0.textAlignment = .center
         $0.typography = .som.head2WithBold
-        $0.numberOfLines = 0
     }
     
+    private let secondResignTitleLabel = UILabel().then {
+        $0.text = Text.secondResignTitle
+        $0.textColor = .som.gray800
+        $0.typography = .som.head2WithBold
+    }
+    
+    private let firstDotLabel = UILabel().then {
+        $0.text = Text.dot
+        $0.textColor = .som.gray600
+        $0.textAlignment = .center
+        $0.typography = .som.body2WithRegular
+    }
     private let firstResignGuideLabel = UILabel().then {
         $0.text = Text.firstResignGuide
         $0.textColor = .som.gray600
         $0.textAlignment = .left
         $0.typography = .som.body2WithRegular
-        $0.numberOfLines = 0
+        $0.numberOfLines = 2
+        $0.lineBreakMode = .byWordWrapping
     }
     
+    private let secondDotLabel = UILabel().then {
+        $0.text = Text.dot
+        $0.textColor = .som.gray600
+        $0.textAlignment = .center
+        $0.typography = .som.body2WithRegular
+    }
     private let secondResignGuideLabel = UILabel().then {
         $0.text = Text.secondResignGuide
         $0.textColor = .som.gray600
         $0.textAlignment = .left
         $0.typography = .som.body2WithRegular
-        $0.numberOfLines = 0
+        $0.numberOfLines = 2
+        $0.lineBreakMode = .byWordWrapping
     }
     
     private let checkBoxButton = UIButton()
@@ -94,9 +116,14 @@ class ResignViewController: BaseNavigationViewController, View {
     override func setupConstraints() {
         super.setupConstraints()
         
-        self.view.addSubview(self.resignTitleLabel)
-        self.resignTitleLabel.snp.makeConstraints {
+        self.view.addSubview(self.firstResignTitleLabel)
+        self.firstResignTitleLabel.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(137)
+            $0.centerX.equalToSuperview()
+        }
+        self.view.addSubview(self.secondResignTitleLabel)
+        self.secondResignTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(self.firstResignTitleLabel.snp.bottom)
             $0.centerX.equalToSuperview()
         }
         
@@ -107,22 +134,35 @@ class ResignViewController: BaseNavigationViewController, View {
         }
         self.view.addSubview(resignGuideBackgroundView)
         resignGuideBackgroundView.snp.makeConstraints {
-            $0.top.equalTo(self.resignTitleLabel.snp.bottom).offset(24)
+            $0.top.equalTo(self.secondResignTitleLabel.snp.bottom).offset(24)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
         }
         
+        resignGuideBackgroundView.addSubview(self.firstDotLabel)
+        self.firstDotLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(20)
+            $0.leading.equalToSuperview().offset(19)
+            $0.width.equalTo(8)
+        }
         resignGuideBackgroundView.addSubview(self.firstResignGuideLabel)
         self.firstResignGuideLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(20)
-            $0.leading.equalToSuperview().offset(19)
+            $0.leading.equalTo(self.firstDotLabel.snp.trailing).offset(2)
             $0.trailing.equalToSuperview().offset(-19)
+        }
+        
+        resignGuideBackgroundView.addSubview(self.secondDotLabel)
+        self.secondDotLabel.snp.makeConstraints {
+            $0.top.equalTo(self.firstDotLabel.snp.bottom)
+            $0.leading.equalToSuperview().offset(19)
+            $0.width.equalTo(8)
         }
         resignGuideBackgroundView.addSubview(self.secondResignGuideLabel)
         self.secondResignGuideLabel.snp.makeConstraints {
             $0.top.equalTo(self.firstResignGuideLabel.snp.bottom)
             $0.bottom.equalToSuperview().offset(-20)
-            $0.leading.equalToSuperview().offset(19)
+            $0.leading.equalTo(self.secondDotLabel.snp.trailing).offset(2)
             $0.trailing.equalToSuperview().offset(-19)
         }
         
@@ -159,6 +199,10 @@ class ResignViewController: BaseNavigationViewController, View {
     // MARK: ReactorKit - bind
     
     func bind(reactor: ResignViewReactor) {
+        
+        if let banEndAt = reactor.banEndAt {
+            self.secondResignGuideLabel.text = "\(Text.secondResignGuideWithBanFrom) \(banEndAt.banEndFormatted)\(Text.secondResignGuideWithBanTo)"
+        }
         
         // Action
         self.checkBoxButton.rx.throttleTap(.seconds(1))
