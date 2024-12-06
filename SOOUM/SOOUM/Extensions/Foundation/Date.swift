@@ -10,6 +10,13 @@ import Foundation
 
 extension Date {
     
+    init?(from string: String, format: String = "yyyy-MM-dd") {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        guard let toDate = formatter.date(from: string) else { return nil }
+        self = toDate
+    }
+    
     func toString(_ format: String) -> String {
         let formatter = DateFormatter()
         formatter.locale = .Korea
@@ -61,7 +68,11 @@ extension Date {
     }
     
     var banEndFormatted: String {
-        return self.toString("yyyy년 mm월 dd일")
+        return self.toString("yyyy년 MM월 dd일")
+    }
+    
+    var announcementFormatted: String {
+        return self.toString("yyyy. MM. dd")
     }
 }
 

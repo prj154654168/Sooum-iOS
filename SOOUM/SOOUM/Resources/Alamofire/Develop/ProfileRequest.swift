@@ -17,8 +17,10 @@ enum ProfileRequest: BaseRequest {
     case updateProfile(nickname: String, profileImg: String?)
     case myCards(lastId: String?)
     case otherCards(memberId: String, lastId: String?)
-    case following(memberId: String)
-    case follower(memberId: String)
+    case myFollowing(lastId: String?)
+    case otherFollowing(memberId: String, lastId: String?)
+    case myFollower(lastId: String?)
+    case otherFollower(memberId: String, lastId: String?)
     case requestFollow(memberId: String)
     case cancelFollow(memberId: String)
     
@@ -35,9 +37,13 @@ enum ProfileRequest: BaseRequest {
             return "/members/feed-cards"
         case let .otherCards(memberId, _):
             return "/members/\(memberId)/feed-cards"
-        case let .following(memberId):
+        case .myFollowing:
+            return "/profiles/following"
+        case let .otherFollowing(memberId, _):
             return "/profiles/\(memberId)/following"
-        case let .follower(memberId):
+        case .myFollower:
+            return "/profiles/follower"
+        case let .otherFollower(memberId, _):
             return "/profiles/\(memberId)/follower"
         case .requestFollow:
             return "/followers"
@@ -74,6 +80,30 @@ enum ProfileRequest: BaseRequest {
                 return [:]
             }
         case let .otherCards(_, lastId):
+            if let lastId = lastId {
+                return ["lastId": lastId]
+            } else {
+                return [:]
+            }
+        case let .myFollowing(lastId):
+            if let lastId = lastId {
+                return ["lastId": lastId]
+            } else {
+                return [:]
+            }
+        case let .otherFollowing(_, lastId):
+            if let lastId = lastId {
+                return ["lastId": lastId]
+            } else {
+                return [:]
+            }
+        case let .myFollower(lastId):
+            if let lastId = lastId {
+                return ["lastId": lastId]
+            } else {
+                return [:]
+            }
+        case let .otherFollower(_, lastId):
             if let lastId = lastId {
                 return ["lastId": lastId]
             } else {

@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 import Then
 
+import RxSwift
+
 
 class OtherProfileViewCell: UICollectionViewCell {
     
@@ -39,6 +41,7 @@ class OtherProfileViewCell: UICollectionViewCell {
         $0.typography = .som.caption
     }
     
+    let followingButton = UIButton()
     private let totalFollowingCountLabel = UILabel().then {
         $0.textColor = .som.gray700
         $0.typography = .som.head2WithBold
@@ -49,6 +52,7 @@ class OtherProfileViewCell: UICollectionViewCell {
         $0.typography = .som.caption
     }
     
+    let followerButton = UIButton()
     private let totalFollowerCountLabel = UILabel().then {
         $0.textColor = .som.gray700
         $0.typography = .som.head2WithBold
@@ -85,6 +89,8 @@ class OtherProfileViewCell: UICollectionViewCell {
         $0.clipsToBounds = true
     }
     
+    var disposeBag = DisposeBag()
+    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
@@ -94,6 +100,17 @@ class OtherProfileViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.profileImageView.image = nil
+        self.totalCardCountLabel.text = nil
+        self.totalFollowingCountLabel.text = nil
+        self.totalFollowerCountLabel.text = nil
+        
+        self.disposeBag = DisposeBag()
     }
     
     private func setupConstraints() {
@@ -132,6 +149,10 @@ class OtherProfileViewCell: UICollectionViewCell {
             $0.width.equalTo(48)
             $0.height.equalTo(42)
         }
+        followingContainer.addSubview(self.followingButton)
+        self.followingButton.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
         
         let followerContainer = UIStackView(arrangedSubviews: [
             self.totalFollowerCountLabel,
@@ -145,6 +166,10 @@ class OtherProfileViewCell: UICollectionViewCell {
         followerContainer.snp.makeConstraints {
             $0.width.equalTo(48)
             $0.height.equalTo(42)
+        }
+        followerContainer.addSubview(self.followerButton)
+        self.followerButton.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
         let totalContainer = UIStackView(arrangedSubviews: [

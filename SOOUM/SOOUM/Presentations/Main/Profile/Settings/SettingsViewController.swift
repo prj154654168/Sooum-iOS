@@ -193,6 +193,14 @@ class SettingsViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
+        self.announcementCellView.rx.didSelect
+            .subscribe(with: self) { object, _ in
+                let announcementViewControler = AnnouncementViewControler()
+                announcementViewControler.reactor = reactor.reactorForAnnouncement()
+                object.navigationPush(announcementViewControler, animated: true, bottomBarHidden: true)
+            }
+            .disposed(by: self.disposeBag)
+        
         // State
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()

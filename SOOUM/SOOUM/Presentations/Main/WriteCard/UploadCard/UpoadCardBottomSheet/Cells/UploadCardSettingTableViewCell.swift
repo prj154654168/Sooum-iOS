@@ -7,6 +7,9 @@
 
 import UIKit
 
+import SnapKit
+import Then
+
 import ReactorKit
 import RxCocoa
 import RxGesture
@@ -29,7 +32,9 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     
     let titleStack = UIStackView().then {
         $0.axis = .vertical
-        $0.spacing = 6
+        $0.alignment = .leading
+        $0.distribution = .equalSpacing
+        $0.spacing = 2
     }
     
     let titleLabel = UILabel().then {
@@ -96,8 +101,7 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     private func setupConstraint() {
         contentView.addSubview(toggleView)
         toggleView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
-            $0.bottom.equalToSuperview().offset(-4)
+            $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().offset(-16)
             $0.height.equalTo(32)
             $0.width.equalTo(48)
@@ -105,17 +109,15 @@ class UploadCardSettingTableViewCell: UITableViewCell {
         
         contentView.addSubview(titleStackContainerView)
         titleStackContainerView.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(20)
-            $0.top.equalToSuperview().offset(20)
-            $0.height.equalTo(36)
-            $0.bottom.equalToSuperview()
+            $0.trailing.equalTo(self.toggleView.snp.leading).offset(-18)
         }
         
         titleStackContainerView.addSubview(titleStack)
         titleStack.addArrangedSubviews(titleLabel, descLabel)
         titleStack.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.trailing.equalToSuperview()
+            $0.edges.equalToSuperview()
         }
     }
 }

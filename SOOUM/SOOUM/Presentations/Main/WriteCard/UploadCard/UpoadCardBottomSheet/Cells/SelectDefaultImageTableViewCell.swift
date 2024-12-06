@@ -7,6 +7,9 @@
 
 import UIKit
 
+import SnapKit
+import Then
+
 import RxCocoa
 import RxGesture
 import RxSwift
@@ -77,10 +80,10 @@ class SelectDefaultImageTableViewCell: UITableViewCell {
         
         // AutoLayout 설정
         imageCollectionView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(10)
+            make.bottom.equalToSuperview().offset(-18)
             make.leading.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(8)
             make.trailing.equalToSuperview().offset(-20)
-            make.bottom.equalToSuperview().offset(-20)
             let numberOfRows: CGFloat = 2    // 두 줄
             let cellHeight: CGFloat = (UIScreen.main.bounds.width - 40) / 4  // 가로 4개로 나눈 셀의 높이 (셀 높이 = 셀 너비)
             let totalHeight = cellHeight * numberOfRows

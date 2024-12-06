@@ -84,8 +84,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     private var keyboardHeight: CGFloat = 0
     
-    private let initalHeight: CGFloat = 34 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 30
-    private var maxHeight: CGFloat = 34 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 96 + 177 + 50
+    private let initalHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28
+    private var maxHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + (74 * 3)
     
     
     // MARK: - Life Cycles
@@ -145,9 +145,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
     }
     
-    // 임시 방편
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         
         self.dismiss(animated: true)
     }
@@ -158,7 +157,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     func bind(reactor: WriteCardViewReactor) {
         
         if reactor.requestType == .comment {
-            self.maxHeight = 34 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 96 + 52 + 60
+            self.maxHeight = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + 74
         }
         
         // Life Cycle

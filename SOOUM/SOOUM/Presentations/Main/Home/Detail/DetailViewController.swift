@@ -126,9 +126,17 @@ import RxSwift
      func bind(reactor: DetailViewReactor) {
          
          // Action
-         self.rx.viewWillAppear
+         let viewWillAppear = self.rx.viewWillAppear.share()
+         viewWillAppear
              .map { _ in Reactor.Action.landing }
              .bind(to: reactor.action)
+             .disposed(by: self.disposeBag)
+         
+         // 탭바 숨김
+         viewWillAppear
+             .subscribe(with: self) { object, _ in
+                 object.hidesBottomBarWhenPushed = true
+             }
              .disposed(by: self.disposeBag)
          
          self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
