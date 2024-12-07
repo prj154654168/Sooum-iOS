@@ -18,6 +18,7 @@ class MainHomeViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        self.selectionStyle = .none
         self.backgroundColor = .clear
         self.contentView.clipsToBounds = true
         self.setupConstraints()
@@ -45,6 +46,10 @@ class MainHomeViewCell: UITableViewCell {
     
     func setModel(_ model: SOMCardModel) {
         self.cardView.setModel(model: model)
+    }
+    
+    func setData(tagCard: TagDetailCardResponse.TagFeedCard) {
+        self.cardView.setData(tagCard: tagCard)
     }
     
     /// 컨텐츠 모드에 따라 정보 스택뷰 순서 변경

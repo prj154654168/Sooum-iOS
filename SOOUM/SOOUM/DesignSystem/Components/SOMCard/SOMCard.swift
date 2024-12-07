@@ -404,6 +404,35 @@ class SOMCard: UIView {
         initUI()
     }
     
+    
+    func setData(tagCard: TagDetailCardResponse.TagFeedCard) {
+        // 카드 배경 이미지
+        rootContainerImageView.setImage(strUrl: tagCard.backgroundImgURL.href)
+        // 카드 본문
+        cardTextContentLabel.text = tagCard.content
+        
+        // 하단 정보
+        likeImageView.image = tagCard.isLiked ?
+            .init(.icon(.filled(.heart))) :
+            .init(.icon(.outlined(.heart)))
+        likeImageView.tintColor = tagCard.isLiked ? .som.p300 : .som.white
+
+        commentImageView.image = tagCard.isCommentWritten ?
+            .init(.icon(.filled(.comment))) :
+            .init(.icon(.outlined(.comment)))
+        commentImageView.tintColor = tagCard.isCommentWritten ? .som.p300 : .som.white
+        
+        timeLabel.text = tagCard.createdAt.infoReadableTimeTakenFromThis(to: Date())
+        distanceInfoStackView.isHidden = tagCard.distance == nil
+        distanceLabel.text = (tagCard.distance ?? 0).infoReadableDistanceRangeFromThis()
+        likeLabel.text = "\(tagCard.likeCnt)"
+        likeLabel.textColor = tagCard.isLiked ? .som.p300 : .som.white
+        commentLabel.text = "\(tagCard.commentCnt)"
+        commentLabel.textColor = tagCard.isCommentWritten ? .som.p300 : .som.white
+
+        cardPungTimeBackgroundView.isHidden = true
+    }
+    
     /// 카드 모드에 따라 스택뷰 순서 변경
     func changeOrderInCardContentStack(_ selectedIndex: Int) {
         cardContentStackView.subviews.forEach { $0.removeFromSuperview() }
