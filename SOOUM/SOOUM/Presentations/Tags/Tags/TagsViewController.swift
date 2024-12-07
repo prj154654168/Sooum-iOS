@@ -55,9 +55,13 @@ class TagsViewController: BaseViewController, View {
             .subscribe(with: self) { object, _ in
                 let searchVC = TagSearchViewController()
                 searchVC.reactor = TagSearchViewReactor()
-                searchVC.modalTransitionStyle = .crossDissolve
-                searchVC.modalPresentationStyle = .overFullScreen
-                object.present(searchVC, animated: false)
+                let navigationController = UINavigationController(
+                    rootViewController: searchVC
+                )
+                navigationController.modalTransitionStyle = .crossDissolve
+                navigationController.modalPresentationStyle = .overFullScreen
+                navigationController.navigationBar.isHidden = true
+                object.present(navigationController, animated: false)
             }
             .disposed(by: self.disposeBag)
     }

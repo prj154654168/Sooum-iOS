@@ -75,7 +75,7 @@ class TagSearchViewController: BaseViewController, View {
                     }
                     object.view.layoutIfNeeded()
                 } completion: { _ in
-                    object.dismiss(animated: true)
+                    object.pop()
                 }
             }
             .disposed(by: self.disposeBag)
@@ -129,21 +129,17 @@ class TagSearchViewController: BaseViewController, View {
         }
     }
     
-    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
-        if flag {
-            UIView.animate(
-                withDuration: 0.15,
-                delay: 0,
-                animations: {
-                    self.view.alpha = 0
-                },
-                completion: { _ in
-                    super.dismiss(animated: false, completion: completion)
-                }
-            )
-        } else {
-            super.dismiss(animated: false, completion: completion)
-        }
+    func pop() {
+        UIView.animate(
+            withDuration: 0.15,
+            delay: 0,
+            animations: {
+                self.view.alpha = 0
+            },
+            completion: { _ in
+                self.navigationController?.dismiss(animated: false)
+            }
+        )
     }
 }
 
@@ -181,9 +177,7 @@ extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
                     let tagID = reactor.currentState.searchTags[indexPath.row].tagId
                     let tagDetailVC = TagDetailViewController()
                     tagDetailVC.reactor = TagDetailViewrReactor(tagID: tagID)
-                    tagDetailVC.modalTransitionStyle = .coverVertical
-                    tagDetailVC.modalPresentationStyle = .overFullScreen
-                    object.present(tagDetailVC, animated: true)
+                    object.navigationController?.pushViewController(tagDetailVC, animated: true)
                 }
                 .disposed(by: cell.disposeBag)
         }
