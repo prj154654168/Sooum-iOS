@@ -7,7 +7,13 @@
 
 import UIKit
 
+import RxCocoa
+import RxGesture
+import RxSwift
+
 class TagPreviewCardCollectionViewCell: UICollectionViewCell {
+    
+    var disposeBag = DisposeBag()
     
     let tagPreviewCardView = TagPreviewCardView()
     
@@ -19,6 +25,15 @@ class TagPreviewCardCollectionViewCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        self.disposeBag = DisposeBag()
+    }
+    
+    func setData(previewCard: FavoriteTagsResponse.PreviewCard) {
+        tagPreviewCardView.rootContainerImageView.setImage(strUrl: previewCard.backgroundImgURL.href)
+        tagPreviewCardView.cardTextContentLabel.text = previewCard.content
     }
     
     private func setupConstraint() {

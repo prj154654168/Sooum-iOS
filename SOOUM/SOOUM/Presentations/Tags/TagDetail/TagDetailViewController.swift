@@ -50,7 +50,7 @@ class TagDetailViewController: BaseViewController, View {
         navBarView.backButton.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
-                object.dismiss(animated: true)
+                object.navigationController?.popViewController(animated: true)
             }
             .disposed(by: self.disposeBag)
     }
@@ -105,13 +105,18 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
             for: indexPath
         ) as! MainHomeViewCell
         
-        guard let reactor = self.reactor else {
+        guard let reactor = self.reactor, reactor.currentState.tagCards.indices.contains(indexPath.row) else {
             return cell
         }
-        if reactor.currentState.tagCards.indices.contains(indexPath.row) {
-            cell.setData(tagCard: reactor.currentState.tagCards[indexPath.row])
-        }
-
+        cell.setData(tagCard: reactor.currentState.tagCards[indexPath.row])
+        cell.contentView.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, _ in
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = DetailViewReactor([reactor.currentState.tagCards[indexPath.row].id])
+                self.navigationPush(detailViewController, animated: true)
+            }
+            .disposed(by: cell.cardView.disposeBag)
         return cell
     }
     

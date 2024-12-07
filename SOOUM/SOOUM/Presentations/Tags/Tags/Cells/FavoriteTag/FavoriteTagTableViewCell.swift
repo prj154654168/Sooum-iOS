@@ -14,7 +14,7 @@ import RxSwift
 final class FavoriteTagTableViewCell: UITableViewCell {
         
     var favoriteTag: FavoriteTagsResponse.FavoriteTagList? = nil
-    
+    let previewCardTapped = PublishSubject<String>()
     var disposeBag = DisposeBag()
     
     lazy var favoriteTagView = FavoriteTagView().then {
@@ -66,9 +66,20 @@ extension FavoriteTagTableViewCell: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(
-            describing: TagPreviewCardCollectionViewCell.self
-        ), for: indexPath)
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: String(describing: TagPreviewCardCollectionViewCell.self),
+            for: indexPath
+        ) as! TagPreviewCardCollectionViewCell
+        guard let previewCards = favoriteTag?.previewCards, previewCards.indices.contains(indexPath.row) else {
+            return cell
+        }
+        cell.setData(previewCard: previewCards[indexPath.row])
+        cell.contentView.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, _ in
+                object.previewCardTapped.onNext(previewCards[indexPath.row].id)
+            }
+            .disposed(by: cell.disposeBag)
         return cell
     }
     

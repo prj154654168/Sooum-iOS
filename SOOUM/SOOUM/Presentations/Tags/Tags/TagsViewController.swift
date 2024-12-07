@@ -151,14 +151,22 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         }
         if reactor.currentState.favoriteTags.indices.contains(indexPath.row) {
             cell.setData(favoriteTag: reactor.currentState.favoriteTags[indexPath.row])
+            
             cell.favoriteTagView.moreButtonStackView.rx.tapGesture()
                 .when(.recognized)
                 .subscribe(with: self) { object, _ in
                     let tagID = reactor.currentState.recommendTags[indexPath.row].tagID
                     let tagDetailVC = TagDetailViewController()
                     tagDetailVC.reactor = TagDetailViewrReactor(tagID: tagID)
-                    tagDetailVC.modalPresentationStyle = .overFullScreen
-                    object.present(tagDetailVC, animated: true)
+                    object.navigationController?.pushViewController(tagDetailVC, animated: true)
+                }
+                .disposed(by: cell.disposeBag)
+            
+            cell.previewCardTapped
+                .subscribe(with: self) { object, previewCardID in
+                    let detailViewController = DetailViewController()
+                    detailViewController.reactor = DetailViewReactor([previewCardID])
+                    self.navigationPush(detailViewController, animated: true)
                 }
                 .disposed(by: cell.disposeBag)
         }
@@ -183,8 +191,7 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
                     let tagID = reactor.currentState.recommendTags[indexPath.row].tagID
                     let tagDetailVC = TagDetailViewController()
                     tagDetailVC.reactor = TagDetailViewrReactor(tagID: tagID)
-                    tagDetailVC.modalPresentationStyle = .overFullScreen
-                    object.present(tagDetailVC, animated: true)
+                    object.navigationController?.pushViewController(tagDetailVC, animated: true)
                 }
                 .disposed(by: cell.disposeBag)
         }
