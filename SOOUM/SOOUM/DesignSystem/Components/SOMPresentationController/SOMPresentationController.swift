@@ -38,15 +38,8 @@ class SOMPresentationController: UIPresentationController {
         return view
     }()
     
-    /*
-        isHandleBar 는 bottomSheet 의 높이가 동적인 여부
-        isScrollable 은 bottomSheet 의 제스처가 pan 인지 tap 인지 여부,
-        isScrollable == true 일 때, pan
-        isScrollable == false 일 떼, tap
-     */
     private var dismissWhenScreenDidTap: Bool
     private var isHandleBar: Bool
-    private var isScrollable: Bool
     private var neverDismiss: Bool
     
     private var maxHeight: CGFloat
@@ -63,7 +56,6 @@ class SOMPresentationController: UIPresentationController {
         presenting presentingViewController: UIViewController?,
         dismissWhenScreenDidTap: Bool,
         isHandleBar: Bool,
-        isScrollable: Bool,
         neverDismiss: Bool,
         maxHeight: CGFloat?,
         initalHeight: CGFloat,
@@ -71,7 +63,6 @@ class SOMPresentationController: UIPresentationController {
     ) {
         self.dismissWhenScreenDidTap = dismissWhenScreenDidTap
         self.isHandleBar = isHandleBar
-        self.isScrollable = isScrollable
         self.neverDismiss = neverDismiss
         
         self.maxHeight = maxHeight ?? initalHeight
@@ -88,13 +79,10 @@ class SOMPresentationController: UIPresentationController {
         )
         
         if isHandleBar {
-            if isScrollable {
-                let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handleGesture))
-                self.handleBar.addGestureRecognizer(panGesture)
-            } else {
-                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleBarDidTap))
-                self.handleBar.addGestureRecognizer(tapGesture)
-            }
+            let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.handleGesture))
+            presentedViewController.view.addGestureRecognizer(panGesture)
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleBarDidTap))
+            self.handleBar.addGestureRecognizer(tapGesture)
         }
         
         if dismissWhenScreenDidTap {

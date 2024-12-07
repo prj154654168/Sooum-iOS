@@ -44,5 +44,3 @@ extension DistanceCardResponse: EmptyResponse {
         DistanceCardResponse.init()
     }
 }
-
-

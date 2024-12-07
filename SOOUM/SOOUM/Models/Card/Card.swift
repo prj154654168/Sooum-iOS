@@ -47,8 +47,9 @@ struct Card: CardProtocol {
 }
 
 extension Card {
+    // Card의 == 조건 id 및 좋아요 수, 코멘트 수
     static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id && lhs.likeCnt == rhs.likeCnt && lhs.isCommentWritten == rhs.isCommentWritten
     }
 }
 

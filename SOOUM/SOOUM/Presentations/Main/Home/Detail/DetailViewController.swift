@@ -20,18 +20,11 @@ import RxSwift
      enum Text {
          static let moreBottomSheetEntryName: String = "moreButtonBottomSheetViewController"
          
-         static let dialogTitle: String = "카드를 삭제할까요?"
-         static let dialogSubTitle: String = "삭제한 카드는 복구할 수 없어요"
-     }
-    
-     let titleImageView = UIImageView().then {
-         $0.backgroundColor = .clear
-     }
-     
-     let titleLabel = UILabel().then {
-         $0.textColor = .som.black
-         $0.textAlignment = .center
-         $0.typography = .som.body1WithBold
+         static let deleteDialogTitle: String = "카드를 삭제할까요?"
+         static let deleteDialogSubTitle: String = "삭제한 카드는 복구할 수 없어요"
+         
+         static let blockDialogTitle: String = "해당 사용자를 차단할까요?"
+         static let blockDialogSubTitle: String = "해당 사용자의 모든 카드를 모두 볼 수 없어요"
      }
      
      let rightHomeButton = UIButton().then {
@@ -50,10 +43,12 @@ import RxSwift
         frame: .zero,
         collectionViewLayout: self.flowLayout
      ).then {
-         $0.alwaysBounceVertical = true
          $0.backgroundColor = .som.white
+         
+         $0.alwaysBounceVertical = true
          $0.showsVerticalScrollIndicator = false
          $0.showsHorizontalScrollIndicator = false
+         
          $0.refreshControl = SOMRefreshControl()
          
          $0.register(DetailViewCell.self, forCellWithReuseIdentifier: "cell")
@@ -73,10 +68,6 @@ import RxSwift
          58
      }
      
-     override var navigationPopGestureEnabled: Bool {
-         false
-     }
-     
      var detailCard = DetailCard()
      var prevCard = PrevCard()
      
@@ -91,20 +82,6 @@ import RxSwift
      override func setupNaviBar() {
          super.setupNaviBar()
          
-         let titleContainer = UIStackView(arrangedSubviews: [
-            self.titleImageView,
-            self.titleLabel
-         ]).then {
-             $0.axis = .horizontal
-             $0.alignment = .center
-             $0.distribution = .equalSpacing
-             $0.spacing = 8
-         }
-         
-         self.navigationBar.titleView = titleContainer
-         self.navigationBar.titlePosition = .left
-         
-         self.navigationBar.isHideBackButton = true
          self.navigationBar.setRightButtons([self.rightHomeButton])
      }
      
@@ -125,20 +102,19 @@ import RxSwift
          // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: MainHomeViewController.self, animated: false)
+                 object.navigationPop(to: MainTabBarController.self, animated: false)
              }
              .disposed(by: self.disposeBag)
          
-         /// navigationPush
+         /// 신고하기 화면으로 전환
          self.moreButtonBottomSheetViewController.reportLabelButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 if let reactor = object.reactor,
-                    let lastId = reactor.selectedCardIds.last {
+                 if let reactor = object.reactor {
                      
                      object.dismissBottomSheet()
                      let viewController = ReportViewController()
-                     viewController.reactor = reactor.reactorForReport(lastId)
-                     object.navigationPush(viewController, animated: true)
+                     viewController.reactor = reactor.reactorForReport()
+                     object.navigationPush(viewController, animated: true, bottomBarHidden: true)
                  }
              }
              .disposed(by: self.disposeBag)
@@ -150,9 +126,17 @@ import RxSwift
      func bind(reactor: DetailViewReactor) {
          
          // Action
-         self.rx.viewWillAppear
+         let viewWillAppear = self.rx.viewWillAppear.share()
+         viewWillAppear
              .map { _ in Reactor.Action.landing }
              .bind(to: reactor.action)
+             .disposed(by: self.disposeBag)
+         
+         // 탭바 숨김
+         viewWillAppear
+             .subscribe(with: self) { object, _ in
+                 object.hidesBottomBarWhenPushed = true
+             }
              .disposed(by: self.disposeBag)
          
          self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
@@ -162,11 +146,37 @@ import RxSwift
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
+         // 차단하기
+         self.moreButtonBottomSheetViewController.blockLabelButton.rx.tap
+             .subscribe(with: self) { object, _ in
+                 
+                 let presented = SOMDialogViewController()
+                 presented.setData(
+                    title: Text.blockDialogTitle,
+                    subTitle: Text.blockDialogSubTitle,
+                    leftAction: .init(mode: .cancel, handler: { object.dismiss(animated: true) }),
+                    rightAction: .init(mode: .block, handler: {
+                        object.dismiss(animated: true) {
+                            reactor.action.onNext(.block)
+                        }
+                    }),
+                    dimViewAction: nil
+                 )
+                 
+                 presented.modalPresentationStyle = .custom
+                 presented.modalTransitionStyle = .crossDissolve
+                 
+                 object.dismiss(animated: true) {
+                     object.present(presented, animated: true)
+                 }
+             }
+             .disposed(by: self.disposeBag)
+         
          // State
          reactor.state.map(\.isLoading)
              .distinctUntilChanged()
              .subscribe(with: self.collectionView) { collectionView, isLoading in
-                 if (collectionView.refreshControl?.isRefreshing ?? false) && isLoading {
+                 if isLoading {
                      collectionView.refreshControl?.beginRefreshingFromTop()
                  } else {
                      collectionView.refreshControl?.endRefreshing()
@@ -189,8 +199,6 @@ import RxSwift
          .subscribe(with: self) { object, pair in
              object.detailCard = pair.0
              object.prevCard = pair.1
-             object.titleLabel.text = pair.0.member.nickname
-             object.titleImageView.setImage(strUrl: pair.0.member.profileImgUrl ?? "")
              object.collectionView.reloadData()
          }
          .disposed(by: self.disposeBag)
@@ -202,7 +210,7 @@ import RxSwift
                  object.collectionView.reloadData()
              }
              .disposed(by: disposeBag)
-
+         
          reactor.state.map(\.cardSummary)
              .distinctUntilChanged()
              .subscribe(with: self) { object, cardSummary in
@@ -214,9 +222,19 @@ import RxSwift
          reactor.state.map(\.isDeleted)
              .distinctUntilChanged()
              .subscribe(with: self) { object, isDeleted in
-                 object.dismiss(animated: true)
-                 object.isDeleted = isDeleted
-                 object.collectionView.reloadData()
+                 object.dismiss(animated: true) {
+                     object.isDeleted = isDeleted
+                     object.collectionView.reloadData()
+                     
+                     object.navigationPop()
+                 }
+             }
+             .disposed(by: self.disposeBag)
+         
+         reactor.state.map(\.isBlocked)
+             .distinctUntilChanged()
+             .subscribe(with: self) { object, _ in
+                 object.navigationPop()
              }
              .disposed(by: self.disposeBag)
      }
@@ -268,19 +286,11 @@ extension DetailViewController: UICollectionViewDataSource {
         
         cell.isOwnCard = self.detailCard.isOwnCard
         cell.prevCard = self.prevCard
+        cell.member = self.detailCard.member
         
         cell.prevCardBackgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
-                let willInsertViewController = DetailViewController()
-                willInsertViewController.reactor = object.reactor?.reactorForPop()
-                guard var viewControllers = object.navigationController?.viewControllers else { return }
-                viewControllers.insert(willInsertViewController, at: 1)
-                object.navigationController?.setViewControllers(viewControllers, animated: false)
-                if let destination = viewControllers.first(where: { $0 == willInsertViewController }) {
-                    object.navigationController?.popToViewController(destination, animated: true)
-                } else {
-                    object.navigationPop()
-                }
+                object.navigationPop()
             }
             .disposed(by: cell.disposeBag)
         
@@ -291,8 +301,8 @@ extension DetailViewController: UICollectionViewDataSource {
                     /// 자신의 카드일 때 카드 삭제하기
                     let presented = SOMDialogViewController()
                     presented.setData(
-                        title: Text.dialogTitle,
-                        subTitle: Text.dialogSubTitle,
+                        title: Text.deleteDialogTitle,
+                        subTitle: Text.deleteDialogSubTitle,
                         leftAction: .init(
                             mode: .cancel,
                             handler: { object.dismiss(animated: true) }
@@ -313,11 +323,19 @@ extension DetailViewController: UICollectionViewDataSource {
                         presented: object.moreButtonBottomSheetViewController,
                         dismissWhenScreenDidTap: true,
                         isHandleBar: true,
-                        isScrollable: true,
                         neverDismiss: false,
                         initalHeight: 178
                     )
                 }
+            }
+            .disposed(by: cell.disposeBag)
+        
+        cell.memberBackgroundButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                let memberId = object.detailCard.member.id
+                let profileViewController = ProfileViewController()
+                profileViewController.reactor = object.reactor?.reactorForProfile(memberId)
+                object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: cell.disposeBag)
         
@@ -343,20 +361,10 @@ extension DetailViewController: UICollectionViewDataSource {
             guard let reactor = self.reactor else { return footer }
             
             footer.didTap
-                .subscribe(with: self) { object, _ in
-                    let willRemoveViewController = object.navigationController?
-                        .viewControllers
-                        .last as? DetailViewController
-                    let selectedId = footer.commentCards[indexPath.row].id
+                .subscribe(with: self) { object, selectedId in
                     let viewController = DetailViewController()
                     viewController.reactor = reactor.reactorForPush(selectedId)
-                    object.navigationPush(viewController, animated: true) { _ in
-                        object.navigationController?
-                            .viewControllers
-                            .removeAll(
-                                where: { $0 == willRemoveViewController }
-                            )
-                    }
+                    object.navigationPush(viewController, animated: true, bottomBarHidden: true)
                 }
                 .disposed(by: footer.disposeBag)
             
@@ -365,6 +373,15 @@ extension DetailViewController: UICollectionViewDataSource {
                 .subscribe(onNext: { isLike in
                     reactor.action.onNext(.updateLike(!isLike))
                 })
+                .disposed(by: footer.disposeBag)
+            
+            footer.likeAndCommentView.commentBackgroundButton.rx.tap
+                .subscribe(with: self) { object, _ in
+                    let writeCardViewController = WriteCardViewController()
+                    writeCardViewController.setupNaviBar()
+                    writeCardViewController.reactor = reactor.reactorForWriteCard()
+                    object.navigationPush(writeCardViewController, animated: true, bottomBarHidden: true)
+                }
                 .disposed(by: footer.disposeBag)
             
             return footer

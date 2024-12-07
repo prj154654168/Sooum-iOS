@@ -15,7 +15,7 @@ import RxSwift
 import SnapKit
 import Then
 
-// MARK: - OnboardingProfileImageSettingView
+// MARK: - OnboardingProfileImageSettingView 
 class OnboardingProfileImageSettingView: UIView {
     
     let imageView = UIImageView().then {
@@ -32,6 +32,7 @@ class OnboardingProfileImageSettingView: UIView {
     
     let changeImageView = UIImageView().then {
         $0.image = .cameraOutlined
+        $0.tintColor = .som.white
     }
     
     // MARK: - init

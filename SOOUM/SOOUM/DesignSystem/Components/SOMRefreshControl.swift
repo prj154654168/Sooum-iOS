@@ -13,6 +13,11 @@ import Then
 
 class SOMRefreshControl: UIRefreshControl {
     
+    private let backgroundView = UIView().then {
+        $0.backgroundColor = .som.white
+        $0.layer.cornerRadius = 40 * 0.5
+    }
+    
     private let imageView = UIImageView().then {
         $0.image = .init(.image(.refreshControl))
         $0.contentMode = .scaleAspectFit
@@ -38,35 +43,8 @@ class SOMRefreshControl: UIRefreshControl {
         self.removeObserver(self, forKeyPath: #keyPath(isRefreshing))
     }
     
-    private func setupConstraints() {
-        
-        self.addObserver(self, forKeyPath: #keyPath(isRefreshing), options: .new, context: nil)
-        
-        self.tintColor = .clear
-        
-        let backgroundView = UIView().then {
-            $0.backgroundColor = .som.white
-            $0.layer.cornerRadius = 40 * 0.5
-            $0.layer.shadowColor = UIColor.som.black.withAlphaComponent(0.25).cgColor
-            /// Opacity는 1로 설정하여 alpha에 의존
-            $0.layer.shadowOpacity = 1
-            /// x=0, y=4
-            $0.layer.shadowOffset = CGSize(width: 0, height: 4)
-            /// blur=4
-            $0.layer.shadowRadius = 4
-        }
-        self.addSubviews(backgroundView)
-        backgroundView.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.size.equalTo(40)
-        }
-        
-        backgroundView.addSubviews(self.imageView)
-        self.imageView.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.size.equalTo(28)
-        }
-    }
+    
+    // MARK: Override func
     
     override func beginRefreshing() {
         super.beginRefreshing()
@@ -78,11 +56,44 @@ class SOMRefreshControl: UIRefreshControl {
         self.animation(false)
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.backgroundView.setShadow(
+            radius: 40 * 0.5,
+            color: UIColor.som.black.withAlphaComponent(0.25),
+            blur: 4,
+            offset: .init(width: 0, height: 4)
+        )
+    }
+    
+    
+    // MARK: Private func
+    
+    private func setupConstraints() {
+        
+        self.addObserver(self, forKeyPath: #keyPath(isRefreshing), options: .new, context: nil)
+        
+        self.tintColor = .clear
+        
+        self.addSubviews(self.backgroundView)
+        self.backgroundView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.size.equalTo(40)
+        }
+        
+        self.backgroundView.addSubviews(self.imageView)
+        self.imageView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            $0.size.equalTo(28)
+        }
+    }
+    
     private func animation(_ isRefreshing: Bool) {
         
         if isRefreshing {
             let rotate = CABasicAnimation(keyPath: "transform.rotation.z")
-            rotate.toValue = NSNumber(value: Double.pi * 2.0)
+            rotate.toValue = NSNumber(value: Double.pi * -2.0)
             rotate.duration = 1
             rotate.isCumulative = true
             rotate.repeatCount = Float.infinity

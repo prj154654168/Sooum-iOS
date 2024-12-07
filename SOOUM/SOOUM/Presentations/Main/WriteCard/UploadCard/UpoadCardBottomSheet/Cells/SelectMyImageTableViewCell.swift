@@ -7,12 +7,13 @@
 
 import UIKit
 
+import SnapKit
+import Then
+
 import ReactorKit
 import RxGesture
 import RxSwift
 
-import SnapKit
-import Then
 
 class SelectMyImageTableViewCell: UITableViewCell {
     
@@ -74,9 +75,9 @@ class SelectMyImageTableViewCell: UITableViewCell {
     private func setupConstraint() {
         contentView.addSubview(rootImageView)
         rootImageView.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
             $0.top.equalToSuperview().offset(8)
             $0.bottom.equalToSuperview().offset(-24)
+            $0.centerX.equalToSuperview()
             $0.height.equalTo(108)
             $0.width.equalTo(120)
         }

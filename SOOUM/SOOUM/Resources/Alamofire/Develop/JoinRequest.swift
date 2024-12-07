@@ -28,10 +28,10 @@ enum JoinRequest: BaseRequest {
     
     var method: HTTPMethod {
         switch self {
-        case .validateNickname, .profileImagePresignedURL:
-            return .get
         case .registerUser:
             return .patch
+        default:
+            return .get
         }
     }
     
@@ -40,21 +40,21 @@ enum JoinRequest: BaseRequest {
         case .validateNickname:
             return [:]
         case .profileImagePresignedURL:
-            return [ "extension": "JPEG" ]
+            return ["extension": "JPEG"]
         case .registerUser(let nickname, let profileImg):
             return [
                 "nickname": nickname,
-                "profileImg": profileImg.isEmpty ? nil : profileImg
+                "profileImg": profileImg
             ]
         }
     }
         
     var encoding: ParameterEncoding {
         switch self {
-        case .validateNickname, .profileImagePresignedURL:
-            return URLEncoding.queryString
         case .registerUser:
             return JSONEncoding.default
+        default:
+            return URLEncoding.queryString
         }
     }
     
@@ -62,7 +62,7 @@ enum JoinRequest: BaseRequest {
         switch self {
         case .validateNickname:
             return .none
-        case .profileImagePresignedURL, .registerUser:
+        default:
             return .access
         }
     }

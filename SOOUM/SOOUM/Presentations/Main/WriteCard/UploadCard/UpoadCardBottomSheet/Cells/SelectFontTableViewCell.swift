@@ -7,13 +7,14 @@
 
 import UIKit
 
+import SnapKit
+import Then
+
 import ReactorKit
 import RxCocoa
 import RxGesture
 import RxSwift
 
-import SnapKit
-import Then
 
 class SelectFontTableViewCell: UITableViewCell {
     
@@ -35,7 +36,7 @@ class SelectFontTableViewCell: UITableViewCell {
     
     let buttonStack = UIStackView().then {
         $0.axis = .horizontal
-        $0.spacing = 8
+        $0.spacing = 4
         $0.distribution = .fillEqually
     }
     
@@ -141,18 +142,18 @@ class SelectFontTableViewCell: UITableViewCell {
     private func setupConstraint() {
         contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(20)
             $0.top.equalToSuperview()
-            $0.height.equalTo(16)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
         }
         
         contentView.addSubview(buttonStack)
         buttonStack.addArrangedSubviews(gothicButtonLabel, handwritingButtonLabel)
         buttonStack.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(4)
+            $0.bottom.equalToSuperview().offset(-20)
             $0.leading.equalToSuperview().offset(20)
-            $0.top.equalTo(titleLabel.snp.bottom).offset(12)
             $0.trailing.equalToSuperview().offset(-20)
-            $0.bottom.equalToSuperview().offset(-24)
         }
         
         gothicButtonLabel.snp.makeConstraints {
@@ -164,8 +165,7 @@ class SelectFontTableViewCell: UITableViewCell {
         
         contentView.addSubview(seperatorView)
         seperatorView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview()
+            $0.bottom.leading.trailing.equalToSuperview()
             $0.height.equalTo(4)
         }
     }

@@ -21,16 +21,16 @@ extension Double {
     func infoReadableDistanceRangeFromThis() -> String {
         
         switch self {
-        case ..<100:
+        case ..<0.1:
             return "100m 이내"
-        case 100..<900:
-            let roundedDistance = Int(ceil(self / 100.0)) * 100
+        case 0.1..<1:
+            let roundedDistance = ceil(self * 1000)
             return "\(roundedDistance)m 이내"
-        case 900..<100000:
-            let roundedDistance = Int(ceil(self / 5000.0)) * 5
+        case 1..<100:
+            let roundedDistance = ceil(self / 5) * 5
             return "\(roundedDistance)km 이내"
         default:
-            let roundedDistance = Int(ceil(self / 100000.0)) * 100
+            let roundedDistance = ceil(self / 100) * 100
             return "\(roundedDistance)km 이내"
         }
     }

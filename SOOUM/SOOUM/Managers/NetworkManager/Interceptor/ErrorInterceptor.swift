@@ -15,12 +15,22 @@ class ErrorInterceptor: RequestInterceptor {
     private let lock = NSLock()
     private var requestsToRetry: [(RetryResult) -> Void] = []
     
+    private let retryLimit: Int = 1
+    
     private let authManager = AuthManager.shared
     
     func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
         self.lock.lock(); defer { self.lock.unlock() }
         
-        guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 401 else {
+        guard let response = request.task?.response as? HTTPURLResponse,
+            response.statusCode == 401
+        else {
+            completion(.doNotRetry)
+            return
+        }
+        
+        // 재인증 과정은 1번만 진행한다.
+        guard request.retryCount < retryLimit else {
             completion(.doNotRetry)
             return
         }
@@ -35,16 +45,9 @@ class ErrorInterceptor: RequestInterceptor {
             case .failure(let error):
                 print("❌ ReAuthenticate failed. \(error.localizedDescription)")
                 self?.requestsToRetry.forEach { $0(.doNotRetry) }
-                self?.goBackToSignUp()
             }
             
             self?.requestsToRetry.removeAll()
         }
-    }
-    
-    func goBackToSignUp() {
-        // 로컬 token 초기화
-        // AuthManager.shared.initializeAuthInfo()
-        // TODO: 회원가입 화면으로 전환
     }
 }

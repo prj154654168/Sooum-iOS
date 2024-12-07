@@ -39,4 +39,25 @@ extension UIView {
         let hitView = self.hitTest(location, with: nil)
         return hitView == self
     }
+    
+    // Set shadow
+    func setShadow(
+        radius cornerRadius: CGFloat,
+        color shadowColor: UIColor,
+        blur shadowRadius: CGFloat,
+        offset shadowOffset: CGSize
+    ) {
+        
+        // 그림자 렌더링 최적화
+        self.layer.shouldRasterize = true
+        self.layer.rasterizationScale = UIScreen.main.scale
+        
+        self.layer.shadowPath = UIBezierPath(roundedRect: self.bounds, cornerRadius: cornerRadius).cgPath
+        
+        self.layer.shadowColor = shadowColor.cgColor
+        /// Opacity는 1로 설정하여 alpha에 의존
+        self.layer.shadowOpacity = 1
+        self.layer.shadowRadius = shadowRadius
+        self.layer.shadowOffset = shadowOffset
+    }
 }

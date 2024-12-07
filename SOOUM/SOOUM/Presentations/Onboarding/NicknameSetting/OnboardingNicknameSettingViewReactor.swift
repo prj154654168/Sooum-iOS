@@ -63,7 +63,7 @@ class OnboardingNicknameSettingViewReactor: Reactor {
             case .success(let (nickname, isValid)):
                 newState.nickname = nickname
                 newState.isNicknameValid = isValid
-                newState.errorMessage = nil
+                newState.errorMessage = isValid.desc
             case .failure(let error):
                 newState.isNicknameValid = .invalid
                 newState.errorMessage = error.localizedDescription

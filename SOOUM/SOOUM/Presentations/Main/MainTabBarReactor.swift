@@ -18,8 +18,6 @@ class MainTabBarReactor: Reactor {
     var initialState: State {
         .init()
     }
-    
-    init() { }
 }
 
 extension MainTabBarReactor {
@@ -29,6 +27,10 @@ extension MainTabBarReactor {
     }
     
     func reactorForWriteCard() -> WriteCardViewReactor {
-        WriteCardViewReactor()
+        WriteCardViewReactor(type: .card)
+    }
+    
+    func reactorForProfile() -> ProfileViewReactor {
+        ProfileViewReactor(type: .my, memberId: nil)
     }
 }

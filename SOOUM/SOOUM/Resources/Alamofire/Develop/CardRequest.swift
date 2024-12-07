@@ -41,6 +41,18 @@ enum CardRequest: BaseRequest {
         imgName: String,
         feedTags: [String]
     )
+    /// 댓글 추가
+    case writeComment(
+        id: String,
+        isDistanceShared: Bool,
+        latitude: String,
+        longitude: String,
+        content: String,
+        font: String,
+        imgType: String,
+        imgName: String,
+        commentTags: [String]
+    )
     /// 글추가 - 관련 태그 조회
     case relatedTag(keyword: String, size: Int)
     
@@ -81,6 +93,9 @@ enum CardRequest: BaseRequest {
         case .writeCard:
             return "/cards"
             
+        case let .writeComment(id, _, _, _, _, _, _, _, _):
+            return "/cards/\(id)"
+            
         case .relatedTag:
             return "/tags/search"
         }
@@ -90,7 +105,7 @@ enum CardRequest: BaseRequest {
         switch self {
         case .deleteCard:
             return .delete
-        case .writeCard:
+        case .writeCard, .writeComment:
             return .post
         case let .updateLike(_, isLike):
             return isLike ? .post : .delete
@@ -165,6 +180,36 @@ enum CardRequest: BaseRequest {
             
             return parameters
             
+        case let .writeComment(
+            _,
+            isDistanceShared,
+            latitude,
+            longitude,
+            content,
+            font,
+            imgType,
+            imgName,
+            commentTags
+        ):
+            var parameters: [String: Any] = [
+                "isDistanceShared": isDistanceShared,
+                "content": content,
+                "font": font,
+                "imgType": imgType,
+                "imgName": imgName,
+            ]
+            
+            if isDistanceShared {
+                parameters.updateValue(latitude, forKey: "latitude")
+                parameters.updateValue(longitude, forKey: "longitude")
+            }
+            
+            if commentTags.isEmpty == false {
+                parameters.updateValue(commentTags, forKey: "commentTags")
+            }
+            
+            return parameters
+            
         case let .relatedTag(keyword, size):
             return ["keyword": keyword, "size": size]
         
@@ -175,7 +220,7 @@ enum CardRequest: BaseRequest {
 
     var encoding: ParameterEncoding {
         switch self {
-        case .updateLike, .writeCard:
+        case .updateLike, .writeCard, .writeComment:
             return JSONEncoding.default
         default:
             return URLEncoding.default

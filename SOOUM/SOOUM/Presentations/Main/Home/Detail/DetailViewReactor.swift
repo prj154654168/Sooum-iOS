@@ -10,10 +10,16 @@ import ReactorKit
 
 class DetailViewReactor: Reactor {
     
+    enum EntranceType {
+        case mainHome
+        case detail
+    }
+    
     enum Action: Equatable {
         case landing
         case refresh
         case delete
+        case block
         case updateLike(Bool)
     }
     
@@ -22,6 +28,7 @@ class DetailViewReactor: Reactor {
         case commentCards([Card])
         case cardSummary(CardSummary)
         case updateIsDeleted(Bool)
+        case updateIsBlocked(Bool)
         case updateIsLoading(Bool)
         case updateIsProcessing(Bool)
         case updateError(String?)
@@ -33,6 +40,7 @@ class DetailViewReactor: Reactor {
         var commentCards: [Card]
         var cardSummary: CardSummary
         var isDeleted: Bool
+        var isBlocked: Bool
         var isLoading: Bool
         var isProcessing: Bool
         var errorMessage: String?
@@ -44,6 +52,7 @@ class DetailViewReactor: Reactor {
         commentCards: [],
         cardSummary: .init(),
         isDeleted: false,
+        isBlocked: false,
         isLoading: false,
         isProcessing: false,
         errorMessage: nil
@@ -52,12 +61,12 @@ class DetailViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     private let locationManager = LocationManager.shared
     
-    var selectedCardIds: [String]
+    private let entranceType: EntranceType
+    private let selectedCardId: String
     
-    /// id가 nil이면 pop, nil이 아니면 push
-    /// selectedCardIds.count == 1 이면 isFrom == .mainHome, 아니면 isFrom == .detailComment
-    init(_ selectedCardIds: [String]) {
-        self.selectedCardIds = selectedCardIds
+    init(type entranceType: EntranceType, _ selectedCardId: String) {
+        self.entranceType = entranceType
+        self.selectedCardId = selectedCardId
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -95,13 +104,15 @@ class DetailViewReactor: Reactor {
                 .just(.updateIsLoading(false))
             ])
         case .delete:
-            guard let id = self.selectedCardIds.last else { return .empty() }
-            let request: CardRequest = .deleteCard(id: id)
+            let request: CardRequest = .deleteCard(id: self.selectedCardId)
             return self.networkManager.request(Status.self, request: request)
                 .map { _ in .updateIsDeleted(true) }
+        case .block:
+            let request: ReportRequest = .blockMember(id: self.currentState.detailCard.member.id)
+            return self.networkManager.request(Status.self, request: request)
+                .map { .updateIsBlocked($0.httpCode == 201) }
         case let .updateLike(isLike):
-            guard let id = self.selectedCardIds.last else { return .empty() }
-            let request: CardRequest = .updateLike(id: id, isLike: isLike)
+            let request: CardRequest = .updateLike(id: self.selectedCardId, isLike: isLike)
             return .concat([
                 self.networkManager.request(Status.self, request: request)
                     .filter { $0.httpCode != 400 }
@@ -123,6 +134,8 @@ class DetailViewReactor: Reactor {
             state.cardSummary = cardSummary
         case let .updateIsDeleted(isDeleted):
             state.isDeleted = isDeleted
+        case let .updateIsBlocked(isBlocked):
+            state.isBlocked = isBlocked
         case let .updateIsLoading(isLoading):
             state.isLoading = isLoading
         case let .updateIsProcessing(isProcessing):
@@ -138,24 +151,22 @@ class DetailViewReactor: Reactor {
         let longitude = self.locationManager.coordinate.longitude
         
         let requset: CardRequest = .detailCard(
-            id: self.selectedCardIds.last ?? "",
+            id: self.selectedCardId,
             latitude: latitude,
             longitude: longitude
         )
         
-        switch self.selectedCardIds.count {
-        case ...1:
+        switch self.entranceType {
+        case .mainHome:
             return self.networkManager.request(DetailCardResponse.self, request: requset)
                 .map(\.detailCard)
                 .map { .detailCard($0, .init()) }
                 .catch { _ in .just(.updateError("에러발생 비상~~")) }
-        case 2...:
+        case .detail:
             return self.networkManager.request(DetailCardByCommentResponse.self, request: requset)
                 .map { ($0.detailCard, $0.prevCard) }
                 .map { .detailCard($0, $1) }
                 .catch { _ in .just(.updateError("에러발생 비상~~")) }
-        default:
-            return .just(.updateError("selectedCardIds.count index error"))
         }
     }
     
@@ -164,7 +175,7 @@ class DetailViewReactor: Reactor {
         let longitude = self.locationManager.coordinate.longitude
         
         let requset: CardRequest = .commentCard(
-            id: self.selectedCardIds.last ?? "",
+            id: self.selectedCardId,
             latitude: latitude,
             longitude: longitude
         )
@@ -175,7 +186,7 @@ class DetailViewReactor: Reactor {
     }
     
     func fetchCardSummary() -> Observable<Mutation> {
-        let requset: CardRequest = .cardSummary(id: self.selectedCardIds.last ?? "")
+        let requset: CardRequest = .cardSummary(id: self.selectedCardId)
         return self.networkManager.request(CardSummaryResponse.self, request: requset)
             .map(\.cardSummary)
             .map { .cardSummary($0) }
@@ -190,15 +201,18 @@ extension DetailViewReactor {
     }
     
     func reactorForPush(_ selectedId: String) -> DetailViewReactor {
-        self.selectedCardIds.append(selectedId)
-        return DetailViewReactor(self.selectedCardIds)
+        DetailViewReactor(type: .detail, selectedId)
     }
     
-    func reactorForPop() -> DetailViewReactor {
-        return DetailViewReactor(self.selectedCardIds.dropLast())
+    func reactorForReport() -> ReportViewReactor {
+        ReportViewReactor(self.selectedCardId)
     }
     
-    func reactorForReport(_ id: String) -> ReportViewReactor {
-        return ReportViewReactor(id)
+    func reactorForWriteCard() -> WriteCardViewReactor {
+        WriteCardViewReactor(type: .comment, self.selectedCardId)
+    }
+    
+    func reactorForProfile(_ memberId: String) -> ProfileViewReactor {
+        ProfileViewReactor.init(type: .other, memberId: memberId)
     }
 }

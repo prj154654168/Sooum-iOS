@@ -10,6 +10,11 @@ import ReactorKit
 
 class WriteCardViewReactor: Reactor {
     
+    enum RequestType {
+        case card
+        case comment
+    }
+    
     enum Action: Equatable {
         case writeCard(
             isDistanceShared: Bool,
@@ -20,6 +25,14 @@ class WriteCardViewReactor: Reactor {
             imgType: String,
             imgName: String,
             feedTags: [String]
+        )
+        case writeComment(
+            isDistanceShared: Bool,
+            content: String,
+            font: String,
+            imgType: String,
+            imgName: String,
+            commentTags: [String]
         )
         case relatedTags(keyword: String)
     }
@@ -42,7 +55,13 @@ class WriteCardViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     private let locationManager = LocationManager.shared
     
-    init() { }
+    let requestType: RequestType
+    private let cardIdForComment: String?
+    
+    init(type requestType: RequestType, _ cardIdForComment: String? = nil) {
+        self.requestType = requestType
+        self.cardIdForComment = cardIdForComment
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
@@ -57,18 +76,44 @@ class WriteCardViewReactor: Reactor {
             feedTags
         ):
             let coordinate = self.locationManager.coordinate
+            let trimedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
             
             let request: CardRequest = .writeCard(
                 isDistanceShared: isDistanceShared,
                 latitude: coordinate.latitude,
                 longitude: coordinate.longitude,
-                isPublic: isPublic,
+                isPublic: !isPublic,
                 isStory: isStory,
-                content: content,
+                content: trimedContent,
                 font: font,
                 imgType: imgType,
                 imgName: imgName,
                 feedTags: feedTags
+            )
+            
+            return self.networkManager.request(Status.self, request: request)
+                .map { .writeCard($0.httpCode == 201) }
+        case let .writeComment(
+            isDistanceShared,
+            content,
+            font,
+            imgType,
+            imgName,
+            commentTags
+        ):
+            let coordinate = locationManager.coordinate
+            let trimedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            let request: CardRequest = .writeComment(
+                id: self.cardIdForComment ?? "",
+                isDistanceShared: isDistanceShared,
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+                content: trimedContent,
+                font: font,
+                imgType: imgType,
+                imgName: imgName,
+                commentTags: commentTags
             )
             
             return self.networkManager.request(Status.self, request: request)

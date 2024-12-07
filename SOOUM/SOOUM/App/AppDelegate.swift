@@ -28,6 +28,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             })
         #endif
         
+        // 앱 첫 실행 시 token 정보 제거
+        self.removeKeyChainWhenFirstLaunch()
+        
         return true
     }
     
@@ -48,4 +51,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didDiscardSceneSessions sceneSessions: Set<UISceneSession>
     ) { }
+}
+
+extension AppDelegate {
+    
+    private func removeKeyChainWhenFirstLaunch() {
+        
+        guard UserDefaults.isFirstLaunch else { return }
+        AuthKeyChain.shared.delete(.accessToken)
+        AuthKeyChain.shared.delete(.refreshToken)
+    }
 }

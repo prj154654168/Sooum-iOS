@@ -55,7 +55,10 @@ class MainTabBarController: SOMTabBarController, View {
         // viewControllers
         let mainHomeViewController = MainHomeViewController()
         mainHomeViewController.reactor = reactor.reactorForMainHome()
-        mainHomeViewController.tabBarItem = .init(
+        let mainHomeNavigationController = UINavigationController(
+            rootViewController: mainHomeViewController
+        )
+        mainHomeNavigationController.tabBarItem = .init(
             title: Text.mainHomeTitle,
             image: .init(.icon(.outlined(.home))),
             tag: 0
@@ -76,18 +79,22 @@ class MainTabBarController: SOMTabBarController, View {
             tag: 2
         )
         
-        let profileViewController = UIViewController()
-        profileViewController.tabBarItem = .init(
+        let profileViewController = ProfileViewController()
+        profileViewController.reactor = reactor.reactorForProfile()
+        let profileNavigationController = UINavigationController(
+            rootViewController: profileViewController
+        )
+        profileNavigationController.tabBarItem = .init(
             title: Text.profileTitle,
             image: .init(.icon(.outlined(.profile))),
             tag: 3
         )
         
         self.viewControllers = [
-            mainHomeViewController,
+            mainHomeNavigationController,
             writeCardViewController,
             tagViewcontroller,
-            profileViewController
+            profileNavigationController
         ]
     }
 }
@@ -100,13 +107,15 @@ extension MainTabBarController: SOMTabBarControllerDelegate {
     ) -> Bool {
         
         if viewController.tabBarItem.tag == 1 {
-            
+        
             let writeCardViewController = WriteCardViewController()
             writeCardViewController.reactor = self.reactor?.reactorForWriteCard()
-            self.navigationPush(writeCardViewController, animated: true)
+            if let selectedViewController = tabBarController.selectedViewController {
+                selectedViewController.navigationPush(writeCardViewController, animated: true)
+            }
             return false
         }
-        
+         
         return true
     }
     

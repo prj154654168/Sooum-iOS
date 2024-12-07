@@ -18,6 +18,7 @@ class SOMDialogViewController: UIViewController {
         case ok
         case delete
         case report
+        case block
         case setting
         
         var text: String {
@@ -30,6 +31,8 @@ class SOMDialogViewController: UIViewController {
                 "삭제하기"
             case .report:
                 "신고하기"
+            case .block:
+                "차단하기"
             case .setting:
                 "설정"
             }
@@ -97,6 +100,7 @@ class SOMDialogViewController: UIViewController {
     let subTitleLabel = UILabel().then {
         $0.textColor = .som.gray600
         $0.typography = .som.body2WithRegular
+        $0.numberOfLines = 0
     }
     
     /// 버튼 스택 뷰

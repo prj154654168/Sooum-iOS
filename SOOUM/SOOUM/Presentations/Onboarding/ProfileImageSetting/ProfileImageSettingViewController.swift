@@ -30,9 +30,23 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
         $0.label.text = "확인"
     }
     
-    let passButton = PrimaryButtonView().then {
-        $0.updateState(state: false)
-        $0.label.text = "다음에 변경하기"
+    let passButton = UIButton().then {
+        let typography = Typography.som.body3WithBold
+        var attributes = typography.attributes
+        attributes.updateValue(typography.font, forKey: .font)
+        attributes.updateValue(UIColor.som.p300, forKey: .foregroundColor)
+        attributes.updateValue(NSUnderlineStyle.single.rawValue, forKey: .underlineStyle)
+        attributes.updateValue(UIColor.som.p300, forKey: .underlineColor)
+        var config = UIButton.Configuration.plain()
+        config.attributedTitle = .init(
+            "다음에 변경하기",
+            attributes: AttributeContainer(attributes)
+        )
+        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
+            AttributeContainer(attributes)
+        }
+        config.contentInsets = .zero
+        $0.configuration = config
     }
      
     func bind(reactor: ProfileImageSettingViewReactor) {
@@ -96,16 +110,16 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
                 
         view.addSubviews(passButton)
         passButton.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-24)
+            $0.height.equalTo(17)
         }
         
         view.addSubview(okButton)
         okButton.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
-            $0.bottom.equalTo(passButton.snp.top).offset(-12)
+            $0.bottom.equalTo(passButton.snp.top).offset(-20)
         }
     }
  }

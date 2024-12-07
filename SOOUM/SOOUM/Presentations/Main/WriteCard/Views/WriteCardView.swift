@@ -27,13 +27,17 @@ class WriteCardView: UIView {
         $0.placeholder = Text.wirteTagPlacholder
     }
     
-    let writtenTags = SOMTags(configure: .horizontalWithRemove)
+    let writtenTags = SOMTags(configure: .horizontalWithRemove).then {
+        $0.tag = 0
+    }
     var writtenTagsHeightConstraint: Constraint?
     
     let relatedTagsBackgroundView = UIView().then {
         $0.isHidden = true
     }
-    let relatedTags = SOMTags(configure: .verticalWithoutRemove)
+    let relatedTags = SOMTags(configure: .verticalWithoutRemove).then {
+        $0.tag = 1
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)

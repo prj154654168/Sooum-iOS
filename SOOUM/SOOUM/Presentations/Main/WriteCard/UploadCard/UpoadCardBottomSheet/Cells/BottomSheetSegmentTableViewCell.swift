@@ -29,15 +29,12 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     var selectedSegment: ImageSegment = .defaultImage
     
     var disposeBag = DisposeBag()
-
-    let rootStack = UIStackView().then {
-        $0.axis = .horizontal
-        $0.spacing = 0
-        $0.isLayoutMarginsRelativeArrangement = true
-    }
     
     let selectModeButtonStack = UIStackView().then {
         $0.axis = .horizontal
+        $0.alignment = .center
+        $0.distribution = .equalSpacing
+        $0.spacing = 22
     }
     
     let defualtImageButtonLabel = UILabel().then {
@@ -55,11 +52,10 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
     }
     
     let chageImageButtonStack = UIStackView().then {
-        $0.alignment = .center
         $0.axis = .horizontal
+        $0.alignment = .center
+        $0.distribution = .equalSpacing
         $0.spacing = 2
-        $0.layoutMargins = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
-        $0.isLayoutMarginsRelativeArrangement = true
     }
     
     let chagneImageLabel = UILabel().then {
@@ -151,36 +147,29 @@ class BottomSheetSegmentTableViewCell: UITableViewCell {
             },
             completion: nil
         )
+        
+        self.chagneImageLabel.text = segment == .defaultImage ? "이미지 변경" : "사진 변경"
+        self.chageImageImageView.isHidden = segment == .myImage
     }
     
     // MARK: - setupConstraint
     private func setupConstraint() {
-        contentView.addSubview(rootStack)
-        rootStack.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview()
-            $0.leading.equalToSuperview().offset(8)
-            $0.trailing.equalToSuperview().offset(-14)
-        }
         
-        rootStack.addArrangedSubviews(selectModeButtonStack, UIView(), chageImageButtonStack)
         selectModeButtonStack.addArrangedSubviews(defualtImageButtonLabel, myImageButtonLabel)
-        defualtImageButtonLabel.snp.makeConstraints {
-            $0.height.equalTo(32)
-            $0.width.equalTo(94)
-        }
-        myImageButtonLabel.snp.makeConstraints {
-            $0.height.equalTo(32)
-            $0.width.equalTo(70)
+        contentView.addSubview(selectModeButtonStack)
+        selectModeButtonStack.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview()
+            $0.leading.equalToSuperview().offset(20)
         }
         
         chageImageButtonStack.addArrangedSubviews(chagneImageLabel, chageImageImageView)
-        chagneImageLabel.snp.makeConstraints {
-            $0.height.equalTo(14)
-            $0.width.equalTo(65)
+        contentView.addSubview(chageImageButtonStack)
+        chageImageButtonStack.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(4)
+            $0.trailing.equalToSuperview().offset(-21)
         }
         chageImageImageView.snp.makeConstraints {
-            $0.height.equalTo(14)
-            $0.width.equalTo(14)
+            $0.size.equalTo(14)
         }
     }
 }

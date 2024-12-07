@@ -77,6 +77,15 @@ class WriteCardTextView: UIView {
         }
     }
     
+    // TODO: 임시로 typography가 변경되면 텍스트 대치
+    var typography: Typography = .som.body1WithBold {
+        didSet {
+            self.textView.typography = self.typography
+            self.textView.text = self.text
+            self.textView.textColor = .som.white
+        }
+    }
+    
     var maxCharacter: Int? {
         didSet {
             self.characterLabel.isHidden = (maxCharacter == nil)
