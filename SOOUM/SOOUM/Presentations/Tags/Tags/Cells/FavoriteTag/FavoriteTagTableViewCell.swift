@@ -40,6 +40,10 @@ final class FavoriteTagTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        self.disposeBag = DisposeBag()
+    }
+    
     func setData(favoriteTag: FavoriteTagsResponse.FavoriteTagList) {
         self.disposeBag = DisposeBag()
         

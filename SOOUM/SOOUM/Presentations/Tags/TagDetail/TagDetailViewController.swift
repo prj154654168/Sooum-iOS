@@ -113,7 +113,10 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
             .when(.recognized)
             .subscribe(with: self) { object, _ in
                 let detailViewController = DetailViewController()
-                detailViewController.reactor = DetailViewReactor([reactor.currentState.tagCards[indexPath.row].id])
+                detailViewController.reactor = DetailViewReactor(
+                    type: .mainHome,
+                    reactor.currentState.tagCards[indexPath.row].id
+                )
                 self.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: cell.cardView.disposeBag)

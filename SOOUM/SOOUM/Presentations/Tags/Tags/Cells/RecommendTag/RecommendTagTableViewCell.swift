@@ -43,6 +43,10 @@ class RecommendTagTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        self.disposeBag = DisposeBag()
+    }
+    
     /// 추천 태그 setData
     func setData(recommendTag: RecommendTagsResponse.RecommendTag) {
         self.disposeBag = DisposeBag()
