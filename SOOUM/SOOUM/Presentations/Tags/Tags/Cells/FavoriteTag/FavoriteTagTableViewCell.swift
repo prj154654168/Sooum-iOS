@@ -12,8 +12,10 @@ import RxGesture
 import RxSwift
 
 final class FavoriteTagTableViewCell: UITableViewCell {
-    
+        
     var favoriteTag: FavoriteTagsResponse.FavoriteTagList? = nil
+    
+    var disposeBag = DisposeBag()
     
     lazy var favoriteTagView = FavoriteTagView().then {
         $0.cardPreviewCollectionView.delegate = self
@@ -39,6 +41,8 @@ final class FavoriteTagTableViewCell: UITableViewCell {
     }
     
     func setData(favoriteTag: FavoriteTagsResponse.FavoriteTagList) {
+        self.disposeBag = DisposeBag()
+        
         self.favoriteTag = favoriteTag
         self.favoriteTagView.tagNameLabel.text = favoriteTag.tagContent
         self.favoriteTagView.tagsCountLabel.text = favoriteTag.tagUsageCnt
