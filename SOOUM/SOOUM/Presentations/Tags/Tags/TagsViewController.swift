@@ -238,4 +238,24 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         }
         return TagsHeaderView(type: TagType.allCases[section])
     }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        guard let reactor = self.reactor else {
+            return 0
+        }
+        let height = 58 + 6 + self.additionalSafeAreaInsets.bottom
+        if reactor.currentState.favoriteTags.isEmpty {
+            return height
+        }
+        switch TagType.allCases[section] {
+        case .favorite:
+            return 0
+        case .recommend:
+            return height
+        }
+    }
 }
