@@ -336,6 +336,8 @@
 		38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
 		38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
 		38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
+		38AE565C2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
+		38AE565D2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
 		38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
 		38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
 		38B6AAD12CA4124B00CE6DB6 /* MainHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */; };
@@ -614,6 +616,7 @@
 		38A627162CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayoutConfigure.swift; sourceTree = "<group>"; };
 		38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndCommentView.swift; sourceTree = "<group>"; };
 		38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreBottomSheetViewController.swift; sourceTree = "<group>"; };
+		38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMDialogViewController+Show.swift"; sourceTree = "<group>"; };
 		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		38B6AAD02CA4124B00CE6DB6 /* MainHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeViewController.swift; sourceTree = "<group>"; };
 		38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTopButtonView.swift; sourceTree = "<group>"; };
@@ -1554,6 +1557,15 @@
 			path = MoreBottomSheet;
 			sourceTree = "<group>";
 		};
+		38AE56572D0489E500CAA431 /* SOMDialogController */ = {
+			isa = PBXGroup;
+			children = (
+				2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */,
+				38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */,
+			);
+			path = SOMDialogController;
+			sourceTree = "<group>";
+		};
 		38B6AACB2CA410C000CE6DB6 /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -1676,6 +1688,7 @@
 		38CE94BD2C904D140004B238 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				38AE56572D0489E500CAA431 /* SOMDialogController */,
 				38CC49802CDE382C007A0145 /* SOMPresentationController */,
 				3880098C2CABF4AD002A9209 /* SOMTags */,
 				3878F46F2CA3F01100AA46A2 /* SOMCard */,
@@ -1683,7 +1696,6 @@
 				38ED2AB32C985AB400920B53 /* SOMHomeTabBar */,
 				385053502C92DBCA00C80B02 /* SOMTabBarController */,
 				3878FE0B2D0365B000D8955C /* SOMNavigationBar */,
-				2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */,
 				38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */,
 				38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */,
 			);
@@ -2026,6 +2038,7 @@
 				381A1D662CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */,
 				385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				3817016F2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
+				38AE565D2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */,
 				3878D0762CFFE01500F9522F /* SettingScrollViewHeader.swift in Sources */,
 				3878D08D2CFFF0BF00F9522F /* AnnouncementViewControler.swift in Sources */,
 				38FD4DB22D034C1700BF5FF1 /* MyFollowingViewCell.swift in Sources */,
@@ -2245,6 +2258,7 @@
 				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
 				2AFD05632D00A1E1007C84AD /* TagDetailCardResponse.swift in Sources */,
 				2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
+				38AE565C2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */,
 				385E65A32CBE56D00032E120 /* Coordinate.swift in Sources */,
 				3878FE0D2D0365C800D8955C /* SOMNavigationBar+Rx.swift in Sources */,
 				2AE6B1632CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */,

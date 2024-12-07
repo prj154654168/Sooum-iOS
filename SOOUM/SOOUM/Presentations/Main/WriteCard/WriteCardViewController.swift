@@ -307,13 +307,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, combine in
                 let (optionState, imageName, imageType, font, content) = combine
                 
-                let presented = SOMDialogViewController()
-                presented.setData(
+                SOMDialogViewController.show(
                     title: Text.writeDialogTitle,
                     subTitle: Text.writeDialogSubTitle,
                     leftAction: .init(
                         mode: .cancel,
-                        handler: { object.dismiss(animated: true) }
+                        handler: { UIApplication.topViewController?.dismiss(animated: true) }
                     ),
                     rightAction: .init(
                         mode: .ok,
@@ -348,17 +347,10 @@ class WriteCardViewController: BaseNavigationViewController, View {
                                 )
                             }
                                     
-                            object.dismiss(animated: true)
+                            UIApplication.topViewController?.dismiss(animated: true)
                         }
-                    ),
-                    dimViewAction: nil
+                    )
                 )
-                presented.modalPresentationStyle = .custom
-                presented.modalTransitionStyle = .crossDissolve
-                
-                object.dismissBottomSheet(completion: {
-                    object.present(presented, animated: true)
-                })
             }
             .disposed(by: self.disposeBag)
         
@@ -396,18 +388,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
                         object.navigationPop()
                     } else {
                         
-                        let presented = SOMDialogViewController()
-                        presented.setData(
+                        SOMDialogViewController.show(
                             title: Text.failedWriteDialogTitle,
                             subTitle: Text.failedWriteDialogSubTitle,
-                            leftAction: nil,
-                            rightAction: .init(mode: .ok, handler: { object.dismiss(animated: true) }),
-                            dimViewAction: nil
+                            rightAction: .init(
+                                mode: .ok,
+                                handler: { UIApplication.topViewController?.dismiss(animated: true) }
+                            )
                         )
-                        
-                        presented.modalPresentationStyle = .custom
-                        presented.modalTransitionStyle = .crossDissolve
-                        object.present(presented, animated: true)
                     }
                 })
             }

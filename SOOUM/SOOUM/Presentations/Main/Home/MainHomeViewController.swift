@@ -387,32 +387,27 @@ extension MainHomeViewController: SOMHomeTabBarDelegate {
         
         if index == 2, self.reactor?.locationManager.checkLocationAuthStatus() == .denied {
             
-            let presented = SOMDialogViewController()
-            presented.setData(
+            SOMDialogViewController.show(
                 title: Text.dialogTitle,
                 subTitle: Text.dialogSubTitle,
                 leftAction: .init(
                     mode: .cancel,
-                    handler: { [weak self] in self?.dismiss(animated: true) }
+                    handler: { UIApplication.topViewController?.dismiss(animated: true) }
                 ),
                 rightAction: .init(
                     mode: .setting,
-                    handler: { [weak self] in
+                    handler: {
                         let application = UIApplication.shared
                         let openSettingsURLString: String = UIApplication.openSettingsURLString
                         if let settingsURL = URL(string: openSettingsURLString),
                             application.canOpenURL(settingsURL) {
                                 application.open(settingsURL)
                         }
-                        self?.dismiss(animated: false)
+                        
+                        UIApplication.topViewController?.dismiss(animated: true)
                     }
-                ),
-                dimViewAction: nil
+                )
             )
-            presented.modalPresentationStyle = .custom
-            presented.modalTransitionStyle = .crossDissolve
-            
-            self.present(presented, animated: true)
             return false
         }
         
