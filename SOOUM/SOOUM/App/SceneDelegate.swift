@@ -21,12 +21,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        // TODO: - 삭제
-        let viewController = TagsViewController()
-        viewController.reactor = TagsViewReactor()
-        // TODO: - 주석 복구
-//        let viewController = LaunchScreenViewController()
-//        viewController.reactor = LaunchScreenViewReactor()
+
+        let viewController = LaunchScreenViewController()
+        viewController.reactor = LaunchScreenViewReactor()
 
         window?.rootViewController = viewController
         window?.backgroundColor = .white
