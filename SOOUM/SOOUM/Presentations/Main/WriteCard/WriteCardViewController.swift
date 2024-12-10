@@ -163,7 +163,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         // Life Cycle
         self.rx.viewWillAppear
             .subscribe(with: self) { object, _ in
-                object.presentBottomSheet(
+                object.showBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
                     dismissWhenScreenDidTap: true,
                     isHandleBar: true,
@@ -179,7 +179,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .filter { $0 }
             .drive(with: self) { object, _ in
-                object.presentBottomSheet(
+                object.showBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
                     dismissWhenScreenDidTap: true,
                     isHandleBar: true,
@@ -379,6 +379,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isWrite)
             .distinctUntilChanged()
+            .skip(1)
             .subscribe(with: self) { object, isWrite in
                 
                 object.dismissBottomSheet(completion: {

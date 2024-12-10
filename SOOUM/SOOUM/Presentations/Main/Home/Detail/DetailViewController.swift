@@ -311,7 +311,7 @@ extension DetailViewController: UICollectionViewDataSource {
                     )
                 } else {
                     /// 자신의 카드가 아닐 때 차단/신고하기
-                    object.presentBottomSheet(
+                    object.showBottomSheet(
                         presented: object.moreButtonBottomSheetViewController,
                         dismissWhenScreenDidTap: true,
                         isHandleBar: true,
