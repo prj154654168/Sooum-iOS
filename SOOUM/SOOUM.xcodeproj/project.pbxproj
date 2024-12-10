@@ -1184,8 +1184,8 @@
 		385071972CA2956D00A7905A /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
-				2A5BB7B72CDB856D00E1C799 /* Onboarding */,
 				385071982CA2958100A7905A /* Launch */,
+				2A5BB7B72CDB856D00E1C799 /* Onboarding */,
 				38B6AACB2CA410C000CE6DB6 /* Main */,
 				2AFF95522CF3207F00CBFB12 /* Tags */,
 			);
