@@ -108,7 +108,7 @@ class SOMTabBar: UIView {
         }
     }
     
-    private func didSelectTab(_ index: Int ) {
+    func didSelectTab(_ index: Int ) {
         
         guard index != self.selectedIndex else { return }
         self.delegate?.tabBar(self, didSelectTabAt: index)
