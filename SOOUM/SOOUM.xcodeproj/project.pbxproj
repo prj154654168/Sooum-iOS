@@ -378,8 +378,8 @@
 		38CC49832CDE3854007A0145 /* SOMPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49812CDE3854007A0145 /* SOMPresentationController.swift */; };
 		38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49842CDE3885007A0145 /* SOMTransitioningDelegate.swift */; };
 		38CC49862CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49842CDE3885007A0145 /* SOMTransitioningDelegate.swift */; };
-		38CC49882CDE3972007A0145 /* SOMPresentationController+Present.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49872CDE3972007A0145 /* SOMPresentationController+Present.swift */; };
-		38CC49892CDE3972007A0145 /* SOMPresentationController+Present.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49872CDE3972007A0145 /* SOMPresentationController+Present.swift */; };
+		38CC49882CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49872CDE3972007A0145 /* SOMPresentationController+Show.swift */; };
+		38CC49892CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49872CDE3972007A0145 /* SOMPresentationController+Show.swift */; };
 		38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
 		38CE94C02C904D460004B238 /* SOMNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */; };
 		38D055C32CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */; };
@@ -408,6 +408,8 @@
 		38ED2AB72C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */; };
 		38F131882CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */; };
 		38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */; };
+		38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3D92F2D06C2370049F575 /* SOMAnimationTransitioning.swift */; };
+		38F3D9312D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3D92F2D06C2370049F575 /* SOMAnimationTransitioning.swift */; };
 		38F720A52CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209A2CD4F15900DF32B5 /* CardSummaryResponse.swift */; };
 		38F720A62CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209A2CD4F15900DF32B5 /* CardSummaryResponse.swift */; };
 		38F720A72CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209B2CD4F15900DF32B5 /* CommentCardResponse.swift */; };
@@ -638,7 +640,7 @@
 		38C2D41F2CFEB82400CEA092 /* ProfileViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewReactor.swift; sourceTree = "<group>"; };
 		38CC49812CDE3854007A0145 /* SOMPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMPresentationController.swift; sourceTree = "<group>"; };
 		38CC49842CDE3885007A0145 /* SOMTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTransitioningDelegate.swift; sourceTree = "<group>"; };
-		38CC49872CDE3972007A0145 /* SOMPresentationController+Present.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMPresentationController+Present.swift"; sourceTree = "<group>"; };
+		38CC49872CDE3972007A0145 /* SOMPresentationController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMPresentationController+Show.swift"; sourceTree = "<group>"; };
 		38CE94BE2C904D460004B238 /* SOMNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMNavigationBar.swift; sourceTree = "<group>"; };
 		38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMActivityIndicatorView.swift; sourceTree = "<group>"; };
 		38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hakgyoansim-Bold.ttf"; sourceTree = "<group>"; };
@@ -653,6 +655,7 @@
 		38ED2AB12C985AB400920B53 /* SOMHomeTabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBar.swift; sourceTree = "<group>"; };
 		38ED2AB22C985AB400920B53 /* SOMHomeTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SOMHomeTabBarItem.swift; sourceTree = "<group>"; };
 		38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedTagResponse.swift; sourceTree = "<group>"; };
+		38F3D92F2D06C2370049F575 /* SOMAnimationTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMAnimationTransitioning.swift; sourceTree = "<group>"; };
 		38F7209A2CD4F15900DF32B5 /* CardSummaryResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardSummaryResponse.swift; sourceTree = "<group>"; };
 		38F7209B2CD4F15900DF32B5 /* CommentCardResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCardResponse.swift; sourceTree = "<group>"; };
 		38F7209C2CD4F15900DF32B5 /* DetailCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailCard.swift; sourceTree = "<group>"; };
@@ -1679,8 +1682,9 @@
 			isa = PBXGroup;
 			children = (
 				38CC49842CDE3885007A0145 /* SOMTransitioningDelegate.swift */,
+				38F3D92F2D06C2370049F575 /* SOMAnimationTransitioning.swift */,
 				38CC49812CDE3854007A0145 /* SOMPresentationController.swift */,
-				38CC49872CDE3972007A0145 /* SOMPresentationController+Present.swift */,
+				38CC49872CDE3972007A0145 /* SOMPresentationController+Show.swift */,
 			);
 			path = SOMPresentationController;
 			sourceTree = "<group>";
@@ -2073,7 +2077,7 @@
 				3816C05D2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */,
 				2A5BB7C62CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */,
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
-				38CC49892CDE3972007A0145 /* SOMPresentationController+Present.swift in Sources */,
+				38CC49892CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */,
 				38F720B02CD4F15900DF32B5 /* DetailCommentCardResponse.swift in Sources */,
 				3878D07E2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
 				2A44A4352CAC21A500DC463E /* SignUpResponse.swift in Sources */,
@@ -2186,6 +2190,7 @@
 				2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				2AFD05672D01CB30007C84AD /* TagInfoResponse.swift in Sources */,
 				2AE6B17C2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,
+				38F3D9312D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
 				38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
 				2AFD056D2D048C84007C84AD /* FavoriteTagTableViewCell.swift in Sources */,
 				2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
@@ -2333,7 +2338,7 @@
 				38ED2AB62C985AB400920B53 /* SOMHomeTabBarItem.swift in Sources */,
 				38C2D41D2CFEB07900CEA092 /* ProfileViewFooterLayout.swift in Sources */,
 				381A1D772CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */,
-				38CC49882CDE3972007A0145 /* SOMPresentationController+Present.swift in Sources */,
+				38CC49882CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */,
 				38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				3878D0632CFFD66700F9522F /* FollowViewController.swift in Sources */,
 				381A1D652CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */,
@@ -2396,6 +2401,7 @@
 				2AFF95552CF3222400CBFB12 /* TagsViewController.swift in Sources */,
 				2AE6B1922CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				2AE6B18F2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
+				38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
 				3878D05C2CFFD10D00F9522F /* FollowingResponse.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */,

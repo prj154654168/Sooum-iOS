@@ -12,7 +12,7 @@ class SOMPresentationController: UIPresentationController {
     
     private let screenView: UIView = {
         let view = UIView()
-        view.backgroundColor = .clear
+        view.backgroundColor = .som.dim
         
         return view
     }()
@@ -49,7 +49,7 @@ class SOMPresentationController: UIPresentationController {
     let completion: (() -> Void)?
     
     
-    // MARK: Init
+    // MARK: Initalization
     
     init(
         presentedViewController: UIViewController,
@@ -68,8 +68,6 @@ class SOMPresentationController: UIPresentationController {
         self.maxHeight = maxHeight ?? initalHeight
         self.initalHeight = initalHeight
         self.currentHeight = initalHeight
-        
-        self.screenView.backgroundColor = self.currentHeight == self.maxHeight ? .som.dim : .clear
         
         self.completion = completion
         
@@ -100,6 +98,12 @@ class SOMPresentationController: UIPresentationController {
         return self.updateFrame()
     }
     
+    override func containerViewDidLayoutSubviews() {
+        super.containerViewDidLayoutSubviews()
+        
+        self.updateSubviewsFrame()
+    }
+    
     // PresentedView가 표시될 때 애니메이션 설정
     override func presentationTransitionWillBegin() {
         super.presentationTransitionWillBegin()
@@ -128,26 +132,11 @@ class SOMPresentationController: UIPresentationController {
         
         if let coordinator = self.presentedViewController.transitionCoordinator {
             coordinator.animate { [weak self] _ in
-                self?.updateScreenColor(self?.currentHeight == self?.maxHeight ? .som.dim : .clear)
+                self?.screenView.alpha = (self?.currentHeight == self?.maxHeight ? 1 : 0)
                 self?.shadowView.alpha = 1
                 self?.shadowView.layer.shadowOpacity = 1
             }
         }
-    }
-    
-    // SubView의 레이아웃 설정
-    override func containerViewDidLayoutSubviews() {
-        super.containerViewDidLayoutSubviews()
-        
-        guard let containerView = self.containerView else { return }
-        
-        let isScreenInteraction = self.currentHeight != self.maxHeight
-        let frame = self.updateFrame()
-        
-        containerView.frame = isScreenInteraction ? frame : UIScreen.main.bounds
-        self.screenView.frame = containerView.bounds
-        self.shadowView.frame = isScreenInteraction ? containerView.bounds : frame
-        self.presentedView?.frame = isScreenInteraction ? containerView.bounds : frame
     }
     
     override func dismissalTransitionWillBegin() {
@@ -164,6 +153,10 @@ class SOMPresentationController: UIPresentationController {
     override func dismissalTransitionDidEnd(_ completed: Bool) {
         super.dismissalTransitionDidEnd(completed)
         
+        self.screenView.removeFromSuperview()
+        self.shadowView.removeFromSuperview()
+        self.handleBar.removeFromSuperview()
+        
         self.completion?()
     }
     
@@ -177,12 +170,9 @@ class SOMPresentationController: UIPresentationController {
         if self.currentHeight == 0 { self.presentedViewController.dismiss(animated: true) }
         
         let isMax = self.currentHeight == self.maxHeight
-        self.updateScreenColor(isMax ? .som.dim : .clear)
+        self.screenView.alpha = isMax ? 1 : 0
         
-        let animationDuration: TimeInterval = animated ? 0.25 : 0
-        UIView.animate(withDuration: animationDuration) {
-            self.containerViewDidLayoutSubviews()
-        }
+        self.updateSubviewsFrame(animated)
     }
     
     private func updateFrame() -> CGRect {
@@ -196,11 +186,20 @@ class SOMPresentationController: UIPresentationController {
         return frame
     }
     
-    private func updateScreenColor(_ color: UIColor) {
+    private func updateSubviewsFrame(_ animated: Bool = true) {
         
-        self.screenView.isHidden = color == .clear
-        self.screenView.alpha = color == .clear ? 0 : 1
-        self.screenView.backgroundColor = color
+        guard let containerView = self.containerView,
+              let presentedView = self.presentedView
+        else { return }
+        
+        let isScreenInteraction = self.currentHeight != self.maxHeight
+        let frame = self.frameOfPresentedViewInContainerView
+        
+        containerView.frame = isScreenInteraction ? frame : UIScreen.main.bounds
+        self.screenView.frame = containerView.bounds
+        
+        presentedView.frame = isScreenInteraction ? containerView.bounds : frame
+        self.shadowView.frame = presentedView.bounds
     }
     
     
@@ -211,8 +210,6 @@ class SOMPresentationController: UIPresentationController {
         
         if self.currentHeight == self.initalHeight {
             self.presentedViewController.dismiss(animated: true)
-        } else {
-            self.updateHeight(self.initalHeight)
         }
     }
     
@@ -257,11 +254,11 @@ class SOMPresentationController: UIPresentationController {
             }
         case .ended:
             if scrollDirection == "top" {
-                let isMax = newHeight > self.initalHeight + (self.maxHeight - self.initalHeight) * 0.5
+                let isMax = newHeight > self.initalHeight + (self.maxHeight - self.initalHeight) * 0.8
                 let updateHeight = isMax ? self.maxHeight : self.initalHeight
                 self.updateHeight(updateHeight)
             } else {
-                let isMin = newHeight < self.initalHeight * 0.5 ? 0 : self.initalHeight
+                let isMin = newHeight < self.initalHeight * 0.8 ? 0 : self.initalHeight
                 let updateHeight = (isMin == 0 && self.neverDismiss) ? self.initalHeight : isMin
                 self.updateHeight(updateHeight)
             }
