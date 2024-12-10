@@ -8,7 +8,7 @@
 import RxCocoa
 import RxSwift
 
-extension Reactive where Base: SOMNavigationBar{
+extension Reactive where Base: SOMNavigationBar {
 
     var title: Binder<String?> {
         return Binder(self.base) { navigationBar, title in

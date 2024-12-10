@@ -27,6 +27,11 @@ class BaseNavigationViewController: BaseViewController {
     private let navigationBarBackgroundView = UIView().then {
         $0.backgroundColor = .som.white
     }
+    
+    private let navigationBarBottomSeperator = UIView().then {
+        $0.backgroundColor = .som.gray200
+        $0.isHidden = true
+    }
 
     private(set) var navigationPopWithBottomBarHidden: Bool = false
     private(set) var navigationPopGestureEnabled: Bool = true
@@ -48,6 +53,15 @@ class BaseNavigationViewController: BaseViewController {
         }
         get {
             self.navigationBar.isHidden
+        }
+    }
+    
+    var hidesNavigationBarBottomSeperator: Bool {
+        set {
+            self.navigationBarBottomSeperator.isHidden = newValue
+        }
+        get {
+            self.navigationBarBottomSeperator.isHidden
         }
     }
 
@@ -74,9 +88,17 @@ class BaseNavigationViewController: BaseViewController {
 
         self.view.addSubview(self.navigationBar)
         self.navigationBar.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(self.navigationBarHeight)
+        }
+        
+        self.view.addSubview(self.navigationBarBottomSeperator)
+        self.navigationBarBottomSeperator.snp.makeConstraints {
+            $0.bottom.equalTo(self.navigationBar.snp.bottom)
+            $0.leading.equalTo(self.navigationBar.snp.leading)
+            $0.trailing.equalTo(self.navigationBar.snp.trailing)
+            $0.height.equalTo(1.4)
         }
     }
 
@@ -113,7 +135,7 @@ class BaseNavigationViewController: BaseViewController {
         // 네비게이션바 설정이 무시될 수 있습니다. 이를 방어하기 위해 네비게이션바를 설정합니다.
         if self.navigationController?.delegate == nil {
             let isFirstViewController = self.navigationController?.viewControllers.first == self
-            self.navigationBar.isHideBackButton = isFirstViewController
+            self.navigationBar.hidesBackButton = isFirstViewController
             self.setupNaviBar()
         }
     }
@@ -144,7 +166,7 @@ extension BaseNavigationViewController: UINavigationControllerDelegate {
         willShow viewController: UIViewController,
         animated: Bool
     ) {
-        self.navigationBar.isHideBackButton = navigationController.viewControllers.first == self
+        self.navigationBar.hidesBackButton = navigationController.viewControllers.first == self
         if viewController == self {
             self.setupNaviBar()
         }

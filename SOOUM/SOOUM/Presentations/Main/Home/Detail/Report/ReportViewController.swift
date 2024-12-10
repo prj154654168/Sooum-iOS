@@ -54,6 +54,9 @@ class ReportViewController: BaseNavigationViewController, View {
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
     }
+    override var navigationBarHeight: CGFloat {
+        53
+    }
 
     override func setupConstraints() {
         self.view.addSubview(tableViewTitleLabel)
@@ -81,7 +84,9 @@ class ReportViewController: BaseNavigationViewController, View {
     
     override func setupNaviBar() {
         super.setupNaviBar()
-        self.navigationBar.titleLabel.text = "신고하기"
+        
+        self.navigationBar.title = Text.title
+        self.hidesNavigationBarBottomSeperator = false
     }
     
     func bind(reactor: ReportViewReactor) {

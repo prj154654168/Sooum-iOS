@@ -124,7 +124,7 @@ class ProfileViewController: BaseNavigationViewController, View {
             $0.bottom.leading.trailing.equalToSuperview()
         }
         
-        self.navigationBar.isHideBackButton = isMine
+        self.navigationBar.hidesBackButton = isMine
         self.navigationBar.titleView = titleContainer
         if isMine {
             self.navigationBar.setRightButtons([self.rightSettingButton])

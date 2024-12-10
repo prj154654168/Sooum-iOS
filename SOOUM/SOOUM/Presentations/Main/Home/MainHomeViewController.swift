@@ -90,7 +90,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         self.navigationBar.titleView = self.logo
         self.navigationBar.titlePosition = .left
         
-        self.navigationBar.isHideBackButton = true
+        self.navigationBar.hidesBackButton = true
         self.navigationBar.setRightButtons([self.rightAlamButton])
     }
     
