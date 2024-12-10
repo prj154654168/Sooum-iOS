@@ -9,6 +9,7 @@ import Foundation
 import Security
 
 import RxSwift
+import FirebaseMessaging
 
 
 enum AuthResult {
