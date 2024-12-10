@@ -79,6 +79,8 @@ class SOMDialogViewController: UIViewController {
     /// 딤뷰 탭했을 경우 적용할 핸들러. nil일 경우 탭되지 않음
     var dimViewAction: Action?
     
+    var completion: ((SOMDialogViewController) -> Void)?
+    
     let disposeBag = DisposeBag()
     
     // MARK: - UI
@@ -128,6 +130,12 @@ class SOMDialogViewController: UIViewController {
         bindUIData()
         action()
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        self.completion?(self)
+    }
 
     // MARK: - setData
     func setData(
@@ -135,13 +143,15 @@ class SOMDialogViewController: UIViewController {
         subTitle: String?,
         leftAction: Action?,
         rightAction: Action?,
-        dimViewAction: Action?
+        dimViewAction: Action?,
+        completion: ((SOMDialogViewController) -> Void)? = nil
     ) {
         self.titleText = title
         self.subTitleText = subTitle
         self.leftAction = leftAction
         self.rightAction = rightAction
         self.dimViewAction = dimViewAction
+        self.completion = completion
     }
     
     // MARK: - initUI

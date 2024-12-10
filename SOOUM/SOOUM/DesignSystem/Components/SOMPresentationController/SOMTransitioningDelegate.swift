@@ -8,7 +8,7 @@
 import UIKit
 
 
-class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
+class SOMTransitioningDelegate: NSObject {
 
     struct AssociatedKeys {
         static var transitioningDelegate = "BottomSheetTransitioningDelegate"
@@ -42,6 +42,35 @@ class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate 
         self.completion = completion
     }
 
+    
+    
+    func dismiss(animated: Bool, completion: (() -> Void)?) {
+        
+        self.presentationController?.presentedViewController.dismiss(
+            animated: animated,
+            completion: completion
+        )
+    }
+}
+
+extension SOMTransitioningDelegate: UIViewControllerTransitioningDelegate {
+    
+    func animationController(
+        forPresented presented: UIViewController,
+        presenting: UIViewController,
+        source: UIViewController
+    ) -> (any UIViewControllerAnimatedTransitioning)? {
+        
+        return SOMAnimationTransitioning(initalHeight: self.initalHeight)
+    }
+    
+    func animationController(
+        forDismissed dismissed: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
+        
+        return nil
+    }
+    
     func presentationController(
         forPresented presented: UIViewController,
         presenting: UIViewController?,
@@ -61,11 +90,5 @@ class SOMTransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate 
         self.presentationController = presentationController
         
         return presentationController
-    }
-    
-    func dismiss(animated: Bool, completion: (() -> Void)?) {
-        guard let presentedController = self.presentationController?.presentedViewController else { return }
-        
-        presentedController.dismiss(animated: animated, completion: completion)
     }
 }

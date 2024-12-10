@@ -150,25 +150,23 @@ import RxSwift
          self.moreButtonBottomSheetViewController.blockLabelButton.rx.tap
              .subscribe(with: self) { object, _ in
                  
-                 let presented = SOMDialogViewController()
-                 presented.setData(
+                 SOMDialogViewController.show(
                     title: Text.blockDialogTitle,
                     subTitle: Text.blockDialogSubTitle,
-                    leftAction: .init(mode: .cancel, handler: { object.dismiss(animated: true) }),
-                    rightAction: .init(mode: .block, handler: {
-                        object.dismiss(animated: true) {
-                            reactor.action.onNext(.block)
+                    leftAction: .init(
+                        mode: .cancel,
+                        handler: { UIApplication.topViewController?.dismiss(animated: true) }
+                    ),
+                    rightAction: .init(
+                        mode: .block,
+                        handler: {
+                            UIApplication.topViewController?.dismiss(animated: true) {
+                                reactor.action.onNext(.block)
+                                object.dismissBottomSheet()
+                            }
                         }
-                    }),
-                    dimViewAction: nil
+                    )
                  )
-                 
-                 presented.modalPresentationStyle = .custom
-                 presented.modalTransitionStyle = .crossDissolve
-                 
-                 object.dismiss(animated: true) {
-                     object.present(presented, animated: true)
-                 }
              }
              .disposed(by: self.disposeBag)
          
@@ -222,7 +220,7 @@ import RxSwift
          reactor.state.map(\.isDeleted)
              .distinctUntilChanged()
              .subscribe(with: self) { object, isDeleted in
-                 object.dismiss(animated: true) {
+                 UIApplication.topViewController?.dismiss(animated: true) {
                      object.isDeleted = isDeleted
                      object.collectionView.reloadData()
                      
@@ -299,27 +297,21 @@ extension DetailViewController: UICollectionViewDataSource {
                 
                 if object.detailCard.isOwnCard {
                     /// 자신의 카드일 때 카드 삭제하기
-                    let presented = SOMDialogViewController()
-                    presented.setData(
+                    SOMDialogViewController.show(
                         title: Text.deleteDialogTitle,
                         subTitle: Text.deleteDialogSubTitle,
                         leftAction: .init(
                             mode: .cancel,
-                            handler: { object.dismiss(animated: true) }
+                            handler: { UIApplication.topViewController?.dismiss(animated: true) }
                         ),
                         rightAction: .init(
                             mode: .delete,
                             handler: { object.reactor?.action.onNext(.delete) }
-                        ),
-                        dimViewAction: nil
+                        )
                     )
-                    presented.modalPresentationStyle = .custom
-                    presented.modalTransitionStyle = .crossDissolve
-                    
-                    object.present(presented, animated: true)
                 } else {
                     /// 자신의 카드가 아닐 때 차단/신고하기
-                    object.presentBottomSheet(
+                    object.showBottomSheet(
                         presented: object.moreButtonBottomSheetViewController,
                         dismissWhenScreenDidTap: true,
                         isHandleBar: true,

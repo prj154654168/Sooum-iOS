@@ -105,22 +105,18 @@ class ReportViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isDialogPresented)
             .subscribe(with: self) { object, isDialogPresented in
                 
-                let presented = SOMDialogViewController()
-                presented.setData(
-                    title: isDialogPresented == true ? Text.successDialogTitle : Text.failedDialogTitle,
-                    subTitle: isDialogPresented == true ? Text.successDialogSubTitle : Text.failedDialogSubTitle,
-                    leftAction: nil,
+                SOMDialogViewController.show(
+                    title: isDialogPresented ? Text.successDialogTitle : Text.failedDialogTitle,
+                    subTitle: isDialogPresented ? Text.successDialogSubTitle : Text.failedDialogSubTitle,
                     rightAction: .init(
                         mode: .ok,
-                        handler: { object.dismiss(animated: false) { object.navigationPop() } }
-                    ),
-                    dimViewAction: nil
+                        handler: {
+                            UIApplication.topViewController?.dismiss(animated: true) {
+                                object.navigationPop()
+                            }
+                        }
+                    )
                 )
-                
-                presented.modalPresentationStyle = .custom
-                presented.modalTransitionStyle = .crossDissolve
-                
-                object.present(presented, animated: true)
             }
             .disposed(by: self.disposeBag)
     }

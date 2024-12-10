@@ -163,19 +163,18 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         self.rightBlockButton.rx.tap
             .subscribe(with: self) { object, _ in
-                let presented = SOMDialogViewController()
-                presented.setData(
+                SOMDialogViewController.show(
                     title: Text.blockDialogTitle,
                     subTitle: Text.blockDialogSubTitle,
-                    leftAction: .init(mode: .cancel, handler: { object.dismiss(animated: true) }),
-                    rightAction: .init(mode: .ok, handler: { object.reactor?.action.onNext(.block) }),
-                    dimViewAction: nil
+                    leftAction: .init(
+                        mode: .cancel,
+                        handler: { UIApplication.topViewController?.dismiss(animated: true) }
+                    ),
+                    rightAction: .init(
+                        mode: .ok,
+                        handler: { object.reactor?.action.onNext(.block) }
+                    )
                 )
-                
-                presented.modalPresentationStyle = .custom
-                presented.modalTransitionStyle = .crossDissolve
-                
-                object.present(presented, animated: true)
             }
             .disposed(by: self.disposeBag)
     }

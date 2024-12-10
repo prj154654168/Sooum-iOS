@@ -45,7 +45,8 @@ class AuthManager: AuthManagerDelegate {
     }
     
     var hasToken: Bool {
-        return !self.authInfo.token.accessToken.isEmpty && !self.authInfo.token.refreshToken.isEmpty
+        let token = self.authInfo.token
+        return !token.accessToken.isEmpty && !token.refreshToken.isEmpty
     }
     
     func convertPEMToSecKey(pemString: String) -> SecKey? {
