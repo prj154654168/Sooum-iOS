@@ -33,20 +33,6 @@ class OtherFollowViewCell: UITableViewCell {
     }
     
     private let followButton = UIButton().then {
-        let typography = Typography.som.body3WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.white, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.willFollowButton,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        $0.configuration = config
-        $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 26 * 0.5
         $0.clipsToBounds = true
     }
@@ -127,21 +113,24 @@ class OtherFollowViewCell: UITableViewCell {
     
     func updateButton(_ isFollowing: Bool) {
         
-        let updateConfigHandler: UIButton.ConfigurationUpdateHandler = { button in
-            var updateConfig = button.configuration
-            let title = isFollowing ? Text.didFollowButton : Text.willFollowButton
-            let updateTextAttributes = UIConfigurationTextAttributesTransformer { current in
-                var update = current
-                update.foregroundColor = isFollowing ? .som.gray600 : .som.white
-                return update
-            }
-            
-            updateConfig?.title = title
-            updateConfig?.titleTextAttributesTransformer = updateTextAttributes
-            button.configuration = updateConfig
+        let typography = Typography.som.body3WithBold
+        var attributes = typography.attributes
+        let title: String = isFollowing ? Text.didFollowButton : Text.willFollowButton
+        let foregroundColor: UIColor = isFollowing ? .som.gray600 : .som.white
+        attributes.updateValue(typography.font, forKey: .font)
+        attributes.updateValue(foregroundColor, forKey: .foregroundColor)
+        var updateConfig = UIButton.Configuration.plain()
+        updateConfig.attributedTitle = .init(
+            title,
+            attributes: AttributeContainer(attributes)
+        )
+        updateConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
+            AttributeContainer(attributes)
         }
+        updateConfig.contentInsets.leading = 20
+        updateConfig.contentInsets.trailing = 20
         
-        self.followButton.configurationUpdateHandler = updateConfigHandler
+        self.followButton.configuration = updateConfig
         self.followButton.setNeedsUpdateConfiguration()
         self.followButton.backgroundColor = isFollowing ? .som.gray200 : .som.p300
     }
