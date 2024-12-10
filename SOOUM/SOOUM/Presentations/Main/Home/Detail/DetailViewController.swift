@@ -102,7 +102,7 @@ import RxSwift
          // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: MainTabBarController.self, animated: false)
+                 object.navigationPop(to: MainHomeViewController.self, animated: false)
              }
              .disposed(by: self.disposeBag)
          
