@@ -13,7 +13,6 @@ import Alamofire
 class ErrorInterceptor: RequestInterceptor {
     
     private let lock = NSLock()
-    private var requestsToRetry: [(RetryResult) -> Void] = []
     
     private let retryLimit: Int = 2
     
@@ -25,29 +24,25 @@ class ErrorInterceptor: RequestInterceptor {
         guard let response = request.task?.response as? HTTPURLResponse,
             response.statusCode == 401
         else {
-            completion(.doNotRetry)
+            completion(.doNotRetryWithError(error))
             return
         }
         
         // 재인증 과정은 1번만 진행한다.
         guard request.retryCount < retryLimit else {
-            completion(.doNotRetry)
+            completion(.doNotRetryWithError(error))
             return
         }
         
-        self.requestsToRetry.append(completion)
-        
-        self.authManager.reAuthenticate(self.authManager.authInfo.token.accessToken) { [weak self] result in
+        self.authManager.reAuthenticate(self.authManager.authInfo.token.accessToken) { result in
             
             switch result {
             case .success:
-                self?.requestsToRetry.forEach { $0(.retry) }
+                completion(.retry)
             case .failure(let error):
                 print("❌ ReAuthenticate failed. \(error.localizedDescription)")
-                self?.requestsToRetry.forEach { $0(.doNotRetry) }
+                completion(.doNotRetry)
             }
-            
-            self?.requestsToRetry.removeAll()
         }
     }
 }

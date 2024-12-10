@@ -136,7 +136,7 @@ extension NetworkManager: NetworkManagerDelegate {
                 .validate(statusCode: 200..<500)
                 .response { response in
                     switch response.result {
-                    case .success(_):
+                    case .success:
                         if let error = response.error {
                             observer.onError(error)
                         } else {
