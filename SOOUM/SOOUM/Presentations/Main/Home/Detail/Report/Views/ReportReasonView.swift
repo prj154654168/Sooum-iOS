@@ -20,7 +20,8 @@ class ReportReasonView: UIView {
     }
     
     let toggleView = UIImageView().then {
-        $0.image = .init(systemName: "Circle")
+        $0.image = .init(.icon(.outlined(.radio)))
+        $0.tintColor = .som.gray300
     }
     
     let titleLabel = UILabel().then {

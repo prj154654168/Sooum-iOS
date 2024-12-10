@@ -38,6 +38,7 @@ extension UIImage {
                 case more
                 case plus
                 case profile
+                case radio
                 case refresh
                 case report
                 case star
@@ -54,6 +55,7 @@ extension UIImage {
                 case home
                 case location
                 case profile
+                case radio
                 case star
                 case tag
             }

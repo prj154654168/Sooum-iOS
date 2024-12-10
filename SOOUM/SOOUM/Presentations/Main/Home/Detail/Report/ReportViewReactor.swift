@@ -56,7 +56,6 @@ class ReportViewReactor: Reactor {
     
     enum Action: Equatable {
         case report(ReportType)
-        case dismissDialog
     }
     
     enum Mutation {
@@ -82,8 +81,6 @@ class ReportViewReactor: Reactor {
         switch action {
         case .report(let reportType):
             return summitReport(reportType: reportType)
-        case .dismissDialog:
-            return .just(.updateDialogPresent(false))
         }
     }
     
@@ -101,5 +98,5 @@ class ReportViewReactor: Reactor {
         let request = ReportRequest.reportCard(id: id, reportType: reportType)
         return self.networkManager.request(Status.self, request: request)
             .map { .updateDialogPresent($0.httpCode == 201) }
-    }
+    } 
 }
