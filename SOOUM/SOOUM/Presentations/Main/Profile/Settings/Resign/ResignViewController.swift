@@ -244,14 +244,13 @@ class ResignViewController: BaseNavigationViewController, View {
         reactor.state.map((\.isSuccess))
             .distinctUntilChanged()
             .filter { $0 }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                DispatchQueue.main.async {
-                    if let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
-                        
-                        let viewController = OnboardingViewController()
-                        window.rootViewController = UINavigationController(rootViewController: viewController)
-                    }
+                if let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                    
+                    let viewController = OnboardingViewController()
+                    window.rootViewController = UINavigationController(rootViewController: viewController)
                 }
             }
             .disposed(by: self.disposeBag)

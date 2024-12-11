@@ -53,12 +53,12 @@ class ResignViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.networkManager.request(Empty.self, request: requset)
+                self.networkManager.request(Status.self, request: requset)
                     .withUnretained(self)
-                    .flatMapLatest { object, _ -> Observable<Mutation> in
+                    .flatMapLatest { object, response -> Observable<Mutation> in
                         object.authManager.initializeAuthInfo()
                         
-                        return .just(.updateIsSuccess(true))
+                        return .just(.updateIsSuccess(response.httpCode == 200))
                     },
                 .just(.updateIsProcessing(false))
             ])
