@@ -235,7 +235,7 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
             1
             
         case .otherSettings:
-            Section.OtherSettings.allCases.count
+            self.reactor?.requestType == .card ? Section.OtherSettings.allCases.count : 1
         }
     }
     
@@ -316,7 +316,19 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
                 ),
             for: indexPath
         ) as! UploadCardSettingTableViewCell
-        cell.setData(cellOption: Section.OtherSettings.allCases[indexPath.item], globalCardOptionState: bottomSheetOptionState)
+        
+        if self.reactor?.requestType == .card {
+            cell.setData(
+                cellOption: Section.OtherSettings.allCases[indexPath.item],
+                globalCardOptionState: bottomSheetOptionState
+            )
+        } else {
+            cell.setData(
+                cellOption: Section.OtherSettings.distanceLimit,
+                globalCardOptionState: bottomSheetOptionState
+            )
+        }
+        
         return cell
     }
     

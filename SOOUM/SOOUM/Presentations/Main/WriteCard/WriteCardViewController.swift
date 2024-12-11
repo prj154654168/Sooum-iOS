@@ -85,7 +85,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     private var keyboardHeight: CGFloat = 0
     
     private let initalHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28
-    private var maxHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + (74 * 3)
+    private var maxHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + (74 * 3) + 19
     
     
     // MARK: - Life Cycles
@@ -151,7 +151,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     func bind(reactor: WriteCardViewReactor) {
         
         if reactor.requestType == .comment {
-            self.maxHeight = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + 74
+            self.maxHeight = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + 74 + 19
         }
         
         // Life Cycle
@@ -277,8 +277,16 @@ class WriteCardViewController: BaseNavigationViewController, View {
         // 시간제한 카드 뷰 표시
         optionState
             .compactMap { $0[.timeLimit] }
-            .map { !$0 }
-            .bind(to: self.timeLimitBackgroundView.rx.isHidden)
+            .subscribe(with: self) { object, isTimeLimit in
+                
+                object.timeLimitBackgroundView.isHidden = isTimeLimit == false
+                object.writeCardView.writeTagTextField.isHidden = isTimeLimit
+                object.writeCardView.writtenTagsHeightConstraint?.deactivate()
+                object.writeCardView.writtenTags.snp.makeConstraints {
+                    let constraint = isTimeLimit ? $0.height.equalTo(0).constraint : $0.height.equalTo(12).constraint
+                    object.writeCardView.writtenTagsHeightConstraint = constraint
+                }
+            }
             .disposed(by: self.disposeBag)
         optionState
             .compactMap { $0[.timeLimit] }

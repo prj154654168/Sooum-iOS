@@ -23,6 +23,11 @@ struct ImageWithName {
 
 class UploadCardBottomSheetViewReactor: Reactor {
     
+    enum RequestType {
+        case card
+        case comment
+    }
+    
     enum Action: Equatable {
         /// 처음, 이미지 변경 눌렀을때 호출
         case fetchNewDefaultImage
@@ -49,6 +54,11 @@ class UploadCardBottomSheetViewReactor: Reactor {
     )
     
     private let networkManager = NetworkManager.shared
+    let requestType: RequestType
+    
+    init(type requestType: RequestType) {
+        self.requestType = requestType
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
