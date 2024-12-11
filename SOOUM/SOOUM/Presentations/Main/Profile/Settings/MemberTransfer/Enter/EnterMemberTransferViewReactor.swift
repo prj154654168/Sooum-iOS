@@ -37,20 +37,27 @@ class EnterMemberTransferViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case let .enterTransferCode(transferCode):
-            guard let encryptedDeviceId = String(
-                data: self.authManager.authInfo.deviceId,
-                encoding: .utf8
-            ) else {
-                return .empty()
-            }
-            let request: SettingsRequest = .transferMember(
-                transferId: transferCode,
-                encryptedDeviceId: encryptedDeviceId
-            )
             
-            return self.networkManager.request(Empty.self, request: request)
-                .flatMapLatest { _ -> Observable<Mutation> in
-                    return .just(.enterTransferCode(true))
+            return self.networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
+                .map(\.publicKey)
+                .withUnretained(self)
+                .flatMapLatest { object, publicKey -> Observable<Mutation> in
+                    
+                    if let secKey = object.authManager.convertPEMToSecKey(pemString: publicKey),
+                       let encryptedDeviceId = object.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
+                        
+                        let request: SettingsRequest = .transferMember(
+                            transferId: transferCode,
+                            encryptedDeviceId: encryptedDeviceId
+                        )
+                        
+                        return self.networkManager.request(Empty.self, request: request)
+                            .flatMapLatest { _ -> Observable<Mutation> in
+                                return .just(.enterTransferCode(true))
+                            }
+                    } else {
+                        return .just(.enterTransferCode(false))
+                    }
                 }
         }
     }
