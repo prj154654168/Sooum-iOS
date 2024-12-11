@@ -31,14 +31,27 @@ class WriteCardTextView: UIView {
         $0.keyboardAppearance = .light
         $0.backgroundColor = .clear
         
-        $0.typography = .som.body1WithBold
-        $0.textColor = .init(hex: "#FEFEFE")
+        let paragraphStyle = NSMutableParagraphStyle()
+        $0.typingAttributes[.paragraphStyle] = paragraphStyle
+        $0.typingAttributes[.foregroundColor] = UIColor.som.white
+        $0.typingAttributes[.font] = Typography.som.body1WithBold.font
+        $0.tintColor = .som.p300
         
-        $0.textContainerInset = .init(top: 14, left: 16, bottom: 14, right: 16)
+        $0.textAlignment = .center
+        
+        let verticalInset = (self.width * 0.9 - 40 * 2) * 0.5
+        let horizontalInset = (self.width - 40 * 2) * 0.5
+        $0.textContainerInset = .init(
+            top: verticalInset,
+            left: horizontalInset,
+            bottom: verticalInset,
+            right: horizontalInset
+        )
         $0.textContainer.lineFragmentPadding = 0
         
         $0.scrollIndicatorInsets = .init(top: 4, left: 0, bottom: 4, right: 6)
         $0.indicatorStyle = .white
+        $0.isScrollEnabled = true
         
         $0.enablesReturnKeyAutomatically = true
         $0.returnKeyType = .done
@@ -171,6 +184,34 @@ class WriteCardTextView: UIView {
             $0.centerX.equalToSuperview()
         }
     }
+    
+    private func updateTextContainerInset(_ textView: UITextView) {
+        
+        let min: UIEdgeInsets = .init(top: 14, left: 16, bottom: 14, right: 16)
+        
+        let attributedText = NSAttributedString(
+            string: textView.text,
+            attributes: [.font: self.typography.font]
+        )
+        
+        let size: CGSize = .init(width: textView.bounds.width, height: .greatestFiniteMagnitude)
+        let textSize: CGSize = textView.sizeThatFits(size)
+        let boundingRect = attributedText.boundingRect(
+            with: textSize,
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            context: nil
+        )
+        
+        let verticalInset = max(min.top, (textView.bounds.height - boundingRect.height) * 0.5)
+        let horizontalInset = max(min.left, (textView.bounds.width - boundingRect.width) * 0.5)
+        
+        textView.textContainerInset = .init(
+            top: verticalInset,
+            left: horizontalInset,
+            bottom: verticalInset,
+            right: horizontalInset
+        )
+    }
 }
 
 extension WriteCardTextView: UITextViewDelegate {
@@ -181,7 +222,7 @@ extension WriteCardTextView: UITextViewDelegate {
         guard let max = self.maxCharacter else { return shouldBeginEditing }
         let characterText = textView.text.count.description + "/" + max.description + "자"
         let attributedString = NSMutableAttributedString(string: characterText).then {
-            let textColor = UIColor(hex: "#FEFEFE")
+            let textColor = UIColor.som.white
             let range = (characterText as NSString).range(of: textView.text.count.description)
             $0.addAttribute(.foregroundColor, value: textColor, range: range)
         }
@@ -206,10 +247,12 @@ extension WriteCardTextView: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         self.delegate?.textViewDidChange(self)
         
+        self.updateTextContainerInset(textView)
+        
         guard let max = self.maxCharacter else { return }
         let characterText = textView.text.count.description + "/" + max.description + "자"
         let attributedString = NSMutableAttributedString(string: characterText).then {
-            let textColor = UIColor(hex: "#FEFEFE")
+            let textColor = UIColor.som.white
             let range = (characterText as NSString).range(of: textView.text.count.description)
             $0.addAttribute(.foregroundColor, value: textColor, range: range)
         }
