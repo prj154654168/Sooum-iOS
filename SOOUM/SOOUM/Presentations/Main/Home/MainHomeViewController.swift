@@ -109,7 +109,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         }
         self.headerContainer.addArrangedSubview(self.headerLocationFilter)
         self.headerLocationFilter.snp.makeConstraints {
-            self.locationFilterHeightConstraint = $0.height.equalTo(SOMLocationFilter.height).constraint
+            self.locationFilterHeightConstraint = $0.height.equalTo(0).constraint
         }
         
         self.view.addSubview(self.tableView)
@@ -160,9 +160,6 @@ class MainHomeViewController: BaseNavigationViewController, View {
     
     override func bind() {
         super.bind()
-        
-        // homeTabBar 시작 인덱스
-        self.headerHomeTabBar.didSelectTab(0)
         
         // 탭바 표시
         self.rx.viewWillAppear
