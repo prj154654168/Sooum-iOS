@@ -105,12 +105,10 @@ class OtherProfileViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.profileImageView.image = nil
-        self.totalCardCountLabel.text = nil
-        self.totalFollowingCountLabel.text = nil
-        self.totalFollowerCountLabel.text = nil
+        self.contentView.subviews.forEach { $0.snp.removeConstraints() }
+        self.setupConstraints()
         
-        self.disposeBag = DisposeBag()
+        self.disposeBag = DisposeBag() 
     }
     
     private func setupConstraints() {

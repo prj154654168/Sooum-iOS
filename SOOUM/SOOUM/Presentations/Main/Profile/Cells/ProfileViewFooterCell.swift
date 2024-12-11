@@ -33,8 +33,8 @@ class ProfileViewFooterCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.backgroundImageView.image = nil
-        self.contentLabel.text = nil
+        self.contentView.subviews.forEach { $0.snp.removeConstraints() }
+        self.setupConstraints()
     }
     
     required init?(coder: NSCoder) {

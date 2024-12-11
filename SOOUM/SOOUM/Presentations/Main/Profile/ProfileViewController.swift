@@ -242,7 +242,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isFollow)
             .distinctUntilChanged()
-            .skip(1)
+            .filter { $0 != nil }
             .subscribe(onNext: { _ in
                 reactor.action.onNext(.landing)
             })
@@ -302,7 +302,7 @@ extension ProfileViewController: UICollectionViewDataSource {
                 .subscribe(with: self) { object, _ in
                     object.reactor?.action.onNext(.follow)
                 }
-                .disposed(by: self.disposeBag)
+                .disposed(by: cell.disposeBag)
             
             cell.followingButton.rx.tap
                 .subscribe(with: self) { object, _ in
