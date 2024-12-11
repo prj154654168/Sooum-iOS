@@ -89,7 +89,7 @@ class ProfileViewReactor: Reactor {
             return self.networkManager.request(Status.self, request: request)
                 .map { .updateIsBlocked($0.httpCode == 201) }
         case .follow:
-            if self.currentState.isFollow {
+            if self.currentState.isFollow { 
                 let request: ProfileRequest = .cancelFollow(memberId: self.memberId ?? "")
                 
                 return self.networkManager.request(Empty.self, request: request)
@@ -179,7 +179,7 @@ extension ProfileViewReactor {
     }
     
     func reactorForUpdate() -> UpdateProfileViewReactor {
-        UpdateProfileViewReactor.init()
+        UpdateProfileViewReactor.init(self.currentState.profile)
     }
     
     func ractorForDetail(_ selectedId: String) -> DetailViewReactor {

@@ -100,6 +100,11 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
     
     func bind(reactor: UpdateProfileViewReactor) {
         
+        UIImage().download(strUrl: reactor.profile.profileImg?.url) { [weak self] image in
+            self?.updateProfileView.image = image
+        }
+        self.updateProfileView.text = reactor.profile.nickname
+        
         // Action
         self.updateProfileView.changeProfileButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in

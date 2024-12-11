@@ -283,20 +283,29 @@ extension UpdateProfileView: UITextFieldDelegate {
         replacementString string: String
     ) -> Bool {
         
-        guard let text = textField.text else {
-            return true
-        }
-        
-        let nsString: NSString? = text as NSString?
+        let nsString: NSString? = textField.text as NSString?
         let newString: String = nsString?.replacingCharacters(in: range, with: string) ?? ""
         
-        let characterText = newString.count.description + "/" + self.maxCharacter.description
-        self.characterLabel.text = characterText
-        return newString.count < self.maxCharacter
+        return newString.count < self.maxCharacter + 1
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        
+        let text = textField.text ?? ""
+        self.characterLabel.text = text.count.description + "/" + self.maxCharacter.description
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+}
+
+extension String {
+    
+    var isConsonant: Bool {
+        guard let scalar = UnicodeScalar(self)?.value else { return false }
+        let consonantScalarRange: ClosedRange<UInt32> = 12593...12622
+        return consonantScalarRange ~= scalar
     }
 }

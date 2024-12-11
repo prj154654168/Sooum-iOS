@@ -25,8 +25,6 @@ extension UIImage {
         return resizedImage
     }
     
-    static let placeholder: UIImage? = UIColor.som.gray400.toImage
-    
     func download(strUrl: String?, completion: @escaping (UIImage?) -> Void) {
         
         if let strUrl = strUrl, let url = URL(string: strUrl) {
@@ -37,11 +35,12 @@ extension UIImage {
                     completion(result.image)
                 case let .failure(error):
                     print("❌ Download image failed with kingfisher \(error.localizedDescription)")
-                    completion(Self.placeholder)
+                    self.cancel(strUrl: strUrl)
+                    completion(nil)
                 }
             }
         } else {
-            completion(Self.placeholder)
+            completion(nil)
         }
     }
     
