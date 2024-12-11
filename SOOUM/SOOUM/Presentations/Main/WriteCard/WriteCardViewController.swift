@@ -145,14 +145,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        self.dismiss(animated: true)
-    }
     
-    
-    // MARK: - ReactorKit
+    // MARK: - ReactorKit - bind
     
     func bind(reactor: WriteCardViewReactor) {
         
@@ -161,7 +155,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         }
         
         // Life Cycle
-        self.rx.viewWillAppear
+        self.rx.viewDidAppear
             .subscribe(with: self) { object, _ in
                 object.showBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
@@ -175,24 +169,26 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // Keyboard, bottomSheet interaction
-        RxKeyboard.instance.isHidden
-            .distinctUntilChanged()
-            .filter { $0 }
-            .drive(with: self) { object, _ in
-                object.showBottomSheet(
-                    presented: object.uploadCardBottomSheetViewController,
-                    dismissWhenScreenDidTap: true,
-                    isHandleBar: true,
-                    neverDismiss: true,
-                    maxHeight: object.maxHeight,
-                    initalHeight: object.initalHeight
-                )
-            }
-            .disposed(by: self.disposeBag)
-        
-        RxKeyboard.instance.willShowVisibleHeight
-            .drive(with: self) { objcet, _ in
-                objcet.dismissBottomSheet()
+        RxKeyboard.instance.visibleHeight
+            .drive(with: self) { object, keyboardHeight in
+                
+                if keyboardHeight > 0 {
+                    
+                    object.dismissBottomSheet()
+                } else {
+                    
+                    // 현재 present 된 viewController가 없을 때 표시
+                    guard object.presentedViewController == nil else { return }
+                    
+                    object.showBottomSheet(
+                        presented: object.uploadCardBottomSheetViewController,
+                        dismissWhenScreenDidTap: true,
+                        isHandleBar: true,
+                        neverDismiss: true,
+                        maxHeight: object.maxHeight,
+                        initalHeight: object.initalHeight
+                    )
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -382,23 +378,29 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .skip(1)
             .subscribe(with: self) { object, isWrite in
                 
-                object.dismissBottomSheet(completion: {
-                    
-                    if isWrite {
+                // 글추가 성공
+                if isWrite {
+                    // 키보드가 표시되어 있을 때, 이전 화면으로 전환
+                    if object.presentedViewController == nil {
                         
                         object.navigationPop()
                     } else {
-                        
-                        SOMDialogViewController.show(
-                            title: Text.failedWriteDialogTitle,
-                            subTitle: Text.failedWriteDialogSubTitle,
-                            rightAction: .init(
-                                mode: .ok,
-                                handler: { UIApplication.topViewController?.dismiss(animated: true) }
-                            )
-                        )
+                        // 바텀싯이 표시되어 있을 때, 바텀싯 제거 후 이전 화면으로 전환
+                        object.dismissBottomSheet() {
+                            object.navigationPop()
+                        }
                     }
-                })
+                } else {
+                    // 글추가 실패, 실패 다이얼로그 표시
+                    SOMDialogViewController.show(
+                        title: Text.failedWriteDialogTitle,
+                        subTitle: Text.failedWriteDialogSubTitle,
+                        rightAction: .init(
+                            mode: .ok,
+                            handler: { UIApplication.topViewController?.dismiss(animated: true) }
+                        )
+                    )
+                }
             }
             .disposed(by: self.disposeBag)
     }
