@@ -155,8 +155,10 @@ class WriteCardViewController: BaseNavigationViewController, View {
         }
         
         // Life Cycle
-        self.rx.viewDidAppear
+        self.rx.viewWillAppear
             .subscribe(with: self) { object, _ in
+                guard object.presentedViewController == nil else { return }
+                
                 object.showBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
                     dismissWhenScreenDidTap: true,
