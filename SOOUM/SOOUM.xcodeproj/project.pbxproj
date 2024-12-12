@@ -1382,7 +1382,6 @@
 		387FBAE32C8702C100A5E139 = {
 			isa = PBXGroup;
 			children = (
-				2A6280612D085C7600803BE9 /* SOOUM-Dev.entitlements */,
 				387FBAEE2C8702C100A5E139 /* SOOUM */,
 				387FBAED2C8702C100A5E139 /* Products */,
 				38CE94C22C904E4A0004B238 /* Frameworks */,
@@ -1402,7 +1401,6 @@
 		387FBAEE2C8702C100A5E139 /* SOOUM */ = {
 			isa = PBXGroup;
 			children = (
-				2A6280602D085C6200803BE9 /* SOOUM.entitlements */,
 				388371F62C8C8E7F004212EB /* DesignSystem */,
 				387FBB032C87036D00A5E139 /* App */,
 				38FDC2B42C9E745B00C094C2 /* Base */,
@@ -1429,7 +1427,9 @@
 			isa = PBXGroup;
 			children = (
 				387FBAF82C8702C200A5E139 /* Assets.xcassets */,
+				2A6280602D085C6200803BE9 /* SOOUM.entitlements */,
 				387FBAFA2C8702C200A5E139 /* LaunchScreen.storyboard */,
+				2A6280612D085C7600803BE9 /* SOOUM-Dev.entitlements */,
 				38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */,
 				38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */,
 				388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */,
@@ -2508,7 +2508,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "SOOUM-Dev.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 103000;
@@ -2552,7 +2552,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "SOOUM-Dev.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 103000;
@@ -2723,7 +2723,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SOOUM/SOOUM.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 99FRG743RX;
@@ -2761,7 +2761,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SOOUM/SOOUM.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 99FRG743RX;
