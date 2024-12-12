@@ -140,6 +140,10 @@
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		3802BDAC2D0AC1FB001256EA /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDAB2D0AC1FB001256EA /* UIImage.swift */; };
 		3802BDAD2D0AC1FB001256EA /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDAB2D0AC1FB001256EA /* UIImage.swift */; };
+		3802BDB12D0AE900001256EA /* PushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDB02D0AE900001256EA /* PushManager.swift */; };
+		3802BDB62D0AF16A001256EA /* PushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDB02D0AE900001256EA /* PushManager.swift */; };
+		3802BDB82D0AF2F7001256EA /* PushManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDB72D0AF2F7001256EA /* PushManager+Rx.swift */; };
+		3802BDB92D0AF2F7001256EA /* PushManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDB72D0AF2F7001256EA /* PushManager+Rx.swift */; };
 		3803CF692D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */; };
 		3803CF6A2D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */; };
 		3803CF6C2D0156FC00FD90DB /* SettingsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803CF6B2D0156FC00FD90DB /* SettingsRequest.swift */; };
@@ -523,6 +527,8 @@
 		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		3802BDAB2D0AC1FB001256EA /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		3802BDB02D0AE900001256EA /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
+		3802BDB72D0AF2F7001256EA /* PushManager+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PushManager+Rx.swift"; sourceTree = "<group>"; };
 		3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewReactor.swift; sourceTree = "<group>"; };
 		3803CF6B2D0156FC00FD90DB /* SettingsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRequest.swift; sourceTree = "<group>"; };
 		3803CF6F2D0159A500FD90DB /* SettingsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsResponse.swift; sourceTree = "<group>"; };
@@ -1047,6 +1053,15 @@
 			path = LocationManager;
 			sourceTree = "<group>";
 		};
+		3802BDAE2D0AE8CA001256EA /* PushManager */ = {
+			isa = PBXGroup;
+			children = (
+				3802BDB02D0AE900001256EA /* PushManager.swift */,
+				3802BDB72D0AF2F7001256EA /* PushManager+Rx.swift */,
+			);
+			path = PushManager;
+			sourceTree = "<group>";
+		};
 		3803CF6E2D01598100FD90DB /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1218,6 +1233,7 @@
 				38D8E28F2CCD22E900CE2E0A /* AuthManager */,
 				38026E3D2CA2B44B0045E1CE /* LocationManager */,
 				385620ED2CA19C2200E0AB5A /* NetworkManager */,
+				3802BDAE2D0AE8CA001256EA /* PushManager */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -2058,6 +2074,7 @@
 				3878D0572CFFCBDA00F9522F /* CommentHistoryResponse.swift in Sources */,
 				381DEA8E2CD4BE55009F1FE9 /* SignInResponse.swift in Sources */,
 				381A1D662CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */,
+				3802BDB92D0AF2F7001256EA /* PushManager+Rx.swift in Sources */,
 				387D852D2D08320A005D9D22 /* SOMCardModel.swift in Sources */,
 				385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				3817016F2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
@@ -2086,6 +2103,7 @@
 				384972A12CA4DEC00012FCA1 /* CardRequest.swift in Sources */,
 				38BE72182CC696E9002662DD /* WriteTagTextField+Rx.swift in Sources */,
 				388FCAD12CFAC2BF0012C4D6 /* Notification.swift in Sources */,
+				3802BDB62D0AF16A001256EA /* PushManager.swift in Sources */,
 				38B6AADC2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				38C2D4122CFE9EF300CEA092 /* OtherProfileViewCell.swift in Sources */,
@@ -2422,6 +2440,7 @@
 				2AE6B1922CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				2AE6B18F2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
 				38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
+				3802BDB82D0AF2F7001256EA /* PushManager+Rx.swift in Sources */,
 				3878D05C2CFFD10D00F9522F /* FollowingResponse.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */,
@@ -2439,6 +2458,7 @@
 				3803CF742D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
 				2AFF95702CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */,
 				384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
+				3802BDB12D0AE900001256EA /* PushManager.swift in Sources */,
 				2A5BB7E72CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
 				3803CF772D01685000FD90DB /* CommentHistroyViewReactor.swift in Sources */,
