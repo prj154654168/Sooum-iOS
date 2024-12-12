@@ -15,6 +15,7 @@ class OnboardingNicknameSettingViewReactor: Reactor {
         case vaild
         case emptyName
         case invalid
+        case overEight
         
         var desc: String {
             switch self {
@@ -24,6 +25,8 @@ class OnboardingNicknameSettingViewReactor: Reactor {
                 "한 글자 이상 입력해주세요."
             case .invalid:
                 "부적절한 닉네임입니다."
+            case .overEight:
+                "8자 이하로 입력해주세요."
             }
         }
     }
@@ -78,6 +81,10 @@ class OnboardingNicknameSettingViewReactor: Reactor {
         if nickname.isEmpty {
             // 닉네임이 비어있다면 유효하지 않음을 즉시 반환
             return Observable.just(.success((nickname: nickname, isValid: .emptyName)))
+        }
+        
+        if nickname.count > 8 {
+            return Observable.just(.success((nickname: nickname, isValid: .invalid)))
         }
         
         return networkManager.request(NicknameValidationResponse.self, request: request)
