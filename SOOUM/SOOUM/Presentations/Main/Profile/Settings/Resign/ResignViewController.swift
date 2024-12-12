@@ -154,7 +154,7 @@ class ResignViewController: BaseNavigationViewController, View {
         
         resignGuideBackgroundView.addSubview(self.secondDotLabel)
         self.secondDotLabel.snp.makeConstraints {
-            $0.top.equalTo(self.firstDotLabel.snp.bottom)
+            $0.top.equalTo(self.firstResignGuideLabel.snp.bottom)
             $0.leading.equalToSuperview().offset(19)
             $0.width.equalTo(8)
         }
