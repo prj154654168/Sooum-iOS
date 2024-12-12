@@ -30,11 +30,17 @@ protocol AuthManagerDelegate: AnyObject {
     func authPayloadByRefresh() -> [String: String]
 }
 
+struct PushTokenSet: Equatable {
+    var apns: Data?
+    var fcm: String?
+}
+
 class AuthManager: AuthManagerDelegate {
     
     static let shared = AuthManager()
     
     private var isReAuthenticating: Bool = false
+    var registeredToken: PushTokenSet?
     
     private var disposeBag = DisposeBag()
     
@@ -101,12 +107,13 @@ class AuthManager: AuthManagerDelegate {
             .flatMapLatest { object, publicKey -> Observable<Bool> in
                 
                 if let secKey = object.convertPEMToSecKey(pemString: publicKey),
-                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
+                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey),
+                   let fcmToken = self.registeredToken?.fcm {
                     
                     let request: AuthRequest = .signUp(
                         encryptedDeviceId: encryptedDeviceId,
                         // TODO: 추후 fcm 등록 후 추가
-                        firebaseToken: "example_firebase_token",
+                        firebaseToken: fcmToken,
                         isAllowNotify: true,
                         isAllowTermOne: true,
                         isAllowTermTwo: true,

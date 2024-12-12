@@ -64,6 +64,36 @@ class SimpleDefaults {
         guard let decoded = try? JSONDecoder().decode(Coordinate.self, from: data) else { return nil }
         return decoded
     }
+    
+    
+    // MARK: Remote notification activation
+    
+    private let remoteNotificationActivationKey: String = "kr.co.twinny.taras.remote.notification.activation"
+
+    @discardableResult
+    func initRemoteNotificationActivation() -> Bool {
+        objc_sync_enter(self); defer { objc_sync_exit(self) }
+        let key: String = "\(self.simpleKey).\(self.remoteNotificationActivationKey)"
+        UserDefaults.standard.set(true, forKey: key)
+        return true
+    }
+
+    func loadRemoteNotificationActivation() -> Bool {
+        objc_sync_enter(self); defer { objc_sync_exit(self) }
+        let key: String = "\(self.simpleKey).\(self.remoteNotificationActivationKey)"
+        guard let value = UserDefaults.standard.value(forKey: key) as? Bool else {
+            return self.initRemoteNotificationActivation()
+        }
+        return value
+    }
+
+    @discardableResult
+    func saveRemoteNotificationActivation(_ value: Bool) -> Bool {
+        objc_sync_enter(self); defer { objc_sync_exit(self) }
+        let key: String = "\(self.simpleKey).\(self.remoteNotificationActivationKey)"
+        UserDefaults.standard.set(value, forKey: key)
+        return value
+    }
 }
 
 extension SimpleDefaults {

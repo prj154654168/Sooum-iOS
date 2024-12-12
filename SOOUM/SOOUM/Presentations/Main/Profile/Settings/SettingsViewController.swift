@@ -148,10 +148,23 @@ class SettingsViewController: BaseNavigationViewController, View {
     
     func bind(reactor: SettingsViewReactor) {
         
+        self.notificationSettingCellView.toggleSwitch.isOn = reactor.initialState.notificationStatus
+        
         // Action
         self.rx.viewWillAppear
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        self.notificationSettingCellView.rx.didSelect
+            .subscribe(onNext: {
+                let application: UIApplication = .shared
+                let openSettingsURLString: String = UIApplication.openSettingsURLString
+                if let settingsURL = URL(string: openSettingsURLString),
+                    application.canOpenURL(settingsURL) {
+                        application.open(settingsURL)
+                }
+            })
             .disposed(by: self.disposeBag)
         
         self.commentHistoryCellView.rx.didSelect
@@ -213,6 +226,12 @@ class SettingsViewController: BaseNavigationViewController, View {
                 object.userBlockedBackgroundView.isHidden = (banEndAt == nil)
                 object.unBlockDateLabel.text = "\(Text.unBlockDate) \(banEndAt?.banEndFormatted ?? "")"
             }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.notificationStatus)
+            .distinctUntilChanged()
+            .debounce(.milliseconds(250), scheduler: MainScheduler.instance)
+            .bind(to: self.notificationSettingCellView.toggleSwitch.rx.isOn)
             .disposed(by: self.disposeBag)
     }
 }

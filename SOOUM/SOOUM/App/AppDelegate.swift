@@ -7,13 +7,20 @@
 
 import UIKit
 
+import Firebase
+import FirebaseCore
+import FirebaseMessaging
+
 import RxSwift
 
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    /// APNS 등록 완료 핸들러
+    var registerRemoteNotificationCompletion: ((Error?) -> Void)?
+    
+    let authManager = AuthManager.shared
 
     func application(
         _ application: UIApplication,
@@ -27,6 +34,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("Resource count \(RxSwift.Resources.total)")
             })
         #endif
+        
+        FirebaseApp.configure()
+        // 파이어베이스 Meesaging 설정
+        Messaging.messaging().delegate = self
+        // 앱 실행 시 사용자에게 알림 허용 권한을 받음
+        UNUserNotificationCenter.current().delegate = self
+        
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound] // 필요한 알림 권한을 설정
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: { _, _ in }
+        )
+        
+        // UNUserNotificationCenterDelegate를 구현한 메서드를 실행시킴
+        application.registerForRemoteNotifications()
         
         // 앱 첫 실행 시 token 정보 제거
         self.removeKeyChainWhenFirstLaunch()
@@ -51,6 +73,74 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didDiscardSceneSessions sceneSessions: Set<UISceneSession>
     ) { }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    
+    // Foreground(앱 켜진 상태)에서도 알림 오는 설정
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        
+        let options: UNNotificationPresentationOptions = [.sound, .list, .banner]
+        completionHandler(options)
+    }
+    
+    /// 사용자가 push notification에 대한 응답을 했을 때 실행할 코드 작성
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
+        let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
+
+        if let messageID: String = userInfo["gcm.message_id"] as? String {
+            print("Message ID: \(messageID)")
+        }
+        
+        // TODO: 알림으로 부터 받은 데이터 사용
+
+        completionHandler()
+    }
+}
+
+extension AppDelegate: MessagingDelegate {
+    
+    func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+        self.registerRemoteNotificationCompletion?(error)
+
+        print("Error registration APNS token: \(error)")
+    }
+
+    func application(
+        _ application: UIApplication,
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+        // APN 등록 성공 후 전달받은 deviceToken을 Firebase 서버로 전달
+        Messaging.messaging().apnsToken = deviceToken
+        
+        let current = PushTokenSet(
+            apns: deviceToken,
+            fcm: Messaging.messaging().fcmToken
+        )
+        self.authManager.registeredToken = current
+
+        self.registerRemoteNotificationCompletion?(nil)
+    }
+
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        
+        let current = PushTokenSet(
+            apns: messaging.apnsToken,
+            fcm: fcmToken
+        )
+        self.authManager.registeredToken = current
+    }
 }
 
 extension AppDelegate {

@@ -12,6 +12,10 @@ def pods
   pod 'RxGesture', '~> 4.0.4'
   
   pod 'Alamofire', '~> 5.9.1'
+
+  pod 'Firebase/Analytics', '~> 10.5.0'
+  pod 'Firebase/Crashlytics', '~> 10.5.0'
+  pod 'Firebase/Messaging', '~> 10.5.0'
   
   pod 'SnapKit', '~> 5.7.1'
   pod 'Then', '~> 3.0.0'

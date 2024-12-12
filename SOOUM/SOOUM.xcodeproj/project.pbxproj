@@ -51,6 +51,9 @@
 		2A5BB7E72CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */; };
 		2A5BB7E82CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */; };
 		2A5BB7FA2CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */; };
+		2A62805B2D084FEB00803BE9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A62805A2D084FEB00803BE9 /* GoogleService-Info.plist */; };
+		2A62805C2D08505200803BE9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A62805A2D084FEB00803BE9 /* GoogleService-Info.plist */; };
+		2A62805E2D08517100803BE9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A62805D2D08517100803BE9 /* GoogleService-Info.plist */; };
 		2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4122CC944FB0057C013 /* UploadRequest.swift */; };
@@ -137,6 +140,10 @@
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		3802BDAC2D0AC1FB001256EA /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDAB2D0AC1FB001256EA /* UIImage.swift */; };
 		3802BDAD2D0AC1FB001256EA /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDAB2D0AC1FB001256EA /* UIImage.swift */; };
+		3802BDB12D0AE900001256EA /* PushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDB02D0AE900001256EA /* PushManager.swift */; };
+		3802BDB62D0AF16A001256EA /* PushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDB02D0AE900001256EA /* PushManager.swift */; };
+		3802BDB82D0AF2F7001256EA /* PushManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDB72D0AF2F7001256EA /* PushManager+Rx.swift */; };
+		3802BDB92D0AF2F7001256EA /* PushManager+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDB72D0AF2F7001256EA /* PushManager+Rx.swift */; };
 		3803CF692D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */; };
 		3803CF6A2D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */; };
 		3803CF6C2D0156FC00FD90DB /* SettingsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803CF6B2D0156FC00FD90DB /* SettingsRequest.swift */; };
@@ -471,6 +478,10 @@
 		2A5BB7E22CDCD97300E1C799 /* JoinRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinRequest.swift; sourceTree = "<group>"; };
 		2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameValidationResponse.swift; sourceTree = "<group>"; };
 		2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSettingViewReactor.swift; sourceTree = "<group>"; };
+		2A62805A2D084FEB00803BE9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		2A62805D2D08517100803BE9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		2A6280602D085C6200803BE9 /* SOOUM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SOOUM.entitlements; sourceTree = "<group>"; };
+		2A6280612D085C7600803BE9 /* SOOUM-Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "SOOUM-Dev.entitlements"; sourceTree = "<group>"; };
 		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
 		2ACBD4122CC944FB0057C013 /* UploadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadRequest.swift; sourceTree = "<group>"; };
 		2ACBD4162CC963390057C013 /* DefaultCardImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCardImageResponse.swift; sourceTree = "<group>"; };
@@ -516,6 +527,8 @@
 		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		3802BDAB2D0AC1FB001256EA /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		3802BDB02D0AE900001256EA /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
+		3802BDB72D0AF2F7001256EA /* PushManager+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PushManager+Rx.swift"; sourceTree = "<group>"; };
 		3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewReactor.swift; sourceTree = "<group>"; };
 		3803CF6B2D0156FC00FD90DB /* SettingsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRequest.swift; sourceTree = "<group>"; };
 		3803CF6F2D0159A500FD90DB /* SettingsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsResponse.swift; sourceTree = "<group>"; };
@@ -1040,6 +1053,15 @@
 			path = LocationManager;
 			sourceTree = "<group>";
 		};
+		3802BDAE2D0AE8CA001256EA /* PushManager */ = {
+			isa = PBXGroup;
+			children = (
+				3802BDB02D0AE900001256EA /* PushManager.swift */,
+				3802BDB72D0AF2F7001256EA /* PushManager+Rx.swift */,
+			);
+			path = PushManager;
+			sourceTree = "<group>";
+		};
 		3803CF6E2D01598100FD90DB /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1211,6 +1233,7 @@
 				38D8E28F2CCD22E900CE2E0A /* AuthManager */,
 				38026E3D2CA2B44B0045E1CE /* LocationManager */,
 				385620ED2CA19C2200E0AB5A /* NetworkManager */,
+				3802BDAE2D0AE8CA001256EA /* PushManager */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -1420,7 +1443,9 @@
 			isa = PBXGroup;
 			children = (
 				387FBAF82C8702C200A5E139 /* Assets.xcassets */,
+				2A6280602D085C6200803BE9 /* SOOUM.entitlements */,
 				387FBAFA2C8702C200A5E139 /* LaunchScreen.storyboard */,
+				2A6280612D085C7600803BE9 /* SOOUM-Dev.entitlements */,
 				38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */,
 				38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */,
 				388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */,
@@ -1435,6 +1460,7 @@
 			isa = PBXGroup;
 			children = (
 				387FBAFD2C8702C200A5E139 /* Info-prod.plist */,
+				2A62805D2D08517100803BE9 /* GoogleService-Info.plist */,
 			);
 			path = Production;
 			sourceTree = "<group>";
@@ -1443,6 +1469,7 @@
 			isa = PBXGroup;
 			children = (
 				388DCC382C8707C200DC5329 /* Info-dev.plist */,
+				2A62805A2D084FEB00803BE9 /* GoogleService-Info.plist */,
 			);
 			path = Develop;
 			sourceTree = "<group>";
@@ -1897,6 +1924,7 @@
 				38D3CB172CC2362B001EC280 /* Hakgyoansim-Bold.ttf in Resources */,
 				385441962C870544004E2BB0 /* Base in Resources */,
 				38D3CB192CC2362B001EC280 /* Hakgyoansim-Light.ttf in Resources */,
+				2A62805B2D084FEB00803BE9 /* GoogleService-Info.plist in Resources */,
 				388DA1022C8F538400A9DD56 /* PretendardVariable.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1905,6 +1933,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A62805E2D08517100803BE9 /* GoogleService-Info.plist in Resources */,
+				2A62805C2D08505200803BE9 /* GoogleService-Info.plist in Resources */,
 				387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */,
 				38D3CB162CC2362B001EC280 /* Hakgyoansim-Bold.ttf in Resources */,
 				387FBAFC2C8702C200A5E139 /* Base in Resources */,
@@ -2044,6 +2074,7 @@
 				3878D0572CFFCBDA00F9522F /* CommentHistoryResponse.swift in Sources */,
 				381DEA8E2CD4BE55009F1FE9 /* SignInResponse.swift in Sources */,
 				381A1D662CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */,
+				3802BDB92D0AF2F7001256EA /* PushManager+Rx.swift in Sources */,
 				387D852D2D08320A005D9D22 /* SOMCardModel.swift in Sources */,
 				385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				3817016F2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
@@ -2072,6 +2103,7 @@
 				384972A12CA4DEC00012FCA1 /* CardRequest.swift in Sources */,
 				38BE72182CC696E9002662DD /* WriteTagTextField+Rx.swift in Sources */,
 				388FCAD12CFAC2BF0012C4D6 /* Notification.swift in Sources */,
+				3802BDB62D0AF16A001256EA /* PushManager.swift in Sources */,
 				38B6AADC2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				38C2D4122CFE9EF300CEA092 /* OtherProfileViewCell.swift in Sources */,
@@ -2408,6 +2440,7 @@
 				2AE6B1922CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				2AE6B18F2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
 				38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
+				3802BDB82D0AF2F7001256EA /* PushManager+Rx.swift in Sources */,
 				3878D05C2CFFD10D00F9522F /* FollowingResponse.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */,
@@ -2425,6 +2458,7 @@
 				3803CF742D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
 				2AFF95702CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */,
 				384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
+				3802BDB12D0AE900001256EA /* PushManager.swift in Sources */,
 				2A5BB7E72CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
 				3803CF772D01685000FD90DB /* CommentHistroyViewReactor.swift in Sources */,
@@ -2494,15 +2528,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 103000;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 99FRG743RX;
+				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "[D]SOOUM";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진 업로드를 위해 갤러리 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
@@ -2524,7 +2557,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Profile-Dev";
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = core.sooum.org;
@@ -2540,15 +2572,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 103000;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 99FRG743RX;
+				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "[D]SOOUM";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진 업로드를 위해 갤러리 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
@@ -2570,7 +2601,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Profile-Dev";
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = core.sooum.org;
@@ -2713,15 +2743,22 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2744,15 +2781,22 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
