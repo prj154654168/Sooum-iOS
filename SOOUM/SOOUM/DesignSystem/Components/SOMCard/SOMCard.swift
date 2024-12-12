@@ -177,7 +177,6 @@ class SOMCard: UIView {
     func prepareForReuse() {
         disposeBag = DisposeBag()
         
-        resetDatas()
         resetConstraints()
     }
     
@@ -440,23 +439,6 @@ class SOMCard: UIView {
     
     
     // MARK: Private func
-    
-    private func resetDatas() {
-        
-        rootContainerImageView.image = nil
-        
-        cardPungTimeBackgroundView.isHidden = true
-        cardPungTimeLabel.text = nil
-        
-        pungedCardInMainHomeBackgroundView.isHidden = true
-        
-        cardTextContentLabel.text = nil
-        
-        timeImageView.image = nil
-        distanceImageView.image = nil
-        likeImageView.image = nil
-        commentImageView.image = nil
-    }
     
     private func resetConstraints() {
         
