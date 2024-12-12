@@ -28,9 +28,13 @@ class TagDetailViewController: BaseViewController, View {
             MainHomeViewCell.self,
             forCellReuseIdentifier: String(describing: MainHomeViewCell.self)
         )
+        $0.refreshControl = refreshControl
+
         $0.dataSource = self
         $0.delegate = self
     }
+    
+    let refreshControl = UIRefreshControl()
     
     override func setupConstraints() {
         self.view.addSubview(navBarView)
@@ -60,6 +64,14 @@ class TagDetailViewController: BaseViewController, View {
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.fetchTagCards)
                 reactor.action.onNext(.fetchTagInfo)
+            }
+            .disposed(by: self.disposeBag)
+        
+        refreshControl.rx.controlEvent(.valueChanged)
+            .subscribe(with: self) { object, _ in
+                reactor.action.onNext(.fetchTagCards)
+                reactor.action.onNext(.fetchTagInfo)
+                object.refreshControl.endRefreshing()
             }
             .disposed(by: self.disposeBag)
         
