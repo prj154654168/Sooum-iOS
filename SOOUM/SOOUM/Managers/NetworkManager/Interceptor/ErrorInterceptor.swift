@@ -14,7 +14,7 @@ class ErrorInterceptor: RequestInterceptor {
     
     private let lock = NSLock()
     
-    private let retryLimit: Int = 2
+    private let retryLimit: Int = 1
     
     private let authManager = AuthManager.shared
     

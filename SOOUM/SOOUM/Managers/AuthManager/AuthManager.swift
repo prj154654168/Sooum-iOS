@@ -156,7 +156,7 @@ class AuthManager: AuthManagerDelegate {
      */
     func reAuthenticate(_ accessToken: String, _ completion: @escaping (AuthResult) -> Void) {
         
-        let authInfo = self.authInfo
+        let token = self.authInfo.token
         
         guard authInfo.token.refreshToken.isEmpty == false else {
             let error = NSError(
@@ -168,7 +168,7 @@ class AuthManager: AuthManagerDelegate {
             return
         }
         
-        guard self.isReAuthenticating == false, accessToken == authInfo.token.accessToken else {
+        guard self.isReAuthenticating == false, accessToken == token.accessToken else {
             completion(.success)
             return
         }
@@ -194,7 +194,7 @@ class AuthManager: AuthManagerDelegate {
                         object.updateTokens(
                             .init(
                                 accessToken: accessToken,
-                                refreshToken: authInfo.token.refreshToken
+                                refreshToken: token.refreshToken
                             )
                         )
                         completion(.success)
