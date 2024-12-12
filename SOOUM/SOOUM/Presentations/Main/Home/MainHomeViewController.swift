@@ -64,6 +64,8 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.refreshControl = SOMRefreshControl()
         
         $0.dataSource = self
+        $0.prefetchDataSource = self
+        
         $0.delegate = self
     }
     
@@ -90,7 +92,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         self.navigationBar.titleView = self.logo
         self.navigationBar.titlePosition = .left
         
-        self.navigationBar.isHideBackButton = true
+        self.navigationBar.hidesBackButton = true
         self.navigationBar.setRightButtons([self.rightAlamButton])
     }
     
@@ -109,7 +111,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
         }
         self.headerContainer.addArrangedSubview(self.headerLocationFilter)
         self.headerLocationFilter.snp.makeConstraints {
-            self.locationFilterHeightConstraint = $0.height.equalTo(SOMLocationFilter.height).constraint
+            self.locationFilterHeightConstraint = $0.height.equalTo(0).constraint
         }
         
         self.view.addSubview(self.tableView)
@@ -160,9 +162,6 @@ class MainHomeViewController: BaseNavigationViewController, View {
     
     override func bind() {
         super.bind()
-        
-        // homeTabBar 시작 인덱스
-        self.headerHomeTabBar.didSelectTab(0)
         
         // 탭바 표시
         self.rx.viewWillAppear
@@ -313,70 +312,68 @@ extension MainHomeViewController: UITableViewDataSource {
     }
 }
 
- extension MainHomeViewController: UITableViewDelegate {
-     
-     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-         let selectedId = self.displayedCards[indexPath.row].id
-         
-         let detailViewController = DetailViewController()
-         detailViewController.reactor = self.reactor?.reactorForDetail(selectedId)
-         // 탭바 숨김처리, bottomBarHidden = true
-         self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
-     }
-     
-     func tableView(
-        _ tableView: UITableView,
-        willDisplay cell: UITableViewCell,
-        forRowAt indexPath: IndexPath
-     ) {
-         let lastSectionIndex = tableView.numberOfSections - 1
-         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
-         
-         if indexPath.section == lastSectionIndex,
-            indexPath.row == lastRowIndex,
-            let reactor = self.reactor {
-             
-             if self.displayedCards.count < reactor.currentState.cards.count {
-                 reactor.action.onNext(.moreFind(lastId: nil))
-             } else {
-                 let cell = cell as! MainHomeViewCell
-                 let lastId = cell.cardView.model?.data.id
-                 reactor.action.onNext(.moreFind(lastId: lastId))
-             }
-         }
-     }
-     
-     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-         let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
-         let height: CGFloat = width + 10 /// 가로 + top inset
-         return height
-     }
-     
-     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-         guard self.displayedCards.isEmpty == false else { return }
-         
-         let offset = scrollView.contentOffset.y
-         
-         // offset이 currentOffset보다 크면 아래로 스크롤, 반대일 경우 위로 스크롤
-         // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
-         self.headerContainer.isHidden = offset <= 0 ? false : offset > self.currentOffset
-         self.tableViewTopConstraint?.deactivate()
-         self.tableView.snp.makeConstraints {
-             let top = self.headerContainer.isHidden ? self.view.safeAreaLayoutGuide.snp.top : self.headerContainer.snp.bottom
-             self.tableViewTopConstraint = $0.top.equalTo(top).constraint
-         }
-         
-         // 최상단일 때만 moveToButton 숨김
-         self.moveTopButton.isHidden = offset <= 0
-         
-         // Set homeTabBar hide animation
-         UIView.animate(withDuration: 0.5) {
-             self.view.layoutIfNeeded()
-         }
-         
-         self.currentOffset = offset
-     }
- }
+extension MainHomeViewController: UITableViewDataSourcePrefetching {
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        let lastSectionIndex = tableView.numberOfSections - 1
+        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        
+        if indexPaths.first?.section == lastSectionIndex,
+           indexPaths.last?.row == lastRowIndex,
+           let reactor = self.reactor {
+            
+            if self.displayedCards.count < reactor.currentState.cards.count {
+                reactor.action.onNext(.moreFind(lastId: nil))
+            } else {
+                let lastId = self.displayedCards[indexPaths.last?.row ?? 0].id
+                reactor.action.onNext(.moreFind(lastId: lastId))
+            }
+        }
+    }
+}
+
+extension MainHomeViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedId = self.displayedCards[indexPath.row].id
+        
+        let detailViewController = DetailViewController()
+        detailViewController.reactor = self.reactor?.reactorForDetail(selectedId)
+        // 탭바 숨김처리, bottomBarHidden = true
+        self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
+        let height: CGFloat = width + 10 /// 가로 + top inset
+        return height
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard self.displayedCards.isEmpty == false else { return }
+        
+        let offset = scrollView.contentOffset.y
+        
+        // offset이 currentOffset보다 크면 아래로 스크롤, 반대일 경우 위로 스크롤
+        // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
+        self.headerContainer.isHidden = offset <= 0 ? false : offset > self.currentOffset
+        self.tableViewTopConstraint?.deactivate()
+        self.tableView.snp.makeConstraints {
+            let top = self.headerContainer.isHidden ? self.view.safeAreaLayoutGuide.snp.top : self.headerContainer.snp.bottom
+            self.tableViewTopConstraint = $0.top.equalTo(top).constraint
+        }
+        
+        // 최상단일 때만 moveToButton 숨김
+        self.moveTopButton.isHidden = offset <= 0
+        
+        // Set homeTabBar hide animation
+        UIView.animate(withDuration: 0.5) {
+            self.view.layoutIfNeeded()
+        }
+        
+        self.currentOffset = offset
+    }
+}
 
 
 // MARK: MainHomeHeaderView Delegate
@@ -400,8 +397,8 @@ extension MainHomeViewController: SOMHomeTabBarDelegate {
                         let application = UIApplication.shared
                         let openSettingsURLString: String = UIApplication.openSettingsURLString
                         if let settingsURL = URL(string: openSettingsURLString),
-                            application.canOpenURL(settingsURL) {
-                                application.open(settingsURL)
+                           application.canOpenURL(settingsURL) {
+                            application.open(settingsURL)
                         }
                         
                         UIApplication.topViewController?.dismiss(animated: true)

@@ -86,6 +86,11 @@ class SOMTabBarController: UIViewController {
         let hidesTabBar = viewController.hidesBottomBarWhenPushed
         self.tabBar.isHidden = hidesTabBar
     }
+    
+    func didSelectedIndex(_ index: Int) {
+        
+        self.tabBar.didSelectTab(index)
+    }
 }
 
 extension SOMTabBarController: SOMTabBarDelegate {

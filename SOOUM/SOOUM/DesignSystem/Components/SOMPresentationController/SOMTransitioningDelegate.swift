@@ -9,10 +9,6 @@ import UIKit
 
 
 class SOMTransitioningDelegate: NSObject {
-
-    struct AssociatedKeys {
-        static var transitioningDelegate = "BottomSheetTransitioningDelegate"
-    }
     
     private var dismissWhenScreenDidTap: Bool
     private var isHandleBar: Bool
@@ -50,6 +46,13 @@ class SOMTransitioningDelegate: NSObject {
             animated: animated,
             completion: completion
         )
+    }
+}
+
+extension SOMTransitioningDelegate {
+    
+    struct AssociatedKeys {
+        static var transitioningDelegate = UInt8(0)
     }
 }
 

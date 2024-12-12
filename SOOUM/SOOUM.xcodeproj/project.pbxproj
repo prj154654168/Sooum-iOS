@@ -135,6 +135,8 @@
 		2AFF95792CF5F0B000CBFB12 /* TagPreviewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95772CF5F0B000CBFB12 /* TagPreviewCardView.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
+		3802BDAC2D0AC1FB001256EA /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDAB2D0AC1FB001256EA /* UIImage.swift */; };
+		3802BDAD2D0AC1FB001256EA /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDAB2D0AC1FB001256EA /* UIImage.swift */; };
 		3803CF692D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */; };
 		3803CF6A2D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */; };
 		3803CF6C2D0156FC00FD90DB /* SettingsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803CF6B2D0156FC00FD90DB /* SettingsRequest.swift */; };
@@ -185,8 +187,8 @@
 		381DEA8E2CD4BE55009F1FE9 /* SignInResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A42C2CAC14C800DC463E /* SignInResponse.swift */; };
 		382D5CF62CFE9B8600BFA23E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382D5CF52CFE9B8600BFA23E /* ProfileViewController.swift */; };
 		382D5CF72CFE9B8600BFA23E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382D5CF52CFE9B8600BFA23E /* ProfileViewController.swift */; };
-		3830FFA62CEC6E3100ABA9FD /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3830FFA52CEC6E3100ABA9FD /* UIImage.swift */; };
-		3830FFA72CEC6E3100ABA9FD /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3830FFA52CEC6E3100ABA9FD /* UIImage.swift */; };
+		3830FFA62CEC6E3100ABA9FD /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3830FFA52CEC6E3100ABA9FD /* Kingfisher.swift */; };
+		3830FFA72CEC6E3100ABA9FD /* Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3830FFA52CEC6E3100ABA9FD /* Kingfisher.swift */; };
 		3836ACB42C8F045300A3C566 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB32C8F045300A3C566 /* Typography.swift */; };
 		3836ACB52C8F045300A3C566 /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB32C8F045300A3C566 /* Typography.swift */; };
 		3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */; };
@@ -513,6 +515,7 @@
 		2AFF95772CF5F0B000CBFB12 /* TagPreviewCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPreviewCardView.swift; sourceTree = "<group>"; };
 		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		3802BDAB2D0AC1FB001256EA /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewReactor.swift; sourceTree = "<group>"; };
 		3803CF6B2D0156FC00FD90DB /* SettingsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRequest.swift; sourceTree = "<group>"; };
 		3803CF6F2D0159A500FD90DB /* SettingsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsResponse.swift; sourceTree = "<group>"; };
@@ -537,7 +540,7 @@
 		381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayout.swift; sourceTree = "<group>"; };
 		381DEA8A2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteCardTextView+Rx.swift"; sourceTree = "<group>"; };
 		382D5CF52CFE9B8600BFA23E /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
-		3830FFA52CEC6E3100ABA9FD /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		3830FFA52CEC6E3100ABA9FD /* Kingfisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Kingfisher.swift; sourceTree = "<group>"; };
 		3836ACB32C8F045300A3C566 /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		3836ACB62C8F04CD00A3C566 /* UILabel+Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Observer.swift"; sourceTree = "<group>"; };
 		3836ACB92C8F050D00A3C566 /* UILabel+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Typography.swift"; sourceTree = "<group>"; };
@@ -1184,8 +1187,8 @@
 		385071972CA2956D00A7905A /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
-				2A5BB7B72CDB856D00E1C799 /* Onboarding */,
 				385071982CA2958100A7905A /* Launch */,
+				2A5BB7B72CDB856D00E1C799 /* Onboarding */,
 				38B6AACB2CA410C000CE6DB6 /* Main */,
 				2AFF95522CF3207F00CBFB12 /* Tags */,
 			);
@@ -1527,10 +1530,11 @@
 				3878F4732CA3F06C00AA46A2 /* UIStackView.swift */,
 				3878F4762CA3F08300AA46A2 /* UIView.swift */,
 				384972A22CA54DC10012FCA1 /* UIImgeView.swift */,
+				3802BDAB2D0AC1FB001256EA /* UIImage.swift */,
 				38121E282CA6A52400602499 /* UIRefreshControl.swift */,
-				3830FFA52CEC6E3100ABA9FD /* UIImage.swift */,
 				3886939E2CF77FA7005F9EF3 /* UIApplication+Top.swift */,
 				388FCACF2CFAC2BF0012C4D6 /* Notification.swift */,
+				3830FFA52CEC6E3100ABA9FD /* Kingfisher.swift */,
 			);
 			path = Cocoa;
 			sourceTree = "<group>";
@@ -2170,7 +2174,7 @@
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				2AE6B1932CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
-				3830FFA72CEC6E3100ABA9FD /* UIImage.swift in Sources */,
+				3830FFA72CEC6E3100ABA9FD /* Kingfisher.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				2A44A4382CAC227300DC463E /* BaseAuthResponse.swift in Sources */,
 				2AFD05562D0082DE007C84AD /* SearchTagsResponse.swift in Sources */,
@@ -2238,6 +2242,7 @@
 				3878D0542CFFC6C100F9522F /* ProfileResponse.swift in Sources */,
 				3878D06C2CFFDF1F00F9522F /* SettingsViewController.swift in Sources */,
 				38FD4DAF2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift in Sources */,
+				3802BDAD2D0AC1FB001256EA /* UIImage.swift in Sources */,
 				381DEA8D2CD4BE4A009F1FE9 /* Card.swift in Sources */,
 				384972A42CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
 				38D6F1812CC2413400E11530 /* WriteCardTextView.swift in Sources */,
@@ -2276,7 +2281,7 @@
 				38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				38D6F17C2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
-				3830FFA62CEC6E3100ABA9FD /* UIImage.swift in Sources */,
+				3830FFA62CEC6E3100ABA9FD /* Kingfisher.swift in Sources */,
 				3878D0672CFFDAF100F9522F /* OtherFollowViewCell.swift in Sources */,
 				381701782CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				2A5BB7C52CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */,
@@ -2324,6 +2329,7 @@
 				38C2D4202CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */,
 				2A44A4372CAC227300DC463E /* BaseAuthResponse.swift in Sources */,
 				38CC49822CDE3854007A0145 /* SOMPresentationController.swift in Sources */,
+				3802BDAC2D0AC1FB001256EA /* UIImage.swift in Sources */,
 				38C2D4142CFEA9CC00CEA092 /* MyProfileViewCell.swift in Sources */,
 				3803CF882D01914200FD90DB /* ResignViewReactor.swift in Sources */,
 				38816D9E2D004A5E00EB87D6 /* UpdateProfileViewController.swift in Sources */,

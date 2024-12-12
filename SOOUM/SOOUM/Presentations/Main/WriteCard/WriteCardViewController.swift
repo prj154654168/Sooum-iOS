@@ -85,7 +85,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     private var keyboardHeight: CGFloat = 0
     
     private let initalHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28
-    private var maxHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + (74 * 3)
+    private var maxHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + (74 * 3) + 19
     
     
     // MARK: - Life Cycles
@@ -145,24 +145,20 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        self.dismiss(animated: true)
-    }
     
-    
-    // MARK: - ReactorKit
+    // MARK: - ReactorKit - bind
     
     func bind(reactor: WriteCardViewReactor) {
         
         if reactor.requestType == .comment {
-            self.maxHeight = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + 74
+            self.maxHeight = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + 74 + 19
         }
         
         // Life Cycle
         self.rx.viewWillAppear
             .subscribe(with: self) { object, _ in
+                guard object.presentedViewController == nil else { return }
+                
                 object.showBottomSheet(
                     presented: object.uploadCardBottomSheetViewController,
                     dismissWhenScreenDidTap: true,
@@ -175,24 +171,26 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // Keyboard, bottomSheet interaction
-        RxKeyboard.instance.isHidden
-            .distinctUntilChanged()
-            .filter { $0 }
-            .drive(with: self) { object, _ in
-                object.showBottomSheet(
-                    presented: object.uploadCardBottomSheetViewController,
-                    dismissWhenScreenDidTap: true,
-                    isHandleBar: true,
-                    neverDismiss: true,
-                    maxHeight: object.maxHeight,
-                    initalHeight: object.initalHeight
-                )
-            }
-            .disposed(by: self.disposeBag)
-        
-        RxKeyboard.instance.willShowVisibleHeight
-            .drive(with: self) { objcet, _ in
-                objcet.dismissBottomSheet()
+        RxKeyboard.instance.visibleHeight
+            .drive(with: self) { object, keyboardHeight in
+                
+                if keyboardHeight > 0 {
+                    
+                    object.dismissBottomSheet()
+                } else {
+                    
+                    // 현재 present 된 viewController가 없을 때 표시
+                    guard object.presentedViewController == nil else { return }
+                    
+                    object.showBottomSheet(
+                        presented: object.uploadCardBottomSheetViewController,
+                        dismissWhenScreenDidTap: true,
+                        isHandleBar: true,
+                        neverDismiss: true,
+                        maxHeight: object.maxHeight,
+                        initalHeight: object.initalHeight
+                    )
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -281,8 +279,16 @@ class WriteCardViewController: BaseNavigationViewController, View {
         // 시간제한 카드 뷰 표시
         optionState
             .compactMap { $0[.timeLimit] }
-            .map { !$0 }
-            .bind(to: self.timeLimitBackgroundView.rx.isHidden)
+            .subscribe(with: self) { object, isTimeLimit in
+                
+                object.timeLimitBackgroundView.isHidden = isTimeLimit == false
+                object.writeCardView.writeTagTextField.isHidden = isTimeLimit
+                object.writeCardView.writtenTagsHeightConstraint?.deactivate()
+                object.writeCardView.writtenTags.snp.makeConstraints {
+                    let constraint = isTimeLimit ? $0.height.equalTo(0).constraint : $0.height.equalTo(12).constraint
+                    object.writeCardView.writtenTagsHeightConstraint = constraint
+                }
+            }
             .disposed(by: self.disposeBag)
         optionState
             .compactMap { $0[.timeLimit] }
@@ -382,23 +388,29 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .skip(1)
             .subscribe(with: self) { object, isWrite in
                 
-                object.dismissBottomSheet(completion: {
-                    
-                    if isWrite {
+                // 글추가 성공
+                if isWrite {
+                    // 키보드가 표시되어 있을 때, 이전 화면으로 전환
+                    if object.presentedViewController == nil {
                         
                         object.navigationPop()
                     } else {
-                        
-                        SOMDialogViewController.show(
-                            title: Text.failedWriteDialogTitle,
-                            subTitle: Text.failedWriteDialogSubTitle,
-                            rightAction: .init(
-                                mode: .ok,
-                                handler: { UIApplication.topViewController?.dismiss(animated: true) }
-                            )
-                        )
+                        // 바텀싯이 표시되어 있을 때, 바텀싯 제거 후 이전 화면으로 전환
+                        object.dismissBottomSheet() {
+                            object.navigationPop()
+                        }
                     }
-                })
+                } else {
+                    // 글추가 실패, 실패 다이얼로그 표시
+                    SOMDialogViewController.show(
+                        title: Text.failedWriteDialogTitle,
+                        subTitle: Text.failedWriteDialogSubTitle,
+                        rightAction: .init(
+                            mode: .ok,
+                            handler: { UIApplication.topViewController?.dismiss(animated: true) }
+                        )
+                    )
+                }
             }
             .disposed(by: self.disposeBag)
     }

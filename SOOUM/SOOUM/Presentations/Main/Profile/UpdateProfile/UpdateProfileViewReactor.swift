@@ -49,6 +49,11 @@ class UpdateProfileViewReactor: Reactor {
     
     private let networkManager = NetworkManager.shared
     private var imageName: String?
+    var profile: Profile
+    
+    init(_ profile: Profile) {
+        self.profile = profile
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {

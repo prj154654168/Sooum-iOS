@@ -64,6 +64,8 @@ class MyFollowingViewCell: UITableViewCell {
         config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
             AttributeContainer(attributes)
         }
+        config.contentInsets.leading = 20
+        config.contentInsets.trailing = 20
         $0.configuration = config
         $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 26 * 0.5

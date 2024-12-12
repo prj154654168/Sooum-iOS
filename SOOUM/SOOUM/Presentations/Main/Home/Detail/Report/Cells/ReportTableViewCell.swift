@@ -37,8 +37,8 @@ class ReportTableViewCell: UITableViewCell {
     }
     
     func updateIsSelected(isSelected: Bool, animated: Bool) {
-        let borderColor = isSelected ? UIColor.som.blue600.cgColor : UIColor.som.gray200.cgColor
-        let toggleImage: UIImage = isSelected ? .radioFilled : .radioOutlined
+        let color: UIColor = isSelected ? .som.p300 : .som.gray200
+        let toggleImage: UIImage? = isSelected ? .init(.icon(.filled(.radio))) : .init(.icon(.outlined(.radio)))
         let durationTime: TimeInterval = 0.3
         if animated {
             UIView.transition(
@@ -47,16 +47,18 @@ class ReportTableViewCell: UITableViewCell {
                 options: .transitionCrossDissolve,
                 animations: { [weak self] in
                     self?.reasonView.toggleView.image = toggleImage
+                    self?.reasonView.toggleView.tintColor = color
                 },
                 completion: nil
             )
             
             UIView.animate(withDuration: durationTime) { [weak self] in
-                self?.reasonView.rootContainerView.layer.borderColor = borderColor
+                self?.reasonView.rootContainerView.layer.borderColor = color.cgColor
             }
         } else {
             reasonView.toggleView.image = toggleImage
-            reasonView.rootContainerView.layer.borderColor = borderColor
+            reasonView.toggleView.tintColor = color
+            reasonView.rootContainerView.layer.borderColor = color.cgColor
         }
     }
     

@@ -142,6 +142,6 @@ class WriteCardViewReactor: Reactor {
 extension WriteCardViewReactor {
     
     func reactorForUploadCard() -> UploadCardBottomSheetViewReactor {
-        UploadCardBottomSheetViewReactor.init()
+        UploadCardBottomSheetViewReactor.init(type: self.requestType == .card ? .card : .comment)
     }
 }

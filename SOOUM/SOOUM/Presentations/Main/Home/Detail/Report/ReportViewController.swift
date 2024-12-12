@@ -18,19 +18,20 @@ import Then
 class ReportViewController: BaseNavigationViewController, View {
     
     enum Text {
+        static let title: String = "신고하기"
+        static let tableViewTitle: String = "신고 사유 선택"
+        
         static let successDialogTitle: String = "신고가 접수 되었어요"
         static let successDialogSubTitle: String = "신고 내용을 확인한 후 조치할 예정이에요"
         
         static let failedDialogTitle: String = "이미 신고를 한 카드에요"
         static let failedDialogSubTitle: String = "이전 신고가 접수되어 처리 중이에요"
     }
-    
-    var selectedReason: ReportViewReactor.ReportType?
         
     let tableViewTitleLabel = UILabel().then {
         $0.typography = .som.body1WithBold
         $0.textColor = .som.gray800
-        $0.text = "신고 사유 선택"
+        $0.text = Text.tableViewTitle
     }
         
     lazy var reportTableView = UITableView().then {
@@ -46,13 +47,19 @@ class ReportViewController: BaseNavigationViewController, View {
     
     let uploadReportButtonLabel = UILabel().then {
         $0.typography = .som.body1WithBold
-        $0.text = "신고하기"
+        $0.text = Text.title
         $0.textColor = .som.white
         $0.isUserInteractionEnabled = false
         $0.textAlignment = .center
         $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
+    }
+    
+    var selectedReason: ReportViewReactor.ReportType?
+    
+    override var navigationBarHeight: CGFloat {
+        53
     }
 
     override func setupConstraints() {
@@ -81,7 +88,9 @@ class ReportViewController: BaseNavigationViewController, View {
     
     override func setupNaviBar() {
         super.setupNaviBar()
-        self.navigationBar.titleLabel.text = "신고하기"
+        
+        self.navigationBar.title = Text.title
+        self.hidesNavigationBarBottomSeperator = false
     }
     
     func bind(reactor: ReportViewReactor) {
@@ -103,6 +112,7 @@ class ReportViewController: BaseNavigationViewController, View {
     private func bindState(reactor: ReportViewReactor) {
         
         reactor.state.map(\.isDialogPresented)
+            .skip(1)
             .subscribe(with: self) { object, isDialogPresented in
                 
                 SOMDialogViewController.show(

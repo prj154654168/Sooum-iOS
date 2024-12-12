@@ -55,6 +55,8 @@ class SOMHomeTabBar: UIView {
         
         Title.allCases.forEach {
             let homeTabBarItem = SOMHomeTabBarItem(title: $0.rawValue)
+            // homeTabBar 시작 인덱스
+            homeTabBarItem.updateItemColor($0 == .latest)
             self.homeTabBarItemContainer.addArrangedSubview(homeTabBarItem)
         }
         

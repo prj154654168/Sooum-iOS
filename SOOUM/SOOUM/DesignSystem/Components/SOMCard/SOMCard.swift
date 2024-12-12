@@ -20,6 +20,7 @@ class SOMCard: UIView {
     var model: SOMCardModel?
     
     /// 펑 이벤트 처리 위해 추가
+    var serialTimer: Disposable?
     var disposeBag = DisposeBag()
     
     /// 배경 이미지
@@ -176,7 +177,7 @@ class SOMCard: UIView {
     func prepareForReuse() {
         disposeBag = DisposeBag()
         
-        // 셀이 재사용될 때 레이아웃도 초기화
+        resetDatas()
         resetConstraints()
     }
     
@@ -356,8 +357,8 @@ class SOMCard: UIView {
             .init(.icon(.outlined(.comment)))
         commentImageView.tintColor = model.data.isCommentWritten ? .som.p300 : .som.white
         
-        /// 임시 시간 어떻게 표시하는 지 물어봐야 함
-        timeLabel.text = model.data.createdAt.infoReadableTimeTakenFromThis(to: Date())
+        let currentDate = Date()
+        timeLabel.text = model.data.createdAt.infoReadableTimeTakenFromThis(to: currentDate)
         distanceInfoStackView.isHidden = model.data.distance == nil
         distanceLabel.text = (model.data.distance ?? 0).infoReadableDistanceRangeFromThis()
         likeLabel.text = model.data.likeCnt > 99 ? "99+" : "\(model.data.likeCnt)"
@@ -367,43 +368,8 @@ class SOMCard: UIView {
         
         // 스토리 정보 설정
         cardPungTimeBackgroundView.isHidden = model.data.storyExpirationTime == nil
-        if let pungTime = model.pungTime {
-            self.cardPungTimeLabel.text = getTimeOutStr(pungTime: pungTime)
-            self.subscribePungTime()
-        }
-        
-        if model.isPunged {
-            self.updatePungUI()
-        }
+        self.subscribePungTime()
     }
-    
-    func resetConstraints() {
-        
-        pungedCardInMainHomeBackgroundView.isHidden = true
-        
-        rootContainerImageView.snp.removeConstraints()
-        
-        pungedCardInMainHomeBackgroundView.snp.removeConstraints()
-        pungedCardInMainHomeLabel.snp.removeConstraints()
-        
-        cardPungTimeBackgroundView.snp.removeConstraints()
-        cardPungTimeLabel.snp.removeConstraints()
-        
-        cardTextBackgroundView.snp.removeConstraints()
-        cardTextBackgroundBlurView.snp.removeConstraints()
-        cardTextContentLabel.snp.removeConstraints()
-        
-        cardGradientView.snp.removeConstraints()
-        
-        cardContentStackView.snp.removeConstraints()
-        timeImageView.snp.removeConstraints()
-        distanceImageView.snp.removeConstraints()
-        likeImageView.snp.removeConstraints()
-        commentImageView.snp.removeConstraints()
-        
-        initUI()
-    }
-    
     
     func setData(tagCard: TagDetailCardResponse.TagFeedCard) {
         // 카드 배경 이미지
@@ -473,45 +439,81 @@ class SOMCard: UIView {
     }
     
     
+    // MARK: Private func
+    
+    private func resetDatas() {
+        
+        rootContainerImageView.image = nil
+        
+        cardPungTimeBackgroundView.isHidden = true
+        cardPungTimeLabel.text = nil
+        
+        pungedCardInMainHomeBackgroundView.isHidden = true
+        
+        cardTextContentLabel.text = nil
+        
+        timeImageView.image = nil
+        distanceImageView.image = nil
+        likeImageView.image = nil
+        commentImageView.image = nil
+    }
+    
+    private func resetConstraints() {
+        
+        rootContainerImageView.snp.removeConstraints()
+        
+        pungedCardInMainHomeBackgroundView.snp.removeConstraints()
+        pungedCardInMainHomeLabel.snp.removeConstraints()
+        
+        cardPungTimeBackgroundView.snp.removeConstraints()
+        cardPungTimeLabel.snp.removeConstraints()
+        
+        cardTextBackgroundView.snp.removeConstraints()
+        cardTextBackgroundBlurView.snp.removeConstraints()
+        cardTextContentLabel.snp.removeConstraints()
+        
+        cardGradientView.frame = .zero
+        cardGradientView.snp.removeConstraints()
+        
+        cardContentStackView.snp.removeConstraints()
+        timeImageView.snp.removeConstraints()
+        distanceImageView.snp.removeConstraints()
+        likeImageView.snp.removeConstraints()
+        commentImageView.snp.removeConstraints()
+        
+        initUI()
+    }
+    
+    
     // MARK: - 카드 펑 로직
     
     /// 펑 이벤트 구독
-    func subscribePungTime() {
-        Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
+    private func subscribePungTime() {
+        self.serialTimer?.dispose()
+        self.serialTimer = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
             .withUnretained(self)
-            .subscribe(onNext: { object, _ in
-                guard let model = object.model, let pungTime = model.pungTime else { return }
-                if model.isPunged == true {
-                    object.updatePungUI()
-                } else {
-                    object.cardPungTimeLabel.text = object.getTimeOutStr(pungTime: pungTime)
+            .startWith((self, 0))
+            .map { object, _ in
+                guard let pungTime = object.model?.pungTime else {
+                    object.serialTimer?.dispose()
+                    return "00 : 00 : 00"
                 }
-            })
-            .disposed(by: disposeBag)
-    }
-
-    /// 매 초마다 펑 여부 확인 이벤트 구독
-    func getTimeOutStr(pungTime: Date) -> String {
-        let remainingTime = Int(pungTime.timeIntervalSince(Date()))
-
-        if remainingTime <= 0 {
-            return "00:00:00"
-        }
-        
-        let hours = remainingTime / 3600
-        let minutes = (remainingTime % 3600) / 60
-        let seconds = remainingTime % 60
-        
-        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+                
+                let currentDate = Date()
+                let remainingTime = currentDate.infoReadableTimeTakenFromThisForPung(to: pungTime)
+                if remainingTime == "00 : 00 : 00" {
+                    object.serialTimer?.dispose()
+                    object.updatePungUI()
+                }
+                
+                return remainingTime
+            }
+            .bind(to: self.cardPungTimeLabel.rx.text)
     }
     
     /// 펑 ui 즉각적으로 업데이트
-    func updatePungUI() {
-        guard let model = self.model else { return }
-        
-        if model.isPunged {
-            rootContainerImageView.subviews.forEach { $0.removeFromSuperview() }
-            pungedCardInMainHomeBackgroundView.isHidden = false
-        }
+    private func updatePungUI() {
+        rootContainerImageView.subviews.forEach { $0.removeFromSuperview() }
+        pungedCardInMainHomeBackgroundView.isHidden = false
     }
 }

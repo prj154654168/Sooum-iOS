@@ -61,8 +61,8 @@ class NetworkManager {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
             /// UTC 기준
-            formatter.timeZone = TimeZone(secondsFromGMT: 0)
-            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.timeZone = .Korea
+            formatter.locale = .Korea
             
             self.decoder = JSONDecoder()
             self.decoder.dateDecodingStrategy = .formatted(formatter)

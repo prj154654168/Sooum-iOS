@@ -196,8 +196,12 @@ class DetailViewReactor: Reactor {
 
 extension DetailViewReactor {
     
+    func reactorForMainTabBar() -> MainTabBarReactor {
+        MainTabBarReactor()
+    }
+    
     func reactorForMainHome() -> MainHomeViewReactor {
-        return MainHomeViewReactor()
+        MainHomeViewReactor()
     }
     
     func reactorForPush(_ selectedId: String) -> DetailViewReactor {

@@ -75,7 +75,7 @@ class SOMNavigationBar: UIView {
         config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.black }
         $0.configuration = config
     }
-    var isHideBackButton: Bool {
+    var hidesBackButton: Bool {
         set { self.backButton.isHidden = newValue }
         get { self.backButton.isHidden }
     }

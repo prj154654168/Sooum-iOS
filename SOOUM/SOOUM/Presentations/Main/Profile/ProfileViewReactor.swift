@@ -38,7 +38,7 @@ class ProfileViewReactor: Reactor {
         var profile: Profile
         var writtenCards: [WrittenCard]
         var isBlocked: Bool
-        var isFollow: Bool
+        var isFollow: Bool?
         var isLoading: Bool
         var isProcessing: Bool
     }
@@ -47,7 +47,7 @@ class ProfileViewReactor: Reactor {
         profile: .init(),
         writtenCards: [],
         isBlocked: false,
-        isFollow: false,
+        isFollow: nil,
         isLoading: false,
         isProcessing: false
     )
@@ -89,7 +89,7 @@ class ProfileViewReactor: Reactor {
             return self.networkManager.request(Status.self, request: request)
                 .map { .updateIsBlocked($0.httpCode == 201) }
         case .follow:
-            if self.currentState.isFollow {
+            if self.currentState.isFollow == true { 
                 let request: ProfileRequest = .cancelFollow(memberId: self.memberId ?? "")
                 
                 return self.networkManager.request(Empty.self, request: request)
@@ -179,7 +179,7 @@ extension ProfileViewReactor {
     }
     
     func reactorForUpdate() -> UpdateProfileViewReactor {
-        UpdateProfileViewReactor.init()
+        UpdateProfileViewReactor.init(self.currentState.profile)
     }
     
     func ractorForDetail(_ selectedId: String) -> DetailViewReactor {

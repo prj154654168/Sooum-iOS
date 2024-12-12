@@ -59,6 +59,9 @@ class ProfileViewFooter: UICollectionReusableView {
     override func prepareForReuse() {
         super.prepareForReuse()
         
+        self.subviews.forEach { $0.snp.removeConstraints() }
+        self.setupConstraints()
+        
         self.disposeBag = DisposeBag()
     }
     

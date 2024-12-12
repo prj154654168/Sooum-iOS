@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Kingfisher
 import SnapKit
 import Then
 import YPImagePicker
@@ -99,6 +100,11 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
     // MARK: ReactorKit bind
     
     func bind(reactor: UpdateProfileViewReactor) {
+        
+        KingfisherManager.shared.download(strUrl: reactor.profile.profileImg?.url) { [weak self] image in
+            self?.updateProfileView.image = image
+        }
+        self.updateProfileView.text = reactor.profile.nickname
         
         // Action
         self.updateProfileView.changeProfileButton.rx.throttleTap(.seconds(3))

@@ -16,11 +16,9 @@ struct SOMCardModel {
     var pungTime: Date?
     /// 현재 카드가 펑된 카드인지 확인
     var isPunged: Bool {
-        guard let pungTime = self.pungTime else {
-            return false
-        }
-        let remainingTime = pungTime.timeIntervalSince(Date())
-        return remainingTime <= 0
+        guard let pungTime = self.data.storyExpirationTime else { return false }
+        let remainingTime: TimeInterval = pungTime.timeIntervalSinceNow
+        return remainingTime <= 0.0
     }
     
     init(data: Card) {

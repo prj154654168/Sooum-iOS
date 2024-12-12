@@ -102,7 +102,7 @@ import RxSwift
          // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: MainTabBarController.self, animated: false)
+                 object.navigationPop(to: MainHomeViewController.self, animated: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -324,10 +324,22 @@ extension DetailViewController: UICollectionViewDataSource {
         
         cell.memberBackgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
-                let memberId = object.detailCard.member.id
-                let profileViewController = ProfileViewController()
-                profileViewController.reactor = object.reactor?.reactorForProfile(memberId)
-                object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                if object.detailCard.isOwnCard {
+                    
+                    let viewController = MainTabBarController()
+                    viewController.reactor = object.reactor?.reactorForMainTabBar()
+                    viewController.didSelectedIndex(3)
+                    let navigationController = UINavigationController(
+                        rootViewController: viewController
+                    )
+                    object.view.window?.rootViewController = navigationController
+                } else {
+                    
+                    let memberId = object.detailCard.member.id
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = object.reactor?.reactorForProfile(memberId)
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                }
             }
             .disposed(by: cell.disposeBag)
         
