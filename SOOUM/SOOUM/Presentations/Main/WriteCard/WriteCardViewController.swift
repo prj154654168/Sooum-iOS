@@ -396,9 +396,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
                         object.navigationPop()
                     } else {
                         // 바텀싯이 표시되어 있을 때, 바텀싯 제거 후 이전 화면으로 전환
-                        object.dismissBottomSheet() {
+                        object.dismissBottomSheet(completion: {
                             object.navigationPop()
-                        }
+                        })
                     }
                 } else {
                     // 글추가 실패, 실패 다이얼로그 표시
