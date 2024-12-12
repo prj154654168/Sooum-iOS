@@ -13,9 +13,9 @@ def pods
   
   pod 'Alamofire', '~> 5.9.1'
 
-  pod 'Firebase/Analytics', '~> 10.5.0'
-  pod 'Firebase/Crashlytics', '~> 10.5.0'
-  pod 'Firebase/Messaging', '~> 10.5.0'
+  pod 'Firebase/Analytics', '~> 9.6.0'
+  pod 'Firebase/Crashlytics', '~> 9.6.0'
+  pod 'Firebase/Messaging', '~> 9.6.0'
   
   pod 'SnapKit', '~> 5.7.1'
   pod 'Then', '~> 3.0.0'
@@ -35,7 +35,7 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.1'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
       if config.name == 'Debug' || config.name == 'GSExhibition'
         if target.name == 'RxSwift'
           config.build_settings['OTHER_SWIFT_FLAGS'] ||= ['-D', 'TRACE_RESOURCES']
