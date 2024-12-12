@@ -166,16 +166,23 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         let favoriteTag = reactor.currentState.favoriteTags[indexPath.row]
         
         cell.setData(favoriteTag: favoriteTag)
-        cell.favoriteTagView.moreButtonStackView.rx.tapGesture()
+        
+        cell.favoriteTagView.rx.tapGesture()
             .when(.recognized)
-            .subscribe(with: self) { object, _ in
-                let tagID = favoriteTag.id
-                let tagDetailVC = TagDetailViewController()
-                tagDetailVC.reactor = TagDetailViewrReactor(tagID: tagID)
-                object.navigationController?.pushViewController(tagDetailVC, animated: true)
+            .subscribe(with: self) { object, gesture in
+                if cell.favoriteTagView.isTappedDirectly(gesture: gesture) {
+                    object.pushTagdetailVC(tagID: favoriteTag.id)
+                }
             }
             .disposed(by: cell.disposeBag)
         
+        cell.favoriteTagView.moreButtonStackView.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, gesture in
+                object.pushTagdetailVC(tagID: favoriteTag.id)
+            }
+            .disposed(by: cell.disposeBag)
+
         cell.previewCardTapped
             .subscribe(with: self) { object, previewCardID in
                 let detailViewController = DetailViewController()
@@ -183,7 +190,14 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
                 self.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: cell.disposeBag)
+        
         return cell
+    }
+    
+    private func pushTagdetailVC(tagID: String) {
+        let tagDetailVC = TagDetailViewController()
+        tagDetailVC.reactor = TagDetailViewrReactor(tagID: tagID)
+        self.navigationController?.pushViewController(tagDetailVC, animated: true)
     }
     
     private func createRecommendTagTableViewCell(indexPath: IndexPath) -> RecommendTagTableViewCell {

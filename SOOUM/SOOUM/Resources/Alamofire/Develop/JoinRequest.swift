@@ -42,10 +42,11 @@ enum JoinRequest: BaseRequest {
         case .profileImagePresignedURL:
             return ["extension": "JPEG"]
         case .registerUser(let nickname, let profileImg):
+            let profileImg = profileImg.isEmpty ? "" : profileImg
             return [
                 "nickname": nickname,
-                "profileImg": profileImg
-            ]
+                "profileImg": profileImg.isEmpty ? nil : profileImg
+            ].compactMapValues { $0 }
         }
     }
         
