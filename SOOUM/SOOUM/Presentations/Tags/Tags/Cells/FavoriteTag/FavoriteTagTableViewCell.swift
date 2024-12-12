@@ -13,7 +13,7 @@ import RxSwift
 
 final class FavoriteTagTableViewCell: UITableViewCell {
         
-    var favoriteTag: FavoriteTagsResponse.FavoriteTagList? = nil
+    var favoriteTag: FavoriteTagsResponse.FavoriteTagList?
     let previewCardTapped = PublishSubject<String>()
     var disposeBag = DisposeBag()
     
@@ -66,7 +66,10 @@ final class FavoriteTagTableViewCell: UITableViewCell {
 extension FavoriteTagTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        3
+        guard let favoriteTag else {
+            return 0
+        }
+        return favoriteTag.previewCards.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
