@@ -12,24 +12,46 @@ class SettingsViewReactor: Reactor {
     
     enum Action: Equatable {
         case landing
+        case updateNotificationStatus(Bool)
     }
     
     enum Mutation {
         case updateBanEndAt(Date?)
+        case updateNotificationStatus(Bool)
         case updateIsProcessing(Bool)
     }
     
     struct State {
         var banEndAt: Date?
+        var notificationStatus: Bool
         var isProcessing: Bool
     }
     
-    var initialState: State = .init(
-        banEndAt: nil,
-        isProcessing: false
-    )
+    var initialState: State
     
     private let networkManager = NetworkManager.shared
+    private let pushManager = PushManager.shared
+    
+    private let disposeBag = DisposeBag()
+    
+    init() {
+        
+        self.initialState = .init(
+            banEndAt: nil,
+            notificationStatus: self.pushManager.notificationStatus,
+            isProcessing: false
+        )
+        
+        self.subscribe()
+    }
+    
+    private func subscribe() {
+
+        self.pushManager.rx.observe(\.notificationStatus)
+            .map(Action.updateNotificationStatus)
+            .bind(to: self.action)
+            .disposed(by: self.disposeBag)
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
@@ -43,7 +65,22 @@ class SettingsViewReactor: Reactor {
                     },
                 .just(.updateIsProcessing(false))
             ])
+        case let .updateNotificationStatus(state):
+            return .just(.updateNotificationStatus(state))
         }
+    }
+    
+    func reduce(state: State, mutation: Mutation) -> State {
+        var state = state
+        switch mutation {
+        case let .updateBanEndAt(banEndAt):
+            state.banEndAt = banEndAt
+        case let .updateNotificationStatus(notificationStatus):
+            state.notificationStatus = notificationStatus
+        case let .updateIsProcessing(isProcessing):
+            state.isProcessing = isProcessing
+        }
+        return state
     }
 }
 
