@@ -84,7 +84,7 @@ class OnboardingNicknameSettingViewReactor: Reactor {
         }
         
         if nickname.count > 8 {
-            return Observable.just(.success((nickname: nickname, isValid: .invalid)))
+            return Observable.just(.success((nickname: nickname, isValid: .overEight)))
         }
         
         return networkManager.request(NicknameValidationResponse.self, request: request)
