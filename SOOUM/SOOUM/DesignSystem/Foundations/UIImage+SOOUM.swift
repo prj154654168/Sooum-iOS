@@ -36,6 +36,7 @@ extension UIImage {
                 case home
                 case location
                 case more
+                case next
                 case plus
                 case profile
                 case radio
