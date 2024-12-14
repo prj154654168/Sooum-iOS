@@ -56,7 +56,6 @@ struct Follow: Equatable, Codable {
     let id: String
     let nickname: String
     let backgroundImgURL: URLString?
-    let following: Bool
     let links: ProfileLinks
     let isFollowing: Bool
     
@@ -64,7 +63,6 @@ struct Follow: Equatable, Codable {
         case id
         case nickname
         case backgroundImgURL = "backgroundImgUrl"
-        case following
         case links = "_links"
         case isFollowing
     }
@@ -76,7 +74,6 @@ extension Follow {
         self.id = ""
         self.nickname = ""
         self.backgroundImgURL = nil
-        self.following = false
         self.links = .init()
         self.isFollowing = false
     }
