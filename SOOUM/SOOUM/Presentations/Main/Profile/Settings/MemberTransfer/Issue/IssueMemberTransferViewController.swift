@@ -12,6 +12,7 @@ import Then
 
 import ReactorKit
 import RxCocoa
+import RxGesture
 import RxSwift
 
 
@@ -23,6 +24,8 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
         static let firstTransferIssueGuide: String = "발급된 코드는 24시간만 유효합니다"
         static let secondTransferIssueGuide: String = "코드가 유출되면 타인이 해당 계정을\n가져갈 수 있으니 주의하세요 "
         static let transferReIssueButtonTitle: String = "코드 재발급하기"
+        
+        static let toastMessage: String = "코드가 복사되었습니다"
     }
     
     private let transferIssueMessageLabel = UILabel().then {
@@ -136,9 +139,6 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
     
     func bind(reactor: IssueMemberTransferViewReactor) {
         
-        // 계정 이관 코드 복사
-        self.transferCodeLabel.copyTextWhenDidTapped()
-        
         // Action
         self.rx.viewDidLoad
             .map { _ in Reactor.Action.landing }
@@ -156,9 +156,22 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.trnsferCode)
-            .distinctUntilChanged()
+        let transferCode = reactor.state.map(\.trnsferCode).distinctUntilChanged().share()
+        transferCode
             .bind(to: self.transferCodeLabel.rx.text)
+            .disposed(by: self.disposeBag)
+        
+        self.transferCodeLabel.rx.tapGesture()
+            .when(.recognized)
+            .withLatestFrom(transferCode)
+            .filter { $0.isEmpty == false }
+            .subscribe(with: self) { object, transferCode in
+                
+                // 계정 이관 코드 클립보드에 저장
+                UIPasteboard.general.string = transferCode
+                // Toast 표시, offset == 코드 재발급하기 버튼 height + margin
+                self.showToast(message: Text.toastMessage, offset: 12 + 48 + 8)
+            }
             .disposed(by: self.disposeBag)
     }
 }

@@ -240,8 +240,8 @@
 		3866577F2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */; };
 		38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */; };
 		38773E7D2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */; };
-		3878B85F2D0DC6A000B3B128 /* UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878B85E2D0DC6A000B3B128 /* UILabel.swift */; };
-		3878B8602D0DC6A300B3B128 /* UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878B85E2D0DC6A000B3B128 /* UILabel.swift */; };
+		3878B8622D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878B8612D0DC8BD00B3B128 /* UIViewController+Toast.swift */; };
+		3878B8632D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878B8612D0DC8BD00B3B128 /* UIViewController+Toast.swift */; };
 		3878D04E2CFFC5F300F9522F /* ProfileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878D04D2CFFC5F300F9522F /* ProfileRequest.swift */; };
 		3878D04F2CFFC5F300F9522F /* ProfileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878D04D2CFFC5F300F9522F /* ProfileRequest.swift */; };
 		3878D0532CFFC6C100F9522F /* ProfileResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878D0522CFFC6C100F9522F /* ProfileResponse.swift */; };
@@ -580,7 +580,7 @@
 		3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PushAndPop.swift"; sourceTree = "<group>"; };
 		3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Rx.swift"; sourceTree = "<group>"; };
 		38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMRefreshControl.swift; sourceTree = "<group>"; };
-		3878B85E2D0DC6A000B3B128 /* UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabel.swift; sourceTree = "<group>"; };
+		3878B8612D0DC8BD00B3B128 /* UIViewController+Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Toast.swift"; sourceTree = "<group>"; };
 		3878D04D2CFFC5F300F9522F /* ProfileRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRequest.swift; sourceTree = "<group>"; };
 		3878D0522CFFC6C100F9522F /* ProfileResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileResponse.swift; sourceTree = "<group>"; };
 		3878D0552CFFCBDA00F9522F /* CommentHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentHistoryResponse.swift; sourceTree = "<group>"; };
@@ -1568,7 +1568,7 @@
 				3886939E2CF77FA7005F9EF3 /* UIApplication+Top.swift */,
 				388FCACF2CFAC2BF0012C4D6 /* Notification.swift */,
 				3830FFA52CEC6E3100ABA9FD /* Kingfisher.swift */,
-				3878B85E2D0DC6A000B3B128 /* UILabel.swift */,
+				3878B8612D0DC8BD00B3B128 /* UIViewController+Toast.swift */,
 			);
 			path = Cocoa;
 			sourceTree = "<group>";
@@ -2126,6 +2126,7 @@
 				38CC49892CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */,
 				38F720B02CD4F15900DF32B5 /* DetailCommentCardResponse.swift in Sources */,
 				3878D07E2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
+				3878B8632D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
 				2A44A4352CAC21A500DC463E /* SignUpResponse.swift in Sources */,
 				3878D0982CFFF2B800F9522F /* CommentHistroyViewController.swift in Sources */,
 				38F720AE2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */,
@@ -2213,7 +2214,6 @@
 				38ED2AB52C985AB400920B53 /* SOMHomeTabBar.swift in Sources */,
 				2A45B3702CE4C5510071026A /* RegisterUserResponse.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
-				3878B8602D0DC6A300B3B128 /* UILabel.swift in Sources */,
 				2AE6B1932CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				3830FFA72CEC6E3100ABA9FD /* Kingfisher.swift in Sources */,
@@ -2408,6 +2408,7 @@
 				385620F22CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				38389B9F2CCCFB7D006728AF /* AuthKeyChain.swift in Sources */,
 				3849729E2CA4DC0B0012FCA1 /* MainHomeViewReactor.swift in Sources */,
+				3878B8622D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
 				2AFD05522D007F2F007C84AD /* TagSearchViewReactor.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
@@ -2442,7 +2443,6 @@
 				2AFD05462CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */,
 				2A5BB7DD2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */,
 				2AFD054F2CFF79D8007C84AD /* TagsViewReactor.swift in Sources */,
-				3878B85F2D0DC6A000B3B128 /* UILabel.swift in Sources */,
 				2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38F720AD2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */,
