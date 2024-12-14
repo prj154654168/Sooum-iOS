@@ -136,6 +136,9 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
     
     func bind(reactor: IssueMemberTransferViewReactor) {
         
+        // 계정 이관 코드 복사
+        self.transferCodeLabel.copyTextWhenDidTapped()
+        
         // Action
         self.rx.viewDidLoad
             .map { _ in Reactor.Action.landing }
