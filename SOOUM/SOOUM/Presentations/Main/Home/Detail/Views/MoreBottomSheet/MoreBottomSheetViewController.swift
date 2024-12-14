@@ -18,38 +18,16 @@ class MoreBottomSheetViewController: BaseViewController {
         static let reportButtonTitle: String = "신고하기"
     }
     
-    let blockLabelButton = UIButton().then {
-        let typography = Typography.som.body1WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.red, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.blockButtonTitle,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        config.contentInsets = .zero
-        $0.configuration = config
+    let blockLabelButton = SOMButton().then {
+        $0.title = Text.blockButtonTitle
+        $0.typography = .som.body1WithBold
+        $0.foregroundColor = .som.red
     }
     
-    let reportLabelButton = UIButton().then {
-        let typography = Typography.som.body1WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.red, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.reportButtonTitle,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        config.contentInsets = .zero
-        $0.configuration = config
+    let reportLabelButton = SOMButton().then {
+        $0.title = Text.reportButtonTitle
+        $0.typography = .som.body1WithBold
+        $0.foregroundColor = .som.red
     }
     
     override func setupConstraints() {

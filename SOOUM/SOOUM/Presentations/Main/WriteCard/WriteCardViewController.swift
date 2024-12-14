@@ -46,21 +46,10 @@ class WriteCardViewController: BaseNavigationViewController, View {
         $0.typography = .som.body2WithBold
     }
     
-    private let writeButton = UIButton().then {
-        let typography = Typography.som.body2WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.gray700, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.wirteButtonTitle,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        config.contentInsets = .zero
-        $0.configuration = config
+    private let writeButton = SOMButton().then {
+        $0.title = Text.wirteButtonTitle
+        $0.typography = .som.body2WithBold
+        $0.foregroundColor = .som.gray700
     }
     
     lazy var writeCardView = WriteCardView().then {
@@ -260,19 +249,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
         content
             .map { !$0.isEmpty }
             .subscribe(with: self) { object, isEnabled in
-                let updateConfigHandler: UIButton.ConfigurationUpdateHandler = { button in
-                    var updateConfig = button.configuration
-                    let updateTextAttributes = UIConfigurationTextAttributesTransformer { current in
-                        var update = current
-                        update.foregroundColor = isEnabled ? .som.p300 : .som.gray700
-                        return update
-                    }
-                    updateConfig?.titleTextAttributesTransformer = updateTextAttributes
-                    button.configuration = updateConfig
-                }
                 
-                object.writeButton.configurationUpdateHandler = updateConfigHandler
-                object.writeButton.setNeedsUpdateConfiguration()
+                object.writeButton.isEnabled = isEnabled
+                object.writeButton.foregroundColor = isEnabled ? .som.p300 : .som.gray700
             }
             .disposed(by: self.disposeBag)
         

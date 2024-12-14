@@ -38,29 +38,15 @@ class ProfileViewController: BaseNavigationViewController, View {
         $0.typography = .som.body3WithRegular
     }
     
-    private let rightBlockButton = UIButton().then {
-        let typography = Typography.som.body3WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.gray500, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.blockButtonTitle,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        config.contentInsets = .zero
-        $0.configuration = config
+    private let rightBlockButton = SOMButton().then {
+        $0.title = Text.blockButtonTitle
+        $0.typography = .som.body3WithBold
+        $0.foregroundColor = .som.gray500
     }
     
-    private let rightSettingButton = UIButton().then {
-        var config = UIButton.Configuration.plain()
-        config.image = .init(.icon(.outlined(.hamburger)))
-        config.image?.withTintColor(.som.black)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.black }
-        $0.configuration = config
+    private let rightSettingButton = SOMButton().then {
+        $0.image = .init(.icon(.outlined(.hamburger)))
+        $0.foregroundColor = .som.black
     }
     
     

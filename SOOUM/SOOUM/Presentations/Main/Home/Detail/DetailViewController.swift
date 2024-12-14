@@ -27,12 +27,9 @@ import RxSwift
          static let blockDialogSubTitle: String = "해당 사용자의 모든 카드를 모두 볼 수 없어요"
      }
      
-     let rightHomeButton = UIButton().then {
-         var config = UIButton.Configuration.plain()
-         config.image = .init(.icon(.outlined(.home)))
-         config.image?.withTintColor(.som.black)
-         config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.black }
-         $0.configuration = config
+     let rightHomeButton = SOMButton().then {
+         $0.image = .init(.icon(.outlined(.home)))
+         $0.foregroundColor = .som.black
      }
      
      private let flowLayout = UICollectionViewFlowLayout().then {

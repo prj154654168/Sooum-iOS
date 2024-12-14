@@ -43,11 +43,9 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
         $0.text = ""
     }
     
-    let nextButton = UIButton().then {
-        var config = UIButton.Configuration.plain()
-        config.image = .next
-        $0.configuration = config
-        $0.tintColor = .som.gray500
+    let nextButton = SOMButton().then {
+        $0.image = .init(.icon(.outlined(.next)))
+        $0.foregroundColor = .som.gray500
     }
     
     // MARK: - init

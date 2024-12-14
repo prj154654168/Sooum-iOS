@@ -54,12 +54,9 @@ class WriteTagTextField: UIView {
         $0.delegate = self
     }
     
-    let addTagButton = UIButton().then {
-        var config = UIButton.Configuration.plain()
-        config.image = .init(.icon(.outlined(.plus)))
-        config.image?.withTintColor(.som.gray600)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray600 }
-        $0.configuration = config
+    let addTagButton = SOMButton().then {
+        $0.image = .init(.icon(.outlined(.plus)))
+        $0.foregroundColor = .som.gray600
         
         $0.isHidden = true
         

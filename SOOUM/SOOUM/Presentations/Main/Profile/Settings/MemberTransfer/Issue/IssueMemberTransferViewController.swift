@@ -50,20 +50,11 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
         $0.numberOfLines = 0
     }
     
-    private let updateTransferCodeButton = UIButton().then {
-        let typography = Typography.som.body1WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.white, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.transferReIssueButtonTitle,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        $0.configuration = config
+    private let updateTransferCodeButton = SOMButton().then {
+        $0.title = Text.transferReIssueButtonTitle
+        $0.typography = .som.body1WithBold
+        $0.foregroundColor = .som.white
+        
         $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 12
         $0.clipsToBounds = true

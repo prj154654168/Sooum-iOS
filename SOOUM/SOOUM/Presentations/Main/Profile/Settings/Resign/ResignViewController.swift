@@ -83,20 +83,11 @@ class ResignViewController: BaseNavigationViewController, View {
         $0.typography = .som.body1WithRegular
     }
     
-    private let resignButton = UIButton().then {
-        let typography = Typography.som.body1WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.gray600, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.resignButtonTitle,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        $0.configuration = config
+    private let resignButton = SOMButton().then {
+        $0.title = Text.resignButtonTitle
+        $0.typography = .som.body1WithBold
+        $0.foregroundColor = .som.gray600
+        
         $0.backgroundColor = .som.gray300
         $0.layer.cornerRadius = 12
         $0.clipsToBounds = true
@@ -222,21 +213,8 @@ class ResignViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, isCheck in
                 object.checkBox.image = .init(.icon(.outlined(isCheck ? .checkBoxOn : .checkBox)))
                 
-                let updateResignButtonConfigHandler: UIButton.ConfigurationUpdateHandler = { button in
-                    var updateConfig = button.configuration
-                    let updateTextAttributes = UIConfigurationTextAttributesTransformer { current in
-                        var update = current
-                        update.foregroundColor = isCheck ? .som.white : .som.gray600
-                        return update
-                    }
-                    updateConfig?.titleTextAttributesTransformer = updateTextAttributes
-                    button.configuration = updateConfig
-                }
-                
-                object.resignButton.configurationUpdateHandler = updateResignButtonConfigHandler
-                object.resignButton.setNeedsUpdateConfiguration()
-                
                 object.resignButton.isEnabled = isCheck
+                object.resignButton.foregroundColor = isCheck ? .som.white : .som.gray600
                 object.resignButton.backgroundColor = isCheck ? .som.p300 : .som.gray300
             }
             .disposed(by: self.disposeBag)

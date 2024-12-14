@@ -29,20 +29,11 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         $0.placeholder = Text.textFieldPlaceholder
     }
     
-    private let completeButton = UIButton().then {
-        let typography = Typography.som.body2WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.white, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.completeButtonTitle,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        $0.configuration = config
+    private let completeButton = SOMButton().then {
+        $0.title = Text.completeButtonTitle
+        $0.typography = .som.body2WithBold
+        $0.foregroundColor = .som.white
+        
         $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 12
         $0.clipsToBounds = true
@@ -102,7 +93,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
     func bind(reactor: UpdateProfileViewReactor) {
         
         KingfisherManager.shared.download(strUrl: reactor.profile.profileImg?.url) { [weak self] image in
-            self?.updateProfileView.image = image
+            self?.updateProfileView.image = image ?? .init(.image(.sooumLogo))
         }
         self.updateProfileView.text = reactor.profile.nickname
         
@@ -135,21 +126,9 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isValid)
             .distinctUntilChanged()
             .subscribe(with: self) { object, isValid in
-                let updateConfigHandler: UIButton.ConfigurationUpdateHandler = { button in
-                    var updateConfig = button.configuration
-                    let updateTextAttributes = UIConfigurationTextAttributesTransformer { current in
-                        var update = current
-                        update.foregroundColor = isValid ? .som.white : .som.gray600
-                        return update
-                    }
-                    updateConfig?.titleTextAttributesTransformer = updateTextAttributes
-                    button.configuration = updateConfig
-                }
-                
-                object.completeButton.configurationUpdateHandler = updateConfigHandler
-                object.completeButton.setNeedsUpdateConfiguration()
                 
                 object.completeButton.isEnabled = isValid
+                object.completeButton.foregroundColor = isValid ? .som.white : .som.gray600
                 object.completeButton.backgroundColor = isValid ? .som.p300 : .som.gray300
             }
             .disposed(by: self.disposeBag)

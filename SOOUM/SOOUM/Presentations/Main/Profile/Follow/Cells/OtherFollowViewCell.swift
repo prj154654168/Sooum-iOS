@@ -32,7 +32,7 @@ class OtherFollowViewCell: UITableViewCell {
         $0.typography = .som.body1WithBold
     }
     
-    private let followButton = UIButton().then {
+    private let followButton = SOMButton().then {
         $0.layer.cornerRadius = 26 * 0.5
         $0.clipsToBounds = true
     }
@@ -113,25 +113,9 @@ class OtherFollowViewCell: UITableViewCell {
     
     func updateButton(_ isFollowing: Bool) {
         
-        let typography = Typography.som.body3WithBold
-        var attributes = typography.attributes
-        let title: String = isFollowing ? Text.didFollowButton : Text.willFollowButton
-        let foregroundColor: UIColor = isFollowing ? .som.gray600 : .som.white
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(foregroundColor, forKey: .foregroundColor)
-        var updateConfig = UIButton.Configuration.plain()
-        updateConfig.attributedTitle = .init(
-            title,
-            attributes: AttributeContainer(attributes)
-        )
-        updateConfig.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        updateConfig.contentInsets.leading = 20
-        updateConfig.contentInsets.trailing = 20
-        
-        self.followButton.configuration = updateConfig
-        self.followButton.setNeedsUpdateConfiguration()
+        self.followButton.title = isFollowing ? Text.didFollowButton : Text.willFollowButton
+        self.followButton.typography = .som.body3WithBold
+        self.followButton.foregroundColor = isFollowing ? .som.gray600 : .som.white
         self.followButton.backgroundColor = isFollowing ? .som.gray200 : .som.p300
     }
 }
