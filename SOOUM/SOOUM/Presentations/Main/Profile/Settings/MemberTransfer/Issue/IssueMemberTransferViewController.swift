@@ -20,19 +20,25 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
     
     enum Text {
         static let navigationTitle: String = "계정 이관 코드 발급"
-        static let transferIssueMessage: String = "계정을 다른 기기로 이관하기 위한\n코드를 발급합니다"
+        static let topTransferIssueMessage: String = "계정을 다른 기기로 이관하기 위한"
+        static let bottomTransferIssueMessage: String = "코드를 발급합니다"
         static let firstTransferIssueGuide: String = "발급된 코드는 24시간만 유효합니다"
-        static let secondTransferIssueGuide: String = "코드가 유출되면 타인이 해당 계정을\n가져갈 수 있으니 주의하세요 "
+        static let topSecondTransferIssueGuide: String = "코드가 유출되면 타인이 해당 계정을"
+        static let bottomSecondTransferIssueGuide: String = "가져갈 수 있으니 주의하세요"
         static let transferReIssueButtonTitle: String = "코드 재발급하기"
         
         static let toastMessage: String = "코드가 복사되었습니다"
     }
     
-    private let transferIssueMessageLabel = UILabel().then {
-        $0.text = Text.transferIssueMessage
+    private let topTransferIssueMessageLabel = UILabel().then {
+        $0.text = Text.topTransferIssueMessage
         $0.textColor = .som.gray800
         $0.typography = .som.body1WithBold
-        $0.numberOfLines = 0
+    }
+    private let bottomTransferIssueMessageLabel = UILabel().then {
+        $0.text = Text.bottomTransferIssueMessage
+        $0.textColor = .som.gray800
+        $0.typography = .som.body1WithBold
     }
     
     private let transferCodeLabel = UILabel().then {
@@ -46,11 +52,15 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
         $0.typography = .som.body1WithBold
     }
     
-    private let secondTransferIssueGuideLabel = UILabel().then {
-        $0.text = Text.secondTransferIssueGuide
+    private let topSecondTransferIssueGuideLabel = UILabel().then {
+        $0.text = Text.topSecondTransferIssueGuide
         $0.textColor = .som.red
         $0.typography = .som.body3WithBold
-        $0.numberOfLines = 0
+    }
+    private let bottomSecondTransferIssueGuideLabel = UILabel().then {
+        $0.text = Text.bottomSecondTransferIssueGuide
+        $0.textColor = .som.red
+        $0.typography = .som.body3WithBold
     }
     
     private let updateTransferCodeButton = SOMButton().then {
@@ -87,9 +97,14 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
             $0.trailing.equalToSuperview().offset(-20)
         }
         
-        transferBackgroundView.addSubview(self.transferIssueMessageLabel)
-        self.transferIssueMessageLabel.snp.makeConstraints {
+        transferBackgroundView.addSubview(self.topTransferIssueMessageLabel)
+        self.topTransferIssueMessageLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(34)
+            $0.centerX.equalToSuperview()
+        }
+        transferBackgroundView.addSubview(self.bottomTransferIssueMessageLabel)
+        self.bottomTransferIssueMessageLabel.snp.makeConstraints {
+            $0.top.equalTo(self.topTransferIssueMessageLabel.snp.bottom)
             $0.centerX.equalToSuperview()
         }
         
@@ -102,7 +117,7 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
         }
         transferBackgroundView.addSubview(transferCodeBackgroundView)
         transferCodeBackgroundView.snp.makeConstraints {
-            $0.top.equalTo(self.transferIssueMessageLabel.snp.bottom).offset(32)
+            $0.top.equalTo(self.bottomTransferIssueMessageLabel.snp.bottom).offset(32)
             $0.bottom.trailing.equalToSuperview().offset(-20)
             $0.leading.equalToSuperview().offset(20)
             $0.height.equalTo(64)
@@ -119,9 +134,14 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
             $0.centerX.equalToSuperview()
         }
         
-        self.view.addSubview(self.secondTransferIssueGuideLabel)
-        self.secondTransferIssueGuideLabel.snp.makeConstraints {
+        self.view.addSubview(self.topSecondTransferIssueGuideLabel)
+        self.topSecondTransferIssueGuideLabel.snp.makeConstraints {
             $0.top.equalTo(self.firstTransferIssueGuideLabel.snp.bottom).offset(8)
+            $0.centerX.equalToSuperview()
+        }
+        self.view.addSubview(self.bottomSecondTransferIssueGuideLabel)
+        self.bottomSecondTransferIssueGuideLabel.snp.makeConstraints {
+            $0.top.equalTo(self.topSecondTransferIssueGuideLabel.snp.bottom)
             $0.centerX.equalToSuperview()
         }
         
