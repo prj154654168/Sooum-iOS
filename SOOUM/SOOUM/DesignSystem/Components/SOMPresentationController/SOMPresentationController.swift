@@ -245,12 +245,17 @@ class SOMPresentationController: UIPresentationController {
         let velocity = gesture.velocity(in: presentedView)
         let scrollDirection = velocity.y < 0 ? "top" : "bottom"
         let newHeight = self.currentHeight - translation.y
+        let minHeight = self.neverDismiss ? self.initalHeight : 0
         switch gesture.state {
         case .changed:
             if scrollDirection == "top" {
-                self.updateHeight(min(self.maxHeight, newHeight))
+                guard minHeight < newHeight else { break }
+                var updateHeight = min(self.maxHeight, newHeight)
+                self.updateHeight(updateHeight)
             } else {
-                self.updateHeight(max(self.neverDismiss ? self.initalHeight : 0, newHeight))
+                guard self.maxHeight > newHeight else { break }
+                var updateHeight = max(minHeight, newHeight)
+                self.updateHeight(updateHeight)
             }
         case .ended:
             if scrollDirection == "top" {
