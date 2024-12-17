@@ -325,13 +325,15 @@ class SOMCard: UIView {
     
     /// cardGradientLayer
     private func addGradient() {
-        cardGradientLayer.colors = [
-            UIColor.clear.cgColor,
-            UIColor.black.withAlphaComponent(0.6).cgColor
-        ]
-        cardGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
-        cardGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
-        cardGradientView.layer.insertSublayer(cardGradientLayer, at: 0)
+        UIView.performWithoutAnimation {
+            cardGradientLayer.colors = [
+                UIColor.clear.cgColor,
+                UIColor.black.withAlphaComponent(0.6).cgColor
+            ]
+            cardGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+            cardGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+            cardGradientView.layer.insertSublayer(cardGradientLayer, at: 0)
+        }
     }
     
     /// 홈피드 모델 초기화
