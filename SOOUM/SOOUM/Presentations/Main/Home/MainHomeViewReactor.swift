@@ -7,8 +7,13 @@
 
 import ReactorKit
 
+import Kingfisher
+
 
 class MainHomeViewReactor: Reactor {
+    
+    // isUpdate == true 일 때, more
+    typealias CardsWithUpdate = (cards: [Card], isUpdate: Bool)
     
     enum Action: Equatable {
         case landing
@@ -19,39 +24,36 @@ class MainHomeViewReactor: Reactor {
     }
     
     enum Mutation {
-        case cards([Card])
-        case more([Card]?)
+        case cards(CardsWithUpdate)
+        case more(CardsWithUpdate)
         case updateSelectedIndex(Int)
         case updateDistanceFilter(String)
         case updateIsLoading(Bool)
         case updateIsProcessing(Bool)
-        case updateError(String?)
     }
     
     struct State {
-        var cards: [Card]
-        var displayedCards: [Card]
+        var displayedCardsWithUpdate: CardsWithUpdate
         var selectedIndex: Int
         var distanceFilter: String
         var isLoading: Bool
         var isProcessing: Bool
-        var errorMessage: String?
     }
     
     var initialState: State = .init(
-        cards: [],
-        displayedCards: [],
+        displayedCardsWithUpdate: (cards: [], isUpdate: false),
         selectedIndex: 0,
         distanceFilter: "UNDER_1",
         isLoading: false,
-        isProcessing: false,
-        errorMessage: nil
+        isProcessing: false
     )
     
     private let networkManager = NetworkManager.shared
     let locationManager = LocationManager.shared
     
-    private let countPerLoading: Int = 10
+    let simpleCache = SimpleCache.shared
+    
+    private let countPerLoading: Int = 12
     
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -75,11 +77,20 @@ class MainHomeViewReactor: Reactor {
             ])
         case let .moreFind(lastId):
             guard let lastId = lastId else {
-                return .concat([
-                    .just(.updateIsProcessing(true)),
-                    .just(.more(nil)),
-                    .just(.updateIsProcessing(false))
-                ])
+                // 캐시된 데이터가 존재할 때
+                var cardType: SimpleCache.CardType {
+                    switch self.currentState.selectedIndex {
+                    case 2: return .distance
+                    default: return .latest
+                    }
+                }
+                
+                let loadedCards = self.simpleCache.loadMainHomeCards(type: cardType) ?? []
+                let displayedCards = self.separate(
+                    displayed: self.currentState.displayedCardsWithUpdate.cards,
+                    current: loadedCards
+                )
+                return .just(.more((cards: displayedCards, isUpdate: true)))
             }
             
             return .concat([
@@ -88,14 +99,35 @@ class MainHomeViewReactor: Reactor {
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
+        
+        // 탭간 전환 시 이미 로딩된 탭 데이터는 로딩 X
         case let .homeTabBarItemDidTap(index):
-            return .concat([
-                .just(.updateIsProcessing(true)),
-                .just(.updateSelectedIndex(index)),
-                self.refresh(index)
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                .just(.updateIsProcessing(false))
-            ])
+            
+            var cardType: SimpleCache.CardType {
+                switch index {
+                case 1: return .popular
+                case 2: return .distance
+                default: return .latest
+                }
+            }
+            
+            if self.simpleCache.isEmpty(type: cardType) {
+                return .concat([
+                    .just(.updateIsProcessing(true)),
+                    .just(.updateSelectedIndex(index)),
+                    self.refresh(index)
+                        .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                    .just(.updateIsProcessing(false))
+                ])
+            } else {
+                let cards = self.simpleCache.loadMainHomeCards(type: cardType) ?? []
+                let displayedCards = self.separate(displayed: [], current: cards)
+                return .concat([
+                    .just(.updateSelectedIndex(index)),
+                    .just(.cards((cards: displayedCards, isUpdate: false)))
+                ])
+            }
+            
         case let .distanceFilter(distanceFilter):
             return .concat([
                 .just(.updateIsProcessing(true)),
@@ -110,12 +142,11 @@ class MainHomeViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var state: State = state
         switch mutation {
-        case let .cards(cards):
-            state.cards = cards
-            state.displayedCards = self.separate(displayed: [], current: cards)
-        case let .more(cards):
-            if let cards = cards { state.cards += cards }
-            state.displayedCards += self.separate(displayed: state.displayedCards, current: state.cards)
+        case let .cards(displayedCardsWithUpdate):
+            state.displayedCardsWithUpdate = displayedCardsWithUpdate
+        case let .more(displayedCardsWithUpdate):
+            state.displayedCardsWithUpdate.cards += displayedCardsWithUpdate.cards
+            state.displayedCardsWithUpdate.isUpdate = displayedCardsWithUpdate.isUpdate
         case let .updateSelectedIndex(selectedIndex):
             state.selectedIndex = selectedIndex
         case let .updateDistanceFilter(distanceFilter):
@@ -124,8 +155,6 @@ class MainHomeViewReactor: Reactor {
             state.isLoading = isLoading
         case let .updateIsProcessing(isProcessing):
             state.isProcessing = isProcessing
-        case let .updateError(errorMessage):
-            state.errorMessage = errorMessage
         }
         return state
     }
@@ -155,23 +184,44 @@ extension MainHomeViewReactor {
         }
         
         switch selectedIndex {
-        case 0:
-            return self.networkManager.request(LatestCardResponse.self, request: request)
-                .map(\.embedded.cards)
-                .map { .cards($0) }
-                .catch { _ in .just(.updateError("에러발생 비상~~")) }
         case 1:
             return self.networkManager.request(PopularCardResponse.self, request: request)
                 .map(\.embedded.cards)
-                .map { .cards($0) }
-                .catch { _ in .just(.updateError("에러발생 비상~~")) }
+                .map { cards in
+                    
+                    // 서버 응답 캐싱
+                    self.simpleCache.saveMainHomeCards(type: .popular, datas: cards)
+                    // 표시할 데이터만 나누기
+                    let displayedCards = self.separate(displayed: [], current: cards)
+                    
+                    return .cards((cards: displayedCards, isUpdate: false))
+                }
+                .catch(self.catchClosure)
         case 2:
             return self.networkManager.request(DistanceCardResponse.self, request: request)
                 .map(\.embedded.cards)
-                .map { .cards($0) }
-                .catch { _ in .just(.updateError("에러발생 비상~~")) }
+                .map { cards in
+                    
+                    // 서버 응답 캐싱
+                    self.simpleCache.saveMainHomeCards(type: .distance, datas: cards)
+                    // 표시할 데이터만 나누기
+                    let displayedCards = self.separate(displayed: [], current: cards)
+                    
+                    return .cards((cards: displayedCards, isUpdate: false))
+                }
+                .catch(self.catchClosure)
         default:
-            return .just(.updateError("selectedIndex error"))
+            return self.networkManager.request(LatestCardResponse.self, request: request)
+                .map(\.embedded.cards)
+                .map { cards in
+                    
+                    // 서버 응답 캐싱
+                    self.simpleCache.saveMainHomeCards(type: .latest, datas: cards)
+                    // 표시할 데이터만 나누기
+                    let displayedCards = self.separate(displayed: [], current: cards)
+                    return .cards((cards: displayedCards, isUpdate: false))
+                }
+                .catch(self.catchClosure)
         }
     }
     
@@ -202,11 +252,33 @@ extension MainHomeViewReactor {
         if selectedIndex == 0 {
             return self.networkManager.request(LatestCardResponse.self, request: request)
                 .map(\.embedded.cards)
-                .map { .more($0) }
+                .map { cards in
+                    
+                    let loadedCards = self.simpleCache.loadMainHomeCards(type: .latest) ?? []
+                    var newCards = loadedCards
+                    newCards += cards
+                    
+                    self.simpleCache.saveMainHomeCards(type: .latest, datas: newCards)
+                    
+                    let displayedCards = self.separate(displayed: loadedCards, current: newCards)
+                    return .more((cards: displayedCards, isUpdate: true))
+                }
+                .catch(self.catchClosure)
         } else {
             return self.networkManager.request(DistanceCardResponse.self, request: request)
                 .map(\.embedded.cards)
-                .map { .more($0) }
+                .map { cards in
+                    
+                    let loadedCards = self.simpleCache.loadMainHomeCards(type: .distance) ?? []
+                    var newCards = loadedCards
+                    newCards += cards
+                    
+                    self.simpleCache.saveMainHomeCards(type: .distance, datas: newCards)
+                    
+                    let displayedCards = self.separate(displayed: loadedCards, current: newCards)
+                    return .more((cards: displayedCards, isUpdate: true))
+                }
+                .catch(self.catchClosure)
         }
     }
 }
@@ -220,6 +292,10 @@ extension MainHomeViewReactor {
 }
 
 extension MainHomeViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+         return { _ in .just(.updateIsLoading(false)) }
+    }
     
     func separate(displayed displayedCards: [Card], current cards: [Card]) -> [Card] {
         let count = displayedCards.count

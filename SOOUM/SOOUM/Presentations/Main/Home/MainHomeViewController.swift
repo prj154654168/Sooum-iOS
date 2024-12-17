@@ -51,10 +51,12 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.isHidden = true
     }
     
-    lazy var tableView = UITableView(frame: .zero, style: .plain).then {
+    private lazy var tableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
+        
+        $0.isScrollEnabled = false
         
         $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
         
@@ -253,21 +255,16 @@ class MainHomeViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let displayedCards = reactor.state.map(\.displayedCards).distinctUntilChanged().share()
+        let displayedCardsWithUpdate = reactor.state.map(\.displayedCardsWithUpdate)
+            .distinctUntilChanged({ $0.cards == $1.cards && $0.isUpdate == $1.isUpdate })
+            .share()
         let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
         isProcessing
             .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                object.tableView.isHidden = true
+            .withLatestFrom(displayedCardsWithUpdate.map { $0.isUpdate })
+            .subscribe(with: self) { object, isUpdate in
+                object.tableView.isHidden = isUpdate == false
                 object.placeholderView.isHidden = true
-            }
-            .disposed(by: self.disposeBag)
-        isProcessing
-            .filter { $0 == false }
-            .withLatestFrom(displayedCards)
-            .subscribe(with: self) { object, displayedCards in
-                object.tableView.isHidden = displayedCards.isEmpty
-                object.placeholderView.isHidden = displayedCards.isEmpty == false
             }
             .disposed(by: self.disposeBag)
         isProcessing
@@ -275,10 +272,39 @@ class MainHomeViewController: BaseNavigationViewController, View {
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        displayedCards
-            .subscribe(with: self) { object, displayedCards in
-                object.displayedCards = displayedCards
-                object.tableView.reloadData()
+        Observable.combineLatest(isProcessing, displayedCardsWithUpdate.map { $0.cards })
+            .filter { $0.0 == false }
+            .subscribe(with: self) { object, pair in
+                object.tableView.isHidden = pair.1.isEmpty
+                object.placeholderView.isHidden = pair.1.isEmpty == false
+            }
+            .disposed(by: self.disposeBag)
+        
+        displayedCardsWithUpdate
+            .subscribe(with: self) { object, displayedCardsWithUpdate in
+                let displayedCards = displayedCardsWithUpdate.cards
+                let isUpdate = displayedCardsWithUpdate.isUpdate
+                // cell들의 높이가 tableView의 높이를 초과할 때만 스크롤 가능
+                let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
+                let height: CGFloat = width + 10
+                let isScrollEnabled: Bool = object.tableView.bounds.height < height * CGFloat(displayedCards.count)
+                object.tableView.isScrollEnabled = isScrollEnabled
+                
+                // isUpdate == true 일 때, 추가된 카드만 로드
+                if isUpdate {
+                    let indexPathForInsert: [IndexPath] = displayedCards.enumerated()
+                        .filter { object.displayedCards.contains($0.element) == false }
+                        .map { IndexPath(row: $0.offset, section: 0) }
+                    
+                    object.displayedCards = displayedCards
+                    
+                    object.tableView.performBatchUpdates {
+                        object.tableView.insertRows(at: indexPathForInsert, with: .automatic)
+                    }
+                } else {
+                    object.displayedCards = displayedCards
+                    object.tableView.reloadData()
+                }
             }
             .disposed(by: self.disposeBag)
     }
@@ -320,7 +346,17 @@ extension MainHomeViewController: UITableViewDataSourcePrefetching {
            indexPaths.last?.row == lastRowIndex,
            let reactor = self.reactor {
             
-            if self.displayedCards.count < reactor.currentState.cards.count {
+            var cardType: SimpleCache.CardType {
+                switch reactor.currentState.selectedIndex {
+                case 1: return .popular
+                case 2: return .distance
+                default: return .latest
+                }
+            }
+            
+            // 캐시된 데이터가 존재하고, 현재 표시된 수보다 캐시된 수가 많으면
+            if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: cardType),
+               self.displayedCards.count < loadedCards.count {
                 reactor.action.onNext(.moreFind(lastId: nil))
             } else {
                 let lastId = self.displayedCards[indexPaths.last?.row ?? 0].id
