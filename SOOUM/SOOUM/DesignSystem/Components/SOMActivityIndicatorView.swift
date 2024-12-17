@@ -87,11 +87,11 @@ class SOMActivityIndicatorView: UIActivityIndicatorView {
         
         if isAnimating {
             let rotate = CABasicAnimation(keyPath: "transform.rotation.z")
+            rotate.fromValue = 0
             rotate.toValue = NSNumber(value: Double.pi * -2.0)
             rotate.duration = 1
-            rotate.isCumulative = true
             rotate.repeatCount = Float.infinity
-            self.imageView.layer.anchorPoint = .init(x: 0.5, y: 0.5)
+            rotate.timingFunction = CAMediaTimingFunction(name: .linear)
             self.imageView.layer.add(rotate, forKey: "rotate")
         } else {
             self.imageView.layer.removeAnimation(forKey: "rotate")
