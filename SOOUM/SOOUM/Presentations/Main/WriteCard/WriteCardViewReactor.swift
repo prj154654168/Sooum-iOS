@@ -106,7 +106,7 @@ class WriteCardViewReactor: Reactor {
             
             let request: CardRequest = .writeComment(
                 id: self.cardIdForComment ?? "",
-                isDistanceShared: isDistanceShared,
+                isDistanceShared: !isDistanceShared,
                 latitude: coordinate.latitude,
                 longitude: coordinate.longitude,
                 content: trimedContent,
