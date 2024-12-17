@@ -79,6 +79,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
     private var tableViewTopConstraint: Constraint?
     
     private var currentOffset: CGFloat = 0
+    private var isRefreshEnabled: Bool = true
     
     
     // MARK: - Life Cycles
@@ -346,8 +347,13 @@ extension MainHomeViewController: UITableViewDelegate {
         return height
     }
     
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = self.currentOffset <= 0
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard self.displayedCards.isEmpty == false else { return }
         
         let offset = scrollView.contentOffset.y
         
@@ -360,15 +366,28 @@ extension MainHomeViewController: UITableViewDelegate {
             self.tableViewTopConstraint = $0.top.equalTo(top).constraint
         }
         
+        self.currentOffset = offset
+        
         // 최상단일 때만 moveToButton 숨김
-        self.moveTopButton.isHidden = offset <= 0
+        self.moveTopButton.isHidden = self.currentOffset <= 0
         
         // Set homeTabBar hide animation
         UIView.animate(withDuration: 0.5) {
             self.view.layoutIfNeeded()
         }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
-        self.currentOffset = offset
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.tableView.refreshControl,
+           offset <= -(refreshControl.frame.origin.y + refreshControl.bounds.height) {
+            
+            refreshControl.beginRefreshingFromTop()
+        }
     }
 }
 
