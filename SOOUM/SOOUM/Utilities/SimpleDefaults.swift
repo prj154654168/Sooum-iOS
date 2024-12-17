@@ -68,7 +68,7 @@ class SimpleDefaults {
     
     // MARK: Remote notification activation
     
-    private let remoteNotificationActivationKey: String = "kr.co.twinny.taras.remote.notification.activation"
+    private let remoteNotificationActivationKey: String = "remote.notification.activation"
 
     @discardableResult
     func initRemoteNotificationActivation() -> Bool {
