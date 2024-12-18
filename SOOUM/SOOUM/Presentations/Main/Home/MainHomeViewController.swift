@@ -231,7 +231,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
     func bind(reactor: MainHomeViewReactor) {
         
         // Action
-        self.rx.viewWillAppear
+        self.rx.viewDidLoad
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
