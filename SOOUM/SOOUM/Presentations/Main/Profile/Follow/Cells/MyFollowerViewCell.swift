@@ -61,12 +61,6 @@ class MyFollowerViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.profileImageView.snp.removeConstraints()
-        self.profileNickname.snp.removeConstraints()
-        self.followButton.snp.removeConstraints()
-        
-        self.setupConstraints()
-        
         self.disposeBag = DisposeBag()
     }
     

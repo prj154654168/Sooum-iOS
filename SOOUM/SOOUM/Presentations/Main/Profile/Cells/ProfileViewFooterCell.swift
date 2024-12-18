@@ -30,13 +30,6 @@ class ProfileViewFooterCell: UICollectionViewCell {
         self.setupConstraints()
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        self.contentView.subviews.forEach { $0.snp.removeConstraints() }
-        self.setupConstraints()
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

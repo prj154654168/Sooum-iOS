@@ -246,67 +246,67 @@ extension ProfileViewController: UICollectionViewDataSource {
         let entranceType = self.reactor?.entranceType ?? .my
         switch entranceType {
         case .my:
-            let cell: MyProfileViewCell = collectionView.dequeueReusableCell(
+            let myCell: MyProfileViewCell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: MyProfileViewCell.cellIdentifier,
                 for: indexPath
             ) as! MyProfileViewCell
-            cell.setModel(self.profile)
+            myCell.setModel(self.profile)
             
-            cell.updateProfileButton.rx.tap
+            myCell.updateProfileButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let updateProfileViewController = UpdateProfileViewController()
                     updateProfileViewController.reactor = self.reactor?.reactorForUpdate()
                     object.navigationPush(updateProfileViewController, animated: true, bottomBarHidden: true)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: myCell.disposeBag)
             
-            cell.followingButton.rx.tap
+            myCell.followingButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
                     followViewController.reactor = self.reactor?.reactorForFollow(type: .following)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: myCell.disposeBag)
             
-            cell.followerButton.rx.tap
+            myCell.followerButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
                     followViewController.reactor = self.reactor?.reactorForFollow(type: .follower)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: myCell.disposeBag)
             
-            return cell
+            return myCell
         case .other:
-            let cell: OtherProfileViewCell = collectionView.dequeueReusableCell(
+            let otherCell: OtherProfileViewCell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: OtherProfileViewCell.cellIdentifier,
                 for: indexPath
             ) as! OtherProfileViewCell
-            cell.setModel(self.profile)
+            otherCell.setModel(self.profile)
             
-            cell.followButton.rx.throttleTap(.seconds(1))
+            otherCell.followButton.rx.throttleTap(.seconds(1))
                 .subscribe(with: self) { object, _ in
                     object.reactor?.action.onNext(.follow)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: otherCell.disposeBag)
             
-            cell.followingButton.rx.tap
+            otherCell.followingButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
                     followViewController.reactor = self.reactor?.reactorForFollow(type: .following)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: otherCell.disposeBag)
             
-            cell.followerButton.rx.tap
+            otherCell.followerButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
                     followViewController.reactor = self.reactor?.reactorForFollow(type: .follower)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: otherCell.disposeBag)
             
-            return cell
+            return otherCell
         }
     }
     

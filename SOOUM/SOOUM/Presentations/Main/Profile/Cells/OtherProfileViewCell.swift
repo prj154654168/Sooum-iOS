@@ -91,9 +91,6 @@ class OtherProfileViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.contentView.subviews.forEach { $0.snp.removeConstraints() }
-        self.setupConstraints()
-        
         self.disposeBag = DisposeBag() 
     }
     
