@@ -22,6 +22,7 @@ class ProfileViewFooterCell: UICollectionViewCell {
         $0.textAlignment = .center
         $0.typography = .som.body3WithRegular
         $0.numberOfLines = 0
+        $0.lineBreakMode = .byTruncatingTail
     }
     
     override init(frame: CGRect) {
@@ -41,7 +42,7 @@ class ProfileViewFooterCell: UICollectionViewCell {
             $0.edges.equalToSuperview()
         }
         
-        self.backgroundImageView.addSubview(self.contentLabel)
+        self.contentView.addSubview(self.contentLabel)
         self.contentLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview().offset(10)
             $0.bottom.trailing.equalToSuperview().offset(-10)
@@ -52,5 +53,6 @@ class ProfileViewFooterCell: UICollectionViewCell {
         self.backgroundImageView.setImage(strUrl: writtenCard.backgroundImgURL.url)
         self.contentLabel.typography = writtenCard.font == .pretendard ? .som.body3WithRegular : .som.schoolBody1WithLight
         self.contentLabel.text = writtenCard.content
+        self.contentLabel.textAlignment = .center
     }
 }
