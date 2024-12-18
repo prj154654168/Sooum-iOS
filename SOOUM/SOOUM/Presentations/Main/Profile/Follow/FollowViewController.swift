@@ -184,14 +184,14 @@ extension FollowViewController {
         cell.selectionStyle = .none
         cell.setModel(model)
         
-        cell.cancelFollowButton.rx.throttleTap(.seconds(3))
+        cell.cancelFollowButton.rx.throttleTap(.seconds(1))
             .subscribe(onNext: { _ in
                 cell.updateButton(false)
                 reactor.action.onNext(.cancel(model.id))
             })
             .disposed(by: cell.disposeBag)
         
-        cell.followButton.rx.throttleTap(.seconds(3))
+        cell.followButton.rx.throttleTap(.seconds(1))
             .subscribe(onNext: { _ in
                 cell.updateButton(true)
                 reactor.action.onNext(.request(model.id))
@@ -212,7 +212,7 @@ extension FollowViewController {
         cell.selectionStyle = .none
         cell.setModel(model)
         
-        cell.followButton.rx.throttleTap(.seconds(3))
+        cell.followButton.rx.throttleTap(.seconds(1))
             .subscribe(onNext: { _ in
                 cell.updateButton(!model.isFollowing)
                 reactor.action.onNext(model.isFollowing ? .cancel(model.id) : .request(model.id))

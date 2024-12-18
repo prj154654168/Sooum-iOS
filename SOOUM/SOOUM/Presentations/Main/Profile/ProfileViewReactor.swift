@@ -68,14 +68,16 @@ class ProfileViewReactor: Reactor {
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.profile(),
-                self.writtenCards(nil),
+                self.writtenCards(nil)
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case .refresh:
             return .concat([
                 .just(.updateIsLoading(true)),
                 self.profile(),
-                self.writtenCards(nil),
+                self.writtenCards(nil)
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
@@ -148,6 +150,7 @@ extension ProfileViewReactor {
                     return .just(.profile(.init()))
                 }
             }
+            .catch(self.catchClosure)
     }
     
     private func writtenCards(_ lastId: String?) -> Observable<Mutation> {
@@ -169,6 +172,16 @@ extension ProfileViewReactor {
                     return .just(.writtenCards(.init()))
                 }
             }
+            .catch(self.catchClosure)
+    }
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false)),
+                .just(.updateIsLoading(false))
+            ])
+        }
     }
 }
 

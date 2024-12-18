@@ -294,7 +294,12 @@ extension MainHomeViewReactor {
 extension MainHomeViewReactor {
     
     var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-         return { _ in .just(.updateIsLoading(false)) }
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false)),
+                .just(.updateIsLoading(false))
+            ])
+        }
     }
     
     func separate(displayed displayedCards: [Card], current cards: [Card]) -> [Card] {
