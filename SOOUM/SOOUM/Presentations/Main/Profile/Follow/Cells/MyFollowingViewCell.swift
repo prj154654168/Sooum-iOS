@@ -44,6 +44,7 @@ class MyFollowingViewCell: UITableViewCell {
         $0.typography = .som.body3WithBold
         $0.foregroundColor = .som.white
         
+        $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 26 * 0.5
         $0.clipsToBounds = true
         $0.isHidden = true
@@ -107,6 +108,7 @@ class MyFollowingViewCell: UITableViewCell {
             $0.centerY.equalToSuperview()
             $0.leading.greaterThanOrEqualTo(self.profileNickname.snp.trailing).offset(40)
             $0.trailing.equalToSuperview().offset(-20)
+            $0.width.equalTo(72)
             $0.height.equalTo(26)
         }
     }

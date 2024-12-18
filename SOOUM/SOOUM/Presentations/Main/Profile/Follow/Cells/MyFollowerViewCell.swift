@@ -87,6 +87,7 @@ class MyFollowerViewCell: UITableViewCell {
             $0.centerY.equalToSuperview()
             $0.leading.greaterThanOrEqualTo(self.profileNickname.snp.trailing).offset(40)
             $0.trailing.equalToSuperview().offset(-20)
+            $0.width.equalTo(72)
             $0.height.equalTo(26)
         }
     }
