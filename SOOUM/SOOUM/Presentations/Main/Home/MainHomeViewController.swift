@@ -231,7 +231,10 @@ class MainHomeViewController: BaseNavigationViewController, View {
     func bind(reactor: MainHomeViewReactor) {
         
         // Action
-        self.rx.viewDidLoad
+        // 테이블 뷰가 스크롤이 되어 있을 시에 새로고침 X
+        self.rx.viewWillAppear
+            .withUnretained(self)
+            .filter { object, _ in object.tableView.contentOffset.y <= 0 }
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
