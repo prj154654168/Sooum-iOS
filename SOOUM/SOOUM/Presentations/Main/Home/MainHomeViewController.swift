@@ -358,9 +358,6 @@ extension MainHomeViewController: UITableViewDataSourcePrefetching {
             if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: cardType),
                self.displayedCards.count < loadedCards.count {
                 reactor.action.onNext(.moreFind(lastId: nil))
-            } else {
-                let lastId = self.displayedCards[indexPaths.last?.row ?? 0].id
-                reactor.action.onNext(.moreFind(lastId: lastId))
             }
         }
     }
@@ -381,6 +378,31 @@ extension MainHomeViewController: UITableViewDelegate {
         let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
         let height: CGFloat = width + 10 /// 가로 + top inset
         return height
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let lastSectionIndex = tableView.numberOfSections - 1
+        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        
+        if indexPath.section == lastSectionIndex,
+           indexPath.row == lastRowIndex,
+           let reactor = self.reactor {
+            
+            var cardType: SimpleCache.CardType {
+                switch reactor.currentState.selectedIndex {
+                case 1: return .popular
+                case 2: return .distance
+                default: return .latest
+                }
+            }
+            
+            // 캐시된 데이터가 존재하고, 현재 표시된 수보다 캐시된 수가 같거나 적으면
+            if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: cardType),
+               self.displayedCards.count >= loadedCards.count {
+                let lastId = self.displayedCards[indexPath.row].id
+                reactor.action.onNext(.moreFind(lastId: lastId))
+            }
+        }
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
