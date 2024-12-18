@@ -43,6 +43,8 @@ class FollowViewController: BaseNavigationViewController, View {
     
     private(set) var follows = [Follow]()
     
+    private var isRefreshEnabled: Bool = true
+    
     
     // MARK: Override func
     
@@ -143,6 +145,26 @@ extension FollowViewController: UITableViewDataSource {
 }
 
 extension FollowViewController: UITableViewDelegate {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
+        let offset = scrollView.contentOffset.y
+        self.isRefreshEnabled = offset <= 0
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.tableView.refreshControl,
+           offset <= -refreshControl.bounds.height {
+            
+            refreshControl.beginRefreshingFromTop()
+        }
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 74
