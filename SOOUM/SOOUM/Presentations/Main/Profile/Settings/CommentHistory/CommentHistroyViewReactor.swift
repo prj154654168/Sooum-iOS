@@ -57,3 +57,10 @@ class CommentHistroyViewReactor: Reactor {
         return state
     }
 }
+
+extension CommentHistroyViewReactor {
+    
+    func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
+        DetailViewReactor.init(type: .detail, selectedId)
+    }
+}
