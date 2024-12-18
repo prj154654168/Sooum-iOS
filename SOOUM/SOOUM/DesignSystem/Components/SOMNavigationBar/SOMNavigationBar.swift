@@ -68,12 +68,9 @@ class SOMNavigationBar: UIView {
     }
     
     /// 네비게이션 바 뒤로가기 버튼
-    let backButton = UIButton().then {
-        var config = UIButton.Configuration.plain()
-        config.image = .init(.icon(.outlined(.arrowBack)))
-        config.image?.withTintColor(.som.black)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.black }
-        $0.configuration = config
+    let backButton = SOMButton().then {
+        $0.image = .init(.icon(.outlined(.arrowBack)))
+        $0.foregroundColor = .som.black
     }
     var hidesBackButton: Bool {
         set { self.backButton.isHidden = newValue }

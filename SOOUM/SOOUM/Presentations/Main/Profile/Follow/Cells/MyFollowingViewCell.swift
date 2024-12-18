@@ -32,42 +32,18 @@ class MyFollowingViewCell: UITableViewCell {
         $0.typography = .som.body1WithBold
     }
     
-    let cancelFollowButton = UIButton().then {
-        let typography = Typography.som.body3WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.gray400, forKey: .foregroundColor)
-        attributes.updateValue(NSUnderlineStyle.single.rawValue, forKey: .underlineStyle)
-        attributes.updateValue(UIColor.som.gray400, forKey: .underlineColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.didFollowButton,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        config.contentInsets = .zero
-        $0.configuration = config
+    let cancelFollowButton = SOMButton().then {
+        $0.title = Text.didFollowButton
+        $0.typography = .som.body3WithBold
+        $0.foregroundColor = .som.gray400
+        $0.isUnderlined = true
     }
     
-    let followButton = UIButton().then {
-        let typography = Typography.som.body3WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.white, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.willFollowButton,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        config.contentInsets.leading = 20
-        config.contentInsets.trailing = 20
-        $0.configuration = config
-        $0.backgroundColor = .som.p300
+    let followButton = SOMButton().then {
+        $0.title = Text.willFollowButton
+        $0.typography = .som.body3WithBold
+        $0.foregroundColor = .som.white
+        
         $0.layer.cornerRadius = 26 * 0.5
         $0.clipsToBounds = true
         $0.isHidden = true

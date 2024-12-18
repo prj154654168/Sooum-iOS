@@ -62,20 +62,11 @@ class MyProfileViewCell: UICollectionViewCell {
         $0.typography = .som.caption
     }
     
-    let updateProfileButton = UIButton().then {
-        let typography = Typography.som.body2WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.white, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.updateProfileButtonTitle,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        $0.configuration = config
+    let updateProfileButton = SOMButton().then {
+        $0.title = Text.updateProfileButtonTitle
+        $0.typography = .som.body2WithBold
+        $0.foregroundColor = .som.white
+        
         $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 12
         $0.clipsToBounds = true

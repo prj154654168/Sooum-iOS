@@ -47,12 +47,9 @@ class DetailViewCell: UICollectionViewCell {
     }
     
     /// 상세보기, 상단 오른쪽 (더보기/삭제) 버튼, 기본 = 더보기
-    let rightTopSettingButton = UIButton().then {
-        var config = UIButton.Configuration.plain()
-        config.image = .init(.icon(.outlined(.more)))
-        config.image?.withTintColor(.som.gray300)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray300 }
-        $0.configuration = config
+    let rightTopSettingButton = SOMButton().then {
+        $0.image = .init(.icon(.outlined(.more)))
+        $0.foregroundColor = .som.gray300
     }
     
     /// 상세보기, 카드 삭제 됐을 때 배경

@@ -30,23 +30,11 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
         $0.label.text = "확인"
     }
     
-    let passButton = UIButton().then {
-        let typography = Typography.som.body3WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.p300, forKey: .foregroundColor)
-        attributes.updateValue(NSUnderlineStyle.single.rawValue, forKey: .underlineStyle)
-        attributes.updateValue(UIColor.som.p300, forKey: .underlineColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            "다음에 변경하기",
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        config.contentInsets = .zero
-        $0.configuration = config
+    let passButton = SOMButton().then {
+        $0.title = "다음에 변경하기"
+        $0.typography = .som.body3WithBold
+        $0.foregroundColor = .som.p300
+        $0.isUnderlined = true
     }
      
     func bind(reactor: ProfileImageSettingViewReactor) {

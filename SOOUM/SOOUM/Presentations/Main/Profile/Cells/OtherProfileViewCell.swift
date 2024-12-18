@@ -63,27 +63,13 @@ class OtherProfileViewCell: UICollectionViewCell {
         $0.typography = .som.caption
     }
     
-    let followButton = UIButton().then {
-        var config = UIButton.Configuration.plain()
-        let image = UIImage(.icon(.outlined(.plus)))?.resized(.init(width: 16, height: 16), color: .som.white)
-        config.image = image
-        config.image?.withTintColor(.som.white)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.white }
-        config.imagePadding = 2
+    let followButton = SOMButton().then {
+        $0.image = .init(.icon(.outlined(.plus)))?.resized(.init(width: 16, height: 16), color: .som.white)
         
-        let typography = Typography.som.body2WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.white, forKey: .foregroundColor)
-        config.attributedTitle = .init(
-            Text.followButtonTitle,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
+        $0.title = Text.followButtonTitle
+        $0.typography = .som.body2WithBold
+        $0.foregroundColor = .som.white
         
-        $0.configuration = config
         $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 12
         $0.clipsToBounds = true
@@ -208,25 +194,11 @@ class OtherProfileViewCell: UICollectionViewCell {
         self.totalFollowerCountLabel.text = profile.followerCnt
         
         let isFollowing = profile.isFollowing ?? false
-        let updateConfigHandler: UIButton.ConfigurationUpdateHandler = { button in
-            var updateConfig = button.configuration
-            let image = UIImage(.icon(.outlined(.plus)))?.resized(.init(width: 16, height: 16), color: .som.white)
-            updateConfig?.image = isFollowing ? nil : image
-            updateConfig?.image?.withTintColor(.som.white)
-            
-            updateConfig?.title = isFollowing ? Text.didFollowButtonTitle : Text.followButtonTitle
-            let updateTextAttributes = UIConfigurationTextAttributesTransformer { current in
-                var update = current
-                update.foregroundColor = isFollowing ? .som.gray600 : .som.white
-                return update
-            }
-            updateConfig?.titleTextAttributesTransformer = updateTextAttributes
-            button.configuration = updateConfig
-        }
         
-        self.followButton.configurationUpdateHandler = updateConfigHandler
-        self.followButton.setNeedsUpdateConfiguration()
-        
+        let image = UIImage(.icon(.outlined(.plus)))?.resized(.init(width: 16, height: 16), color: .som.white)
+        self.followButton.image = isFollowing ? nil : image
+        self.followButton.title = isFollowing ? Text.didFollowButtonTitle : Text.followButtonTitle
+        self.followButton.foregroundColor = isFollowing ? .som.gray600 : .som.white
         self.followButton.backgroundColor = isFollowing ? .som.gray200 : .som.p300
     }
 }

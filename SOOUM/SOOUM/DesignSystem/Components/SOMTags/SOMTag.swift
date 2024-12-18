@@ -23,10 +23,8 @@ class SOMTag: UICollectionViewCell {
     
     weak var delegate: SOMTagDelegate?
     
-    private lazy var removeButton = UIButton().then {
-        var config = UIButton.Configuration.plain()
-        config.image = .init(.image(.cancel))
-        $0.configuration = config
+    private lazy var removeButton = SOMButton().then {
+        $0.image = .init(.image(.cancel))
         
         $0.layer.cornerRadius = 8
         $0.clipsToBounds = true

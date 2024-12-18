@@ -23,7 +23,7 @@ class SettingTextCellView: UIView {
     }
     
     private let arrowImageView = UIImageView().then {
-        $0.image = .init(.image(.next))
+        $0.image = .init(.icon(.outlined(.next)))
         $0.tintColor = .som.gray400
     }
     

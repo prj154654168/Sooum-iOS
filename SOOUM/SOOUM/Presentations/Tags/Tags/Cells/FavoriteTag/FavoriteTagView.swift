@@ -32,7 +32,7 @@ class FavoriteTagView: UIView {
     }
     
     let moreImageView = UIImageView().then {
-        $0.image = .next
+        $0.image = .init(.icon(.outlined(.next)))
         $0.contentMode = .scaleAspectFit
         $0.tintColor = .som.blue300
     }

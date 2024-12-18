@@ -63,20 +63,11 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         $0.delegate = self
     }
     
-    private let transferMemberButton = UIButton().then {
-        let typography = Typography.som.body1WithBold
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        attributes.updateValue(UIColor.som.white, forKey: .foregroundColor)
-        var config = UIButton.Configuration.plain()
-        config.attributedTitle = .init(
-            Text.transferEnterButtonTitle,
-            attributes: AttributeContainer(attributes)
-        )
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
-            AttributeContainer(attributes)
-        }
-        $0.configuration = config
+    private let transferMemberButton = SOMButton().then {
+        $0.title = Text.transferEnterButtonTitle
+        $0.typography = .som.body1WithBold
+        $0.foregroundColor = .som.white
+        
         $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 12
         $0.clipsToBounds = true
@@ -167,21 +158,9 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         transferCode
             .map { $0.isEmpty }
             .subscribe(with: self) { object, isEmpty in
-                let updateConfigHandler: UIButton.ConfigurationUpdateHandler = { button in
-                    var updateConfig = button.configuration
-                    let updateTextAttributes = UIConfigurationTextAttributesTransformer { current in
-                        var update = current
-                        update.foregroundColor = isEmpty ? .som.gray600 : .som.white
-                        return update
-                    }
-                    updateConfig?.titleTextAttributesTransformer = updateTextAttributes
-                    button.configuration = updateConfig
-                }
-                
-                object.transferMemberButton.configurationUpdateHandler = updateConfigHandler
-                object.transferMemberButton.setNeedsUpdateConfiguration()
                 
                 object.transferMemberButton.isEnabled = isEmpty == false
+                object.transferMemberButton.foregroundColor = isEmpty ? .som.gray600 : .som.white
                 object.transferMemberButton.backgroundColor = isEmpty ? .som.gray300 : .som.p300
             }
             .disposed(by: self.disposeBag)

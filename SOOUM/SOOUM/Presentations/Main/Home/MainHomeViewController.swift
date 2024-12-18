@@ -32,12 +32,9 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.contentMode = .scaleAspectFit
     }
     
-    private let rightAlamButton = UIButton().then {
-        var config = UIButton.Configuration.plain()
-        config.image = .init(.icon(.outlined(.alarm)))
-        config.image?.withTintColor(.som.gray700)
-        config.imageColorTransformer = UIConfigurationColorTransformer { _ in .som.gray700 }
-        $0.configuration = config
+    private let rightAlamButton = SOMButton().then {
+        $0.image = .init(.icon(.outlined(.alarm)))
+        $0.foregroundColor = .som.gray700
     }
     
     private let headerContainer = UIStackView().then {
