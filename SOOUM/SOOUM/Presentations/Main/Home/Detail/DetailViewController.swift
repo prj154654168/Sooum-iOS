@@ -15,8 +15,8 @@ import RxCocoa
 import RxSwift
 
 
- class DetailViewController: BaseNavigationViewController, View {
-     
+class DetailViewController: BaseNavigationViewController, View {
+
      enum Text {
          static let moreBottomSheetEntryName: String = "moreButtonBottomSheetViewController"
          
@@ -276,10 +276,10 @@ extension DetailViewController: UICollectionViewDataSource {
         let model: SOMCardModel = .init(data: card)
         
         let tags: [SOMTagModel] = self.detailCard.tags.map {
-            SOMTagModel(id: $0.id, originalText: $0.content, isRemovable: false)
+            SOMTagModel(id: $0.id, originalText: $0.content, isSelectable: true, isRemovable: false)
         }
         cell.setDatas(model, tags: tags)
-        
+        cell.tags.delegate = self
         cell.isOwnCard = self.detailCard.isOwnCard
         cell.prevCard = self.prevCard
         cell.member = self.detailCard.member
@@ -437,4 +437,15 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         let height: CGFloat = collectionView.bounds.height - cellHeight
         return CGSize(width: width, height: height)
     }
+}
+
+extension DetailViewController: SOMTagsDelegate {
+  func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
+    print("\(type(of: self)) - \(#function)")
+
+    let tagDetailVC = TagDetailViewController()
+    let tagDetailReactor = TagDetailViewrReactor(tagID: model.id)
+    tagDetailVC.reactor = tagDetailReactor
+    self.navigationPush(tagDetailVC, animated: true)
+  }
 }
