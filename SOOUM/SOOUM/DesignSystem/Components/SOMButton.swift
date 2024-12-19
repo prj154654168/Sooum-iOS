@@ -83,7 +83,7 @@ class SOMButton: UIButton {
             
             if self.isUnderlined == true {
                 attributes.updateValue(NSUnderlineStyle.single.rawValue, forKey: .underlineStyle)
-                attributes.updateValue(UIColor.som.gray400, forKey: .underlineColor)
+                attributes.updateValue(foregroundColor ?? UIColor.som.gray400, forKey: .underlineColor)
             }
             
             configuration.attributedTitle = .init(title, attributes: AttributeContainer(attributes))
