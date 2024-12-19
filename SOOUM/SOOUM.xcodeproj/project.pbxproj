@@ -14,6 +14,8 @@
 		2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */; };
 		2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */; };
 		2A048E852C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */; };
+		2A34AFB52D144F08007BD7E7 /* EmptyTagDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34AFB42D144EEF007BD7E7 /* EmptyTagDetailTableViewCell.swift */; };
+		2A34AFB62D144F08007BD7E7 /* EmptyTagDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A34AFB42D144EEF007BD7E7 /* EmptyTagDetailTableViewCell.swift */; };
 		2A44A42A2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */; };
 		2A44A42B2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */; };
 		2A44A42D2CAC14C800DC463E /* SignInResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A42C2CAC14C800DC463E /* SignInResponse.swift */; };
@@ -465,6 +467,7 @@
 		2A032EFC2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceViewReactor.swift; sourceTree = "<group>"; };
 		2A048E7A2C9BDF5F00FFD485 /* SOMLocationFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilter.swift; sourceTree = "<group>"; };
 		2A048E832C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLocationFilterCollectionViewCell.swift; sourceTree = "<group>"; };
+		2A34AFB42D144EEF007BD7E7 /* EmptyTagDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTagDetailTableViewCell.swift; sourceTree = "<group>"; };
 		2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyResponse.swift; sourceTree = "<group>"; };
 		2A44A42C2CAC14C800DC463E /* SignInResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInResponse.swift; sourceTree = "<group>"; };
 		2A44A4332CAC21A500DC463E /* SignUpResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpResponse.swift; sourceTree = "<group>"; };
@@ -733,6 +736,14 @@
 			path = SOMLocationFilter;
 			sourceTree = "<group>";
 		};
+		2A34AFB32D144EE7007BD7E7 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				2A34AFB42D144EEF007BD7E7 /* EmptyTagDetailTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		2A5BB7B72CDB856D00E1C799 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
@@ -944,6 +955,7 @@
 		2AFD05572D008D01007C84AD /* TagDetail */ = {
 			isa = PBXGroup;
 			children = (
+				2A34AFB32D144EE7007BD7E7 /* Cells */,
 				2AFD05582D008D23007C84AD /* TagDetailViewController.swift */,
 				2AFD055F2D009FA1007C84AD /* TagDetailViewrReactor.swift */,
 				2AFD055B2D0094F0007C84AD /* Views */,
@@ -2252,6 +2264,7 @@
 				3878D0822CFFEC6900F9522F /* TermsOfServiceViewController.swift in Sources */,
 				38F720B92CD4F16500DF32B5 /* CardProtocol.swift in Sources */,
 				38121E352CA6DA4000602499 /* Date.swift in Sources */,
+				2A34AFB62D144F08007BD7E7 /* EmptyTagDetailTableViewCell.swift in Sources */,
 				3803CF752D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
 				38C2D4182CFEAACA00CEA092 /* ProfileViewFooterCell.swift in Sources */,
 				381DEA8C2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
@@ -2472,6 +2485,7 @@
 				3878D0532CFFC6C100F9522F /* ProfileResponse.swift in Sources */,
 				2AE6B1752CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */,
 				2A5BB7C22CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */,
+				2A34AFB52D144F08007BD7E7 /* EmptyTagDetailTableViewCell.swift in Sources */,
 				3803CF742D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
 				2AFF95702CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */,
 				384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
