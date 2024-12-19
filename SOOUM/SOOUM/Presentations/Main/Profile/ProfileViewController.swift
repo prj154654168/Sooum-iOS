@@ -84,6 +84,7 @@ class ProfileViewController: BaseNavigationViewController, View {
     
     private(set) var profile = Profile()
     private(set) var writtenCards = [WrittenCard]()
+    private(set) var isBlocked = false
     
     override var navigationBarHeight: CGFloat {
          68
@@ -121,6 +122,15 @@ class ProfileViewController: BaseNavigationViewController, View {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.delegate = self
+        
+        // 탭바 표시
+        self.hidesBottomBarWhenPushed = self.reactor?.entranceType == .my ? false : true
+    }
+    
     override func setupConstraints() {
         super.setupConstraints()
         
@@ -132,12 +142,14 @@ class ProfileViewController: BaseNavigationViewController, View {
     }
     
     override func bind() {
-        super.bind()
         
-        // 탭바 표시
-        self.rx.viewWillAppear
+        self.backButton.rx.tap
             .subscribe(with: self) { object, _ in
-                object.hidesBottomBarWhenPushed = self.reactor?.entranceType == .my ? false : true
+                if object.isBlocked {
+                    object.navigationPop(to: MainHomeViewController.self, animated: true)
+                } else {
+                    object.navigationPop()
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -222,9 +234,12 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isBlocked)
             .distinctUntilChanged()
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                object.dismiss(animated: true)
+            .subscribe(with: self) { object, isBlocked in
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    object.isBlocked = isBlocked
+                    object.rightBlockButton.isHidden = isBlocked
+                    object.collectionView.reloadData()
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -284,11 +299,15 @@ extension ProfileViewController: UICollectionViewDataSource {
                 withReuseIdentifier: OtherProfileViewCell.cellIdentifier,
                 for: indexPath
             ) as! OtherProfileViewCell
-            otherCell.setModel(self.profile)
+            otherCell.setModel(self.profile, isBlocked: self.isBlocked)
             
             otherCell.followButton.rx.throttleTap(.seconds(1))
                 .subscribe(with: self) { object, _ in
-                    object.reactor?.action.onNext(.follow)
+                    if object.isBlocked {
+                        object.reactor?.action.onNext(.block)
+                    } else {
+                        object.reactor?.action.onNext(.follow)
+                    }
                 }
                 .disposed(by: otherCell.disposeBag)
             
@@ -326,7 +345,7 @@ extension ProfileViewController: UICollectionViewDataSource {
                     withReuseIdentifier: "footer",
                     for: indexPath
                 ) as! ProfileViewFooter
-            footer.setModel(self.writtenCards)
+            footer.setModel(self.writtenCards, isBlocked: self.isBlocked)
             
             footer.didTap
                 .subscribe(with: self) { object, selectedId in

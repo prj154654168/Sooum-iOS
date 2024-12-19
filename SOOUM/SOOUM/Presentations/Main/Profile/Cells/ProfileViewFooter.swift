@@ -16,6 +16,10 @@ import RxSwift
 
 class ProfileViewFooter: UICollectionReusableView {
     
+    enum Text {
+        static let blockedText: String = "차단한 계정입니다"
+    }
+    
     private let flowLayout = SOMTagsLayout().then {
         $0.scrollDirection = .vertical
         $0.minimumLineSpacing = .zero
@@ -38,6 +42,13 @@ class ProfileViewFooter: UICollectionReusableView {
         
         $0.dataSource = self
         $0.delegate = self
+    }
+    
+    private let blockedLabel = UILabel().then {
+        $0.text = Text.blockedText
+        $0.textColor = .som.gray400
+        $0.typography = .som.body1WithBold
+        $0.isHidden = true
     }
     
     private(set) var writtenCards = [WrittenCard]()
@@ -64,15 +75,25 @@ class ProfileViewFooter: UICollectionReusableView {
     
     private func setupConstraints() {
         
-        self.addSubviews(self.collectionView)
+        self.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+        
+        self.addSubview(self.blockedLabel)
+        self.blockedLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
     }
     
-    func setModel(_ writtenCards: [WrittenCard]) {
+    func setModel(_ writtenCards: [WrittenCard], isBlocked: Bool) {
+        self.blockedLabel.isHidden = isBlocked == false
+        self.collectionView.isHidden = isBlocked
+        
         self.writtenCards = writtenCards
-        self.collectionView.reloadData()
+        if self.writtenCards != writtenCards {
+            self.collectionView.reloadData()
+        }
     }
 }
 

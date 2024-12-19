@@ -87,11 +87,20 @@ class ProfileViewReactor: Reactor {
                 .just(.updateIsProcessing(false))
             ])
         case .block:
-            let request: ReportRequest = .blockMember(id: self.memberId ?? "")
-            return self.networkManager.request(Status.self, request: request)
-                .map { .updateIsBlocked($0.httpCode == 201) }
+            if self.currentState.isBlocked {
+                let request: ReportRequest = .cancelBlockMember(id: self.memberId ?? "")
+                return self.networkManager.request(Empty.self, request: request)
+                    .flatMapLatest { _ -> Observable<Mutation> in
+                        return .just(.updateIsBlocked(false))
+                    }
+            } else {
+                let request: ReportRequest = .blockMember(id: self.memberId ?? "")
+                return self.networkManager.request(Status.self, request: request)
+                    .map { .updateIsBlocked($0.httpCode == 201) }
+            }
+            
         case .follow:
-            if self.currentState.isFollow == true { 
+            if self.currentState.isFollow == true {
                 let request: ProfileRequest = .cancelFollow(memberId: self.memberId ?? "")
                 
                 return self.networkManager.request(Empty.self, request: request)

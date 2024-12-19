@@ -14,6 +14,7 @@ enum ReportRequest: BaseRequest {
 
     case reportCard(id: String, reportType: ReportViewReactor.ReportType)
     case blockMember(id: String)
+    case cancelBlockMember(id: String)
     
 
     var path: String {
@@ -22,11 +23,15 @@ enum ReportRequest: BaseRequest {
             return "/report/cards/\(id)"
         case .blockMember:
             return "/blocks"
+        case let .cancelBlockMember(id):
+            return "/blocks/\(id)"
         }
     }
 
     var method: HTTPMethod {
         switch self {
+        case .cancelBlockMember:
+            return .delete
         default:
             return .post
         }
@@ -38,11 +43,15 @@ enum ReportRequest: BaseRequest {
             return ["reportType": reportType.rawValue]
         case let .blockMember(id):
             return ["toMemberId": id]
+        case .cancelBlockMember:
+            return [:]
         }
     }
 
     var encoding: ParameterEncoding {
         switch self {
+        case .cancelBlockMember:
+            return URLEncoding.default
         default:
             return JSONEncoding.default
         }
