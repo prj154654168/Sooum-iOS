@@ -258,9 +258,11 @@ class MainHomeViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let displayedCardsWithUpdate = reactor.state.map(\.displayedCardsWithUpdate)
-            .distinctUntilChanged({ $0.cards == $1.cards && $0.isUpdate == $1.isUpdate })
-            .share()
+      let displayedCardsWithUpdate = reactor.state
+          .map(\.displayedCardsWithUpdate)
+          .distinctUntilChanged({ reactor.canUpdateCells(prev: $0, curr: $1) })
+          .share()
+      
         let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
         isProcessing
             .filter { $0 }
@@ -270,6 +272,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
                 object.placeholderView.isHidden = true
             }
             .disposed(by: self.disposeBag)
+      
         isProcessing
             .distinctUntilChanged()
             .bind(to: self.activityIndicatorView.rx.isAnimating)

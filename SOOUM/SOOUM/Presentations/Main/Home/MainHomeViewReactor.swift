@@ -307,4 +307,12 @@ extension MainHomeViewReactor {
         let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
         return displayedCards
     }
+  
+    func canUpdateCells(
+        prev prevCardsWithUpdate: CardsWithUpdate,
+        curr currCardsWithUpdate: CardsWithUpdate
+    ) -> Bool {
+        return prevCardsWithUpdate.cards == currCardsWithUpdate.cards &&
+            prevCardsWithUpdate.isUpdate == currCardsWithUpdate.isUpdate
+    }
 }
