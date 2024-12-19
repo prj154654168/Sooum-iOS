@@ -261,26 +261,23 @@ class WriteCardViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        // 시간제한 카드 뷰 표시
+        // 시간제한 카드 뷰 및 태그 표시
         optionState
+            .skip(1)
             .compactMap { $0[.timeLimit] }
             .subscribe(with: self) { object, isTimeLimit in
                 
                 object.timeLimitBackgroundView.isHidden = isTimeLimit == false
+                
+                object.writeCardView.relatedTagsBackgroundView.isHidden = isTimeLimit
+                
                 object.writeCardView.writeTagTextField.isHidden = isTimeLimit
                 object.writeCardView.writtenTagsHeightConstraint?.deactivate()
                 object.writeCardView.writtenTags.snp.makeConstraints {
-                    let constraint = isTimeLimit ? $0.height.equalTo(0).constraint : $0.height.equalTo(12).constraint
+                    let height = self.writtenTagModels.isEmpty ? 12 : 58
+                    let constraint = isTimeLimit ? $0.height.equalTo(0).constraint : $0.height.equalTo(height).constraint
                     object.writeCardView.writtenTagsHeightConstraint = constraint
                 }
-            }
-            .disposed(by: self.disposeBag)
-        optionState
-            .compactMap { $0[.timeLimit] }
-            .map { !$0 }
-            .subscribe(with: self.writeCardView.writeTagTextField) { writeTagTextField, isTimeLimit in
-                writeTagTextField.isUserInteractionEnabled = isTimeLimit
-                writeTagTextField.text = nil
             }
             .disposed(by: self.disposeBag)
         
