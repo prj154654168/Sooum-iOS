@@ -34,6 +34,13 @@ class TagDetailViewrReactor: Reactor {
     var initialState = State()
     
     private let tagID: String
+  
+    var emptyTagMode: EmptyTagDetailTableViewCell.Mode {
+      guard let cardCnt = self.currentState.tagInfo?.cardCnt else {
+        return .noCardsRegistered
+      }
+      return cardCnt == 0 ? .noCardsRegistered : .noCardsCanView
+    }
     
     init(initialState: State = State(), tagID: String) {
         self.initialState = initialState

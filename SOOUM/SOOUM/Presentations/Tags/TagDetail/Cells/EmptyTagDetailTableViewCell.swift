@@ -47,6 +47,7 @@ class EmptyTagDetailTableViewCell: UITableViewCell {
     $0.typography = .som.body2WithBold
     $0.textColor = .som.gray500
     $0.textAlignment = .center
+    $0.numberOfLines = 2
   }
   
   // MARK: - init
