@@ -36,7 +36,6 @@ class MainTabBarController: SOMTabBarController, View {
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBar.isHidden = true
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
     }
     
     func bind(reactor: MainTabBarReactor) {
