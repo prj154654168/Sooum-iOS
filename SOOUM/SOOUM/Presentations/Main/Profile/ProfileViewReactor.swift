@@ -68,14 +68,16 @@ class ProfileViewReactor: Reactor {
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.profile(),
-                self.writtenCards(nil),
+                self.writtenCards(nil)
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case .refresh:
             return .concat([
                 .just(.updateIsLoading(true)),
                 self.profile(),
-                self.writtenCards(nil),
+                self.writtenCards(nil)
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
@@ -85,11 +87,20 @@ class ProfileViewReactor: Reactor {
                 .just(.updateIsProcessing(false))
             ])
         case .block:
-            let request: ReportRequest = .blockMember(id: self.memberId ?? "")
-            return self.networkManager.request(Status.self, request: request)
-                .map { .updateIsBlocked($0.httpCode == 201) }
+            if self.currentState.isBlocked {
+                let request: ReportRequest = .cancelBlockMember(id: self.memberId ?? "")
+                return self.networkManager.request(Empty.self, request: request)
+                    .flatMapLatest { _ -> Observable<Mutation> in
+                        return .just(.updateIsBlocked(false))
+                    }
+            } else {
+                let request: ReportRequest = .blockMember(id: self.memberId ?? "")
+                return self.networkManager.request(Status.self, request: request)
+                    .map { .updateIsBlocked($0.httpCode == 201) }
+            }
+            
         case .follow:
-            if self.currentState.isFollow == true { 
+            if self.currentState.isFollow == true {
                 let request: ProfileRequest = .cancelFollow(memberId: self.memberId ?? "")
                 
                 return self.networkManager.request(Empty.self, request: request)
@@ -148,6 +159,7 @@ extension ProfileViewReactor {
                     return .just(.profile(.init()))
                 }
             }
+            .catch(self.catchClosure)
     }
     
     private func writtenCards(_ lastId: String?) -> Observable<Mutation> {
@@ -169,6 +181,16 @@ extension ProfileViewReactor {
                     return .just(.writtenCards(.init()))
                 }
             }
+            .catch(self.catchClosure)
+    }
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false)),
+                .just(.updateIsLoading(false))
+            ])
+        }
     }
 }
 

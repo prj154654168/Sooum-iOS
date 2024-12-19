@@ -49,6 +49,7 @@ extension UIImage {
             
             enum Filled: String {
                 case addCard
+                case checkbox
                 case alarm
                 case clock
                 case comment

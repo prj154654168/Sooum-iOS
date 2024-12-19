@@ -26,19 +26,13 @@ class CommentHistoryViewCell: UICollectionViewCell {
             letterSpacing: -0.04
         )
         $0.numberOfLines = 0
+        $0.lineBreakMode = .byTruncatingTail
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.setupConstraints()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        
-        self.backgroundImageView.image = nil
-        self.contentLabel.text = nil
     }
     
     required init?(coder: NSCoder) {

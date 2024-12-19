@@ -51,10 +51,12 @@ class MainHomeViewController: BaseNavigationViewController, View {
         $0.isHidden = true
     }
     
-    lazy var tableView = UITableView(frame: .zero, style: .plain).then {
+    private lazy var tableView = UITableView(frame: .zero, style: .plain).then {
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
+        
+        $0.isScrollEnabled = false
         
         $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
         
@@ -79,6 +81,7 @@ class MainHomeViewController: BaseNavigationViewController, View {
     private var tableViewTopConstraint: Constraint?
     
     private var currentOffset: CGFloat = 0
+    private var isRefreshEnabled: Bool = true
     
     
     // MARK: - Life Cycles
@@ -228,7 +231,10 @@ class MainHomeViewController: BaseNavigationViewController, View {
     func bind(reactor: MainHomeViewReactor) {
         
         // Action
+        // 테이블 뷰가 스크롤이 되어 있을 시에 새로고침 X
         self.rx.viewWillAppear
+            .withUnretained(self)
+            .filter { object, _ in object.tableView.contentOffset.y <= 0 }
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -252,32 +258,59 @@ class MainHomeViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let displayedCards = reactor.state.map(\.displayedCards).distinctUntilChanged().share()
+      let displayedCardsWithUpdate = reactor.state
+          .map(\.displayedCardsWithUpdate)
+          .distinctUntilChanged({ reactor.canUpdateCells(prev: $0, curr: $1) })
+          .share()
+      
         let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
         isProcessing
             .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                object.tableView.isHidden = true
+            .withLatestFrom(displayedCardsWithUpdate.map { $0.isUpdate })
+            .subscribe(with: self) { object, isUpdate in
+                object.tableView.isHidden = isUpdate == false
                 object.placeholderView.isHidden = true
             }
             .disposed(by: self.disposeBag)
-        isProcessing
-            .filter { $0 == false }
-            .withLatestFrom(displayedCards)
-            .subscribe(with: self) { object, displayedCards in
-                object.tableView.isHidden = displayedCards.isEmpty
-                object.placeholderView.isHidden = displayedCards.isEmpty == false
-            }
-            .disposed(by: self.disposeBag)
+      
         isProcessing
             .distinctUntilChanged()
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        displayedCards
-            .subscribe(with: self) { object, displayedCards in
-                object.displayedCards = displayedCards
-                object.tableView.reloadData()
+        Observable.combineLatest(isProcessing, displayedCardsWithUpdate.map { $0.cards })
+            .filter { $0.0 == false }
+            .subscribe(with: self) { object, pair in
+                object.tableView.isHidden = pair.1.isEmpty
+                object.placeholderView.isHidden = pair.1.isEmpty == false
+            }
+            .disposed(by: self.disposeBag)
+        
+        displayedCardsWithUpdate
+            .subscribe(with: self) { object, displayedCardsWithUpdate in
+                let displayedCards = displayedCardsWithUpdate.cards
+                let isUpdate = displayedCardsWithUpdate.isUpdate
+                // cell들의 높이가 tableView의 높이를 초과할 때만 스크롤 가능
+                let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
+                let height: CGFloat = width + 10
+                let isScrollEnabled: Bool = object.tableView.bounds.height < height * CGFloat(displayedCards.count)
+                object.tableView.isScrollEnabled = isScrollEnabled
+                
+                // isUpdate == true 일 때, 추가된 카드만 로드
+                if isUpdate {
+                    let indexPathForInsert: [IndexPath] = displayedCards.enumerated()
+                        .filter { object.displayedCards.contains($0.element) == false }
+                        .map { IndexPath(row: $0.offset, section: 0) }
+                    
+                    object.displayedCards = displayedCards
+                    
+                    object.tableView.performBatchUpdates {
+                        object.tableView.insertRows(at: indexPathForInsert, with: .automatic)
+                    }
+                } else {
+                    object.displayedCards = displayedCards
+                    object.tableView.reloadData()
+                }
             }
             .disposed(by: self.disposeBag)
     }
@@ -319,11 +352,18 @@ extension MainHomeViewController: UITableViewDataSourcePrefetching {
            indexPaths.last?.row == lastRowIndex,
            let reactor = self.reactor {
             
-            if self.displayedCards.count < reactor.currentState.cards.count {
+            var cardType: SimpleCache.CardType {
+                switch reactor.currentState.selectedIndex {
+                case 1: return .popular
+                case 2: return .distance
+                default: return .latest
+                }
+            }
+            
+            // 캐시된 데이터가 존재하고, 현재 표시된 수보다 캐시된 수가 많으면
+            if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: cardType),
+               self.displayedCards.count < loadedCards.count {
                 reactor.action.onNext(.moreFind(lastId: nil))
-            } else {
-                let lastId = self.displayedCards[indexPaths.last?.row ?? 0].id
-                reactor.action.onNext(.moreFind(lastId: lastId))
             }
         }
     }
@@ -346,8 +386,38 @@ extension MainHomeViewController: UITableViewDelegate {
         return height
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let lastSectionIndex = tableView.numberOfSections - 1
+        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        
+        if indexPath.section == lastSectionIndex,
+           indexPath.row == lastRowIndex,
+           let reactor = self.reactor {
+            
+            var cardType: SimpleCache.CardType {
+                switch reactor.currentState.selectedIndex {
+                case 1: return .popular
+                case 2: return .distance
+                default: return .latest
+                }
+            }
+            
+            // 캐시된 데이터가 존재하고, 현재 표시된 수보다 캐시된 수가 같거나 적으면
+            if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: cardType),
+               self.displayedCards.count >= loadedCards.count {
+                let lastId = self.displayedCards[indexPath.row].id
+                reactor.action.onNext(.moreFind(lastId: lastId))
+            }
+        }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = self.currentOffset <= 0
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard self.displayedCards.isEmpty == false else { return }
         
         let offset = scrollView.contentOffset.y
         
@@ -360,15 +430,28 @@ extension MainHomeViewController: UITableViewDelegate {
             self.tableViewTopConstraint = $0.top.equalTo(top).constraint
         }
         
+        self.currentOffset = offset
+        
         // 최상단일 때만 moveToButton 숨김
-        self.moveTopButton.isHidden = offset <= 0
+        self.moveTopButton.isHidden = self.currentOffset <= 0
         
         // Set homeTabBar hide animation
         UIView.animate(withDuration: 0.5) {
             self.view.layoutIfNeeded()
         }
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         
-        self.currentOffset = offset
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.tableView.refreshControl,
+           offset <= -refreshControl.bounds.height {
+            
+            refreshControl.beginRefreshingFromTop()
+        }
     }
 }
 

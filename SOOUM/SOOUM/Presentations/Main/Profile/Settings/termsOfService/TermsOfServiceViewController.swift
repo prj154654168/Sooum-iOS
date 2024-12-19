@@ -78,7 +78,7 @@ class TermsOfServiceViewController: BaseNavigationViewController {
         
         self.privacyPolicyCellView.rx.didSelect
             .subscribe(with: self) { object, _ in
-                if let url = URL(string: "https://tiny-viscount-552.notion.site/73ff608593ff42e0830c6bc772e0ffc1?pvs=4") {
+                if let url = URL(string: "https://mewing-space-6d3.notion.site/44e378c9d11d45159859492434b6b128?pvs=4") {
                     if UIApplication.shared.canOpenURL(url) {
                         UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     }
@@ -88,7 +88,7 @@ class TermsOfServiceViewController: BaseNavigationViewController {
         
         self.termsOfServiceCellView.rx.didSelect
             .subscribe(with: self) { object, _ in
-                if let url = URL(string: "https://tiny-viscount-552.notion.site/78a2178a3c7f46d18bbfa45c880c11a5?pvs=4") {
+                if let url = URL(string: "https://mewing-space-6d3.notion.site/3f92380d536a4b569921d2809ed147ef?pvs=4") {
                     if UIApplication.shared.canOpenURL(url) {
                         UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     }
@@ -98,7 +98,7 @@ class TermsOfServiceViewController: BaseNavigationViewController {
         
         self.termsOfLocationInfoCellView.rx.didSelect
             .subscribe(with: self) { object, _ in
-                if let url = URL(string: "https://tiny-viscount-552.notion.site/b529a2cfe4034baa89a64c64b17216a7?pvs=4") {
+                if let url = URL(string: "https://mewing-space-6d3.notion.site/45d151f68ba74b23b24483ad8b2662b4?pvs=4") {
                     if UIApplication.shared.canOpenURL(url) {
                         UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     }

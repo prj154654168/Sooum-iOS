@@ -84,10 +84,13 @@ class ProfileViewController: BaseNavigationViewController, View {
     
     private(set) var profile = Profile()
     private(set) var writtenCards = [WrittenCard]()
+    private(set) var isBlocked = false
     
     override var navigationBarHeight: CGFloat {
          68
     }
+    
+    private var isRefreshEnabled: Bool = true
     
     
     // MARK: Override func
@@ -119,6 +122,15 @@ class ProfileViewController: BaseNavigationViewController, View {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.delegate = self
+        
+        // 탭바 표시
+        self.hidesBottomBarWhenPushed = self.reactor?.entranceType == .my ? false : true
+    }
+    
     override func setupConstraints() {
         super.setupConstraints()
         
@@ -130,12 +142,14 @@ class ProfileViewController: BaseNavigationViewController, View {
     }
     
     override func bind() {
-        super.bind()
         
-        // 탭바 표시
-        self.rx.viewWillAppear
+        self.backButton.rx.tap
             .subscribe(with: self) { object, _ in
-                object.hidesBottomBarWhenPushed = self.reactor?.entranceType == .my ? false : true
+                if object.isBlocked {
+                    object.navigationPop(to: MainHomeViewController.self, animated: true)
+                } else {
+                    object.navigationPop()
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -220,9 +234,12 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isBlocked)
             .distinctUntilChanged()
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                object.dismiss(animated: true)
+            .subscribe(with: self) { object, isBlocked in
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    object.isBlocked = isBlocked
+                    object.rightBlockButton.isHidden = isBlocked
+                    object.collectionView.reloadData()
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -246,67 +263,71 @@ extension ProfileViewController: UICollectionViewDataSource {
         let entranceType = self.reactor?.entranceType ?? .my
         switch entranceType {
         case .my:
-            let cell: MyProfileViewCell = collectionView.dequeueReusableCell(
+            let myCell: MyProfileViewCell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: MyProfileViewCell.cellIdentifier,
                 for: indexPath
             ) as! MyProfileViewCell
-            cell.setModel(self.profile)
+            myCell.setModel(self.profile)
             
-            cell.updateProfileButton.rx.tap
+            myCell.updateProfileButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let updateProfileViewController = UpdateProfileViewController()
                     updateProfileViewController.reactor = self.reactor?.reactorForUpdate()
                     object.navigationPush(updateProfileViewController, animated: true, bottomBarHidden: true)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: myCell.disposeBag)
             
-            cell.followingButton.rx.tap
+            myCell.followingButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
                     followViewController.reactor = self.reactor?.reactorForFollow(type: .following)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: myCell.disposeBag)
             
-            cell.followerButton.rx.tap
+            myCell.followerButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
                     followViewController.reactor = self.reactor?.reactorForFollow(type: .follower)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: myCell.disposeBag)
             
-            return cell
+            return myCell
         case .other:
-            let cell: OtherProfileViewCell = collectionView.dequeueReusableCell(
+            let otherCell: OtherProfileViewCell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: OtherProfileViewCell.cellIdentifier,
                 for: indexPath
             ) as! OtherProfileViewCell
-            cell.setModel(self.profile)
+            otherCell.setModel(self.profile, isBlocked: self.isBlocked)
             
-            cell.followButton.rx.throttleTap(.seconds(1))
+            otherCell.followButton.rx.throttleTap(.seconds(1))
                 .subscribe(with: self) { object, _ in
-                    object.reactor?.action.onNext(.follow)
+                    if object.isBlocked {
+                        object.reactor?.action.onNext(.block)
+                    } else {
+                        object.reactor?.action.onNext(.follow)
+                    }
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: otherCell.disposeBag)
             
-            cell.followingButton.rx.tap
+            otherCell.followingButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
                     followViewController.reactor = self.reactor?.reactorForFollow(type: .following)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: otherCell.disposeBag)
             
-            cell.followerButton.rx.tap
+            otherCell.followerButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
                     followViewController.reactor = self.reactor?.reactorForFollow(type: .follower)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
-                .disposed(by: cell.disposeBag)
+                .disposed(by: otherCell.disposeBag)
             
-            return cell
+            return otherCell
         }
     }
     
@@ -324,7 +345,7 @@ extension ProfileViewController: UICollectionViewDataSource {
                     withReuseIdentifier: "footer",
                     for: indexPath
                 ) as! ProfileViewFooter
-            footer.setModel(self.writtenCards)
+            footer.setModel(self.writtenCards, isBlocked: self.isBlocked)
             
             footer.didTap
                 .subscribe(with: self) { object, selectedId in
@@ -342,6 +363,26 @@ extension ProfileViewController: UICollectionViewDataSource {
 }
 
 extension ProfileViewController: UICollectionViewDelegateFlowLayout {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
+        let offset = scrollView.contentOffset.y
+        self.isRefreshEnabled = offset <= 0
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.collectionView.refreshControl,
+           offset <= -refreshControl.bounds.height {
+            
+            refreshControl.beginRefreshingFromTop()
+        }
+    }
     
     func collectionView(
         _ collectionView: UICollectionView,

@@ -15,8 +15,8 @@ import RxCocoa
 import RxSwift
 
 
- class DetailViewController: BaseNavigationViewController, View {
-     
+class DetailViewController: BaseNavigationViewController, View {
+
      enum Text {
          static let moreBottomSheetEntryName: String = "moreButtonBottomSheetViewController"
          
@@ -72,6 +72,7 @@ import RxSwift
      var cardSummary = CardSummary()
      
      var isDeleted = false
+     var isRefreshEnabled = false
      
      
      // MARK: - Life Cycles
@@ -275,10 +276,10 @@ extension DetailViewController: UICollectionViewDataSource {
         let model: SOMCardModel = .init(data: card)
         
         let tags: [SOMTagModel] = self.detailCard.tags.map {
-            SOMTagModel(id: $0.id, originalText: $0.content, isRemovable: false)
+            SOMTagModel(id: $0.id, originalText: $0.content, isSelectable: true, isRemovable: false)
         }
         cell.setDatas(model, tags: tags)
-        
+        cell.tags.delegate = self
         cell.isOwnCard = self.detailCard.isOwnCard
         cell.prevCard = self.prevCard
         cell.member = self.detailCard.member
@@ -394,6 +395,26 @@ extension DetailViewController: UICollectionViewDataSource {
 
 extension DetailViewController: UICollectionViewDelegateFlowLayout {
     
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
+        let offset = scrollView.contentOffset.y
+        self.isRefreshEnabled = offset <= 0
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.collectionView.refreshControl,
+           offset <= -refreshControl.bounds.height {
+            
+            refreshControl.beginRefreshingFromTop()
+        }
+    }
+    
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -416,4 +437,15 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         let height: CGFloat = collectionView.bounds.height - cellHeight
         return CGSize(width: width, height: height)
     }
+}
+
+extension DetailViewController: SOMTagsDelegate {
+  func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
+    print("\(type(of: self)) - \(#function)")
+
+    let tagDetailVC = TagDetailViewController()
+    let tagDetailReactor = TagDetailViewrReactor(tagID: model.id)
+    tagDetailVC.reactor = tagDetailReactor
+    self.navigationPush(tagDetailVC, animated: true)
+  }
 }

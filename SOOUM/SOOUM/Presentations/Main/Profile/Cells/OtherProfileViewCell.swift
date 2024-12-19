@@ -22,6 +22,7 @@ class OtherProfileViewCell: UICollectionViewCell {
         
         static let followButtonTitle: String = "팔로우하기"
         static let didFollowButtonTitle: String = "팔로우 중"
+        static let blockedFollowButtonTitle: String = "차단 해제"
     }
     
     static let cellIdentifier = String(reflecting: OtherProfileViewCell.self)
@@ -90,9 +91,6 @@ class OtherProfileViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        
-        self.contentView.subviews.forEach { $0.snp.removeConstraints() }
-        self.setupConstraints()
         
         self.disposeBag = DisposeBag() 
     }
@@ -183,7 +181,7 @@ class OtherProfileViewCell: UICollectionViewCell {
         }
     }
     
-    func setModel(_ profile: Profile) {
+    func setModel(_ profile: Profile, isBlocked: Bool) {
         if let profileImg = profile.profileImg {
             self.profileImageView.setImage(strUrl: profileImg.url)
         } else {
@@ -195,10 +193,17 @@ class OtherProfileViewCell: UICollectionViewCell {
         
         let isFollowing = profile.isFollowing ?? false
         
-        let image = UIImage(.icon(.outlined(.plus)))?.resized(.init(width: 16, height: 16), color: .som.white)
-        self.followButton.image = isFollowing ? nil : image
-        self.followButton.title = isFollowing ? Text.didFollowButtonTitle : Text.followButtonTitle
-        self.followButton.foregroundColor = isFollowing ? .som.gray600 : .som.white
-        self.followButton.backgroundColor = isFollowing ? .som.gray200 : .som.p300
+        if isBlocked {
+            self.followButton.image = nil
+            self.followButton.title = Text.blockedFollowButtonTitle
+            self.followButton.foregroundColor = .som.white
+            self.followButton.backgroundColor = .som.p300
+        } else {
+            let image = UIImage(.icon(.outlined(.plus)))?.resized(.init(width: 16, height: 16), color: .som.white)
+            self.followButton.image = isFollowing ? nil : image
+            self.followButton.title = isFollowing ? Text.didFollowButtonTitle : Text.followButtonTitle
+            self.followButton.foregroundColor = isFollowing ? .som.gray600 : .som.white
+            self.followButton.backgroundColor = isFollowing ? .som.gray200 : .som.p300
+        }
     }
 }

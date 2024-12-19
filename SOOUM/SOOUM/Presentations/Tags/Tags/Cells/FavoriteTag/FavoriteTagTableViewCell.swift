@@ -50,6 +50,7 @@ final class FavoriteTagTableViewCell: UITableViewCell {
         self.favoriteTag = favoriteTag
         self.favoriteTagView.tagNameLabel.text = favoriteTag.tagContent
         self.favoriteTagView.tagsCountLabel.text = favoriteTag.tagUsageCnt
+        favoriteTagView.cardPreviewCollectionView.reloadData()
     }
     
     private func setupConstraint() {
@@ -102,5 +103,4 @@ extension FavoriteTagTableViewCell: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
     }
-    
 }

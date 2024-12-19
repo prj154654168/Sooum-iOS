@@ -28,13 +28,15 @@ class TagDetailViewController: BaseViewController, View {
             MainHomeViewCell.self,
             forCellReuseIdentifier: String(describing: MainHomeViewCell.self)
         )
-        $0.refreshControl = refreshControl
-
+        $0.register(
+            EmptyTagDetailTableViewCell.self,
+            forCellReuseIdentifier: String(describing: EmptyTagDetailTableViewCell.self)
+        )
+        $0.refreshControl = UIRefreshControl()
+        $0.contentInsetAdjustmentBehavior = .never
         $0.dataSource = self
         $0.delegate = self
     }
-    
-    let refreshControl = UIRefreshControl()
     
     override func setupConstraints() {
         self.view.addSubview(navBarView)
@@ -67,11 +69,11 @@ class TagDetailViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        refreshControl.rx.controlEvent(.valueChanged)
+        tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.fetchTagCards)
                 reactor.action.onNext(.fetchTagInfo)
-                object.refreshControl.endRefreshing()
+                object.tableView.refreshControl?.endRefreshing()
             }
             .disposed(by: self.disposeBag)
         
@@ -108,10 +110,22 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
         guard let reactor = self.reactor else {
             return 0
         }
-        return reactor.currentState.tagCards.count
+        return max(reactor.currentState.tagCards.count, 1)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let reactor = self.reactor else {
+            return UITableViewCell()
+        }
+        if reactor.currentState.tagCards.isEmpty {
+            return createEmptyTableViewCell(indexPath: indexPath, mode: reactor.emptyTagMode)
+        }
+        return createMainHomeViewCell(indexPath: indexPath)
+    }
+    
+    private func createMainHomeViewCell(indexPath: IndexPath) -> MainHomeViewCell {
+        print("\(type(of: self)) - \(#function)")
+
         let cell: MainHomeViewCell = tableView.dequeueReusableCell(
             withIdentifier: String(describing: MainHomeViewCell.self),
             for: indexPath
@@ -120,6 +134,7 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
         guard let reactor = self.reactor, reactor.currentState.tagCards.indices.contains(indexPath.row) else {
             return cell
         }
+
         cell.setData(tagCard: reactor.currentState.tagCards[indexPath.row])
         cell.contentView.rx.tapGesture()
             .when(.recognized)
@@ -135,9 +150,33 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     
+    private func createEmptyTableViewCell(
+        indexPath: IndexPath,
+        mode: EmptyTagDetailTableViewCell.Mode
+    ) -> EmptyTagDetailTableViewCell {
+        print("\(type(of: self)) - \(#function)")
+
+        let cell: EmptyTagDetailTableViewCell = tableView.dequeueReusableCell(
+            withIdentifier: String(describing: EmptyTagDetailTableViewCell.self),
+            for: indexPath
+        ) as! EmptyTagDetailTableViewCell
+        cell.setData(mode: mode)
+        return cell
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard let reactor = self.reactor else {
+            return 0
+        }
+        if reactor.currentState.tagCards.isEmpty {
+            return self.tableView.bounds.height// - 200
+        }
         let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
         let height: CGFloat = width + 10 /// 가로 + top inset
         return height
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        0
     }
 }
