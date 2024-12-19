@@ -517,7 +517,7 @@
 		2AFD054E2CFF79D8007C84AD /* TagsViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewReactor.swift; sourceTree = "<group>"; };
 		2AFD05512D007F2F007C84AD /* TagSearchViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchViewReactor.swift; sourceTree = "<group>"; };
 		2AFD05542D0082DE007C84AD /* SearchTagsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTagsResponse.swift; sourceTree = "<group>"; };
-		2AFD05582D008D23007C84AD /* TagDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailViewController.swift; sourceTree = "<group>"; };
+		2AFD05582D008D23007C84AD /* TagDetailViewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = TagDetailViewController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		2AFD055C2D009513007C84AD /* TagDetailNavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailNavigationBarView.swift; sourceTree = "<group>"; };
 		2AFD055F2D009FA1007C84AD /* TagDetailViewrReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailViewrReactor.swift; sourceTree = "<group>"; };
 		2AFD05622D00A1E1007C84AD /* TagDetailCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailCardResponse.swift; sourceTree = "<group>"; };

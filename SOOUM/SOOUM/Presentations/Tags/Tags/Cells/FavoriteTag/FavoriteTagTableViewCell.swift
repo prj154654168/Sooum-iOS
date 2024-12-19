@@ -50,6 +50,7 @@ final class FavoriteTagTableViewCell: UITableViewCell {
         self.favoriteTag = favoriteTag
         self.favoriteTagView.tagNameLabel.text = favoriteTag.tagContent
         self.favoriteTagView.tagsCountLabel.text = favoriteTag.tagUsageCnt
+        favoriteTagView.cardPreviewCollectionView.reloadData()
     }
     
     private func setupConstraint() {
