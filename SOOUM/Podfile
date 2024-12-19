@@ -37,6 +37,11 @@ post_install do |installer|
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
       if config.name == 'Debug' || config.name == 'GSExhibition'
+	# FirebaseCrashlytics Ignoring duplicate libraries: '-lc++' 경고 해결
+	if target.name == 'FirebaseCrashlytics'
+	  config.build_settings['OTHER_LDFLAGS'] = "$(inherited) -Wl,-ld_classic"
+	end
+	# RxSwift Resources count 적용
         if target.name == 'RxSwift'
           config.build_settings['OTHER_SWIFT_FLAGS'] ||= ['-D', 'TRACE_RESOURCES']
         end
