@@ -105,7 +105,8 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
     
     func updateState(isOn: Bool, animated: Bool = false) {
         UIView.transition(with: checkBoxImageView, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
-            self.checkBoxImageView.image = isOn ? .checkboxFilled : .init(.icon(.outlined(.checkBox)))
+            self.checkBoxImageView.image = isOn ? .init(.icon(.filled(.checkbox))) : .init(.icon(.outlined(.checkBox)))
+            self.checkBoxImageView.tintColor = isOn ? .som.p300 : .som.gray500
         }
         UIView.animate(withDuration: animated ? animated ? 0.2 : 0 : 0) {
             self.nextButton.tintColor = isOn ? .som.p300 : .som.gray500
