@@ -91,9 +91,7 @@ class ProfileViewFooter: UICollectionReusableView {
         self.collectionView.isHidden = isBlocked
         
         self.writtenCards = writtenCards
-        if self.writtenCards != writtenCards {
-            self.collectionView.reloadData()
-        }
+        self.collectionView.reloadData()
     }
 }
 
