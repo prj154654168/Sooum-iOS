@@ -63,7 +63,7 @@ class SOMTag: UICollectionViewCell {
             $0.centerY.equalToSuperview()
             self.removeButtonLeadingConstraint = $0.leading.equalToSuperview().offset(16).constraint
             self.removeButtonWidthConstraint = $0.width.equalTo(16).constraint
-            $0.height.equalTo(16)
+            $0.size.equalTo(16)
         }
         
         self.contentView.addSubview(self.label)
