@@ -358,8 +358,7 @@ class SOMCard: UIView {
             .init(.icon(.outlined(.comment)))
         commentImageView.tintColor = model.data.isCommentWritten ? .som.p300 : .som.white
         
-        let currentDate = Date()
-        timeLabel.text = model.data.createdAt.infoReadableTimeTakenFromThis(to: currentDate)
+        timeLabel.text = model.data.createdAt.infoReadableTimeTakenFromThis(to: Date().toKorea())
         distanceInfoStackView.isHidden = model.data.distance == nil
         distanceLabel.text = (model.data.distance ?? 0).infoReadableDistanceRangeFromThis()
         likeLabel.text = model.data.likeCnt > 99 ? "99+" : "\(model.data.likeCnt)"
@@ -389,7 +388,7 @@ class SOMCard: UIView {
             .init(.icon(.outlined(.comment)))
         commentImageView.tintColor = tagCard.isCommentWritten ? .som.p300 : .som.white
         
-        timeLabel.text = tagCard.createdAt.infoReadableTimeTakenFromThis(to: Date())
+        timeLabel.text = tagCard.createdAt.infoReadableTimeTakenFromThis(to: Date().toKorea())
         distanceInfoStackView.isHidden = tagCard.distance == nil
         distanceLabel.text = (tagCard.distance ?? 0).infoReadableDistanceRangeFromThis()
         likeLabel.text = "\(tagCard.likeCnt)"
