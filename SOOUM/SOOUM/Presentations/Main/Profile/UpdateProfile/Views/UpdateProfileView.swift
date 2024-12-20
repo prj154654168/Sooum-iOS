@@ -81,7 +81,7 @@ class UpdateProfileView: UIView {
     }
     
     private let errorImageView = UIImageView().then {
-        $0.image = .init(.image(.error))
+        $0.image = .init(.image(.errorTriangle))
     }
     
     private let errorMessageLabel = UILabel().then {

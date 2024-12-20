@@ -17,7 +17,7 @@ import Then
 
 class TermsOfServiceAgreeButtonView: UIView {
     let checkImageView = UIImageView().then {
-        $0.image = .termsOfServiceCheck
+        $0.image = .init(.icon(.outlined(.check)))
         $0.tintColor = .som.gray600
     }
     
@@ -70,7 +70,7 @@ class TermsOfServiceAgreeButtonView: UIView {
     func updateState(isOn: Bool) {
         UIView.animate(withDuration: 0.2) {
             self.layer.borderColor = isOn ? UIColor.som.p300.cgColor : UIColor.som.gray300.cgColor
-            self.checkImageView.tintColor = isOn ? .som.p300 : .som.gray300
+            self.checkImageView.tintColor = isOn ? .som.p300 : .som.gray600
         }
         UIView.transition(with: titleLabel, duration: 0.2, options: .transitionCrossDissolve) {
             self.titleLabel.textColor = isOn ? .som.p300 : .som.gray600

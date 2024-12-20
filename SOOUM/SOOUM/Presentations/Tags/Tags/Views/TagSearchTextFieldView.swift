@@ -25,7 +25,7 @@ class TagSearchTextFieldView: UIView {
     }
     
     let magnifyingGlassImageView = UIImageView().then {
-        $0.image = .magnifyingglassOutlined
+        $0.image = .init(.icon(.outlined(.search)))
         $0.tintColor = .som.gray500
     }
     
@@ -52,7 +52,7 @@ class TagSearchTextFieldView: UIView {
             action()
             self.layer.borderColor = UIColor.som.blue300.cgColor
             self.layer.borderWidth = 1
-            magnifyingGlassImageView.tintColor = .som.blue300
+            magnifyingGlassImageView.tintColor = .som.p300
         }
         self.textField.isUserInteractionEnabled = isInteractive
     }

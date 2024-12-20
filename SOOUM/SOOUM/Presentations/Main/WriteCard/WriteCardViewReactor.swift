@@ -79,7 +79,7 @@ class WriteCardViewReactor: Reactor {
             let trimedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
             
             let request: CardRequest = .writeCard(
-                isDistanceShared: isDistanceShared,
+                isDistanceShared: !isDistanceShared,
                 latitude: coordinate.latitude,
                 longitude: coordinate.longitude,
                 isPublic: !isPublic,

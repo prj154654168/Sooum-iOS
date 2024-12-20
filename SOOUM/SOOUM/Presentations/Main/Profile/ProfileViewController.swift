@@ -45,7 +45,7 @@ class ProfileViewController: BaseNavigationViewController, View {
     }
     
     private let rightSettingButton = SOMButton().then {
-        $0.image = .init(.icon(.outlined(.hamburger)))
+        $0.image = .init(.icon(.outlined(.menu)))
         $0.foregroundColor = .som.black
     }
     

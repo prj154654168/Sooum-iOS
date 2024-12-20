@@ -18,13 +18,13 @@ struct SOMTagsLayoutConfigure {
     
     static var horizontalWithoutRemove = Self(
         direction: .horizontal,
-        lineSpacing: 0,
+        lineSpacing: 10,
         interSpacing: 10,
         inset: .init(top: 15, left: 20, bottom: 18, right: 0)
     )
     static var horizontalWithRemove = Self(
         direction: .horizontal,
-        lineSpacing: 0,
+        lineSpacing: 12,
         interSpacing: 12,
         inset: .init(top: 12, left: 20, bottom: 16, right: 20)
     )

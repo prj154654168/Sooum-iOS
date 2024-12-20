@@ -17,6 +17,12 @@ extension Date {
         self = toDate
     }
     
+    func toKorea() -> Date {
+        let secondsFromGMT = TimeZone.Korea.secondsFromGMT(for: self)
+        let toKorea = self.addingTimeInterval(TimeInterval(secondsFromGMT))
+        return toKorea
+    }
+    
     func toString(_ format: String) -> String {
         let formatter = DateFormatter()
         formatter.locale = .Korea
@@ -37,7 +43,7 @@ extension Date {
         let minutes: Int = .init(time % (60 * 60)) / 60
         
         if days > 364 {
-            return "\(days)년전".trimmingCharacters(in: .whitespaces)
+            return "\(days / 365)년전".trimmingCharacters(in: .whitespaces)
         }
         
         if days > 0 && days < 365 {
@@ -45,10 +51,6 @@ extension Date {
         }
         
         if hours > 0 && hours < 24 {
-            return "\(hours)시간전".trimmingCharacters(in: .whitespaces)
-        }
-        
-        if minutes > 59 {
             return "\(hours)시간전".trimmingCharacters(in: .whitespaces)
         }
         
