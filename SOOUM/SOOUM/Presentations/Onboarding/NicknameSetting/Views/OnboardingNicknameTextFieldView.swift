@@ -36,7 +36,7 @@ class OnboardingNicknameTextFieldView: UIView {
     }
     
     let clearImageView = UIImageView().then {
-        $0.image = .cancelOutlined
+        $0.image = .init(.icon(.outlined(.cancel)))
         $0.tintColor = .som.black
     }
     

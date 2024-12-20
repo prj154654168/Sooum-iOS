@@ -19,7 +19,8 @@ class SOMRefreshControl: UIRefreshControl {
     }
     
     private let imageView = UIImageView().then {
-        $0.image = .init(.image(.refreshControl))
+        $0.image = .init(.icon(.outlined(.refresh)))
+        $0.tintColor = .som.black
         $0.contentMode = .scaleAspectFit
     }
     

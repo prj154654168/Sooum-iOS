@@ -15,8 +15,23 @@ extension UIImage {
         case logo
         
         enum IconStyle {
-            case outlined(Outlined)
             case filled(Filled)
+            case outlined(Outlined)
+            
+            enum Filled: String {
+                case addCard
+                case alarm
+                case checkBox
+                case clock
+                case comment
+                case heart
+                case home
+                case location
+                case profile
+                case radio
+                case star
+                case tag
+            }
             
             enum Outlined: String {
                 case addCard
@@ -25,16 +40,15 @@ extension UIImage {
                 case arrowTop
                 case camera
                 case cancel
-                case chatBubbleGrid
+                case check
                 case checkBox
-                case checkBoxOn
                 case clock
                 case comment
                 case commentAdd
-                case hamburger
                 case heart
                 case home
                 case location
+                case menu
                 case more
                 case next
                 case plus
@@ -42,42 +56,26 @@ extension UIImage {
                 case radio
                 case refresh
                 case report
+                case search
                 case star
                 case tag
                 case trash
             }
             
-            enum Filled: String {
-                case addCard
-                case checkbox
-                case alarm
-                case clock
-                case comment
-                case heart
-                case home
-                case location
-                case profile
-                case radio
-                case star
-                case tag
-            }
-            
             var imageName: String {
                 switch self {
-                case .outlined(let outlined):
-                    return "\(outlined.rawValue)_outlined"
                 case .filled(let filled):
                     return "\(filled.rawValue)_filled"
+                case .outlined(let outlined):
+                    return "\(outlined.rawValue)_outlined"
                 }
             }
         }
         
         enum ImageStyle: String {
-            case refreshControl
-            case cancel
-            case error
+            case cancelTag
+            case errorTriangle
             case login
-            case next
             case sooumLogo
         }
         

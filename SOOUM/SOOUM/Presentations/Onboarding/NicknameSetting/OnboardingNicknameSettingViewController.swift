@@ -68,7 +68,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         $0.alignment = .center
         
         let imageView = UIImageView().then {
-            $0.image = .error
+            $0.image = .init(.image(.errorTriangle))
             $0.contentMode = .scaleAspectFit
         }
         $0.addArrangedSubviews(imageView)

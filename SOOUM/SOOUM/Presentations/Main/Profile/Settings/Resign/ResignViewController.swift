@@ -211,7 +211,7 @@ class ResignViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isCheck)
             .distinctUntilChanged()
             .subscribe(with: self) { object, isCheck in
-                object.checkBox.image = .init(.icon(.outlined(isCheck ? .checkBoxOn : .checkBox)))
+                object.checkBox.image = isCheck ? .init(.icon(.filled(.checkBox))) : .init(.icon(.outlined(.checkBox)))
                 
                 object.resignButton.isEnabled = isCheck
                 object.resignButton.foregroundColor = isCheck ? .som.white : .som.gray600

@@ -40,12 +40,11 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
             letterSpacing: 0
         )
         $0.textColor = .som.gray500
-        $0.text = ""
     }
     
     let nextButton = SOMButton().then {
         $0.image = .init(.icon(.outlined(.next)))
-        $0.foregroundColor = .som.gray500
+        $0.foregroundColor = .som.gray800
     }
     
     // MARK: - init
@@ -105,14 +104,14 @@ class OnboardingTermsOfServiceTableViewCell: UITableViewCell {
     
     func updateState(isOn: Bool, animated: Bool = false) {
         UIView.transition(with: checkBoxImageView, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
-            self.checkBoxImageView.image = isOn ? .init(.icon(.filled(.checkbox))) : .init(.icon(.outlined(.checkBox)))
-            self.checkBoxImageView.tintColor = isOn ? .som.p300 : .som.gray500
+            self.checkBoxImageView.image = isOn ? .init(.icon(.filled(.checkBox))) : .init(.icon(.outlined(.checkBox)))
+            self.checkBoxImageView.tintColor = isOn ? .som.p300 : .som.gray600
         }
-        UIView.animate(withDuration: animated ? animated ? 0.2 : 0 : 0) {
-            self.nextButton.tintColor = isOn ? .som.p300 : .som.gray500
+        UIView.animate(withDuration: animated ? 0.2 : 0) {
+            self.nextButton.foregroundColor = isOn ? .som.p300 : .som.gray600
         }
         UIView.transition(with: titleLabel, duration: animated ? 0.2 : 0, options: .transitionCrossDissolve) {
-            self.titleLabel.textColor = isOn ? .som.p300 : .som.gray500 
+            self.titleLabel.textColor = isOn ? .som.p300 : .som.gray600
         }
     }
 }
