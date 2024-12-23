@@ -8,6 +8,8 @@
 import Foundation
 import Security
 
+import Alamofire
+
 import RxSwift
 
 
@@ -108,7 +110,7 @@ class AuthManager: AuthManagerDelegate {
                 
                 if let secKey = object.convertPEMToSecKey(pemString: publicKey),
                    let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey),
-                   let fcmToken = self.registeredToken?.fcm {
+                   let fcmToken = object.registeredToken?.fcm {
                     
                     let request: AuthRequest = .signUp(
                         encryptedDeviceId: encryptedDeviceId,
@@ -145,6 +147,18 @@ class AuthManager: AuthManagerDelegate {
                         .map { response -> Bool in
                             if response.isRegistered, let token = response.token {
                                 object.authInfo.updateToken(token)
+                                
+                                if let fcmToken = object.registeredToken?.fcm {
+                                    let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
+                                    networkManager.request(Empty.self, request: request)
+                                        .subscribe(onNext: { _ in
+                                            print("ℹ️ Update FCM token to server with", fcmToken)
+                                        })
+                                        .disposed(by: object.disposeBag)
+                                } else {
+                                    print("ℹ️ Failed FCM token updated to server")
+                                }
+                                
                                 return true
                             }
                             return false

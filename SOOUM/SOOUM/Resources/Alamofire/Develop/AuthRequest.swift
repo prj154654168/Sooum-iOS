@@ -27,6 +27,8 @@ enum AuthRequest: BaseRequest {
     )
     /// 재인증
     case reAuthenticationWithRefreshSession
+    /// fcm 업데이트
+    case updateFCM(fcmToken: String)
     
     var path: String {
         switch self {
@@ -38,6 +40,8 @@ enum AuthRequest: BaseRequest {
             return "/users/sign-up"
         case .reAuthenticationWithRefreshSession:
             return "/users/token"
+        case .updateFCM:
+            return "/members/fcm"
         }
     }
     
@@ -47,6 +51,8 @@ enum AuthRequest: BaseRequest {
             return .get
         case .login, .signUp, .reAuthenticationWithRefreshSession:
             return .post
+        case .updateFCM:
+            return .patch
         }
     }
     
@@ -75,6 +81,8 @@ enum AuthRequest: BaseRequest {
                     "isAllowTermThree": isAllowTermThree
                 ] as [String: Any]
             ]
+        case let .updateFCM(fcmToken):
+            return ["fcmToken": fcmToken]
         default:
             return [:]
         }
@@ -82,7 +90,7 @@ enum AuthRequest: BaseRequest {
     
     var encoding: ParameterEncoding {
         switch self {
-        case .login, .signUp:
+        case .login, .signUp, .updateFCM:
             return JSONEncoding.default
         default:
             return URLEncoding.default
