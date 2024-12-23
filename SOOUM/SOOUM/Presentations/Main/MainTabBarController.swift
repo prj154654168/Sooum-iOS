@@ -52,12 +52,12 @@ class MainTabBarController: SOMTabBarController, View {
             .disposed(by: self.disposeBag)
         
         // viewControllers
-        let mainHomeViewController = MainHomeViewController()
-        mainHomeViewController.reactor = reactor.reactorForMainHome()
+        let mainHomeTabBarController = MainHomeTabBarController()
+        mainHomeTabBarController.reactor = reactor.reactorForMainHome()
         let mainHomeNavigationController = UINavigationController(
-            rootViewController: mainHomeViewController
+            rootViewController: mainHomeTabBarController
         )
-        mainHomeNavigationController.tabBarItem = .init(
+        mainHomeTabBarController.tabBarItem = .init(
             title: Text.mainHomeTitle,
             image: .init(.icon(.outlined(.home))),
             tag: 0
