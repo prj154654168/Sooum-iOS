@@ -61,6 +61,6 @@ class CommentHistroyViewReactor: Reactor {
 extension CommentHistroyViewReactor {
     
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor.init(type: .detail, selectedId)
+        DetailViewReactor.init(selectedId)
     }
 }

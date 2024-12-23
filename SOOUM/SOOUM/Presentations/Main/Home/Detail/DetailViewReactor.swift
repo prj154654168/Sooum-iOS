@@ -10,11 +10,6 @@ import ReactorKit
 
 class DetailViewReactor: Reactor {
     
-    enum EntranceType {
-        case mainHome
-        case detail
-    }
-    
     enum Action: Equatable {
         case landing
         case refresh
@@ -61,11 +56,9 @@ class DetailViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     private let locationManager = LocationManager.shared
     
-    private let entranceType: EntranceType
     private let selectedCardId: String
     
-    init(type entranceType: EntranceType, _ selectedCardId: String) {
-        self.entranceType = entranceType
+    init(_ selectedCardId: String) {
         self.selectedCardId = selectedCardId
     }
     
@@ -156,18 +149,10 @@ class DetailViewReactor: Reactor {
             longitude: longitude
         )
         
-        switch self.entranceType {
-        case .mainHome:
-            return self.networkManager.request(DetailCardResponse.self, request: requset)
-                .map(\.detailCard)
-                .map { .detailCard($0, .init()) }
-                .catch { _ in .just(.updateError("에러발생 비상~~")) }
-        case .detail:
-            return self.networkManager.request(DetailCardByCommentResponse.self, request: requset)
-                .map { ($0.detailCard, $0.prevCard) }
-                .map { .detailCard($0, $1) }
-                .catch { _ in .just(.updateError("에러발생 비상~~")) }
-        }
+        return self.networkManager.request(DetailCardResponse.self, request: requset)
+            .map { ($0.detailCard, $0.prevCard ?? .init()) }
+            .map { .detailCard($0, $1) }
+            .catch(self.catchClosure)
     }
     
     func fetchCommentCards() -> Observable<Mutation> {
@@ -182,7 +167,7 @@ class DetailViewReactor: Reactor {
         return self.networkManager.request(CommentCardResponse.self, request: requset)
             .map(\.embedded.commentCards)
             .map { .commentCards($0) }
-            .catch { _ in .just(.updateError("에러발생 비상~~")) }
+            .catch(self.catchClosure)
     }
     
     func fetchCardSummary() -> Observable<Mutation> {
@@ -190,7 +175,7 @@ class DetailViewReactor: Reactor {
         return self.networkManager.request(CardSummaryResponse.self, request: requset)
             .map(\.cardSummary)
             .map { .cardSummary($0) }
-            .catch { _ in .just(.updateError("에러발생 비상~~")) }
+            .catch(self.catchClosure)
     }
 }
 
@@ -205,7 +190,7 @@ extension DetailViewReactor {
     }
     
     func reactorForPush(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(type: .detail, selectedId)
+        DetailViewReactor(selectedId)
     }
     
     func reactorForReport() -> ReportViewReactor {
@@ -218,5 +203,17 @@ extension DetailViewReactor {
     
     func reactorForProfile(_ memberId: String) -> ProfileViewReactor {
         ProfileViewReactor.init(type: .other, memberId: memberId)
+    }
+}
+
+extension DetailViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false)),
+                .just(.updateIsLoading(false))
+            ])
+        }
     }
 }

@@ -37,6 +37,7 @@ extension MainHomeTabBarReactor {
     }
     
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor.init(type: .mainHome, selectedId)
+        DetailViewReactor.init(selectedId)
+    }
     }
 }
