@@ -139,12 +139,13 @@ extension MainHomeDistanceViewReactor {
         
         return self.networkManager.request(DistanceCardResponse.self, request: request)
             .map(\.embedded.cards)
-            .map { cards in
+            .withUnretained(self)
+            .map { object, cards in
                 
                 // 서버 응답 캐싱
-                self.simpleCache.saveMainHomeCards(type: .distance, datas: cards)
+                object.simpleCache.saveMainHomeCards(type: .distance, datas: cards)
                 // 표시할 데이터만 나누기
-                let displayedCards = self.separate(displayed: [], current: cards)
+                let displayedCards = object.separate(displayed: [], current: cards)
                 return .cards((cards: displayedCards, isUpdate: false))
             }
             .catch(self.catchClosure)
@@ -166,15 +167,16 @@ extension MainHomeDistanceViewReactor {
         
         return self.networkManager.request(LatestCardResponse.self, request: request)
             .map(\.embedded.cards)
-            .map { cards in
+            .withUnretained(self)
+            .map { object, cards in
                 
-                let loadedCards = self.simpleCache.loadMainHomeCards(type: .distance) ?? []
+                let loadedCards = object.simpleCache.loadMainHomeCards(type: .distance) ?? []
                 var newCards = loadedCards
                 newCards += cards
                 
-                self.simpleCache.saveMainHomeCards(type: .distance, datas: newCards)
+                object.simpleCache.saveMainHomeCards(type: .distance, datas: newCards)
                 
-                let displayedCards = self.separate(displayed: loadedCards, current: newCards)
+                let displayedCards = object.separate(displayed: loadedCards, current: newCards)
                 return .more((cards: displayedCards, isUpdate: true))
             }
             .catch(self.catchClosure)

@@ -112,12 +112,13 @@ extension MainHomePopularViewReactor {
         
         return self.networkManager.request(PopularCardResponse.self, request: request)
             .map(\.embedded.cards)
-            .map { cards in
+            .withUnretained(self)
+            .map { object, cards in
                 
                 // 서버 응답 캐싱
-                self.simpleCache.saveMainHomeCards(type: .popular, datas: cards)
+                object.simpleCache.saveMainHomeCards(type: .popular, datas: cards)
                 // 표시할 데이터만 나누기
-                let displayedCards = self.separate(displayed: [], current: cards)
+                let displayedCards = object.separate(displayed: [], current: cards)
                 return .cards((cards: displayedCards, isUpdate: false))
             }
             .catch(self.catchClosure)
