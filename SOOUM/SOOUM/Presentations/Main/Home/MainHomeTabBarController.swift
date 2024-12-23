@@ -101,6 +101,15 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
+        // 알림 화면으로 전환
+        self.rightAlamButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                let notificatinoTabBarController = NotificationTabBarController()
+                notificatinoTabBarController.reactor = object.reactor?.reactorForNoti()
+                object.navigationPush(notificatinoTabBarController, animated: true, bottomBarHidden: true)
+            }
+            .disposed(by: self.disposeBag)
+        
         // 유저 정보 모두 제거 후 온보딩 화면으로 전환
         #if DEVELOP
         logo.rx.longPressGesture()

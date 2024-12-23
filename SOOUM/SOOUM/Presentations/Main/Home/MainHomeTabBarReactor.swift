@@ -39,5 +39,8 @@ extension MainHomeTabBarReactor {
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
         DetailViewReactor.init(selectedId)
     }
+    
+    func reactorForNoti() -> NotificationTabBarReactor {
+        NotificationTabBarReactor.init()
     }
 }

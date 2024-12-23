@@ -196,8 +196,8 @@
 		381DEA8E2CD4BE55009F1FE9 /* SignInResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A42C2CAC14C800DC463E /* SignInResponse.swift */; };
 		382D5CF62CFE9B8600BFA23E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382D5CF52CFE9B8600BFA23E /* ProfileViewController.swift */; };
 		382D5CF72CFE9B8600BFA23E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382D5CF52CFE9B8600BFA23E /* ProfileViewController.swift */; };
-		382E15362D15A6460097B09C /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382E15352D15A6460097B09C /* NotificationViewController.swift */; };
-		382E15372D15A6460097B09C /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382E15352D15A6460097B09C /* NotificationViewController.swift */; };
+		382E15362D15A6460097B09C /* NotificationTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382E15352D15A6460097B09C /* NotificationTabBarController.swift */; };
+		382E15372D15A6460097B09C /* NotificationTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382E15352D15A6460097B09C /* NotificationTabBarController.swift */; };
 		382E153A2D15A67A0097B09C /* NotificationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382E15392D15A67A0097B09C /* NotificationViewCell.swift */; };
 		382E153B2D15A67A0097B09C /* NotificationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382E15392D15A67A0097B09C /* NotificationViewCell.swift */; };
 		382E153F2D15AF4F0097B09C /* CommentHistoryInNotiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382E153E2D15AF4F0097B09C /* CommentHistoryInNotiResponse.swift */; };
@@ -329,6 +329,14 @@
 		388698522D191F2100008600 /* MainHomeDistanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388698502D191F2100008600 /* MainHomeDistanceViewController.swift */; };
 		388698542D191F4B00008600 /* MainHomeDistanceViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388698532D191F4B00008600 /* MainHomeDistanceViewReactor.swift */; };
 		388698552D191F4B00008600 /* MainHomeDistanceViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388698532D191F4B00008600 /* MainHomeDistanceViewReactor.swift */; };
+		388698582D1982DE00008600 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388698572D1982DE00008600 /* NotificationViewController.swift */; };
+		388698592D1982DE00008600 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388698572D1982DE00008600 /* NotificationViewController.swift */; };
+		3886985F2D1984D600008600 /* NotificationViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3886985E2D1984D600008600 /* NotificationViewReactor.swift */; };
+		388698602D1984D600008600 /* NotificationViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3886985E2D1984D600008600 /* NotificationViewReactor.swift */; };
+		388698622D1986B100008600 /* NotificationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388698612D1986B100008600 /* NotificationRequest.swift */; };
+		388698632D1986B100008600 /* NotificationRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388698612D1986B100008600 /* NotificationRequest.swift */; };
+		388698652D1998DB00008600 /* NotificationTabBarReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388698642D1998DB00008600 /* NotificationTabBarReactor.swift */; };
+		388698662D1998DB00008600 /* NotificationTabBarReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388698642D1998DB00008600 /* NotificationTabBarReactor.swift */; };
 		3887D0332CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */; };
 		3887D0342CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */; };
 		3887D0362CC5335D00FB52E1 /* WriteCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0352CC5335D00FB52E1 /* WriteCardView.swift */; };
@@ -455,14 +463,8 @@
 		38F720A62CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209A2CD4F15900DF32B5 /* CardSummaryResponse.swift */; };
 		38F720A72CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209B2CD4F15900DF32B5 /* CommentCardResponse.swift */; };
 		38F720A82CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209B2CD4F15900DF32B5 /* CommentCardResponse.swift */; };
-		38F720A92CD4F15900DF32B5 /* DetailCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209C2CD4F15900DF32B5 /* DetailCard.swift */; };
-		38F720AA2CD4F15900DF32B5 /* DetailCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209C2CD4F15900DF32B5 /* DetailCard.swift */; };
-		38F720AB2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209D2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift */; };
-		38F720AC2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209D2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift */; };
 		38F720AD2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209E2CD4F15900DF32B5 /* DetailCardResponse.swift */; };
 		38F720AE2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209E2CD4F15900DF32B5 /* DetailCardResponse.swift */; };
-		38F720AF2CD4F15900DF32B5 /* DetailCommentCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209F2CD4F15900DF32B5 /* DetailCommentCardResponse.swift */; };
-		38F720B02CD4F15900DF32B5 /* DetailCommentCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F7209F2CD4F15900DF32B5 /* DetailCommentCardResponse.swift */; };
 		38F720B12CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F720A12CD4F15900DF32B5 /* distanceCardResponse.swift */; };
 		38F720B22CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F720A12CD4F15900DF32B5 /* distanceCardResponse.swift */; };
 		38F720B32CD4F15900DF32B5 /* LatestCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F720A22CD4F15900DF32B5 /* LatestCardResponse.swift */; };
@@ -586,7 +588,7 @@
 		381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayout.swift; sourceTree = "<group>"; };
 		381DEA8A2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteCardTextView+Rx.swift"; sourceTree = "<group>"; };
 		382D5CF52CFE9B8600BFA23E /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
-		382E15352D15A6460097B09C /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		382E15352D15A6460097B09C /* NotificationTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTabBarController.swift; sourceTree = "<group>"; };
 		382E15392D15A67A0097B09C /* NotificationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewCell.swift; sourceTree = "<group>"; };
 		382E153E2D15AF4F0097B09C /* CommentHistoryInNotiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentHistoryInNotiResponse.swift; sourceTree = "<group>"; };
 		382E15412D15BA490097B09C /* NotificationWithReportViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationWithReportViewCell.swift; sourceTree = "<group>"; };
@@ -657,6 +659,10 @@
 		3886939E2CF77FA7005F9EF3 /* UIApplication+Top.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Top.swift"; sourceTree = "<group>"; };
 		388698502D191F2100008600 /* MainHomeDistanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeDistanceViewController.swift; sourceTree = "<group>"; };
 		388698532D191F4B00008600 /* MainHomeDistanceViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeDistanceViewReactor.swift; sourceTree = "<group>"; };
+		388698572D1982DE00008600 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		3886985E2D1984D600008600 /* NotificationViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewReactor.swift; sourceTree = "<group>"; };
+		388698612D1986B100008600 /* NotificationRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRequest.swift; sourceTree = "<group>"; };
+		388698642D1998DB00008600 /* NotificationTabBarReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTabBarReactor.swift; sourceTree = "<group>"; };
 		3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardViewReactor.swift; sourceTree = "<group>"; };
 		3887D0352CC5335D00FB52E1 /* WriteCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardView.swift; sourceTree = "<group>"; };
 		3887D0382CC5504500FB52E1 /* UITextField+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Typography.swift"; sourceTree = "<group>"; };
@@ -722,10 +728,7 @@
 		38F70E6E2D191DFB00B33C9D /* MainHomePopularViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomePopularViewReactor.swift; sourceTree = "<group>"; };
 		38F7209A2CD4F15900DF32B5 /* CardSummaryResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardSummaryResponse.swift; sourceTree = "<group>"; };
 		38F7209B2CD4F15900DF32B5 /* CommentCardResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCardResponse.swift; sourceTree = "<group>"; };
-		38F7209C2CD4F15900DF32B5 /* DetailCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailCard.swift; sourceTree = "<group>"; };
-		38F7209D2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailCardByCommentResponse.swift; sourceTree = "<group>"; };
 		38F7209E2CD4F15900DF32B5 /* DetailCardResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailCardResponse.swift; sourceTree = "<group>"; };
-		38F7209F2CD4F15900DF32B5 /* DetailCommentCardResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailCommentCardResponse.swift; sourceTree = "<group>"; };
 		38F720A12CD4F15900DF32B5 /* distanceCardResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = distanceCardResponse.swift; sourceTree = "<group>"; };
 		38F720A22CD4F15900DF32B5 /* LatestCardResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LatestCardResponse.swift; sourceTree = "<group>"; };
 		38F720A32CD4F15900DF32B5 /* PopularCardResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopularCardResponse.swift; sourceTree = "<group>"; };
@@ -1651,6 +1654,15 @@
 			path = Cocoa;
 			sourceTree = "<group>";
 		};
+		388698562D19829400008600 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				388698572D1982DE00008600 /* NotificationViewController.swift */,
+				3886985E2D1984D600008600 /* NotificationViewReactor.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		388C96342CCE415B0061C598 /* DBManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -1662,8 +1674,10 @@
 		389596A12D15A4CB000662B6 /* Notification */ = {
 			isa = PBXGroup;
 			children = (
-				382E15352D15A6460097B09C /* NotificationViewController.swift */,
+				382E15352D15A6460097B09C /* NotificationTabBarController.swift */,
+				388698642D1998DB00008600 /* NotificationTabBarReactor.swift */,
 				382E15382D15A6680097B09C /* cells */,
+				388698562D19829400008600 /* Views */,
 			);
 			path = Notification;
 			sourceTree = "<group>";
@@ -1774,6 +1788,7 @@
 				3878D04D2CFFC5F300F9522F /* ProfileRequest.swift */,
 				3803CF6B2D0156FC00FD90DB /* SettingsRequest.swift */,
 				2AFD054B2CFF76CB007C84AD /* TagRequest.swift */,
+				388698612D1986B100008600 /* NotificationRequest.swift */,
 			);
 			path = Develop;
 			sourceTree = "<group>";
@@ -1939,10 +1954,7 @@
 			children = (
 				38F7209A2CD4F15900DF32B5 /* CardSummaryResponse.swift */,
 				38F7209B2CD4F15900DF32B5 /* CommentCardResponse.swift */,
-				38F7209C2CD4F15900DF32B5 /* DetailCard.swift */,
-				38F7209D2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift */,
 				38F7209E2CD4F15900DF32B5 /* DetailCardResponse.swift */,
-				38F7209F2CD4F15900DF32B5 /* DetailCommentCardResponse.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -2244,7 +2256,6 @@
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				38CC49892CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */,
 				38F70E5C2D1905D000B33C9D /* MainHomeTabBarController.swift in Sources */,
-				38F720B02CD4F15900DF32B5 /* DetailCommentCardResponse.swift in Sources */,
 				3878D07E2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
 				3878B8632D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
 				2A44A4352CAC21A500DC463E /* SignUpResponse.swift in Sources */,
@@ -2255,6 +2266,7 @@
 				2AFD05532D007F2F007C84AD /* TagSearchViewReactor.swift in Sources */,
 				2A44A42B2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
 				382E15402D15AF4F0097B09C /* CommentHistoryInNotiResponse.swift in Sources */,
+				388698632D1986B100008600 /* NotificationRequest.swift in Sources */,
 				38C2D4152CFEA9CC00CEA092 /* MyProfileViewCell.swift in Sources */,
 				38F720B22CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */,
 				38FD4DB52D034F6600BF5FF1 /* MyFollowerViewCell.swift in Sources */,
@@ -2277,13 +2289,13 @@
 				2A5BB7BF2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */,
 				388A2D2E2D00A45800E2F2F0 /* writtenCardResponse.swift in Sources */,
 				3878D07A2CFFE1E800F9522F /* ResignViewController.swift in Sources */,
-				38F720AC2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift in Sources */,
 				38A627182CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */,
 				3887D03A2CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */,
 				38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				2AFD056E2D048CAF007C84AD /* TagRequest.swift in Sources */,
+				388698602D1984D600008600 /* NotificationViewReactor.swift in Sources */,
 				38C2D4212CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */,
 				38816D9F2D004A5E00EB87D6 /* UpdateProfileViewController.swift in Sources */,
 				38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
@@ -2321,7 +2333,6 @@
 				3803CF7E2D016DA200FD90DB /* TransferCodeResponse.swift in Sources */,
 				38F70E5F2D190FBD00B33C9D /* MainHomeTabBarReactor.swift in Sources */,
 				3834FADE2D11C5AC00C9108D /* SimpleCache.swift in Sources */,
-				38F720AA2CD4F15900DF32B5 /* DetailCard.swift in Sources */,
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				2AFF95752CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */,
 				2AFD05472CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */,
@@ -2369,7 +2380,7 @@
 				2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				38D563852D1719B1006265AA /* SOMSwipeTabBarItem.swift in Sources */,
-				382E15372D15A6460097B09C /* NotificationViewController.swift in Sources */,
+				382E15372D15A6460097B09C /* NotificationTabBarController.swift in Sources */,
 				38F720A82CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */,
 				38C2D41B2CFEAAED00CEA092 /* ProfileViewFooter.swift in Sources */,
 				389681112CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
@@ -2380,6 +2391,7 @@
 				3803CF752D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
 				38C2D4182CFEAACA00CEA092 /* ProfileViewFooterCell.swift in Sources */,
 				381DEA8C2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
+				388698662D1998DB00008600 /* NotificationTabBarReactor.swift in Sources */,
 				381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
 				2A5BB7DE2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */,
@@ -2389,6 +2401,7 @@
 				38D6F1872CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */,
 				38D5637F2D17152F006265AA /* SOMSwipeTabBarDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
+				388698592D1982DE00008600 /* NotificationViewController.swift in Sources */,
 				38389B9D2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				38F70E6D2D191D9A00B33C9D /* MainHomePopularViewController.swift in Sources */,
 				385E65A42CBE56D00032E120 /* Coordinate.swift in Sources */,
@@ -2449,7 +2462,6 @@
 				385E65A32CBE56D00032E120 /* Coordinate.swift in Sources */,
 				3878FE0D2D0365C800D8955C /* SOMNavigationBar+Rx.swift in Sources */,
 				2AE6B1632CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift in Sources */,
-				38F720AB2CD4F15900DF32B5 /* DetailCardByCommentResponse.swift in Sources */,
 				38FD4DB42D034F6600BF5FF1 /* MyFollowerViewCell.swift in Sources */,
 				3878D04E2CFFC5F300F9522F /* ProfileRequest.swift in Sources */,
 				3878D0722CFFDFEF00F9522F /* SettingTextCellView+Rx.swift in Sources */,
@@ -2517,6 +2529,7 @@
 				3803CF882D01914200FD90DB /* ResignViewReactor.swift in Sources */,
 				38816D9E2D004A5E00EB87D6 /* UpdateProfileViewController.swift in Sources */,
 				38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */,
+				3886985F2D1984D600008600 /* NotificationViewReactor.swift in Sources */,
 				2AFD05692D03264C007C84AD /* AddFavoriteTagResponse.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				3816C0602CCDE35300C8688C /* ErrorInterceptor.swift in Sources */,
@@ -2540,6 +2553,7 @@
 				38D055C32CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
 				2A45B36F2CE4C5510071026A /* RegisterUserResponse.swift in Sources */,
+				388698582D1982DE00008600 /* NotificationViewController.swift in Sources */,
 				38121E342CA6DA4000602499 /* Date.swift in Sources */,
 				38F720A52CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
 				3878D0752CFFE01500F9522F /* SettingScrollViewHeader.swift in Sources */,
@@ -2586,6 +2600,7 @@
 				2A5BB7DD2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */,
 				2AFD054F2CFF79D8007C84AD /* TagsViewReactor.swift in Sources */,
 				2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */,
+				388698652D1998DB00008600 /* NotificationTabBarReactor.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38F720AD2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */,
 				2AE6B1502CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
@@ -2608,7 +2623,7 @@
 				38121E312CA6C77500602499 /* Double.swift in Sources */,
 				3878D0532CFFC6C100F9522F /* ProfileResponse.swift in Sources */,
 				2AE6B1752CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */,
-				382E15362D15A6460097B09C /* NotificationViewController.swift in Sources */,
+				382E15362D15A6460097B09C /* NotificationTabBarController.swift in Sources */,
 				2A5BB7C22CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */,
 				2A34AFB52D144F08007BD7E7 /* EmptyTagDetailTableViewCell.swift in Sources */,
 				3803CF742D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
@@ -2641,12 +2656,10 @@
 				3878D06F2CFFDF9600F9522F /* SettingTextCellView.swift in Sources */,
 				38B8A5842CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				2AFF95612CF33A3900CBFB12 /* FavoriteTagView.swift in Sources */,
-				38F720A92CD4F15900DF32B5 /* DetailCard.swift in Sources */,
 				3803CF852D017DC700FD90DB /* EnterMemberTransferViewReactor.swift in Sources */,
 				38D488CA2D0C557300F2D38D /* SOMButton.swift in Sources */,
 				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				3878D06B2CFFDF1F00F9522F /* SettingsViewController.swift in Sources */,
-				38F720AF2CD4F15900DF32B5 /* DetailCommentCardResponse.swift in Sources */,
 				3878D0882CFFEF0F00F9522F /* TermsOfServiceTextCellView+Rx.swift in Sources */,
 				2AE6B16D2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */,
 				38F720A72CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */,
@@ -2662,6 +2675,7 @@
 				38A627172CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */,
 				2AFD05552D0082DE007C84AD /* SearchTagsResponse.swift in Sources */,
 				38B8A5882CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
+				388698622D1986B100008600 /* NotificationRequest.swift in Sources */,
 				388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				388698542D191F4B00008600 /* MainHomeDistanceViewReactor.swift in Sources */,
 				3866577E2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */,

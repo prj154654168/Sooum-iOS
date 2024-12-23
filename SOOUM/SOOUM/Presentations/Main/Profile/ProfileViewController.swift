@@ -146,7 +146,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         self.backButton.rx.tap
             .subscribe(with: self) { object, _ in
                 if object.isBlocked {
-                    object.navigationPop(to: MainHomeViewController.self, animated: true)
+                    object.navigationPop(to: MainHomeTabBarController.self, animated: true)
                 } else {
                     object.navigationPop()
                 }
