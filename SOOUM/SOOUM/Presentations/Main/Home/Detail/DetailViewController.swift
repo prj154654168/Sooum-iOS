@@ -100,7 +100,7 @@ class DetailViewController: BaseNavigationViewController, View {
          // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: MainHomeViewController.self, animated: false)
+                 object.navigationPop(to: MainHomeTabBarController.self, animated: false)
              }
              .disposed(by: self.disposeBag)
          
