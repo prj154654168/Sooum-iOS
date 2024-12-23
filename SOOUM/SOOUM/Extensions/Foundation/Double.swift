@@ -25,13 +25,13 @@ extension Double {
             return "100m 이내"
         case 0.1..<1:
             let roundedDistance = ceil(self * 1000)
-            return "\(roundedDistance)m 이내"
+            return "\(Int(roundedDistance))m 이내"
         case 1..<100:
             let roundedDistance = ceil(self / 5) * 5
-            return "\(roundedDistance)km 이내"
+            return "\(Int(roundedDistance))km 이내"
         default:
             let roundedDistance = ceil(self / 100) * 100
-            return "\(roundedDistance)km 이내"
+            return "\(Int(roundedDistance))km 이내"
         }
     }
 }
