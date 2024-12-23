@@ -131,13 +131,12 @@ class SOMSwipeTabBar: UIView {
             self.bottomSeperatorHeightConstraint = $0.height.equalTo(1).constraint
         }
         
-//        self.addSubview(self.selectedIndicator)
-//        self.selectedIndicator.snp.makeConstraints {
-//            $0.bottom.equalToSuperview()
-//            self.selectedIndicatorLeadingConstraint = $0.leading.equalToSuperview().constraint
-//            self.selectedIndicatorWidthConstraint = $0.width.equalTo(self.itemWidth).constraint
-//            $0.height.equalTo(1.6)
-//        }
+        self.addSubview(self.selectedIndicator)
+        self.selectedIndicator.snp.makeConstraints {
+            $0.bottom.equalToSuperview()
+            self.selectedIndicatorLeadingConstraint = $0.leading.equalToSuperview().constraint
+            $0.height.equalTo(1.6)
+        }
     }
     
     private func refreshConstraints() {
@@ -212,11 +211,13 @@ class SOMSwipeTabBar: UIView {
         if self.itemAlignment == .fill {
             let indicatorLeadingOffset: CGFloat = self.itemWidth * CGFloat(index)
             
+            self.selectedIndicatorLeadingConstraint?.deactivate()
+            self.selectedIndicator.snp.makeConstraints {
+                self.selectedIndicatorLeadingConstraint = $0.leading.equalToSuperview().offset(indicatorLeadingOffset).constraint
+            }
+            
             UIView.animate(withDuration: 0.25) {
-                self.selectedIndicatorLeadingConstraint?.deactivate()
-                self.selectedIndicator.snp.makeConstraints {
-                    self.selectedIndicatorLeadingConstraint = $0.leading.equalToSuperview().offset(indicatorLeadingOffset).constraint
-                }
+                self.layoutIfNeeded()
             }
         }
         
