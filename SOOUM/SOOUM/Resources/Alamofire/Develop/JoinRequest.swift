@@ -18,7 +18,7 @@ enum JoinRequest: BaseRequest {
     var path: String {
         switch self {
         case .validateNickname(let nickname):
-            return "/profiles/nickname/\(nickname)/available"
+            return "/profiles/nickname/available"
         case .profileImagePresignedURL:
             return "/imgs/profiles/upload"
         case .registerUser:
@@ -28,6 +28,8 @@ enum JoinRequest: BaseRequest {
     
     var method: HTTPMethod {
         switch self {
+        case .validateNickname:
+            return .post
         case .registerUser:
             return .patch
         default:
@@ -37,8 +39,8 @@ enum JoinRequest: BaseRequest {
     
     var parameters: Parameters {
         switch self {
-        case .validateNickname:
-            return [:]
+        case let .validateNickname(nickname):
+            return ["nickname": nickname]
         case .profileImagePresignedURL:
             return ["extension": "JPEG"]
         case .registerUser(let nickname, let profileImg):
@@ -52,7 +54,7 @@ enum JoinRequest: BaseRequest {
         
     var encoding: ParameterEncoding {
         switch self {
-        case .registerUser:
+        case .registerUser, .validateNickname:
             return JSONEncoding.default
         default:
             return URLEncoding.queryString
