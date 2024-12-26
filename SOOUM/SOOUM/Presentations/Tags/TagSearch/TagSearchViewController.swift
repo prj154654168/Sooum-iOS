@@ -91,8 +91,8 @@ class TagSearchViewController: BaseViewController, View {
         tagSearchTextFieldView.textField.rx.text.orEmpty
             .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
-            .compactMap {
-                $0.isEmpty ? nil : Reactor.Action.searchTag($0)
+            .map {
+                Reactor.Action.searchTag($0)
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
