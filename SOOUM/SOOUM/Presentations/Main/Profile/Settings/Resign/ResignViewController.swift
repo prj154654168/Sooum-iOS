@@ -222,14 +222,16 @@ class ResignViewController: BaseNavigationViewController, View {
         reactor.state.map((\.isSuccess))
             .distinctUntilChanged()
             .filter { $0 }
-            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                if let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                   let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
-                    
-                    let viewController = OnboardingViewController()
-                    window.rootViewController = UINavigationController(rootViewController: viewController)
-                }
+                guard let window = object.view.window else { return }
+                
+                let onboardingViewController = OnboardingViewController()
+                onboardingViewController.modalTransitionStyle = .crossDissolve
+                
+                let navigationViewController = UINavigationController(rootViewController: onboardingViewController)
+                window.rootViewController = navigationViewController
+                
+                object.navigationController?.viewControllers = []
             }
             .disposed(by: self.disposeBag)
     }
