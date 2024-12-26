@@ -16,7 +16,7 @@ class MainHomeDistanceViewReactor: Reactor {
     enum Action: Equatable {
         case landing
         case refresh
-        case moreFind(_ lastId: String?)
+        case moreFind(lastId: String?)
         case distanceFilter(String)
     }
     

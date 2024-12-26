@@ -51,6 +51,11 @@ class MainHomeLatestViewController: BaseViewController, View {
     private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
     
+    private let cellHeight: CGFloat = {
+        let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
+        return width + 10  /// 가로 + top inset
+    }()
+    
     
     // MARK: Variables + Rx
     
@@ -212,14 +217,11 @@ extension MainHomeLatestViewController: UITableViewDataSource {
 extension MainHomeLatestViewController: UITableViewDataSourcePrefetching {
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        let lastSectionIndex = tableView.numberOfSections - 1
-        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         
-        if indexPaths.first?.section == lastSectionIndex,
-           indexPaths.last?.row == lastRowIndex,
-           let reactor = self.reactor {
+        if let rowIndex = indexPaths.map({ $0.row }).max(),
+            rowIndex >= Int(Double(self.displayedCards.count) * 0.8),
+            let reactor = self.reactor {
             
-            // 캐시된 데이터가 존재하고, 현재 표시된 수보다 캐시된 수가 많으면
             if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: .latest),
                self.displayedCards.count < loadedCards.count {
                 reactor.action.onNext(.moreFind(lastId: nil))
@@ -237,9 +239,7 @@ extension MainHomeLatestViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
-        let height: CGFloat = width + 10 /// 가로 + top inset
-        return height
+        return self.cellHeight
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
