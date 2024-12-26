@@ -99,6 +99,8 @@ enum AuthRequest: BaseRequest {
     
     var authorizationType: AuthorizationType {
         switch self {
+        case .updateFCM:
+            return .access
         case .reAuthenticationWithRefreshSession:
             return .refresh
         default:

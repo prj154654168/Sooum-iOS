@@ -40,14 +40,18 @@ class MainTabBarController: SOMTabBarController, View {
     
     func bind(reactor: MainTabBarReactor) {
         
-        // 위치 권한 요청
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
+                // 위치 권한 요청
                 let locationManager = LocationManager.shared
                 locationManager.delegate = object
                 if locationManager.checkLocationAuthStatus() == .notDetermined {
                     locationManager.requestLocationPermission()
                 }
+                
+                // 알리 권한 요청
+                let pushManager = PushManager.shared
+                pushManager.switchNotification(isOn: true)
             }
             .disposed(by: self.disposeBag)
         

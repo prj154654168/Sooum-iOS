@@ -107,7 +107,7 @@ extension AppDelegate: MessagingDelegate {
     ) {
         self.registerRemoteNotificationCompletion?(error)
 
-        print("Error registration APNS token: \(error)")
+        print("❌ Error registration APNS token: \(error)")
     }
 
     func application(
@@ -122,6 +122,8 @@ extension AppDelegate: MessagingDelegate {
             fcm: Messaging.messaging().fcmToken
         )
         self.authManager.registeredToken = current
+        
+        print("ℹ️ Call func: \(#function)")
 
         self.registerRemoteNotificationCompletion?(nil)
     }
@@ -133,6 +135,8 @@ extension AppDelegate: MessagingDelegate {
             fcm: fcmToken
         )
         self.authManager.registeredToken = current
+        
+        print("ℹ️ Call func: \(#function)")
     }
 }
 
