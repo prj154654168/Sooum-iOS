@@ -25,7 +25,8 @@ class MainHomeDistanceViewController: BaseViewController, View {
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
-        $0.isScrollEnabled = false
+        $0.contentInset.bottom = 100
+        $0.verticalScrollIndicatorInsets.bottom = 80
         
         $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
         
@@ -164,11 +165,6 @@ class MainHomeDistanceViewController: BaseViewController, View {
             .subscribe(with: self) { object, displayedCardsWithUpdate in
                 let displayedCards = displayedCardsWithUpdate.cards
                 let isUpdate = displayedCardsWithUpdate.isUpdate
-                // cell들의 높이가 tableView의 높이를 초과할 때만 스크롤 가능
-                let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
-                let height: CGFloat = width + 10
-                let isScrollEnabled: Bool = object.tableView.bounds.height < height * CGFloat(displayedCards.count)
-                object.tableView.isScrollEnabled = isScrollEnabled
                 
                 // isUpdate == true 일 때, 추가된 카드만 로드
                 if isUpdate {
@@ -279,7 +275,10 @@ extension MainHomeDistanceViewController: UITableViewDelegate {
         
         // offset이 currentOffset보다 크면 아래로 스크롤, 반대일 경우 위로 스크롤
         // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
-        self.hidesHeaderContainer.accept(offset <= 0 ? false : offset > self.currentOffset)
+        // 메인 큐에서 실행 명시
+        DispatchQueue.main.async {
+            self.hidesHeaderContainer.accept(offset <= 0 ? false : offset > self.currentOffset)
+        }
         
         self.currentOffset = offset
         
