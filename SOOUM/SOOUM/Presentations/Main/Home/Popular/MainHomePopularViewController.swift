@@ -272,7 +272,7 @@ extension MainHomePopularViewController: UITableViewDelegate {
         // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
         if self.isRefreshEnabled,
            let refreshControl = self.tableView.refreshControl,
-           offset <= -refreshControl.bounds.height {
+           offset <= -(refreshControl.frame.origin.y + 40) {
             
             refreshControl.beginRefreshingFromTop()
         }
