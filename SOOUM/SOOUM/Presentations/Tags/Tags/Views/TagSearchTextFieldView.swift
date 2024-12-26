@@ -83,7 +83,9 @@ class TagSearchTextFieldView: UIView {
         self.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
-                object.textField.becomeFirstResponder()
+                if !object.textField.isFirstResponder {
+                    object.textField.becomeFirstResponder()
+                }
             }
             .disposed(by: disposeBag)
     }
