@@ -42,7 +42,8 @@ class IssueMemberTransferViewReactor: Reactor {
                 self.networkManager.request(TransferCodeResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.updateTransferCode(response.transferCode))
-                    },
+                    }
+                    .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
             ])
         case .updateTransferCode:
@@ -53,7 +54,8 @@ class IssueMemberTransferViewReactor: Reactor {
                 self.networkManager.request(TransferCodeResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.updateTransferCode(response.transferCode))
-                    },
+                    }
+                    .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
             ])
         }
@@ -68,5 +70,16 @@ class IssueMemberTransferViewReactor: Reactor {
             state.isProcessing = isProcessing
         }
         return state
+    }
+}
+
+extension IssueMemberTransferViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false))
+            ])
+        }
     }
 }

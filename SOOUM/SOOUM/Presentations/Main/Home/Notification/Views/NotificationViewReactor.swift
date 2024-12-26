@@ -93,10 +93,12 @@ class NotificationViewReactor: Reactor {
                 .just(.updateIsProcessing(true)),
                 responseWithoutRead
                     .map(\.commentHistoryInNotis)
-                    .map(Mutation.notificationsWithoutRead),
+                    .map(Mutation.notificationsWithoutRead)
+                    .catch(self.catchClosure),
                 response
                     .map(\.commentHistoryInNotis)
-                    .map(Mutation.notifications),
+                    .map(Mutation.notifications)
+                    .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
             ])
         case let .moreFind(lastId):
@@ -163,5 +165,16 @@ class NotificationViewReactor: Reactor {
             state.isReadCompleted = isReadCompleted
         }
         return state
+    }
+}
+
+extension NotificationViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false))
+            ])
+        }
     }
 }

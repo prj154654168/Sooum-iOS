@@ -40,7 +40,8 @@ class CommentHistroyViewReactor: Reactor {
                 self.networkManager.request(CommentHistoryResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.commentHistories(response.embedded.commentHistories))
-                    },
+                    }
+                    .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
             ])
         }
@@ -55,6 +56,17 @@ class CommentHistroyViewReactor: Reactor {
             state.isProcessing = isProcessing
         }
         return state
+    }
+}
+
+extension CommentHistroyViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false))
+            ])
+        }
     }
 }
 

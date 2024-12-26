@@ -58,8 +58,9 @@ class ResignViewReactor: Reactor {
                     .flatMapLatest { object, response -> Observable<Mutation> in
                         object.authManager.initializeAuthInfo()
                         
-                        return .just(.updateIsSuccess(response.httpCode == 200))
-                    },
+                        return .just(.updateIsSuccess(response.httpCode == 204))
+                    }
+                    .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
             ])
         }
@@ -76,5 +77,16 @@ class ResignViewReactor: Reactor {
             state.isProcessing = isProcessing
         }
         return state
+    }
+}
+
+extension ResignViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false))
+            ])
+        }
     }
 }
