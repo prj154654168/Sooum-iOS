@@ -38,27 +38,34 @@ class EnterMemberTransferViewReactor: Reactor {
         switch action {
         case let .enterTransferCode(transferCode):
             
-            return self.networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
-                .map(\.publicKey)
-                .withUnretained(self)
-                .flatMapLatest { object, publicKey -> Observable<Mutation> in
-                    
-                    if let secKey = object.authManager.convertPEMToSecKey(pemString: publicKey),
-                       let encryptedDeviceId = object.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
+            return .concat([
+                .just(.updateIsProcessing(true)),
+                
+                self.networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
+                    .map(\.publicKey)
+                    .withUnretained(self)
+                    .flatMapLatest { object, publicKey -> Observable<Mutation> in
                         
-                        let request: SettingsRequest = .transferMember(
-                            transferId: transferCode,
-                            encryptedDeviceId: encryptedDeviceId
-                        )
-                        
-                        return self.networkManager.request(Empty.self, request: request)
-                            .flatMapLatest { _ -> Observable<Mutation> in
-                                return .just(.enterTransferCode(true))
-                            }
-                    } else {
-                        return .just(.enterTransferCode(false))
+                        if let secKey = object.authManager.convertPEMToSecKey(pemString: publicKey),
+                           let encryptedDeviceId = object.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
+                            
+                            let request: SettingsRequest = .transferMember(
+                                transferId: transferCode,
+                                encryptedDeviceId: encryptedDeviceId
+                            )
+                            
+                            return self.networkManager.request(Empty.self, request: request)
+                                .flatMapLatest { _ -> Observable<Mutation> in
+                                    return .just(.enterTransferCode(true))
+                                }
+                        } else {
+                            return .just(.enterTransferCode(false))
+                        }
                     }
-                }
+                    .catch(self.catchClosure),
+                
+                .just(.updateIsProcessing(false))
+            ])
         }
     }
     
@@ -71,5 +78,16 @@ class EnterMemberTransferViewReactor: Reactor {
             state.isProcessing = isProcessing
         }
         return state
+    }
+}
+
+extension EnterMemberTransferViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false))
+            ])
+        }
     }
 }

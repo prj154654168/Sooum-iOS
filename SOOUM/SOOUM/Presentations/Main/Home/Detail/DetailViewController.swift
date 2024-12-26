@@ -100,7 +100,7 @@ class DetailViewController: BaseNavigationViewController, View {
          // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: MainHomeViewController.self, animated: false)
+                 object.navigationPop(to: MainHomeTabBarController.self, animated: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -409,7 +409,7 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
         if self.isRefreshEnabled,
            let refreshControl = self.collectionView.refreshControl,
-           offset <= -refreshControl.bounds.height {
+           offset <= -(refreshControl.frame.origin.y + 40) {
             
             refreshControl.beginRefreshingFromTop()
         }

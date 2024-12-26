@@ -186,7 +186,7 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         cell.previewCardTapped
             .subscribe(with: self) { object, previewCardID in
                 let detailViewController = DetailViewController()
-                detailViewController.reactor = DetailViewReactor(type: .mainHome, previewCardID)
+                detailViewController.reactor = DetailViewReactor(previewCardID)
                 self.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: cell.disposeBag)

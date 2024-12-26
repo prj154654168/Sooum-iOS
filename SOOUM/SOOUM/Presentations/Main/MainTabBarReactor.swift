@@ -22,8 +22,8 @@ class MainTabBarReactor: Reactor {
 
 extension MainTabBarReactor {
     
-    func reactorForMainHome() -> MainHomeViewReactor {
-        MainHomeViewReactor()
+    func reactorForMainHome() -> MainHomeTabBarReactor {
+        MainHomeTabBarReactor.init()
     }
     
     func reactorForWriteCard() -> WriteCardViewReactor {

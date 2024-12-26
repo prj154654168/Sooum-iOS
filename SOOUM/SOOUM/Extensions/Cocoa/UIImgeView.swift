@@ -21,7 +21,11 @@ extension UIImageView {
         
         /// Image load
         if let strUrl: String = strUrl, let url = URL(string: strUrl) {
-            self.kf.setImage(with: url)
+            self.kf.setImage(
+                with: url,
+                placeholder: Self.placeholder,
+                options: [.transition(.fade(0.5))]
+            )
             self.backgroundColor = .clear
         } else {
             self.kf.cancelDownloadTask()

@@ -62,7 +62,8 @@ class SettingsViewReactor: Reactor {
                 self.networkManager.request(SettingsResponse.self, request: SettingsRequest.activate)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.updateBanEndAt(response.banEndAt))
-                    },
+                    }
+                    .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
             ])
         case let .updateNotificationStatus(state):
@@ -81,6 +82,17 @@ class SettingsViewReactor: Reactor {
             state.isProcessing = isProcessing
         }
         return state
+    }
+}
+
+extension SettingsViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false))
+            ])
+        }
     }
 }
 

@@ -325,7 +325,9 @@ class SOMCard: UIView {
     
     /// cardGradientLayer
     private func addGradient() {
+        
         UIView.performWithoutAnimation {
+            
             cardGradientLayer.colors = [
                 UIColor.clear.cgColor,
                 UIColor.black.withAlphaComponent(0.6).cgColor
@@ -455,7 +457,6 @@ class SOMCard: UIView {
         cardTextBackgroundBlurView.snp.removeConstraints()
         cardTextContentLabel.snp.removeConstraints()
         
-        cardGradientView.frame = .zero
         cardGradientView.snp.removeConstraints()
         
         cardContentStackView.snp.removeConstraints()

@@ -141,7 +141,6 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
             .subscribe(with: self) { object, _ in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = DetailViewReactor(
-                    type: .mainHome,
                     reactor.currentState.tagCards[indexPath.row].id
                 )
                 self.navigationPush(detailViewController, animated: true)

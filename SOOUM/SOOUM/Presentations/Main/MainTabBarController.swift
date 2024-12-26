@@ -40,24 +40,28 @@ class MainTabBarController: SOMTabBarController, View {
     
     func bind(reactor: MainTabBarReactor) {
         
-        // 위치 권한 요청
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
+                // 위치 권한 요청
                 let locationManager = LocationManager.shared
                 locationManager.delegate = object
                 if locationManager.checkLocationAuthStatus() == .notDetermined {
                     locationManager.requestLocationPermission()
                 }
+                
+                // 알리 권한 요청
+                let pushManager = PushManager.shared
+                pushManager.switchNotification(isOn: true)
             }
             .disposed(by: self.disposeBag)
         
         // viewControllers
-        let mainHomeViewController = MainHomeViewController()
-        mainHomeViewController.reactor = reactor.reactorForMainHome()
+        let mainHomeTabBarController = MainHomeTabBarController()
+        mainHomeTabBarController.reactor = reactor.reactorForMainHome()
         let mainHomeNavigationController = UINavigationController(
-            rootViewController: mainHomeViewController
+            rootViewController: mainHomeTabBarController
         )
-        mainHomeNavigationController.tabBarItem = .init(
+        mainHomeTabBarController.tabBarItem = .init(
             title: Text.mainHomeTitle,
             image: .init(.icon(.outlined(.home))),
             tag: 0

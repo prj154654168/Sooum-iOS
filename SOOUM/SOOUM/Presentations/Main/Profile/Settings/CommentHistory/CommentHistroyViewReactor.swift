@@ -40,7 +40,8 @@ class CommentHistroyViewReactor: Reactor {
                 self.networkManager.request(CommentHistoryResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.commentHistories(response.embedded.commentHistories))
-                    },
+                    }
+                    .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
             ])
         }
@@ -60,7 +61,18 @@ class CommentHistroyViewReactor: Reactor {
 
 extension CommentHistroyViewReactor {
     
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false))
+            ])
+        }
+    }
+}
+
+extension CommentHistroyViewReactor {
+    
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor.init(type: .detail, selectedId)
+        DetailViewReactor.init(selectedId)
     }
 }
