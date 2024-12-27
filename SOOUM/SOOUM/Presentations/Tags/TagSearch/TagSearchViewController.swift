@@ -89,7 +89,7 @@ class TagSearchViewController: BaseViewController, View {
     
     func bind(reactor: TagSearchViewReactor) {
         tagSearchTextFieldView.textField.rx.text.orEmpty
-            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
             .map {
                 Reactor.Action.searchTag($0)

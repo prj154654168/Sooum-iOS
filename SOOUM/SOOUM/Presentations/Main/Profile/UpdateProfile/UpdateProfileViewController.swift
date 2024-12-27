@@ -106,7 +106,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         
         let nickname = self.updateProfileView.textField.rx.text.orEmpty.distinctUntilChanged()
         nickname
-            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
             .map { Reactor.Action.checkValidate($0) }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)

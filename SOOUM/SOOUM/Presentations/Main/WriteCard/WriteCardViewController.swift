@@ -239,6 +239,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         // Action
         writtenTagText
             .filter { $0.isEmpty == false }
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
             .map(Reactor.Action.relatedTags)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
