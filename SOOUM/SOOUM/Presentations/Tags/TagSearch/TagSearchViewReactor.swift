@@ -52,6 +52,9 @@ class TagSearchViewReactor: Reactor {
     
     private func searchTags(keyword: String) -> Observable<Mutation> {
         let request: TagRequest = .search(keyword: keyword)
+        if keyword.isEmpty {
+            return .just(.searchTags([]))
+        }
         
         return NetworkManager.shared.request(SearchTagsResponse.self, request: request)
             .map { response in

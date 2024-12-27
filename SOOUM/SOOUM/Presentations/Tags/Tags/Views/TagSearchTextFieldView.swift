@@ -49,7 +49,6 @@ class TagSearchTextFieldView: UIView {
     
     private func setInteractive(_ isInteractive: Bool) {
         if isInteractive {
-            action()
             self.layer.borderColor = UIColor.som.blue300.cgColor
             self.layer.borderWidth = 1
             magnifyingGlassImageView.tintColor = .som.p300
@@ -78,13 +77,27 @@ class TagSearchTextFieldView: UIView {
             $0.size.equalTo(24)
         }
     }
-    
-    private func action() {
-        self.rx.tapGesture()
-            .when(.recognized)
-            .subscribe(with: self) { object, _ in
-                object.textField.becomeFirstResponder()
-            }
-            .disposed(by: disposeBag)
+  
+    override var isFirstResponder: Bool {
+        return self.textField.isFirstResponder
+    }
+
+    @discardableResult
+    override func becomeFirstResponder() -> Bool {
+        return self.textField.becomeFirstResponder()
+    }
+
+    @discardableResult
+    override func resignFirstResponder() -> Bool {
+        return self.textField.resignFirstResponder()
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { }
+
+    @objc
+    private func touch(sender: UIGestureRecognizer) {
+        if !self.textField.isFirstResponder {
+            self.textField.becomeFirstResponder()
+        }
     }
 }

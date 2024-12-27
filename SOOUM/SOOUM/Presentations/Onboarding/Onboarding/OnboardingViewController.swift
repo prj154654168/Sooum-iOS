@@ -54,28 +54,30 @@ class OnboardingViewController: BaseViewController {
         $0.clipsToBounds = true
     }
     
-    let oldUserButtonLabel = UILabel().then {
-        $0.typography = .init(
-            fontContainer: BuiltInFont(
-                size: 14,
-                weight: .regular
-            ), lineHeight: 20
-        )
-        $0.text = "기존 계정이 있으신가요?"
-        $0.textColor = UIColor(hex: "#B4B4B4")
+    let oldUserButtonLabel = SOMButton().then {
+        $0.typography = .som.body2WithBold
+        $0.title = "기존 계정이 있으신가요?"
+        $0.foregroundColor = UIColor(hex: "#B4B4B4")
+        $0.isUnderlined = true
         $0.layer.cornerRadius = 12
-        $0.textAlignment = .center
         $0.backgroundColor = .clear
     }
     
     override func bind() {
-        
         startButtonLabel.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
                 let termsOfServiceVC = OnboardingTermsOfServiceViewController()
                 termsOfServiceVC.reactor = OnboardingTermsOfServiceViewReactor()
                 object.navigationController?.pushViewController(termsOfServiceVC, animated: true)
+            }
+            .disposed(by: disposeBag)
+      
+        oldUserButtonLabel.rx.tap
+            .subscribe(with: self) { object, _ in
+              let enterMemberTransferViewController = EnterMemberTransferViewController()
+              enterMemberTransferViewController.reactor = EnterMemberTransferViewReactor()
+              object.navigationPush(enterMemberTransferViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: disposeBag)
     }
