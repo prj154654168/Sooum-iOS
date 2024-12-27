@@ -182,7 +182,7 @@ class DetailViewReactor: Reactor {
 extension DetailViewReactor {
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor()
+        MainTabBarReactor(willNavigate: .none)
     }
     
     func reactorForMainHome() -> MainHomeTabBarReactor {
