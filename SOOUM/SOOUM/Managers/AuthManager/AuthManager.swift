@@ -212,6 +212,17 @@ class AuthManager: AuthManagerDelegate {
                         completion(.failure(error))
                     } else {
                         
+                        if let fcmToken = object.registeredToken?.fcm {
+                            let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
+                            networkManager.request(Empty.self, request: request)
+                                .subscribe(onNext: { _ in
+                                    print("ℹ️ Update FCM token to server with", fcmToken)
+                                })
+                                .disposed(by: object.disposeBag)
+                        } else {
+                            print("ℹ️ Failed FCM token updated to server")
+                        }
+                        
                         object.updateTokens(
                             .init(
                                 accessToken: accessToken,
