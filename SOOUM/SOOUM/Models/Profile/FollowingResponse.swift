@@ -58,6 +58,7 @@ struct Follow: Equatable, Codable {
     let backgroundImgURL: URLString?
     let links: ProfileLinks
     let isFollowing: Bool
+    let isRequester: Bool
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -65,6 +66,7 @@ struct Follow: Equatable, Codable {
         case backgroundImgURL = "backgroundImgUrl"
         case links = "_links"
         case isFollowing
+        case isRequester
     }
 }
 
@@ -76,6 +78,7 @@ extension Follow {
         self.backgroundImgURL = nil
         self.links = .init()
         self.isFollowing = false
+        self.isRequester = false
     }
 }
 
