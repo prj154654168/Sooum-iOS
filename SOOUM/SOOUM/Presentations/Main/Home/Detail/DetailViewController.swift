@@ -195,7 +195,10 @@ class DetailViewController: BaseNavigationViewController, View {
          .subscribe(with: self) { object, pair in
              object.detailCard = pair.0
              object.prevCard = pair.1
-             object.collectionView.reloadData()
+             
+             UIView.performWithoutAnimation {
+                 object.collectionView.reloadData()
+             }
          }
          .disposed(by: self.disposeBag)
          
@@ -203,7 +206,10 @@ class DetailViewController: BaseNavigationViewController, View {
              .distinctUntilChanged()
              .subscribe(with: self) { object, commentCards in
                  object.commentCards = commentCards
-                 object.collectionView.reloadData()
+                 
+                 UIView.performWithoutAnimation {
+                     object.collectionView.reloadData()
+                 }
              }
              .disposed(by: disposeBag)
          
@@ -211,7 +217,10 @@ class DetailViewController: BaseNavigationViewController, View {
              .distinctUntilChanged()
              .subscribe(with: self) { object, cardSummary in
                  object.cardSummary = cardSummary
-                 object.collectionView.reloadData()
+                 
+                 UIView.performWithoutAnimation {
+                     object.collectionView.reloadData()
+                 }
              }
              .disposed(by: disposeBag)
          
@@ -220,7 +229,10 @@ class DetailViewController: BaseNavigationViewController, View {
              .subscribe(with: self) { object, isDeleted in
                  UIApplication.topViewController?.dismiss(animated: true) {
                      object.isDeleted = isDeleted
-                     object.collectionView.reloadData()
+                     
+                     UIView.performWithoutAnimation {
+                         object.collectionView.reloadData()
+                     }
                      
                      object.navigationPop()
                  }

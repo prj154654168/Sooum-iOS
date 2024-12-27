@@ -185,7 +185,10 @@ class MainHomeDistanceViewController: BaseViewController, View {
                     }
                 } else {
                     object.displayedCards = displayedCards
-                    object.tableView.reloadData()
+                    
+                    UIView.performWithoutAnimation {
+                        object.tableView.reloadData()
+                    }
                 }
             }
             .disposed(by: self.disposeBag)
