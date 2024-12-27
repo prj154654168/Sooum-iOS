@@ -7,6 +7,9 @@
 
 import Foundation
 
+import Alamofire
+
+
 // MARK: - SearchTagsResponse
 struct SearchTagsResponse: Codable {
     
@@ -37,4 +40,20 @@ struct SearchTagsResponse: Codable {
     }
 }
 
+extension SearchTagsResponse {
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.embedded = try container.decodeIfPresent(Embedded.self, forKey: .embedded) ?? .init(relatedTagList: [])
+        self.status = try container.decode(Status.self, forKey: .status)
+    }
+}
 
+extension SearchTagsResponse: EmptyResponse {
+    static func emptyValue() -> SearchTagsResponse {
+        SearchTagsResponse.init(
+            embedded: .init(relatedTagList: []),
+            status: .init(httpCode: 0, httpStatus: "", responseMessage: "")
+        )
+    }
+}
