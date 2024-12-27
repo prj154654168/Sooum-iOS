@@ -99,14 +99,14 @@ class NotificationViewCell: UITableViewCell {
         self.feedCardImageView.setImage(strUrl: model.feedCardImgURL?.url)
         self.feedCardContentLabel.text = model.content
         
-        var text: String {
+        let text: String = {
             switch model.type {
-            case .feedLike: return "카드에 공감하였습니다."
-            case .commentCard: return "답카드를 작성했습니다."
+            case .feedLike, .commentLike: return "님이 카드에 공감하였습니다."
+            case .commentWrite: return "님이 답카드를 작성했습니다."
             default: return ""
             }
-        }
-        self.notificationTitleLabel.text = model.nickName ?? "" + text
+        }()
+        self.notificationTitleLabel.text = "\(model.nickName ?? "")\(text)"
         
         self.timeGapLabel.text = model.createAt.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
         

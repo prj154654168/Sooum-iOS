@@ -196,13 +196,12 @@ extension NotificationViewController: UITableViewDelegate {
             let selectedId = self.notificationsWithoutRead[indexPath.row].id
             
             self.reactor?.action.onNext(.requestRead("\(selectedId)"))
+            let targetCardId = self.notificationsWithoutRead[indexPath.row].targetCardId
+            self.willPushCardId.accept("\(targetCardId ?? 0)")
         case .read:
-            break
+            let targetCardId = self.notifications[indexPath.row].targetCardId
+            self.willPushCardId.accept("\(targetCardId ?? 0)")
         }
-        
-        let targetCardId = self.notificationsWithoutRead[indexPath.row].targetCardId
-        
-        self.willPushCardId.accept("\(targetCardId ?? 0)")
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -229,26 +228,35 @@ extension NotificationViewController: UITableViewDelegate {
             
         case .read:
             
+            let backgroundView = UIView().then {
+                $0.backgroundColor = .som.white
+            }
+            
             let frame = CGRect(x: 0, y: 10, width: UIScreen.main.bounds.width, height: 4)
             let seperator = UIView().then {
                 $0.backgroundColor = .som.gray100
                 
                 $0.frame = frame
             }
+            backgroundView.addSubview(seperator)
             
-            return self.notifications.isEmpty ? nil : seperator
+            return self.notificationsWithoutRead.isEmpty ? nil : backgroundView
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        switch Section.allCases[indexPath.row] {
+        switch Section.allCases[indexPath.section] {
         case .withoutRead:
-            let type = self.notificationsWithoutRead[indexPath.row].type
-            switch type {
-            case .blocked, .delete:
-                return 55
-            default:
+            if self.notificationsWithoutRead.isEmpty == false {
+                let type = self.notificationsWithoutRead[indexPath.row].type
+                switch type {
+                case .blocked, .delete:
+                    return 55
+                default:
+                    return 64
+                }
+            } else {
                 return 64
             }
         case .read:
@@ -261,7 +269,7 @@ extension NotificationViewController: UITableViewDelegate {
         case .withoutRead:
             return self.notificationsWithoutRead.isEmpty ? 0 : 46
         case .read:
-            return self.notifications.isEmpty ? 10 : 24
+            return self.notificationsWithoutRead.isEmpty ? 10 : 24
         }
     }
 }

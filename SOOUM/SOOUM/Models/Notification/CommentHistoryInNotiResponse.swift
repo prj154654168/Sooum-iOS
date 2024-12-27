@@ -52,14 +52,14 @@ struct CommentHistoryInNoti: Equatable, Codable {
     enum NotificationType: String, Codable {
         case feedLike = "FEED_LIKE"
         case commentLike = "COMMENT_LIKE"
-        case commentCard = "COMMENT_WRITE"
+        case commentWrite = "COMMENT_WRITE"
         case blocked = "BLOCKED"
         case delete = "DELETED"
         
         var description: String {
             switch self {
             case .feedLike, .commentLike: return "공감"
-            case .commentCard: return "답카드"
+            case .commentWrite: return "답카드"
             default: return ""
             }
         }
