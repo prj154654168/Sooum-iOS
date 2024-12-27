@@ -19,6 +19,16 @@ class PushManager: NSObject, PushManagerDelegate {
     
     static let shared = PushManager()
     
+    var window: UIWindow? {
+        let application = UIApplication.shared
+        if let windowScene: UIWindowScene = application.connectedScenes.first as? UIWindowScene,
+           let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            return window
+        } else {
+            return nil
+        }
+    }
+    
     var canReceiveNotifications: Bool = true
     @objc dynamic var notificationStatus: Bool = true
     
@@ -27,6 +37,32 @@ class PushManager: NSObject, PushManagerDelegate {
         
         self.registerNotificationObserver()
         self.updateNotificationStatus()
+    }
+    
+    
+    // MARK: Navigation
+    
+    func setupRootViewController(_ info: NotificationInfo) {
+        
+        DispatchQueue.main.async { [weak self] in
+            if self?.window != nil {
+                self?.setupMainTabBarController(info)
+            }
+        }
+    }
+    
+    fileprivate func setupMainTabBarController(_ pushInfo: NotificationInfo) {
+        
+        let willNavigateNoti = pushInfo.notificationType == .blocked || pushInfo.notificationType == .delete
+        let mainTabBarReactor = MainTabBarReactor(
+            willNavigate: willNavigateNoti ? .pushForNoti : .pushForDetail,
+            pushInfo: pushInfo
+        )
+        let mainTabBarController = MainTabBarController()
+        mainTabBarController.reactor = mainTabBarReactor
+        
+        let navigationController = UINavigationController(rootViewController: mainTabBarController)
+        self.window?.rootViewController = navigationController
     }
     
     
