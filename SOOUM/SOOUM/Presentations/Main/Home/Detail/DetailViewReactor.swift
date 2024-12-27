@@ -56,7 +56,7 @@ class DetailViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     private let locationManager = LocationManager.shared
     
-    private let selectedCardId: String
+    let selectedCardId: String
     
     init(_ selectedCardId: String) {
         self.selectedCardId = selectedCardId

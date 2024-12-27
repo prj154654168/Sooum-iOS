@@ -298,7 +298,18 @@ extension DetailViewController: UICollectionViewDataSource {
         
         cell.prevCardBackgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
-                object.navigationPop()
+                /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop, 아니면 naviPush
+                if let naviStackCount = object.navigationController?.viewControllers.count,
+                   let prevViewController = object.navigationController?.viewControllers[naviStackCount - 2] as? DetailViewController,
+                   prevViewController.reactor?.selectedCardId == object.prevCard.previousCardId {
+                    
+                    object.navigationPop()
+                } else {
+                    
+                    let detailViewController = DetailViewController()
+                    detailViewController.reactor = object.reactor?.reactorForPush(object.prevCard.previousCardId)
+                    object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                }
             }
             .disposed(by: cell.disposeBag)
         
