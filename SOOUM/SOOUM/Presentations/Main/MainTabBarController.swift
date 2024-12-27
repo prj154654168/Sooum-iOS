@@ -99,6 +99,33 @@ class MainTabBarController: SOMTabBarController, View {
             tagViewcontroller,
             profileNavigationController
         ]
+        
+        self.rx.viewWillAppear
+            .map { _ in Reactor.Action.judgeEntrance }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.entranceType)
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, entranceType in
+                
+                switch entranceType {
+                case .pushForNoti:
+                    
+                    let notificationViewController = NotificationViewController()
+                    notificationViewController.reactor = reactor.reactorForNoti()
+                    object.navigationPush(notificationViewController, animated: true, bottomBarHidden: true)
+                case .pushForDetail:
+                    
+                    guard let targetCardId = reactor.pushInfo?.targetCardId else { return }
+                    
+                    let detailViewController = DetailViewController()
+                    detailViewController.reactor = reactor.reactorForDetail(targetCardId)
+                    object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                default: break
+                }
+            }
+            .disposed(by: self.disposeBag)
     }
 }
 

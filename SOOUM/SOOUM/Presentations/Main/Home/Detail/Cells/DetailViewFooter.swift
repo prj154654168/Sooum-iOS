@@ -168,37 +168,6 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
         layout.sectionInset.right = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
     }
     
-    func scrollViewWillEndDragging(
-        _ scrollView: UIScrollView,
-        withVelocity velocity: CGPoint,
-        targetContentOffset: UnsafeMutablePointer<CGPoint>
-    ) {
-        let layout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-        let cellWidthIncludingSpacing = self.collectionView.bounds.height + layout.minimumLineSpacing
-        
-        var offset = targetContentOffset.pointee
-        let index = (offset.x + scrollView.contentInset.left) / cellWidthIncludingSpacing
-        var roundedIndex = round(index)
-        
-        if velocity.x > 0 {
-            roundedIndex = floor(roundedIndex) + 1
-        } else if velocity.x < 0 {
-            roundedIndex = ceil(roundedIndex) - 1
-        } else {
-            roundedIndex = round(roundedIndex)
-        }
-        roundedIndex = max(
-            0,
-            min(roundedIndex, CGFloat(self.collectionView.numberOfItems(inSection: 0) - 1))
-        )
-        
-        offset = CGPoint(
-            x: roundedIndex * cellWidthIncludingSpacing - scrollView.contentInset.left,
-            y: scrollView.contentInset.top
-        )
-        targetContentOffset.pointee = offset
-    }
-    
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,

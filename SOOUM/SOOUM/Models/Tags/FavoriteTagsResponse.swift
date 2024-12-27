@@ -7,7 +7,11 @@
 
 import Foundation
 
+import Alamofire
+
+
 // MARK: - FavoriteTagsResponse
+
 struct FavoriteTagsResponse: Codable {
     
     // MARK: - Embedded
@@ -74,3 +78,11 @@ struct FavoriteTagsResponse: Codable {
     }
 }
 
+extension FavoriteTagsResponse: EmptyResponse {
+    static func emptyValue() -> FavoriteTagsResponse {
+        FavoriteTagsResponse.init(
+            embedded: .init(favoriteTagList: []),
+            status: .init(httpCode: 0, httpStatus: "", responseMessage: "")
+        )
+    }
+}

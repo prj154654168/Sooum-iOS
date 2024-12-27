@@ -55,7 +55,7 @@ extension Date {
         }
         
         if minutes > 9 && minutes < 60 {
-            return "\(minutes % 100)0분전".trimmingCharacters(in: .whitespaces)
+            return "\(minutes / 10)0분전".trimmingCharacters(in: .whitespaces)
         }
         
         if minutes > 4 && minutes < 10 {

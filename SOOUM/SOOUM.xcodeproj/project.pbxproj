@@ -391,6 +391,8 @@
 		38B8A58C2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A58A2CAEA79A000AFE83 /* DetailViewFooter.swift */; };
 		38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */; };
 		38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */; };
+		38B8BE472D1ECBDA0084569C /* NotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8BE462D1ECBDA0084569C /* NotificationInfo.swift */; };
+		38B8BE482D1ECBDA0084569C /* NotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8BE462D1ECBDA0084569C /* NotificationInfo.swift */; };
 		38BE72172CC696E9002662DD /* WriteTagTextField+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BE72162CC696E9002662DD /* WriteTagTextField+Rx.swift */; };
 		38BE72182CC696E9002662DD /* WriteTagTextField+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BE72162CC696E9002662DD /* WriteTagTextField+Rx.swift */; };
 		38C2D4112CFE9EF300CEA092 /* OtherProfileViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D4102CFE9EF300CEA092 /* OtherProfileViewCell.swift */; };
@@ -691,6 +693,7 @@
 		38B8A5872CAEA5F9000AFE83 /* DetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewCell.swift; sourceTree = "<group>"; };
 		38B8A58A2CAEA79A000AFE83 /* DetailViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooter.swift; sourceTree = "<group>"; };
 		38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooterCell.swift; sourceTree = "<group>"; };
+		38B8BE462D1ECBDA0084569C /* NotificationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationInfo.swift; sourceTree = "<group>"; };
 		38B9E4692CE72CC1008A24C8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		38BE72162CC696E9002662DD /* WriteTagTextField+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteTagTextField+Rx.swift"; sourceTree = "<group>"; };
 		38C2D4102CFE9EF300CEA092 /* OtherProfileViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileViewCell.swift; sourceTree = "<group>"; };
@@ -1119,6 +1122,7 @@
 			children = (
 				3802BDB02D0AE900001256EA /* PushManager.swift */,
 				3802BDB72D0AF2F7001256EA /* PushManager+Rx.swift */,
+				38B8BE452D1ECBBF0084569C /* Models */,
 			);
 			path = PushManager;
 			sourceTree = "<group>";
@@ -1811,6 +1815,14 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		38B8BE452D1ECBBF0084569C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				38B8BE462D1ECBDA0084569C /* NotificationInfo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		38C2D40F2CFE9ED800CEA092 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -2399,6 +2411,7 @@
 				38F720A62CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
 				388693A02CF77FA7005F9EF3 /* UIApplication+Top.swift in Sources */,
 				38D6F1872CC24C4F00E11530 /* WriteCardTextViewDelegate.swift in Sources */,
+				38B8BE482D1ECBDA0084569C /* NotificationInfo.swift in Sources */,
 				38D5637F2D17152F006265AA /* SOMSwipeTabBarDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
 				388698592D1982DE00008600 /* NotificationViewController.swift in Sources */,
@@ -2639,6 +2652,7 @@
 				3878D0562CFFCBDA00F9522F /* CommentHistoryResponse.swift in Sources */,
 				3878D08C2CFFF0BF00F9522F /* AnnouncementViewControler.swift in Sources */,
 				2ACBD41A2CCA03790057C013 /* ImageURLWithName.swift in Sources */,
+				38B8BE472D1ECBDA0084569C /* NotificationInfo.swift in Sources */,
 				3878F4742CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				2A5BB7D92CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */,
 				38F70E6C2D191D9A00B33C9D /* MainHomePopularViewController.swift in Sources */,

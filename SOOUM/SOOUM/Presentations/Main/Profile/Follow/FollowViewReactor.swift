@@ -156,3 +156,14 @@ extension FollowViewReactor {
         }
     }
 }
+
+extension FollowViewReactor {
+    
+    func reactorForProfile(memberId: String) -> ProfileViewReactor {
+        ProfileViewReactor.init(type: .other, memberId: memberId)
+    }
+    
+    func reactorForMainTabBar() -> MainTabBarReactor {
+        MainTabBarReactor.init(willNavigate: .none)
+    }
+}

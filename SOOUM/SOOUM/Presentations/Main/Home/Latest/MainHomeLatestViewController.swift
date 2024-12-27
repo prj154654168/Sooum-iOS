@@ -50,6 +50,12 @@ class MainHomeLatestViewController: BaseViewController, View {
     // tableView 정보
     private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
+    private var isLoadingMore: Bool = false
+    
+    private let cellHeight: CGFloat = {
+        let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
+        return width + 10  /// 가로 + top inset
+    }()
     
     
     // MARK: Variables + Rx
@@ -153,6 +159,7 @@ class MainHomeLatestViewController: BaseViewController, View {
         Observable.combineLatest(isProcessing, displayedCardsWithUpdate.map { $0.cards })
             .filter { $0.0 == false }
             .subscribe(with: self) { object, pair in
+                object.isLoadingMore = false
                 object.tableView.isHidden = pair.1.isEmpty
                 object.placeholderView.isHidden = pair.1.isEmpty == false
             }
@@ -176,7 +183,10 @@ class MainHomeLatestViewController: BaseViewController, View {
                     }
                 } else {
                     object.displayedCards = displayedCards
-                    object.tableView.reloadData()
+                    
+                    UIView.performWithoutAnimation {
+                        object.tableView.reloadData()
+                    }
                 }
             }
             .disposed(by: self.disposeBag)
@@ -212,16 +222,15 @@ extension MainHomeLatestViewController: UITableViewDataSource {
 extension MainHomeLatestViewController: UITableViewDataSourcePrefetching {
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        let lastSectionIndex = tableView.numberOfSections - 1
-        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         
-        if indexPaths.first?.section == lastSectionIndex,
-           indexPaths.last?.row == lastRowIndex,
+        if self.isLoadingMore == false,
+           let rowIndex = indexPaths.map({ $0.row }).max(),
+           rowIndex >= Int(Double(self.displayedCards.count) * 0.8),
            let reactor = self.reactor {
             
-            // 캐시된 데이터가 존재하고, 현재 표시된 수보다 캐시된 수가 많으면
             if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: .latest),
                self.displayedCards.count < loadedCards.count {
+                self.isRefreshEnabled = true
                 reactor.action.onNext(.moreFind(lastId: nil))
             }
         }
@@ -237,22 +246,22 @@ extension MainHomeLatestViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
-        let height: CGFloat = width + 10 /// 가로 + top inset
-        return height
+        return self.cellHeight
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         
-        if indexPath.section == lastSectionIndex,
+        if self.isLoadingMore == false,
+           indexPath.section == lastSectionIndex,
            indexPath.row == lastRowIndex,
            let reactor = self.reactor {
             
             // 캐시된 데이터가 존재하고, 현재 표시된 수보다 캐시된 수가 같거나 적으면
             if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: .latest),
                self.displayedCards.count >= loadedCards.count {
+                self.isLoadingMore = true
                 let lastId = self.displayedCards[indexPath.row].id
                 reactor.action.onNext(.moreFind(lastId: lastId))
             }

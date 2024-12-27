@@ -56,7 +56,7 @@ class DetailViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     private let locationManager = LocationManager.shared
     
-    private let selectedCardId: String
+    let selectedCardId: String
     
     init(_ selectedCardId: String) {
         self.selectedCardId = selectedCardId
@@ -182,7 +182,7 @@ class DetailViewReactor: Reactor {
 extension DetailViewReactor {
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor()
+        MainTabBarReactor(willNavigate: .none)
     }
     
     func reactorForMainHome() -> MainHomeTabBarReactor {

@@ -22,6 +22,8 @@ class MyFollowerViewCell: UITableViewCell {
     
     static let cellIdentifier = String(reflecting: MyFollowerViewCell.self)
     
+    let profilBackgroundButton = UIButton()
+    
     private let profileImageView = UIImageView().then {
         $0.layer.cornerRadius = 46 * 0.5
         $0.clipsToBounds = true
@@ -89,6 +91,14 @@ class MyFollowerViewCell: UITableViewCell {
             $0.trailing.equalToSuperview().offset(-20)
             $0.width.equalTo(72)
             $0.height.equalTo(26)
+        }
+        
+        self.contentView.addSubview(self.profilBackgroundButton)
+        self.profilBackgroundButton.snp.makeConstraints {
+            $0.top.equalTo(self.profileImageView.snp.top)
+            $0.bottom.equalTo(self.profileImageView.snp.bottom)
+            $0.leading.equalTo(self.profileImageView.snp.leading)
+            $0.trailing.equalTo(self.profileNickname.snp.trailing)
         }
     }
     

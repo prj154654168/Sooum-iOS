@@ -114,7 +114,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             .disposed(by: disposeBag)
         
         nickname
-            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
             .distinctUntilChanged()
             .map { Reactor.Action.checkNicknameValidation($0) }
             .bind(to: reactor.action)

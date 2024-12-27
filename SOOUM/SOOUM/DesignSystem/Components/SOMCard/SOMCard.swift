@@ -177,7 +177,7 @@ class SOMCard: UIView {
     func prepareForReuse() {
         disposeBag = DisposeBag()
         
-        resetConstraints()
+        self.layoutSubviews()
     }
     
     // MARK: - initUI
@@ -438,34 +438,6 @@ class SOMCard: UIView {
         
         cardContentStackView.subviews.forEach { $0.removeFromSuperview() }
         cardContentStackView.addArrangedSubviews(UIView(), distanceInfoStackView, timeInfoStackView)
-    }
-    
-    
-    // MARK: Private func
-    
-    private func resetConstraints() {
-        
-        rootContainerImageView.snp.removeConstraints()
-        
-        pungedCardInMainHomeBackgroundView.snp.removeConstraints()
-        pungedCardInMainHomeLabel.snp.removeConstraints()
-        
-        cardPungTimeBackgroundView.snp.removeConstraints()
-        cardPungTimeLabel.snp.removeConstraints()
-        
-        cardTextBackgroundView.snp.removeConstraints()
-        cardTextBackgroundBlurView.snp.removeConstraints()
-        cardTextContentLabel.snp.removeConstraints()
-        
-        cardGradientView.snp.removeConstraints()
-        
-        cardContentStackView.snp.removeConstraints()
-        timeImageView.snp.removeConstraints()
-        distanceImageView.snp.removeConstraints()
-        likeImageView.snp.removeConstraints()
-        commentImageView.snp.removeConstraints()
-        
-        initUI()
     }
     
     

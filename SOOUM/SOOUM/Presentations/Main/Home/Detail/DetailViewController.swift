@@ -195,7 +195,10 @@ class DetailViewController: BaseNavigationViewController, View {
          .subscribe(with: self) { object, pair in
              object.detailCard = pair.0
              object.prevCard = pair.1
-             object.collectionView.reloadData()
+             
+             UIView.performWithoutAnimation {
+                 object.collectionView.reloadData()
+             }
          }
          .disposed(by: self.disposeBag)
          
@@ -203,7 +206,10 @@ class DetailViewController: BaseNavigationViewController, View {
              .distinctUntilChanged()
              .subscribe(with: self) { object, commentCards in
                  object.commentCards = commentCards
-                 object.collectionView.reloadData()
+                 
+                 UIView.performWithoutAnimation {
+                     object.collectionView.reloadData()
+                 }
              }
              .disposed(by: disposeBag)
          
@@ -211,7 +217,10 @@ class DetailViewController: BaseNavigationViewController, View {
              .distinctUntilChanged()
              .subscribe(with: self) { object, cardSummary in
                  object.cardSummary = cardSummary
-                 object.collectionView.reloadData()
+                 
+                 UIView.performWithoutAnimation {
+                     object.collectionView.reloadData()
+                 }
              }
              .disposed(by: disposeBag)
          
@@ -220,7 +229,10 @@ class DetailViewController: BaseNavigationViewController, View {
              .subscribe(with: self) { object, isDeleted in
                  UIApplication.topViewController?.dismiss(animated: true) {
                      object.isDeleted = isDeleted
-                     object.collectionView.reloadData()
+                     
+                     UIView.performWithoutAnimation {
+                         object.collectionView.reloadData()
+                     }
                      
                      object.navigationPop()
                  }
@@ -286,7 +298,18 @@ extension DetailViewController: UICollectionViewDataSource {
         
         cell.prevCardBackgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
-                object.navigationPop()
+                /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop, 아니면 naviPush
+                if let naviStackCount = object.navigationController?.viewControllers.count,
+                   let prevViewController = object.navigationController?.viewControllers[naviStackCount - 2] as? DetailViewController,
+                   prevViewController.reactor?.selectedCardId == object.prevCard.previousCardId {
+                    
+                    object.navigationPop()
+                } else {
+                    
+                    let detailViewController = DetailViewController()
+                    detailViewController.reactor = object.reactor?.reactorForPush(object.prevCard.previousCardId)
+                    object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                }
             }
             .disposed(by: cell.disposeBag)
         

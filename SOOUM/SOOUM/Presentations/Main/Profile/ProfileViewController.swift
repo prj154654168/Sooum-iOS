@@ -156,7 +156,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         self.rightSettingButton.rx.tap
             .subscribe(with: self) { object, _ in
                 let settingsViewController = SettingsViewController()
-                settingsViewController.reactor = self.reactor?.reactorForSettings()
+                settingsViewController.reactor = object.reactor?.reactorForSettings()
                 object.navigationPush(settingsViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: self.disposeBag)
@@ -272,7 +272,7 @@ extension ProfileViewController: UICollectionViewDataSource {
             myCell.updateProfileButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let updateProfileViewController = UpdateProfileViewController()
-                    updateProfileViewController.reactor = self.reactor?.reactorForUpdate()
+                    updateProfileViewController.reactor = object.reactor?.reactorForUpdate()
                     object.navigationPush(updateProfileViewController, animated: true, bottomBarHidden: true)
                 }
                 .disposed(by: myCell.disposeBag)
@@ -280,7 +280,7 @@ extension ProfileViewController: UICollectionViewDataSource {
             myCell.followingButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
-                    followViewController.reactor = self.reactor?.reactorForFollow(type: .following)
+                    followViewController.reactor = object.reactor?.reactorForFollow(type: .following)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
                 .disposed(by: myCell.disposeBag)
@@ -288,7 +288,7 @@ extension ProfileViewController: UICollectionViewDataSource {
             myCell.followerButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
-                    followViewController.reactor = self.reactor?.reactorForFollow(type: .follower)
+                    followViewController.reactor = object.reactor?.reactorForFollow(type: .follower)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
                 .disposed(by: myCell.disposeBag)
@@ -314,7 +314,7 @@ extension ProfileViewController: UICollectionViewDataSource {
             otherCell.followingButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
-                    followViewController.reactor = self.reactor?.reactorForFollow(type: .following)
+                    followViewController.reactor = object.reactor?.reactorForFollow(type: .following)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
                 .disposed(by: otherCell.disposeBag)
@@ -322,7 +322,7 @@ extension ProfileViewController: UICollectionViewDataSource {
             otherCell.followerButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let followViewController = FollowViewController()
-                    followViewController.reactor = self.reactor?.reactorForFollow(type: .follower)
+                    followViewController.reactor = object.reactor?.reactorForFollow(type: .follower)
                     object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
                 }
                 .disposed(by: otherCell.disposeBag)

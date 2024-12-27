@@ -125,6 +125,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         self.backButton.rx.tap
             .subscribe(with: self) { object, _ in
+                
+                guard object.presentedViewController != nil else { return }
+                
                 object.dismissBottomSheet(completion: {
                     object.navigationPop()
                 })
@@ -132,12 +135,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        self.dismissBottomSheet()
     }
     
     
@@ -166,29 +163,39 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // Keyboard, bottomSheet interaction
-        RxKeyboard.instance.visibleHeight
-            .drive(with: self) { object, keyboardHeight in
+        Observable.combineLatest(
+            RxKeyboard.instance.isHidden.asObservable(),
+            self.rx.viewWillDisappear
+        )
+        .subscribe(with: self) { object, combined in
+            
+            let (isHidden, willDisppear) = combined
+            
+            guard willDisppear == false else { return }
+            
+            if isHidden {
                 
-                if keyboardHeight > 0 {
-                    
-                    object.dismissBottomSheet()
-                } else {
-                    
-                    // 현재 present 된 viewController가 없을 때 표시
-                    guard object.presentedViewController == nil else { return }
-                    
-                    object.showBottomSheet(
-                        presented: object.uploadCardBottomSheetViewController,
-                        dismissWhenScreenDidTap: true,
-                        isHandleBar: true,
-                        neverDismiss: true,
-                        maxHeight: object.maxHeight,
-                        initalHeight: object.initalHeight
-                    )
-                }
+                // 현재 present 된 viewController가 없을 때 표시
+                guard object.presentedViewController == nil else { return }
+                
+                object.showBottomSheet(
+                    presented: object.uploadCardBottomSheetViewController,
+                    dismissWhenScreenDidTap: true,
+                    isHandleBar: true,
+                    neverDismiss: true,
+                    maxHeight: object.maxHeight,
+                    initalHeight: object.initalHeight
+                )
+            } else {
+                
+                // 현재 present 된 viewController가 있을 때 dismiss
+                guard object.presentedViewController != nil else { return }
+                
+                object.dismissBottomSheet()
             }
-            .disposed(by: self.disposeBag)
-        
+        }
+        .disposed(by: self.disposeBag)
+            
         // Update image for textView
         self.uploadCardBottomSheetViewController.bottomSheetImageSelected
             .distinctUntilChanged()
@@ -232,6 +239,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         // Action
         writtenTagText
             .filter { $0.isEmpty == false }
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
             .map(Reactor.Action.relatedTags)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -368,6 +376,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isWrite)
             .distinctUntilChanged()
             .skip(1)
+            .delay(.seconds(1), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, isWrite in
                 
                 // 글추가 성공

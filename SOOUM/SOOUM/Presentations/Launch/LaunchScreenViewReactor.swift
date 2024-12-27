@@ -88,6 +88,6 @@ extension LaunchScreenViewReactor {
 extension LaunchScreenViewReactor {
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor()
+        MainTabBarReactor(willNavigate: .none)
     }
 }
