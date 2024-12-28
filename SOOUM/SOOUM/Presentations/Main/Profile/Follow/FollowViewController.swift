@@ -114,6 +114,20 @@ class FollowViewController: BaseNavigationViewController, View {
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isRequest)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isCancel)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
     }
 }
 
@@ -183,6 +197,7 @@ extension FollowViewController {
         ) as! MyFollowingViewCell
         cell.selectionStyle = .none
         cell.setModel(model)
+        cell.updateButton(model.isFollowing)
         
         cell.profilBackgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
@@ -207,14 +222,12 @@ extension FollowViewController {
         
         cell.cancelFollowButton.rx.throttleTap(.seconds(1))
             .subscribe(onNext: { _ in
-                cell.updateButton(false)
                 reactor.action.onNext(.cancel(model.id))
             })
             .disposed(by: cell.disposeBag)
         
         cell.followButton.rx.throttleTap(.seconds(1))
             .subscribe(onNext: { _ in
-                cell.updateButton(true)
                 reactor.action.onNext(.request(model.id))
             })
             .disposed(by: cell.disposeBag)
@@ -232,6 +245,7 @@ extension FollowViewController {
         ) as! MyFollowerViewCell
         cell.selectionStyle = .none
         cell.setModel(model)
+        cell.updateButton(model.isFollowing)
         
         cell.profilBackgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
@@ -256,7 +270,6 @@ extension FollowViewController {
         
         cell.followButton.rx.throttleTap(.seconds(1))
             .subscribe(onNext: { _ in
-                cell.updateButton(!model.isFollowing)
                 reactor.action.onNext(model.isFollowing ? .cancel(model.id) : .request(model.id))
             })
             .disposed(by: cell.disposeBag)
@@ -274,6 +287,7 @@ extension FollowViewController {
         ) as! OtherFollowViewCell
         cell.selectionStyle = .none
         cell.setModel(model)
+        cell.updateButton(model.isFollowing)
         
         cell.profilBackgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
@@ -298,7 +312,6 @@ extension FollowViewController {
         
         cell.followButton.rx.throttleTap(.seconds(1))
             .subscribe(with: self) { object, _ in
-                cell.updateButton(!model.isFollowing)
                 reactor.action.onNext(model.isFollowing ? .cancel(model.id) : .request(model.id))
             }
             .disposed(by: cell.disposeBag)

@@ -106,12 +106,18 @@ class OtherFollowViewCell: UITableViewCell {
     // MARK: Public func
     
     func setModel(_ follow: Follow) {
-        if let url = follow.backgroundImgURL?.url {
-            self.profileImageView.setImage(strUrl: url)
-        } else {
-            self.profileImageView.image = .init(.image(.sooumLogo))
+        
+        if self.profileImageView.image == nil {
+            if let url = follow.backgroundImgURL?.url {
+                self.profileImageView.setImage(strUrl: url)
+            } else {
+                self.profileImageView.image = .init(.image(.sooumLogo))
+            }
         }
-        self.profileNickname.text = follow.nickname
+        
+        if self.profileNickname.text != follow.nickname {
+            self.profileNickname.text = follow.nickname
+        }
         
         self.updateButton(follow.isFollowing)
     }
