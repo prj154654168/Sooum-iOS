@@ -31,6 +31,7 @@ class SettingsViewReactor: Reactor {
     
     private let networkManager = NetworkManager.shared
     private let pushManager = PushManager.shared
+    let authManager = AuthManager.shared
     
     private let disposeBag = DisposeBag()
     
