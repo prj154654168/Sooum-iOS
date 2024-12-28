@@ -34,7 +34,7 @@ class OtherFollowViewCell: UITableViewCell {
         $0.typography = .som.body1WithBold
     }
     
-    private let followButton = SOMButton().then {
+    let followButton = SOMButton().then {
         $0.layer.cornerRadius = 26 * 0.5
         $0.clipsToBounds = true
     }

@@ -296,6 +296,13 @@ extension FollowViewController {
             }
             .disposed(by: cell.disposeBag)
         
+        cell.followButton.rx.throttleTap(.seconds(1))
+            .subscribe(with: self) { object, _ in
+                cell.updateButton(!model.isFollowing)
+                reactor.action.onNext(model.isFollowing ? .cancel(model.id) : .request(model.id))
+            }
+            .disposed(by: cell.disposeBag)
+        
         return cell
     }
 }
