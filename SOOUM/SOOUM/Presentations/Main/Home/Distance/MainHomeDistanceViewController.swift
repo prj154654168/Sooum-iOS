@@ -282,10 +282,7 @@ extension MainHomeDistanceViewController: UITableViewDelegate {
         
         // offset이 currentOffset보다 크면 아래로 스크롤, 반대일 경우 위로 스크롤
         // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
-        // 메인 큐에서 실행 명시
-        DispatchQueue.main.async {
-            self.hidesHeaderContainer.accept(offset <= 0 ? false : offset > self.currentOffset)
-        }
+        self.hidesHeaderContainer.accept(offset <= 0 ? false : offset > self.currentOffset)
         
         self.currentOffset = offset
         

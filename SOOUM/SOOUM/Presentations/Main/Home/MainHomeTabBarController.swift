@@ -189,6 +189,7 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
             mainHomePopularViewController.hidesHeaderContainer.asObservable(),
             mainHomeDistanceViewController.hidesHeaderContainer.asObservable()
         )
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, hidesHeaderContainer in
             
             // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
