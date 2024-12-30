@@ -162,6 +162,8 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
         willDisplay cell: UICollectionViewCell,
         forItemAt indexPath: IndexPath
     ) {
+        guard self.commentCards.count == 1 else { return }
+        
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let cellWidthWithSpacing = cell.bounds.width + layout.minimumLineSpacing
         layout.sectionInset.left = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
