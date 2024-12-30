@@ -71,6 +71,8 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
     private var pages = [UIViewController]()
     private var currentPage: Int = 0
     
+    private var animator: UIViewPropertyAnimator?
+    
     
     // MARK: Constraints
     
@@ -195,16 +197,30 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, hidesHeaderContainer in
             
-            // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
-            object.headerContainer.isHidden = hidesHeaderContainer
-            object.pageViewTopConstraint?.deactivate()
-            object.pageViewController.view.snp.makeConstraints {
-                let top = hidesHeaderContainer ? object.view.safeAreaLayoutGuide.snp.top : object.headerContainer.snp.bottom
-                object.pageViewTopConstraint = $0.top.equalTo(top).priority(.high).constraint
+            // 애니메이터가 이미 실행 중이라면 취소하고 새 애니메이션 시작
+            if object.animator?.state == .active {
+                
+                object.animator?.stopAnimation(false)
+                object.animator?.finishAnimation(at: .end)
             }
             
-            UIView.animate(withDuration: 0.25) {
-                self.view.layoutIfNeeded()
+            // 애니메이션 추가
+            object.animator = UIViewPropertyAnimator(duration: 0.25, curve: .easeInOut) {
+                
+                // 레이아웃 업데이트
+                object.pageViewTopConstraint?.deactivate()
+                let top = hidesHeaderContainer ? object.headerContainer.snp.top : object.headerContainer.snp.bottom
+                object.pageViewController.view.snp.makeConstraints {
+                    object.pageViewTopConstraint = $0.top.equalTo(top).priority(.high).constraint
+                }
+            }
+            
+            // 새 애니메이션 시작
+            object.animator?.startAnimation()
+            // 애니메이션이 끝난 후 animator 초기화
+            object.animator?.addCompletion { position in
+                
+                if position == .end { object.animator = nil }
             }
         }
         .disposed(by: self.disposeBag)

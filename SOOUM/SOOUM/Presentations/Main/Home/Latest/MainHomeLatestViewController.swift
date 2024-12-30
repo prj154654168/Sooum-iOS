@@ -26,6 +26,7 @@ class MainHomeLatestViewController: BaseViewController, View {
         $0.separatorStyle = .none
         
         $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
+        $0.register(PlaceholderViewCell.self, forCellReuseIdentifier: "placeholder")
         
         $0.refreshControl = SOMRefreshControl()
         
@@ -38,8 +39,6 @@ class MainHomeLatestViewController: BaseViewController, View {
     private let moveTopButton = MoveTopButtonView().then {
         $0.isHidden = true
     }
-    
-    private let placeholderView = PlaceholderView()
     
     
     // MARK: Variables
@@ -74,13 +73,6 @@ class MainHomeLatestViewController: BaseViewController, View {
             $0.edges.equalToSuperview()
         }
         
-        self.view.addSubview(self.placeholderView)
-        self.placeholderView.snp.makeConstraints {
-            let offset = UIScreen.main.bounds.height * 0.4 - SOMSwipeTabBar.Height.mainHome
-            $0.top.equalToSuperview().offset(offset)
-            $0.centerX.equalToSuperview()
-        }
-        
         self.view.addSubview(self.moveTopButton)
         self.view.bringSubviewToFront(self.moveTopButton)
         self.moveTopButton.snp.makeConstraints {
@@ -109,11 +101,10 @@ class MainHomeLatestViewController: BaseViewController, View {
     func bind(reactor: MainHomeLatestViewReactor) {
         
         // Action
-        // 테이블 뷰가 스크롤이 되어 있을 시에 새로고침 X
         self.rx.viewWillAppear
             .withUnretained(self)
-            .filter { object, _ in object.tableView.contentOffset.y <= 0 }
-            .map { _ in Reactor.Action.landing }
+            .map { object, _ in object.isMovingToParent && object.isBeingPresented == false }
+            .map(Reactor.Action.landing)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -135,37 +126,18 @@ class MainHomeLatestViewController: BaseViewController, View {
                 }
             }
             .disposed(by: self.disposeBag)
-        
-      let displayedCardsWithUpdate = reactor.state
-          .map(\.displayedCardsWithUpdate)
-          .distinctUntilChanged({ reactor.canUpdateCells(prev: $0, curr: $1) })
-          .share()
       
-        let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
-        isProcessing
-            .filter { $0 }
-            .withLatestFrom(displayedCardsWithUpdate.map { $0.isUpdate })
-            .subscribe(with: self) { object, isUpdate in
-                object.tableView.isHidden = isUpdate == false
-                object.placeholderView.isHidden = true
-            }
-            .disposed(by: self.disposeBag)
-      
-        isProcessing
+        reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
+            .do(onNext: { [weak self] isProcessing in
+                if isProcessing == false { self?.isLoadingMore = false }
+            })
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        Observable.combineLatest(isProcessing, displayedCardsWithUpdate.map { $0.cards })
-            .filter { $0.0 == false }
-            .subscribe(with: self) { object, pair in
-                object.isLoadingMore = false
-                object.tableView.isHidden = pair.1.isEmpty
-                object.placeholderView.isHidden = pair.1.isEmpty == false
-            }
-            .disposed(by: self.disposeBag)
-        
-        displayedCardsWithUpdate
+        reactor.state.map(\.displayedCardsWithUpdate)
+            .distinctUntilChanged({ reactor.canUpdateCells(prev: $0, curr: $1) })
+            .skip(1)
             .subscribe(with: self) { object, displayedCardsWithUpdate in
                 let displayedCards = displayedCardsWithUpdate.cards
                 let isUpdate = displayedCardsWithUpdate.isUpdate
@@ -177,16 +149,10 @@ class MainHomeLatestViewController: BaseViewController, View {
                         .map { IndexPath(row: $0.offset, section: 0) }
                     
                     object.displayedCards = displayedCards
-                    
-                    object.tableView.performBatchUpdates {
-                        object.tableView.insertRows(at: indexPathForInsert, with: .automatic)
-                    }
+                    object.tableView.insertRows(at: indexPathForInsert, with: .fade)
                 } else {
                     object.displayedCards = displayedCards
-                    
-                    UIView.performWithoutAnimation {
-                        object.tableView.reloadData()
-                    }
+                    object.tableView.reloadData()
                 }
             }
             .disposed(by: self.disposeBag)
@@ -199,29 +165,40 @@ class MainHomeLatestViewController: BaseViewController, View {
 extension MainHomeLatestViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.displayedCards.count
+        return self.displayedCards.isEmpty ? 1 : self.displayedCards.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let model = SOMCardModel(data: self.displayedCards[indexPath.row])
-        
-        let cell: MainHomeViewCell = tableView.dequeueReusableCell(
-            withIdentifier: "cell",
-            for: indexPath
-        ) as! MainHomeViewCell
-        cell.selectionStyle = .none
-        cell.setModel(model)
-        // 카드 하단 contents 스택 순서 변경 (최신순)
-        cell.changeOrderInCardContentStack(0)
-        
-        return cell
+        if self.displayedCards.isEmpty {
+            
+            let placeholder = tableView.dequeueReusableCell(
+                withIdentifier: "placeholder",
+                for: indexPath
+            ) as! PlaceholderViewCell
+            
+            return placeholder
+        } else {
+            
+            let model = SOMCardModel(data: self.displayedCards[indexPath.row])
+            
+            let cell: MainHomeViewCell = tableView.dequeueReusableCell(
+                withIdentifier: "cell",
+                for: indexPath
+            ) as! MainHomeViewCell
+            cell.setModel(model)
+            // 카드 하단 contents 스택 순서 변경 (최신순)
+            cell.changeOrderInCardContentStack(0)
+            
+            return cell
+        }
     }
 }
 
 extension MainHomeLatestViewController: UITableViewDataSourcePrefetching {
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        guard self.displayedCards.isEmpty == false else { return }
         
         if self.isLoadingMore == false,
            let rowIndex = indexPaths.map({ $0.row }).max(),
@@ -246,10 +223,12 @@ extension MainHomeLatestViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.cellHeight
+        return self.displayedCards.isEmpty ? self.tableView.bounds.height : self.cellHeight
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard self.displayedCards.isEmpty == false else { return }
+        
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         
@@ -278,9 +257,22 @@ extension MainHomeLatestViewController: UITableViewDelegate {
         
         let offset = scrollView.contentOffset.y
         
+        // 당겨서 새로고침 상황일 때
+        if offset <= 0 {
+            
+            self.hidesHeaderContainer.accept(false)
+            self.currentOffset = offset
+            self.moveTopButton.isHidden = true
+            
+            return
+        }
+        
+        // 정상적인 스크롤 상황일 때, 헤더뷰 숨김
+        guard offset <= (scrollView.contentSize.height - scrollView.frame.height) else { return }
+        
         // offset이 currentOffset보다 크면 아래로 스크롤, 반대일 경우 위로 스크롤
         // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
-        self.hidesHeaderContainer.accept(offset <= 0 ? false : offset > self.currentOffset)
+        self.hidesHeaderContainer.accept(offset > self.currentOffset)
         
         self.currentOffset = offset
         

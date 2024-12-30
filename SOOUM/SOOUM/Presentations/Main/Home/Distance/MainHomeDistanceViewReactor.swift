@@ -14,7 +14,7 @@ class MainHomeDistanceViewReactor: Reactor {
     typealias CardsWithUpdate = (cards: [Card], isUpdate: Bool)
     
     enum Action: Equatable {
-        case landing
+        case landing(fromToParent: Bool)
         case refresh
         case moreFind(lastId: String?)
         case distanceFilter(String)
@@ -52,22 +52,33 @@ class MainHomeDistanceViewReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .landing:
+        case let .landing(fromToParent):
             
-            if self.simpleCache.isEmpty(type: .distance) {
-                // 캐시가 존재하지 않으면 서버 요청
-                return .concat([
-                    .just(.updateIsProcessing(true)),
-                    self.refresh(self.currentState.distanceFilter)
-                        .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                    .just(.updateIsProcessing(false))
-                ])
-            } else {
-                // 캐시가 존재하면 캐싱된 데이터 사용
-                let cachedCards = self.simpleCache.loadMainHomeCards(type: .distance) ?? []
-                let displayedCards = self.separate(displayed: [], current: cachedCards)
+            // Navigation pop 으로 인한 표시이거나 (최우선),
+            // 캐시가 존재하지 않으면 서버 요청
+            if fromToParent {
                 
-                return .just(.cards((cards: displayedCards, isUpdate: false)))
+                // Pop 으로 인한 viewWillAppear 일 때, 딜레이 및 로딩 제거
+                return self.refresh(self.currentState.distanceFilter)
+            } else {
+                
+                if self.simpleCache.isEmpty(type: .distance) {
+                    
+                    // 캐시가 존재하지 않으면 서버 요청
+                    return .concat([
+                        .just(.updateIsProcessing(true)),
+                        self.refresh(self.currentState.distanceFilter)
+                            .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                        .just(.updateIsProcessing(false))
+                    ])
+                } else {
+                    
+                    // 캐시가 존재하면 캐싱된 데이터 사용
+                    let cachedCards = self.simpleCache.loadMainHomeCards(type: .distance) ?? []
+                    let displayedCards = self.separate(displayed: [], current: cachedCards)
+                    
+                    return .just(.cards((cards: displayedCards, isUpdate: false)))
+                }
             }
         case .refresh:
             return .concat([
@@ -188,6 +199,7 @@ extension MainHomeDistanceViewReactor {
     var catchClosure: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
             .concat([
+                .just(.cards((cards: [], isUpdate: false))),
                 .just(.updateIsProcessing(false)),
                 .just(.updateIsLoading(false))
             ])
