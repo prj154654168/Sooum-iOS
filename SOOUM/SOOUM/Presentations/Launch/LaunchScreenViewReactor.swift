@@ -62,7 +62,9 @@ class LaunchScreenViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .launch:
-            return self.authManager.hasToken ? .just(.updateIsRegistered(true)) : self.login()
+            let autoLogin: Observable<Mutation> = .just(.updateIsRegistered(true))
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+            return self.authManager.hasToken ? autoLogin : self.login()
         }
     }
     

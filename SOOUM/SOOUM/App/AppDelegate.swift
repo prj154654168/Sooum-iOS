@@ -98,8 +98,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             let info = NotificationInfo(infoDic)
             PushManager.shared.setupRootViewController(info, terminated: false)
         }
-        
-        // TODO: 알림으로 부터 받은 데이터 사용
 
         completionHandler()
     }

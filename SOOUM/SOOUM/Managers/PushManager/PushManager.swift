@@ -10,6 +10,9 @@ import UIKit
 
 protocol PushManagerDelegate: AnyObject {
     
+    var window: UIWindow? { get }
+    func setupRootViewController(_ info: NotificationInfo, terminated: Bool)
+    
     var canReceiveNotifications: Bool { get }
     var notificationStatus: Bool { get }
     func switchNotification(isOn: Bool, completion: ((Error?) -> Void)?)
@@ -49,7 +52,7 @@ class PushManager: NSObject, PushManagerDelegate {
         DispatchQueue.main.async { [weak self] in
             if self?.window != nil {
                 if terminated {
-                    
+                    self?.setupLaunchScreenViewController(info)
                 } else {
                     self?.setupMainTabBarController(info)
                 }

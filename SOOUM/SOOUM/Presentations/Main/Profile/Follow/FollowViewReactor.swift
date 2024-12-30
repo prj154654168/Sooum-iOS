@@ -164,6 +164,6 @@ extension FollowViewReactor {
     }
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor.init(willNavigate: .none)
+        MainTabBarReactor.init(pushInfo: nil)
     }
 }

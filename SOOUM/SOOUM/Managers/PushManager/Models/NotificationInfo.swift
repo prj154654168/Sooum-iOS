@@ -14,7 +14,8 @@ class NotificationInfo {
     let targetCardId: String?
     
     init(_ info: [String: Any]) {
-        self.notificationType = info["notificationType"] as? CommentHistoryInNoti.NotificationType
+        let notificationType = info["notificationType"] as? String ?? ""
+        self.notificationType = CommentHistoryInNoti.NotificationType(rawValue: notificationType)
         self.targetCardId = info["targetCardId"] as? String
     }
 }
