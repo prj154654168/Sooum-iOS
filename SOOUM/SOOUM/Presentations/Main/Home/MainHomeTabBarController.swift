@@ -40,6 +40,13 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         $0.foregroundColor = .som.gray700
     }
     
+    private let dotWithoutReadView = UIView().then {
+        $0.backgroundColor = .som.red
+        $0.layer.cornerRadius = 6 * 0.5
+        $0.clipsToBounds = true
+        $0.isHidden = true
+    }
+    
     
     // MARK: Views
     
@@ -92,6 +99,12 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         self.navigationBar.hidesBackButton = true
         self.rightAlamButton.snp.makeConstraints {
             $0.size.equalTo(24)
+        }
+        self.rightAlamButton.addSubview(self.dotWithoutReadView)
+        self.dotWithoutReadView.snp.makeConstraints {
+            $0.top.equalTo(self.rightAlamButton.snp.top).offset(2)
+            $0.trailing.equalTo(self.rightAlamButton.snp.trailing).offset(-3)
+            $0.size.equalTo(6)
         }
         self.navigationBar.setRightButtons([self.rightAlamButton])
     }
@@ -238,6 +251,18 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
             object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
         }
         .disposed(by: self.disposeBag)
+        
+        // Action
+        self.rx.viewWillAppear
+            .map { _ in Reactor.Action.notisWithoutRead }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        // State
+        reactor.state.map(\.isNotisWithoutRead)
+            .distinctUntilChanged()
+            .bind(to: self.dotWithoutReadView.rx.isHidden)
+            .disposed(by: self.disposeBag)
     }
 }
 
