@@ -21,6 +21,7 @@ class MainHomeViewCell: UITableViewCell {
         self.selectionStyle = .none
         self.backgroundColor = .clear
         self.contentView.clipsToBounds = true
+        
         self.setupConstraints()
     }
     
