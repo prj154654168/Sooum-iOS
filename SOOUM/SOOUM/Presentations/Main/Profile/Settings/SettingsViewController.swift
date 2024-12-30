@@ -175,14 +175,8 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.notificationSettingCellView.rx.didSelect
-            .subscribe(onNext: {
-                let application: UIApplication = .shared
-                let openSettingsURLString: String = UIApplication.openSettingsURLString
-                if let settingsURL = URL(string: openSettingsURLString),
-                    application.canOpenURL(settingsURL) {
-                        application.open(settingsURL)
-                }
-            })
+            .map { _ in Reactor.Action.updateNotificationStatus(!self.notificationSettingCellView.toggleSwitch.isOn) }
+            .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         self.commentHistoryCellView.rx.didSelect

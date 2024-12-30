@@ -35,7 +35,9 @@ class PushManager: NSObject, PushManagerDelegate {
     override init() {
         super.init()
         
-        self.registerNotificationObserver()
+        // 설정 앱의 알림 허용 유무와 동기화 하는 옵저버 제거
+        // 서버 api를 통해서만 알림 허용 유무 변경
+        // self.registerNotificationObserver()
         self.updateNotificationStatus()
     }
     
@@ -105,15 +107,16 @@ class PushManager: NSObject, PushManagerDelegate {
 
             if isOn {
 
-                let appDelegate: AppDelegate? = application.delegate as? AppDelegate
-                appDelegate?.registerRemoteNotificationCompletion = { [weak self] error in
-                    if let error: Error = error {
-                        self?.notificationStatus = false
-                        completion?(error)
-                    } else {
-                        completion?(nil)
-                    }
-                }
+                // 서버 api를 통해서만 알림 허용 유무 변경
+                // let appDelegate: AppDelegate? = application.delegate as? AppDelegate
+                // appDelegate?.registerRemoteNotificationCompletion = { [weak self] error in
+                //     if let error: Error = error {
+                //         self?.notificationStatus = false
+                //         completion?(error)
+                //     } else {
+                //         completion?(nil)
+                //     }
+                // }
 
                 UNUserNotificationCenter.current().requestAuthorization(
                     options: [.alert, .badge, .sound],
