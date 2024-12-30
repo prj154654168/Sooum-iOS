@@ -31,6 +31,8 @@ class SettingTextCellView: UIView {
         $0.isOn = false
         $0.onTintColor = .som.p300
         $0.thumbTintColor = .som.white
+        
+        $0.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
     }
     
     let backgroundButton = UIButton()
@@ -57,12 +59,6 @@ class SettingTextCellView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        self.toggleSwitch.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
     }
     
     private func setupConstraints() {
