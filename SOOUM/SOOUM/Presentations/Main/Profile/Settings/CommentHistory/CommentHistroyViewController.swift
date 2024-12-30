@@ -26,7 +26,6 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
         $0.minimumLineSpacing = .zero
         $0.minimumInteritemSpacing = .zero
         $0.sectionInset = .zero
-        $0.estimatedItemSize = .zero
     }
     private lazy var collectionView = UICollectionView(
         frame: .zero,
