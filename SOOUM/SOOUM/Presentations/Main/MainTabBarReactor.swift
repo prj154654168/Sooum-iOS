@@ -36,7 +36,17 @@ class MainTabBarReactor: Reactor {
     private let willNavigate: EntranceType
     let pushInfo: NotificationInfo?
     
-    init(willNavigate: EntranceType, pushInfo: NotificationInfo? = nil) {
+    init(pushInfo: NotificationInfo? = nil) {
+        var willNavigate: EntranceType {
+            switch pushInfo?.notificationType {
+            case .feedLike, .commentLike, .commentWrite:
+                return .pushForDetail
+            case .blocked, .delete:
+                return .pushForNoti
+            default:
+                return .none
+            }
+        }
         self.willNavigate = willNavigate
         self.pushInfo = pushInfo
     }

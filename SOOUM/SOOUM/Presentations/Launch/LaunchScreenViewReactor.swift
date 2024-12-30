@@ -53,7 +53,11 @@ class LaunchScreenViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     private let authManager = AuthManager.shared
     
-    init() { }
+    let pushInfo: NotificationInfo?
+    
+    init(pushInfo: NotificationInfo? = nil) {
+        self.pushInfo = pushInfo
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
@@ -88,6 +92,6 @@ extension LaunchScreenViewReactor {
 extension LaunchScreenViewReactor {
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(willNavigate: .none)
+        MainTabBarReactor(pushInfo: self.pushInfo)
     }
 }

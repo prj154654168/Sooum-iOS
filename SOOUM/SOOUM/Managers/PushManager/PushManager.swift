@@ -44,22 +44,32 @@ class PushManager: NSObject, PushManagerDelegate {
     
     // MARK: Navigation
     
-    func setupRootViewController(_ info: NotificationInfo) {
+    func setupRootViewController(_ info: NotificationInfo, terminated: Bool) {
         
         DispatchQueue.main.async { [weak self] in
             if self?.window != nil {
-                self?.setupMainTabBarController(info)
+                if terminated {
+                    
+                } else {
+                    self?.setupMainTabBarController(info)
+                }
             }
         }
     }
     
+    fileprivate func setupLaunchScreenViewController(_ pushInfo: NotificationInfo) {
+        
+        let launchScreenReactor = LaunchScreenViewReactor(pushInfo: pushInfo)
+        let launchScreenViewController = LaunchScreenViewController()
+        launchScreenViewController.reactor = launchScreenReactor
+        
+        let navigationController = UINavigationController(rootViewController: launchScreenViewController)
+        self.window?.rootViewController = navigationController
+    }
+    
     fileprivate func setupMainTabBarController(_ pushInfo: NotificationInfo) {
         
-        let willNavigateNoti = pushInfo.notificationType == .blocked || pushInfo.notificationType == .delete
-        let mainTabBarReactor = MainTabBarReactor(
-            willNavigate: willNavigateNoti ? .pushForNoti : .pushForDetail,
-            pushInfo: pushInfo
-        )
+        let mainTabBarReactor = MainTabBarReactor(pushInfo: pushInfo)
         let mainTabBarController = MainTabBarController()
         mainTabBarController.reactor = mainTabBarReactor
         

@@ -36,7 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if let infoDic: [String: Any] = userInfo as? [String: Any] {
                 
                 let info = NotificationInfo(infoDic)
-                PushManager.shared.setupRootViewController(info)
+                PushManager.shared.setupRootViewController(info, terminated: true)
             }
         }
     }
