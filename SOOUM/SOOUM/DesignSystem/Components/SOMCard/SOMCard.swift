@@ -170,7 +170,11 @@ class SOMCard: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         cardGradientLayer.frame = cardGradientView.bounds
+        CATransaction.commit()
     }
     
     /// 이 컴포넌트를 사용하는 재사용 셀에서 호출
