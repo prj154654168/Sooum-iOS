@@ -175,7 +175,8 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.notificationSettingCellView.rx.didSelect
-            .map { _ in Reactor.Action.updateNotificationStatus(!self.notificationSettingCellView.toggleSwitch.isOn) }
+            .withUnretained(self)
+            .map { object, _ in Reactor.Action.updateNotificationStatus(!object.notificationSettingCellView.toggleSwitch.isOn) }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -220,14 +221,14 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         self.announcementCellView.rx.didSelect
             .subscribe(with: self) { object, _ in
-                let announcementViewControler = AnnouncementViewControler()
-                announcementViewControler.reactor = reactor.reactorForAnnouncement()
-                object.navigationPush(announcementViewControler, animated: true, bottomBarHidden: true)
+                let announcementViewController = AnnouncementViewController()
+                announcementViewController.reactor = reactor.reactorForAnnouncement()
+                object.navigationPush(announcementViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: self.disposeBag)
         
         self.inquiryCellView.rx.didSelect
-            .subscribe(with: self) { object, _ in
+            .subscribe(onNext: { _ in
                 let subject = Text.inquiryMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                 let guideMessage = """
                     \(Text.identificationInfo)
@@ -242,11 +243,11 @@ class SettingsViewController: BaseNavigationViewController, View {
                     
                     UIApplication.shared.open(mailtoUrl, options: [:], completionHandler: nil)
                 }
-            }
+            })
             .disposed(by: self.disposeBag)
         
         self.suggestionCellView.rx.didSelect
-            .subscribe(with: self) { object, _ in
+            .subscribe(onNext: { _ in
                 let subject = Text.suggestMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                 let guideMessage = """
                     \(Text.identificationInfo)
@@ -261,7 +262,7 @@ class SettingsViewController: BaseNavigationViewController, View {
                     
                     UIApplication.shared.open(mailtoUrl, options: [:], completionHandler: nil)
                 }
-            }
+            })
             .disposed(by: self.disposeBag)
         
         // State

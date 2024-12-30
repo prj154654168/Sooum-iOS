@@ -1,5 +1,5 @@
 //
-//  AnnouncementViewControler.swift
+//  AnnouncementViewController.swift
 //  SOOUM
 //
 //  Created by 오현식 on 12/4/24.
@@ -15,7 +15,7 @@ import RxCocoa
 import RxSwift
 
 
-class AnnouncementViewControler: BaseNavigationViewController, View {
+class AnnouncementViewController: BaseNavigationViewController, View {
     
     enum Text {
         static let navigationTitle: String = "공지사항"
@@ -56,6 +56,11 @@ class AnnouncementViewControler: BaseNavigationViewController, View {
     }
     
     
+    // MARK: Variables
+    
+    private var isRefreshEnabled: Bool = true
+    
+    
     // MARK: ReactorKit - bind
     
     func bind(reactor: AnnouncementViewReactor) {
@@ -66,7 +71,25 @@ class AnnouncementViewControler: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
+            .withLatestFrom(reactor.state.map(\.isLoading))
+            .filter { $0 == false }
+            .map { _ in Reactor.Action.refresh }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
         // State
+        reactor.state.map(\.isLoading)
+            .distinctUntilChanged()
+            .subscribe(with: self.tableView) { tableView, isLoading in
+                if isLoading {
+                    tableView.refreshControl?.beginRefreshingFromTop()
+                } else {
+                    tableView.refreshControl?.endRefreshing()
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
         reactor.state.map(\.announcements)
             .distinctUntilChanged()
             .subscribe(with: self) { object, announcements in
@@ -77,7 +100,7 @@ class AnnouncementViewControler: BaseNavigationViewController, View {
     }
 }
 
-extension AnnouncementViewControler: UITableViewDataSource {
+extension AnnouncementViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.announcements.count
@@ -98,7 +121,27 @@ extension AnnouncementViewControler: UITableViewDataSource {
     }
 }
 
-extension AnnouncementViewControler: UITableViewDelegate {
+extension AnnouncementViewController: UITableViewDelegate {
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        self.isRefreshEnabled = offset <= 0
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.tableView.refreshControl,
+           offset <= -(refreshControl.frame.origin.y + 40) {
+            
+            refreshControl.beginRefreshingFromTop()
+        }
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
