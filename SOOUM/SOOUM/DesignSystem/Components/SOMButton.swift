@@ -63,12 +63,14 @@ class SOMButton: UIButton {
         var configuration = UIButton.Configuration.plain()
         
         // 이미지 설정
-        configuration.image = self.image
-        
-        if let foregroundColor = self.foregroundColor {
-            configuration.image?.withTintColor(foregroundColor)
-            configuration.imageColorTransformer = UIConfigurationColorTransformer { _ in
-                foregroundColor
+        if let image = self.image {
+            configuration.image = self.image
+            
+            if let foregroundColor = self.foregroundColor {
+                configuration.image?.withTintColor(foregroundColor)
+                configuration.imageColorTransformer = UIConfigurationColorTransformer { _ in
+                    foregroundColor
+                }
             }
         }
         

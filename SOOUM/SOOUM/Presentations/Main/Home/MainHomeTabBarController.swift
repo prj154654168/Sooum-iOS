@@ -88,6 +88,9 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         self.navigationBar.titlePosition = .left
         
         self.navigationBar.hidesBackButton = true
+        self.rightAlamButton.snp.makeConstraints {
+            $0.size.equalTo(24)
+        }
         self.navigationBar.setRightButtons([self.rightAlamButton])
     }
     
