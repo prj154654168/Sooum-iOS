@@ -119,7 +119,12 @@ class OtherFollowViewCell: UITableViewCell {
             self.profileNickname.text = follow.nickname
         }
         
-        self.updateButton(follow.isFollowing)
+        
+        if follow.isRequester {
+            self.followButton.isHidden = true
+        } else {
+            self.updateButton(follow.isFollowing)
+        }
     }
     
     func updateButton(_ isFollowing: Bool) {
