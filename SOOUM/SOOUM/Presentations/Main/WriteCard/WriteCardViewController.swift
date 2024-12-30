@@ -76,6 +76,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
     private let initalHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28
     private var maxHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + (74 * 3) + 19
     
+    // 펑 이벤트 처리 위해 추가
+    private var serialTimer: Disposable?
+    
     
     // MARK: - Life Cycles
     
@@ -144,9 +147,22 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         if reactor.requestType == .comment {
             self.maxHeight = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + 74 + 19
+            
+            self.writeCardView.writeTagTextField.isHidden = reactor.parentPungTime != nil
+            self.writeCardView.pungTimeView.isHidden = reactor.parentPungTime == nil
+            
+            if reactor.parentPungTime != nil {
+                self.subscribePungTime()
+            }
         }
         
         // Life Cycle
+        self.rx.viewWillDisappear
+            .subscribe(with: self) { object, _ in
+                object.serialTimer?.dispose()
+            }
+            .disposed(by: self.disposeBag)
+        
         self.rx.viewWillAppear
             .subscribe(with: self) { object, _ in
                 guard object.presentedViewController == nil else { return }
@@ -404,6 +420,29 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 }
             }
             .disposed(by: self.disposeBag)
+    }
+    
+    // 펑 이벤트 구독
+    private func subscribePungTime() {
+        self.serialTimer?.dispose()
+        self.serialTimer = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
+            .withUnretained(self)
+            .startWith((self, 0))
+            .map { object, _ in
+                guard let pungTime = object.reactor?.parentPungTime else {
+                    object.serialTimer?.dispose()
+                    return "00 : 00 : 00"
+                }
+                
+                let currentDate = Date()
+                let remainingTime = currentDate.infoReadableTimeTakenFromThisForPung(to: pungTime)
+                if remainingTime == "00 : 00 : 00" {
+                    object.serialTimer?.dispose()
+                }
+                
+                return remainingTime
+            }
+            .bind(to: self.writeCardView.pungTimeView.rx.text)
     }
 }
 

@@ -198,7 +198,11 @@ extension DetailViewReactor {
     }
     
     func reactorForWriteCard() -> WriteCardViewReactor {
-        WriteCardViewReactor(type: .comment, self.selectedCardId)
+        WriteCardViewReactor(
+            type: .comment,
+            parentCardId: self.selectedCardId,
+            parentPungTime: self.currentState.detailCard.storyExpirationTime
+        )
     }
     
     func reactorForProfile(_ memberId: String) -> ProfileViewReactor {
