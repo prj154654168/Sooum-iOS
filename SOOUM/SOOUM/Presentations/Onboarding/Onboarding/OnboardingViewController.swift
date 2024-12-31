@@ -76,7 +76,7 @@ class OnboardingViewController: BaseViewController {
         oldUserButtonLabel.rx.tap
             .subscribe(with: self) { object, _ in
               let enterMemberTransferViewController = EnterMemberTransferViewController()
-              enterMemberTransferViewController.reactor = EnterMemberTransferViewReactor()
+              enterMemberTransferViewController.reactor = EnterMemberTransferViewReactor(entranceType: .onboarding)
               object.navigationPush(enterMemberTransferViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: disposeBag)

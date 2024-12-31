@@ -126,7 +126,7 @@ extension SettingsViewReactor {
     }
     
     func reactorForTransferEnter() -> EnterMemberTransferViewReactor {
-        EnterMemberTransferViewReactor.init()
+        EnterMemberTransferViewReactor.init(entranceType: .settings)
     }
     
     func reactorForResign() -> ResignViewReactor {
