@@ -120,11 +120,11 @@ class MainTabBarController: SOMTabBarController, View {
                 switch entranceType {
                 case .pushForNoti:
                     
-                    let notificationViewController = NotificationViewController()
-                    notificationViewController.reactor = reactor.reactorForNoti()
+                    let notificationTabBarController = NotificationTabBarController()
+                    notificationTabBarController.reactor = reactor.reactorForNoti()
                     mainHomeTabBarController.navigationPush(
-                        notificationViewController,
-                        animated: true,
+                        notificationTabBarController,
+                        animated: false,
                         bottomBarHidden: true
                     )
                 case .pushForDetail:
@@ -133,7 +133,7 @@ class MainTabBarController: SOMTabBarController, View {
                     detailViewController.reactor = reactor.reactorForDetail(targetCardId)
                     mainHomeTabBarController.navigationPush(
                         detailViewController,
-                        animated: true,
+                        animated: false,
                         bottomBarHidden: true
                     )
                 default: break

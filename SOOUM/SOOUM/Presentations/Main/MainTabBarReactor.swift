@@ -82,11 +82,11 @@ extension MainTabBarReactor {
         ProfileViewReactor(type: .my, memberId: nil)
     }
     
-    func reactorForNoti() -> NotificationViewReactor {
-        NotificationViewReactor(.total)
+    func reactorForNoti() -> NotificationTabBarReactor {
+        NotificationTabBarReactor()
     }
     
     func reactorForDetail(_ targetCardId: String) -> DetailViewReactor {
-        DetailViewReactor(targetCardId)
+        DetailViewReactor(type: .push, targetCardId)
     }
 }

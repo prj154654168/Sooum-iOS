@@ -245,6 +245,27 @@ class DetailViewController: BaseNavigationViewController, View {
                  object.navigationPop()
              }
              .disposed(by: self.disposeBag)
+         
+         reactor.state.map(\.errorMessage)
+             .distinctUntilChanged()
+             .skip(1)
+             .subscribe(with: self) { object, errorMessage in
+                 guard reactor.entranceType == .navi else {
+                     let notificationTabBarController = NotificationTabBarController()
+                     notificationTabBarController.reactor = reactor.reactorForNoti()
+                     
+                     object.navigationController?.pushViewController(notificationTabBarController, animated: false)
+                     object.navigationController?.viewControllers.removeAll(where: { $0.isKind(of: DetailViewController.self) })
+                     
+                     return
+                 }
+                 object.isDeleted = errorMessage != nil
+                 
+                 UIView.performWithoutAnimation {
+                     object.collectionView.reloadData()
+                 }
+             }
+             .disposed(by: self.disposeBag)
      }
  }
 
