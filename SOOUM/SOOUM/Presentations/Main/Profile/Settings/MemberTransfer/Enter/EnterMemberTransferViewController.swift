@@ -181,7 +181,14 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .filter { $0 }
             .subscribe(with: self) { object, _ in
-                object.navigationPop()
+                switch reactor.initialState.entranceType {
+                case .onboarding:
+                    let viewController = LaunchScreenViewController()
+                    viewController.reactor = LaunchScreenViewReactor()
+                    object.view.window?.rootViewController = viewController
+                case .settings:
+                    object.navigationPop()
+                }
             }
             .disposed(by: self.disposeBag)
     }
