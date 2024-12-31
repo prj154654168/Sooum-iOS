@@ -7,23 +7,31 @@
 
 import ReactorKit
 
+import Alamofire
+
 
 class MainHomeTabBarReactor: Reactor {
 
     enum Action: Equatable {
         case notisWithoutRead
+        case requestRead(String)
     }
     
     
     enum Mutation {
         case notisWithoutRead(Bool)
+        case updateIsReadCompleted(Bool)
     }
     
     struct State {
         var isNotisWithoutRead: Bool
+        var isReadCompleted: Bool
     }
     
-    var initialState: State = .init(isNotisWithoutRead: false)
+    var initialState: State = .init(
+        isNotisWithoutRead: false,
+        isReadCompleted: false
+    )
     
     private let networkManager = NetworkManager.shared
     let locationManager = LocationManager.shared
@@ -36,6 +44,10 @@ class MainHomeTabBarReactor: Reactor {
             return self.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
                 .map { $0.commentHistoryInNotis.isEmpty }
                 .map(Mutation.notisWithoutRead)
+        case let .requestRead(selectedId):
+            let request: NotificationRequest = .requestRead(notificationId: selectedId)
+            return self.networkManager.request(Empty.self, request: request)
+                .map { _ in .updateIsReadCompleted(true) }
         }
     }
     
@@ -44,6 +56,8 @@ class MainHomeTabBarReactor: Reactor {
         switch mutation {
         case let .notisWithoutRead(isNotisWithoutRead):
             state.isNotisWithoutRead = isNotisWithoutRead
+        case let .updateIsReadCompleted(isReadCompleted):
+            state.isReadCompleted = isReadCompleted
         }
         return state
     }
