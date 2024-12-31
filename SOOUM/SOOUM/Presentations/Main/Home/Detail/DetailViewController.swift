@@ -347,18 +347,15 @@ extension DetailViewController: UICollectionViewDataSource {
             .subscribe(with: self) { object, _ in
                 if object.detailCard.isOwnCard {
                     
-                    let viewController = MainTabBarController()
-                    viewController.reactor = object.reactor?.reactorForMainTabBar()
-                    viewController.didSelectedIndex(3)
-                    let navigationController = UINavigationController(
-                        rootViewController: viewController
-                    )
-                    object.view.window?.rootViewController = navigationController
+                    let memberId = object.detailCard.member.id
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = object.reactor?.reactorForProfile(type: .myWithNavi, memberId)
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 } else {
                     
                     let memberId = object.detailCard.member.id
                     let profileViewController = ProfileViewController()
-                    profileViewController.reactor = object.reactor?.reactorForProfile(memberId)
+                    profileViewController.reactor = object.reactor?.reactorForProfile(type: .other, memberId)
                     object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 }
             }

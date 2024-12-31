@@ -204,17 +204,13 @@ extension FollowViewController {
                 
                 if model.isRequester {
                     
-                    let mainTabBarController = MainTabBarController()
-                    mainTabBarController.reactor = reactor.reactorForMainTabBar()
-                    mainTabBarController.didSelectedIndex(3)
-                    let navigationController = UINavigationController(
-                        rootViewController: mainTabBarController
-                    )
-                    object.view.window?.rootViewController = navigationController
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = reactor.reactorForProfile(type: .myWithNavi, model.id)
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 } else {
                     
                     let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(memberId: model.id)
+                    profileViewController.reactor = reactor.reactorForProfile(type: .other, model.id)
                     object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 }
             }
@@ -252,17 +248,13 @@ extension FollowViewController {
                 
                 if model.isRequester {
                     
-                    let mainTabBarController = MainTabBarController()
-                    mainTabBarController.reactor = reactor.reactorForMainTabBar()
-                    mainTabBarController.didSelectedIndex(3)
-                    let navigationController = UINavigationController(
-                        rootViewController: mainTabBarController
-                    )
-                    object.view.window?.rootViewController = navigationController
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = reactor.reactorForProfile(type: .myWithNavi, model.id)
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 } else {
                     
                     let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(memberId: model.id)
+                    profileViewController.reactor = reactor.reactorForProfile(type: .other, model.id)
                     object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 }
             }
@@ -294,17 +286,13 @@ extension FollowViewController {
                 
                 if model.isRequester {
                     
-                    let mainTabBarController = MainTabBarController()
-                    mainTabBarController.reactor = reactor.reactorForMainTabBar()
-                    mainTabBarController.didSelectedIndex(3)
-                    let navigationController = UINavigationController(
-                        rootViewController: mainTabBarController
-                    )
-                    object.view.window?.rootViewController = navigationController
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = reactor.reactorForProfile(type: .myWithNavi, model.id)
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 } else {
                     
                     let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(memberId: model.id)
+                    profileViewController.reactor = reactor.reactorForProfile(type: .other, model.id)
                     object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 }
             }

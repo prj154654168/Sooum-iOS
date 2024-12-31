@@ -159,8 +159,8 @@ extension FollowViewReactor {
 
 extension FollowViewReactor {
     
-    func reactorForProfile(memberId: String) -> ProfileViewReactor {
-        ProfileViewReactor.init(type: .other, memberId: memberId)
+    func reactorForProfile(type: ProfileViewReactor.EntranceType, _ memberId: String) -> ProfileViewReactor {
+        ProfileViewReactor.init(type: type, memberId: memberId)
     }
     
     func reactorForMainTabBar() -> MainTabBarReactor {
