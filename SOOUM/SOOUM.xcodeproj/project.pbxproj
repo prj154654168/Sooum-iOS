@@ -574,7 +574,7 @@
 		3803CF792D016BDB00FD90DB /* IssueMemberTransferViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssueMemberTransferViewReactor.swift; sourceTree = "<group>"; };
 		3803CF7C2D016DA200FD90DB /* TransferCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferCodeResponse.swift; sourceTree = "<group>"; };
 		3803CF812D017DB800FD90DB /* EnterMemberTransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterMemberTransferViewController.swift; sourceTree = "<group>"; };
-		3803CF842D017DC700FD90DB /* EnterMemberTransferViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterMemberTransferViewReactor.swift; sourceTree = "<group>"; };
+		3803CF842D017DC700FD90DB /* EnterMemberTransferViewReactor.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = EnterMemberTransferViewReactor.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3803CF872D01914200FD90DB /* ResignViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResignViewReactor.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
 		38121E302CA6C77500602499 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };

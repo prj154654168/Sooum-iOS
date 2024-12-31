@@ -12,6 +12,11 @@ import Alamofire
 
 class EnterMemberTransferViewReactor: Reactor {
     
+    enum EntranceType {
+        case onboarding
+        case settings
+    }
+    
     enum Action: Equatable {
         case enterTransferCode(String)
     }
@@ -24,15 +29,21 @@ class EnterMemberTransferViewReactor: Reactor {
     struct State {
         var isSuccess: Bool
         var isProcessing: Bool
+        let entranceType: EntranceType
     }
     
-    var initialState: State = .init(
-        isSuccess: false,
-        isProcessing: false
-    )
+    var initialState: State
     
     private let networkManager = NetworkManager.shared
     private let authManager = AuthManager.shared
+  
+    init(entranceType: EntranceType) {
+        self.initialState = .init(
+            isSuccess: false,
+            isProcessing: false,
+            entranceType: entranceType
+        )
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
