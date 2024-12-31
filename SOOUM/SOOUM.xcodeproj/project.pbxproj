@@ -573,7 +573,7 @@
 		3803CF762D01685000FD90DB /* CommentHistroyViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentHistroyViewReactor.swift; sourceTree = "<group>"; };
 		3803CF792D016BDB00FD90DB /* IssueMemberTransferViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssueMemberTransferViewReactor.swift; sourceTree = "<group>"; };
 		3803CF7C2D016DA200FD90DB /* TransferCodeResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferCodeResponse.swift; sourceTree = "<group>"; };
-		3803CF812D017DB800FD90DB /* EnterMemberTransferViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterMemberTransferViewController.swift; sourceTree = "<group>"; };
+		3803CF812D017DB800FD90DB /* EnterMemberTransferViewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = EnterMemberTransferViewController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3803CF842D017DC700FD90DB /* EnterMemberTransferViewReactor.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = EnterMemberTransferViewReactor.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3803CF872D01914200FD90DB /* ResignViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResignViewReactor.swift; sourceTree = "<group>"; };
 		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
@@ -607,7 +607,7 @@
 		385053512C92DBE200C80B02 /* SOMTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarItem.swift; sourceTree = "<group>"; };
 		385053542C92DCF900C80B02 /* SOMTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBar.swift; sourceTree = "<group>"; };
 		385053572C92DD2300C80B02 /* SOMTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarController.swift; sourceTree = "<group>"; };
-		385071992CA295A800A7905A /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
+		385071992CA295A800A7905A /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3854419A2C870544004E2BB0 /* SOOUM-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SOOUM-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		385620EE2CA19C9500E0AB5A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_Request.swift; sourceTree = "<group>"; };
