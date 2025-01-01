@@ -16,7 +16,7 @@ class MainHomeDistanceViewReactor: Reactor {
     enum Action: Equatable {
         case landing(fromToParent: Bool)
         case refresh
-        case moreFind(lastId: String?)
+        case moreFind(lastId: String)
         case distanceFilter(String)
     }
     
@@ -47,7 +47,8 @@ class MainHomeDistanceViewReactor: Reactor {
     
     let simpleCache = SimpleCache.shared
     
-    private let countPerLoading: Int = 10
+    // TODO: 페이징
+    //private let countPerLoading: Int = 10
     
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -75,9 +76,8 @@ class MainHomeDistanceViewReactor: Reactor {
                     
                     // 캐시가 존재하면 캐싱된 데이터 사용
                     let cachedCards = self.simpleCache.loadMainHomeCards(type: .distance) ?? []
-                    let displayedCards = self.separate(displayed: [], current: cachedCards)
                     
-                    return .just(.cards((cards: displayedCards, isUpdate: false)))
+                    return .just(.cards((cards: cachedCards, isUpdate: false)))
                 }
             }
         case .refresh:
@@ -88,16 +88,6 @@ class MainHomeDistanceViewReactor: Reactor {
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
-            guard let lastId = lastId else {
-                // 캐시된 데이터가 존재할 때
-                let loadedCards = self.simpleCache.loadMainHomeCards(type: .distance) ?? []
-                let displayedCards = self.separate(
-                    displayed: self.currentState.displayedCardsWithUpdate.cards,
-                    current: loadedCards
-                )
-                
-                return .just(.more((cards: displayedCards, isUpdate: true)))
-            }
             
             return .concat([
                 .just(.updateIsProcessing(true)),
@@ -155,9 +145,8 @@ extension MainHomeDistanceViewReactor {
                 
                 // 서버 응답 캐싱
                 object.simpleCache.saveMainHomeCards(type: .distance, datas: cards)
-                // 표시할 데이터만 나누기
-                let displayedCards = object.separate(displayed: [], current: cards)
-                return .cards((cards: displayedCards, isUpdate: false))
+                
+                return .cards((cards: cards, isUpdate: false))
             }
             .catch(self.catchClosure)
     }
@@ -181,14 +170,12 @@ extension MainHomeDistanceViewReactor {
             .withUnretained(self)
             .map { object, cards in
                 
-                let loadedCards = object.simpleCache.loadMainHomeCards(type: .distance) ?? []
-                var newCards = loadedCards
+                let cachedCards = object.simpleCache.loadMainHomeCards(type: .distance) ?? []
+                var newCards = cachedCards
                 newCards += cards
                 
                 object.simpleCache.saveMainHomeCards(type: .distance, datas: newCards)
-                
-                let displayedCards = object.separate(displayed: loadedCards, current: newCards)
-                return .more((cards: displayedCards, isUpdate: true))
+                return .more((cards: cards, isUpdate: true))
             }
             .catch(self.catchClosure)
     }
@@ -206,11 +193,12 @@ extension MainHomeDistanceViewReactor {
         }
     }
     
-    func separate(displayed displayedCards: [Card], current cards: [Card]) -> [Card] {
-        let count = displayedCards.count
-        let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
-        return displayedCards
-    }
+    // TODO: 페이징
+    // func separate(displayed displayedCards: [Card], current cards: [Card]) -> [Card] {
+    //     let count = displayedCards.count
+    //     let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
+    //     return displayedCards
+    // }
   
     func canUpdateCells(
         prev prevCardsWithUpdate: CardsWithUpdate,

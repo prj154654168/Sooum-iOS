@@ -25,14 +25,14 @@ class MainHomeLatestViewController: BaseViewController, View {
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
+        $0.isHidden = true
+        
         $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
         $0.register(PlaceholderViewCell.self, forCellReuseIdentifier: "placeholder")
         
         $0.refreshControl = SOMRefreshControl()
         
         $0.dataSource = self
-        $0.prefetchDataSource = self
-        
         $0.delegate = self
     }
     
@@ -128,9 +128,7 @@ class MainHomeLatestViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
       
         reactor.state.map(\.isProcessing)
-            .distinctUntilChanged()
             .do(onNext: { [weak self] isProcessing in
-                self?.tableView.isHidden = isProcessing
                 if isProcessing == false { self?.isLoadingMore = false }
             })
             .bind(to: self.activityIndicatorView.rx.isAnimating)
@@ -142,6 +140,8 @@ class MainHomeLatestViewController: BaseViewController, View {
             .subscribe(with: self) { object, displayedCardsWithUpdate in
                 let displayedCards = displayedCardsWithUpdate.cards
                 let isUpdate = displayedCardsWithUpdate.isUpdate
+                
+                object.tableView.isHidden = false
                 
                 // isUpdate == true 일 때, 추가된 카드만 로드
                 if isUpdate {
@@ -192,25 +192,6 @@ extension MainHomeLatestViewController: UITableViewDataSource {
             cell.changeOrderInCardContentStack(0)
             
             return cell
-        }
-    }
-}
-
-extension MainHomeLatestViewController: UITableViewDataSourcePrefetching {
-    
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        guard self.displayedCards.isEmpty == false else { return }
-        
-        if self.isLoadingMore == false,
-           let rowIndex = indexPaths.map({ $0.row }).max(),
-           rowIndex >= Int(Double(self.displayedCards.count) * 0.8),
-           let reactor = self.reactor {
-            
-            if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: .latest),
-               self.displayedCards.count < loadedCards.count {
-                self.isRefreshEnabled = true
-                reactor.action.onNext(.moreFind(lastId: nil))
-            }
         }
     }
 }

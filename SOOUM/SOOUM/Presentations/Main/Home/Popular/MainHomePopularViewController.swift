@@ -25,14 +25,14 @@ class MainHomePopularViewController: BaseViewController, View {
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
+        $0.isHidden = true
+        
         $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
         $0.register(PlaceholderViewCell.self, forCellReuseIdentifier: "placeholder")
         
         $0.refreshControl = SOMRefreshControl()
         
         $0.dataSource = self
-        $0.prefetchDataSource = self
-        
         $0.delegate = self
     }
     
@@ -103,7 +103,7 @@ class MainHomePopularViewController: BaseViewController, View {
         self.rx.viewWillAppear
             .withUnretained(self)
             .map { object, _ in object.isViewLoaded == false }
-            .map { _ in Reactor.Action.landing }
+            .map(Reactor.Action.landing)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -126,21 +126,19 @@ class MainHomePopularViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
       
-        let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
-        isProcessing
+        reactor.state.map(\.isProcessing)
+            .distinctUntilChanged()
             .bind(to: self.activityIndicatorView.rx.isAnimating)
-            .disposed(by: self.disposeBag)
-        isProcessing
-            .bind(to: self.tableView.rx.isHidden)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.displayedCardsWithUpdate)
             .distinctUntilChanged({ reactor.canUpdateCells(prev: $0, curr: $1) })
             .skip(1)
             .subscribe(with: self) { object, displayedCardsWithUpdate in
-                
                 let displayedCards = displayedCardsWithUpdate.cards
                 let isUpdate = displayedCardsWithUpdate.isUpdate
+                
+                object.tableView.isHidden = false
                 
                 // isUpdate == true 일 때, 추가된 카드만 로드
                 if isUpdate {
@@ -191,22 +189,6 @@ extension MainHomePopularViewController: UITableViewDataSource {
             cell.changeOrderInCardContentStack(1)
             
             return cell
-        }
-    }
-}
-
-extension MainHomePopularViewController: UITableViewDataSourcePrefetching {
-    
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        
-        if let rowIndex = indexPaths.map({ $0.row }).max(),
-            rowIndex >= Int(Double(self.displayedCards.count) * 0.8),
-            let reactor = self.reactor {
-            
-            if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: .latest),
-               self.displayedCards.count < loadedCards.count {
-                reactor.action.onNext(.moreFind)
-            }
         }
     }
 }

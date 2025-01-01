@@ -305,9 +305,9 @@ class SOMCard: UIView {
         }
         cardTextScrollView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(14)
+            $0.bottom.equalToSuperview().offset(-14)
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)
-            $0.bottom.equalToSuperview().offset(-14)
         }
         cardTextContentLabel.snp.makeConstraints {
             $0.edges.equalToSuperview()

@@ -14,14 +14,12 @@ class MainHomePopularViewReactor: Reactor {
     typealias CardsWithUpdate = (cards: [Card], isUpdate: Bool)
     
     enum Action: Equatable {
-        case landing
+        case landing(fromToParent: Bool)
         case refresh
-        case moreFind
     }
     
     enum Mutation {
         case cards(CardsWithUpdate)
-        case more(CardsWithUpdate)
         case updateIsLoading(Bool)
         case updateIsProcessing(Bool)
     }
@@ -43,27 +41,36 @@ class MainHomePopularViewReactor: Reactor {
     
     let simpleCache = SimpleCache.shared
     
-    private let countPerLoading: Int = 10
+    // TODO: 페이징
+    // private let countPerLoading: Int = 10
     
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .landing:
+        case let .landing(fromToParent):
             
-            if self.simpleCache.isEmpty(type: .popular) {
-                // 캐시가 존재하지 않으면 서버 요청
-                return .concat([
-                    .just(.updateIsProcessing(true)),
-                    self.refresh()
-                        .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                    .just(.updateIsProcessing(false))
-                ])
-            } else {
-                // 캐시가 존재하면 캐싱된 데이터 사용
-                let cachedCards = self.simpleCache.loadMainHomeCards(type: .popular) ?? []
-                let displayedCards = self.separate(displayed: [], current: cachedCards)
+            // Navigation pop 으로 인한 표시이거나 (최우선),
+            // 캐시가 존재하지 않으면 서버 요청
+            if fromToParent {
                 
-                return .just(.cards((cards: displayedCards, isUpdate: false)))
+                // Pop 으로 인한 viewWillAppear 일 때, 딜레이 및 로딩 제거
+                return self.refresh()
+            } else {
+                
+                if self.simpleCache.isEmpty(type: .popular) {
+                    // 캐시가 존재하지 않으면 서버 요청
+                    return .concat([
+                        .just(.updateIsProcessing(true)),
+                        self.refresh()
+                            .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                        .just(.updateIsProcessing(false))
+                    ])
+                } else {
+                    // 캐시가 존재하면 캐싱된 데이터 사용
+                    let cachedCards = self.simpleCache.loadMainHomeCards(type: .popular) ?? []
+                    
+                    return .just(.cards((cards: cachedCards, isUpdate: false)))
+                }
             }
         case .refresh:
             return .concat([
@@ -72,15 +79,6 @@ class MainHomePopularViewReactor: Reactor {
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
-        case .moreFind:
-            // 캐시된 데이터가 존재할 때
-            let loadedCards = self.simpleCache.loadMainHomeCards(type: .popular) ?? []
-            let displayedCards = self.separate(
-                displayed: self.currentState.displayedCardsWithUpdate.cards,
-                current: loadedCards
-            )
-            
-            return .just(.more((cards: displayedCards, isUpdate: true)))
         }
     }
     
@@ -89,9 +87,6 @@ class MainHomePopularViewReactor: Reactor {
         switch mutation {
         case let .cards(displayedCardsWithUpdate):
             state.displayedCardsWithUpdate = displayedCardsWithUpdate
-        case let .more(displayedCardsWithUpdate):
-            state.displayedCardsWithUpdate.cards += displayedCardsWithUpdate.cards
-            state.displayedCardsWithUpdate.isUpdate = displayedCardsWithUpdate.isUpdate
         case let .updateIsLoading(isLoading):
             state.isLoading = isLoading
         case let .updateIsProcessing(isProcessing):
@@ -117,9 +112,8 @@ extension MainHomePopularViewReactor {
                 
                 // 서버 응답 캐싱
                 object.simpleCache.saveMainHomeCards(type: .popular, datas: cards)
-                // 표시할 데이터만 나누기
-                let displayedCards = object.separate(displayed: [], current: cards)
-                return .cards((cards: displayedCards, isUpdate: false))
+                
+                return .cards((cards: cards, isUpdate: false))
             }
             .catch(self.catchClosure)
     }
@@ -136,11 +130,12 @@ extension MainHomePopularViewReactor {
         }
     }
     
-    func separate(displayed displayedCards: [Card], current cards: [Card]) -> [Card] {
-        let count = displayedCards.count
-        let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
-        return displayedCards
-    }
+    // TODO: 페이징
+    // func separate(displayed displayedCards: [Card], current cards: [Card]) -> [Card] {
+    //     let count = displayedCards.count
+    //     let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
+    //     return displayedCards
+    // }
   
     func canUpdateCells(
         prev prevCardsWithUpdate: CardsWithUpdate,
