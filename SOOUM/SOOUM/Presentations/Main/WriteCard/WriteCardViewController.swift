@@ -298,7 +298,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 object.writeCardView.writeTagTextField.isHidden = isTimeLimit
                 object.writeCardView.writtenTagsHeightConstraint?.deactivate()
                 object.writeCardView.writtenTags.snp.makeConstraints {
-                    let height = self.writtenTagModels.isEmpty ? 12 : 58
+                    let height = object.writtenTagModels.isEmpty ? 12 : 58
                     let constraint = isTimeLimit ? $0.height.equalTo(0).constraint : $0.height.equalTo(height).constraint
                     object.writeCardView.writtenTagsHeightConstraint = constraint
                 }
