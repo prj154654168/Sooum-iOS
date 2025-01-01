@@ -13,6 +13,7 @@ import Alamofire
 enum SettingsRequest: BaseRequest {
 
     case activate
+    case notificationAllow(isAllowNotify: Bool?)
     case commentHistory(lastId: String?)
     case transferCode(isUpdate: Bool)
     case transferMember(transferId: String, encryptedDeviceId: String)
@@ -24,6 +25,8 @@ enum SettingsRequest: BaseRequest {
         switch self {
         case .activate:
             return "/settings/status"
+        case .notificationAllow:
+            return "/members/notify"
         case .commentHistory:
             return "/members/comment-cards"
         case .resign:
@@ -37,6 +40,8 @@ enum SettingsRequest: BaseRequest {
 
     var method: HTTPMethod {
         switch self {
+        case let .notificationAllow(isAllowNotify):
+            return isAllowNotify == nil ? .get : .patch
         case let .transferCode(isUpdate):
             return isUpdate ? .patch : .get
         case .transferMember:
@@ -50,6 +55,12 @@ enum SettingsRequest: BaseRequest {
 
     var parameters: Parameters {
         switch self {
+        case let .notificationAllow(isAllowNotify):
+            if let isAllowNotify = isAllowNotify {
+                return ["isAllowNotify": isAllowNotify]
+            } else {
+                return [:]
+            }
         case let .transferMember(transferId, encryptedDeviceId):
             return ["transferId": transferId, "encryptedDeviceId": encryptedDeviceId]
         case let .commentHistory(lastId):
@@ -66,6 +77,8 @@ enum SettingsRequest: BaseRequest {
 
     var encoding: ParameterEncoding {
         switch self {
+        case let .notificationAllow(isAllowNotify):
+            return isAllowNotify == nil ? URLEncoding.default : JSONEncoding.default
         case .transferMember, .resign:
             return JSONEncoding.default
         default:

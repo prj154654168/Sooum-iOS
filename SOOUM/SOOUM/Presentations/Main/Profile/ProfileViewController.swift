@@ -98,7 +98,7 @@ class ProfileViewController: BaseNavigationViewController, View {
     override func setupNaviBar() {
         super.setupNaviBar()
         
-        let isMine = self.reactor?.entranceType == .my
+        let isMine = self.reactor?.entranceType == .my || self.reactor?.entranceType == .myWithNavi
         
         let titleContainer = UIView()
         titleContainer.addSubview(self.titleView)
@@ -113,7 +113,7 @@ class ProfileViewController: BaseNavigationViewController, View {
             $0.bottom.leading.trailing.equalToSuperview()
         }
         
-        self.navigationBar.hidesBackButton = isMine
+        self.navigationBar.hidesBackButton = self.reactor?.entranceType == .my
         self.navigationBar.titleView = titleContainer
         if isMine {
             self.navigationBar.setRightButtons([self.rightSettingButton])
@@ -262,7 +262,7 @@ extension ProfileViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let entranceType = self.reactor?.entranceType ?? .my
         switch entranceType {
-        case .my:
+        case .my, .myWithNavi:
             let myCell: MyProfileViewCell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: MyProfileViewCell.cellIdentifier,
                 for: indexPath
@@ -392,7 +392,7 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
         let width: CGFloat = UIScreen.main.bounds.width
         // 내 프로필 일 때, 프로필 - 컨텐츠 + 컨텐츠 - 버튼 + 버튼 - 하단
         // 상대 프로필 일 때, 프로필 - 버튼 + 버튼 - 하단
-        let isMine = self.reactor?.entranceType == .my
+        let isMine = self.reactor?.entranceType == .my || self.reactor?.entranceType == .myWithNavi
         let spacing: CGFloat = isMine ? (16 + 18 + 30) : (22 + 22)
         // 내 프로필 일 떄, 프로필 + 간격 + 컨텐츠 + 버튼
         // 상대 프로필 일 때, 프로필 + 간격 + 버튼
@@ -408,7 +408,7 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
         let width: CGFloat = UIScreen.main.bounds.width
         // 내 프로필 일 때, 프로필 - 컨텐츠 + 컨텐츠 - 버튼 + 버튼 - 하단
         // 상대 프로필 일 때, 프로필 - 버튼 + 버튼 - 하단
-        let isMine = self.reactor?.entranceType == .my
+        let isMine = self.reactor?.entranceType == .my || self.reactor?.entranceType == .myWithNavi
         let spacing: CGFloat = isMine ? (16 + 18 + 30) : (22 + 22)
         // 내 프로필 일 떄, 프로필 + 간격 + 컨텐츠 + 버튼
         // 상대 프로필 일 때, 프로필 + 간격 + 버튼

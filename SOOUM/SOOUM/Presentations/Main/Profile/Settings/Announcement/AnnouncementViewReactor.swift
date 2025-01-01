@@ -12,17 +12,23 @@ class AnnouncementViewReactor: Reactor {
     
     enum Action: Equatable {
         case landing
+        case refresh
     }
     
     enum Mutation {
         case announcements([Announcement])
+        case updateIsLoading(Bool)
     }
     
     struct State {
         var announcements: [Announcement]
+        var isLoading: Bool
     }
     
-    var initialState: State = .init(announcements: [])
+    var initialState: State = .init(
+        announcements: [],
+        isLoading: false
+    )
     
     private let networkManager = NetworkManager.shared
     
@@ -35,6 +41,19 @@ class AnnouncementViewReactor: Reactor {
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.announcements(response.embedded.announcements))
                 }
+        case .refresh:
+            let request: SettingsRequest = .announcement
+            
+            return .concat([
+                .just(.updateIsLoading(true)),
+                self.networkManager.request(AnnouncementResponse.self, request: request)
+                    .flatMapLatest { response -> Observable<Mutation> in
+                        return .just(.announcements(response.embedded.announcements))
+                    }
+                    .catch(self.catchClosure)
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .just(.updateIsLoading(false))
+            ])
         }
     }
     
@@ -43,7 +62,16 @@ class AnnouncementViewReactor: Reactor {
         switch mutation {
         case let .announcements(announcements):
             state.announcements = announcements
+        case let .updateIsLoading(isLoading):
+            state.isLoading = isLoading
         }
         return state
+    }
+}
+
+extension AnnouncementViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in .just(.updateIsLoading(false)) }
     }
 }

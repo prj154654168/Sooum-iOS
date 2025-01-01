@@ -1,8 +1,8 @@
 //
-//  PlaceholderView.swift
+//  PlaceholderViewCell.swift
 //  SOOUM
 //
-//  Created by 오현식 on 12/23/24.
+//  Created by 오현식 on 12/30/24.
 //
 
 import UIKit
@@ -11,7 +11,7 @@ import SnapKit
 import Then
 
 
-class PlaceholderView: UIView {
+class PlaceholderViewCell: UITableViewCell {
     
     enum Text {
         static let title: String = "아직 등록된 카드가 없어요"
@@ -46,8 +46,12 @@ class PlaceholderView: UIView {
     
     // MARK: Initalization
     
-    override init(frame: CGRect) {
-        super.init(frame: .zero)
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.selectionStyle = .none
+        self.backgroundColor = .clear
+        self.isUserInteractionEnabled = false
         
         self.setupConstraints()
     }
@@ -61,21 +65,23 @@ class PlaceholderView: UIView {
     
     private func setupConstraints() {
         
-        self.addSubview(self.placeholderTitleLabel)
+        self.contentView.addSubview(self.placeholderTitleLabel)
         self.placeholderTitleLabel.snp.makeConstraints {
-            $0.top.leading.trailing.equalToSuperview()
+            let offset = UIScreen.main.bounds.height * 0.2
+            $0.top.equalToSuperview().offset(offset)
+            $0.centerX.equalToSuperview()
         }
         
-        self.addSubview(self.placeholderFirstSubTitleLabel)
+        self.contentView.addSubview(self.placeholderFirstSubTitleLabel)
         self.placeholderFirstSubTitleLabel.snp.makeConstraints {
             $0.top.equalTo(self.placeholderTitleLabel.snp.bottom).offset(14)
             $0.centerX.equalToSuperview()
         }
         
-        self.addSubview(self.placeholderSecondSubTitleLabel)
+        self.contentView.addSubview(self.placeholderSecondSubTitleLabel)
         self.placeholderSecondSubTitleLabel.snp.makeConstraints {
             $0.top.equalTo(self.placeholderFirstSubTitleLabel.snp.bottom)
-            $0.bottom.centerX.equalToSuperview()
+            $0.centerX.equalToSuperview()
         }
     }
 }

@@ -27,6 +27,10 @@ class WriteCardView: UIView {
         $0.placeholder = Text.wirteTagPlacholder
     }
     
+    let pungTimeView = PungTimeView().then {
+        $0.isHidden = true
+    }
+    
     let writtenTags = SOMTags(configure: .horizontalWithRemove).then {
         $0.tag = 0
     }
@@ -70,6 +74,13 @@ class WriteCardView: UIView {
             $0.top.equalTo(self.writtenTags.snp.bottom)
             $0.leading.equalToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
+        }
+        
+        self.addSubview(self.pungTimeView)
+        self.pungTimeView.snp.makeConstraints {
+            $0.top.equalTo(self.writtenTags.snp.bottom).offset(18)
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(25)
         }
         
         self.addSubview(self.relatedTagsBackgroundView)

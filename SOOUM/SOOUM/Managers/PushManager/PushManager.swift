@@ -10,6 +10,9 @@ import UIKit
 
 protocol PushManagerDelegate: AnyObject {
     
+    var window: UIWindow? { get }
+    func setupRootViewController(_ info: NotificationInfo, terminated: Bool)
+    
     var canReceiveNotifications: Bool { get }
     var notificationStatus: Bool { get }
     func switchNotification(isOn: Bool, completion: ((Error?) -> Void)?)
@@ -35,29 +38,41 @@ class PushManager: NSObject, PushManagerDelegate {
     override init() {
         super.init()
         
-        self.registerNotificationObserver()
+        // 설정 앱의 알림 허용 유무와 동기화 하는 옵저버 제거
+        // 서버 api를 통해서만 알림 허용 유무 변경
+        // self.registerNotificationObserver()
         self.updateNotificationStatus()
     }
     
     
     // MARK: Navigation
     
-    func setupRootViewController(_ info: NotificationInfo) {
+    func setupRootViewController(_ info: NotificationInfo, terminated: Bool) {
         
         DispatchQueue.main.async { [weak self] in
             if self?.window != nil {
-                self?.setupMainTabBarController(info)
+                if terminated {
+                    self?.setupLaunchScreenViewController(info)
+                } else {
+                    self?.setupMainTabBarController(info)
+                }
             }
         }
     }
     
+    fileprivate func setupLaunchScreenViewController(_ pushInfo: NotificationInfo) {
+        
+        let launchScreenReactor = LaunchScreenViewReactor(pushInfo: pushInfo)
+        let launchScreenViewController = LaunchScreenViewController()
+        launchScreenViewController.reactor = launchScreenReactor
+        
+        let navigationController = UINavigationController(rootViewController: launchScreenViewController)
+        self.window?.rootViewController = navigationController
+    }
+    
     fileprivate func setupMainTabBarController(_ pushInfo: NotificationInfo) {
         
-        let willNavigateNoti = pushInfo.notificationType == .blocked || pushInfo.notificationType == .delete
-        let mainTabBarReactor = MainTabBarReactor(
-            willNavigate: willNavigateNoti ? .pushForNoti : .pushForDetail,
-            pushInfo: pushInfo
-        )
+        let mainTabBarReactor = MainTabBarReactor(pushInfo: pushInfo)
         let mainTabBarController = MainTabBarController()
         mainTabBarController.reactor = mainTabBarReactor
         
@@ -105,15 +120,16 @@ class PushManager: NSObject, PushManagerDelegate {
 
             if isOn {
 
-                let appDelegate: AppDelegate? = application.delegate as? AppDelegate
-                appDelegate?.registerRemoteNotificationCompletion = { [weak self] error in
-                    if let error: Error = error {
-                        self?.notificationStatus = false
-                        completion?(error)
-                    } else {
-                        completion?(nil)
-                    }
-                }
+                // 서버 api를 통해서만 알림 허용 유무 변경
+                // let appDelegate: AppDelegate? = application.delegate as? AppDelegate
+                // appDelegate?.registerRemoteNotificationCompletion = { [weak self] error in
+                //     if let error: Error = error {
+                //         self?.notificationStatus = false
+                //         completion?(error)
+                //     } else {
+                //         completion?(nil)
+                //     }
+                // }
 
                 UNUserNotificationCenter.current().requestAuthorization(
                     options: [.alert, .badge, .sound],

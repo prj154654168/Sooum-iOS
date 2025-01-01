@@ -10,6 +10,11 @@ import ReactorKit
 
 class DetailViewReactor: Reactor {
     
+    enum EntranceType {
+        case push
+        case navi
+    }
+    
     enum Action: Equatable {
         case landing
         case refresh
@@ -56,9 +61,11 @@ class DetailViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     private let locationManager = LocationManager.shared
     
+    let entranceType: EntranceType
     let selectedCardId: String
     
-    init(_ selectedCardId: String) {
+    init(type entranceType: EntranceType = .navi, _ selectedCardId: String) {
+        self.entranceType = entranceType
         self.selectedCardId = selectedCardId
     }
     
@@ -150,8 +157,17 @@ class DetailViewReactor: Reactor {
         )
         
         return self.networkManager.request(DetailCardResponse.self, request: requset)
-            .map { ($0.detailCard, $0.prevCard ?? .init()) }
-            .map { .detailCard($0, $1) }
+            .flatMapLatest { response -> Observable<Mutation> in
+                if response.status.httpCode == 400 {
+                    // TODO: 임시 에러 메시지, 삭제된 카드 아이디로 요청 시
+                    return .just(.updateError("이미 삭제된 카드"))
+                } else {
+                    let detailCard = response.detailCard
+                    let prevCard = response.prevCard ?? .init()
+                    
+                    return .just(.detailCard(detailCard, prevCard))
+                }
+            }
             .catch(self.catchClosure)
     }
     
@@ -182,7 +198,7 @@ class DetailViewReactor: Reactor {
 extension DetailViewReactor {
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(willNavigate: .none)
+        MainTabBarReactor(pushInfo: nil)
     }
     
     func reactorForMainHome() -> MainHomeTabBarReactor {
@@ -198,11 +214,22 @@ extension DetailViewReactor {
     }
     
     func reactorForWriteCard() -> WriteCardViewReactor {
-        WriteCardViewReactor(type: .comment, self.selectedCardId)
+        WriteCardViewReactor(
+            type: .comment,
+            parentCardId: self.selectedCardId,
+            parentPungTime: self.currentState.detailCard.storyExpirationTime
+        )
     }
     
-    func reactorForProfile(_ memberId: String) -> ProfileViewReactor {
-        ProfileViewReactor.init(type: .other, memberId: memberId)
+    func reactorForProfile(
+        type: ProfileViewReactor.EntranceType,
+        _ memberId: String
+    ) -> ProfileViewReactor {
+        ProfileViewReactor.init(type: type, memberId: memberId)
+    }
+    
+    func reactorForNoti() -> NotificationTabBarReactor {
+        NotificationTabBarReactor()
     }
 }
 

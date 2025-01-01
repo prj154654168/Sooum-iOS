@@ -19,12 +19,11 @@ extension UIImageView {
 
     func setImage(strUrl: String?) {
         
-        /// Image load
         if let strUrl: String = strUrl, let url = URL(string: strUrl) {
             self.kf.setImage(
                 with: url,
                 placeholder: Self.placeholder,
-                options: [.transition(.fade(0.5))]
+                options: [.transition(.fade(0.25))]
             )
             self.backgroundColor = .clear
         } else {

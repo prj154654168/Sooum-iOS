@@ -38,6 +38,8 @@ class NotificationViewController: BaseViewController, View {
         
         $0.sectionHeaderTopPadding = .zero
         
+        $0.refreshControl = SOMRefreshControl()
+        
         $0.register(NotificationViewCell.self, forCellReuseIdentifier: NotificationViewCell.cellIdentifier)
         $0.register(NotificationWithReportViewCell.self, forCellReuseIdentifier: NotificationWithReportViewCell.cellIdentifier)
         
@@ -56,6 +58,8 @@ class NotificationViewController: BaseViewController, View {
     
     private var notificationsWithoutRead = [CommentHistoryInNoti]()
     private var notifications = [CommentHistoryInNoti]()
+    
+    private var isRefreshEnabled: Bool = true
     
     
     // MARK: Variables + Rx
@@ -88,11 +92,29 @@ class NotificationViewController: BaseViewController, View {
         // Action
         self.rx.viewWillAppear
             .withUnretained(self.tableView)
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
+            .withLatestFrom(reactor.state.map(\.isLoading))
+            .filter { $0 == false }
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
+        reactor.state.map(\.isLoading)
+            .distinctUntilChanged()
+            .subscribe(with: self.tableView) { tableView, isLoading in
+                if isLoading {
+                    tableView.refreshControl?.beginRefreshingFromTop()
+                } else {
+                    tableView.refreshControl?.endRefreshing()
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
         let notificationsWithoutRead = reactor.state.map(\.notificationsWithoutRead).distinctUntilChanged().share()
         let notifications = reactor.state.map(\.notifications).distinctUntilChanged().share()
         
@@ -270,6 +292,26 @@ extension NotificationViewController: UITableViewDelegate {
             return self.notificationsWithoutRead.isEmpty ? 0 : 46
         case .read:
             return self.notificationsWithoutRead.isEmpty ? 10 : 24
+        }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
+        let offset = scrollView.contentOffset.y
+        self.isRefreshEnabled = offset <= 0
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.tableView.refreshControl,
+           offset <= -(refreshControl.frame.origin.y + 40) {
+            
+            refreshControl.beginRefreshingFromTop()
         }
     }
 }

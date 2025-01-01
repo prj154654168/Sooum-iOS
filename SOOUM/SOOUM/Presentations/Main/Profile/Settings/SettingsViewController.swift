@@ -39,9 +39,9 @@ class SettingsViewController: BaseNavigationViewController, View {
         static let unBlockDate: String = "차단 해제 날짜 : "
         
         static let adminMailStrUrl: String = "sooum1004@gmail.com"
+        static let identificationInfo: String = "식별 정보: "
         static let inquiryMailTitle: String = "[문의하기]"
         static let inquiryMailGuideMessage: String = """
-            식별 정보: [RefreshToken]
             \n
             문의 내용: 식별 정보 삭제에 주의하여 주시고, 이곳에 자유롭게 문의하실 내용을 적어주세요.
             단, 본 양식에 비방, 욕설, 허위 사실 유포 등의 부적절한 내용이 포함될 경우,
@@ -50,7 +50,6 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         static let suggestMailTitle: String = "[제안하기]"
         static let suggestMailGuideMessage: String = """
-            식별 정보: [RefreshToken]
             \n
             제안 내용: 식별 정보 삭제에 주의하여 주시고, 이곳에 숨 개발팀에 제안할 내용을  자유롭게 작성해 주세요.
             단, 본 양식에 비방, 욕설, 허위 사실 유포 등의 부적절한 내용이 포함될 경우,
@@ -176,14 +175,9 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.notificationSettingCellView.rx.didSelect
-            .subscribe(onNext: {
-                let application: UIApplication = .shared
-                let openSettingsURLString: String = UIApplication.openSettingsURLString
-                if let settingsURL = URL(string: openSettingsURLString),
-                    application.canOpenURL(settingsURL) {
-                        application.open(settingsURL)
-                }
-            })
+            .withUnretained(self)
+            .map { object, _ in Reactor.Action.updateNotificationStatus(!object.notificationSettingCellView.toggleSwitch.isOn) }
+            .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         self.commentHistoryCellView.rx.didSelect
@@ -227,16 +221,21 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         self.announcementCellView.rx.didSelect
             .subscribe(with: self) { object, _ in
-                let announcementViewControler = AnnouncementViewControler()
-                announcementViewControler.reactor = reactor.reactorForAnnouncement()
-                object.navigationPush(announcementViewControler, animated: true, bottomBarHidden: true)
+                let announcementViewController = AnnouncementViewController()
+                announcementViewController.reactor = reactor.reactorForAnnouncement()
+                object.navigationPush(announcementViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: self.disposeBag)
         
         self.inquiryCellView.rx.didSelect
-            .subscribe(with: self) { object, _ in
+            .subscribe(onNext: { _ in
                 let subject = Text.inquiryMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-                let body = Text.inquiryMailGuideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                let guideMessage = """
+                    \(Text.identificationInfo)
+                    \(reactor.authManager.authInfo.token.refreshToken)\n
+                    \(Text.inquiryMailGuideMessage)
+                """
+                let body = guideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                 let mailToString = "mailto:\(Text.adminMailStrUrl)?subject=\(subject)&body=\(body)"
                 
                 if let mailtoUrl = URL(string: mailToString),
@@ -244,13 +243,18 @@ class SettingsViewController: BaseNavigationViewController, View {
                     
                     UIApplication.shared.open(mailtoUrl, options: [:], completionHandler: nil)
                 }
-            }
+            })
             .disposed(by: self.disposeBag)
         
         self.suggestionCellView.rx.didSelect
-            .subscribe(with: self) { object, _ in
+            .subscribe(onNext: { _ in
                 let subject = Text.suggestMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-                let body = Text.suggestMailGuideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                let guideMessage = """
+                    \(Text.identificationInfo)
+                    \(reactor.authManager.authInfo.token.refreshToken)\n
+                    \(Text.suggestMailGuideMessage)
+                """
+                let body = guideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                 let mailToString = "mailto:\(Text.adminMailStrUrl)?subject=\(subject)&body=\(body)"
                 
                 if let mailtoUrl = URL(string: mailToString),
@@ -258,7 +262,7 @@ class SettingsViewController: BaseNavigationViewController, View {
                     
                     UIApplication.shared.open(mailtoUrl, options: [:], completionHandler: nil)
                 }
-            }
+            })
             .disposed(by: self.disposeBag)
         
         // State

@@ -39,9 +39,15 @@ class SOMSwipeTabBarItem: UIView {
         }
     }
     
-    func updateState(color textColor: UIColor, typo typography: Typography) {
+    func updateState(
+        color textColor: UIColor,
+        typo typography: Typography,
+        with duration: TimeInterval
+    ) {
         
-        self.titleLabel.textColor = textColor
-        self.titleLabel.typography = typography
+        UIView.animate(withDuration: duration) {
+            self.titleLabel.textColor = textColor
+            self.titleLabel.typography = typography
+        }
     }
 }

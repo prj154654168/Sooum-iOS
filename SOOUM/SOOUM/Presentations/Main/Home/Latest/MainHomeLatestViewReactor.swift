@@ -14,9 +14,9 @@ class MainHomeLatestViewReactor: Reactor {
     typealias CardsWithUpdate = (cards: [Card], isUpdate: Bool)
     
     enum Action: Equatable {
-        case landing
+        case landing(fromToParent: Bool)
         case refresh
-        case moreFind(lastId: String?)
+        case moreFind(lastId: String)
     }
     
     enum Mutation {
@@ -43,27 +43,38 @@ class MainHomeLatestViewReactor: Reactor {
     
     let simpleCache = SimpleCache.shared
     
-    private let countPerLoading: Int = 10
+    // TODO: 페이징
+    // private let countPerLoading: Int = 10
     
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .landing:
+        case let .landing(fromToParent):
             
-            if self.simpleCache.isEmpty(type: .latest) {
-                // 캐시가 존재하지 않으면 서버 요청
-                return .concat([
-                    .just(.updateIsProcessing(true)),
-                    self.refresh()
-                        .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                    .just(.updateIsProcessing(false))
-                ])
-            } else {
-                // 캐시가 존재하면 캐싱된 데이터 사용
-                let cachedCards = self.simpleCache.loadMainHomeCards(type: .latest) ?? []
-                let displayedCards = self.separate(displayed: [], current: cachedCards)
+            // Navigation pop 으로 인한 표시이거나 (최우선),
+            // 캐시가 존재하지 않으면 서버 요청
+            if fromToParent {
                 
-                return .just(.cards((cards: displayedCards, isUpdate: false)))
+                // Pop 으로 인한 viewWillAppear 일 때, 딜레이 및 로딩 제거
+                return self.refresh()
+            } else {
+                
+                if self.simpleCache.isEmpty(type: .latest) {
+                    
+                    // 캐시가 존재하지 않을 떄
+                    return .concat([
+                        .just(.updateIsProcessing(true)),
+                        self.refresh()
+                            .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                        .just(.updateIsProcessing(false))
+                    ])
+                } else {
+                    
+                    // 캐시가 존재하면 캐싱된 데이터 사용
+                    let cachedCards = self.simpleCache.loadMainHomeCards(type: .latest) ?? []
+                    
+                    return .just(.cards((cards: cachedCards, isUpdate: false)))
+                }
             }
         case .refresh:
             return .concat([
@@ -73,17 +84,6 @@ class MainHomeLatestViewReactor: Reactor {
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
-            guard let lastId = lastId else {
-                // 캐시된 데이터가 존재할 때
-                let loadedCards = self.simpleCache.loadMainHomeCards(type: .latest) ?? []
-                let displayedCards = self.separate(
-                    displayed: self.currentState.displayedCardsWithUpdate.cards,
-                    current: loadedCards
-                )
-                
-                return .just(.more((cards: displayedCards, isUpdate: true)))
-            }
-            
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.moreFind(lastId)
@@ -126,9 +126,8 @@ extension MainHomeLatestViewReactor {
                 
                 // 서버 응답 캐싱
                 object.simpleCache.saveMainHomeCards(type: .latest, datas: cards)
-                // 표시할 데이터만 나누기
-                let displayedCards = object.separate(displayed: [], current: cards)
-                return .cards((cards: displayedCards, isUpdate: false))
+                
+                return .cards((cards: cards, isUpdate: false))
             }
             .catch(self.catchClosure)
     }
@@ -145,14 +144,13 @@ extension MainHomeLatestViewReactor {
             .withUnretained(self)
             .map { object, cards in
                 
-                let loadedCards = object.simpleCache.loadMainHomeCards(type: .latest) ?? []
-                var newCards = loadedCards
+                let cachedCards = object.simpleCache.loadMainHomeCards(type: .latest) ?? []
+                var newCards = cachedCards
                 newCards += cards
                 
                 object.simpleCache.saveMainHomeCards(type: .latest, datas: newCards)
                 
-                let displayedCards = object.separate(displayed: loadedCards, current: newCards)
-                return .more((cards: displayedCards, isUpdate: true))
+                return .more((cards: cards, isUpdate: true))
             }
             .catch(self.catchClosure)
     }
@@ -163,17 +161,19 @@ extension MainHomeLatestViewReactor {
     var catchClosure: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
             .concat([
+                .just(.cards((cards: [], isUpdate: false))),
                 .just(.updateIsProcessing(false)),
                 .just(.updateIsLoading(false))
             ])
         }
     }
     
-    func separate(displayed displayedCards: [Card], current cards: [Card]) -> [Card] {
-        let count = displayedCards.count
-        let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
-        return displayedCards
-    }
+    // TODO: 페이징
+    // func separate(displayed displayedCards: [Card], current cards: [Card]) -> [Card] {
+    //     let count = displayedCards.count
+    //     let displayedCards = Array(cards[count..<min(count + self.countPerLoading, cards.count)])
+    //     return displayedCards
+    // }
   
     func canUpdateCells(
         prev prevCardsWithUpdate: CardsWithUpdate,
