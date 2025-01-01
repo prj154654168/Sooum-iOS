@@ -1885,8 +1885,8 @@
 			isa = PBXGroup;
 			children = (
 				38D5637D2D17152F006265AA /* SOMSwipeTabBarDelegate.swift */,
-				38D5637A2D16D72D006265AA /* SOMSwipeTabBar.swift */,
 				38D563832D1719B1006265AA /* SOMSwipeTabBarItem.swift */,
+				38D5637A2D16D72D006265AA /* SOMSwipeTabBar.swift */,
 			);
 			path = SOMSwipeTabBar;
 			sourceTree = "<group>";

@@ -165,7 +165,8 @@ class SOMSwipeTabBar: UIView {
             let item = SOMSwipeTabBarItem(title: title)
             item.updateState(
                 color: index == 0 ? self.selectedColor : self.defaultColor,
-                typo: index == 0 ? self.selectedTypo : self.defaultTypo
+                typo: index == 0 ? self.selectedTypo : self.defaultTypo,
+                with: 0
             )
             
             item.snp.makeConstraints {
@@ -198,13 +199,16 @@ class SOMSwipeTabBar: UIView {
         }
     }
     
-    func didSelectTabBarItem(_ index: Int) {
+    func didSelectTabBarItem(_ index: Int, animated: Bool = true) {
+        
+        let animationDuration: TimeInterval = animated ? 0.25 : 0
         
         self.tabBarItemContainer.arrangedSubviews.enumerated().forEach {
             let selectedItem = $1 as? SOMSwipeTabBarItem
             selectedItem?.updateState(
                 color: $0 == index ? self.selectedColor : self.defaultColor,
-                typo: $0 == index ? self.selectedTypo : self.defaultTypo
+                typo: $0 == index ? self.selectedTypo : self.defaultTypo,
+                with: $0 == index ? animationDuration : 0
             )
         }
         
@@ -216,7 +220,7 @@ class SOMSwipeTabBar: UIView {
                 self.selectedIndicatorLeadingConstraint = $0.leading.equalToSuperview().offset(indicatorLeadingOffset).constraint
             }
             
-            UIView.animate(withDuration: 0.25) {
+            UIView.animate(withDuration: animationDuration) {
                 self.layoutIfNeeded()
             }
         }
