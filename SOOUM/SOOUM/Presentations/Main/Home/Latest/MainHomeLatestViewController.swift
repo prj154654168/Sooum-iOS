@@ -76,8 +76,8 @@ class MainHomeLatestViewController: BaseViewController, View {
         self.view.addSubview(self.moveTopButton)
         self.view.bringSubviewToFront(self.moveTopButton)
         self.moveTopButton.snp.makeConstraints {
-            let bottomOffset: CGFloat = 24 + 60 + 4
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-bottomOffset)
+            let bottomOffset: CGFloat = 24 + 60 + 4 + 20
+            $0.bottom.equalTo(self.tableView.snp.bottom).offset(-bottomOffset)
             $0.centerX.equalToSuperview()
             $0.height.equalTo(MoveTopButtonView.height)
         }

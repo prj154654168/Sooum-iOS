@@ -85,8 +85,8 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
     
     // MARK: Constraints
     
-    private var headerContainerHeightConstraint: Constraint?
     private var headerLocationFilterHeightConstraint: Constraint?
+    private var pageViewTopConstraint: Constraint?
     
     
     // MARK: Override func
@@ -158,9 +158,11 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         self.headerContainer.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             $0.leading.trailing.equalToSuperview()
-            self.headerContainerHeightConstraint = $0.height.equalTo(self.headerContainerHeight).priority(.high).constraint
         }
         self.headerContainer.addArrangedSubview(self.headerTapBar)
+        self.headerTapBar.snp.makeConstraints {
+            $0.height.equalTo(SOMSwipeTabBar.Height.mainHome)
+        }
         self.headerContainer.addArrangedSubview(self.headerLocationFilter)
         self.headerLocationFilter.snp.makeConstraints {
             self.headerLocationFilterHeightConstraint = $0.height.equalTo(0).priority(.high).constraint
@@ -169,7 +171,9 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         self.addChild(self.pageViewController)
         self.view.addSubview(self.pageViewController.view)
         self.pageViewController.view.snp.makeConstraints {
-            $0.top.equalTo(self.headerContainer.snp.bottom)
+            self.pageViewTopConstraint = $0.top.equalTo(self.headerContainer.snp.bottom)
+                .priority(.high)
+                .constraint
             $0.bottom.leading.trailing.equalToSuperview()
         }
     }
@@ -218,29 +222,19 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
                 object.animator?.finishAnimation(at: .end)
             }
             
-            // SwipeTabBar inset 업데이트
-            object.headerTapBar.inset.top = hidesHeaderContainer ? 0 : 4
-            object.headerTapBar.inset.bottom = hidesHeaderContainer ? 0 : 10
-            // LocationFilter height 업데이트
-            if object.headerTapBar.selectedIndex == 2 {
-                object.headerLocationFilterHeightConstraint?.deactivate()
-                object.headerLocationFilter.snp.makeConstraints {
-                    let height = hidesHeaderContainer ? 0 : SOMLocationFilter.height
-                    object.headerLocationFilterHeightConstraint = $0.height.equalTo(height).constraint
-                }
-            }
-            // container height 업데이트
-            object.headerContainerHeightConstraint?.deactivate()
-            object.headerContainer.snp.makeConstraints {
-                let height = hidesHeaderContainer ? 0 : object.headerContainerHeight
-                object.headerContainerHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+            object.headerContainer.isHidden = hidesHeaderContainer
+            
+            object.pageViewTopConstraint?.deactivate()
+            object.pageViewController.view.snp.makeConstraints {
+                let top = hidesHeaderContainer ? object.view.safeAreaLayoutGuide.snp.top : object.headerContainer.snp.bottom
+                object.pageViewTopConstraint = $0.top.equalTo(top).priority(.high).constraint
             }
             
             // 애니메이션 추가
             object.animator = UIViewPropertyAnimator(duration: 0.25, curve: .easeInOut)
             object.animator?.addAnimations {
                 
-                UIView.animate(withDuration: 0.25) { object.view.layoutIfNeeded() }
+                object.view.layoutIfNeeded()
             }
             // 새 애니메이션 시작
             object.animator?.startAnimation()
@@ -316,12 +310,6 @@ extension MainHomeTabBarController: SOMSwipeTabBarDelegate {
     func tabBar(_ tabBar: SOMSwipeTabBar, didSelectTabAt index: Int) {
         
         let hidesLocationFilter = index != 2
-        self.headerContainerHeight = hidesLocationFilter ? SOMSwipeTabBar.Height.mainHome : SOMSwipeTabBar.Height.mainHome + SOMLocationFilter.height
-        
-        self.headerContainerHeightConstraint?.deactivate()
-        self.headerContainer.snp.makeConstraints {
-            self.headerContainerHeightConstraint = $0.height.equalTo(self.headerContainerHeight).priority(.high).constraint
-        }
         
         self.headerLocationFilterHeightConstraint?.deactivate()
         self.headerLocationFilter.snp.makeConstraints {
