@@ -102,7 +102,7 @@ class MainHomePopularViewController: BaseViewController, View {
         // Action
         self.rx.viewWillAppear
             .withUnretained(self)
-            .map { object, _ in object.isMovingToParent && object.isBeingPresented == false }
+            .map { object, _ in object.isViewLoaded == false }
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
