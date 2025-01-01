@@ -78,6 +78,8 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
     private var pages = [UIViewController]()
     private var currentPage: Int = 0
     
+    private var headerContainerHeight: CGFloat = SOMSwipeTabBar.Height.mainHome
+    
     private var animator: UIViewPropertyAnimator?
     
     
@@ -85,7 +87,6 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
     
     private var headerContainerHeightConstraint: Constraint?
     private var headerLocationFilterHeightConstraint: Constraint?
-    private var pageViewTopConstraint: Constraint?
     
     
     // MARK: Override func
@@ -157,7 +158,7 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         self.headerContainer.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             $0.leading.trailing.equalToSuperview()
-            self.headerContainerHeightConstraint = $0.height.equalTo(SOMSwipeTabBar.Height.mainHome).priority(.high).constraint
+            self.headerContainerHeightConstraint = $0.height.equalTo(self.headerContainerHeight).priority(.high).constraint
         }
         self.headerContainer.addArrangedSubview(self.headerTapBar)
         self.headerContainer.addArrangedSubview(self.headerLocationFilter)
@@ -168,7 +169,7 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         self.addChild(self.pageViewController)
         self.view.addSubview(self.pageViewController.view)
         self.pageViewController.view.snp.makeConstraints {
-            self.pageViewTopConstraint = $0.top.equalTo(self.headerContainer.snp.bottom).priority(.high).constraint
+            $0.top.equalTo(self.headerContainer.snp.bottom)
             $0.bottom.leading.trailing.equalToSuperview()
         }
     }
@@ -203,9 +204,9 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         
         // 각 뷰컨트롤러의 hidesHeaderContainer 구독
         Observable.merge(
-            mainHomeLatestViewController.hidesHeaderContainer.asObservable(),
-            mainHomePopularViewController.hidesHeaderContainer.asObservable(),
-            mainHomeDistanceViewController.hidesHeaderContainer.asObservable()
+            mainHomeLatestViewController.hidesHeaderContainer.distinctUntilChanged().asObservable(),
+            mainHomePopularViewController.hidesHeaderContainer.distinctUntilChanged().asObservable(),
+            mainHomeDistanceViewController.hidesHeaderContainer.distinctUntilChanged().asObservable()
         )
         .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, hidesHeaderContainer in
@@ -217,17 +218,30 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
                 object.animator?.finishAnimation(at: .end)
             }
             
-            // 애니메이션 추가
-            object.animator = UIViewPropertyAnimator(duration: 0.25, curve: .easeInOut) {
-                
-                // 레이아웃 업데이트
-                object.pageViewTopConstraint?.deactivate()
-                let top = hidesHeaderContainer ? object.headerContainer.snp.top : object.headerContainer.snp.bottom
-                object.pageViewController.view.snp.makeConstraints {
-                    object.pageViewTopConstraint = $0.top.equalTo(top).priority(.high).constraint
+            // SwipeTabBar inset 업데이트
+            object.headerTapBar.inset.top = hidesHeaderContainer ? 0 : 4
+            object.headerTapBar.inset.bottom = hidesHeaderContainer ? 0 : 10
+            // LocationFilter height 업데이트
+            if object.headerTapBar.selectedIndex == 2 {
+                object.headerLocationFilterHeightConstraint?.deactivate()
+                object.headerLocationFilter.snp.makeConstraints {
+                    let height = hidesHeaderContainer ? 0 : SOMLocationFilter.height
+                    object.headerLocationFilterHeightConstraint = $0.height.equalTo(height).constraint
                 }
             }
+            // container height 업데이트
+            object.headerContainerHeightConstraint?.deactivate()
+            object.headerContainer.snp.makeConstraints {
+                let height = hidesHeaderContainer ? 0 : object.headerContainerHeight
+                object.headerContainerHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+            }
             
+            // 애니메이션 추가
+            object.animator = UIViewPropertyAnimator(duration: 0.25, curve: .easeInOut)
+            object.animator?.addAnimations {
+                
+                UIView.animate(withDuration: 0.25) { object.view.layoutIfNeeded() }
+            }
             // 새 애니메이션 시작
             object.animator?.startAnimation()
             // 애니메이션이 끝난 후 animator 초기화
@@ -302,10 +316,11 @@ extension MainHomeTabBarController: SOMSwipeTabBarDelegate {
     func tabBar(_ tabBar: SOMSwipeTabBar, didSelectTabAt index: Int) {
         
         let hidesLocationFilter = index != 2
+        self.headerContainerHeight = hidesLocationFilter ? SOMSwipeTabBar.Height.mainHome : SOMSwipeTabBar.Height.mainHome + SOMLocationFilter.height
+        
         self.headerContainerHeightConstraint?.deactivate()
         self.headerContainer.snp.makeConstraints {
-            let height = hidesLocationFilter ? SOMSwipeTabBar.Height.mainHome : SOMSwipeTabBar.Height.mainHome + SOMLocationFilter.height
-            self.headerContainerHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+            self.headerContainerHeightConstraint = $0.height.equalTo(self.headerContainerHeight).priority(.high).constraint
         }
         
         self.headerLocationFilterHeightConstraint?.deactivate()
