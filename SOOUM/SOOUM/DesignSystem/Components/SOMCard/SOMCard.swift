@@ -19,6 +19,8 @@ class SOMCard: UIView {
     
     var model: SOMCardModel?
     
+    private var contentHeightConstraint: Constraint?
+    
     /// 펑 이벤트 처리 위해 추가
     var serialTimer: Disposable?
     var disposeBag = DisposeBag()
@@ -69,6 +71,14 @@ class SOMCard: UIView {
         $0.effect = blurEffect
         $0.backgroundColor = .som.dim
         $0.alpha = 0.8
+    }
+    /// 본문 스크롤 뷰
+    let cardTextScrollView = UIScrollView().then {
+        $0.bounces = false
+        $0.isScrollEnabled = false
+        $0.alwaysBounceVertical = true
+        $0.indicatorStyle = .white
+        
     }
     /// 본문 표시 라벨
     let cardTextContentLabel = UILabel().then {
@@ -181,7 +191,7 @@ class SOMCard: UIView {
     func prepareForReuse() {
         disposeBag = DisposeBag()
         
-        self.layoutSubviews()
+        layoutSubviews()
     }
     
     // MARK: - initUI
@@ -213,7 +223,8 @@ class SOMCard: UIView {
     private func addCardTextContainerView() {
         rootContainerImageView.addSubview(cardTextBackgroundView)
         cardTextBackgroundView.addSubview(cardTextBackgroundBlurView)
-        cardTextBackgroundView.addSubview(cardTextContentLabel)
+        cardTextBackgroundView.addSubview(cardTextScrollView)
+        cardTextScrollView.addSubview(cardTextContentLabel)
     }
     
     private func addCardContentStackView() {
@@ -285,17 +296,22 @@ class SOMCard: UIView {
         /// 본문 라벨
         cardTextBackgroundView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.leading.equalToSuperview().offset(40)
+            $0.trailing.equalToSuperview().offset(-40)
+            contentHeightConstraint = $0.height.equalTo(24 + 14 * 2).priority(.high).constraint
         }
         cardTextBackgroundBlurView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        cardTextContentLabel.snp.makeConstraints {
+        cardTextScrollView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(14)
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)
             $0.bottom.equalToSuperview().offset(-14)
+        }
+        cardTextContentLabel.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalTo(cardTextScrollView.frameLayoutGuide.snp.width)
         }
         
         /// 하단 그라디언트 뷰
@@ -351,6 +367,7 @@ class SOMCard: UIView {
         
         // 카드 본문
         cardTextContentLabel.text = model.data.content
+        updateContentHeight(model.data.content)
         cardTextContentLabel.typography = model.data.font == .pretendard ? .som.body1WithBold : .som.schoolBody1WithBold
         cardTextContentLabel.textAlignment = .center
         
@@ -442,6 +459,37 @@ class SOMCard: UIView {
         
         cardContentStackView.subviews.forEach { $0.removeFromSuperview() }
         cardContentStackView.addArrangedSubviews(UIView(), distanceInfoStackView, timeInfoStackView)
+    }
+    
+    private func updateContentHeight(_ text: String) {
+        
+        layoutIfNeeded()
+        
+        let typography = Typography.som.body1WithBold
+        var attributes = typography.attributes
+        attributes.updateValue(typography.font, forKey: .font)
+        let attributedText = NSAttributedString(
+            string: text,
+            attributes: attributes
+        )
+        
+        let availableWidth = cardTextScrollView.bounds.width - 16 * 2
+        let size: CGSize = .init(width: availableWidth, height: .greatestFiniteMagnitude)
+        let boundingRect = attributedText.boundingRect(
+            with: size,
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            context: nil
+        )
+        let boundingHeight = boundingRect.height + 14 * 2 /// top, bottom inset
+        let backgroundHeight = rootContainerImageView.bounds.height
+        
+        cardTextScrollView.isScrollEnabled = boundingHeight > backgroundHeight * 0.5
+        
+        contentHeightConstraint?.deactivate()
+        cardTextBackgroundView.snp.makeConstraints {
+            let height = min(boundingHeight, backgroundHeight * 0.5)
+            contentHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+        }
     }
     
     
