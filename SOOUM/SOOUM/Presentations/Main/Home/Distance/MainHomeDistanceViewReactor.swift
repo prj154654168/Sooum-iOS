@@ -48,7 +48,7 @@ class MainHomeDistanceViewReactor: Reactor {
     let simpleCache = SimpleCache.shared
     
     // TODO: 페이징
-    //private let countPerLoading: Int = 10
+    // private let countPerLoading: Int = 10
     
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -165,7 +165,7 @@ extension MainHomeDistanceViewReactor {
             distanceFilter: distanceFilter
         )
         
-        return self.networkManager.request(LatestCardResponse.self, request: request)
+        return self.networkManager.request(DistanceCardResponse.self, request: request)
             .map(\.embedded.cards)
             .withUnretained(self)
             .map { object, cards in
