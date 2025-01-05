@@ -98,13 +98,14 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         self.navigationBar.titlePosition = .left
         
         self.navigationBar.hidesBackButton = true
+        
         self.rightAlamButton.snp.makeConstraints {
             $0.size.equalTo(24)
         }
-        self.rightAlamButton.addSubview(self.dotWithoutReadView)
+        (self.rightAlamButton.imageView ?? self.rightAlamButton).addSubview(self.dotWithoutReadView)
         self.dotWithoutReadView.snp.makeConstraints {
-            $0.top.equalTo(self.rightAlamButton.snp.top).offset(2)
-            $0.trailing.equalTo(self.rightAlamButton.snp.trailing).offset(-3)
+            $0.top.equalToSuperview().offset(2)
+            $0.trailing.equalToSuperview().offset(-3)
             $0.size.equalTo(6)
         }
         self.navigationBar.setRightButtons([self.rightAlamButton])

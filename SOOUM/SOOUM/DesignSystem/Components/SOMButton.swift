@@ -42,9 +42,9 @@ class SOMButton: UIButton {
         }
     }
     
-    var isUnderlined: Bool? {
+    var hasUnderlined: Bool? {
         didSet {
-            if oldValue != self.isUnderlined {
+            if oldValue != self.hasUnderlined {
                 self.setConfiguration()
             }
         }
@@ -83,7 +83,7 @@ class SOMButton: UIButton {
                 attributes.updateValue(foregroundColor, forKey: .foregroundColor)
             }
             
-            if self.isUnderlined == true {
+            if self.hasUnderlined == true {
                 attributes.updateValue(NSUnderlineStyle.single.rawValue, forKey: .underlineStyle)
                 attributes.updateValue(foregroundColor ?? UIColor.som.gray400, forKey: .underlineColor)
             }
