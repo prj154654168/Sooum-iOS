@@ -425,7 +425,6 @@ extension DetailViewController: UICollectionViewDataSource {
             footer.likeAndCommentView.commentBackgroundButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let writeCardViewController = WriteCardViewController()
-                    writeCardViewController.setupNaviBar()
                     writeCardViewController.reactor = reactor.reactorForWriteCard()
                     object.navigationPush(writeCardViewController, animated: true, bottomBarHidden: true)
                 }

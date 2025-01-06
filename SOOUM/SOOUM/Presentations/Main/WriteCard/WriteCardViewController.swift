@@ -63,6 +63,10 @@ class WriteCardViewController: BaseNavigationViewController, View {
         false
     }
     
+    override var navigationPopGestureEnabled: Bool {
+        false
+    }
+    
     private let uploadCardBottomSheetViewController = UploadCardBottomSheetViewController()
     
     private var writtenTagModels = [SOMTagModel]()
@@ -121,19 +125,36 @@ class WriteCardViewController: BaseNavigationViewController, View {
     }
     
     override func bind() {
-        
-        self.backButton.rx.tap
-            .subscribe(with: self) { object, _ in
-                
-                guard object.presentedViewController != nil else { return }
-                
-                object.dismissBottomSheet(completion: {
-                    object.navigationPop()
-                })
-            }
-            .disposed(by: self.disposeBag)
+        super.bind()
         
         self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.setupNaviBar()
+        
+        guard self.presentedViewController == nil else { return }
+        
+        self.showBottomSheet(
+            presented: self.uploadCardBottomSheetViewController,
+            dismissWhenScreenDidTap: true,
+            isHandleBar: true,
+            neverDismiss: true,
+            maxHeight: self.maxHeight,
+            initalHeight: self.initalHeight
+        )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.serialTimer?.dispose()
+        
+        if self.presentedViewController != nil {
+            self.dismissBottomSheet()
+        }
     }
     
     
@@ -151,28 +172,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 self.subscribePungTime()
             }
         }
-        
-        // Life Cycle
-        self.rx.viewWillDisappear
-            .subscribe(with: self) { object, _ in
-                object.serialTimer?.dispose()
-            }
-            .disposed(by: self.disposeBag)
-        
-        self.rx.viewWillAppear
-            .subscribe(with: self) { object, _ in
-                guard object.presentedViewController == nil else { return }
-                
-                object.showBottomSheet(
-                    presented: object.uploadCardBottomSheetViewController,
-                    dismissWhenScreenDidTap: true,
-                    isHandleBar: true,
-                    neverDismiss: true,
-                    maxHeight: object.maxHeight,
-                    initalHeight: object.initalHeight
-                )
-            }
-            .disposed(by: self.disposeBag)
         
         // Keyboard, bottomSheet interaction
         Observable.combineLatest(
