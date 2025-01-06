@@ -16,14 +16,19 @@ class NotificationViewCell: UITableViewCell {
     static let cellIdentifier = String(reflecting: NotificationViewCell.self)
     
     private let feedCardImageView = UIImageView().then {
-        $0.backgroundColor = .black.withAlphaComponent(0.3)
         $0.layer.cornerRadius = 6
         $0.clipsToBounds = true
+    }
+    
+    private let feedCardDimView = UIView().then {
+        $0.backgroundColor = .black.withAlphaComponent(0.3)
     }
     
     private let feedCardContentLabel = UILabel().then {
         $0.textColor = .som.white
         $0.textAlignment = .center
+        $0.numberOfLines = 0
+        $0.lineBreakMode = .byTruncatingTail
         $0.typography = .init(
             fontContainer: BuiltInFont(size: 3, weight: .bold),
             lineHeight: 5,
@@ -68,9 +73,15 @@ class NotificationViewCell: UITableViewCell {
             $0.size.equalTo(40)
         }
         
+        self.feedCardImageView.addSubview(self.feedCardDimView)
+        self.feedCardDimView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
         self.feedCardImageView.addSubview(self.feedCardContentLabel)
         self.feedCardContentLabel.snp.makeConstraints {
-            $0.center.equalToSuperview()
+            $0.top.leading.equalToSuperview().offset(5)
+            $0.bottom.trailing.equalToSuperview().offset(-5)
         }
         
         self.contentView.addSubview(self.notificationTitleLabel)
