@@ -59,10 +59,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
         58
     }
     
-    override var isEndEditingWhenWillDisappear: Bool {
-        false
-    }
-    
     override var navigationPopGestureEnabled: Bool {
         false
     }
@@ -152,9 +148,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         self.serialTimer?.dispose()
         
-        if self.presentedViewController != nil {
-            self.dismissBottomSheet()
-        }
+        self.presentedViewController?.dismiss(animated: false)
     }
     
     
