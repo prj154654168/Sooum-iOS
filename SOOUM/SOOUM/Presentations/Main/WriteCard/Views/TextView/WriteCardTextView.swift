@@ -63,6 +63,11 @@ class WriteCardTextView: UIView {
         $0.delegate = self
     }
     
+    private let placeholderLabel = UILabel().then {
+        $0.textColor = .som.white
+        $0.typography = .som.body1WithBold
+    }
+    
     private let characterLabel = UILabel().then {
         $0.textColor = .init(hex: "#D6D6D6")
         // 고정된 타이포그래피가 없음
@@ -78,6 +83,15 @@ class WriteCardTextView: UIView {
     var image: UIImage? {
         didSet {
             self.backgroundImageView.image = self.image
+        }
+    }
+    
+    var placeholder: String? {
+        set {
+            self.placeholderLabel.text = newValue
+        }
+        get {
+            return self.placeholderLabel.text
         }
     }
     
@@ -178,6 +192,11 @@ class WriteCardTextView: UIView {
             $0.height.equalTo(height)
         }
         
+        self.textView.addSubview(self.placeholderLabel)
+        self.placeholderLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
         self.addSubview(self.characterLabel)
         self.characterLabel.snp.makeConstraints {
             $0.bottom.equalToSuperview().offset(-12)
@@ -233,6 +252,8 @@ extension WriteCardTextView: UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         self.delegate?.textViewDidBeginEditing(self)
+        
+        self.placeholderLabel.isHidden = true
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -242,6 +263,9 @@ extension WriteCardTextView: UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
         self.delegate?.textViewDidEndEditing(self)
+        
+        let isHidden = textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+        placeholderLabel.isHidden = isHidden
     }
     
     func textViewDidChange(_ textView: UITextView) {

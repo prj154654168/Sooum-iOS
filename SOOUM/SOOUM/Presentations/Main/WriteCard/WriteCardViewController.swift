@@ -21,10 +21,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
     enum Text {
         static let timeLimitLabelText: String = "시간제한 카드"
         static let wirteButtonTitle: String = "작성하기"
-        static let wirteTagPlacholder: String = "#태그를 입력해주세요!"
-        static let relatedTagsTitle: String = "#관련태그"
-        
-        static let uploadCardBottomSheetEntryName: String = "uploadCardBottomSheetViewController"
         
         static let writeDialogTitle: String = "카드를 작성할까요?"
         static let writeDialogSubTitle: String = "추가한 카드는 수정할 수 없어요"
