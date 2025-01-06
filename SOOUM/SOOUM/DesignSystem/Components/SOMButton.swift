@@ -64,7 +64,7 @@ class SOMButton: UIButton {
         
         // 이미지 설정
         if let image = self.image {
-            configuration.image = self.image
+            configuration.image = image
             
             if let foregroundColor = self.foregroundColor {
                 configuration.image?.withTintColor(foregroundColor)
