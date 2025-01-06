@@ -49,7 +49,7 @@ class WriteCardTextView: UIView {
         )
         $0.textContainer.lineFragmentPadding = 0
         
-        $0.scrollIndicatorInsets = .init(top: 4, left: 0, bottom: 4, right: 6)
+        $0.scrollIndicatorInsets = .init(top: 4, left: 0, bottom: 4, right: 0)
         $0.indicatorStyle = .white
         $0.isScrollEnabled = true
         
@@ -206,7 +206,7 @@ class WriteCardTextView: UIView {
     
     private func updateTextContainerInset(_ textView: UITextView) {
         
-        let min: UIEdgeInsets = .init(top: 14, left: 16, bottom: 14, right: 16)
+        let min: UIEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
         
         let attributedText = NSAttributedString(
             string: textView.text,
