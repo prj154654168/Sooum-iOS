@@ -32,11 +32,13 @@ class TagDetailViewController: BaseViewController, View {
             EmptyTagDetailTableViewCell.self,
             forCellReuseIdentifier: String(describing: EmptyTagDetailTableViewCell.self)
         )
-        $0.refreshControl = UIRefreshControl()
+        $0.refreshControl = SOMRefreshControl()
         $0.contentInsetAdjustmentBehavior = .never
         $0.dataSource = self
         $0.delegate = self
     }
+    
+    var isRefreshEnabled = false
     
     override func setupConstraints() {
         self.view.addSubview(navBarView)
@@ -177,5 +179,25 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         0
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
+        let offset = scrollView.contentOffset.y
+        self.isRefreshEnabled = offset <= 0
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.tableView.refreshControl,
+           offset <= -(refreshControl.frame.origin.y + 40) {
+            
+            refreshControl.beginRefreshingFromTop()
+        }
     }
 }
