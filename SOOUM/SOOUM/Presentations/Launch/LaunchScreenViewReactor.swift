@@ -31,13 +31,11 @@ class LaunchScreenViewReactor: Reactor {
         case launch
     }
     
-    // MARK: - Mutation
     enum Mutation {
         case updateIsRegistered(Bool)
         case updateError(String)
     }
     
-    // MARK: - State
     struct State {
         /// deviceId 서버 등록 여부, 로그인 성공 여부
         var isRegistered: Bool

@@ -20,6 +20,8 @@ class SOMDialogViewController: UIViewController {
         case report
         case block
         case setting
+        case exit
+        case update
         
         var text: String {
             switch self {
@@ -35,6 +37,10 @@ class SOMDialogViewController: UIViewController {
                 "차단하기"
             case .setting:
                 "설정"
+            case .exit:
+                "종료하기"
+            case .update:
+                "업데이트"
             }
         }
         

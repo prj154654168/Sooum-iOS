@@ -14,17 +14,18 @@ import Then
 class WriteCardView: UIView {
     
     enum Text {
-        static let wirteButtonTitle: String = "작성하기"
-        static let wirteTagPlacholder: String = "#태그를 입력해주세요!"
+        static let writeCardPlaceholder: String = "이곳에 글을 적어주세요."
+        static let wirteTagPlaceholder: String = "#태그를 입력해주세요!"
         static let relatedTagsTitle: String = "#관련태그"
     }
     
     lazy var writeCardTextView = WriteCardTextView().then {
         $0.maxCharacter = 1000
+        $0.placeholder = Text.writeCardPlaceholder
     }
     
     lazy var writeTagTextField = WriteTagTextField().then {
-        $0.placeholder = Text.wirteTagPlacholder
+        $0.placeholder = Text.wirteTagPlaceholder
     }
     
     let pungTimeView = PungTimeView().then {

@@ -479,6 +479,10 @@
 		38F720B62CD4F15900DF32B5 /* PopularCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F720A32CD4F15900DF32B5 /* PopularCardResponse.swift */; };
 		38F720B82CD4F16500DF32B5 /* CardProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F720B72CD4F16500DF32B5 /* CardProtocol.swift */; };
 		38F720B92CD4F16500DF32B5 /* CardProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F720B72CD4F16500DF32B5 /* CardProtocol.swift */; };
+		38F88EBA2D2C1CB8002AD7A8 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F88EB92D2C1CB8002AD7A8 /* Info.swift */; };
+		38F88EBB2D2C1CB8002AD7A8 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F88EB92D2C1CB8002AD7A8 /* Info.swift */; };
+		38F88EBE2D2C1E22002AD7A8 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F88EBD2D2C1E22002AD7A8 /* Version.swift */; };
+		38F88EBF2D2C1E22002AD7A8 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F88EBD2D2C1E22002AD7A8 /* Version.swift */; };
 		38FD4DAB2D032CF000BF5FF1 /* AnnouncementResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FD4DAA2D032CF000BF5FF1 /* AnnouncementResponse.swift */; };
 		38FD4DAC2D032CF000BF5FF1 /* AnnouncementResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FD4DAA2D032CF000BF5FF1 /* AnnouncementResponse.swift */; };
 		38FD4DAE2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FD4DAD2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift */; };
@@ -742,6 +746,8 @@
 		38F720A22CD4F15900DF32B5 /* LatestCardResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LatestCardResponse.swift; sourceTree = "<group>"; };
 		38F720A32CD4F15900DF32B5 /* PopularCardResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopularCardResponse.swift; sourceTree = "<group>"; };
 		38F720B72CD4F16500DF32B5 /* CardProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardProtocol.swift; sourceTree = "<group>"; };
+		38F88EB92D2C1CB8002AD7A8 /* Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info.swift; sourceTree = "<group>"; };
+		38F88EBD2D2C1E22002AD7A8 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
 		38FD4DAA2D032CF000BF5FF1 /* AnnouncementResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementResponse.swift; sourceTree = "<group>"; };
 		38FD4DAD2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementViewReactor.swift; sourceTree = "<group>"; };
 		38FD4DB02D034C1700BF5FF1 /* MyFollowingViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFollowingViewCell.swift; sourceTree = "<group>"; };
@@ -1265,6 +1271,7 @@
 				38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */,
 				38389B9E2CCCFB7D006728AF /* AuthKeyChain.swift */,
 				3834FADC2D11C5AC00C9108D /* SimpleCache.swift */,
+				38F88EB92D2C1CB8002AD7A8 /* Info.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1531,6 +1538,7 @@
 		387FBB032C87036D00A5E139 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				38F88EBC2D2C1E19002AD7A8 /* Models */,
 				387FBAEF2C8702C100A5E139 /* AppDelegate.swift */,
 				387FBAF12C8702C100A5E139 /* SceneDelegate.swift */,
 			);
@@ -1989,6 +1997,14 @@
 			path = MainHome;
 			sourceTree = "<group>";
 		};
+		38F88EBC2D2C1E19002AD7A8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				38F88EBD2D2C1E22002AD7A8 /* Version.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		38FDC2B42C9E745B00C094C2 /* Base */ = {
 			isa = PBXGroup;
 			children = (
@@ -2373,6 +2389,7 @@
 				2A45B3702CE4C5510071026A /* RegisterUserResponse.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				2AE6B1932CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
+				38F88EBF2D2C1E22002AD7A8 /* Version.swift in Sources */,
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				3830FFA72CEC6E3100ABA9FD /* Kingfisher.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
@@ -2391,6 +2408,7 @@
 				2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */,
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
 				38405CCC2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
+				38F88EBB2D2C1CB8002AD7A8 /* Info.swift in Sources */,
 				381A1D6B2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
 				2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				2AFD05672D01CB30007C84AD /* TagInfoResponse.swift in Sources */,
@@ -2475,6 +2493,7 @@
 				38FD4DAE2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift in Sources */,
 				2A44A4342CAC21A500DC463E /* SignUpResponse.swift in Sources */,
 				385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
+				38F88EBA2D2C1CB8002AD7A8 /* Info.swift in Sources */,
 				3834FADD2D11C5AC00C9108D /* SimpleCache.swift in Sources */,
 				38D563842D1719B1006265AA /* SOMSwipeTabBarItem.swift in Sources */,
 				2A5BB7BE2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */,
@@ -2567,6 +2586,7 @@
 				38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				382E153F2D15AF4F0097B09C /* CommentHistoryInNotiResponse.swift in Sources */,
 				3878D0632CFFD66700F9522F /* FollowViewController.swift in Sources */,
+				38F88EBE2D2C1E22002AD7A8 /* Version.swift in Sources */,
 				381A1D652CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */,
 				38B8A58B2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
 				2A5BB7E02CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */,
@@ -2757,6 +2777,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = core.sooum.org;
@@ -2801,6 +2822,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = core.sooum.org;
@@ -2868,6 +2890,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SOOUM_APP_ID = "";
 				SOOUM_DISPLAY_NAME = "";
 				SOOUM_LOCATION_DESCRIPTION = "";
 				SOOUM_PHOTO_LIBRARY_DESCRIPTION = "사진 업로드를 위해 갤러리 권한이 필요합니다.";
@@ -2928,6 +2951,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SOOUM_APP_ID = "";
 				SOOUM_DISPLAY_NAME = "";
 				SOOUM_LOCATION_DESCRIPTION = "";
 				SOOUM_PHOTO_LIBRARY_DESCRIPTION = "사진 업로드를 위해 갤러리 권한이 필요합니다.";

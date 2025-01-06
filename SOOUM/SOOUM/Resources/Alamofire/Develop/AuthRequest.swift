@@ -29,6 +29,8 @@ enum AuthRequest: BaseRequest {
     case reAuthenticationWithRefreshSession
     /// fcm 업데이트
     case updateFCM(fcmToken: String)
+    /// version 검사
+    case updateCheck
     
     var path: String {
         switch self {
@@ -42,12 +44,14 @@ enum AuthRequest: BaseRequest {
             return "/users/token"
         case .updateFCM:
             return "/members/fcm"
+        case .updateCheck:
+            return "/app/version/ios"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .getPublicKey:
+        case .getPublicKey, .updateCheck:
             return .get
         case .login, .signUp, .reAuthenticationWithRefreshSession:
             return .post

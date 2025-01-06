@@ -49,7 +49,7 @@ class WriteCardTextView: UIView {
         )
         $0.textContainer.lineFragmentPadding = 0
         
-        $0.scrollIndicatorInsets = .init(top: 4, left: 0, bottom: 4, right: 6)
+        $0.scrollIndicatorInsets = .init(top: 4, left: 0, bottom: 4, right: 0)
         $0.indicatorStyle = .white
         $0.isScrollEnabled = true
         
@@ -61,6 +61,11 @@ class WriteCardTextView: UIView {
         $0.spellCheckingType = .no
         
         $0.delegate = self
+    }
+    
+    private let placeholderLabel = UILabel().then {
+        $0.textColor = .som.white
+        $0.typography = .som.body1WithBold
     }
     
     private let characterLabel = UILabel().then {
@@ -78,6 +83,15 @@ class WriteCardTextView: UIView {
     var image: UIImage? {
         didSet {
             self.backgroundImageView.image = self.image
+        }
+    }
+    
+    var placeholder: String? {
+        set {
+            self.placeholderLabel.text = newValue
+        }
+        get {
+            return self.placeholderLabel.text
         }
     }
     
@@ -178,6 +192,11 @@ class WriteCardTextView: UIView {
             $0.height.equalTo(height)
         }
         
+        self.textView.addSubview(self.placeholderLabel)
+        self.placeholderLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
         self.addSubview(self.characterLabel)
         self.characterLabel.snp.makeConstraints {
             $0.bottom.equalToSuperview().offset(-12)
@@ -187,7 +206,7 @@ class WriteCardTextView: UIView {
     
     private func updateTextContainerInset(_ textView: UITextView) {
         
-        let min: UIEdgeInsets = .init(top: 14, left: 16, bottom: 14, right: 16)
+        let min: UIEdgeInsets = .init(top: 12, left: 16, bottom: 12, right: 16)
         
         let attributedText = NSAttributedString(
             string: textView.text,
@@ -233,6 +252,8 @@ extension WriteCardTextView: UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         self.delegate?.textViewDidBeginEditing(self)
+        
+        self.placeholderLabel.isHidden = true
     }
     
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -242,6 +263,9 @@ extension WriteCardTextView: UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
         self.delegate?.textViewDidEndEditing(self)
+        
+        let isHidden = textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+        placeholderLabel.isHidden = isHidden
     }
     
     func textViewDidChange(_ textView: UITextView) {

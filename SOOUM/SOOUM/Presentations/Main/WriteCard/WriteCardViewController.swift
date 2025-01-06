@@ -21,10 +21,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
     enum Text {
         static let timeLimitLabelText: String = "시간제한 카드"
         static let wirteButtonTitle: String = "작성하기"
-        static let wirteTagPlacholder: String = "#태그를 입력해주세요!"
-        static let relatedTagsTitle: String = "#관련태그"
-        
-        static let uploadCardBottomSheetEntryName: String = "uploadCardBottomSheetViewController"
         
         static let writeDialogTitle: String = "카드를 작성할까요?"
         static let writeDialogSubTitle: String = "추가한 카드는 수정할 수 없어요"
@@ -63,7 +59,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         58
     }
     
-    override var isEndEditingWhenWillDisappear: Bool {
+    override var navigationPopGestureEnabled: Bool {
         false
     }
     
@@ -125,19 +121,34 @@ class WriteCardViewController: BaseNavigationViewController, View {
     }
     
     override func bind() {
-        
-        self.backButton.rx.tap
-            .subscribe(with: self) { object, _ in
-                
-                guard object.presentedViewController != nil else { return }
-                
-                object.dismissBottomSheet(completion: {
-                    object.navigationPop()
-                })
-            }
-            .disposed(by: self.disposeBag)
+        super.bind()
         
         self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.setupNaviBar()
+        
+        guard self.presentedViewController == nil else { return }
+        
+        self.showBottomSheet(
+            presented: self.uploadCardBottomSheetViewController,
+            dismissWhenScreenDidTap: true,
+            isHandleBar: true,
+            neverDismiss: true,
+            maxHeight: self.maxHeight,
+            initalHeight: self.initalHeight
+        )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.serialTimer?.dispose()
+        
+        self.presentedViewController?.dismiss(animated: false)
     }
     
     
@@ -155,28 +166,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 self.subscribePungTime()
             }
         }
-        
-        // Life Cycle
-        self.rx.viewWillDisappear
-            .subscribe(with: self) { object, _ in
-                object.serialTimer?.dispose()
-            }
-            .disposed(by: self.disposeBag)
-        
-        self.rx.viewWillAppear
-            .subscribe(with: self) { object, _ in
-                guard object.presentedViewController == nil else { return }
-                
-                object.showBottomSheet(
-                    presented: object.uploadCardBottomSheetViewController,
-                    dismissWhenScreenDidTap: true,
-                    isHandleBar: true,
-                    neverDismiss: true,
-                    maxHeight: object.maxHeight,
-                    initalHeight: object.initalHeight
-                )
-            }
-            .disposed(by: self.disposeBag)
         
         // Keyboard, bottomSheet interaction
         Observable.combineLatest(

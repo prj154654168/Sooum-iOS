@@ -38,7 +38,7 @@ class MyFollowingViewCell: UITableViewCell {
         $0.title = Text.didFollowButton
         $0.typography = .som.body3WithBold
         $0.foregroundColor = .som.gray400
-        $0.isUnderlined = true
+        $0.hasUnderlined = true
     }
     
     let followButton = SOMButton().then {

@@ -100,7 +100,11 @@ class DetailViewController: BaseNavigationViewController, View {
          // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: MainHomeTabBarController.self, animated: false)
+                 if let navigationController = object.navigationController {
+                     navigationController.popToRootViewController(animated: false)
+                 } else {
+                     object.navigationPop()
+                 }
              }
              .disposed(by: self.disposeBag)
          
@@ -421,7 +425,6 @@ extension DetailViewController: UICollectionViewDataSource {
             footer.likeAndCommentView.commentBackgroundButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let writeCardViewController = WriteCardViewController()
-                    writeCardViewController.setupNaviBar()
                     writeCardViewController.reactor = reactor.reactorForWriteCard()
                     object.navigationPush(writeCardViewController, animated: true, bottomBarHidden: true)
                 }

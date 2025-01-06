@@ -58,7 +58,7 @@ class OnboardingViewController: BaseViewController {
         $0.typography = .som.body2WithBold
         $0.title = "기존 계정이 있으신가요?"
         $0.foregroundColor = UIColor(hex: "#B4B4B4")
-        $0.isUnderlined = true
+        $0.hasUnderlined = true
         $0.layer.cornerRadius = 12
         $0.backgroundColor = .clear
     }

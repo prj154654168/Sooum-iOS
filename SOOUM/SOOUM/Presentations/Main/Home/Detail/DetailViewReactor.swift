@@ -63,10 +63,16 @@ class DetailViewReactor: Reactor {
     
     let entranceType: EntranceType
     let selectedCardId: String
+    var parentPungTime: Date?
     
-    init(type entranceType: EntranceType = .navi, _ selectedCardId: String) {
+    init(
+        type entranceType: EntranceType = .navi,
+        _ selectedCardId: String,
+        hasPungTime parentPungTime: Date? = nil
+    ) {
         self.entranceType = entranceType
         self.selectedCardId = selectedCardId
+        self.parentPungTime = parentPungTime
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -206,7 +212,7 @@ extension DetailViewReactor {
     }
     
     func reactorForPush(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(selectedId)
+        DetailViewReactor(selectedId, hasPungTime: self.currentState.detailCard.storyExpirationTime)
     }
     
     func reactorForReport() -> ReportViewReactor {
@@ -217,7 +223,7 @@ extension DetailViewReactor {
         WriteCardViewReactor(
             type: .comment,
             parentCardId: self.selectedCardId,
-            parentPungTime: self.currentState.detailCard.storyExpirationTime
+            parentPungTime: self.currentState.detailCard.storyExpirationTime ?? self.parentPungTime
         )
     }
     

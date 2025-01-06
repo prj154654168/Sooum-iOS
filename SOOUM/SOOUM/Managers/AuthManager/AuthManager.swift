@@ -146,6 +146,7 @@ class AuthManager: AuthManagerDelegate {
                     return networkManager.request(SignInResponse.self, request: request)
                         .map { response -> Bool in
                             if response.isRegistered, let token = response.token {
+                                
                                 object.authInfo.updateToken(token)
                                 
                                 if let fcmToken = object.registeredToken?.fcm {
@@ -212,6 +213,13 @@ class AuthManager: AuthManagerDelegate {
                         completion(.failure(error))
                     } else {
                         
+                        object.updateTokens(
+                            .init(
+                                accessToken: accessToken,
+                                refreshToken: token.refreshToken
+                            )
+                        )
+                        
                         if let fcmToken = object.registeredToken?.fcm {
                             let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
                             networkManager.request(Empty.self, request: request)
@@ -223,12 +231,6 @@ class AuthManager: AuthManagerDelegate {
                             print("ℹ️ Failed FCM token updated to server")
                         }
                         
-                        object.updateTokens(
-                            .init(
-                                accessToken: accessToken,
-                                refreshToken: token.refreshToken
-                            )
-                        )
                         completion(.success)
                     }
                     

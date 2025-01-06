@@ -34,7 +34,7 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
         $0.title = "다음에 변경하기"
         $0.typography = .som.body3WithBold
         $0.foregroundColor = .som.p300
-        $0.isUnderlined = true
+        $0.hasUnderlined = true
     }
      
     func bind(reactor: ProfileImageSettingViewReactor) {
