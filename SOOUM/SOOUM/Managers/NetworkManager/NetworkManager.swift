@@ -18,7 +18,8 @@ protocol NetworkManagerDelegate: AnyObject {
         _ data: Data,
         to url: URLConvertible
     ) -> Observable<Result<Void, Error>>
-    func download<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<(T, URL)>
+    
+    func checkClientVersion() -> Observable<String>
 }
 
 class NetworkManager {
@@ -107,14 +108,14 @@ extension NetworkManager: NetworkManagerDelegate {
                     emptyResponseCodes: [200, 201, 204, 205]
                 ) { response in
                     switch response.result {
-                    case .success(let value):
+                    case let .success(value):
                         if let error = response.error {
                             observer.onError(error)
                         } else {
                             observer.onNext(value)
                             observer.onCompleted()
                         }
-                    case .failure(let error):
+                    case let .failure(error):
                         print("❌ Network or response format error: \(error)")
                         observer.onError(error)
                     }
@@ -155,46 +156,22 @@ extension NetworkManager: NetworkManagerDelegate {
         }
     }
     
-    func download<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<(T, URL)> {
+    func checkClientVersion() -> Observable<String> {
+        
         return Observable.create { [weak self] observer -> Disposable in
             
-            let task = self?.session.download(request)
+            let task = self?.session.request(AuthRequest.updateCheck)
                 .validate(statusCode: 200..<500)
-                .responseDecodable(
-                    of: object,
-                    decoder: self?.decoder ?? JSONDecoder()
-                ) { response in
+                .responseString { response in
                     switch response.result {
-                    case .success(let value):
-                        
-                        guard let httpResponse = response.response,
-                              let fileURL = response.fileURL else {
-                            
-                            let error: NSError = self?.setupError("❌ No HTTPResponse") ?? .init()
-                            observer.onError(error)
-                            return
-                        }
-                        
-                        guard (200..<300).contains(httpResponse.statusCode) else {
-                            
-                            let error: NSError = self?.setupError(
-                                "❌ Unacceptable status code: \(httpResponse.statusCode)"
-                            ) ?? .init()
-                            observer.onError(error)
-                            return
-                        }
-                        
+                    case let .success(value):
                         if let error = response.error {
-                            
-                            let error: NSError = self?.setupError(
-                                "❌ Alamofire errors: \(error)"
-                            ) ?? .init()
                             observer.onError(error)
+                        } else {
+                            observer.onNext(value)
+                            observer.onCompleted()
                         }
-                        
-                        observer.onNext((value, fileURL))
-                        observer.onCompleted()
-                    case .failure(let error):
+                    case let .failure(error):
                         print("❌ Network or response format error: \(error)")
                         observer.onError(error)
                     }
