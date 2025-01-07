@@ -230,6 +230,7 @@ class DetailViewController: BaseNavigationViewController, View {
          
          reactor.state.map(\.isDeleted)
              .distinctUntilChanged()
+             .skip(1)
              .subscribe(with: self) { object, isDeleted in
                  UIApplication.topViewController?.dismiss(animated: true) {
                      object.isDeleted = isDeleted
