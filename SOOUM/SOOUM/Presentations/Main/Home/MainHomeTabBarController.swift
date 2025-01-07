@@ -367,7 +367,35 @@ extension MainHomeTabBarController: UIPageViewControllerDataSource {
               currentIndex < self.pages.count - 1
         else { return nil }
         
-        return self.pages[currentIndex + 1]
+        if self.currentPage + 1 == 2, self.reactor?.locationManager.locationAuthStatus == .denied {
+            
+            SOMDialogViewController.show(
+                title: Text.dialogTitle,
+                subTitle: Text.dialogSubTitle,
+                leftAction: .init(
+                    mode: .cancel,
+                    handler: { UIApplication.topViewController?.dismiss(animated: true) }
+                ),
+                rightAction: .init(
+                    mode: .setting,
+                    handler: {
+                        let application = UIApplication.shared
+                        let openSettingsURLString: String = UIApplication.openSettingsURLString
+                        if let settingsURL = URL(string: openSettingsURLString),
+                           application.canOpenURL(settingsURL) {
+                            application.open(settingsURL)
+                        }
+                        
+                        UIApplication.topViewController?.dismiss(animated: true)
+                    }
+                )
+            )
+            
+            return nil
+        } else {
+            
+            return self.pages[currentIndex + 1]
+        }
     }
 }
 
