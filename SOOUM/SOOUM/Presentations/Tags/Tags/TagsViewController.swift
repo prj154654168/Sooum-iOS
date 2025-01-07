@@ -74,6 +74,7 @@ class TagsViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
         
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
+            .throttle(.seconds(1), scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.fetchTags }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
