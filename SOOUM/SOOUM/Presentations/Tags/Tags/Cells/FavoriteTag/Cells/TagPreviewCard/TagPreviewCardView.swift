@@ -69,25 +69,23 @@ class TagPreviewCardView: UIView {
         rootContainerImageView.addSubview(cardTextBackgroundView)
         cardTextBackgroundView.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(20)
-            $0.top.equalToSuperview().offset(20)
+            $0.top.greaterThanOrEqualToSuperview().offset(20)
             $0.trailing.equalToSuperview().offset(-20)
-            $0.bottom.equalToSuperview().offset(-20)
+            $0.bottom.lessThanOrEqualToSuperview().offset(-20)
+            $0.center.equalToSuperview()
         }
         
         rootContainerImageView.addSubview(cardTextBackgroundBlurView)
         cardTextBackgroundBlurView.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(20)
-            $0.top.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.bottom.equalToSuperview().offset(-20)
+            $0.edges.equalTo(cardTextBackgroundView)
         }
         
         rootContainerImageView.addSubview(cardTextContentLabel)
         cardTextContentLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(36)
-            $0.top.equalToSuperview().offset(32)
-            $0.trailing.equalToSuperview().offset(-36)
-            $0.bottom.equalToSuperview().offset(-32)
+            $0.leading.equalTo(cardTextBackgroundView).offset(16)
+            $0.top.equalTo(cardTextBackgroundView).offset(12)
+            $0.trailing.equalTo(cardTextBackgroundView).offset(-16)
+            $0.bottom.equalTo(cardTextBackgroundView).offset(-12)
         }
     }
 }
