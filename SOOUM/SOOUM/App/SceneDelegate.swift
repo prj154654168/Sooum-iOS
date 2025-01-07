@@ -36,14 +36,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if let infoDic: [String: Any] = userInfo as? [String: Any] {
                 
                 let info = NotificationInfo(infoDic)
-                PushManager.shared.setupRootViewController(info)
+                PushManager.shared.setupRootViewController(info, terminated: true)
             }
         }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) { }
 
-    func sceneDidBecomeActive(_ scene: UIScene) { }
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        // Use this method to prepare your scene to be onscreen.
+        // UIKit calls this method after loading the interface for your scene, but before that interface appears onscreen.
+        // Use it to refresh the contents of views, start timers, or increase frame rates for your UI.
+        
+        (UIApplication.shared.delegate as? AppDelegate)?.checkUpdate()
+    }
 
     func sceneWillResignActive(_ scene: UIScene) { }
 

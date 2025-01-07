@@ -21,10 +21,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
     enum Text {
         static let timeLimitLabelText: String = "시간제한 카드"
         static let wirteButtonTitle: String = "작성하기"
-        static let wirteTagPlacholder: String = "#태그를 입력해주세요!"
-        static let relatedTagsTitle: String = "#관련태그"
-        
-        static let uploadCardBottomSheetEntryName: String = "uploadCardBottomSheetViewController"
         
         static let writeDialogTitle: String = "카드를 작성할까요?"
         static let writeDialogSubTitle: String = "추가한 카드는 수정할 수 없어요"
@@ -63,7 +59,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         58
     }
     
-    override var isEndEditingWhenWillDisappear: Bool {
+    override var navigationPopGestureEnabled: Bool {
         false
     }
     
@@ -75,6 +71,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     private let initalHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28
     private var maxHeight: CGFloat = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + (74 * 3) + 19
+    
+    // 펑 이벤트 처리 위해 추가
+    private var serialTimer: Disposable?
     
     
     // MARK: - Life Cycles
@@ -122,19 +121,34 @@ class WriteCardViewController: BaseNavigationViewController, View {
     }
     
     override func bind() {
-        
-        self.backButton.rx.tap
-            .subscribe(with: self) { object, _ in
-                
-                guard object.presentedViewController != nil else { return }
-                
-                object.dismissBottomSheet(completion: {
-                    object.navigationPop()
-                })
-            }
-            .disposed(by: self.disposeBag)
+        super.bind()
         
         self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.setupNaviBar()
+        
+        guard self.presentedViewController == nil else { return }
+        
+        self.showBottomSheet(
+            presented: self.uploadCardBottomSheetViewController,
+            dismissWhenScreenDidTap: true,
+            isHandleBar: true,
+            neverDismiss: true,
+            maxHeight: self.maxHeight,
+            initalHeight: self.initalHeight
+        )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.serialTimer?.dispose()
+        
+        self.presentedViewController?.dismiss(animated: false)
     }
     
     
@@ -144,23 +158,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         if reactor.requestType == .comment {
             self.maxHeight = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + 74 + 19
-        }
-        
-        // Life Cycle
-        self.rx.viewWillAppear
-            .subscribe(with: self) { object, _ in
-                guard object.presentedViewController == nil else { return }
-                
-                object.showBottomSheet(
-                    presented: object.uploadCardBottomSheetViewController,
-                    dismissWhenScreenDidTap: true,
-                    isHandleBar: true,
-                    neverDismiss: true,
-                    maxHeight: object.maxHeight,
-                    initalHeight: object.initalHeight
-                )
+            
+            self.writeCardView.writeTagTextField.isHidden = reactor.parentPungTime != nil
+            self.writeCardView.pungTimeView.isHidden = reactor.parentPungTime == nil
+            
+            if reactor.parentPungTime != nil {
+                self.subscribePungTime()
             }
-            .disposed(by: self.disposeBag)
+        }
         
         // Keyboard, bottomSheet interaction
         Observable.combineLatest(
@@ -282,7 +287,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 object.writeCardView.writeTagTextField.isHidden = isTimeLimit
                 object.writeCardView.writtenTagsHeightConstraint?.deactivate()
                 object.writeCardView.writtenTags.snp.makeConstraints {
-                    let height = self.writtenTagModels.isEmpty ? 12 : 58
+                    let height = object.writtenTagModels.isEmpty ? 12 : 58
                     let constraint = isTimeLimit ? $0.height.equalTo(0).constraint : $0.height.equalTo(height).constraint
                     object.writeCardView.writtenTagsHeightConstraint = constraint
                 }
@@ -404,6 +409,29 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 }
             }
             .disposed(by: self.disposeBag)
+    }
+    
+    // 펑 이벤트 구독
+    private func subscribePungTime() {
+        self.serialTimer?.dispose()
+        self.serialTimer = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
+            .withUnretained(self)
+            .startWith((self, 0))
+            .map { object, _ in
+                guard let pungTime = object.reactor?.parentPungTime else {
+                    object.serialTimer?.dispose()
+                    return "00 : 00 : 00"
+                }
+                
+                let currentDate = Date()
+                let remainingTime = currentDate.infoReadableTimeTakenFromThisForPung(to: pungTime)
+                if remainingTime == "00 : 00 : 00" {
+                    object.serialTimer?.dispose()
+                }
+                
+                return remainingTime
+            }
+            .bind(to: self.writeCardView.pungTimeView.rx.text)
     }
 }
 

@@ -7,6 +7,8 @@
 
 import ReactorKit
 
+import Alamofire
+
 
 class SettingsViewReactor: Reactor {
     
@@ -31,6 +33,7 @@ class SettingsViewReactor: Reactor {
     
     private let networkManager = NetworkManager.shared
     private let pushManager = PushManager.shared
+    let authManager = AuthManager.shared
     
     private let disposeBag = DisposeBag()
     
@@ -42,7 +45,8 @@ class SettingsViewReactor: Reactor {
             isProcessing: false
         )
         
-        self.subscribe()
+        // 서버 api를 통해서만 알림 허용 유무 변경
+        // self.subscribe()
     }
     
     private func subscribe() {
@@ -64,10 +68,25 @@ class SettingsViewReactor: Reactor {
                         return .just(.updateBanEndAt(response.banEndAt))
                     }
                     .catch(self.catchClosure),
+                self.networkManager.request(
+                    NotificationAllowResponse.self,
+                    request: SettingsRequest.notificationAllow(isAllowNotify: nil)
+                )
+                .flatMapLatest { response -> Observable<Mutation> in
+                    return .just(.updateNotificationStatus(response.isAllowNotify))
+                }
+                .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
             ])
         case let .updateNotificationStatus(state):
-            return .just(.updateNotificationStatus(state))
+            return self.networkManager.request(
+                Empty.self,
+                request: SettingsRequest.notificationAllow(isAllowNotify: state)
+            )
+            .flatMapLatest { _ -> Observable<Mutation> in
+                return .just(.updateNotificationStatus(state))
+            }
+            .catchAndReturn(.updateNotificationStatus(!state))
         }
     }
     

@@ -29,6 +29,8 @@ enum AuthRequest: BaseRequest {
     case reAuthenticationWithRefreshSession
     /// fcm 업데이트
     case updateFCM(fcmToken: String)
+    /// version 검사
+    case updateCheck
     
     var path: String {
         switch self {
@@ -42,12 +44,14 @@ enum AuthRequest: BaseRequest {
             return "/users/token"
         case .updateFCM:
             return "/members/fcm"
+        case .updateCheck:
+            return "/app/version/ios"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .getPublicKey:
+        case .getPublicKey, .updateCheck:
             return .get
         case .login, .signUp, .reAuthenticationWithRefreshSession:
             return .post
@@ -115,6 +119,10 @@ enum AuthRequest: BaseRequest {
             
             // 재인증 API는 access와 refresh 둘 다 사용
             switch self.authorizationType {
+            case .access:
+                let authPayloadForAccess = AuthManager.shared.authPayloadByAccess()
+                let authKeyForAccess = authPayloadForAccess.keys.first! as String
+                request.setValue(authPayloadForAccess[authKeyForAccess], forHTTPHeaderField: authKeyForAccess)
             case .refresh:
                 let authPayloadForRefresh = AuthManager.shared.authPayloadByRefresh()
                 let authKeyForRefresh = authPayloadForRefresh.keys.first! as String

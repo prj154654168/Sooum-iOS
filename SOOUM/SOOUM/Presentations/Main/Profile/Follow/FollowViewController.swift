@@ -114,6 +114,20 @@ class FollowViewController: BaseNavigationViewController, View {
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isRequest)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isCancel)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
     }
 }
 
@@ -183,23 +197,20 @@ extension FollowViewController {
         ) as! MyFollowingViewCell
         cell.selectionStyle = .none
         cell.setModel(model)
+        cell.updateButton(model.isFollowing)
         
         cell.profilBackgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
                 
                 if model.isRequester {
                     
-                    let mainTabBarController = MainTabBarController()
-                    mainTabBarController.reactor = reactor.reactorForMainTabBar()
-                    mainTabBarController.didSelectedIndex(3)
-                    let navigationController = UINavigationController(
-                        rootViewController: mainTabBarController
-                    )
-                    object.view.window?.rootViewController = navigationController
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = reactor.reactorForProfile(type: .myWithNavi, model.id)
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 } else {
                     
                     let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(memberId: model.id)
+                    profileViewController.reactor = reactor.reactorForProfile(type: .other, model.id)
                     object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 }
             }
@@ -207,14 +218,12 @@ extension FollowViewController {
         
         cell.cancelFollowButton.rx.throttleTap(.seconds(1))
             .subscribe(onNext: { _ in
-                cell.updateButton(false)
                 reactor.action.onNext(.cancel(model.id))
             })
             .disposed(by: cell.disposeBag)
         
         cell.followButton.rx.throttleTap(.seconds(1))
             .subscribe(onNext: { _ in
-                cell.updateButton(true)
                 reactor.action.onNext(.request(model.id))
             })
             .disposed(by: cell.disposeBag)
@@ -232,23 +241,20 @@ extension FollowViewController {
         ) as! MyFollowerViewCell
         cell.selectionStyle = .none
         cell.setModel(model)
+        cell.updateButton(model.isFollowing)
         
         cell.profilBackgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
                 
                 if model.isRequester {
                     
-                    let mainTabBarController = MainTabBarController()
-                    mainTabBarController.reactor = reactor.reactorForMainTabBar()
-                    mainTabBarController.didSelectedIndex(3)
-                    let navigationController = UINavigationController(
-                        rootViewController: mainTabBarController
-                    )
-                    object.view.window?.rootViewController = navigationController
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = reactor.reactorForProfile(type: .myWithNavi, model.id)
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 } else {
                     
                     let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(memberId: model.id)
+                    profileViewController.reactor = reactor.reactorForProfile(type: .other, model.id)
                     object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 }
             }
@@ -256,7 +262,6 @@ extension FollowViewController {
         
         cell.followButton.rx.throttleTap(.seconds(1))
             .subscribe(onNext: { _ in
-                cell.updateButton(!model.isFollowing)
                 reactor.action.onNext(model.isFollowing ? .cancel(model.id) : .request(model.id))
             })
             .disposed(by: cell.disposeBag)
@@ -274,25 +279,28 @@ extension FollowViewController {
         ) as! OtherFollowViewCell
         cell.selectionStyle = .none
         cell.setModel(model)
+        cell.updateButton(model.isFollowing)
         
         cell.profilBackgroundButton.rx.tap
             .subscribe(with: self) { object, _ in
                 
                 if model.isRequester {
                     
-                    let mainTabBarController = MainTabBarController()
-                    mainTabBarController.reactor = reactor.reactorForMainTabBar()
-                    mainTabBarController.didSelectedIndex(3)
-                    let navigationController = UINavigationController(
-                        rootViewController: mainTabBarController
-                    )
-                    object.view.window?.rootViewController = navigationController
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = reactor.reactorForProfile(type: .myWithNavi, model.id)
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 } else {
                     
                     let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(memberId: model.id)
+                    profileViewController.reactor = reactor.reactorForProfile(type: .other, model.id)
                     object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 }
+            }
+            .disposed(by: cell.disposeBag)
+        
+        cell.followButton.rx.throttleTap(.seconds(1))
+            .subscribe(with: self) { object, _ in
+                reactor.action.onNext(model.isFollowing ? .cancel(model.id) : .request(model.id))
             }
             .disposed(by: cell.disposeBag)
         

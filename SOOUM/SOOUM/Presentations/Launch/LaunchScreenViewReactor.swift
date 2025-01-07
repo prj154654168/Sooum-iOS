@@ -31,13 +31,11 @@ class LaunchScreenViewReactor: Reactor {
         case launch
     }
     
-    // MARK: - Mutation
     enum Mutation {
         case updateIsRegistered(Bool)
         case updateError(String)
     }
     
-    // MARK: - State
     struct State {
         /// deviceId 서버 등록 여부, 로그인 성공 여부
         var isRegistered: Bool
@@ -53,12 +51,18 @@ class LaunchScreenViewReactor: Reactor {
     private let networkManager = NetworkManager.shared
     private let authManager = AuthManager.shared
     
-    init() { }
+    let pushInfo: NotificationInfo?
+    
+    init(pushInfo: NotificationInfo? = nil) {
+        self.pushInfo = pushInfo
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .launch:
-            return self.authManager.hasToken ? .just(.updateIsRegistered(true)) : self.login()
+            let autoLogin: Observable<Mutation> = .just(.updateIsRegistered(true))
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+            return self.authManager.hasToken ? autoLogin : self.login()
         }
     }
     
@@ -88,6 +92,6 @@ extension LaunchScreenViewReactor {
 extension LaunchScreenViewReactor {
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(willNavigate: .none)
+        MainTabBarReactor(pushInfo: self.pushInfo)
     }
 }

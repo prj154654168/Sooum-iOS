@@ -56,11 +56,14 @@ class WriteCardViewReactor: Reactor {
     private let locationManager = LocationManager.shared
     
     let requestType: RequestType
-    private let cardIdForComment: String?
     
-    init(type requestType: RequestType, _ cardIdForComment: String? = nil) {
+    private let parentCardId: String?
+    let parentPungTime: Date?
+    
+    init(type requestType: RequestType, parentCardId: String? = nil, parentPungTime: Date? = nil) {
         self.requestType = requestType
-        self.cardIdForComment = cardIdForComment
+        self.parentCardId = parentCardId
+        self.parentPungTime = parentPungTime
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -105,7 +108,7 @@ class WriteCardViewReactor: Reactor {
             let trimedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
             
             let request: CardRequest = .writeComment(
-                id: self.cardIdForComment ?? "",
+                id: self.parentCardId ?? "",
                 isDistanceShared: !isDistanceShared,
                 latitude: coordinate.latitude,
                 longitude: coordinate.longitude,

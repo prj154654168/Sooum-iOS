@@ -42,9 +42,9 @@ class SOMButton: UIButton {
         }
     }
     
-    var isUnderlined: Bool? {
+    var hasUnderlined: Bool? {
         didSet {
-            if oldValue != self.isUnderlined {
+            if oldValue != self.hasUnderlined {
                 self.setConfiguration()
             }
         }
@@ -63,12 +63,14 @@ class SOMButton: UIButton {
         var configuration = UIButton.Configuration.plain()
         
         // 이미지 설정
-        configuration.image = self.image
-        
-        if let foregroundColor = self.foregroundColor {
-            configuration.image?.withTintColor(foregroundColor)
-            configuration.imageColorTransformer = UIConfigurationColorTransformer { _ in
-                foregroundColor
+        if let image = self.image {
+            configuration.image = image
+            
+            if let foregroundColor = self.foregroundColor {
+                configuration.image?.withTintColor(foregroundColor)
+                configuration.imageColorTransformer = UIConfigurationColorTransformer { _ in
+                    foregroundColor
+                }
             }
         }
         
@@ -81,7 +83,7 @@ class SOMButton: UIButton {
                 attributes.updateValue(foregroundColor, forKey: .foregroundColor)
             }
             
-            if self.isUnderlined == true {
+            if self.hasUnderlined == true {
                 attributes.updateValue(NSUnderlineStyle.single.rawValue, forKey: .underlineStyle)
                 attributes.updateValue(foregroundColor ?? UIColor.som.gray400, forKey: .underlineColor)
             }

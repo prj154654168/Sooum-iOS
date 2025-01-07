@@ -21,7 +21,7 @@ class DetailViewCell: UICollectionViewCell {
         static let deletedCardInDetailText: String = "이 글은 삭제되었어요"
     }
     
-    private let cardView = SOMCard()
+    private let cardView = SOMCard(hasScrollEnabled: true)
     
     let prevCardBackgroundButton = UIButton().then {
         $0.isHidden = true
@@ -123,6 +123,7 @@ class DetailViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
         self.setupConstraints()
     }
 

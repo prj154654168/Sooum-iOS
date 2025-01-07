@@ -11,6 +11,7 @@ import RxSwift
 import SnapKit
 import Then
 
+
 class SOMCard: UIView {
     
     enum Text {
@@ -18,6 +19,11 @@ class SOMCard: UIView {
     }
     
     var model: SOMCardModel?
+    
+    private var hasScrollEnabled: Bool
+    
+    private var contentHeightConstraint: Constraint?
+    private var scrollContentHieghtConstraint: Constraint?
     
     /// 펑 이벤트 처리 위해 추가
     var serialTimer: Disposable?
@@ -58,24 +64,40 @@ class SOMCard: UIView {
         $0.typography = .som.body1WithBold
     }
     
-    /// cardTextContentLabel를 감싸는 불투명 컨테이너 뷰
-    let cardTextBackgroundView = UIView().then {
-        $0.backgroundColor = .clear
-        $0.layer.cornerRadius = 24
-        $0.clipsToBounds = true
-    }
+    /// 본문을 감싸는 불투명 컨테이너 뷰
     let cardTextBackgroundBlurView = UIVisualEffectView().then {
         let blurEffect = UIBlurEffect(style: .dark)
         $0.effect = blurEffect
         $0.backgroundColor = .som.dim
         $0.alpha = 0.8
+        $0.layer.cornerRadius = 24
+        $0.clipsToBounds = true
     }
-    /// 본문 표시 라벨
+    /// 본문 표시 라벨 (스크롤 X)
     let cardTextContentLabel = UILabel().then {
-        $0.typography = .som.body1WithBold
         $0.textColor = .som.white
-        $0.numberOfLines = 0
         $0.textAlignment = .center
+        $0.numberOfLines = 0
+        $0.lineBreakMode = .byTruncatingTail
+        $0.typography = .som.body1WithBold
+    }
+    /// 본문 스크롤 텍스트 뷰 (스크롤 O)
+    let cardTextContentScrollView = UITextView().then {
+        $0.backgroundColor = .clear
+        $0.tintColor = .clear
+        
+        $0.textAlignment = .center
+        $0.textContainerInset = .init(top: 0, left: 16, bottom: 0, right: 16)
+        $0.textContainer.lineFragmentPadding = 0
+        
+        $0.indicatorStyle = .white
+        $0.scrollIndicatorInsets = .init(top: 14, left: 0, bottom: 14, right: 0)
+        
+        $0.isScrollEnabled = false
+        $0.showsVerticalScrollIndicator = true
+        $0.showsHorizontalScrollIndicator = false
+        
+        $0.isEditable = false
     }
     
     let cardGradientView = UIView().then {
@@ -154,13 +176,11 @@ class SOMCard: UIView {
         $0.textColor = .som.white
     }
     
-    // MARK: - init
-    convenience init() {
-        self.init(frame: .zero)
-    }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    // MARK: - init
+    init(hasScrollEnabled: Bool = false) {
+        self.hasScrollEnabled = hasScrollEnabled
+        super.init(frame: .zero)
         initUI()
     }
     
@@ -170,14 +190,17 @@ class SOMCard: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         cardGradientLayer.frame = cardGradientView.bounds
+        CATransaction.commit()
     }
     
     /// 이 컴포넌트를 사용하는 재사용 셀에서 호출
     func prepareForReuse() {
+        serialTimer?.dispose()
         disposeBag = DisposeBag()
-        
-        self.layoutSubviews()
     }
     
     // MARK: - initUI
@@ -207,9 +230,12 @@ class SOMCard: UIView {
     }
     
     private func addCardTextContainerView() {
-        rootContainerImageView.addSubview(cardTextBackgroundView)
-        cardTextBackgroundView.addSubview(cardTextBackgroundBlurView)
-        cardTextBackgroundView.addSubview(cardTextContentLabel)
+        self.addSubview(cardTextBackgroundBlurView)
+        if hasScrollEnabled {
+            self.addSubview(cardTextContentScrollView)
+        } else {
+            self.addSubview(cardTextContentLabel)
+        }
     }
     
     private func addCardContentStackView() {
@@ -279,26 +305,31 @@ class SOMCard: UIView {
         }
         
         /// 본문 라벨
-        cardTextBackgroundView.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-        }
         cardTextBackgroundBlurView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.centerY.equalToSuperview()
+            $0.leading.equalToSuperview().offset(40)
+            $0.trailing.equalToSuperview().offset(-40)
+            contentHeightConstraint = $0.height.equalTo(24 + 14 * 2).priority(.high).constraint
         }
-        cardTextContentLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(14)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
-            $0.bottom.equalToSuperview().offset(-14)
+        if hasScrollEnabled {
+            cardTextContentScrollView.snp.makeConstraints {
+                $0.top.equalTo(cardTextBackgroundBlurView.snp.top).offset(14)
+                $0.bottom.equalTo(cardTextBackgroundBlurView.snp.bottom).offset(-14)
+                $0.leading.equalTo(cardTextBackgroundBlurView.snp.leading)
+                $0.trailing.equalTo(cardTextBackgroundBlurView.snp.trailing)
+            }
+        } else {
+            cardTextContentLabel.snp.makeConstraints {
+                $0.top.equalTo(cardTextBackgroundBlurView.snp.top).offset(14)
+                $0.bottom.equalTo(cardTextBackgroundBlurView.snp.bottom).offset(-14)
+                $0.leading.equalTo(cardTextBackgroundBlurView.snp.leading).offset(16)
+                $0.trailing.equalTo(cardTextBackgroundBlurView.snp.trailing).offset(-16)
+            }
         }
         
         /// 하단 그라디언트 뷰
         cardGradientView.snp.makeConstraints {
-            $0.leading.equalToSuperview()
-            $0.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview()
+            $0.bottom.leading.trailing.equalToSuperview()
             $0.height.equalTo(60)
         }
         
@@ -325,30 +356,44 @@ class SOMCard: UIView {
     
     /// cardGradientLayer
     private func addGradient() {
-        
-        UIView.performWithoutAnimation {
             
-            cardGradientLayer.colors = [
-                UIColor.clear.cgColor,
-                UIColor.black.withAlphaComponent(0.6).cgColor
-            ]
-            cardGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
-            cardGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
-            cardGradientView.layer.insertSublayer(cardGradientLayer, at: 0)
-        }
+        cardGradientLayer.colors = [
+            UIColor.clear.cgColor,
+            UIColor.black.withAlphaComponent(0.6).cgColor
+        ]
+        cardGradientLayer.startPoint = CGPoint(x: 0.5, y: 0)
+        cardGradientLayer.endPoint = CGPoint(x: 0.5, y: 1)
+        cardGradientView.layer.insertSublayer(cardGradientLayer, at: 0)
     }
     
     /// 홈피드 모델 초기화
     func setModel(model: SOMCardModel) {
+        
+        // 하단 그라디언트 레이어 프레임 설정
+        self.layoutSubviews()
         
         self.model = model
         // 카드 배경 이미지
         rootContainerImageView.setImage(strUrl: model.data.backgroundImgURL.url)
         
         // 카드 본문
-        cardTextContentLabel.text = model.data.content
-        cardTextContentLabel.typography = model.data.font == .pretendard ? .som.body1WithBold : .som.schoolBody1WithBold
-        cardTextContentLabel.textAlignment = .center
+        updateContentHeight(model.data.content)
+        let typography: Typography = model.data.font == .pretendard ? .som.body1WithBold : .som.schoolBody1WithBold
+        if hasScrollEnabled {
+            var attributes = typography.attributes
+            attributes.updateValue(typography.font, forKey: .font)
+            attributes.updateValue(UIColor.som.white, forKey: .foregroundColor)
+            cardTextContentScrollView.attributedText = .init(
+                string: model.data.content,
+                attributes: attributes
+            )
+            cardTextContentScrollView.textAlignment = .center
+        } else {
+            cardTextContentLabel.typography = typography
+            cardTextContentLabel.text = model.data.content
+            cardTextContentLabel.textAlignment = .center
+            cardTextContentLabel.lineBreakMode = .byTruncatingTail
+        }
         
         // 하단 정보
         likeImageView.image = model.data.isLiked ?
@@ -374,6 +419,9 @@ class SOMCard: UIView {
     }
     
     func setData(tagCard: TagDetailCardResponse.TagFeedCard) {
+        
+        // 하단 그라디언트 레이어 프레임 설정
+        self.layoutSubviews()
         // 카드 배경 이미지
         rootContainerImageView.setImage(strUrl: tagCard.backgroundImgURL.href)
         // 카드 본문
@@ -438,6 +486,43 @@ class SOMCard: UIView {
         
         cardContentStackView.subviews.forEach { $0.removeFromSuperview() }
         cardContentStackView.addArrangedSubviews(UIView(), distanceInfoStackView, timeInfoStackView)
+    }
+    
+    private func updateContentHeight(_ text: String) {
+        
+        let typography = Typography.som.body1WithBold
+        var attributes = typography.attributes
+        attributes.updateValue(typography.font, forKey: .font)
+        let attributedText = NSAttributedString(
+            string: text,
+            attributes: attributes
+        )
+        
+        let availableWidth = UIScreen.main.bounds.width - 20 * 2 - 40 * 2 - 16 * 2
+        let size: CGSize = .init(width: availableWidth, height: .greatestFiniteMagnitude)
+        let boundingRect = attributedText.boundingRect(
+            with: size,
+            options: [.usesLineFragmentOrigin],
+            context: nil
+        )
+        let boundingHeight = boundingRect.height + 14 * 2 /// top, bottom inset
+        let backgroundHeight = rootContainerImageView.bounds.height
+        
+        let height = min(boundingHeight, backgroundHeight * 0.5)
+        
+        contentHeightConstraint?.deactivate()
+        cardTextBackgroundBlurView.snp.makeConstraints {
+            contentHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+        }
+        
+        if hasScrollEnabled {
+            cardTextContentScrollView.isScrollEnabled = boundingHeight > backgroundHeight * 0.5
+            cardTextContentScrollView.isUserInteractionEnabled = true
+            cardTextContentScrollView.contentSize = .init(
+                width: cardTextContentScrollView.bounds.width,
+                height: boundingHeight
+            )
+        }
     }
     
     

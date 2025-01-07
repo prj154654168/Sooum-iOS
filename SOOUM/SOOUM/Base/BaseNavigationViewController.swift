@@ -106,6 +106,7 @@ class BaseNavigationViewController: BaseViewController {
         super.bind()
 
         self.navigationController?.delegate = self
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
 
         self.backButton.rx.tap
             .subscribe(with: self) { object, _ in

@@ -34,7 +34,7 @@ class OtherFollowViewCell: UITableViewCell {
         $0.typography = .som.body1WithBold
     }
     
-    private let followButton = SOMButton().then {
+    let followButton = SOMButton().then {
         $0.layer.cornerRadius = 26 * 0.5
         $0.clipsToBounds = true
     }
@@ -106,14 +106,25 @@ class OtherFollowViewCell: UITableViewCell {
     // MARK: Public func
     
     func setModel(_ follow: Follow) {
-        if let url = follow.backgroundImgURL?.url {
-            self.profileImageView.setImage(strUrl: url)
-        } else {
-            self.profileImageView.image = .init(.image(.sooumLogo))
-        }
-        self.profileNickname.text = follow.nickname
         
-        self.updateButton(follow.isFollowing)
+        if self.profileImageView.image == nil {
+            if let url = follow.backgroundImgURL?.url {
+                self.profileImageView.setImage(strUrl: url)
+            } else {
+                self.profileImageView.image = .init(.image(.sooumLogo))
+            }
+        }
+        
+        if self.profileNickname.text != follow.nickname {
+            self.profileNickname.text = follow.nickname
+        }
+        
+        
+        if follow.isRequester {
+            self.followButton.isHidden = true
+        } else {
+            self.updateButton(follow.isFollowing)
+        }
     }
     
     func updateButton(_ isFollowing: Bool) {

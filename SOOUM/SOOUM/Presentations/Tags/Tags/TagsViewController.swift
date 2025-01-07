@@ -26,8 +26,6 @@ class TagsViewController: BaseViewController, View {
     }
     
     let tagSearchTextFieldView = TagSearchTextFieldView(isInteractive: false)
-    
-    let refreshControl = UIRefreshControl()
 
     lazy var tableView = UITableView().then {
         $0.separatorStyle = .none
@@ -46,8 +44,10 @@ class TagsViewController: BaseViewController, View {
         )
         $0.dataSource = self
         $0.delegate = self
-        $0.refreshControl = refreshControl
+        $0.refreshControl = SOMRefreshControl()
     }
+    
+    var isRefreshEnabled = false
     
     override func bind() {
         tagSearchTextFieldView.rx.tapGesture()
@@ -73,22 +73,22 @@ class TagsViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        refreshControl.rx.controlEvent(.valueChanged)
-            .subscribe(with: self) { object, _ in
-                reactor.action.onNext(.fetchTags)
-                object.refreshControl.endRefreshing()
-            }
+        self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
+            .map { _ in Reactor.Action.fetchTags }
+            .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
 
         reactor.state.map(\.favoriteTags)
             .subscribe(with: self) { object, _ in
                 object.tableView.reloadData()
+                object.tableView.refreshControl?.endRefreshing()
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.favoriteTags)
             .subscribe(with: self) { object, _ in
                 object.tableView.reloadData()
+                object.tableView.refreshControl?.endRefreshing()
             }
             .disposed(by: self.disposeBag)
     }
@@ -274,6 +274,26 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
             return 0
         case .recommend:
             return height
+        }
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
+        let offset = scrollView.contentOffset.y
+        self.isRefreshEnabled = offset <= 0
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.tableView.refreshControl,
+           offset <= -(refreshControl.frame.origin.y + 40) {
+            
+            refreshControl.beginRefreshingFromTop()
         }
     }
 }

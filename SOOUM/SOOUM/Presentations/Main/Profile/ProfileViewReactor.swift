@@ -14,6 +14,7 @@ class ProfileViewReactor: Reactor {
     
     enum EntranceType {
         case my
+        case myWithNavi
         case other
     }
     
@@ -144,7 +145,7 @@ extension ProfileViewReactor {
         
         var request: ProfileRequest {
             switch self.entranceType {
-            case .my:
+            case .my, .myWithNavi:
                 return .myProfile
             case .other:
                 return .otherProfile(memberId: self.memberId ?? "")
@@ -166,7 +167,7 @@ extension ProfileViewReactor {
         
         var request: ProfileRequest {
             switch self.entranceType {
-            case .my:
+            case .my, .myWithNavi:
                 return .myCards(lastId: lastId)
             case .other:
                 return .otherCards(memberId: self.memberId ?? "", lastId: lastId)

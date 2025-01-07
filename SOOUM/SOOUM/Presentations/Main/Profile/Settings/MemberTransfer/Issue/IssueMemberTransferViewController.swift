@@ -165,7 +165,7 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.updateTransferCodeButton.rx.throttleTap(.seconds(3))
+        self.updateTransferCodeButton.rx.throttleTap(.seconds(1))
             .map { _ in Reactor.Action.updateTransferCode }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)

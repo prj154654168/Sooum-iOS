@@ -38,7 +38,7 @@ class MyFollowingViewCell: UITableViewCell {
         $0.title = Text.didFollowButton
         $0.typography = .som.body3WithBold
         $0.foregroundColor = .som.gray400
-        $0.isUnderlined = true
+        $0.hasUnderlined = true
     }
     
     let followButton = SOMButton().then {
@@ -127,12 +127,18 @@ class MyFollowingViewCell: UITableViewCell {
     // MARK: Public func
     
     func setModel(_ follow: Follow) {
-        if let url = follow.backgroundImgURL?.url {
-            self.profileImageView.setImage(strUrl: url)
-        } else {
-            self.profileImageView.image = .init(.image(.sooumLogo))
+        
+        if self.profileImageView.image == nil {
+            if let url = follow.backgroundImgURL?.url {
+                self.profileImageView.setImage(strUrl: url)
+            } else {
+                self.profileImageView.image = .init(.image(.sooumLogo))
+            }
         }
-        self.profileNickname.text = follow.nickname
+        
+        if self.profileNickname.text != follow.nickname {
+            self.profileNickname.text = follow.nickname
+        }
         
         self.updateButton(follow.isFollowing)
     }

@@ -17,6 +17,10 @@ class ProfileViewFooterCell: UICollectionViewCell {
     
     private let backgroundImageView = UIImageView()
     
+    private let backgroundDimView = UIView().then {
+        $0.backgroundColor = .som.black.withAlphaComponent(0.2)
+    }
+    
     private let contentLabel = UILabel().then {
         $0.textColor = .som.white
         $0.textAlignment = .center
@@ -42,7 +46,12 @@ class ProfileViewFooterCell: UICollectionViewCell {
             $0.edges.equalToSuperview()
         }
         
-        self.contentView.addSubview(self.contentLabel)
+        self.backgroundImageView.addSubview(self.backgroundDimView)
+        self.backgroundDimView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        self.backgroundImageView.addSubview(self.contentLabel)
         self.contentLabel.snp.makeConstraints {
             $0.top.leading.equalToSuperview().offset(10)
             $0.bottom.trailing.equalToSuperview().offset(-10)

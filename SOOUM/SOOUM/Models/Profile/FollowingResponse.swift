@@ -84,7 +84,10 @@ extension Follow {
 
 extension Follow {
     static func == (lhs: Follow, rhs: Follow) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id &&
+        lhs.nickname == rhs.nickname &&
+        lhs.backgroundImgURL == rhs.backgroundImgURL &&
+        lhs.isFollowing == rhs.isFollowing
     }
 }
 

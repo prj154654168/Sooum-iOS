@@ -109,19 +109,33 @@ class MainTabBarController: SOMTabBarController, View {
             .distinctUntilChanged()
             .subscribe(with: self) { object, entranceType in
                 
+                guard let navigationController = object.viewControllers[0] as? UINavigationController,
+                      let mainHomeTabBarController = navigationController.viewControllers.first as? MainHomeTabBarController,
+                      let targetCardId = reactor.pushInfo?.targetCardId,
+                      let notificationId = reactor.pushInfo?.notificationId
+                else { return }
+                
+                mainHomeTabBarController.reactor?.action.onNext(.requestRead(notificationId))
+                
                 switch entranceType {
                 case .pushForNoti:
                     
-                    let notificationViewController = NotificationViewController()
-                    notificationViewController.reactor = reactor.reactorForNoti()
-                    object.navigationPush(notificationViewController, animated: true, bottomBarHidden: true)
+                    let notificationTabBarController = NotificationTabBarController()
+                    notificationTabBarController.reactor = reactor.reactorForNoti()
+                    mainHomeTabBarController.navigationPush(
+                        notificationTabBarController,
+                        animated: false,
+                        bottomBarHidden: true
+                    )
                 case .pushForDetail:
-                    
-                    guard let targetCardId = reactor.pushInfo?.targetCardId else { return }
                     
                     let detailViewController = DetailViewController()
                     detailViewController.reactor = reactor.reactorForDetail(targetCardId)
-                    object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                    mainHomeTabBarController.navigationPush(
+                        detailViewController,
+                        animated: false,
+                        bottomBarHidden: true
+                    )
                 default: break
                 }
             }

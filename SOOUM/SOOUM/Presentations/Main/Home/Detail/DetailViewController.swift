@@ -100,7 +100,11 @@ class DetailViewController: BaseNavigationViewController, View {
          // Navigation pop to root
          self.rightHomeButton.rx.tap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: MainHomeTabBarController.self, animated: false)
+                 if let navigationController = object.navigationController {
+                     navigationController.popToRootViewController(animated: false)
+                 } else {
+                     object.navigationPop()
+                 }
              }
              .disposed(by: self.disposeBag)
          
@@ -245,6 +249,27 @@ class DetailViewController: BaseNavigationViewController, View {
                  object.navigationPop()
              }
              .disposed(by: self.disposeBag)
+         
+         reactor.state.map(\.errorMessage)
+             .distinctUntilChanged()
+             .skip(1)
+             .subscribe(with: self) { object, errorMessage in
+                 guard reactor.entranceType == .navi else {
+                     let notificationTabBarController = NotificationTabBarController()
+                     notificationTabBarController.reactor = reactor.reactorForNoti()
+                     
+                     object.navigationController?.pushViewController(notificationTabBarController, animated: false)
+                     object.navigationController?.viewControllers.removeAll(where: { $0.isKind(of: DetailViewController.self) })
+                     
+                     return
+                 }
+                 object.isDeleted = errorMessage != nil
+                 
+                 UIView.performWithoutAnimation {
+                     object.collectionView.reloadData()
+                 }
+             }
+             .disposed(by: self.disposeBag)
      }
  }
 
@@ -347,18 +372,15 @@ extension DetailViewController: UICollectionViewDataSource {
             .subscribe(with: self) { object, _ in
                 if object.detailCard.isOwnCard {
                     
-                    let viewController = MainTabBarController()
-                    viewController.reactor = object.reactor?.reactorForMainTabBar()
-                    viewController.didSelectedIndex(3)
-                    let navigationController = UINavigationController(
-                        rootViewController: viewController
-                    )
-                    object.view.window?.rootViewController = navigationController
+                    let memberId = object.detailCard.member.id
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = object.reactor?.reactorForProfile(type: .myWithNavi, memberId)
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 } else {
                     
                     let memberId = object.detailCard.member.id
                     let profileViewController = ProfileViewController()
-                    profileViewController.reactor = object.reactor?.reactorForProfile(memberId)
+                    profileViewController.reactor = object.reactor?.reactorForProfile(type: .other, memberId)
                     object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
                 }
             }
@@ -393,7 +415,7 @@ extension DetailViewController: UICollectionViewDataSource {
                 }
                 .disposed(by: footer.disposeBag)
             
-            footer.likeAndCommentView.likeBackgroundButton.rx.throttleTap(.seconds(3))
+            footer.likeAndCommentView.likeBackgroundButton.rx.throttleTap(.seconds(1))
                 .withLatestFrom(reactor.state.map(\.cardSummary.isLiked))
                 .subscribe(onNext: { isLike in
                     reactor.action.onNext(.updateLike(!isLike))
@@ -403,7 +425,6 @@ extension DetailViewController: UICollectionViewDataSource {
             footer.likeAndCommentView.commentBackgroundButton.rx.tap
                 .subscribe(with: self) { object, _ in
                     let writeCardViewController = WriteCardViewController()
-                    writeCardViewController.setupNaviBar()
                     writeCardViewController.reactor = reactor.reactorForWriteCard()
                     object.navigationPush(writeCardViewController, animated: true, bottomBarHidden: true)
                 }

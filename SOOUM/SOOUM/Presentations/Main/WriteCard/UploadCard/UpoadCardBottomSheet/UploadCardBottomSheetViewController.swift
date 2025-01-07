@@ -369,7 +369,7 @@ extension UploadCardBottomSheetViewController {
         config.library.minNumberOfItems = 1
         config.library.numberOfItemsInRow = 4
         config.library.spacingBetweenItems = 1.0
-        config.showsCrop = .rectangle(ratio: 10 / 9)
+        config.showsCrop = .rectangle(ratio: 1.0)
         config.showsPhotoFilters = false
         config.library.skipSelectionsGallery = false
         config.library.preselectedItems = nil

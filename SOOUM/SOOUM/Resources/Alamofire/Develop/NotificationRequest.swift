@@ -16,7 +16,7 @@ enum NotificationRequest: BaseRequest {
     case totalRead(lastId: String?)
     case commentWithoutRead(lastId: String?)
     case commentRead(lastId: String?)
-    case likeWithoutRead(id: String?)
+    case likeWithoutRead(lastId: String?)
     case likeRead(lastId: String?)
     
     case requestRead(notificationId: String)
