@@ -145,7 +145,7 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
                 detailViewController.reactor = DetailViewReactor(
                     reactor.currentState.tagCards[indexPath.row].id
                 )
-                self.navigationPush(detailViewController, animated: true)
+                object.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: cell.cardView.disposeBag)
         return cell
