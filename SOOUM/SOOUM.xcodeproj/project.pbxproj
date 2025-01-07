@@ -1347,6 +1347,7 @@
 			isa = PBXGroup;
 			children = (
 				385620EE2CA19C9500E0AB5A /* NetworkManager.swift */,
+				38F88EBC2D2C1E19002AD7A8 /* Models */,
 				3816C05E2CCDE33C00C8688C /* Interceptor */,
 				381701762CD88837005FC220 /* Monitor */,
 			);
@@ -1538,7 +1539,6 @@
 		387FBB032C87036D00A5E139 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				38F88EBC2D2C1E19002AD7A8 /* Models */,
 				387FBAEF2C8702C100A5E139 /* AppDelegate.swift */,
 				387FBAF12C8702C100A5E139 /* SceneDelegate.swift */,
 			);

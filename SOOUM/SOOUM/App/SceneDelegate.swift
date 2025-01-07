@@ -43,13 +43,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidDisconnect(_ scene: UIScene) { }
 
-    func sceneDidBecomeActive(_ scene: UIScene) {
-        // Use this method to prepare your scene to be onscreen.
-        // UIKit calls this method after loading the interface for your scene, but before that interface appears onscreen.
-        // Use it to refresh the contents of views, start timers, or increase frame rates for your UI.
-        
-        (UIApplication.shared.delegate as? AppDelegate)?.checkUpdate()
-    }
+    func sceneDidBecomeActive(_ scene: UIScene) { }
 
     func sceneWillResignActive(_ scene: UIScene) { }
 

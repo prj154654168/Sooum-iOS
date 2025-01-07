@@ -20,11 +20,11 @@ extension Version {
     
     /// AP앱이 최신버전인지 여부
     var isLatest: Bool {
-        Self.thisAppVersion.currentVerion >= self.currentVerion
+        self.currentVerion.compare(Self.thisAppVersion.currentVerion, options: .numeric).rawValue >= 0
     }
     
     /// AP앱이 반드시 업데이트가 필요한지 여부
     var mustUpdate: Bool {
-        Self.thisAppVersion.currentVerion < self.currentVerion
+        self.currentVerion.compare(Self.thisAppVersion.currentVerion, options: .numeric).rawValue < 0
     }
 }

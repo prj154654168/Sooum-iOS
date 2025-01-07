@@ -46,7 +46,7 @@ class SOMDialogViewController: UIViewController {
         
         var bgColor: UIColor {
             switch self {
-            case .cancel:
+            case .cancel, .exit:
                 .som.gray300
             default:
                 .som.p300
@@ -55,7 +55,7 @@ class SOMDialogViewController: UIViewController {
         
         var textColor: UIColor {
             switch self {
-            case .cancel:
+            case .cancel, .exit:
                 .som.gray700
             default:
                 .som.white

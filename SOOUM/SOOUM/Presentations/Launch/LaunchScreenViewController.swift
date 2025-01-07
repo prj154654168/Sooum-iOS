@@ -17,6 +17,13 @@ import Then
 
 class LaunchScreenViewController: BaseViewController, View {
     
+    enum Text {
+        static let updateVerionTitle: String = "업데이트 안내"
+        static let updateVersionMessage: String = "안정적인 서비스 사용을 위해\n최신버전으로 업데이트해주세요"
+        
+        static let testFlightStrUrl: String = "itms-beta://testflight.apple.com/v1/app"
+    }
+    
     let viewForAnimation = UIView().then {
         $0.backgroundColor = UIColor(hex: "#A2E3FF")
     }
@@ -57,9 +64,47 @@ class LaunchScreenViewController: BaseViewController, View {
                 }
             }
             .disposed(by: self.disposeBag)
+        
+        // 앱 버전 검사
+        reactor.state.map(\.mustUpdate)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                
+                SOMDialogViewController.show(
+                    title: Text.updateVerionTitle,
+                    subTitle: Text.updateVersionMessage,
+                    leftAction: .init(
+                        mode: .exit,
+                        handler: {
+                            // 앱 종료
+                            // 자연스럽게 종료하기 위해 종료전, suspend 상태로 변경 후 종료
+                            UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                exit(0)
+                            }
+                        }
+                    ),
+                    rightAction: .init(
+                        mode: .update,
+                        handler: {
+                            #if DEVELOP
+                            // 개발 버전일 때 testFlight로 전환
+                            let strUrl = "\(Text.testFlightStrUrl)/\(Info.appId)"
+                            if let testFlightUrl = URL(string: strUrl) {
+                                UIApplication.shared.open(testFlightUrl, options: [:], completionHandler: nil)
+                            }
+                            #endif
+                            
+                            UIApplication.topViewController?.dismiss(animated: true)
+                        }
+                    )
+                )
+            }
+            .disposed(by: self.disposeBag)
 
         // 로그인 성공 시 홈 화면으로 전환
-        let isRegistered = reactor.state.map(\.isRegistered).share()
+        let isRegistered = reactor.state.map(\.isRegistered).distinctUntilChanged().share()
         isRegistered
             .filter { $0 }
             .subscribe(with: self) { object, _ in

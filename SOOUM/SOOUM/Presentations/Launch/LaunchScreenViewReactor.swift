@@ -32,20 +32,19 @@ class LaunchScreenViewReactor: Reactor {
     }
     
     enum Mutation {
+        case check(Bool)
         case updateIsRegistered(Bool)
-        case updateError(String)
     }
     
     struct State {
+        var mustUpdate: Bool
         /// deviceId 서버 등록 여부, 로그인 성공 여부
         var isRegistered: Bool
-        /// 표시할 에러메시지
-        var errorMessage: String?
     }
     
     var initialState: State = .init(
-        isRegistered: false,
-        errorMessage: nil
+        mustUpdate: false,
+        isRegistered: false
     )
     
     private let networkManager = NetworkManager.shared
@@ -60,19 +59,17 @@ class LaunchScreenViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .launch:
-            let autoLogin: Observable<Mutation> = .just(.updateIsRegistered(true))
-                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            return self.authManager.hasToken ? autoLogin : self.login()
+            return self.check()
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case .updateIsRegistered(let isRegistered):
+        case let .check(mustUpdate):
+            newState.mustUpdate = mustUpdate
+        case let .updateIsRegistered(isRegistered):
             newState.isRegistered = isRegistered
-        case .updateError(let errorMessage):
-            newState.errorMessage = errorMessage
         }
         return newState
     }
@@ -86,6 +83,22 @@ extension LaunchScreenViewReactor {
     private func login() -> Observable<Mutation> {
         return self.authManager.certification()
             .map { .updateIsRegistered($0) }
+    }
+    
+    private func check() -> Observable<Mutation> {
+        
+        return self.networkManager.checkClientVersion()
+            .withUnretained(self)
+            .flatMapLatest { object, currentVersion -> Observable<Mutation> in
+                let model = Version(currentVerion: currentVersion)
+                if model.mustUpdate {
+                    
+                    return .just(.check(true))
+                } else {
+                    
+                    return self.authManager.hasToken ? .just(.updateIsRegistered(true)) : object.login()
+                }
+            }
     }
 }
     

@@ -17,15 +17,7 @@ import RxSwift
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    enum Text {
-        static let updateVerionTitle: String = "업데이트 안내"
-        static let updateVersionMessage: String = "안정적인 서비스 사용을 위해\n최신버전으로 업데이트해주세요"
-        
-        static let testFlightStrUrl: String = "itms-beta://apps.apple.com/app/id"
-    }
-    
     private let authManager = AuthManager.shared
-    private let disposeBag = DisposeBag()
 
     /// APNS 등록 완료 핸들러
     var registerRemoteNotificationCompletion: ((Error?) -> Void)?
@@ -55,10 +47,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.removeKeyChainWhenFirstLaunch()
         
         return true
-    }
-    
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        self.checkUpdate()
     }
     
     
@@ -164,51 +152,5 @@ extension AppDelegate {
         guard UserDefaults.isFirstLaunch else { return }
         AuthKeyChain.shared.delete(.accessToken)
         AuthKeyChain.shared.delete(.refreshToken)
-    }
-}
-
-extension AppDelegate {
-    
-    func checkUpdate() {
-        
-        NetworkManager.shared.checkClientVersion()
-            .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, currentVersion in
-                
-                let model = Version(currentVerion: currentVersion)
-                if model.mustUpdate {
-                    
-                    SOMDialogViewController.show(
-                        title: Text.updateVerionTitle,
-                        subTitle: Text.updateVersionMessage,
-                        leftAction: .init(
-                            mode: .exit,
-                            handler: {
-                                // 앱 종료
-                                // 자연스럽게 종료하기 위해 종료전, suspend 상태로 변경 후 종료
-                                UIApplication.shared.perform(#selector(NSXPCConnection.suspend))
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                    exit(0)
-                                }
-                            }
-                        ),
-                        rightAction: .init(
-                            mode: .update,
-                            handler: {
-                                #if DEVELOP
-                                // 개발 버전일 때 testFlight로 전환
-                                let strUrl = "\(Text.testFlightStrUrl)\(Info.appId)"
-                                if let testFlightUrl = URL(string: strUrl) {
-                                    UIApplication.shared.open(testFlightUrl, options: [:], completionHandler: nil)
-                                }
-                                #endif
-                                
-                                UIApplication.topViewController?.dismiss(animated: true)
-                            }
-                        )
-                    )
-                }
-            }
-            .disposed(by: self.disposeBag)
     }
 }
