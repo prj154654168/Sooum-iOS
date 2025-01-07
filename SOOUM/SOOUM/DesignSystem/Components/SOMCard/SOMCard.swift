@@ -425,8 +425,23 @@ class SOMCard: UIView {
         // 카드 배경 이미지
         rootContainerImageView.setImage(strUrl: tagCard.backgroundImgURL.href)
         // 카드 본문
-        cardTextContentLabel.text = tagCard.content
-        
+        updateContentHeight(tagCard.content)
+        let typography: Typography = tagCard.font == .pretendard ? .som.body1WithBold : .som.schoolBody1WithBold
+        if hasScrollEnabled {
+            var attributes = typography.attributes
+            attributes.updateValue(typography.font, forKey: .font)
+            attributes.updateValue(UIColor.som.white, forKey: .foregroundColor)
+            cardTextContentScrollView.attributedText = .init(
+                string: tagCard.content,
+                attributes: attributes
+            )
+            cardTextContentScrollView.textAlignment = .center
+        } else {
+            cardTextContentLabel.typography = typography
+            cardTextContentLabel.text = tagCard.content
+            cardTextContentLabel.textAlignment = .center
+            cardTextContentLabel.lineBreakMode = .byTruncatingTail
+        }
         // 하단 정보
         likeImageView.image = tagCard.isLiked ?
             .init(.icon(.filled(.heart))) :
