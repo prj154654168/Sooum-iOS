@@ -164,15 +164,10 @@ class DetailViewReactor: Reactor {
         
         return self.networkManager.request(DetailCardResponse.self, request: requset)
             .flatMapLatest { response -> Observable<Mutation> in
-                if response.status.httpCode == 400 {
-                    // TODO: 임시 에러 메시지, 삭제된 카드 아이디로 요청 시
-                    return .just(.updateError("이미 삭제된 카드"))
-                } else {
-                    let detailCard = response.detailCard
-                    let prevCard = response.prevCard ?? .init()
-                    
-                    return .just(.detailCard(detailCard, prevCard))
-                }
+                let detailCard = response.detailCard
+                let prevCard = response.prevCard ?? .init()
+                
+                return .just(.detailCard(detailCard, prevCard))
             }
             .catch(self.catchClosure)
     }
@@ -212,7 +207,10 @@ extension DetailViewReactor {
     }
     
     func reactorForPush(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(selectedId, hasPungTime: self.currentState.detailCard.storyExpirationTime)
+        DetailViewReactor(
+            selectedId,
+            hasPungTime: self.parentPungTime ?? self.currentState.detailCard.storyExpirationTime
+        )
     }
     
     func reactorForReport() -> ReportViewReactor {
@@ -242,11 +240,22 @@ extension DetailViewReactor {
 extension DetailViewReactor {
     
     var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { _ in
-            .concat([
+        return { error in
+            
+            let nsError = error as NSError
+            let endProcessing = Observable<Mutation>.concat([
                 .just(.updateIsProcessing(false)),
                 .just(.updateIsLoading(false))
             ])
+            
+            if nsError.code == 400 {
+                return .concat([
+                    .just(.updateError(nsError.localizedDescription)),
+                    endProcessing
+                ])
+            } else {
+                return endProcessing
+            }
         }
     }
 }

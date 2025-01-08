@@ -84,11 +84,11 @@ class NetworkManager {
         self.encoder = configuration.encoder
     }
     
-    private func setupError(_ message: String) -> NSError {
+    private func setupError(_ message: String, with code: Int = -99) -> NSError {
         
         let error: NSError = .init(
             domain: "SOOUM",
-            code: -99,
+            code: code,
             userInfo: [NSLocalizedDescriptionKey: message]
         )
         return error
@@ -116,6 +116,13 @@ extension NetworkManager: NetworkManagerDelegate {
                             observer.onCompleted()
                         }
                     case let .failure(error):
+                        if response.response?.statusCode == 400 {
+                            observer.onError(self?.setupError(
+                                "Bad Request: HTTP 400 received.",
+                                with: 400
+                            ) ?? .init())
+                        }
+                        
                         print("❌ Network or response format error: \(error)")
                         observer.onError(error)
                     }
