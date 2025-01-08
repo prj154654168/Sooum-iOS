@@ -121,6 +121,7 @@ extension NetworkManager: NetworkManagerDelegate {
                                 "Bad Request: HTTP 400 received.",
                                 with: 400
                             ) ?? .init())
+                            return
                         }
                         
                         print("❌ Network or response format error: \(error)")
