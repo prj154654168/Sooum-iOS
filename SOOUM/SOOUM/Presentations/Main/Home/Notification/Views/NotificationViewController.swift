@@ -91,7 +91,6 @@ class NotificationViewController: BaseViewController, View {
         
         // Action
         self.rx.viewWillAppear
-            .withUnretained(self.tableView)
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -99,6 +98,7 @@ class NotificationViewController: BaseViewController, View {
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(reactor.state.map(\.isLoading))
             .filter { $0 == false }
+            .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)

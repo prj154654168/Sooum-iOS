@@ -72,6 +72,7 @@ class TagDetailViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
         
         tableView.refreshControl?.rx.controlEvent(.valueChanged)
+            .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.fetchTagCards)
                 reactor.action.onNext(.fetchTagInfo)
