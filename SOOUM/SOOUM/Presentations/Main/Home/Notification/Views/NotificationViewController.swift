@@ -238,7 +238,8 @@ extension NotificationViewController: UITableViewDelegate {
             let typography = Typography.som.body2WithBold
             let frame = CGRect(x: 20, y: 16, width: UIScreen.main.bounds.width, height: typography.lineHeight)
             let label = UILabel().then {
-                $0.text = Text.withoutReadHeaderTitle + " (\(self.notificationsWithoutRead.count)개)"
+                let nofiCount = self.notificationsWithoutRead.count > 99 ? "99+" : "\(self.notificationsWithoutRead.count)"
+                $0.text = Text.withoutReadHeaderTitle + " (\(nofiCount)개)"
                 $0.textColor = .som.black
                 $0.typography = typography
                 
