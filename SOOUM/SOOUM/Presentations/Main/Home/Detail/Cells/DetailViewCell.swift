@@ -92,8 +92,13 @@ class DetailViewCell: UICollectionViewCell {
     
     var prevCard: PrevCard = .init() {
         didSet {
-            if prevCard.previousCardImgLink.url.isEmpty {
-                self.isPrevCardExist = false
+            if self.prevCard.previousCardImgLink.url.isEmpty {
+                // 전글 id == -1 일 때, 전글 삭제됨
+                if self.prevCard.previousCardId == "-1" {
+                    self.isPrevCardDeleted()
+                } else {
+                    self.isPrevCardExist = false
+                }
             } else {
                 self.isPrevCardExist = true
                 self.prevCardBackgroundImageView.setImage(strUrl: prevCard.previousCardImgLink.url)
@@ -240,5 +245,11 @@ class DetailViewCell: UICollectionViewCell {
         self.memberImageView.removeFromSuperview()
         self.memberLabel.removeFromSuperview()
         self.deletedCardInDetailBackgroundView.isHidden = false
+    }
+    
+    func isPrevCardDeleted() {
+        self.prevCardBackgroundImageView.backgroundColor = .init(hex: "#7D7D7D")
+        self.prevCardBackgroundImageView.image = nil
+        self.prevCardTextLabel.text = Text.pungedPrevCardTitle
     }
 }
