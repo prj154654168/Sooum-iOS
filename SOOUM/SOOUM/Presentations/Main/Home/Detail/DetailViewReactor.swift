@@ -24,7 +24,7 @@ class DetailViewReactor: Reactor {
     }
     
     enum Mutation {
-        case detailCard(DetailCard, PrevCard)
+        case detailCard(DetailCard, PrevCard?)
         case commentCards([Card])
         case cardSummary(CardSummary)
         case updateIsDeleted(Bool)
@@ -36,7 +36,7 @@ class DetailViewReactor: Reactor {
     
     struct State {
         var detailCard: DetailCard
-        var prevCard: PrevCard
+        var prevCard: PrevCard?
         var commentCards: [Card]
         var cardSummary: CardSummary
         var isDeleted: Bool
@@ -48,7 +48,7 @@ class DetailViewReactor: Reactor {
     
     var initialState: State = .init(
         detailCard: .init(),
-        prevCard: .init(),
+        prevCard: nil,
         commentCards: [],
         cardSummary: .init(),
         isDeleted: false,
@@ -165,7 +165,7 @@ class DetailViewReactor: Reactor {
         return self.networkManager.request(DetailCardResponse.self, request: requset)
             .flatMapLatest { response -> Observable<Mutation> in
                 let detailCard = response.detailCard
-                let prevCard = response.prevCard ?? .init()
+                let prevCard = response.prevCard
                 
                 return .just(.detailCard(detailCard, prevCard))
             }

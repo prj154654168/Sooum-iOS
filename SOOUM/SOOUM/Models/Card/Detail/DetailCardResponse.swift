@@ -182,7 +182,7 @@ struct TagFeed: Codable {
 
 struct PrevCard: Equatable, Codable {
     let previousCardId: String
-    let previousCardImgLink: URLString
+    let previousCardImgLink: URLString?
     let isFeedCardStory: Bool
 }
 
@@ -196,14 +196,14 @@ extension PrevCard {
     
     init() {
         self.previousCardId = ""
-        self.previousCardImgLink = .init()
+        self.previousCardImgLink = nil
         self.isFeedCardStory = false
     }
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.previousCardId = try container.decode(String.self, forKey: .previousCardId)
-        self.previousCardImgLink = try container.decode(URLString.self, forKey: .previousCardImgLink)
+        self.previousCardImgLink = try? container.decode(URLString.self, forKey: .previousCardImgLink)
         self.isFeedCardStory = try container.decode(Bool.self, forKey: .isFeedCardStory)
     }
 }

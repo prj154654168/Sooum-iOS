@@ -66,7 +66,7 @@ class DetailViewController: BaseNavigationViewController, View {
      }
      
      var detailCard = DetailCard()
-     var prevCard = PrevCard()
+     var prevCard: PrevCard?
      
      var commentCards = [Card]()
      var cardSummary = CardSummary()
@@ -328,13 +328,15 @@ extension DetailViewController: UICollectionViewDataSource {
                 /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop, 아니면 naviPush
                 if let naviStackCount = object.navigationController?.viewControllers.count,
                    let prevViewController = object.navigationController?.viewControllers[naviStackCount - 2] as? DetailViewController,
-                   prevViewController.reactor?.selectedCardId == object.prevCard.previousCardId {
+                   prevViewController.reactor?.selectedCardId == object.prevCard?.previousCardId {
                     
                     object.navigationPop()
                 } else {
                     
                     let detailViewController = DetailViewController()
-                    detailViewController.reactor = object.reactor?.reactorForPush(object.prevCard.previousCardId)
+                    detailViewController.reactor = object.reactor?.reactorForPush(
+                        object.prevCard?.previousCardId ?? ""
+                    )
                     object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
                 }
             }
