@@ -65,26 +65,26 @@ class NotificationViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.notifications(false),
-                self.notifications(true),
+                self.notifications(with: false),
+                self.notifications(with: true),
                 .just(.updateIsProcessing(false))
             ])
         case .refresh:
             
             return .concat([
                 .just(.updateIsLoading(true)),
-                self.notifications(false)
+                self.notifications(with: false)
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                self.notifications(true)
+                self.notifications(with: true)
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
             
             return .concat([
-                self.moreNotifications(false, lastId: lastId)
+                self.moreNotifications(with: false, lastId: lastId)
                     .catch(self.catchClosure),
-                self.moreNotifications(true, lastId: lastId)
+                self.moreNotifications(with: true, lastId: lastId)
                     .catch(self.catchClosure)
             ])
         case let .requestRead(selectedId):
@@ -118,7 +118,7 @@ class NotificationViewReactor: Reactor {
 
 extension NotificationViewReactor {
     
-    private func notifications(_ isRead: Bool) -> Observable<Mutation> {
+    private func notifications(with isRead: Bool) -> Observable<Mutation> {
         
         var request: NotificationRequest {
             switch self.entranceType {
@@ -137,7 +137,7 @@ extension NotificationViewReactor {
             .catch(self.catchClosure)
     }
     
-    private func moreNotifications(_ isRead: Bool, lastId: String) -> Observable<Mutation> {
+    private func moreNotifications(with isRead: Bool, lastId: String) -> Observable<Mutation> {
         
         var request: NotificationRequest {
             switch self.entranceType {
