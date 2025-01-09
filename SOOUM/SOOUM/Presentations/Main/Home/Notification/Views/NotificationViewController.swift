@@ -62,6 +62,7 @@ class NotificationViewController: BaseViewController, View {
     
     private var notificationsWithoutRead = [CommentHistoryInNoti]()
     private var notifications = [CommentHistoryInNoti]()
+    private var withoutReadNotisCount = "0"
     
     private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
@@ -124,6 +125,17 @@ class NotificationViewController: BaseViewController, View {
                 if isProcessing { self?.isLoadingMore = false }
             })
             .bind(to: self.activityIndicatorView.rx.isAnimating)
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.withoutReadNotisCount)
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, withoutReadNotisCount in
+                object.withoutReadNotisCount = withoutReadNotisCount
+                
+                UIView.performWithoutAnimation {
+                    object.tableView.reloadData()
+                }
+            }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.notificationsWithoutRead)
@@ -261,8 +273,7 @@ extension NotificationViewController: UITableViewDelegate {
             let typography = Typography.som.body2WithBold
             let frame = CGRect(x: 20, y: 16, width: UIScreen.main.bounds.width, height: typography.lineHeight)
             let label = UILabel().then {
-                let nofiCount = self.notificationsWithoutRead.count > 99 ? "99+" : "\(self.notificationsWithoutRead.count)"
-                $0.text = Text.withoutReadHeaderTitle + " (\(nofiCount)개)"
+                $0.text = Text.withoutReadHeaderTitle + " (\(self.withoutReadNotisCount)개)"
                 $0.textColor = .som.black
                 $0.typography = typography
                 
@@ -359,6 +370,9 @@ extension NotificationViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let offset = scrollView.contentOffset.y
+        
+        // 당겨서 새로고침 상황일 때
+        guard offset > 0 else { return }
         
         // 아래로 스크롤 중일 때, 데이터 추가로드 가능
         self.isLoadingMore = offset > self.currentOffset
