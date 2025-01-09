@@ -29,6 +29,7 @@ class ProfileViewReactor: Reactor {
     enum Mutation {
         case profile(Profile)
         case writtenCards([WrittenCard])
+        case moreWrittenCards([WrittenCard])
         case updateIsBlocked(Bool)
         case updateIsFollow(Bool)
         case updateIsLoading(Bool)
@@ -69,7 +70,7 @@ class ProfileViewReactor: Reactor {
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.profile(),
-                self.writtenCards(nil)
+                self.writtenCards()
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
@@ -77,14 +78,14 @@ class ProfileViewReactor: Reactor {
             return .concat([
                 .just(.updateIsLoading(true)),
                 self.profile(),
-                self.writtenCards(nil)
+                self.writtenCards()
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.writtenCards(lastId),
+                self.moreWrittenCards(lastId: lastId),
                 .just(.updateIsProcessing(false))
             ])
         case .block:
@@ -126,6 +127,8 @@ class ProfileViewReactor: Reactor {
             state.profile = profile
         case let .writtenCards(writtenCards):
             state.writtenCards = writtenCards
+        case let .moreWrittenCards(writtenCards):
+            state.writtenCards += writtenCards
         case let .updateIsBlocked(isBlocked):
             state.isBlocked = isBlocked
         case let .updateIsFollow(isFollow):
@@ -163,7 +166,29 @@ extension ProfileViewReactor {
             .catch(self.catchClosure)
     }
     
-    private func writtenCards(_ lastId: String?) -> Observable<Mutation> {
+    private func writtenCards() -> Observable<Mutation> {
+        
+        var request: ProfileRequest {
+            switch self.entranceType {
+            case .my, .myWithNavi:
+                return .myCards(lastId: nil)
+            case .other:
+                return .otherCards(memberId: self.memberId ?? "", lastId: nil)
+            }
+        }
+        
+        return self.networkManager.request(WrittenCardResponse.self, request: request)
+            .flatMapLatest { response -> Observable<Mutation> in
+                if (200...204).contains(response.status.httpCode) {
+                    return .just(.writtenCards(response.embedded.writtenCards))
+                } else {
+                    return .just(.writtenCards(.init()))
+                }
+            }
+            .catch(self.catchClosure)
+    }
+    
+    private func moreWrittenCards(lastId: String) -> Observable<Mutation> {
         
         var request: ProfileRequest {
             switch self.entranceType {
@@ -177,9 +202,9 @@ extension ProfileViewReactor {
         return self.networkManager.request(WrittenCardResponse.self, request: request)
             .flatMapLatest { response -> Observable<Mutation> in
                 if (200...204).contains(response.status.httpCode) {
-                    return .just(.writtenCards(response.embedded.writtenCards))
+                    return .just(.moreWrittenCards(response.embedded.writtenCards))
                 } else {
-                    return .just(.writtenCards(.init()))
+                    return .just(.moreWrittenCards(.init()))
                 }
             }
             .catch(self.catchClosure)

@@ -356,6 +356,12 @@ extension ProfileViewController: UICollectionViewDataSource {
                 }
                 .disposed(by: footer.disposeBag)
             
+            footer.moreDisplay
+                .subscribe(with: self) { object, lastId in
+                    object.reactor?.action.onNext(.moreFind(lastId))
+                }
+                .disposed(by: footer.disposeBag)
+            
             return footer
         } else {
             return .init(frame: .zero)

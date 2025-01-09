@@ -33,6 +33,8 @@ class ProfileViewFooter: UICollectionReusableView {
     ).then {
         $0.alwaysBounceVertical = true
         
+        $0.decelerationRate = .fast
+        
         $0.contentInsetAdjustmentBehavior = .never
         $0.contentInset = .zero
         
@@ -53,7 +55,10 @@ class ProfileViewFooter: UICollectionReusableView {
     
     private(set) var writtenCards = [WrittenCard]()
     
+    private var isLoadingMore: Bool = true
+    
     let didTap = PublishRelay<String>()
+    let moreDisplay = PublishRelay<String>()
     
     var disposeBag = DisposeBag()
     
@@ -92,6 +97,8 @@ class ProfileViewFooter: UICollectionReusableView {
         
         self.writtenCards = writtenCards
         self.collectionView.reloadData()
+        
+        self.isLoadingMore = true
     }
 }
 
@@ -131,5 +138,24 @@ extension ProfileViewFooter: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
         let width: CGFloat = UIScreen.main.bounds.width / 3
         return CGSize(width: width, height: width)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        guard self.writtenCards.isEmpty == false else { return }
+        
+        let lastSectionIndex = collectionView.numberOfSections - 1
+        let lastRowIndex = collectionView.numberOfItems(inSection: lastSectionIndex) - 1
+        
+        if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.item == lastRowIndex {
+            
+            self.isLoadingMore = false
+            
+            let lastId = self.writtenCards[indexPath.item].id
+            self.moreDisplay.accept(lastId)
+        }
     }
 }
