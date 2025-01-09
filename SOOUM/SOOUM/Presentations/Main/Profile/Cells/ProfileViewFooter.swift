@@ -165,6 +165,9 @@ extension ProfileViewFooter: UICollectionViewDelegateFlowLayout {
         
         let offset = scrollView.contentOffset.y
         
+        // 당겨서 새로고침 상황일 때
+        guard offset > 0 else { return }
+        
         // 아래로 스크롤 중일 때, 데이터 추가로드 가능
         self.isLoadingMore = offset > self.currentOffset
         self.currentOffset = offset

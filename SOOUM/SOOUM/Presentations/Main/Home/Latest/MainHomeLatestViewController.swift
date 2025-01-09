@@ -140,7 +140,7 @@ class MainHomeLatestViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.displayedCardsWithUpdate)
-            .distinctUntilChanged({ reactor.canUpdateCells(prev: $0, curr: $1) })
+            .distinctUntilChanged(reactor.canUpdateCells)
             .skip(1)
             .subscribe(with: self) { object, displayedCardsWithUpdate in
                 let displayedCards = displayedCardsWithUpdate.cards
@@ -244,7 +244,7 @@ extension MainHomeLatestViewController: UITableViewDelegate {
         let offset = scrollView.contentOffset.y
         
         // 당겨서 새로고침 상황일 때
-        if offset <= 0 {
+        guard offset > 0 else {
             
             self.hidesHeaderContainer.accept(false)
             self.currentOffset = offset
