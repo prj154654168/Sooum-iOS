@@ -12,10 +12,11 @@ import ReactorKit
 class TagsViewReactor: Reactor {
     
     enum Action {
-        case fetchTags
+        case refresh
     }
     
     enum Mutation {
+        case setLoading(Bool)
         /// 즐겨찾기 태그 fetch
         case favoriteTags([FavoriteTagsResponse.FavoriteTagList])
         /// 추천 태그 fetch
@@ -23,6 +24,8 @@ class TagsViewReactor: Reactor {
     }
     
     struct State {
+        /// 로딩 여부
+        fileprivate(set) var isLoading: Bool = false
         /// 즐겨찾기 태그 리스트
         fileprivate(set) var favoriteTags: [FavoriteTagsResponse.FavoriteTagList] = []
         /// 추천 태그 리스트
@@ -36,10 +39,12 @@ class TagsViewReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .fetchTags:
+        case .refresh:
             return .concat([
+                .just(.setLoading(true)),
                 self.fetchFavoriteTags(),
-                self.fetchRecommendTags()
+                self.fetchRecommendTags(),
+                .just(.setLoading(false)),
             ])
         }
     }
@@ -47,6 +52,9 @@ class TagsViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
+        case let .setLoading(isLoading):
+            newState.isLoading = isLoading
+            
         case let .favoriteTags(favoriteTags):
             newState.favoriteTags = favoriteTags
             

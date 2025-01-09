@@ -550,7 +550,7 @@
 		2AFD05452CFF75DD007C84AD /* FavoriteTagsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagsResponse.swift; sourceTree = "<group>"; };
 		2AFD05482CFF7687007C84AD /* RecommendTagsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTagsResponse.swift; sourceTree = "<group>"; };
 		2AFD054B2CFF76CB007C84AD /* TagRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRequest.swift; sourceTree = "<group>"; };
-		2AFD054E2CFF79D8007C84AD /* TagsViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewReactor.swift; sourceTree = "<group>"; };
+		2AFD054E2CFF79D8007C84AD /* TagsViewReactor.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = TagsViewReactor.swift; sourceTree = "<group>"; tabWidth = 4; };
 		2AFD05512D007F2F007C84AD /* TagSearchViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchViewReactor.swift; sourceTree = "<group>"; };
 		2AFD05542D0082DE007C84AD /* SearchTagsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTagsResponse.swift; sourceTree = "<group>"; };
 		2AFD05582D008D23007C84AD /* TagDetailViewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = TagDetailViewController.swift; sourceTree = "<group>"; tabWidth = 4; };
@@ -559,7 +559,7 @@
 		2AFD05622D00A1E1007C84AD /* TagDetailCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailCardResponse.swift; sourceTree = "<group>"; };
 		2AFD05652D01CB30007C84AD /* TagInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagInfoResponse.swift; sourceTree = "<group>"; };
 		2AFD05682D03264C007C84AD /* AddFavoriteTagResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFavoriteTagResponse.swift; sourceTree = "<group>"; };
-		2AFF95542CF3222400CBFB12 /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
+		2AFF95542CF3222400CBFB12 /* TagsViewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchTextFieldView.swift; sourceTree = "<group>"; };
 		2AFF955C2CF328DE00CBFB12 /* FavoriteTagTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagTableViewCell.swift; sourceTree = "<group>"; };
 		2AFF95602CF33A3900CBFB12 /* FavoriteTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagView.swift; sourceTree = "<group>"; };

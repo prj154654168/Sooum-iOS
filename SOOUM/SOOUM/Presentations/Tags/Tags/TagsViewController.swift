@@ -69,27 +69,27 @@ class TagsViewController: BaseViewController, View {
     func bind(reactor: TagsViewReactor) {
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
-                reactor.action.onNext(.fetchTags)
+                reactor.action.onNext(.refresh)
             }
             .disposed(by: self.disposeBag)
         
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
-            .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
-            .map { _ in Reactor.Action.fetchTags }
+            .withLatestFrom(reactor.state.map(\.isLoading))
+            .filter { $0 == false }
+            .throttle(.seconds(2), scheduler: MainScheduler.instance)
+            .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
 
         reactor.state.map(\.favoriteTags)
             .subscribe(with: self) { object, _ in
                 object.tableView.reloadData()
-                object.tableView.refreshControl?.endRefreshing()
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.favoriteTags)
             .subscribe(with: self) { object, _ in
                 object.tableView.reloadData()
-                object.tableView.refreshControl?.endRefreshing()
             }
             .disposed(by: self.disposeBag)
     }
