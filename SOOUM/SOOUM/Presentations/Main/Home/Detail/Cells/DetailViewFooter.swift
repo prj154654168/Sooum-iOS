@@ -55,7 +55,8 @@ class DetailViewFooter: UICollectionReusableView {
     
     var commentCards = [Card]()
     
-    private var isLoadingMore: Bool = true
+    private var currentOffset: CGFloat = 0
+    private var isLoadingMore: Bool = false
     
     let didTap = PublishRelay<String>()
     let moreDisplay = PublishRelay<String>()
@@ -114,7 +115,7 @@ class DetailViewFooter: UICollectionReusableView {
     
     func setDatas(_ datas: [Card], cardSummary: CardSummary) {
         
-        self.isLoadingMore = true
+        self.isLoadingMore = false
         
         self.commentCards = datas
         self.likeAndCommentView.likeCount = cardSummary.cardLikeCnt
@@ -199,5 +200,14 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
         let height: CGFloat = collectionView.bounds.height
         return CGSize(width: height, height: height)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.x
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
+        self.currentOffset = offset
     }
 }

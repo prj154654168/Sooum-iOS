@@ -91,7 +91,7 @@ class DetailViewReactor: Reactor {
                 .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
                     Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
                 }
-                .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .delay(.seconds(1), scheduler: MainScheduler.instance),
                 
                 .just(.updateIsProcessing(false))
             ])
@@ -107,14 +107,15 @@ class DetailViewReactor: Reactor {
                 .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
                     Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
                 }
-                .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .delay(.seconds(1), scheduler: MainScheduler.instance),
                 
                 .just(.updateIsLoading(false))
             ])
         case let .moreFindForComment(lastId):
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.fetchMoreCommentCards(lastId),
+                self.fetchMoreCommentCards(lastId)
+                    .delay(.seconds(1), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case .delete:

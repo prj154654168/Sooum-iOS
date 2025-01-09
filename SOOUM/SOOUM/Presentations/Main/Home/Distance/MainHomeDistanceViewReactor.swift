@@ -69,7 +69,7 @@ class MainHomeDistanceViewReactor: Reactor {
                     return .concat([
                         .just(.updateIsProcessing(true)),
                         self.refresh(self.currentState.distanceFilter)
-                            .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                            .delay(.seconds(1), scheduler: MainScheduler.instance),
                         .just(.updateIsProcessing(false))
                     ])
                 } else {
@@ -81,10 +81,11 @@ class MainHomeDistanceViewReactor: Reactor {
                 }
             }
         case .refresh:
+            
             return .concat([
                 .just(.updateIsLoading(true)),
                 self.refresh(self.currentState.distanceFilter)
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                    .delay(.seconds(1), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
@@ -95,11 +96,12 @@ class MainHomeDistanceViewReactor: Reactor {
                 .just(.updateIsProcessing(false))
             ])
         case let .distanceFilter(distanceFilter):
+            
             return .concat([
                 .just(.updateIsProcessing(true)),
                 .just(.updateDistanceFilter(distanceFilter)),
                 self.refresh(distanceFilter)
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                    .delay(.seconds(1), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         }

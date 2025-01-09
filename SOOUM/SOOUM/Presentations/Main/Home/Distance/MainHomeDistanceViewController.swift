@@ -49,7 +49,7 @@ class MainHomeDistanceViewController: BaseViewController, View {
     // tableView 정보
     private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
-    private var isLoadingMore: Bool = true
+    private var isLoadingMore: Bool = false
     
     private let cellHeight: CGFloat = {
         let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
@@ -129,14 +129,10 @@ class MainHomeDistanceViewController: BaseViewController, View {
       
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
-            .subscribe(with: self) { object, isProcessing in
-                object.isLoadingMore = !isProcessing
-                if isProcessing {
-                    object.activityIndicatorView.startAnimating()
-                } else {
-                    object.activityIndicatorView.stopAnimating()
-                }
-            }
+            .do(onNext: { [weak self] isProcessing in
+                if isProcessing { self?.isLoadingMore = false }
+            })
+            .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.displayedCardsWithUpdate)
@@ -258,6 +254,10 @@ extension MainHomeDistanceViewController: UITableViewDelegate {
         // offset이 currentOffset보다 크면 아래로 스크롤, 반대일 경우 위로 스크롤
         // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
         self.hidesHeaderContainer.accept(offset > self.currentOffset)
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
+        print("@@@ \(self.isLoadingMore)")
         
         self.currentOffset = offset
         

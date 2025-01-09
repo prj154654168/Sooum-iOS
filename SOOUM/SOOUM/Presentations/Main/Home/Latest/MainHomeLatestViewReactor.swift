@@ -65,7 +65,7 @@ class MainHomeLatestViewReactor: Reactor {
                     return .concat([
                         .just(.updateIsProcessing(true)),
                         self.refresh()
-                            .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                            .delay(.seconds(1), scheduler: MainScheduler.instance),
                         .just(.updateIsProcessing(false))
                     ])
                 } else {
@@ -80,14 +80,14 @@ class MainHomeLatestViewReactor: Reactor {
             return .concat([
                 .just(.updateIsLoading(true)),
                 self.refresh()
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                    .delay(.seconds(1), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.moreFind(lastId)
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                    .delay(.seconds(1), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         }
