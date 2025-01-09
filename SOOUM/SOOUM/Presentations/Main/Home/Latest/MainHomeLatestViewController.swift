@@ -108,17 +108,18 @@ class MainHomeLatestViewController: BaseViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        let isLoading = reactor.state.map(\.isLoading).distinctUntilChanged().share()
+        
+        // isLoading == true && isRefreshing == false 일 때, 이벤트 무시
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(reactor.state.map(\.isLoading))
             .filter { $0 == false }
-            .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        reactor.state.map(\.isLoading)
-            .distinctUntilChanged()
+        isLoading
             .do(onNext: { [weak self] isLoading in
                 if isLoading { self?.isLoadingMore = false }
             })
@@ -235,8 +236,8 @@ extension MainHomeLatestViewController: UITableViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
-        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
-        self.isRefreshEnabled = self.currentOffset <= 0
+        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (self.currentOffset <= 0 && self.reactor?.currentState.isLoading == false)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
