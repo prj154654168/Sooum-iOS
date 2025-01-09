@@ -20,6 +20,7 @@ class TagsViewReactor: Reactor {
         case favoriteTags([FavoriteTagsResponse.FavoriteTagList])
         /// 추천 태그 fetch
         case recommendTags([RecommendTagsResponse.RecommendTag])
+        case setLoading(Bool)
     }
     
     struct State {
@@ -27,6 +28,7 @@ class TagsViewReactor: Reactor {
         fileprivate(set) var favoriteTags: [FavoriteTagsResponse.FavoriteTagList] = []
         /// 추천 태그 리스트
         fileprivate(set) var recommendTags: [RecommendTagsResponse.RecommendTag] = []
+        fileprivate(set) var isLoading: Bool = false
     }
     
     var initialState = State()
@@ -37,9 +39,17 @@ class TagsViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .fetchTags:
-            return .concat([
+            
+            let combined = Observable.concat([
                 self.fetchFavoriteTags(),
                 self.fetchRecommendTags()
+            ])
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+            
+            return .concat([
+                .just(.setLoading(true)),
+                combined,
+                .just(.setLoading(false))
             ])
         }
     }
@@ -52,6 +62,9 @@ class TagsViewReactor: Reactor {
             
         case let .recommendTags(recommendTags):
             newState.recommendTags = recommendTags
+            
+        case let .setLoading(isLoading):
+            newState.isLoading = isLoading
         }
         return newState
     }

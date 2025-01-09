@@ -73,8 +73,10 @@ class TagsViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
         
+        let isLoading = reactor.state.map(\.isLoading).distinctUntilChanged().share()
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
-            .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
+            .withLatestFrom(isLoading)
+            .filter { $0 == false }
             .map { _ in Reactor.Action.fetchTags }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -82,14 +84,22 @@ class TagsViewController: BaseViewController, View {
         reactor.state.map(\.favoriteTags)
             .subscribe(with: self) { object, _ in
                 object.tableView.reloadData()
-                object.tableView.refreshControl?.endRefreshing()
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.favoriteTags)
             .subscribe(with: self) { object, _ in
                 object.tableView.reloadData()
-                object.tableView.refreshControl?.endRefreshing()
+            }
+            .disposed(by: self.disposeBag)
+        
+        isLoading
+            .subscribe(with: self.tableView) { tableView, isLoading in
+                if isLoading {
+                    tableView.refreshControl?.beginRefreshingFromTop()
+                } else {
+                    tableView.refreshControl?.endRefreshing()
+                }
             }
             .disposed(by: self.disposeBag)
     }
@@ -280,9 +290,10 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
-        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
         let offset = scrollView.contentOffset.y
-        self.isRefreshEnabled = offset <= 0
+        
+        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

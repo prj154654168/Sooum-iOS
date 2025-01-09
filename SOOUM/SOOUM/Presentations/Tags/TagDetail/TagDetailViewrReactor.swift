@@ -23,12 +23,14 @@ class TagDetailViewrReactor: Reactor {
         case tagCards([TagDetailCardResponse.TagFeedCard])
         /// 태그 즐겨찾기 여부 변경
         case updateFavorite(TagInfoResponse)
+        case setLoading(Bool)
     }
     
     struct State {
         /// 태그 카드 리스트
         fileprivate(set) var tagCards: [TagDetailCardResponse.TagFeedCard] = []
         fileprivate(set) var tagInfo: TagInfoResponse?
+        fileprivate(set) var isLoading: Bool = false
     }
     
     var initialState = State()
@@ -50,10 +52,20 @@ class TagDetailViewrReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .fetchTagCards:
-            return self.fetchTagCards()
+            return .concat([
+                .just(.setLoading(true)),
+                self.fetchTagCards()
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .just(.setLoading(false))
+            ])
             
         case .fetchTagInfo:
-            return self.fetchTagInfo()
+            return .concat([
+                .just(.setLoading(true)),
+                self.fetchTagInfo()
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .just(.setLoading(false))
+            ])
             
         case .updateFavorite:
             return updateFavorite()
@@ -71,6 +83,9 @@ class TagDetailViewrReactor: Reactor {
             
         case let .updateFavorite(tagInfo):
             newState.tagInfo = tagInfo
+            
+        case let .setLoading(isLoading):
+            newState.isLoading = isLoading
         }
         
         return newState
