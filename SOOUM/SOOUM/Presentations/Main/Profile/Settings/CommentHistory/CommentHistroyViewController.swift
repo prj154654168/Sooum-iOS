@@ -36,6 +36,8 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
         $0.contentInsetAdjustmentBehavior = .never
         $0.contentInset = .zero
         
+        $0.decelerationRate = .fast
+        
         $0.showsHorizontalScrollIndicator = false
         
         $0.register(CommentHistoryViewCell.self, forCellWithReuseIdentifier: CommentHistoryViewCell.cellIdentifier)
@@ -45,6 +47,8 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
     }
     
     private(set) var commentHistroies = [CommentHistory]()
+    
+    private var isLoadingMore: Bool = true
     
     override var navigationBarHeight: CGFloat {
         46
@@ -83,7 +87,14 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
         // State
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
-            .bind(to: self.activityIndicatorView.rx.isAnimating)
+            .subscribe(with: self) { object, isProcessing in
+                object.isLoadingMore = !isProcessing
+                if isProcessing {
+                    object.activityIndicatorView.startAnimating()
+                } else {
+                    object.activityIndicatorView.stopAnimating()
+                }
+            }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.commentHistories)
@@ -131,5 +142,21 @@ extension CommentHistroyViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
         let width: CGFloat = UIScreen.main.bounds.width / 3
         return CGSize(width: width, height: width)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        guard self.commentHistroies.isEmpty == false else { return }
+        
+        let lastSectionIndex = collectionView.numberOfSections - 1
+        let lastRowIndex = collectionView.numberOfItems(inSection: lastSectionIndex) - 1
+        
+        if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.item == lastRowIndex {
+            let lastId = self.commentHistroies[indexPath.item].id
+            self.reactor?.action.onNext(.moreFind(lastId))
+        }
     }
 }

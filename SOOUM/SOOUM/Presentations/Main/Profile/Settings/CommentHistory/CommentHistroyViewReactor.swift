@@ -12,10 +12,12 @@ class CommentHistroyViewReactor: Reactor {
     
     enum Action: Equatable {
         case landing
+        case moreFind(String)
     }
     
     enum Mutation {
         case commentHistories([CommentHistory])
+        case more([CommentHistory])
         case updateIsProcessing(Bool)
     }
     
@@ -35,11 +37,24 @@ class CommentHistroyViewReactor: Reactor {
         switch action {
         case .landing:
             let request: SettingsRequest = .commentHistory(lastId: nil)
+            
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.networkManager.request(CommentHistoryResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.commentHistories(response.embedded.commentHistories))
+                    }
+                    .catch(self.catchClosure),
+                .just(.updateIsProcessing(false))
+            ])
+        case let .moreFind(lastId):
+            let request: SettingsRequest = .commentHistory(lastId: lastId)
+            
+            return .concat([
+                .just(.updateIsProcessing(true)),
+                self.networkManager.request(CommentHistoryResponse.self, request: request)
+                    .flatMapLatest { response -> Observable<Mutation> in
+                        return .just(.more(response.embedded.commentHistories))
                     }
                     .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
@@ -52,6 +67,8 @@ class CommentHistroyViewReactor: Reactor {
         switch mutation {
         case let .commentHistories(commentHistories):
             state.commentHistories = commentHistories
+        case let .more(commentHistories):
+            state.commentHistories += commentHistories
         case let .updateIsProcessing(isProcessing):
             state.isProcessing = isProcessing
         }
