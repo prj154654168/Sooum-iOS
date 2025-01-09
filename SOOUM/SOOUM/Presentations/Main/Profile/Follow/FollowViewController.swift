@@ -44,6 +44,7 @@ class FollowViewController: BaseNavigationViewController, View {
     private(set) var follows = [Follow]()
     
     private var isRefreshEnabled: Bool = true
+    private var isLoadingMore: Bool = true
     
     
     // MARK: Override func
@@ -98,7 +99,14 @@ class FollowViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
-            .bind(to: self.activityIndicatorView.rx.isAnimating)
+            .subscribe(with: self) { object, isProcessing in
+                object.isLoadingMore = !isProcessing
+                if isProcessing {
+                    object.activityIndicatorView.startAnimating()
+                } else {
+                    object.activityIndicatorView.stopAnimating()
+                }
+            }
             .disposed(by: self.disposeBag)
         
         let follows = reactor.state.map(\.follows).distinctUntilChanged().share()
@@ -161,6 +169,26 @@ extension FollowViewController: UITableViewDataSource {
 
 extension FollowViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 74
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
+        guard self.follows.isEmpty == false else { return }
+        
+        let lastSectionIndex = tableView.numberOfSections - 1
+        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        
+        if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.row == lastRowIndex {
+            let lastId = self.follows[indexPath.row].id
+            self.reactor?.action.onNext(.moreFind(lastId: lastId))
+        }
+    }
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
         // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
@@ -179,10 +207,6 @@ extension FollowViewController: UITableViewDelegate {
             
             refreshControl.beginRefreshingFromTop()
         }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 74
     }
 }
 
