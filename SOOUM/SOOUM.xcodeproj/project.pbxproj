@@ -235,6 +235,8 @@
 		385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAF12C8702C100A5E139 /* SceneDelegate.swift */; };
 		385441952C870544004E2BB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAF82C8702C200A5E139 /* Assets.xcassets */; };
 		385441962C870544004E2BB0 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 387FBAFB2C8702C200A5E139 /* Base */; };
+		385602B62D2FB18400118530 /* NotiPlaceholderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385602B52D2FB18400118530 /* NotiPlaceholderViewCell.swift */; };
+		385602B72D2FB18400118530 /* NotiPlaceholderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385602B52D2FB18400118530 /* NotiPlaceholderViewCell.swift */; };
 		385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620EE2CA19C9500E0AB5A /* NetworkManager.swift */; };
 		385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620EE2CA19C9500E0AB5A /* NetworkManager.swift */; };
 		385620F22CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */; };
@@ -623,6 +625,7 @@
 		385053572C92DD2300C80B02 /* SOMTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarController.swift; sourceTree = "<group>"; };
 		385071992CA295A800A7905A /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3854419A2C870544004E2BB0 /* SOOUM-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SOOUM-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		385602B52D2FB18400118530 /* NotiPlaceholderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotiPlaceholderViewCell.swift; sourceTree = "<group>"; };
 		385620EE2CA19C9500E0AB5A /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		385620F12CA19D2D00E0AB5A /* Alamofire_Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_Request.swift; sourceTree = "<group>"; };
 		385620F52CA19EA900E0AB5A /* Alamofire_constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire_constants.swift; sourceTree = "<group>"; };
@@ -1253,6 +1256,7 @@
 			children = (
 				382E15392D15A67A0097B09C /* NotificationViewCell.swift */,
 				382E15412D15BA490097B09C /* NotificationWithReportViewCell.swift */,
+				385602B52D2FB18400118530 /* NotiPlaceholderViewCell.swift */,
 			);
 			path = cells;
 			sourceTree = "<group>";
@@ -2491,6 +2495,7 @@
 				2AFD055E2D009513007C84AD /* TagDetailNavigationBarView.swift in Sources */,
 				2AFF95652CF33D9F00CBFB12 /* TagsHeaderView.swift in Sources */,
 				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
+				385602B72D2FB18400118530 /* NotiPlaceholderViewCell.swift in Sources */,
 				3878D0542CFFC6C100F9522F /* ProfileResponse.swift in Sources */,
 				3878D06C2CFFDF1F00F9522F /* SettingsViewController.swift in Sources */,
 				38FD4DAF2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift in Sources */,
@@ -2677,6 +2682,7 @@
 				2AE6B1922CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				2AE6B18F2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
 				38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
+				385602B62D2FB18400118530 /* NotiPlaceholderViewCell.swift in Sources */,
 				3802BDB82D0AF2F7001256EA /* PushManager+Rx.swift in Sources */,
 				3878D05C2CFFD10D00F9522F /* FollowingResponse.swift in Sources */,
 				38F70E652D19161800B33C9D /* MainHomeLatestViewReactor.swift in Sources */,

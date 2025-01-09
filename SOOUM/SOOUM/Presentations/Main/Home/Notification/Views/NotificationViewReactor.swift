@@ -21,7 +21,7 @@ class NotificationViewReactor: Reactor {
     enum Action: Equatable {
         case landing
         case refresh
-        case moreFind(String)
+        case moreFind(withoutReadLastId: String?, readLastId: String?)
         case requestRead(String)
     }
     
@@ -79,13 +79,13 @@ class NotificationViewReactor: Reactor {
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
-        case let .moreFind(lastId):
+        case let .moreFind(withoutReadLastId, readLastId):
             
             return .concat([
-                self.moreNotifications(with: false, lastId: lastId)
-                    .catch(self.catchClosure),
-                self.moreNotifications(with: true, lastId: lastId)
-                    .catch(self.catchClosure)
+                .just(.updateIsProcessing(true)),
+                self.moreNotifications(with: false, lastId: withoutReadLastId),
+                self.moreNotifications(with: true, lastId: readLastId),
+                .just(.updateIsProcessing(false))
             ])
         case let .requestRead(selectedId):
             let request: NotificationRequest = .requestRead(notificationId: selectedId)
@@ -137,7 +137,9 @@ extension NotificationViewReactor {
             .catch(self.catchClosure)
     }
     
-    private func moreNotifications(with isRead: Bool, lastId: String) -> Observable<Mutation> {
+    private func moreNotifications(with isRead: Bool, lastId: String?) -> Observable<Mutation> {
+        
+        guard let lastId = lastId else { return .just(.more([])) }
         
         var request: NotificationRequest {
             switch self.entranceType {
@@ -152,7 +154,7 @@ extension NotificationViewReactor {
         
         return self.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
             .map(\.commentHistoryInNotis)
-            .map(isRead ? Mutation.notifications : Mutation.notificationsWithoutRead)
+            .map(isRead ? Mutation.more : Mutation.moreWithoutRead)
             .catch(self.catchClosure)
     }
     
