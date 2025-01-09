@@ -30,6 +30,7 @@ class NotificationViewReactor: Reactor {
         case notifications([CommentHistoryInNoti])
         case moreWithoutRead([CommentHistoryInNoti])
         case more([CommentHistoryInNoti])
+        case withoutReadNotiscount(String)
         case updateIsProcessing(Bool)
         case updateIsLoading(Bool)
         case updateIsReadCompleted(Bool)
@@ -38,6 +39,7 @@ class NotificationViewReactor: Reactor {
     struct State {
         var notificationsWithoutRead: [CommentHistoryInNoti]
         var notifications: [CommentHistoryInNoti]
+        var withoutReadNotisCount: String
         var isProcessing: Bool
         var isLoading: Bool
         var isReadCompleted: Bool
@@ -46,6 +48,7 @@ class NotificationViewReactor: Reactor {
     var initialState: State = .init(
         notificationsWithoutRead: [],
         notifications: [],
+        withoutReadNotisCount: "0",
         isProcessing: false,
         isLoading: false,
         isReadCompleted: false
@@ -63,6 +66,7 @@ class NotificationViewReactor: Reactor {
         switch action {
         case .landing:
             
+                self.withoutReadNotisCount(),
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.notifications(with: false),
@@ -71,6 +75,7 @@ class NotificationViewReactor: Reactor {
             ])
         case .refresh:
             
+                self.withoutReadNotisCount(),
             return .concat([
                 .just(.updateIsLoading(true)),
                 self.notifications(with: false)
@@ -81,6 +86,7 @@ class NotificationViewReactor: Reactor {
             ])
         case let .moreFind(withoutReadLastId, readLastId):
             
+                self.withoutReadNotisCount(),
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.moreNotifications(with: false, lastId: withoutReadLastId),
@@ -105,6 +111,8 @@ class NotificationViewReactor: Reactor {
             state.notificationsWithoutRead += notificationsWithoutRead
         case let .more(notifications):
             state.notifications += notifications
+        case let .withoutReadNotiscount(withoutReadNotisCount):
+            state.withoutReadNotisCount = withoutReadNotisCount
         case let .updateIsProcessing(isProcessing):
             state.isProcessing = isProcessing
         case let .updateIsLoading(isLoading):
@@ -156,6 +164,24 @@ extension NotificationViewReactor {
             .map(\.commentHistoryInNotis)
             .map(isRead ? Mutation.more : Mutation.moreWithoutRead)
             .catch(self.catchClosure)
+    }
+    
+    private func withoutReadNotisCount() -> Observable<Mutation> {
+        
+        var request: NotificationRequest {
+            switch self.entranceType {
+            case .total:
+                return .totalWithoutReadCount
+            case .comment:
+                return .commentWithoutReadCount
+            case .like:
+                return .likeWihoutReadCount
+            }
+        }
+        
+        return self.networkManager.request(WithoutReadNotisCountResponse.self, request: request)
+            .map(\.unreadCnt)
+            .map(Mutation.withoutReadNotiscount)
     }
     
     var catchClosure: ((Error) throws -> Observable<Mutation> ) {

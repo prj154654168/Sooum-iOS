@@ -268,7 +268,7 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // State
-        reactor.state.map(\.isNotisWithoutRead)
+        reactor.state.map(\.hasNotisWithoutRead)
             .distinctUntilChanged()
             .bind(to: self.dotWithoutReadView.rx.isHidden)
             .disposed(by: self.disposeBag)
