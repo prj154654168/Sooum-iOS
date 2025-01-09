@@ -89,7 +89,6 @@ enum JoinRequest: BaseRequest {
             )
             
             let encoded = try self.encoding.encode(request, with: self.parameters)
-            print("\(type(of: self)) - \(#function)", encoded)
 
             return encoded
         } else {

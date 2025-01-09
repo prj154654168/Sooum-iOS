@@ -84,7 +84,6 @@ class TagDetailViewrReactor: Reactor {
                 return Mutation.tagCards(response.embedded.tagFeedCardDtoList)
             }
             .catch { _ in
-                print("\(type(of: self)) - \(#function) - catch")
                 return .just(.tagCards([]))
             }
     }

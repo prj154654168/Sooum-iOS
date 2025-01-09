@@ -13,6 +13,8 @@ import FirebaseMessaging
 
 import RxSwift
 
+import CocoaLumberjack
+
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -34,6 +36,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("Resource count \(RxSwift.Resources.total)")
             })
         #endif
+        
+        // Set log
+        self.setupCocoaLumberjack()
         
         FirebaseApp.configure()
         // 파이어베이스 Meesaging 설정
@@ -91,7 +96,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
 
         if let messageID: String = userInfo["gcm.message_id"] as? String {
-            print("Message ID: \(messageID)")
+            Log.info("Message ID: \(messageID)")
         }
         
         if let infoDic = userInfo as? [String: Any] {
@@ -112,7 +117,7 @@ extension AppDelegate: MessagingDelegate {
     ) {
         self.registerRemoteNotificationCompletion?(error)
 
-        print("❌ Error registration APNS token: \(error)")
+        Log.error("Error registration APNS token: \(error)")
     }
 
     func application(
@@ -128,7 +133,7 @@ extension AppDelegate: MessagingDelegate {
         )
         self.authManager.registeredToken = current
         
-        print("ℹ️ Call func: \(#function)")
+        Log.info("Call func: \(#function)")
 
         self.registerRemoteNotificationCompletion?(nil)
     }
@@ -141,11 +146,21 @@ extension AppDelegate: MessagingDelegate {
         )
         self.authManager.registeredToken = current
         
-        print("ℹ️ Call func: \(#function)")
+        Log.info("Call func: \(#function)")
     }
 }
 
 extension AppDelegate {
+    
+    /// CocoaLumberjack 설정
+    private func setupCocoaLumberjack() {
+        DDLog.add(DDOSLogger.sharedInstance) // Uses os_log
+
+        let fileLogger: DDFileLogger = DDFileLogger() // File Logger
+        fileLogger.rollingFrequency = 60 * 60 * 24 // 24 hours
+        fileLogger.logFileManager.maximumNumberOfLogFiles = 7
+        DDLog.add(fileLogger)
+    }
     
     private func removeKeyChainWhenFirstLaunch() {
         

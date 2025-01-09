@@ -21,7 +21,7 @@ extension KingfisherManager {
                 case let .success(result):
                     completion(result.image)
                 case let .failure(error):
-                    print("❌ Download image failed with kingfisher \(error.localizedDescription)")
+                    Log.error("Download image failed with kingfisher \(error.localizedDescription)")
                     self.cancel(strUrl: strUrl)
                     completion(nil)
                 }

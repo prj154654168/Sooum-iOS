@@ -61,7 +61,6 @@ class TagSearchViewReactor: Reactor {
                 return Mutation.searchTags(response.embedded.relatedTagList)
             }
             .catch { _ in
-                print("\(type(of: self)) - \(#function) - catch")
                 return .just(.searchTags([]))
             }
     }

@@ -127,8 +127,6 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     private func createMainHomeViewCell(indexPath: IndexPath) -> MainHomeViewCell {
-        print("\(type(of: self)) - \(#function)")
-
         let cell: MainHomeViewCell = tableView.dequeueReusableCell(
             withIdentifier: String(describing: MainHomeViewCell.self),
             for: indexPath
@@ -156,7 +154,6 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
         indexPath: IndexPath,
         mode: EmptyTagDetailTableViewCell.Mode
     ) -> EmptyTagDetailTableViewCell {
-        print("\(type(of: self)) - \(#function)")
 
         let cell: EmptyTagDetailTableViewCell = tableView.dequeueReusableCell(
             withIdentifier: String(describing: EmptyTagDetailTableViewCell.self),

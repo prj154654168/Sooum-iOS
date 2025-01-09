@@ -64,7 +64,7 @@ class AuthManager: AuthManagerDelegate {
             .replacingOccurrences(of: "\n", with: "")
         
         guard let keyData = Data(base64Encoded: keyString) else {
-            print("Failed to decode base64 string.")
+            Log.fail("Failed to decode base64 string.")
             return nil
         }
         
@@ -76,7 +76,7 @@ class AuthManager: AuthManagerDelegate {
         
         var error: Unmanaged<CFError>?
         guard let secKey = SecKeyCreateWithData(keyData as CFData, attributes as CFDictionary, &error) else {
-            print("Error creating SecKey: \(error?.takeRetainedValue().localizedDescription ?? "unknown error")")
+            Log.error("Error creating SecKey: \(error?.takeRetainedValue().localizedDescription ?? "unknown error")")
             return nil
         }
         
@@ -92,7 +92,7 @@ class AuthManager: AuthManagerDelegate {
             self.authInfo.deviceId as CFData,
             &error
         ) else {
-            print("Error encrypting UUID: \(error?.takeRetainedValue().localizedDescription ?? "unknown error")")
+            Log.error("Error encrypting UUID: \(error?.takeRetainedValue().localizedDescription ?? "unknown error")")
             return nil
         }
         
@@ -153,11 +153,11 @@ class AuthManager: AuthManagerDelegate {
                                     let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
                                     networkManager.request(Empty.self, request: request)
                                         .subscribe(onNext: { _ in
-                                            print("ℹ️ Update FCM token to server with", fcmToken)
+                                            Log.info("Update FCM token to server with", fcmToken)
                                         })
                                         .disposed(by: object.disposeBag)
                                 } else {
-                                    print("ℹ️ Failed FCM token updated to server")
+                                    Log.info("Failed FCM token updated to server")
                                 }
                                 
                                 return true
@@ -224,11 +224,11 @@ class AuthManager: AuthManagerDelegate {
                             let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
                             networkManager.request(Empty.self, request: request)
                                 .subscribe(onNext: { _ in
-                                    print("ℹ️ Update FCM token to server with", fcmToken)
+                                    Log.info("Update FCM token to server with", fcmToken)
                                 })
                                 .disposed(by: object.disposeBag)
                         } else {
-                            print("ℹ️ Failed FCM token updated to server")
+                            Log.info("Failed FCM token updated to server")
                         }
                         
                         completion(.success)

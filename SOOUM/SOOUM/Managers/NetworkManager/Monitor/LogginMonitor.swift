@@ -25,18 +25,19 @@ class LogginMonitor: EventMonitor {
         if let request = request.request {
             
             let currentTime = formatter.string(from: Date())
-            print("\n--------------------------------")
-            print("📡 REQUEST [\(currentTime)]")
-            print("URL: \(request.url?.absoluteString ?? "")")
-            print("Method: \(request.httpMethod ?? "")")
+            Log.debug("""
+                \nREQUEST [\(currentTime)]
+                URL: \(request.url?.absoluteString ?? "")
+                Method: \(request.httpMethod ?? "")
+            """)
             
             if let headers = request.allHTTPHeaderFields, !headers.isEmpty {
-                print("Headers: \(headers)")
+                Log.debug("\nHeaders: \(headers)")
             }
             
             if let body = request.httpBody,
                let jsonString = String(data: body, encoding: .utf8) {
-                print("Body: \(prettyPrintJSON(jsonString))")
+                Log.debug("\nBody: \(prettyPrintJSON(jsonString))")
             }
         }
     }
@@ -44,20 +45,19 @@ class LogginMonitor: EventMonitor {
     func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
         
         let currentTime = formatter.string(from: Date())
-        print("\n📡 RESPONSE [\(currentTime)]")
-        
-        if let statusCode = response.response?.statusCode {
-            print("Status Code: \(statusCode)")
-        }
+        Log.debug("""
+            \nRESPONSE [\(currentTime)]
+            Status Code: \(response.response?.statusCode ?? -99)")
+        """)
         
         if let data = response.data {
             if let jsonString = String(data: data, encoding: .utf8) {
-                print("Response: \(prettyPrintJSON(jsonString))")
+                Log.debug("\nResponse: \(prettyPrintJSON(jsonString))")
             }
         }
         
         if let error = response.error {
-            print("Error: \(error.localizedDescription)")
+            Log.error("\nError: \(error.localizedDescription)")
         }
     }
     

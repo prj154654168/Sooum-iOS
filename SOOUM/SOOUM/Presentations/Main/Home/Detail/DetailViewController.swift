@@ -488,12 +488,11 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension DetailViewController: SOMTagsDelegate {
-  func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
-    print("\(type(of: self)) - \(#function)")
-
-    let tagDetailVC = TagDetailViewController()
-    let tagDetailReactor = TagDetailViewrReactor(tagID: model.id)
-    tagDetailVC.reactor = tagDetailReactor
-    self.navigationPush(tagDetailVC, animated: true)
-  }
+    
+    func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
+        let tagDetailVC = TagDetailViewController()
+        let tagDetailReactor = TagDetailViewrReactor(tagID: model.id)
+        tagDetailVC.reactor = tagDetailReactor
+        self.navigationPush(tagDetailVC, animated: true)
+    }
 }

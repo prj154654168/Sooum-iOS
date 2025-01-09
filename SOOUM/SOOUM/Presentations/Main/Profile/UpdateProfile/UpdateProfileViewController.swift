@@ -182,7 +182,7 @@ extension UpdateProfileViewController {
         picker.didFinishPicking { [weak picker] items, cancelled in
             
             if cancelled {
-                print("Picker was canceled")
+                Log.error("Picker was canceled")
                 picker?.dismiss(animated: true, completion: nil)
                 return
             }

@@ -176,14 +176,14 @@ extension MainTabBarController: LocationManagerDelegate {
         _ manager: LocationManager,
         didUpdateCoordinate coordinate: CLLocationCoordinate2D
     ) {
-        print("ℹ️ Update location coordinate: \(coordinate)")
+        Log.debug("Update location coordinate: \(coordinate)")
     }
     
     func locationManager(_ manager: LocationManager, didChangeAuthStatus status: AuthStatus) {
-        print("ℹ️ Change location auth status", status)
+        Log.debug("Change location auth status", status)
     }
     
     func locationManager(_ manager: LocationManager, didFailWithError error: any Error) {
-        print("❌ Update location error", error.localizedDescription)
+        Log.error("Update location error", error.localizedDescription)
     }
 }
