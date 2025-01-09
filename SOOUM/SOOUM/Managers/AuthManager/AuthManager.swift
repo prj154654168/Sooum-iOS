@@ -42,7 +42,7 @@ class AuthManager: AuthManagerDelegate {
     static let shared = AuthManager()
     
     private var isReAuthenticating: Bool = false
-    var registeredToken: PushTokenSet?
+    private var registeredToken: PushTokenSet?
     
     private var disposeBag = DisposeBag()
     
@@ -99,7 +99,6 @@ class AuthManager: AuthManagerDelegate {
         return (encryptedData as Data).base64EncodedString()
     }
     
-    // TODO: 회원가입 시 매개변수 추가
     func join() -> Observable<Bool> {
         
         let networkManager = NetworkManager.shared
@@ -114,7 +113,6 @@ class AuthManager: AuthManagerDelegate {
                     
                     let request: AuthRequest = .signUp(
                         encryptedDeviceId: encryptedDeviceId,
-                        // TODO: 추후 fcm 등록 후 추가
                         firebaseToken: fcmToken,
                         isAllowNotify: true,
                         isAllowTermOne: true,
@@ -149,15 +147,9 @@ class AuthManager: AuthManagerDelegate {
                                 
                                 object.authInfo.updateToken(token)
                                 
-                                if let fcmToken = object.registeredToken?.fcm {
-                                    let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
-                                    networkManager.request(Empty.self, request: request)
-                                        .subscribe(onNext: { _ in
-                                            Log.info("Update FCM token to server with", fcmToken)
-                                        })
-                                        .disposed(by: object.disposeBag)
-                                } else {
-                                    Log.info("Failed FCM token updated to server")
+                                // 서버에 FCM token 업데이트
+                                if let tokenSet = object.registeredToken {
+                                    object.updateFcmToken(tokenSet)
                                 }
                                 
                                 return true
@@ -220,15 +212,9 @@ class AuthManager: AuthManagerDelegate {
                             )
                         )
                         
-                        if let fcmToken = object.registeredToken?.fcm {
-                            let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
-                            networkManager.request(Empty.self, request: request)
-                                .subscribe(onNext: { _ in
-                                    Log.info("Update FCM token to server with", fcmToken)
-                                })
-                                .disposed(by: object.disposeBag)
-                        } else {
-                            Log.info("Failed FCM token updated to server")
+                        // 서버에 FCM token 업데이트
+                        if let tokenSet = object.registeredToken {
+                            object.updateFcmToken(tokenSet)
                         }
                         
                         completion(.success)
@@ -250,6 +236,37 @@ class AuthManager: AuthManagerDelegate {
                 }
             )
             .disposed(by: self.disposeBag)
+    }
+    
+    func updateFcmToken(_ tokenSet: PushTokenSet) {
+        
+        // // 토큰이 없는 경우 업데이트에 실패하므로 무시
+        guard self.hasToken else {
+            Log.info("Can't upload fcm token without authorization token. (from: \(#function))")
+            return
+        }
+        
+        // 이전에 업로드 성공한 토큰이 다시 등록되는 경우 무시
+        let prevTokenSet = self.registeredToken
+        guard self.registeredToken != tokenSet else {
+            Log.info("Ignored already registered token set. (from: \(#function))")
+            return
+        }
+        
+        self.registeredToken = tokenSet
+        
+        // 서버에 FCM token 업데이트
+        if let fcmToken = tokenSet.fcm {
+            let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
+            NetworkManager.shared.request(Empty.self, request: request)
+                .subscribe(onNext: { _ in
+                    Log.info("Update FCM token to server with", fcmToken)
+                })
+                .disposed(by: self.disposeBag)
+        } else {
+            self.registeredToken = prevTokenSet
+            Log.info("Failed FCM token updated to server")
+        }
     }
     
     func initializeAuthInfo() {

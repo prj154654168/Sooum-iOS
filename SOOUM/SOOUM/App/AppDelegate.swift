@@ -131,7 +131,7 @@ extension AppDelegate: MessagingDelegate {
             apns: deviceToken,
             fcm: Messaging.messaging().fcmToken
         )
-        self.authManager.registeredToken = current
+        self.authManager.updateFcmToken(current)
         
         Log.info("Call func: \(#function)")
 
@@ -144,7 +144,7 @@ extension AppDelegate: MessagingDelegate {
             apns: messaging.apnsToken,
             fcm: fcmToken
         )
-        self.authManager.registeredToken = current
+        self.authManager.updateFcmToken(current)
         
         Log.info("Call func: \(#function)")
     }
