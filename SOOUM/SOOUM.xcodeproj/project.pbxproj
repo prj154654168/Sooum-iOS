@@ -369,6 +369,12 @@
 		388FCAD12CFAC2BF0012C4D6 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388FCACF2CFAC2BF0012C4D6 /* Notification.swift */; };
 		389681102CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */; };
 		389681112CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */; };
+		389EF8172D2F450000E053AE /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF8162D2F450000E053AE /* Log.swift */; };
+		389EF8182D2F450000E053AE /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF8162D2F450000E053AE /* Log.swift */; };
+		389EF81A2D2F454600E053AE /* Log+Extract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF8192D2F454600E053AE /* Log+Extract.swift */; };
+		389EF81B2D2F454600E053AE /* Log+Extract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF8192D2F454600E053AE /* Log+Extract.swift */; };
+		389EF81E2D2F469B00E053AE /* CocoaLumberjack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF81D2D2F469B00E053AE /* CocoaLumberjack.swift */; };
+		389EF81F2D2F469B00E053AE /* CocoaLumberjack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF81D2D2F469B00E053AE /* CocoaLumberjack.swift */; };
 		38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38A627172CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A627162CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift */; };
@@ -690,6 +696,9 @@
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		388FCACF2CFAC2BF0012C4D6 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewReactor.swift; sourceTree = "<group>"; };
+		389EF8162D2F450000E053AE /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		389EF8192D2F454600E053AE /* Log+Extract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+Extract.swift"; sourceTree = "<group>"; };
+		389EF81D2D2F469B00E053AE /* CocoaLumberjack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocoaLumberjack.swift; sourceTree = "<group>"; };
 		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
 		38A627162CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayoutConfigure.swift; sourceTree = "<group>"; };
 		38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndCommentView.swift; sourceTree = "<group>"; };
@@ -1180,6 +1189,7 @@
 		38121E2F2CA6C76C00602499 /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				389EF81C2D2F468A00E053AE /* Log */,
 				38121E302CA6C77500602499 /* Double.swift */,
 				38121E332CA6DA4000602499 /* Date.swift */,
 				38D869622CF821F900BF87DA /* UserDefaults.swift */,
@@ -1272,6 +1282,7 @@
 				38389B9E2CCCFB7D006728AF /* AuthKeyChain.swift */,
 				3834FADC2D11C5AC00C9108D /* SimpleCache.swift */,
 				38F88EB92D2C1CB8002AD7A8 /* Info.swift */,
+				389EF8162D2F450000E053AE /* Log.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -1699,6 +1710,15 @@
 				388698562D19829400008600 /* Views */,
 			);
 			path = Notification;
+			sourceTree = "<group>";
+		};
+		389EF81C2D2F468A00E053AE /* Log */ = {
+			isa = PBXGroup;
+			children = (
+				389EF81D2D2F469B00E053AE /* CocoaLumberjack.swift */,
+				389EF8192D2F454600E053AE /* Log+Extract.swift */,
+			);
+			path = Log;
 			sourceTree = "<group>";
 		};
 		38AA00002CAD1BB2002C5F1E /* Views */ = {
@@ -2248,6 +2268,7 @@
 				38D8E2922CCD232B00CE2E0A /* AuthManager.swift in Sources */,
 				38B8A5892CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
 				3878D0572CFFCBDA00F9522F /* CommentHistoryResponse.swift in Sources */,
+				389EF81F2D2F469B00E053AE /* CocoaLumberjack.swift in Sources */,
 				381DEA8E2CD4BE55009F1FE9 /* SignInResponse.swift in Sources */,
 				381A1D662CC38E7D005FDB8E /* WriteTagTextField.swift in Sources */,
 				3802BDB92D0AF2F7001256EA /* PushManager+Rx.swift in Sources */,
@@ -2419,6 +2440,7 @@
 				2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				38D563852D1719B1006265AA /* SOMSwipeTabBarItem.swift in Sources */,
+				389EF8182D2F450000E053AE /* Log.swift in Sources */,
 				382E15372D15A6460097B09C /* NotificationTabBarController.swift in Sources */,
 				38F720A82CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */,
 				38C2D41B2CFEAAED00CEA092 /* ProfileViewFooter.swift in Sources */,
@@ -2456,6 +2478,7 @@
 				2A5BB7DA2CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */,
 				3878D0682CFFDAF100F9522F /* OtherFollowViewCell.swift in Sources */,
 				2AE6B1792CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */,
+				389EF81B2D2F454600E053AE /* Log+Extract.swift in Sources */,
 				381701792CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				388698522D191F2100008600 /* MainHomeDistanceViewController.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
@@ -2561,12 +2584,14 @@
 				38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */,
 				3817016E2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
 				388A2D302D00D6A100E2F2F0 /* FollowViewReactor.swift in Sources */,
+				389EF81E2D2F469B00E053AE /* CocoaLumberjack.swift in Sources */,
 				3880098E2CABF4C2002A9209 /* SOMTag.swift in Sources */,
 				2A5BB7E32CDCD97300E1C799 /* JoinRequest.swift in Sources */,
 				38C2D4202CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */,
 				2A44A4372CAC227300DC463E /* BaseAuthResponse.swift in Sources */,
 				38CC49822CDE3854007A0145 /* SOMPresentationController.swift in Sources */,
 				3802BDAC2D0AC1FB001256EA /* UIImage.swift in Sources */,
+				389EF81A2D2F454600E053AE /* Log+Extract.swift in Sources */,
 				38C2D4142CFEA9CC00CEA092 /* MyProfileViewCell.swift in Sources */,
 				3803CF882D01914200FD90DB /* ResignViewReactor.swift in Sources */,
 				38816D9E2D004A5E00EB87D6 /* UpdateProfileViewController.swift in Sources */,
@@ -2720,6 +2745,7 @@
 				38A627172CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */,
 				2AFD05552D0082DE007C84AD /* SearchTagsResponse.swift in Sources */,
 				38B8A5882CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
+				389EF8172D2F450000E053AE /* Log.swift in Sources */,
 				388698622D1986B100008600 /* NotificationRequest.swift in Sources */,
 				38572CDE2D2254E800B07C69 /* PlaceholderViewCell.swift in Sources */,
 				388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
