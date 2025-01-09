@@ -92,6 +92,13 @@ class TagsViewController: BaseViewController, View {
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isLoading)
+            .map{ !$0 }
+            .subscribe(with: self) { object, isLoading in
+                object.tableView.refreshControl?.endRefreshing()
+            }
+            .disposed(by: self.disposeBag)
     }
     
     override func setupConstraints() {
