@@ -71,12 +71,13 @@ class TagDetailViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
         
+        let isLoading = reactor.state.map(\.isLoading).distinctUntilChanged().share()
         tableView.refreshControl?.rx.controlEvent(.valueChanged)
-            .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
+            .withLatestFrom(isLoading)
+            .filter { $0 == false }
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.fetchTagCards)
                 reactor.action.onNext(.fetchTagInfo)
-                object.tableView.refreshControl?.endRefreshing()
             }
             .disposed(by: self.disposeBag)
         
@@ -98,6 +99,16 @@ class TagDetailViewController: BaseViewController, View {
                     return
                 }
                 object.updateTagInfo(tagInfo: tagInfo)
+            }
+            .disposed(by: self.disposeBag)
+        
+        isLoading
+            .subscribe(with: self.tableView) { tableView, isLoading in
+                if isLoading {
+                    tableView.refreshControl?.beginRefreshingFromTop()
+                } else {
+                    tableView.refreshControl?.endRefreshing()
+                }
             }
             .disposed(by: self.disposeBag)
     }
@@ -181,9 +192,10 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
-        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
         let offset = scrollView.contentOffset.y
-        self.isRefreshEnabled = offset <= 0
+        
+        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
