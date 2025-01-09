@@ -27,6 +27,8 @@ class FollowViewController: BaseNavigationViewController, View {
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
+        $0.decelerationRate = .fast
+        
         $0.register(MyFollowingViewCell.self, forCellReuseIdentifier: MyFollowingViewCell.cellIdentifier)
         $0.register(MyFollowerViewCell.self, forCellReuseIdentifier: MyFollowerViewCell.cellIdentifier)
         $0.register(OtherFollowViewCell.self, forCellReuseIdentifier: OtherFollowViewCell.cellIdentifier)
