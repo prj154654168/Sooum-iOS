@@ -44,6 +44,7 @@ class CommentHistroyViewReactor: Reactor {
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.commentHistories(response.embedded.commentHistories))
                     }
+                    .delaySubscription(.seconds(1), scheduler: MainScheduler.instance)
                     .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
             ])
@@ -56,6 +57,7 @@ class CommentHistroyViewReactor: Reactor {
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.more(response.embedded.commentHistories))
                     }
+                    .delaySubscription(.seconds(1), scheduler: MainScheduler.instance)
                     .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
             ])

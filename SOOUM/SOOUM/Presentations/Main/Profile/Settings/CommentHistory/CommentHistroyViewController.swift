@@ -48,6 +48,7 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
     
     private(set) var commentHistroies = [CommentHistory]()
     
+    private var currentOffset: CGFloat = 0
     private var isLoadingMore: Bool = true
     
     override var navigationBarHeight: CGFloat {
@@ -87,14 +88,10 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
         // State
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
-            .subscribe(with: self) { object, isProcessing in
-                object.isLoadingMore = !isProcessing
-                if isProcessing {
-                    object.activityIndicatorView.startAnimating()
-                } else {
-                    object.activityIndicatorView.stopAnimating()
-                }
-            }
+            .do(onNext: { [weak self] isProcessing in
+                if isProcessing { self?.isLoadingMore = false }
+            })
+            .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.commentHistories)
@@ -158,5 +155,14 @@ extension CommentHistroyViewController: UICollectionViewDelegateFlowLayout {
             let lastId = self.commentHistroies[indexPath.item].id
             self.reactor?.action.onNext(.moreFind(lastId))
         }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
+        self.currentOffset = offset
     }
 }
