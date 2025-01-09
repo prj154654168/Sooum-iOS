@@ -55,7 +55,8 @@ class ProfileViewFooter: UICollectionReusableView {
     
     private(set) var writtenCards = [WrittenCard]()
     
-    private var isLoadingMore: Bool = true
+    private var currentOffset: CGFloat = 0
+    private var isLoadingMore: Bool = false
     
     let didTap = PublishRelay<String>()
     let moreDisplay = PublishRelay<String>()
@@ -92,13 +93,14 @@ class ProfileViewFooter: UICollectionReusableView {
     }
     
     func setModel(_ writtenCards: [WrittenCard], isBlocked: Bool) {
+        
+        self.isLoadingMore = false
+        
         self.blockedLabel.isHidden = isBlocked == false
         self.collectionView.isHidden = isBlocked
         
         self.writtenCards = writtenCards
         self.collectionView.reloadData()
-        
-        self.isLoadingMore = true
     }
 }
 
@@ -157,5 +159,14 @@ extension ProfileViewFooter: UICollectionViewDelegateFlowLayout {
             let lastId = self.writtenCards[indexPath.item].id
             self.moreDisplay.accept(lastId)
         }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
+        self.currentOffset = offset
     }
 }

@@ -67,28 +67,44 @@ class ProfileViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
-            return .concat([
-                .just(.updateIsProcessing(true)),
+            
+            let combined = Observable.concat([
                 self.profile(),
                 self.writtenCards()
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+            ])
+                .delay(.seconds(1), scheduler: MainScheduler.instance)
+            
+            return .concat([
+                .just(.updateIsProcessing(true)),
+                combined,
                 .just(.updateIsProcessing(false))
             ])
+            
         case .refresh:
+            
+            let combined = Observable.concat([
+                self.profile(),
+                self.writtenCards()
+            ])
+                .delay(.seconds(1), scheduler: MainScheduler.instance)
+            
             return .concat([
                 .just(.updateIsLoading(true)),
-                self.profile(),
-                self.writtenCards()
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                combined,
                 .just(.updateIsLoading(false))
             ])
+            
         case let .moreFind(lastId):
+            
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.moreWrittenCards(lastId: lastId),
+                self.moreWrittenCards(lastId: lastId)
+                    .delay(.seconds(1), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
+            
         case .block:
+            
             if self.currentState.isBlocked {
                 let request: ReportRequest = .cancelBlockMember(id: self.memberId ?? "")
                 return self.networkManager.request(Empty.self, request: request)
@@ -102,6 +118,7 @@ class ProfileViewReactor: Reactor {
             }
             
         case .follow:
+            
             if self.currentState.isFollow == true {
                 let request: ProfileRequest = .cancelFollow(memberId: self.memberId ?? "")
                 
