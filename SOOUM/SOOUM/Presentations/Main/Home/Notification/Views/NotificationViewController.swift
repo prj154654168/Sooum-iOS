@@ -106,6 +106,9 @@ class NotificationViewController: BaseViewController, View {
         // State
         reactor.state.map(\.isLoading)
             .distinctUntilChanged()
+            .do(onNext: { [weak self] isLoading in
+                if isLoading { self?.isLoadingMore = false }
+            })
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
@@ -358,7 +361,7 @@ extension NotificationViewController: UITableViewDelegate {
         let offset = scrollView.contentOffset.y
         
         // 아래로 스크롤 중일 때, 데이터 추가로드 가능
-        self.isLoadingMore = (offset > self.currentOffset) && self.isRefreshEnabled == false
+        self.isLoadingMore = offset > self.currentOffset
         self.currentOffset = offset
     }
     

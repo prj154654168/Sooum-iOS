@@ -118,6 +118,9 @@ class MainHomeDistanceViewController: BaseViewController, View {
         // State
         reactor.state.map(\.isLoading)
             .distinctUntilChanged()
+            .do(onNext: { [weak self] isLoading in
+                if isLoading { self?.isLoadingMore = false }
+            })
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
@@ -255,8 +258,8 @@ extension MainHomeDistanceViewController: UITableViewDelegate {
         // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
         self.hidesHeaderContainer.accept(offset > self.currentOffset)
         
-        // 아래로 스크롤 중일 때 + 새로고침 불가능할 때, 데이터 추가로드 가능
-        self.isLoadingMore = (offset > self.currentOffset) && self.isRefreshEnabled == false
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
         
         self.currentOffset = offset
         
