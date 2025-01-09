@@ -56,6 +56,7 @@ class DetailViewFooter: UICollectionReusableView {
     var commentCards = [Card]()
     
     let didTap = PublishRelay<String>()
+    let moreDisplay = PublishRelay<String>()
     
     var disposeBag = DisposeBag()
     
@@ -171,6 +172,17 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
             let cellWidthWithSpacing = cell.bounds.width + layout.minimumLineSpacing
             layout.sectionInset.left = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
             layout.sectionInset.right = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
+        }
+        
+        guard self.commentCards.isEmpty == false else { return }
+        
+        let lastSectionIndex = collectionView.numberOfSections - 1
+        let lastRowIndex = collectionView.numberOfItems(inSection: lastSectionIndex) - 1
+        
+        if indexPath.section == lastSectionIndex, indexPath.item == lastRowIndex {
+            
+            let lastId = self.commentCards[indexPath.item].id
+            self.moreDisplay.accept(lastId)
         }
     }
     

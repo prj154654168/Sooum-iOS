@@ -13,15 +13,15 @@ import Alamofire
 enum CardRequest: BaseRequest {
 
     /// 최신순
-    case latestCard(id: String?, latitude: String?, longitude: String?)
+    case latestCard(lastId: String?, latitude: String?, longitude: String?)
     /// 인기순
     case popularCard(latitude: String?, longitude: String?)
     /// 거리순
-    case distancCard(id: String?, latitude: String, longitude: String, distanceFilter: String)
+    case distancCard(lastId: String?, latitude: String, longitude: String, distanceFilter: String)
     /// 상세보기
     case detailCard(id: String, latitude: String?, longitude: String?)
     /// 상세보기 - 댓글
-    case commentCard(id: String, latitude: String?, longitude: String?)
+    case commentCard(id: String, lastId: String?, latitude: String?, longitude: String?)
     /// 상세보기 - 댓글 좋아요 정보
     case cardSummary(id: String)
     /// 상세보기 - 카드 삭제
@@ -58,9 +58,9 @@ enum CardRequest: BaseRequest {
     
     var path: String {
         switch self {
-        case let .latestCard(id, _, _):
-            if let id = id {
-                return "/cards/home/latest/\(id)"
+        case let .latestCard(lastId, _, _):
+            if let lastId = lastId {
+                return "/cards/home/latest/\(lastId)"
             } else {
                 return "/cards/home/latest"
             }
@@ -68,9 +68,9 @@ enum CardRequest: BaseRequest {
         case .popularCard:
             return "/cards/home/popular"
             
-        case let .distancCard(id, _, _, _):
-            if let id = id {
-                return "/cards/home/distance/\(id)"
+        case let .distancCard(lastId, _, _, _):
+            if let lastId = lastId{
+                return "/cards/home/distance/\(lastId)"
             } else {
                 return "/cards/home/distance"
             }
@@ -78,7 +78,7 @@ enum CardRequest: BaseRequest {
         case let .detailCard(id, _, _):
             return "/cards/\(id)/detail"
             
-        case let .commentCard(id, _, _):
+        case let .commentCard(id, _, _, _):
             return "/comments/current/\(id)"
             
         case let .cardSummary(id):
@@ -140,12 +140,16 @@ enum CardRequest: BaseRequest {
                 return [:]
             }
         
-        case let .commentCard(_, latitude, longitude):
-            if let latitude = latitude, let longitude = longitude {
-                return ["latitude": latitude, "longitude": longitude]
-            } else {
-                return [:]
+        case let .commentCard(_, lastId, latitude, longitude):
+            var params: Parameters = [:]
+            if let lastId = lastId {
+                params.updateValue(lastId, forKey: "lastId")
             }
+            if let latitude = latitude, let longitude = longitude {
+                params.updateValue(latitude, forKey: "latitude")
+                params.updateValue(longitude, forKey: "longitude")
+            }
+            return params
             
         case let .writeCard(
             isDistanceShared,

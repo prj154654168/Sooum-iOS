@@ -117,7 +117,7 @@ extension MainHomeLatestViewReactor {
         let latitude = self.locationManager.coordinate.latitude
         let longitude = self.locationManager.coordinate.longitude
         
-        let request: CardRequest = .latestCard(id: nil, latitude: latitude, longitude: longitude)
+        let request: CardRequest = .latestCard(lastId: nil, latitude: latitude, longitude: longitude)
         
         return self.networkManager.request(LatestCardResponse.self, request: request)
             .map(\.embedded.cards)
@@ -137,7 +137,7 @@ extension MainHomeLatestViewReactor {
         let latitude = self.locationManager.coordinate.latitude
         let longitude = self.locationManager.coordinate.longitude
         
-        let request: CardRequest = .latestCard(id: lastId, latitude: latitude, longitude: longitude)
+        let request: CardRequest = .latestCard(lastId: lastId, latitude: latitude, longitude: longitude)
         
         return self.networkManager.request(LatestCardResponse.self, request: request)
             .map(\.embedded.cards)

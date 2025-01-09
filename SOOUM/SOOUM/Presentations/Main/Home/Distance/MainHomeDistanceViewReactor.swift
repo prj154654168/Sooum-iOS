@@ -132,7 +132,7 @@ extension MainHomeDistanceViewReactor {
         let longitude = self.locationManager.coordinate.longitude
         
         let request: CardRequest = .distancCard(
-            id: nil, 
+            lastId: nil,
             latitude: latitude,
             longitude: longitude,
             distanceFilter: distanceFilter
@@ -159,7 +159,7 @@ extension MainHomeDistanceViewReactor {
         let distanceFilter = self.currentState.distanceFilter
         
         let request: CardRequest = .distancCard(
-            id: lastId,
+            lastId: lastId,
             latitude: latitude,
             longitude: longitude,
             distanceFilter: distanceFilter
