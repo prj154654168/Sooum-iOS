@@ -165,7 +165,7 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        self.transferMemberButton.rx.throttleTap(.seconds(3))
+        self.transferMemberButton.rx.throttleTap(.seconds(1))
             .withLatestFrom(transferCode)
             .map(Reactor.Action.enterTransferCode)
             .bind(to: reactor.action)

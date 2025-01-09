@@ -72,7 +72,7 @@ class ProfileViewReactor: Reactor {
                 self.profile(),
                 self.writtenCards()
             ])
-                .delay(.seconds(1), scheduler: MainScheduler.instance)
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
             
             return .concat([
                 .just(.updateIsProcessing(true)),
@@ -86,7 +86,7 @@ class ProfileViewReactor: Reactor {
                 self.profile(),
                 self.writtenCards()
             ])
-                .delay(.seconds(1), scheduler: MainScheduler.instance)
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
             
             return .concat([
                 .just(.updateIsLoading(true)),
@@ -99,7 +99,7 @@ class ProfileViewReactor: Reactor {
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.moreWrittenCards(lastId: lastId)
-                    .delay(.seconds(1), scheduler: MainScheduler.instance),
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
             

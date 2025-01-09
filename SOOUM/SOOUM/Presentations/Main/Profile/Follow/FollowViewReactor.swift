@@ -73,21 +73,21 @@ class FollowViewReactor: Reactor {
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.refresh()
-                    .delay(.seconds(1), scheduler: MainScheduler.instance),
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case .refresh:
             return .concat([
                 .just(.updateIsLoading(true)),
                 self.refresh()
-                    .delay(.seconds(1), scheduler: MainScheduler.instance),
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.more(lastId: lastId)
-                    .delay(.seconds(1), scheduler: MainScheduler.instance),
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case let .request(memberId):

@@ -50,8 +50,8 @@ class AnnouncementViewReactor: Reactor {
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.announcements(response.embedded.announcements))
                     }
-                    .catch(self.catchClosure)
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+                    .catch(self.catchClosure),
                 .just(.updateIsLoading(false))
             ])
         }

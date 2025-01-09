@@ -71,7 +71,7 @@ class NotificationViewReactor: Reactor {
                 self.notifications(with: false),
                 self.notifications(with: true)
             ])
-                .delay(.seconds(1), scheduler: MainScheduler.instance)
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
             
             return .concat([
                 .just(.updateIsProcessing(true)),
@@ -86,7 +86,7 @@ class NotificationViewReactor: Reactor {
                 self.notifications(with: false),
                 self.notifications(with: true)
             ])
-                .delay(.seconds(1), scheduler: MainScheduler.instance)
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
             
             return .concat([
                 .just(.updateIsLoading(true)),
@@ -101,7 +101,7 @@ class NotificationViewReactor: Reactor {
                 self.moreNotifications(with: false, lastId: withoutReadLastId),
                 self.moreNotifications(with: true, lastId: readLastId)
             ])
-                .delay(.seconds(1), scheduler: MainScheduler.instance)
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
             
             return .concat([
                 .just(.updateIsProcessing(true)),
