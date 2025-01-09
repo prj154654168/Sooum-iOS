@@ -63,8 +63,9 @@ class NotificationViewController: BaseViewController, View {
     private var notificationsWithoutRead = [CommentHistoryInNoti]()
     private var notifications = [CommentHistoryInNoti]()
     
+    private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
-    private var isLoadingMore: Bool = true
+    private var isLoadingMore: Bool = false
     
     
     // MARK: Variables + Rx
@@ -116,14 +117,10 @@ class NotificationViewController: BaseViewController, View {
         
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
-            .subscribe(with: self) { object, isProcessing in
-                object.isLoadingMore = !isProcessing
-                if isProcessing {
-                    object.activityIndicatorView.startAnimating()
-                } else {
-                    object.activityIndicatorView.stopAnimating()
-                }
-            }
+            .do(onNext: { [weak self] isProcessing in
+                if isProcessing { self?.isLoadingMore = false }
+            })
+            .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.notificationsWithoutRead)
@@ -350,9 +347,19 @@ extension NotificationViewController: UITableViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
-        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
         let offset = scrollView.contentOffset.y
+        
+        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
         self.isRefreshEnabled = offset <= 0
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
+        self.currentOffset = offset
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

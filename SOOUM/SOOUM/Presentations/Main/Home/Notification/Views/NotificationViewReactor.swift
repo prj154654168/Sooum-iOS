@@ -66,33 +66,49 @@ class NotificationViewReactor: Reactor {
         switch action {
         case .landing:
             
+            let combined = Observable.concat([
                 self.withoutReadNotisCount(),
+                self.notifications(with: false),
+                self.notifications(with: true)
+            ])
+                .delay(.seconds(1), scheduler: MainScheduler.instance)
+            
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.notifications(with: false),
-                self.notifications(with: true),
+                combined,
                 .just(.updateIsProcessing(false))
             ])
+            
         case .refresh:
             
+            let combined = Observable.concat([
                 self.withoutReadNotisCount(),
+                self.notifications(with: false),
+                self.notifications(with: true)
+            ])
+                .delay(.seconds(1), scheduler: MainScheduler.instance)
+            
             return .concat([
                 .just(.updateIsLoading(true)),
-                self.notifications(with: false)
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                self.notifications(with: true)
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                combined,
                 .just(.updateIsLoading(false))
             ])
+            
         case let .moreFind(withoutReadLastId, readLastId):
             
+            let combined = Observable.concat([
                 self.withoutReadNotisCount(),
+                self.moreNotifications(with: false, lastId: withoutReadLastId),
+                self.moreNotifications(with: true, lastId: readLastId)
+            ])
+                .delay(.seconds(1), scheduler: MainScheduler.instance)
+            
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.moreNotifications(with: false, lastId: withoutReadLastId),
-                self.moreNotifications(with: true, lastId: readLastId),
+                combined,
                 .just(.updateIsProcessing(false))
             ])
+            
         case let .requestRead(selectedId):
             let request: NotificationRequest = .requestRead(notificationId: selectedId)
             return self.networkManager.request(Empty.self, request: request)
