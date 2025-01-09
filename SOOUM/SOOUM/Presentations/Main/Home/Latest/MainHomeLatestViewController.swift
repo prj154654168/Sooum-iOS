@@ -49,7 +49,7 @@ class MainHomeLatestViewController: BaseViewController, View {
     // tableView 정보
     private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
-    private var isLoadingMore: Bool = false
+    private var isLoadingMore: Bool = true
     
     private let cellHeight: CGFloat = {
         let width: CGFloat = (UIScreen.main.bounds.width - 20 * 2) * 0.9
@@ -129,10 +129,14 @@ class MainHomeLatestViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
       
         reactor.state.map(\.isProcessing)
-            .do(onNext: { [weak self] isProcessing in
-                if isProcessing == false { self?.isLoadingMore = false }
-            })
-            .bind(to: self.activityIndicatorView.rx.isAnimating)
+            .subscribe(with: self) { object, isProcessing in
+                object.isLoadingMore = !isProcessing
+                if isProcessing {
+                    object.activityIndicatorView.startAnimating()
+                } else {
+                    object.activityIndicatorView.stopAnimating()
+                }
+            }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.displayedCardsWithUpdate)
@@ -215,7 +219,7 @@ extension MainHomeLatestViewController: UITableViewDelegate {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         
-        if self.isLoadingMore == false,
+        if self.isLoadingMore,
            indexPath.section == lastSectionIndex,
            indexPath.row == lastRowIndex,
            let reactor = self.reactor {
@@ -223,7 +227,6 @@ extension MainHomeLatestViewController: UITableViewDelegate {
             // 캐시된 데이터가 존재하고, 현재 표시된 수보다 캐시된 수가 같거나 적으면
             if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: .latest),
                self.displayedCards.count >= loadedCards.count {
-                self.isLoadingMore = true
                 let lastId = self.displayedCards[indexPath.row].id
                 reactor.action.onNext(.moreFind(lastId: lastId))
             }

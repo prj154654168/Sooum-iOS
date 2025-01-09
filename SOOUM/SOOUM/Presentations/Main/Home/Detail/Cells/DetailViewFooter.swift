@@ -55,6 +55,8 @@ class DetailViewFooter: UICollectionReusableView {
     
     var commentCards = [Card]()
     
+    private var isLoadingMore: Bool = true
+    
     let didTap = PublishRelay<String>()
     let moreDisplay = PublishRelay<String>()
     
@@ -111,6 +113,8 @@ class DetailViewFooter: UICollectionReusableView {
     }
     
     func setDatas(_ datas: [Card], cardSummary: CardSummary) {
+        
+        self.isLoadingMore = true
         
         self.commentCards = datas
         self.likeAndCommentView.likeCount = cardSummary.cardLikeCnt
@@ -179,7 +183,9 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
         let lastSectionIndex = collectionView.numberOfSections - 1
         let lastRowIndex = collectionView.numberOfItems(inSection: lastSectionIndex) - 1
         
-        if indexPath.section == lastSectionIndex, indexPath.item == lastRowIndex {
+        if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.item == lastRowIndex {
+            
+            self.isLoadingMore = false
             
             let lastId = self.commentCards[indexPath.item].id
             self.moreDisplay.accept(lastId)
