@@ -45,8 +45,9 @@ class FollowViewController: BaseNavigationViewController, View {
     
     private(set) var follows = [Follow]()
     
+    private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
-    private var isLoadingMore: Bool = true
+    private var isLoadingMore: Bool = false
     
     
     // MARK: Override func
@@ -101,14 +102,10 @@ class FollowViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
-            .subscribe(with: self) { object, isProcessing in
-                object.isLoadingMore = !isProcessing
-                if isProcessing {
-                    object.activityIndicatorView.startAnimating()
-                } else {
-                    object.activityIndicatorView.stopAnimating()
-                }
-            }
+            .do(onNext: { [weak self] isProcessing in
+                if isProcessing { self?.isLoadingMore = false }
+            })
+            .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
         let follows = reactor.state.map(\.follows).distinctUntilChanged().share()
@@ -196,6 +193,15 @@ extension FollowViewController: UITableViewDelegate {
         // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
         let offset = scrollView.contentOffset.y
         self.isRefreshEnabled = offset <= 0
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = (offset > self.currentOffset) && self.isRefreshEnabled == false
+        self.currentOffset = offset
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

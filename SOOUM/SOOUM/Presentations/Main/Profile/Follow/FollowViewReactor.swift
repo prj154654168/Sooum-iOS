@@ -73,20 +73,21 @@ class FollowViewReactor: Reactor {
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.refresh()
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                    .delay(.seconds(1), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case .refresh:
             return .concat([
                 .just(.updateIsLoading(true)),
                 self.refresh()
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                    .delay(.seconds(1), scheduler: MainScheduler.instance),
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.more(lastId: lastId),
+                self.more(lastId: lastId)
+                    .delay(.seconds(1), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         case let .request(memberId):
@@ -160,11 +161,13 @@ extension FollowViewReactor {
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.follows(response.embedded.followings))
                 }
+                .catch(self.catchClosure)
         case .follower:
             return self.networkManager.request(FollowerResponse.self, request: request)
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.follows(response.embedded.followers))
                 }
+                .catch(self.catchClosure)
         }
     }
     
@@ -195,11 +198,13 @@ extension FollowViewReactor {
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.more(response.embedded.followings))
                 }
+                .catch(self.catchClosure)
         case .follower:
             return self.networkManager.request(FollowerResponse.self, request: request)
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.more(response.embedded.followers))
                 }
+                .catch(self.catchClosure)
         }
     }
 }
@@ -212,5 +217,17 @@ extension FollowViewReactor {
     
     func reactorForMainTabBar() -> MainTabBarReactor {
         MainTabBarReactor.init(pushInfo: nil)
+    }
+}
+
+extension FollowViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.updateIsProcessing(false)),
+                .just(.updateIsLoading(false))
+            ])
+        }
     }
 }
