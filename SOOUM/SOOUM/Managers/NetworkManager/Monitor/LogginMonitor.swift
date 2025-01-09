@@ -27,18 +27,11 @@ class LogginMonitor: EventMonitor {
             let currentTime = formatter.string(from: Date())
             Log.debug("""
                 \nREQUEST [\(currentTime)]
-                URL: \(request.url?.absoluteString ?? "")
-                Method: \(request.httpMethod ?? "")
+            URL: \(request.url?.absoluteString ?? "")
+            Method: \(request.httpMethod ?? "")
+            Headers: \(request.allHTTPHeaderFields ?? [:])
+            Body: \(prettyPrintJSON(String(data: request.httpBody ?? Data(), encoding: .utf8) ?? ""))
             """)
-            
-            if let headers = request.allHTTPHeaderFields, !headers.isEmpty {
-                Log.debug("\nHeaders: \(headers)")
-            }
-            
-            if let body = request.httpBody,
-               let jsonString = String(data: body, encoding: .utf8) {
-                Log.debug("\nBody: \(prettyPrintJSON(jsonString))")
-            }
         }
     }
     
@@ -47,18 +40,10 @@ class LogginMonitor: EventMonitor {
         let currentTime = formatter.string(from: Date())
         Log.debug("""
             \nRESPONSE [\(currentTime)]
-            Status Code: \(response.response?.statusCode ?? -99)")
+        Status Code: \(response.response?.statusCode ?? -99)
+        Response: \(prettyPrintJSON(String(data: response.data ?? Data(), encoding: .utf8) ?? ""))
+        Error: \(response.error?.localizedDescription ?? "")
         """)
-        
-        if let data = response.data {
-            if let jsonString = String(data: data, encoding: .utf8) {
-                Log.debug("\nResponse: \(prettyPrintJSON(jsonString))")
-            }
-        }
-        
-        if let error = response.error {
-            Log.error("\nError: \(error.localizedDescription)")
-        }
     }
     
     private func prettyPrintJSON(_ jsonString: String) -> String {
