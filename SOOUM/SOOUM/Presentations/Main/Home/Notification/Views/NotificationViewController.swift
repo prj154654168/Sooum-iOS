@@ -19,8 +19,6 @@ class NotificationViewController: BaseViewController, View {
     
     enum Text {
         static let withoutReadHeaderTitle: String = "읽지 않음"
-        
-        static let placeholderLabelText: String = "알림이 아직 없어요"
     }
     
     enum Section: CaseIterable {
@@ -36,21 +34,27 @@ class NotificationViewController: BaseViewController, View {
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
+        $0.isHidden = true
+        
         $0.sectionHeaderTopPadding = .zero
         
         $0.refreshControl = SOMRefreshControl()
         
-        $0.register(NotificationViewCell.self, forCellReuseIdentifier: NotificationViewCell.cellIdentifier)
-        $0.register(NotificationWithReportViewCell.self, forCellReuseIdentifier: NotificationWithReportViewCell.cellIdentifier)
+        $0.register(
+            NotificationViewCell.self,
+            forCellReuseIdentifier: NotificationViewCell.cellIdentifier
+        )
+        $0.register(
+            NotificationWithReportViewCell.self,
+            forCellReuseIdentifier: NotificationWithReportViewCell.cellIdentifier
+        )
+        $0.register(
+            NotiPlaceholderViewCell.self,
+            forCellReuseIdentifier: NotiPlaceholderViewCell.cellIdentifier
+        )
         
         $0.dataSource = self
         $0.delegate = self
-    }
-    
-    private let placeholderLabel = UILabel().then {
-        $0.text = Text.placeholderLabelText
-        $0.textColor = .init(hex: "#B4B4B4")
-        $0.typography = .som.body1WithBold
     }
     
     
@@ -58,8 +62,11 @@ class NotificationViewController: BaseViewController, View {
     
     private var notificationsWithoutRead = [CommentHistoryInNoti]()
     private var notifications = [CommentHistoryInNoti]()
+    private var withoutReadNotisCount = "0"
     
+    private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
+    private var isLoadingMore: Bool = false
     
     
     // MARK: Variables + Rx
@@ -75,12 +82,6 @@ class NotificationViewController: BaseViewController, View {
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-        }
-        
-        self.view.addSubview(self.placeholderLabel)
-        self.placeholderLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(UIScreen.main.bounds.height * 0.3)
-            $0.centerX.equalToSuperview()
         }
     }
     
@@ -98,7 +99,6 @@ class NotificationViewController: BaseViewController, View {
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(reactor.state.map(\.isLoading))
             .filter { $0 == false }
-            .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -106,6 +106,9 @@ class NotificationViewController: BaseViewController, View {
         // State
         reactor.state.map(\.isLoading)
             .distinctUntilChanged()
+            .do(onNext: { [weak self] isLoading in
+                if isLoading { self?.isLoadingMore = false }
+            })
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
@@ -115,35 +118,47 @@ class NotificationViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let notificationsWithoutRead = reactor.state.map(\.notificationsWithoutRead).distinctUntilChanged().share()
-        let notifications = reactor.state.map(\.notifications).distinctUntilChanged().share()
+        reactor.state.map(\.isProcessing)
+            .distinctUntilChanged()
+            .do(onNext: { [weak self] isProcessing in
+                if isProcessing { self?.isLoadingMore = false }
+            })
+            .bind(to: self.activityIndicatorView.rx.isAnimating)
+            .disposed(by: self.disposeBag)
         
-        Observable.combineLatest(
-            reactor.state.map(\.isProcessing).distinctUntilChanged(),
-            notificationsWithoutRead,
-            notifications,
-            resultSelector: { $0 == false && ($1.isEmpty == false || $2.isEmpty == false) }
-        )
-        .skip(1)
-        .subscribe(with: self) { object, isHidden in
-            object.placeholderLabel.isHidden = isHidden
-        }
-        .disposed(by: self.disposeBag)
-        
-        notificationsWithoutRead
-            .subscribe(with: self) { object, notificationsWithoutRead in
-                object.notificationsWithoutRead = notificationsWithoutRead
+        reactor.state.map(\.withoutReadNotisCount)
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, withoutReadNotisCount in
+                object.withoutReadNotisCount = withoutReadNotisCount
+                
                 UIView.performWithoutAnimation {
-                    object.tableView.reloadSections(IndexSet(0...0), with: .none)
+                    object.tableView.reloadData()
                 }
             }
             .disposed(by: self.disposeBag)
         
-        notifications
+        reactor.state.map(\.notificationsWithoutRead)
+            .distinctUntilChanged()
+            .skip(1)
+            .subscribe(with: self) { object, notificationsWithoutRead in
+                object.tableView.isHidden = false
+                
+                object.notificationsWithoutRead = notificationsWithoutRead
+                UIView.performWithoutAnimation {
+                    object.tableView.reloadData()
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.notifications)
+            .distinctUntilChanged()
+            .skip(1)
             .subscribe(with: self) { object, notifications in
+                object.tableView.isHidden = false
+                
                 object.notifications = notifications
                 UIView.performWithoutAnimation {
-                    object.tableView.reloadSections(IndexSet(1...1), with: .none)
+                    object.tableView.reloadData()
                 }
             }
             .disposed(by: self.disposeBag)
@@ -157,6 +172,11 @@ extension NotificationViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if self.notificationsWithoutRead.isEmpty && self.notifications.isEmpty {
+            return 1
+        }
+        
         switch Section.allCases[section] {
         case .withoutRead:
             return self.notificationsWithoutRead.count
@@ -166,6 +186,16 @@ extension NotificationViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if self.notificationsWithoutRead.isEmpty && self.notifications.isEmpty {
+            
+            let placeholder: NotiPlaceholderViewCell = tableView.dequeueReusableCell(
+                withIdentifier: NotiPlaceholderViewCell.cellIdentifier,
+                for: indexPath
+            ) as! NotiPlaceholderViewCell
+            
+            return placeholder
+        }
         
         switch Section.allCases[indexPath.section] {
         case .withoutRead:
@@ -228,6 +258,10 @@ extension NotificationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
+        if self.notificationsWithoutRead.isEmpty && self.notifications.isEmpty {
+            return nil
+        }
+        
         switch Section.allCases[section] {
         case .withoutRead:
             
@@ -238,8 +272,7 @@ extension NotificationViewController: UITableViewDelegate {
             let typography = Typography.som.body2WithBold
             let frame = CGRect(x: 20, y: 16, width: UIScreen.main.bounds.width, height: typography.lineHeight)
             let label = UILabel().then {
-                let nofiCount = self.notificationsWithoutRead.count > 99 ? "99+" : "\(self.notificationsWithoutRead.count)"
-                $0.text = Text.withoutReadHeaderTitle + " (\(nofiCount)개)"
+                $0.text = Text.withoutReadHeaderTitle + " (\(self.withoutReadNotisCount)개)"
                 $0.textColor = .som.black
                 $0.typography = typography
                 
@@ -269,6 +302,10 @@ extension NotificationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
+        if self.notificationsWithoutRead.isEmpty && self.notifications.isEmpty {
+            return self.tableView.bounds.height
+        }
+        
         switch Section.allCases[indexPath.section] {
         case .withoutRead:
             if self.notificationsWithoutRead.isEmpty == false {
@@ -296,11 +333,49 @@ extension NotificationViewController: UITableViewDelegate {
         }
     }
     
+    func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
+        guard self.notificationsWithoutRead.isEmpty == false ||
+                self.notifications.isEmpty == false
+        else { return }
+        
+        let lastSectionIndex = tableView.numberOfSections - 1
+        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        
+        if self.isLoadingMore,
+           indexPath.section == lastSectionIndex,
+           indexPath.row == lastRowIndex {
+            
+            let withoutReadLastId = self.notificationsWithoutRead.last?.id.description
+            let readLastId = self.notifications.last?.id.description
+            self.reactor?.action.onNext(.moreFind(
+                withoutReadLastId: withoutReadLastId,
+                readLastId: readLastId
+            ))
+        }
+    }
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
-        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
         let offset = scrollView.contentOffset.y
-        self.isRefreshEnabled = offset <= 0
+        
+        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 당겨서 새로고침 상황일 때
+        guard offset > 0 else { return }
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
+        self.currentOffset = offset
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

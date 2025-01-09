@@ -14,10 +14,13 @@ enum NotificationRequest: BaseRequest {
     
     case totalWithoutRead(lastId: String?)
     case totalRead(lastId: String?)
+    case totalWithoutReadCount
     case commentWithoutRead(lastId: String?)
     case commentRead(lastId: String?)
+    case commentWithoutReadCount
     case likeWithoutRead(lastId: String?)
     case likeRead(lastId: String?)
+    case likeWihoutReadCount
     
     case requestRead(notificationId: String)
     
@@ -35,6 +38,8 @@ enum NotificationRequest: BaseRequest {
             } else {
                 return "/notifications/read"
             }
+        case .totalWithoutReadCount:
+            return "/notifications/unread-cnt"
         case let .commentWithoutRead(lastId):
             if let lastId = lastId {
                 return "/notifications/card/unread/\(lastId)"
@@ -47,6 +52,8 @@ enum NotificationRequest: BaseRequest {
             } else {
                 return "/notifications/card/read"
             }
+        case .commentWithoutReadCount:
+            return "/notifications/card/unread-cnt"
         case let .likeWithoutRead(lastId):
             if let lastId = lastId {
                 return "/notifications/like/unread/\(lastId)"
@@ -59,6 +66,8 @@ enum NotificationRequest: BaseRequest {
             } else {
                 return "/notifications/like/read"
             }
+        case .likeWihoutReadCount:
+            return "/notifications/like/unread-cnt"
         case let .requestRead(notificationId):
             return "/notifications/\(notificationId)/read"
         }

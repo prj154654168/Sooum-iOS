@@ -27,6 +27,8 @@ class FollowViewController: BaseNavigationViewController, View {
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
+        $0.decelerationRate = .fast
+        
         $0.register(MyFollowingViewCell.self, forCellReuseIdentifier: MyFollowingViewCell.cellIdentifier)
         $0.register(MyFollowerViewCell.self, forCellReuseIdentifier: MyFollowerViewCell.cellIdentifier)
         $0.register(OtherFollowViewCell.self, forCellReuseIdentifier: OtherFollowViewCell.cellIdentifier)
@@ -43,7 +45,9 @@ class FollowViewController: BaseNavigationViewController, View {
     
     private(set) var follows = [Follow]()
     
+    private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
+    private var isLoadingMore: Bool = false
     
     
     // MARK: Override func
@@ -80,13 +84,15 @@ class FollowViewController: BaseNavigationViewController, View {
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(isLoading)
             .filter { $0 == false }
-            .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
         isLoading
+            .do(onNext: { [weak self] isLoading in
+                if isLoading { self?.isLoadingMore = false }
+            })
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
@@ -98,6 +104,9 @@ class FollowViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
+            .do(onNext: { [weak self] isProcessing in
+                if isProcessing { self?.isLoadingMore = false }
+            })
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
@@ -161,11 +170,44 @@ extension FollowViewController: UITableViewDataSource {
 
 extension FollowViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 74
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
+        guard self.follows.isEmpty == false else { return }
+        
+        let lastSectionIndex = tableView.numberOfSections - 1
+        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        
+        if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.row == lastRowIndex {
+            let lastId = self.follows[indexPath.row].id
+            self.reactor?.action.onNext(.moreFind(lastId: lastId))
+        }
+    }
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
-        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
         let offset = scrollView.contentOffset.y
-        self.isRefreshEnabled = offset <= 0
+        
+        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 당겨서 새로고침 상황일 때
+        guard offset > 0 else { return }
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
+        self.currentOffset = offset
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -179,10 +221,6 @@ extension FollowViewController: UITableViewDelegate {
             
             refreshControl.beginRefreshingFromTop()
         }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 74
     }
 }
 

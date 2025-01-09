@@ -90,18 +90,19 @@ class DetailViewCell: UICollectionViewCell {
         }
     }
     
-    var prevCard: PrevCard = .init() {
+    var prevCard: PrevCard? {
         didSet {
-            if self.prevCard.previousCardImgLink.url.isEmpty {
-                // 전글 id == -1 일 때, 전글 삭제됨
-                if self.prevCard.previousCardId == "-1" {
+            if let prevCard = self.prevCard {
+                self.isPrevCardExist = true
+                if prevCard.previousCardId == "-1" {
                     self.isPrevCardDeleted()
                 } else {
-                    self.isPrevCardExist = false
+                    self.prevCardBackgroundImageView.setImage(
+                        strUrl: prevCard.previousCardImgLink?.url ?? ""
+                    )
                 }
             } else {
-                self.isPrevCardExist = true
-                self.prevCardBackgroundImageView.setImage(strUrl: prevCard.previousCardImgLink.url)
+                self.isPrevCardExist = false
             }
         }
     }

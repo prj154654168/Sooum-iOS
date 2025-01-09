@@ -109,10 +109,6 @@ extension SelectDefaultImageTableViewCell: UICollectionViewDataSource, UICollect
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Selected image at index: \(indexPath.item)")
-    }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let numberOfCellsPerRow: CGFloat = 4
         let width = collectionView.frame.width / numberOfCellsPerRow

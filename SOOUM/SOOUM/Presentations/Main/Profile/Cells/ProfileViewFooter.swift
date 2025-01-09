@@ -33,6 +33,8 @@ class ProfileViewFooter: UICollectionReusableView {
     ).then {
         $0.alwaysBounceVertical = true
         
+        $0.decelerationRate = .fast
+        
         $0.contentInsetAdjustmentBehavior = .never
         $0.contentInset = .zero
         
@@ -53,7 +55,11 @@ class ProfileViewFooter: UICollectionReusableView {
     
     private(set) var writtenCards = [WrittenCard]()
     
+    private var currentOffset: CGFloat = 0
+    private var isLoadingMore: Bool = false
+    
     let didTap = PublishRelay<String>()
+    let moreDisplay = PublishRelay<String>()
     
     var disposeBag = DisposeBag()
     
@@ -87,6 +93,9 @@ class ProfileViewFooter: UICollectionReusableView {
     }
     
     func setModel(_ writtenCards: [WrittenCard], isBlocked: Bool) {
+        
+        self.isLoadingMore = false
+        
         self.blockedLabel.isHidden = isBlocked == false
         self.collectionView.isHidden = isBlocked
         
@@ -131,5 +140,36 @@ extension ProfileViewFooter: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
         let width: CGFloat = UIScreen.main.bounds.width / 3
         return CGSize(width: width, height: width)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        guard self.writtenCards.isEmpty == false else { return }
+        
+        let lastSectionIndex = collectionView.numberOfSections - 1
+        let lastRowIndex = collectionView.numberOfItems(inSection: lastSectionIndex) - 1
+        
+        if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.item == lastRowIndex {
+            
+            self.isLoadingMore = false
+            
+            let lastId = self.writtenCards[indexPath.item].id
+            self.moreDisplay.accept(lastId)
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 당겨서 새로고침 상황일 때
+        guard offset > 0 else { return }
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
+        self.currentOffset = offset
     }
 }

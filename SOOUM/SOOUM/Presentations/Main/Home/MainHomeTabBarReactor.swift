@@ -24,12 +24,12 @@ class MainHomeTabBarReactor: Reactor {
     }
     
     struct State {
-        var isNotisWithoutRead: Bool
+        var hasNotisWithoutRead: Bool
         var isReadCompleted: Bool
     }
     
     var initialState: State = .init(
-        isNotisWithoutRead: false,
+        hasNotisWithoutRead: false,
         isReadCompleted: false
     )
     
@@ -39,10 +39,10 @@ class MainHomeTabBarReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .notisWithoutRead:
-            let request: NotificationRequest = .totalWithoutRead(lastId: nil)
+            let request: NotificationRequest = .totalWithoutReadCount
             
-            return self.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
-                .map { $0.commentHistoryInNotis.isEmpty }
+            return self.networkManager.request(WithoutReadNotisCountResponse.self, request: request)
+                .map { $0.unreadCnt == "0" }
                 .map(Mutation.notisWithoutRead)
         case let .requestRead(selectedId):
             let request: NotificationRequest = .requestRead(notificationId: selectedId)
@@ -54,8 +54,8 @@ class MainHomeTabBarReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case let .notisWithoutRead(isNotisWithoutRead):
-            state.isNotisWithoutRead = isNotisWithoutRead
+        case let .notisWithoutRead(hasNotisWithoutRead):
+            state.hasNotisWithoutRead = hasNotisWithoutRead
         case let .updateIsReadCompleted(isReadCompleted):
             state.isReadCompleted = isReadCompleted
         }

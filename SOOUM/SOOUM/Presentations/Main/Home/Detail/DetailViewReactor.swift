@@ -18,14 +18,16 @@ class DetailViewReactor: Reactor {
     enum Action: Equatable {
         case landing
         case refresh
+        case moreFindForComment(lastId: String)
         case delete
         case block
         case updateLike(Bool)
     }
     
     enum Mutation {
-        case detailCard(DetailCard, PrevCard)
+        case detailCard(DetailCard, PrevCard?)
         case commentCards([Card])
+        case moreComment([Card])
         case cardSummary(CardSummary)
         case updateIsDeleted(Bool)
         case updateIsBlocked(Bool)
@@ -36,7 +38,7 @@ class DetailViewReactor: Reactor {
     
     struct State {
         var detailCard: DetailCard
-        var prevCard: PrevCard
+        var prevCard: PrevCard?
         var commentCards: [Card]
         var cardSummary: CardSummary
         var isDeleted: Bool
@@ -48,7 +50,7 @@ class DetailViewReactor: Reactor {
     
     var initialState: State = .init(
         detailCard: .init(),
-        prevCard: .init(),
+        prevCard: nil,
         commentCards: [],
         cardSummary: .init(),
         isDeleted: false,
@@ -109,6 +111,13 @@ class DetailViewReactor: Reactor {
                 
                 .just(.updateIsLoading(false))
             ])
+        case let .moreFindForComment(lastId):
+            return .concat([
+                .just(.updateIsProcessing(true)),
+                self.fetchMoreCommentCards(lastId)
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .just(.updateIsProcessing(false))
+            ])
         case .delete:
             let request: CardRequest = .deleteCard(id: self.selectedCardId)
             return self.networkManager.request(Status.self, request: request)
@@ -136,6 +145,8 @@ class DetailViewReactor: Reactor {
             state.prevCard = prevCard
         case let .commentCards(commentCards):
             state.commentCards = commentCards
+        case let .moreComment(commentCards):
+            state.commentCards += commentCards
         case let .cardSummary(cardSummary):
             state.cardSummary = cardSummary
         case let .updateIsDeleted(isDeleted):
@@ -165,7 +176,7 @@ class DetailViewReactor: Reactor {
         return self.networkManager.request(DetailCardResponse.self, request: requset)
             .flatMapLatest { response -> Observable<Mutation> in
                 let detailCard = response.detailCard
-                let prevCard = response.prevCard ?? .init()
+                let prevCard = response.prevCard
                 
                 return .just(.detailCard(detailCard, prevCard))
             }
@@ -178,12 +189,29 @@ class DetailViewReactor: Reactor {
         
         let requset: CardRequest = .commentCard(
             id: self.selectedCardId,
+            lastId: nil,
             latitude: latitude,
             longitude: longitude
         )
         return self.networkManager.request(CommentCardResponse.self, request: requset)
             .map(\.embedded.commentCards)
-            .map { .commentCards($0) }
+            .map(Mutation.commentCards)
+            .catch(self.catchClosure)
+    }
+    
+    func fetchMoreCommentCards(_ lastId: String) -> Observable<Mutation> {
+        let latitude = self.locationManager.coordinate.latitude
+        let longitude = self.locationManager.coordinate.longitude
+        
+        let request: CardRequest = .commentCard(
+            id: self.selectedCardId,
+            lastId: lastId,
+            latitude: latitude,
+            longitude: longitude
+        )
+        return self.networkManager.request(CommentCardResponse.self, request: request)
+            .map(\.embedded.commentCards)
+            .map(Mutation.moreComment)
             .catch(self.catchClosure)
     }
     
@@ -191,7 +219,7 @@ class DetailViewReactor: Reactor {
         let requset: CardRequest = .cardSummary(id: self.selectedCardId)
         return self.networkManager.request(CardSummaryResponse.self, request: requset)
             .map(\.cardSummary)
-            .map { .cardSummary($0) }
+            .map(Mutation.cardSummary)
             .catch(self.catchClosure)
     }
 }

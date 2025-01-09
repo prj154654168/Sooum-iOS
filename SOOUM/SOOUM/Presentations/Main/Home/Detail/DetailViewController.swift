@@ -66,7 +66,7 @@ class DetailViewController: BaseNavigationViewController, View {
      }
      
      var detailCard = DetailCard()
-     var prevCard = PrevCard()
+     var prevCard: PrevCard?
      
      var commentCards = [Card]()
      var cardSummary = CardSummary()
@@ -144,7 +144,6 @@ class DetailViewController: BaseNavigationViewController, View {
          self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
              .withLatestFrom(reactor.state.map(\.isLoading))
              .filter { $0 == false }
-             .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
              .map { _ in Reactor.Action.refresh }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
@@ -185,11 +184,8 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: self.disposeBag)
          
-         let isProcessing = reactor.state.map(\.isProcessing).distinctUntilChanged().share()
-         isProcessing
-             .bind(to: self.collectionView.rx.isHidden)
-             .disposed(by: self.disposeBag)
-         isProcessing
+         reactor.state.map(\.isProcessing)
+             .distinctUntilChanged()
              .bind(to: self.activityIndicatorView.rx.isAnimating)
              .disposed(by: self.disposeBag)
          
@@ -328,13 +324,15 @@ extension DetailViewController: UICollectionViewDataSource {
                 /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop, 아니면 naviPush
                 if let naviStackCount = object.navigationController?.viewControllers.count,
                    let prevViewController = object.navigationController?.viewControllers[naviStackCount - 2] as? DetailViewController,
-                   prevViewController.reactor?.selectedCardId == object.prevCard.previousCardId {
+                   prevViewController.reactor?.selectedCardId == object.prevCard?.previousCardId {
                     
                     object.navigationPop()
                 } else {
                     
                     let detailViewController = DetailViewController()
-                    detailViewController.reactor = object.reactor?.reactorForPush(object.prevCard.previousCardId)
+                    detailViewController.reactor = object.reactor?.reactorForPush(
+                        object.prevCard?.previousCardId ?? ""
+                    )
                     object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
                 }
             }
@@ -432,6 +430,12 @@ extension DetailViewController: UICollectionViewDataSource {
                 }
                 .disposed(by: footer.disposeBag)
             
+            footer.moreDisplay
+                .subscribe(onNext: { lastId in
+                    reactor.action.onNext(.moreFindForComment(lastId: lastId))
+                })
+                .disposed(by: footer.disposeBag)
+            
             return footer
         } else {
             return .init(frame: .zero)
@@ -440,26 +444,6 @@ extension DetailViewController: UICollectionViewDataSource {
 }
 
 extension DetailViewController: UICollectionViewDelegateFlowLayout {
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        
-        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
-        let offset = scrollView.contentOffset.y
-        self.isRefreshEnabled = offset <= 0
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        
-        let offset = scrollView.contentOffset.y
-        
-        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
-        if self.isRefreshEnabled,
-           let refreshControl = self.collectionView.refreshControl,
-           offset <= -(refreshControl.frame.origin.y + 40) {
-            
-            refreshControl.beginRefreshingFromTop()
-        }
-    }
     
     func collectionView(
         _ collectionView: UICollectionView,
@@ -483,15 +467,35 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         let height: CGFloat = collectionView.bounds.height - cellHeight
         return CGSize(width: width, height: height)
     }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.collectionView.refreshControl,
+           offset <= -(refreshControl.frame.origin.y + 40) {
+            
+            refreshControl.beginRefreshingFromTop()
+        }
+    }
 }
 
 extension DetailViewController: SOMTagsDelegate {
-  func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
-    print("\(type(of: self)) - \(#function)")
-
-    let tagDetailVC = TagDetailViewController()
-    let tagDetailReactor = TagDetailViewrReactor(tagID: model.id)
-    tagDetailVC.reactor = tagDetailReactor
-    self.navigationPush(tagDetailVC, animated: true)
-  }
+    
+    func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
+        let tagDetailVC = TagDetailViewController()
+        let tagDetailReactor = TagDetailViewrReactor(tagID: model.id)
+        tagDetailVC.reactor = tagDetailReactor
+        self.navigationPush(tagDetailVC, animated: true)
+    }
 }

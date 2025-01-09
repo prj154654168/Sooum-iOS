@@ -81,6 +81,7 @@ class MainHomeDistanceViewReactor: Reactor {
                 }
             }
         case .refresh:
+            
             return .concat([
                 .just(.updateIsLoading(true)),
                 self.refresh(self.currentState.distanceFilter)
@@ -95,6 +96,7 @@ class MainHomeDistanceViewReactor: Reactor {
                 .just(.updateIsProcessing(false))
             ])
         case let .distanceFilter(distanceFilter):
+            
             return .concat([
                 .just(.updateIsProcessing(true)),
                 .just(.updateDistanceFilter(distanceFilter)),
@@ -132,7 +134,7 @@ extension MainHomeDistanceViewReactor {
         let longitude = self.locationManager.coordinate.longitude
         
         let request: CardRequest = .distancCard(
-            id: nil, 
+            lastId: nil,
             latitude: latitude,
             longitude: longitude,
             distanceFilter: distanceFilter
@@ -159,7 +161,7 @@ extension MainHomeDistanceViewReactor {
         let distanceFilter = self.currentState.distanceFilter
         
         let request: CardRequest = .distancCard(
-            id: lastId,
+            lastId: lastId,
             latitude: latitude,
             longitude: longitude,
             distanceFilter: distanceFilter

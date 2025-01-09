@@ -250,11 +250,11 @@ class SOMPresentationController: UIPresentationController {
         case .changed:
             if scrollDirection == "top" {
                 guard minHeight < newHeight else { break }
-                var updateHeight = min(self.maxHeight, newHeight)
+                let updateHeight = min(self.maxHeight, newHeight)
                 self.updateHeight(updateHeight)
             } else {
                 guard self.maxHeight > newHeight else { break }
-                var updateHeight = max(minHeight, newHeight)
+                let updateHeight = max(minHeight, newHeight)
                 self.updateHeight(updateHeight)
             }
         case .ended:

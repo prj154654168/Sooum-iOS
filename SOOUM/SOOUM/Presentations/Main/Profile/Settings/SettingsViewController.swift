@@ -161,6 +161,12 @@ class SettingsViewController: BaseNavigationViewController, View {
         }
     }
     
+    override func bind() {
+        super.bind()
+        
+        self.setupDebugging()
+    }
+    
     
     // MARK: ReactorKit bind
     
@@ -283,6 +289,28 @@ class SettingsViewController: BaseNavigationViewController, View {
         reactor.state.map(\.notificationStatus)
             .distinctUntilChanged()
             .bind(to: self.notificationSettingCellView.toggleSwitch.rx.isOn)
+            .disposed(by: self.disposeBag)
+    }
+}
+
+extension SettingsViewController {
+    
+    private func setupDebugging() {
+
+        let longPressRecognizer = UILongPressGestureRecognizer()
+        self.appSettingHeader.addGestureRecognizer(longPressRecognizer)
+
+        longPressRecognizer.rx.event
+            .flatMapLatest { _ in Log.extract() }
+            .subscribe(
+                with: self,
+                onNext: { object, viewController in
+                    object.navigationController?.present(viewController, animated: true)
+                },
+                onError: { _, error in
+                    Log.error(error.localizedDescription)
+                }
+            )
             .disposed(by: self.disposeBag)
     }
 }

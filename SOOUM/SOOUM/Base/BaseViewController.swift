@@ -42,7 +42,7 @@ class BaseViewController: UIViewController {
             name: .hidesBottomBarWhenPushedDidChange,
             object: nil
         )
-        print("ℹ️ Deinit: ", type(of: self).description().components(separatedBy: ".").last ?? "")
+        Log.debug("Deinit: ", type(of: self).description().components(separatedBy: ".").last ?? "")
     }
 
     override func viewDidLoad() {

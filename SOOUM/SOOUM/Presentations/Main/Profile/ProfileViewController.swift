@@ -193,7 +193,6 @@ class ProfileViewController: BaseNavigationViewController, View {
         self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(reactor.state.map(\.isLoading))
             .filter { $0 == false }
-            .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -356,6 +355,12 @@ extension ProfileViewController: UICollectionViewDataSource {
                 }
                 .disposed(by: footer.disposeBag)
             
+            footer.moreDisplay
+                .subscribe(with: self) { object, lastId in
+                    object.reactor?.action.onNext(.moreFind(lastId))
+                }
+                .disposed(by: footer.disposeBag)
+            
             return footer
         } else {
             return .init(frame: .zero)
@@ -367,9 +372,10 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
-        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
         let offset = scrollView.contentOffset.y
-        self.isRefreshEnabled = offset <= 0
+        
+        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

@@ -50,8 +50,8 @@ extension AuthInfo {
         } else {
             authInfo.token.refreshToken = ""
         }
-        print("""
-            ℹ️ Call Info: \(authInfo)
+        Log.info("""
+            Call Info: \(authInfo)
                 deviceId: \(String(data: authInfo.deviceId, encoding: .utf8)!)
                 accessToken: \(authInfo.token.accessToken)
                 refreshToken: \(authInfo.token.refreshToken)

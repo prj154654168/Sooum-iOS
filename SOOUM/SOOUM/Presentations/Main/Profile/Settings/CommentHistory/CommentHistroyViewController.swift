@@ -36,6 +36,8 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
         $0.contentInsetAdjustmentBehavior = .never
         $0.contentInset = .zero
         
+        $0.decelerationRate = .fast
+        
         $0.showsHorizontalScrollIndicator = false
         
         $0.register(CommentHistoryViewCell.self, forCellWithReuseIdentifier: CommentHistoryViewCell.cellIdentifier)
@@ -45,6 +47,9 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
     }
     
     private(set) var commentHistroies = [CommentHistory]()
+    
+    private var currentOffset: CGFloat = 0
+    private var isLoadingMore: Bool = true
     
     override var navigationBarHeight: CGFloat {
         46
@@ -83,6 +88,9 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
         // State
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
+            .do(onNext: { [weak self] isProcessing in
+                if isProcessing { self?.isLoadingMore = false }
+            })
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
@@ -131,5 +139,33 @@ extension CommentHistroyViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
         let width: CGFloat = UIScreen.main.bounds.width / 3
         return CGSize(width: width, height: width)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        guard self.commentHistroies.isEmpty == false else { return }
+        
+        let lastSectionIndex = collectionView.numberOfSections - 1
+        let lastRowIndex = collectionView.numberOfItems(inSection: lastSectionIndex) - 1
+        
+        if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.item == lastRowIndex {
+            let lastId = self.commentHistroies[indexPath.item].id
+            self.reactor?.action.onNext(.moreFind(lastId))
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 당겨서 새로고침 상황일 때
+        guard offset > 0 else { return }
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
+        self.currentOffset = offset
     }
 }

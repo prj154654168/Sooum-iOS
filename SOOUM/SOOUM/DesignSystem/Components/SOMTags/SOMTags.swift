@@ -115,7 +115,7 @@ class SOMTags: UIView {
         /// 새로운 태그가 유효한지 확인 (중복 여부 확인)
         let deduplicatedNew = Set(new)
         if new.count != deduplicatedNew.count {
-            print("⚠️ 중복된 태그가 존재합니다. 태그의 순서를 유지하고 중복된 태그를 제거합니다.")
+            Log.warning("중복된 태그가 존재합니다. 태그의 순서를 유지하고 중복된 태그를 제거합니다.")
         }
         /// 현재 태그 배열에서 삭제되어야 할 태그 및 삽입되어야 할 태그 찾기
         let deleted = Set(current).subtracting(new)

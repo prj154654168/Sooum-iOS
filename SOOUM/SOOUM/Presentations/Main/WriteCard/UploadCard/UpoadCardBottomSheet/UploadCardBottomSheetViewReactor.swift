@@ -82,7 +82,6 @@ class UploadCardBottomSheetViewReactor: Reactor {
     }
     
     func fetchDefaultImages() -> Observable<Mutation> {
-        print("\(type(of: self)) - \(#function)")
         
         let request: UploadRequest = .defaultImages
         
@@ -132,7 +131,6 @@ class UploadCardBottomSheetViewReactor: Reactor {
     }
     
     func uploadMyImage(myImage: UIImage) -> Observable<Mutation> {
-        print("\(type(of: self)) - \(#function)")
 
         let presignedURLRequest: UploadRequest = .presignedURL
         
@@ -142,7 +140,6 @@ class UploadCardBottomSheetViewReactor: Reactor {
                 
                 // 2. presigned URL을 통해 이미지를 업로드합니다.
                 guard let url = URL(string: presignedResponse.url.href) else {
-                    print("\(type(of: self)) - \(#function)url없음")
                     return Observable.just(Mutation.myImageName(""))
                 }
                 
@@ -164,7 +161,6 @@ class UploadCardBottomSheetViewReactor: Reactor {
     }
     
     func uploadImageToURL(image: UIImage, url: URL, completion: @escaping (Result<Void, Error>) -> Void) {
-        print("\(type(of: self)) - \(#function)")
 
         // 이미지를 JPEG로 변환
         guard let imageData = image.jpegData(compressionQuality: 0.5) else {

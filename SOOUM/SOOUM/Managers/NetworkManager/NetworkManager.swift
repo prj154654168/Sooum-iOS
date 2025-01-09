@@ -124,7 +124,7 @@ extension NetworkManager: NetworkManagerDelegate {
                             return
                         }
                         
-                        print("❌ Network or response format error: \(error)")
+                        Log.error("Network or response format error: \(error)")
                         observer.onError(error)
                     }
                 }
@@ -153,7 +153,7 @@ extension NetworkManager: NetworkManagerDelegate {
                             observer.onCompleted()
                         }
                     case .failure(let error):
-                        print("❌ Network or response format error: \(error)")
+                        Log.error("Network or response format error: \(error)")
                         observer.onError(error)
                     }
                 }
@@ -180,7 +180,7 @@ extension NetworkManager: NetworkManagerDelegate {
                             observer.onCompleted()
                         }
                     case let .failure(error):
-                        print("❌ Network or response format error: \(error)")
+                        Log.error("Network or response format error: \(error)")
                         observer.onError(error)
                     }
                 }

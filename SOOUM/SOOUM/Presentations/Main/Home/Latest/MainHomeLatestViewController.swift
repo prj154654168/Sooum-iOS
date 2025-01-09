@@ -108,17 +108,21 @@ class MainHomeLatestViewController: BaseViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        let isLoading = reactor.state.map(\.isLoading).distinctUntilChanged().share()
+        
+        // isLoading == true && isRefreshing == false 일 때, 이벤트 무시
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(reactor.state.map(\.isLoading))
             .filter { $0 == false }
-            .throttle(.seconds(3), latest: false, scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        reactor.state.map(\.isLoading)
-            .distinctUntilChanged()
+        isLoading
+            .do(onNext: { [weak self] isLoading in
+                if isLoading { self?.isLoadingMore = false }
+            })
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
@@ -129,14 +133,15 @@ class MainHomeLatestViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
       
         reactor.state.map(\.isProcessing)
+            .distinctUntilChanged()
             .do(onNext: { [weak self] isProcessing in
-                if isProcessing == false { self?.isLoadingMore = false }
+                if isProcessing { self?.isLoadingMore = false }
             })
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.displayedCardsWithUpdate)
-            .distinctUntilChanged({ reactor.canUpdateCells(prev: $0, curr: $1) })
+            .distinctUntilChanged(reactor.canUpdateCells)
             .skip(1)
             .subscribe(with: self) { object, displayedCardsWithUpdate in
                 let displayedCards = displayedCardsWithUpdate.cards
@@ -215,7 +220,7 @@ extension MainHomeLatestViewController: UITableViewDelegate {
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
         
-        if self.isLoadingMore == false,
+        if self.isLoadingMore,
            indexPath.section == lastSectionIndex,
            indexPath.row == lastRowIndex,
            let reactor = self.reactor {
@@ -223,7 +228,6 @@ extension MainHomeLatestViewController: UITableViewDelegate {
             // 캐시된 데이터가 존재하고, 현재 표시된 수보다 캐시된 수가 같거나 적으면
             if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: .latest),
                self.displayedCards.count >= loadedCards.count {
-                self.isLoadingMore = true
                 let lastId = self.displayedCards[indexPath.row].id
                 reactor.action.onNext(.moreFind(lastId: lastId))
             }
@@ -232,8 +236,8 @@ extension MainHomeLatestViewController: UITableViewDelegate {
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
-        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
-        self.isRefreshEnabled = self.currentOffset <= 0
+        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (self.currentOffset <= 0 && self.reactor?.currentState.isLoading == false)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -241,7 +245,7 @@ extension MainHomeLatestViewController: UITableViewDelegate {
         let offset = scrollView.contentOffset.y
         
         // 당겨서 새로고침 상황일 때
-        if offset <= 0 {
+        guard offset > 0 else {
             
             self.hidesHeaderContainer.accept(false)
             self.currentOffset = offset
@@ -256,6 +260,9 @@ extension MainHomeLatestViewController: UITableViewDelegate {
         // offset이 currentOffset보다 크면 아래로 스크롤, 반대일 경우 위로 스크롤
         // 위로 스크롤 중일 때 헤더뷰 표시, 아래로 스크롤 중일 때 헤더뷰 숨김
         self.hidesHeaderContainer.accept(offset > self.currentOffset)
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
         
         self.currentOffset = offset
         

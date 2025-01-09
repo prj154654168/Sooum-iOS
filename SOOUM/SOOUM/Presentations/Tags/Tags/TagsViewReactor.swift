@@ -64,7 +64,6 @@ class TagsViewReactor: Reactor {
                 return Mutation.favoriteTags(response.embedded.favoriteTagList)
             }
             .catch { _ in
-                print("\(type(of: self)) - \(#function) - catch")
                 return .just(.favoriteTags([]))
             }
     }
@@ -77,7 +76,6 @@ class TagsViewReactor: Reactor {
                 return Mutation.recommendTags(response.embedded.recommendTagList)
             }
             .catch { _ in
-                print("\(type(of: self)) - \(#function) - catch")
                 return .just(.recommendTags([]))
             }
     }
