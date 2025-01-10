@@ -39,6 +39,12 @@ class ProfileViewFooterCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.backgroundImageView.image = nil
+    }
+    
     private func setupConstraints() {
         
         self.contentView.addSubview(self.backgroundImageView)
