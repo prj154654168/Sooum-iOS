@@ -76,6 +76,9 @@ class MyFollowingViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
+        self.profileImageView.image = nil
+        self.profileNickname.text = nil
+        
         self.disposeBag = DisposeBag()
     }
     
@@ -128,19 +131,12 @@ class MyFollowingViewCell: UITableViewCell {
     
     func setModel(_ follow: Follow) {
         
-        if self.profileImageView.image == nil {
-            if let url = follow.backgroundImgURL?.url {
-                self.profileImageView.setImage(strUrl: url)
-            } else {
-                self.profileImageView.image = .init(.image(.sooumLogo))
-            }
+        if let url = follow.backgroundImgURL?.url {
+            self.profileImageView.setImage(strUrl: url)
+        } else {
+            self.profileImageView.image = .init(.image(.sooumLogo))
         }
-        
-        if self.profileNickname.text != follow.nickname {
-            self.profileNickname.text = follow.nickname
-        }
-        
-        self.updateButton(follow.isFollowing)
+        self.profileNickname.text = follow.nickname
     }
     
     func updateButton(_ isFollowing: Bool) {
