@@ -201,6 +201,8 @@ class SOMCard: UIView {
     func prepareForReuse() {
         serialTimer?.dispose()
         disposeBag = DisposeBag()
+        
+        layoutSubviews()
     }
     
     // MARK: - initUI
