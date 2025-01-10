@@ -149,7 +149,7 @@ class AuthManager: AuthManagerDelegate {
                                 
                                 // 서버에 FCM token 업데이트
                                 if let tokenSet = object.registeredToken {
-                                    object.updateFcmToken(tokenSet)
+                                    object.updateFcmToken(with: tokenSet, call: #function)
                                 }
                                 
                                 return true
@@ -214,7 +214,7 @@ class AuthManager: AuthManagerDelegate {
                         
                         // 서버에 FCM token 업데이트
                         if let tokenSet = object.registeredToken {
-                            object.updateFcmToken(tokenSet)
+                            object.updateFcmToken(with: tokenSet, call: #function)
                         }
                         
                         completion(.success)
@@ -238,18 +238,18 @@ class AuthManager: AuthManagerDelegate {
             .disposed(by: self.disposeBag)
     }
     
-    func updateFcmToken(_ tokenSet: PushTokenSet) {
+    func updateFcmToken(with tokenSet: PushTokenSet, call function: String) {
         
         // // 토큰이 없는 경우 업데이트에 실패하므로 무시
         guard self.hasToken else {
-            Log.info("Can't upload fcm token without authorization token. (from: \(#function))")
+            Log.info("Can't upload fcm token without authorization token. (from: \(function))")
             return
         }
         
         // 이전에 업로드 성공한 토큰이 다시 등록되는 경우 무시
         let prevTokenSet = self.registeredToken
-        guard self.registeredToken != tokenSet else {
-            Log.info("Ignored already registered token set. (from: \(#function))")
+        guard self.registeredToken?.fcm != tokenSet.fcm else {
+            Log.info("Ignored already registered token set. (from: \(function))")
             return
         }
         
