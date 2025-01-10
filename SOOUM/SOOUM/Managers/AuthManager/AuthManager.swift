@@ -153,11 +153,13 @@ class AuthManager: AuthManagerDelegate {
                                 }
                                 
                                 return true
+                            } else {
+                                return false
                             }
-                            return false
                         }
+                } else {
+                    return .just(false)
                 }
-                return .just(false)
             }
     }
 
