@@ -21,9 +21,10 @@ class NotificationViewController: BaseViewController, View {
         static let withoutReadHeaderTitle: String = "읽지 않음"
     }
     
-    enum Section: CaseIterable {
+    enum Section: Int, CaseIterable {
         case withoutRead
         case read
+        case empty
     }
     
     
@@ -37,6 +38,7 @@ class NotificationViewController: BaseViewController, View {
         $0.isHidden = true
         
         $0.sectionHeaderTopPadding = .zero
+        $0.decelerationRate = .fast
         
         $0.refreshControl = SOMRefreshControl()
         
@@ -144,8 +146,14 @@ class NotificationViewController: BaseViewController, View {
                 object.tableView.isHidden = false
                 
                 object.notificationsWithoutRead = notificationsWithoutRead
+                
+                let indexSetForEmpty = IndexSet(integer: Section.empty.rawValue)
+                let indexSetForWithoutRead = IndexSet(integer: Section.withoutRead.rawValue)
                 UIView.performWithoutAnimation {
-                    object.tableView.reloadData()
+                    object.tableView.performBatchUpdates {
+                        object.tableView.reloadSections(indexSetForEmpty, with: .none)
+                        object.tableView.reloadSections(indexSetForWithoutRead, with: .none)
+                    }
                 }
             }
             .disposed(by: self.disposeBag)
@@ -157,8 +165,14 @@ class NotificationViewController: BaseViewController, View {
                 object.tableView.isHidden = false
                 
                 object.notifications = notifications
+                
+                let indexSetForEmpty = IndexSet(integer: Section.empty.rawValue)
+                let indexSetForRead = IndexSet(integer: Section.read.rawValue)
                 UIView.performWithoutAnimation {
-                    object.tableView.reloadData()
+                    object.tableView.performBatchUpdates {
+                        object.tableView.reloadSections(indexSetForEmpty, with: .none)
+                        object.tableView.reloadSections(indexSetForRead, with: .none)
+                    }
                 }
             }
             .disposed(by: self.disposeBag)
@@ -173,29 +187,17 @@ extension NotificationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if self.notificationsWithoutRead.isEmpty && self.notifications.isEmpty {
-            return 1
-        }
-        
         switch Section.allCases[section] {
         case .withoutRead:
             return self.notificationsWithoutRead.count
         case .read:
             return self.notifications.count
+        case .empty:
+            return (self.notificationsWithoutRead.isEmpty && self.notifications.isEmpty) ? 1 : 0
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if self.notificationsWithoutRead.isEmpty && self.notifications.isEmpty {
-            
-            let placeholder: NotiPlaceholderViewCell = tableView.dequeueReusableCell(
-                withIdentifier: NotiPlaceholderViewCell.cellIdentifier,
-                for: indexPath
-            ) as! NotiPlaceholderViewCell
-            
-            return placeholder
-        }
         
         switch Section.allCases[indexPath.section] {
         case .withoutRead:
@@ -235,6 +237,15 @@ extension NotificationViewController: UITableViewDataSource {
             cell.bind(self.notifications[indexPath.row], isReaded: true)
             
             return cell
+            
+        case .empty:
+            
+            let placeholder: NotiPlaceholderViewCell = tableView.dequeueReusableCell(
+                withIdentifier: NotiPlaceholderViewCell.cellIdentifier,
+                for: indexPath
+            ) as! NotiPlaceholderViewCell
+            
+            return placeholder
         }
     }
 }
@@ -253,14 +264,12 @@ extension NotificationViewController: UITableViewDelegate {
         case .read:
             let targetCardId = self.notifications[indexPath.row].targetCardId
             self.willPushCardId.accept("\(targetCardId ?? 0)")
+        case .empty:
+            break
         }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        if self.notificationsWithoutRead.isEmpty && self.notifications.isEmpty {
-            return nil
-        }
         
         switch Section.allCases[section] {
         case .withoutRead:
@@ -297,14 +306,13 @@ extension NotificationViewController: UITableViewDelegate {
             backgroundView.addSubview(seperator)
             
             return self.notificationsWithoutRead.isEmpty ? nil : backgroundView
+            
+        case .empty:
+            return nil
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        if self.notificationsWithoutRead.isEmpty && self.notifications.isEmpty {
-            return self.tableView.bounds.height
-        }
         
         switch Section.allCases[indexPath.section] {
         case .withoutRead:
@@ -321,6 +329,8 @@ extension NotificationViewController: UITableViewDelegate {
             }
         case .read:
             return 64
+        case .empty:
+            return self.tableView.bounds.height
         }
     }
     
@@ -330,6 +340,8 @@ extension NotificationViewController: UITableViewDelegate {
             return self.notificationsWithoutRead.isEmpty ? 0 : 46
         case .read:
             return self.notificationsWithoutRead.isEmpty ? 10 : 24
+        case .empty:
+            return 0
         }
     }
     
@@ -342,19 +354,26 @@ extension NotificationViewController: UITableViewDelegate {
                 self.notifications.isEmpty == false
         else { return }
         
-        let lastSectionIndex = tableView.numberOfSections - 1
-        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        let sectionIndexForWithoutRead = Section.withoutRead.rawValue
+        let lastRowIndexForWithoutRead = tableView.numberOfRows(inSection: sectionIndexForWithoutRead) - 1
+        let sectionIndexForRead = Section.read.rawValue
+        let lastRowIndexForRead = tableView.numberOfRows(inSection: sectionIndexForRead) - 1
+        
         
         if self.isLoadingMore,
-           indexPath.section == lastSectionIndex,
-           indexPath.row == lastRowIndex {
+           indexPath.section == sectionIndexForWithoutRead,
+           indexPath.row == lastRowIndexForWithoutRead {
             
             let withoutReadLastId = self.notificationsWithoutRead.last?.id.description
+            self.reactor?.action.onNext(.moreFind(withoutReadLastId: withoutReadLastId, readLastId: nil))
+        }
+        
+        if self.isLoadingMore,
+           indexPath.section == sectionIndexForRead,
+           indexPath.row == lastRowIndexForRead {
+            
             let readLastId = self.notifications.last?.id.description
-            self.reactor?.action.onNext(.moreFind(
-                withoutReadLastId: withoutReadLastId,
-                readLastId: readLastId
-            ))
+            self.reactor?.action.onNext(.moreFind(withoutReadLastId: nil, readLastId: readLastId))
         }
     }
     
