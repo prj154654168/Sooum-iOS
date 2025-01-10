@@ -63,8 +63,12 @@ enum TagRequest: BaseRequest {
     
     var parameters: Parameters {
         switch self {
-        case .favorite, .recommend:
-            return [:]
+        case let .favorite(lastId):
+            if let lastId = lastId {
+                return ["last": lastId]
+            } else {
+                return [:]
+            }
             
         case let .search(keyword):
             return [
@@ -72,7 +76,7 @@ enum TagRequest: BaseRequest {
                 "size": 20
             ]
             
-        case .tagInfo, .tagCard, .addFavorite, .deleteFavorite:
+        default:
             return [:]
         }
     }
