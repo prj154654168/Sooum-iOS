@@ -35,6 +35,11 @@ class MyFollowerViewCell: UITableViewCell {
     }
     
     let followButton = SOMButton().then {
+        $0.title = Text.willFollowButton
+        $0.typography = .som.body3WithBold
+        $0.foregroundColor = .som.white
+        
+        $0.backgroundColor = .som.p300
         $0.layer.cornerRadius = 26 * 0.5
         $0.clipsToBounds = true
     }
@@ -62,6 +67,11 @@ class MyFollowerViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        
+        // UI 초기화
+        self.profileImageView.image = nil
+        self.profileNickname.text = nil
+        self.updateButton(false)
         
         self.disposeBag = DisposeBag()
     }
@@ -107,25 +117,17 @@ class MyFollowerViewCell: UITableViewCell {
     
     func setModel(_ follow: Follow) {
         
-        if self.profileImageView.image == nil {
-            if let url = follow.backgroundImgURL?.url {
-                self.profileImageView.setImage(strUrl: url)
-            } else {
-                self.profileImageView.image = .init(.image(.sooumLogo))
-            }
+        if let url = follow.backgroundImgURL?.url {
+            self.profileImageView.setImage(strUrl: url)
+        } else {
+            self.profileImageView.image = .init(.image(.sooumLogo))
         }
-        
-        if self.profileNickname.text != follow.nickname {
-            self.profileNickname.text = follow.nickname
-        }
-        
-        self.updateButton(follow.isFollowing)
+        self.profileNickname.text = follow.nickname
     }
     
     func updateButton(_ isFollowing: Bool) {
         
         self.followButton.title = isFollowing ? Text.didFollowButton : Text.willFollowButton
-        self.followButton.typography = .som.body3WithBold
         self.followButton.foregroundColor = isFollowing ? .som.gray600 : .som.white
         self.followButton.backgroundColor = isFollowing ? .som.gray200 : .som.p300
     }
