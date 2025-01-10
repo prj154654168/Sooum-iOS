@@ -104,7 +104,7 @@ class LaunchScreenViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
 
         // 로그인 성공 시 홈 화면으로 전환
-        let isRegistered = reactor.state.map(\.isRegistered).distinctUntilChanged().share()
+        let isRegistered = reactor.state.map(\.isRegistered).share()
         isRegistered
             .filter { $0 }
             .subscribe(with: self) { object, _ in
