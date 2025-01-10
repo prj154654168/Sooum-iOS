@@ -11,7 +11,7 @@ import ReactorKit
 
 class TagsViewController: BaseViewController, View {
     
-    enum TagType: CaseIterable {
+    enum TagType: Int, CaseIterable {
         case favorite
         case recommend
         
@@ -47,7 +47,9 @@ class TagsViewController: BaseViewController, View {
         $0.refreshControl = SOMRefreshControl()
     }
     
-    var isRefreshEnabled = false
+    private var currentOffset: CGFloat = 0
+    private var isRefreshEnabled: Bool = false
+    private var isLoadingMore: Bool = false
     
     override func bind() {
         tagSearchTextFieldView.rx.tapGesture()
@@ -94,12 +96,23 @@ class TagsViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
         
         isLoading
+            .do(onNext: { [weak self] isLoading in
+                if isLoading { self?.isLoadingMore = false }
+            })
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()
                 }
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isProcessing)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                object.isLoadingMore = false
             }
             .disposed(by: self.disposeBag)
     }
@@ -288,12 +301,41 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let reactor = self.reactor,
+                reactor.currentState.favoriteTags.isEmpty == false
+        else { return }
+        
+        let sectionForFavorite = TagType.favorite.rawValue
+        let lastRowForFavorite = tableView.numberOfRows(inSection: sectionForFavorite) - 1
+        
+        if self.isLoadingMore,
+           indexPath.section == sectionForFavorite,
+           indexPath.row == lastRowForFavorite {
+            
+            let lastId = reactor.currentState.favoriteTags[indexPath.row].id
+            reactor.action.onNext(.moreFind(lastId))
+        }
+    }
+    
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
         let offset = scrollView.contentOffset.y
         
         // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
         self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 당겨서 새로고침 상황일 때
+        guard offset > 0 else { return }
+        
+        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
+        self.isLoadingMore = offset > self.currentOffset
+        self.currentOffset = offset
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
