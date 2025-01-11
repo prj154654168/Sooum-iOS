@@ -4,14 +4,6 @@
 <dict>
 	<key>ServerEndpoint</key>
 	<string>$(SOOUM_SERVER_ENDPOINT)</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(SOOUM_LOCATION_DESCRIPTION)</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>$(SOOUM_LOCATION_DESCRIPTION)</string>
-	<key>NSCameraUsageDescription</key>
-	<string>$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Hakgyoansim-Bold.ttf</string>
