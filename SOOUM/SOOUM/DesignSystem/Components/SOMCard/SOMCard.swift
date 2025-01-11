@@ -191,18 +191,15 @@ class SOMCard: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        cardGradientLayer.frame = cardGradientView.bounds
-        CATransaction.commit()
+        DispatchQueue.main.async { [weak self] in
+            self?.setGradientLayerFrame()
+        }
     }
     
     /// 이 컴포넌트를 사용하는 재사용 셀에서 호출
     func prepareForReuse() {
         serialTimer?.dispose()
         disposeBag = DisposeBag()
-        
-        layoutSubviews()
     }
     
     // MARK: - initUI
@@ -368,11 +365,16 @@ class SOMCard: UIView {
         cardGradientView.layer.insertSublayer(cardGradientLayer, at: 0)
     }
     
+    private func setGradientLayerFrame() {
+        
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        cardGradientLayer.frame = cardGradientView.bounds
+        CATransaction.commit()
+    }
+    
     /// 홈피드 모델 초기화
     func setModel(model: SOMCardModel) {
-        
-        // 하단 그라디언트 레이어 프레임 설정
-        self.layoutSubviews()
         
         self.model = model
         // 카드 배경 이미지
@@ -422,8 +424,6 @@ class SOMCard: UIView {
     
     func setData(tagCard: TagDetailCardResponse.TagFeedCard) {
         
-        // 하단 그라디언트 레이어 프레임 설정
-        self.layoutSubviews()
         // 카드 배경 이미지
         rootContainerImageView.setImage(strUrl: tagCard.backgroundImgURL.href)
         // 카드 본문
@@ -506,6 +506,8 @@ class SOMCard: UIView {
     }
     
     private func updateContentHeight(_ text: String) {
+        
+        layoutIfNeeded()
         
         let typography = Typography.som.body1WithBold
         var attributes = typography.attributes
