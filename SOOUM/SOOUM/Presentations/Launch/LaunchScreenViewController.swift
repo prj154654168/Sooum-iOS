@@ -22,6 +22,7 @@ class LaunchScreenViewController: BaseViewController, View {
         static let updateVersionMessage: String = "안정적인 서비스 사용을 위해\n최신버전으로 업데이트해주세요"
         
         static let testFlightStrUrl: String = "itms-beta://testflight.apple.com/v1/app"
+        static let appStoreStrUrl: String = "itms-apps://itunes.apple.com/app/id"
     }
     
     let viewForAnimation = UIView().then {
@@ -93,6 +94,12 @@ class LaunchScreenViewController: BaseViewController, View {
                             let strUrl = "\(Text.testFlightStrUrl)/\(Info.appId)"
                             if let testFlightUrl = URL(string: strUrl) {
                                 UIApplication.shared.open(testFlightUrl, options: [:], completionHandler: nil)
+                            }
+                            #elseif PRODUCTION
+                            // 운영 버전일 때 app store로 전환
+                            let strUrl = "\(Text.appStoreStrUrl)\(Info.appId)"
+                            if let appStoreUrl = URL(string: strUrl) {
+                                UIApplication.shared.open(appStoreUrl, options: [:], completionHandler: nil)
                             }
                             #endif
                             

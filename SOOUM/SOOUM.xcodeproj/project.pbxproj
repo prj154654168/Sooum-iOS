@@ -3042,8 +3042,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D PRODUCTION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SOOUM_APP_ID = 6740403078;
 				SOOUM_DISPLAY_NAME = "숨";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;
@@ -3083,8 +3085,10 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D PRODUCTION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SOOUM_APP_ID = 6740403078;
 				SOOUM_DISPLAY_NAME = "숨";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;
