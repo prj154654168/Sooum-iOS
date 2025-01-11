@@ -51,7 +51,7 @@ extension AuthInfo {
             authInfo.token.refreshToken = ""
         }
         Log.info("""
-            Call Info: \(authInfo)
+        Call Info: \(authInfo)
                 deviceId: \(String(data: authInfo.deviceId, encoding: .utf8)!)
                 accessToken: \(authInfo.token.accessToken)
                 refreshToken: \(authInfo.token.refreshToken)
