@@ -262,6 +262,7 @@
 		38738D4C2D2FDCC300C37574 /* WithoutReadNotisCountResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38738D4A2D2FDCC300C37574 /* WithoutReadNotisCountResponse.swift */; };
 		38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */; };
 		38773E7D2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */; };
+		387894462D31788800F69487 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 387894442D31786B00F69487 /* GoogleService-Info.plist */; };
 		3878B8622D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878B8612D0DC8BD00B3B128 /* UIViewController+Toast.swift */; };
 		3878B8632D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878B8612D0DC8BD00B3B128 /* UIViewController+Toast.swift */; };
 		3878D04E2CFFC5F300F9522F /* ProfileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878D04D2CFFC5F300F9522F /* ProfileRequest.swift */; };
@@ -439,7 +440,6 @@
 		38D3CB172CC2362B001EC280 /* Hakgyoansim-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */; };
 		38D3CB182CC2362B001EC280 /* Hakgyoansim-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */; };
 		38D3CB192CC2362B001EC280 /* Hakgyoansim-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */; };
-		38D42BDC2D314B5A0090B09D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 38D42BDB2D314B5A0090B09D /* GoogleService-Info.plist */; };
 		38D488CA2D0C557300F2D38D /* SOMButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D488C92D0C557300F2D38D /* SOMButton.swift */; };
 		38D488CB2D0C557300F2D38D /* SOMButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D488C92D0C557300F2D38D /* SOMButton.swift */; };
 		38D5637B2D16D72D006265AA /* SOMSwipeTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D5637A2D16D72D006265AA /* SOMSwipeTabBar.swift */; };
@@ -642,6 +642,7 @@
 		3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Rx.swift"; sourceTree = "<group>"; };
 		38738D4A2D2FDCC300C37574 /* WithoutReadNotisCountResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithoutReadNotisCountResponse.swift; sourceTree = "<group>"; };
 		38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMRefreshControl.swift; sourceTree = "<group>"; };
+		387894442D31786B00F69487 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3878B8612D0DC8BD00B3B128 /* UIViewController+Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Toast.swift"; sourceTree = "<group>"; };
 		3878D04D2CFFC5F300F9522F /* ProfileRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRequest.swift; sourceTree = "<group>"; };
 		3878D0522CFFC6C100F9522F /* ProfileResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileResponse.swift; sourceTree = "<group>"; };
@@ -737,7 +738,6 @@
 		38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMActivityIndicatorView.swift; sourceTree = "<group>"; };
 		38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hakgyoansim-Bold.ttf"; sourceTree = "<group>"; };
 		38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hakgyoansim-Light.ttf"; sourceTree = "<group>"; };
-		38D42BDB2D314B5A0090B09D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		38D488C92D0C557300F2D38D /* SOMButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMButton.swift; sourceTree = "<group>"; };
 		38D5637A2D16D72D006265AA /* SOMSwipeTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMSwipeTabBar.swift; sourceTree = "<group>"; };
 		38D5637D2D17152F006265AA /* SOMSwipeTabBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMSwipeTabBarDelegate.swift; sourceTree = "<group>"; };
@@ -1586,7 +1586,7 @@
 		387FBB062C8703F600A5E139 /* Production */ = {
 			isa = PBXGroup;
 			children = (
-				38D42BDB2D314B5A0090B09D /* GoogleService-Info.plist */,
+				387894442D31786B00F69487 /* GoogleService-Info.plist */,
 				387FBAFD2C8702C200A5E139 /* Info-prod.plist */,
 			);
 			path = Production;
@@ -2139,12 +2139,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				387894462D31788800F69487 /* GoogleService-Info.plist in Resources */,
 				387FBAF92C8702C200A5E139 /* Assets.xcassets in Resources */,
 				38D3CB162CC2362B001EC280 /* Hakgyoansim-Bold.ttf in Resources */,
 				387FBAFC2C8702C200A5E139 /* Base in Resources */,
 				38D3CB182CC2362B001EC280 /* Hakgyoansim-Light.ttf in Resources */,
 				388DA1012C8F538400A9DD56 /* PretendardVariable.ttf in Resources */,
-				38D42BDC2D314B5A0090B09D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2800,10 +2800,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "[D]SOOUM";
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_ DESCRIPTION)";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_PHOTO_LIBRARY_ DESCRIPTION)";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -2824,7 +2823,7 @@
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = core.sooum.org;
+				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2845,10 +2844,9 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "[D]SOOUM";
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_ DESCRIPTION)";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_PHOTO_LIBRARY_ DESCRIPTION)";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -2869,7 +2867,7 @@
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = core.sooum.org;
+				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2936,7 +2934,7 @@
 				SDKROOT = iphoneos;
 				SOOUM_APP_ID = "";
 				SOOUM_DISPLAY_NAME = "";
-				SOOUM_LOCATION_DESCRIPTION = "";
+				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_PHOTO_LIBRARY_DESCRIPTION = "사진 업로드를 위해 갤러리 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
@@ -2997,7 +2995,7 @@
 				SDKROOT = iphoneos;
 				SOOUM_APP_ID = "";
 				SOOUM_DISPLAY_NAME = "";
-				SOOUM_LOCATION_DESCRIPTION = "";
+				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_PHOTO_LIBRARY_DESCRIPTION = "사진 업로드를 위해 갤러리 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -3037,7 +3035,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_DISPLAY_NAME = SOOUM;
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = core.sooum.org;
+				SOOUM_SERVER_ENDPOINT = api.sooum.org;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3076,7 +3074,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_DISPLAY_NAME = SOOUM;
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = core.sooum.org;
+				SOOUM_SERVER_ENDPOINT = api.sooum.org;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
