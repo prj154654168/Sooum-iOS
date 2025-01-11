@@ -43,6 +43,7 @@ class ProfileViewFooterCell: UICollectionViewCell {
         super.prepareForReuse()
         
         self.backgroundImageView.image = nil
+        self.contentLabel.text = nil
     }
     
     private func setupConstraints() {
