@@ -100,7 +100,12 @@ class ProfileViewFooter: UICollectionReusableView {
         self.collectionView.isHidden = isBlocked
         
         self.writtenCards = writtenCards
-        self.collectionView.reloadData()
+        
+        UIView.performWithoutAnimation {
+            self.collectionView.performBatchUpdates {
+                self.collectionView.reloadSections(IndexSet(integer: 0))
+            }
+        }
     }
 }
 

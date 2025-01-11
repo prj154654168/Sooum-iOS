@@ -220,7 +220,12 @@ class ProfileViewController: BaseNavigationViewController, View {
                 object.profile = profile
                 object.titleView.text = profile.nickname
                 object.subTitleView.text = "TOTAL \(profile.totalVisitorCnt) TODAY \(profile.currentDayVisitors)"
-                object.collectionView.reloadData()
+                
+                UIView.performWithoutAnimation {
+                    object.collectionView.performBatchUpdates {
+                        object.collectionView.reloadSections(IndexSet(integer: 0))
+                    }
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -228,7 +233,12 @@ class ProfileViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .subscribe(with: self) { object, writtenCards in
                 object.writtenCards = writtenCards
-                object.collectionView.reloadData()
+                
+                UIView.performWithoutAnimation {
+                    object.collectionView.performBatchUpdates {
+                        object.collectionView.reloadSections(IndexSet(integer: 0))
+                    }
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -238,7 +248,12 @@ class ProfileViewController: BaseNavigationViewController, View {
                 UIApplication.topViewController?.dismiss(animated: true) {
                     object.isBlocked = isBlocked
                     object.rightBlockButton.isHidden = isBlocked
-                    object.collectionView.reloadData()
+                    
+                    UIView.performWithoutAnimation {
+                        object.collectionView.performBatchUpdates {
+                            object.collectionView.reloadSections(IndexSet(integer: 0))
+                        }
+                    }
                 }
             }
             .disposed(by: self.disposeBag)
