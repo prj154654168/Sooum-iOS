@@ -164,7 +164,9 @@ class SettingsViewController: BaseNavigationViewController, View {
     override func bind() {
         super.bind()
         
+        #if DEVELOP
         self.setupDebugging()
+        #endif
     }
     
     
