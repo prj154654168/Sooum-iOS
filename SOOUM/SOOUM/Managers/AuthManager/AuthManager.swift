@@ -242,6 +242,9 @@ class AuthManager: AuthManagerDelegate {
     
     func updateFcmToken(with tokenSet: PushTokenSet, call function: String) {
         
+        let prevTokenSet = self.registeredToken
+        self.registeredToken = tokenSet
+        
         // // 토큰이 없는 경우 업데이트에 실패하므로 무시
         guard self.hasToken else {
             Log.info("Can't upload fcm token without authorization token. (from: \(function))")
@@ -249,25 +252,27 @@ class AuthManager: AuthManagerDelegate {
         }
         
         // 이전에 업로드 성공한 토큰이 다시 등록되는 경우 무시
-        let prevTokenSet = self.registeredToken
         guard self.registeredToken?.fcm != tokenSet.fcm else {
             Log.info("Ignored already registered token set. (from: \(function))")
             return
         }
         
-        self.registeredToken = tokenSet
-        
         // 서버에 FCM token 업데이트
         if let fcmToken = tokenSet.fcm {
             let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
             NetworkManager.shared.request(Empty.self, request: request)
-                .subscribe(onNext: { _ in
-                    Log.info("Update FCM token to server with", fcmToken)
-                })
+                .subscribe(
+                    onNext: { _ in
+                        Log.info("Update FCM token to server with", fcmToken)
+                    },
+                    onError: { error in
+                        Log.error("Failed to update FCM token to server: not found user")
+                    }
+                )
                 .disposed(by: self.disposeBag)
         } else {
             self.registeredToken = prevTokenSet
-            Log.info("Failed FCM token updated to server")
+            Log.info("Failed to update FCM token to server: not found device unique id")
         }
     }
     
