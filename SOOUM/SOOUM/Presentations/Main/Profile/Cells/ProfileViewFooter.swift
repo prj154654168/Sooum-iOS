@@ -20,7 +20,7 @@ class ProfileViewFooter: UICollectionReusableView {
         static let blockedText: String = "차단한 계정입니다"
     }
     
-    private let flowLayout = SOMTagsLayout().then {
+    private let flowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
         $0.minimumLineSpacing = .zero
         $0.minimumInteritemSpacing = .zero
@@ -124,14 +124,14 @@ extension ProfileViewFooter: UICollectionViewDataSource {
             withReuseIdentifier: ProfileViewFooterCell.cellIdentifier,
             for: indexPath
         ) as! ProfileViewFooterCell
-        let writtenCard = self.writtenCards[indexPath.row]
+        let writtenCard = self.writtenCards[indexPath.item]
         cell.setModel(writtenCard)
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let selectedId = self.writtenCards[indexPath.row].id
+        let selectedId = self.writtenCards[indexPath.item].id
         self.didTap.accept(selectedId)
     }
 }

@@ -422,8 +422,6 @@
 		38C2D4182CFEAACA00CEA092 /* ProfileViewFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D4162CFEAACA00CEA092 /* ProfileViewFooterCell.swift */; };
 		38C2D41A2CFEAAED00CEA092 /* ProfileViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D4192CFEAAED00CEA092 /* ProfileViewFooter.swift */; };
 		38C2D41B2CFEAAED00CEA092 /* ProfileViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D4192CFEAAED00CEA092 /* ProfileViewFooter.swift */; };
-		38C2D41D2CFEB07900CEA092 /* ProfileViewFooterLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D41C2CFEB07900CEA092 /* ProfileViewFooterLayout.swift */; };
-		38C2D41E2CFEB07900CEA092 /* ProfileViewFooterLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D41C2CFEB07900CEA092 /* ProfileViewFooterLayout.swift */; };
 		38C2D4202CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D41F2CFEB82400CEA092 /* ProfileViewReactor.swift */; };
 		38C2D4212CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D41F2CFEB82400CEA092 /* ProfileViewReactor.swift */; };
 		38CC49822CDE3854007A0145 /* SOMPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49812CDE3854007A0145 /* SOMPresentationController.swift */; };
@@ -730,7 +728,6 @@
 		38C2D4132CFEA9CC00CEA092 /* MyProfileViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewCell.swift; sourceTree = "<group>"; };
 		38C2D4162CFEAACA00CEA092 /* ProfileViewFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewFooterCell.swift; sourceTree = "<group>"; };
 		38C2D4192CFEAAED00CEA092 /* ProfileViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewFooter.swift; sourceTree = "<group>"; };
-		38C2D41C2CFEB07900CEA092 /* ProfileViewFooterLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewFooterLayout.swift; sourceTree = "<group>"; };
 		38C2D41F2CFEB82400CEA092 /* ProfileViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewReactor.swift; sourceTree = "<group>"; };
 		38CC49812CDE3854007A0145 /* SOMPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMPresentationController.swift; sourceTree = "<group>"; };
 		38CC49842CDE3885007A0145 /* SOMTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTransitioningDelegate.swift; sourceTree = "<group>"; };
@@ -1874,7 +1871,6 @@
 			children = (
 				38C2D4132CFEA9CC00CEA092 /* MyProfileViewCell.swift */,
 				38C2D4102CFE9EF300CEA092 /* OtherProfileViewCell.swift */,
-				38C2D41C2CFEB07900CEA092 /* ProfileViewFooterLayout.swift */,
 				38C2D4192CFEAAED00CEA092 /* ProfileViewFooter.swift */,
 				38C2D4162CFEAACA00CEA092 /* ProfileViewFooterCell.swift */,
 			);
@@ -2292,7 +2288,6 @@
 				38601E1C2D313A8200A465A9 /* SOMNavigationBar+Rx.swift in Sources */,
 				38FD4DB22D034C1700BF5FF1 /* MyFollowingViewCell.swift in Sources */,
 				38CC49832CDE3854007A0145 /* SOMPresentationController.swift in Sources */,
-				38C2D41E2CFEB07900CEA092 /* ProfileViewFooterLayout.swift in Sources */,
 				2AE6B1672CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift in Sources */,
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
 				38389BA02CCCFB7D006728AF /* AuthKeyChain.swift in Sources */,
@@ -2620,7 +2615,6 @@
 				2A44A42D2CAC14C800DC463E /* SignInResponse.swift in Sources */,
 				38BE72172CC696E9002662DD /* WriteTagTextField+Rx.swift in Sources */,
 				38572CDB2D22464F00B07C69 /* PungTimeView.swift in Sources */,
-				38C2D41D2CFEB07900CEA092 /* ProfileViewFooterLayout.swift in Sources */,
 				381A1D772CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */,
 				38CC49882CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */,
 				38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
