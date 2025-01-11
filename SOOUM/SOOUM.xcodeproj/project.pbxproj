@@ -724,6 +724,7 @@
 		38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooterCell.swift; sourceTree = "<group>"; };
 		38B8BE462D1ECBDA0084569C /* NotificationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationInfo.swift; sourceTree = "<group>"; };
 		38B9E4692CE72CC1008A24C8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		38BCF2302D32BB22004F653A /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		38BE72162CC696E9002662DD /* WriteTagTextField+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteTagTextField+Rx.swift"; sourceTree = "<group>"; };
 		38C2D4102CFE9EF300CEA092 /* OtherProfileViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileViewCell.swift; sourceTree = "<group>"; };
 		38C2D4132CFEA9CC00CEA092 /* MyProfileViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileViewCell.swift; sourceTree = "<group>"; };
@@ -1820,12 +1821,12 @@
 		38B6AAE82CA47F5C00CE6DB6 /* Alamofire */ = {
 			isa = PBXGroup;
 			children = (
-				38B6AAE92CA47F6200CE6DB6 /* Develop */,
+				38B6AAE92CA47F6200CE6DB6 /* Request */,
 			);
 			path = Alamofire;
 			sourceTree = "<group>";
 		};
-		38B6AAE92CA47F6200CE6DB6 /* Develop */ = {
+		38B6AAE92CA47F6200CE6DB6 /* Request */ = {
 			isa = PBXGroup;
 			children = (
 				384972A02CA4DEC00012FCA1 /* CardRequest.swift */,
@@ -1838,7 +1839,7 @@
 				2AFD054B2CFF76CB007C84AD /* TagRequest.swift */,
 				388698612D1986B100008600 /* NotificationRequest.swift */,
 			);
-			path = Develop;
+			path = Request;
 			sourceTree = "<group>";
 		};
 		38B8A5822CAE9CB7000AFE83 /* Cells */ = {
