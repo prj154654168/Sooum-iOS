@@ -39,12 +39,12 @@ class LaunchScreenViewReactor: Reactor {
     struct State {
         var mustUpdate: Bool
         /// deviceId 서버 등록 여부, 로그인 성공 여부
-        var isRegistered: Bool
+        var isRegistered: Bool?
     }
     
     var initialState: State = .init(
         mustUpdate: false,
-        isRegistered: false
+        isRegistered: nil
     )
     
     private let networkManager = NetworkManager.shared
@@ -92,10 +92,8 @@ extension LaunchScreenViewReactor {
             .flatMapLatest { object, currentVersion -> Observable<Mutation> in
                 let model = Version(currentVerion: currentVersion)
                 if model.mustUpdate {
-                    
                     return .just(.check(true))
                 } else {
-                    
                     return self.authManager.hasToken ? .just(.updateIsRegistered(true)) : object.login()
                 }
             }
