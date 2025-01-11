@@ -2,8 +2,20 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ServerEndpoint</key>
+	<string>$(SOOUM_SERVER_ENDPOINT)</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>$(SOOUM_LOCATION_DESCRIPTION)</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>$(SOOUM_LOCATION_DESCRIPTION)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Hakgyoansim-Bold.ttf</string>
+		<string>Hakgyoansim-Light.ttf</string>
 		<string>PretendardVariable.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>

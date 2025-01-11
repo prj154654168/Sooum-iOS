@@ -48,8 +48,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // 앱 알림 설정을 위한 초기화
         _ = PushManager.init()
         
-        // 앱 첫 실행 시 token 정보 제거
-        self.removeKeyChainWhenFirstLaunch()
+        // 앱 첫 실행 시 할 일
+        self.todoFirstLaunch()
         
         return true
     }
@@ -162,9 +162,14 @@ extension AppDelegate {
         DDLog.add(fileLogger)
     }
     
-    private func removeKeyChainWhenFirstLaunch() {
+    private func todoFirstLaunch() {
         
         guard UserDefaults.isFirstLaunch else { return }
+        
+        // 앱 첫 실행 시 fcm token 요청 (회원가입 필수)
+        UIApplication.shared.registerForRemoteNotifications()
+        
+        // 앱 첫 실행 시 token 정보 제거
         AuthKeyChain.shared.delete(.accessToken)
         AuthKeyChain.shared.delete(.refreshToken)
     }
