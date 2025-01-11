@@ -2104,11 +2104,12 @@
 			};
 			buildConfigurationList = 387FBAE72C8702C100A5E139 /* Build configuration list for PBXProject "SOOUM" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 387FBAE32C8702C100A5E139;
 			productRefGroup = 387FBAED2C8702C100A5E139 /* Products */;
@@ -2779,6 +2780,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				387FBAFB2C8702C200A5E139 /* Base */,
+				38BCF2302D32BB22004F653A /* ko */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -2799,9 +2801,11 @@
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "[D]SOOUM";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -2843,9 +2847,11 @@
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "[D]SOOUM";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -2879,6 +2885,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -2947,6 +2954,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -3015,9 +3023,11 @@
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = SOOUM;
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_ DESCRIPTION)";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_PHOTO_LIBRARY_ DESCRIPTION)";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -3033,7 +3043,7 @@
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SOOUM_DISPLAY_NAME = SOOUM;
+				SOOUM_DISPLAY_NAME = "숨";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3054,9 +3064,11 @@
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = SOOUM;
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_ DESCRIPTION)";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_PHOTO_LIBRARY_ DESCRIPTION)";
+				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -3072,7 +3084,7 @@
 				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SOOUM_DISPLAY_NAME = SOOUM;
+				SOOUM_DISPLAY_NAME = "숨";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;
 				SWIFT_EMIT_LOC_STRINGS = YES;
