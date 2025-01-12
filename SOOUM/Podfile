@@ -1,0 +1,53 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+platform :ios, '15.0'
+use_frameworks!
+inhibit_all_warnings!
+
+def pods
+  pod 'RxSwift', '~> 6.7.1'
+  pod 'RxCocoa', '~> 6.7.1'
+  pod 'RxKeyboard', '~> 2.0.0'
+  pod 'ReactorKit', '~> 3.2.0'
+  pod 'RxGesture', '~> 4.0.4'
+  
+  pod 'Alamofire', '~> 5.9.1'
+
+  pod 'Firebase/Analytics', '~> 10.19.0'
+  pod 'Firebase/Crashlytics', '~> 10.19.0'
+  pod 'Firebase/Messaging', '~> 10.19.0'
+  
+  pod 'SnapKit', '~> 5.7.1'
+  pod 'Then', '~> 3.0.0'
+  pod 'Kingfisher', '~> 6.0.0'
+  pod 'YPImagePicker', '~> 5.2.2'
+
+  pod 'CocoaLumberjack/Swift', '~> 3.7.2'
+end
+
+target 'SOOUM-Dev' do
+  pods
+  pod 'SwiftLint', '~> 0.56.2'
+end
+
+target 'SOOUM' do
+  pods
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+      if config.name == 'Debug' || config.name == 'GSExhibition'
+	# FirebaseCrashlytics Ignoring duplicate libraries: '-lc++' 경고 해결
+	if target.name == 'FirebaseCrashlytics'
+	  config.build_settings['OTHER_LDFLAGS'] = "$(inherited) -Wl,-ld_classic"
+	end
+	# RxSwift Resources count 적용
+        if target.name == 'RxSwift'
+          config.build_settings['OTHER_SWIFT_FLAGS'] ||= ['-D', 'TRACE_RESOURCES']
+        end
+      end
+    end
+  end
+end
