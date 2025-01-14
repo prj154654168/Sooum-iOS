@@ -422,13 +422,17 @@ extension DetailViewController: UICollectionViewDataSource {
             
             footer.likeAndCommentView.likeBackgroundButton.rx.throttleTap(.seconds(1))
                 .withLatestFrom(reactor.state.map(\.cardSummary.isLiked))
-                .subscribe(onNext: { isLike in
+                .subscribe(with: self) { object, isLike in
+                    guard object.isDeleted == false else { return }
+                    
                     reactor.action.onNext(.updateLike(!isLike))
-                })
+                }
                 .disposed(by: footer.disposeBag)
             
             footer.likeAndCommentView.commentBackgroundButton.rx.tap
                 .subscribe(with: self) { object, _ in
+                    guard object.isDeleted == false else { return }
+                    
                     let writeCardViewController = WriteCardViewController()
                     writeCardViewController.reactor = reactor.reactorForWriteCard()
                     object.navigationPush(writeCardViewController, animated: true, bottomBarHidden: true)
