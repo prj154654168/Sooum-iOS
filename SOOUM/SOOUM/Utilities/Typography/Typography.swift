@@ -22,6 +22,8 @@ class Typography: NSObject, NSCopying {
         let paragraph = NSMutableParagraphStyle()
         paragraph.minimumLineHeight = self.lineHeight
         paragraph.maximumLineHeight = self.lineHeight
+        // TODO: 임시, \n 개행문자가 포함된 string을 정렬시키기 위해 추가
+        paragraph.alignment = .center
         return paragraph
     }
 

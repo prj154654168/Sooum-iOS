@@ -22,7 +22,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         static let appSettingTitle: String = "앱 설정"
         static let notificationSettingTitle: String = "알림 설정"
-        static let commentHistoryTitle: String = "작성된 덧글 히스토리"
+        static let commentHistoryTitle: String = "작성된 답카드 히스토리"
         
         static let userSettingTitle: String = "계정 설정"
         static let issueUserTransferCodeTitle: String = "계정 이관 코드 발급"

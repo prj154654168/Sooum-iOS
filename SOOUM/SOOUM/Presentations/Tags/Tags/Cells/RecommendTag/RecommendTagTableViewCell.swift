@@ -53,7 +53,7 @@ class RecommendTagTableViewCell: UITableViewCell {
         self.mode = .recommendTag
         
         self.recommendTag = recommendTag
-        self.recommendTagView.tagNameLabel.text = recommendTag.tagContent
+        self.recommendTagView.tagNameLabel.text = "#\(recommendTag.tagContent)"
         self.recommendTagView.tagsCountLabel.text = recommendTag.tagUsageCnt
     }
     
@@ -63,7 +63,7 @@ class RecommendTagTableViewCell: UITableViewCell {
         
         self.mode = .searchTag
         self.searchTag = searchRelatedTag
-        self.recommendTagView.tagNameLabel.text = searchRelatedTag.content
+        self.recommendTagView.tagNameLabel.text = "#\(searchRelatedTag.content)"
         self.recommendTagView.tagsCountLabel.text = "\(searchRelatedTag.count)"
     }
     

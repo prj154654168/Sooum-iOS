@@ -27,13 +27,13 @@ class MainHomeLatestViewReactor: Reactor {
     }
     
     struct State {
-        var displayedCardsWithUpdate: CardsWithUpdate
+        var displayedCardsWithUpdate: CardsWithUpdate?
         var isLoading: Bool
         var isProcessing: Bool
     }
     
     var initialState: State = .init(
-        displayedCardsWithUpdate: (cards: [], isUpdate: false),
+        displayedCardsWithUpdate: nil,
         isLoading: false,
         isProcessing: false
     )
@@ -99,8 +99,8 @@ class MainHomeLatestViewReactor: Reactor {
         case let .cards(displayedCardsWithUpdate):
             state.displayedCardsWithUpdate = displayedCardsWithUpdate
         case let .more(displayedCardsWithUpdate):
-            state.displayedCardsWithUpdate.cards += displayedCardsWithUpdate.cards
-            state.displayedCardsWithUpdate.isUpdate = displayedCardsWithUpdate.isUpdate
+            state.displayedCardsWithUpdate?.cards += displayedCardsWithUpdate.cards
+            state.displayedCardsWithUpdate?.isUpdate = displayedCardsWithUpdate.isUpdate
         case let .updateIsLoading(isLoading):
             state.isLoading = isLoading
         case let .updateIsProcessing(isProcessing):

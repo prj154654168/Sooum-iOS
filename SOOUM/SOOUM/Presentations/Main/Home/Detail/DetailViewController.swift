@@ -22,6 +22,8 @@ class DetailViewController: BaseNavigationViewController, View {
          
          static let deleteDialogTitle: String = "카드를 삭제할까요?"
          static let deleteDialogSubTitle: String = "삭제한 카드는 복구할 수 없어요"
+         static let deletePungDialogTitle: String = "시간 제한 카드를 삭제할까요?"
+         static let deletePungDialogSubTitle: String = "카드를 삭제하면,\n답카드가 자동으로 삭제되지 않아요"
          
          static let blockDialogTitle: String = "해당 사용자를 차단할까요?"
          static let blockDialogSubTitle: String = "해당 사용자의 모든 카드를 모두 볼 수 없어요"
@@ -248,10 +250,11 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: self.disposeBag)
          
-         reactor.state.map(\.errorMessage)
+         reactor.state.map(\.isErrorOccur)
              .distinctUntilChanged()
-             .skip(1)
-             .subscribe(with: self) { object, errorMessage in
+             .filterNil()
+             .filter { $0 }
+             .subscribe(with: self) { object, _ in
                  guard reactor.entranceType == .navi else {
                      let notificationTabBarController = NotificationTabBarController()
                      notificationTabBarController.reactor = reactor.reactorForNoti()
@@ -261,7 +264,7 @@ class DetailViewController: BaseNavigationViewController, View {
                      
                      return
                  }
-                 object.isDeleted = errorMessage != nil
+                 object.isDeleted = true
                  
                  UIView.performWithoutAnimation {
                      object.collectionView.reloadData()
@@ -316,6 +319,7 @@ extension DetailViewController: UICollectionViewDataSource {
         cell.setDatas(model, tags: tags)
         cell.tags.delegate = self
         cell.isOwnCard = self.detailCard.isOwnCard
+        cell.isPrevCardDelete = self.detailCard.isPreviousCardDelete
         cell.prevCard = self.prevCard
         cell.member = self.detailCard.member
         
@@ -343,9 +347,10 @@ extension DetailViewController: UICollectionViewDataSource {
                 
                 if object.detailCard.isOwnCard {
                     /// 자신의 카드일 때 카드 삭제하기
+                    let isFeedAndPungCard = object.detailCard.isFeedCard == true && object.detailCard.storyExpirationTime != nil
                     SOMDialogViewController.show(
-                        title: Text.deleteDialogTitle,
-                        subTitle: Text.deleteDialogSubTitle,
+                        title: isFeedAndPungCard ? Text.deletePungDialogTitle : Text.deleteDialogTitle,
+                        subTitle: isFeedAndPungCard ? Text.deletePungDialogSubTitle : Text.deleteDialogSubTitle,
                         leftAction: .init(
                             mode: .cancel,
                             handler: { UIApplication.topViewController?.dismiss(animated: true) }

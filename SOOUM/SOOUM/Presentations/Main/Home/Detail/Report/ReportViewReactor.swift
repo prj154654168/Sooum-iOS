@@ -64,10 +64,10 @@ class ReportViewReactor: Reactor {
     }
     
     struct State {
-        var isDialogPresented: Bool
+        var isDialogPresented: Bool?
     }
     
-    var initialState: State = .init(isDialogPresented: false)
+    var initialState: State = .init(isDialogPresented: nil)
     
     private let networkManager = NetworkManager.shared
     /// 신고할 카드 id

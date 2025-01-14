@@ -20,9 +20,9 @@ enum CardRequest: BaseRequest {
     case distancCard(lastId: String?, latitude: String, longitude: String, distanceFilter: String)
     /// 상세보기
     case detailCard(id: String, latitude: String?, longitude: String?)
-    /// 상세보기 - 댓글
+    /// 상세보기 - 답카드
     case commentCard(id: String, lastId: String?, latitude: String?, longitude: String?)
-    /// 상세보기 - 댓글 좋아요 정보
+    /// 상세보기 - 답카드 좋아요 정보
     case cardSummary(id: String)
     /// 상세보기 - 카드 삭제
     case deleteCard(id: String)
@@ -41,7 +41,7 @@ enum CardRequest: BaseRequest {
         imgName: String,
         feedTags: [String]
     )
-    /// 댓글 추가
+    /// 답카드 추가
     case writeComment(
         id: String,
         isDistanceShared: Bool,

@@ -29,14 +29,14 @@ class MainHomeDistanceViewReactor: Reactor {
     }
     
     struct State {
-        var displayedCardsWithUpdate: CardsWithUpdate
+        var displayedCardsWithUpdate: CardsWithUpdate?
         var distanceFilter: String
         var isLoading: Bool
         var isProcessing: Bool
     }
     
     var initialState: State = .init(
-        displayedCardsWithUpdate: (cards: [], isUpdate: false),
+        displayedCardsWithUpdate: nil,
         distanceFilter: "UNDER_1",
         isLoading: false,
         isProcessing: false
@@ -113,8 +113,8 @@ class MainHomeDistanceViewReactor: Reactor {
         case let .cards(displayedCardsWithUpdate):
             state.displayedCardsWithUpdate = displayedCardsWithUpdate
         case let .more(displayedCardsWithUpdate):
-            state.displayedCardsWithUpdate.cards += displayedCardsWithUpdate.cards
-            state.displayedCardsWithUpdate.isUpdate = displayedCardsWithUpdate.isUpdate
+            state.displayedCardsWithUpdate?.cards += displayedCardsWithUpdate.cards
+            state.displayedCardsWithUpdate?.isUpdate = displayedCardsWithUpdate.isUpdate
         case let .updateDistanceFilter(distanceFilter):
             state.distanceFilter = distanceFilter
         case let .updateIsLoading(isLoading):

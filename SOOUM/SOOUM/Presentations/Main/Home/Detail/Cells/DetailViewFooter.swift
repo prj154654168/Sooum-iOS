@@ -17,7 +17,7 @@ import Then
 class DetailViewFooter: UICollectionReusableView {
     
     enum Text {
-        static let noContentText: String = "댓글이 아직 없어요"
+        static let noContentText: String = "답카드가 아직 없어요"
     }
     
     let likeAndCommentView = LikeAndCommentView()

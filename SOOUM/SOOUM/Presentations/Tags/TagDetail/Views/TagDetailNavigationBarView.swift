@@ -88,7 +88,7 @@ class TagDetailNavigationBarView: UIView {
     }
     
     func setData(tagInfo: TagInfoResponse) {
-        titleLabel.text = tagInfo.content
+        titleLabel.text = "#\(tagInfo.content)"
         subtitleLabel.text = "카드 \(tagInfo.cardCnt) 개"
         favoriteButton.setImage(tagInfo.isFavorite ? .starFilled : .starOutlined, for: .normal)
         favoriteButton.tintColor = tagInfo.isFavorite ? .som.blue300 : .som.black

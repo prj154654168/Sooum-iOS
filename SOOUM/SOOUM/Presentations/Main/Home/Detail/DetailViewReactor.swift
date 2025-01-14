@@ -33,7 +33,7 @@ class DetailViewReactor: Reactor {
         case updateIsBlocked(Bool)
         case updateIsLoading(Bool)
         case updateIsProcessing(Bool)
-        case updateError(String?)
+        case updateError(Bool?)
     }
     
     struct State {
@@ -45,7 +45,7 @@ class DetailViewReactor: Reactor {
         var isBlocked: Bool
         var isLoading: Bool
         var isProcessing: Bool
-        var errorMessage: String?
+        var isErrorOccur: Bool?
     }
     
     var initialState: State = .init(
@@ -57,7 +57,7 @@ class DetailViewReactor: Reactor {
         isBlocked: false,
         isLoading: false,
         isProcessing: false,
-        errorMessage: nil
+        isErrorOccur: nil
     )
     
     private let networkManager = NetworkManager.shared
@@ -157,8 +157,8 @@ class DetailViewReactor: Reactor {
             state.isLoading = isLoading
         case let .updateIsProcessing(isProcessing):
             state.isProcessing = isProcessing
-        case let .updateError(errorMessage):
-            state.errorMessage = errorMessage
+        case let .updateError(isErrorOccur):
+            state.isErrorOccur = isErrorOccur
         }
         return state
     }
@@ -278,7 +278,7 @@ extension DetailViewReactor {
             
             if nsError.code == 400 {
                 return .concat([
-                    .just(.updateError(nsError.localizedDescription)),
+                    .just(.updateError(true)),
                     endProcessing
                 ])
             } else {

@@ -112,7 +112,7 @@ class ReportViewController: BaseNavigationViewController, View {
     private func bindState(reactor: ReportViewReactor) {
         
         reactor.state.map(\.isDialogPresented)
-            .skip(1)
+            .filterNil()
             .subscribe(with: self) { object, isDialogPresented in
                 
                 SOMDialogViewController.show(
