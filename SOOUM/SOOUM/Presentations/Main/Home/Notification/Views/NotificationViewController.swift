@@ -141,7 +141,7 @@ class NotificationViewController: BaseViewController, View {
         
         reactor.state.map(\.notificationsWithoutRead)
             .distinctUntilChanged()
-            .skip(1)
+            .filterNil()
             .subscribe(with: self) { object, notificationsWithoutRead in
                 object.tableView.isHidden = false
                 
@@ -160,7 +160,7 @@ class NotificationViewController: BaseViewController, View {
         
         reactor.state.map(\.notifications)
             .distinctUntilChanged()
-            .skip(1)
+            .filterNil()
             .subscribe(with: self) { object, notifications in
                 object.tableView.isHidden = false
                 

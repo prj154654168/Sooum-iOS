@@ -141,8 +141,8 @@ class MainHomeLatestViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.displayedCardsWithUpdate)
+            .filterNil()
             .distinctUntilChanged(reactor.canUpdateCells)
-            .skip(1)
             .subscribe(with: self) { object, displayedCardsWithUpdate in
                 let displayedCards = displayedCardsWithUpdate.cards
                 let isUpdate = displayedCardsWithUpdate.isUpdate

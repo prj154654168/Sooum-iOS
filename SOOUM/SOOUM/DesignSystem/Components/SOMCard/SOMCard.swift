@@ -106,7 +106,7 @@ class SOMCard: UIView {
     
     let cardGradientLayer = CAGradientLayer()
     
-    /// 좋아요, 거리, 댓글, 시간 정보 포함하는 스택뷰
+    /// 좋아요, 거리, 답카드, 시간 정보 포함하는 스택뷰
     let cardContentStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 8
@@ -160,7 +160,7 @@ class SOMCard: UIView {
         $0.textColor = .som.white
     }
     
-    /// 댓글 정보 표시 스택뷰
+    /// 답카드 정보 표시 스택뷰
     let commentInfoStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 4

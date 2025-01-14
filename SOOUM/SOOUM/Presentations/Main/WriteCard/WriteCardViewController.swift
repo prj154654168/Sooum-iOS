@@ -379,8 +379,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.isWrite)
-            .distinctUntilChanged()
-            .skip(1)
+            .filterNil()
             .delay(.seconds(1), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, isWrite in
                 

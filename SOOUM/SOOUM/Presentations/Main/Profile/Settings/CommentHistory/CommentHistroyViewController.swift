@@ -18,7 +18,7 @@ import RxSwift
 class CommentHistroyViewController: BaseNavigationViewController, View {
     
     enum Text {
-        static let navigationTitle: String = "덧글 히스토리"
+        static let navigationTitle: String = "답카드 히스토리"
     }
     
     private let flowLayout = SOMTagsLayout().then {

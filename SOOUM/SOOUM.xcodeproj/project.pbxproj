@@ -220,6 +220,8 @@
 		384972A12CA4DEC00012FCA1 /* CardRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384972A02CA4DEC00012FCA1 /* CardRequest.swift */; };
 		384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384972A22CA54DC10012FCA1 /* UIImgeView.swift */; };
 		384972A42CA54DC10012FCA1 /* UIImgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384972A22CA54DC10012FCA1 /* UIImgeView.swift */; };
+		385009C22D363525007175A1 /* FilterNil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385009C12D363525007175A1 /* FilterNil.swift */; };
+		385009C32D363525007175A1 /* FilterNil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385009C12D363525007175A1 /* FilterNil.swift */; };
 		385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053512C92DBE200C80B02 /* SOMTabBarItem.swift */; };
 		385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053512C92DBE200C80B02 /* SOMTabBarItem.swift */; };
 		385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385053542C92DCF900C80B02 /* SOMTabBar.swift */; };
@@ -622,6 +624,7 @@
 		38405CCA2CC611FD00612D1E /* BaseEmptyAndHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseEmptyAndHeader.swift; sourceTree = "<group>"; };
 		384972A02CA4DEC00012FCA1 /* CardRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRequest.swift; sourceTree = "<group>"; };
 		384972A22CA54DC10012FCA1 /* UIImgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImgeView.swift; sourceTree = "<group>"; };
+		385009C12D363525007175A1 /* FilterNil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterNil.swift; sourceTree = "<group>"; };
 		385053512C92DBE200C80B02 /* SOMTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarItem.swift; sourceTree = "<group>"; };
 		385053542C92DCF900C80B02 /* SOMTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBar.swift; sourceTree = "<group>"; };
 		385053572C92DD2300C80B02 /* SOMTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTabBarController.swift; sourceTree = "<group>"; };
@@ -1796,6 +1799,7 @@
 			children = (
 				38B6AADE2CA4777200CE6DB6 /* UIViewController+Rx.swift */,
 				3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */,
+				385009C12D363525007175A1 /* FilterNil.swift */,
 			);
 			path = RxCocoa;
 			sourceTree = "<group>";
@@ -2315,6 +2319,7 @@
 				3878D05D2CFFD10D00F9522F /* FollowingResponse.swift in Sources */,
 				38D6F17D2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
+				385009C32D363525007175A1 /* FilterNil.swift in Sources */,
 				3816C05D2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */,
 				2A5BB7C62CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */,
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
@@ -2565,6 +2570,7 @@
 				38D5637E2D17152F006265AA /* SOMSwipeTabBarDelegate.swift in Sources */,
 				2AE6B17B2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,
 				38F70E5B2D1905D000B33C9D /* MainHomeTabBarController.swift in Sources */,
+				385009C22D363525007175A1 /* FilterNil.swift in Sources */,
 				38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				2A5BB7D12CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */,
 				3887D0392CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
@@ -2796,12 +2802,13 @@
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
+				INFOPLIST_KEY_CFBundleDisplayName = "[D]SOOUM";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_CAMERA_DESCRIPTION)";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_LIBRARY_DESCRIPTION)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -2845,12 +2852,13 @@
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
+				INFOPLIST_KEY_CFBundleDisplayName = "[D]SOOUM";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_CAMERA_DESCRIPTION)";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_LIBRARY_DESCRIPTION)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -2941,9 +2949,10 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SOOUM_APP_ID = "";
+				SOOUM_CAMERA_DESCRIPTION = "숨에서 내 사진을 공유할 수 있도록 카메라 접근 권한을 허용해주세요.";
 				SOOUM_DISPLAY_NAME = "";
+				SOOUM_LIBRARY_DESCRIPTION = "게시글이나 프로필 업로드를 위해 권한이 필요합니다.";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_PHOTO_LIBRARY_DESCRIPTION = "사진 업로드를 위해 갤러리 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3003,9 +3012,10 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SOOUM_APP_ID = "";
+				SOOUM_CAMERA_DESCRIPTION = "숨에서 내 사진을 공유할 수 있도록 카메라 접근 권한을 허용해주세요.";
 				SOOUM_DISPLAY_NAME = "";
+				SOOUM_LIBRARY_DESCRIPTION = "게시글이나 프로필 업로드를 위해 권한이 필요합니다.";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_PHOTO_LIBRARY_DESCRIPTION = "사진 업로드를 위해 갤러리 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
@@ -3024,11 +3034,12 @@
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
+				INFOPLIST_KEY_CFBundleDisplayName = "숨";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_CAMERA_DESCRIPTION)";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_LIBRARY_DESCRIPTION)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -3070,11 +3081,12 @@
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "$(SOOUM_DISPLAY_NAME)";
-				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
-				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
-				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_PHOTO_LIBRARY_DESCRIPTION)";
+				INFOPLIST_KEY_CFBundleDisplayName = "숨";
+				INFOPLIST_KEY_NSCameraUsageDescription = "$(SOOUM_CAMERA_DESCRIPTION)";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "$(SOOUM_LOCATION_DESCRIPTION)";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "$(SOOUM_LIBRARY_DESCRIPTION)";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;

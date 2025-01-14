@@ -22,7 +22,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         static let blockButtonTitle: String = "차단하기"
         
         static let blockDialogTitle: String = "정말 차단하시겠어요?"
-        static let blockDialogSubTitle: String = "해당 사용자의 카드와 댓글을 볼 수 없어요"
+        static let blockDialogSubTitle: String = "해당 사용자의 카드와 답카드를 볼 수 없어요"
     }
     
     
