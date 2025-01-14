@@ -18,7 +18,7 @@ import RxSwift
 class NotificationTabBarController: BaseNavigationViewController, View {
     
     enum Text {
-        static let navigationTitle: String = "덧글 히스토리"
+        static let navigationTitle: String = "알림"
         
         static let tabTotalTitle: String = "전체"
         static let tabCommentTitle: String = "답카드"
