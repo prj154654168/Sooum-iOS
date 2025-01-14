@@ -12,6 +12,7 @@ class CommentHistroyViewReactor: Reactor {
     
     enum Action: Equatable {
         case landing
+        case refresh
         case moreFind(String)
     }
     
@@ -19,16 +20,19 @@ class CommentHistroyViewReactor: Reactor {
         case commentHistories([CommentHistory])
         case more([CommentHistory])
         case updateIsProcessing(Bool)
+        case updateIsLoading(Bool)
     }
     
     struct State {
         var commentHistories: [CommentHistory]
         var isProcessing: Bool
+        var isLoading: Bool
     }
     
     var initialState: State = .init(
         commentHistories: [],
-        isProcessing: false
+        isProcessing: false,
+        isLoading: false
     )
     
     private let networkManager = NetworkManager.shared
@@ -47,6 +51,20 @@ class CommentHistroyViewReactor: Reactor {
                     .delaySubscription(.milliseconds(500), scheduler: MainScheduler.instance)
                     .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
+            ])
+        case .refresh:
+            
+            let request: SettingsRequest = .commentHistory(lastId: nil)
+            
+            return .concat([
+                .just(.updateIsLoading(true)),
+                self.networkManager.request(CommentHistoryResponse.self, request: request)
+                    .flatMapLatest { response -> Observable<Mutation> in
+                        return .just(.commentHistories(response.embedded.commentHistories))
+                    }
+                    .delaySubscription(.milliseconds(500), scheduler: MainScheduler.instance)
+                    .catch(self.catchClosure),
+                .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
             let request: SettingsRequest = .commentHistory(lastId: lastId)
@@ -73,6 +91,8 @@ class CommentHistroyViewReactor: Reactor {
             state.commentHistories += commentHistories
         case let .updateIsProcessing(isProcessing):
             state.isProcessing = isProcessing
+        case let .updateIsLoading(isLoading):
+            state.isLoading = isLoading
         }
         return state
     }
@@ -83,7 +103,8 @@ extension CommentHistroyViewReactor {
     var catchClosure: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
             .concat([
-                .just(.updateIsProcessing(false))
+                .just(.updateIsProcessing(false)),
+                .just(.updateIsLoading(false))
             ])
         }
     }
