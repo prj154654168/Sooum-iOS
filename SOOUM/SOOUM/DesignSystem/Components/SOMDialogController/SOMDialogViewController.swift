@@ -211,7 +211,12 @@ class SOMDialogViewController: UIViewController {
     private func bindUIData() {
         // 제목 및 부제목 텍스트
         titleLabel.text = titleText
-        subTitleLabel.text = subTitleText
+        // TODO: 임시, \n 개행문자가 들어간 string의 정렬을 위해 추가
+        // subTitleLabel.text = subTitleText
+        subTitleLabel.attributedText = NSAttributedString(
+            string: subTitleText ?? "",
+            attributes: Typography.som.body2WithRegular.attributes
+        )
         
         // 좌측 버튼 설정
         if let leftAction = leftAction {
