@@ -40,6 +40,8 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
         
         $0.showsHorizontalScrollIndicator = false
         
+        $0.refreshControl = SOMRefreshControl()
+        
         $0.register(CommentHistoryViewCell.self, forCellWithReuseIdentifier: CommentHistoryViewCell.cellIdentifier)
         
         $0.dataSource = self
@@ -49,6 +51,7 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
     private(set) var commentHistroies = [CommentHistory]()
     
     private var currentOffset: CGFloat = 0
+    private var isRefreshEnabled: Bool = true
     private var isLoadingMore: Bool = true
     
     override var navigationBarHeight: CGFloat {
@@ -85,6 +88,13 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
+            .withLatestFrom(reactor.state.map(\.isLoading))
+            .filter { $0 == false }
+            .map { _ in Reactor.Action.refresh }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
         // State
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
@@ -92,6 +102,20 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
                 if isProcessing { self?.isLoadingMore = false }
             })
             .bind(to: self.activityIndicatorView.rx.isAnimating)
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isLoading)
+            .distinctUntilChanged()
+            .do(onNext: { [weak self] isLoading in
+                if isLoading { self?.isLoadingMore = false }
+            })
+            .subscribe(with: self.collectionView) { collectionView, isLoading in
+                if isLoading {
+                    collectionView.refreshControl?.beginRefreshingFromTop()
+                } else {
+                    collectionView.refreshControl?.endRefreshing()
+                }
+            }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.commentHistories)
@@ -156,6 +180,13 @@ extension CommentHistroyViewController: UICollectionViewDelegateFlowLayout {
             self.reactor?.action.onNext(.moreFind(lastId))
         }
     }
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
+    }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
@@ -167,5 +198,18 @@ extension CommentHistroyViewController: UICollectionViewDelegateFlowLayout {
         // 아래로 스크롤 중일 때, 데이터 추가로드 가능
         self.isLoadingMore = offset > self.currentOffset
         self.currentOffset = offset
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
+        if self.isRefreshEnabled,
+           let refreshControl = self.collectionView.refreshControl,
+           offset <= -(refreshControl.frame.origin.y + 40) {
+            
+            refreshControl.beginRefreshingFromTop()
+        }
     }
 }
