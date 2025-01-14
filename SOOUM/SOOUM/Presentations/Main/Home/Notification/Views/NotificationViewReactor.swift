@@ -37,8 +37,8 @@ class NotificationViewReactor: Reactor {
     }
     
     struct State {
-        var notificationsWithoutRead: [CommentHistoryInNoti]
-        var notifications: [CommentHistoryInNoti]
+        var notificationsWithoutRead: [CommentHistoryInNoti]?
+        var notifications: [CommentHistoryInNoti]?
         var withoutReadNotisCount: String
         var isProcessing: Bool
         var isLoading: Bool
@@ -46,8 +46,8 @@ class NotificationViewReactor: Reactor {
     }
     
     var initialState: State = .init(
-        notificationsWithoutRead: [],
-        notifications: [],
+        notificationsWithoutRead: nil,
+        notifications: nil,
         withoutReadNotisCount: "0",
         isProcessing: false,
         isLoading: false,
@@ -124,9 +124,9 @@ class NotificationViewReactor: Reactor {
         case let .notifications(notifications):
             state.notifications = notifications
         case let .moreWithoutRead(notificationsWithoutRead):
-            state.notificationsWithoutRead += notificationsWithoutRead
+            state.notificationsWithoutRead? += notificationsWithoutRead
         case let .more(notifications):
-            state.notifications += notifications
+            state.notifications? += notifications
         case let .withoutReadNotiscount(withoutReadNotisCount):
             state.withoutReadNotisCount = withoutReadNotisCount
         case let .updateIsProcessing(isProcessing):

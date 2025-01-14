@@ -25,13 +25,13 @@ class MainHomePopularViewReactor: Reactor {
     }
     
     struct State {
-        var displayedCardsWithUpdate: CardsWithUpdate
+        var displayedCardsWithUpdate: CardsWithUpdate?
         var isLoading: Bool
         var isProcessing: Bool
     }
     
     var initialState: State = .init(
-        displayedCardsWithUpdate: (cards: [], isUpdate: false),
+        displayedCardsWithUpdate: nil,
         isLoading: false,
         isProcessing: false
     )

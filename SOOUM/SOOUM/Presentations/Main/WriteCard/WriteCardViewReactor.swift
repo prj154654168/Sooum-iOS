@@ -43,12 +43,12 @@ class WriteCardViewReactor: Reactor {
     }
     
     struct State {
-        var isWrite: Bool
+        var isWrite: Bool?
         var relatedTags: [RelatedTag]
     }
     
     var initialState: State = .init(
-        isWrite: false,
+        isWrite: nil,
         relatedTags: []
     )
     

@@ -106,7 +106,7 @@ class MainTabBarController: SOMTabBarController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.entranceType)
-            .distinctUntilChanged()
+            .filter { $0 != .none }
             .subscribe(with: self) { object, entranceType in
                 
                 guard let navigationController = object.viewControllers[0] as? UINavigationController,
@@ -136,7 +136,8 @@ class MainTabBarController: SOMTabBarController, View {
                         animated: false,
                         bottomBarHidden: true
                     )
-                default: break
+                case .none:
+                    break
                 }
             }
             .disposed(by: self.disposeBag)

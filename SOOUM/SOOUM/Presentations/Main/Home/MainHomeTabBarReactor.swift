@@ -24,12 +24,12 @@ class MainHomeTabBarReactor: Reactor {
     }
     
     struct State {
-        var hasNotisWithoutRead: Bool
+        var noNotisWithoutRead: Bool
         var isReadCompleted: Bool
     }
     
     var initialState: State = .init(
-        hasNotisWithoutRead: false,
+        noNotisWithoutRead: true,
         isReadCompleted: false
     )
     
@@ -54,8 +54,8 @@ class MainHomeTabBarReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case let .notisWithoutRead(hasNotisWithoutRead):
-            state.hasNotisWithoutRead = hasNotisWithoutRead
+        case let .notisWithoutRead(noNotisWithoutRead):
+            state.noNotisWithoutRead = noNotisWithoutRead
         case let .updateIsReadCompleted(isReadCompleted):
             state.isReadCompleted = isReadCompleted
         }
