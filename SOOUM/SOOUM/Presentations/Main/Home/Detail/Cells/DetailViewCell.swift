@@ -94,15 +94,17 @@ class DetailViewCell: UICollectionViewCell {
         didSet {
             if let prevCard = self.prevCard {
                 self.isPrevCardExist = true
-                if prevCard.previousCardId == "-1" {
-                    self.isPrevCardDeleted()
-                } else {
-                    self.prevCardBackgroundImageView.setImage(
-                        strUrl: prevCard.previousCardImgLink?.url ?? ""
-                    )
-                }
+                self.prevCardBackgroundImageView.setImage(strUrl: prevCard.previousCardImgLink?.url ?? "")
             } else {
                 self.isPrevCardExist = false
+            }
+        }
+    }
+    
+    var isPrevCardDelete: Bool? {
+        didSet {
+            if self.isPrevCardDelete ?? false {
+                self.isPrevCardDeleted()
             }
         }
     }

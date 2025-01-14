@@ -248,10 +248,11 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: self.disposeBag)
          
-         reactor.state.map(\.errorMessage)
+         reactor.state.map(\.isErrorOccur)
              .distinctUntilChanged()
-             .skip(1)
-             .subscribe(with: self) { object, errorMessage in
+             .filterNil()
+             .filter { $0 }
+             .subscribe(with: self) { object, _ in
                  guard reactor.entranceType == .navi else {
                      let notificationTabBarController = NotificationTabBarController()
                      notificationTabBarController.reactor = reactor.reactorForNoti()
@@ -261,7 +262,7 @@ class DetailViewController: BaseNavigationViewController, View {
                      
                      return
                  }
-                 object.isDeleted = errorMessage != nil
+                 object.isDeleted = true
                  
                  UIView.performWithoutAnimation {
                      object.collectionView.reloadData()
@@ -316,6 +317,7 @@ extension DetailViewController: UICollectionViewDataSource {
         cell.setDatas(model, tags: tags)
         cell.tags.delegate = self
         cell.isOwnCard = self.detailCard.isOwnCard
+        cell.isPrevCardDelete = self.detailCard.isPreviousCardDelete
         cell.prevCard = self.prevCard
         cell.member = self.detailCard.member
         

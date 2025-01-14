@@ -75,6 +75,7 @@ struct DetailCard: CardProtocol {
     let isCommentWritten: Bool
     
     let isOwnCard: Bool
+    let isPreviousCardDelete: Bool
     
     let member: Member
     let tags: [Tag]
@@ -93,6 +94,7 @@ struct DetailCard: CardProtocol {
         case isLiked
         case isCommentWritten
         case isOwnCard
+        case isPreviousCardDelete
         case member
         case tags
     }
@@ -120,6 +122,7 @@ extension DetailCard {
         self.isLiked = false
         self.isCommentWritten = false
         self.isOwnCard = false
+        self.isPreviousCardDelete = false
         self.member = .init()
         self.tags = []
     }
@@ -143,6 +146,7 @@ extension DetailCard {
         self.isCommentWritten = try container.decode(Bool.self, forKey: .isCommentWritten)
         
         self.isOwnCard = try container.decode(Bool.self, forKey: .isOwnCard)
+        self.isPreviousCardDelete = try container.decode(Bool.self, forKey: .isPreviousCardDelete)
         self.member = try container.decode(Member.self, forKey: .member)
         self.tags = try container.decodeIfPresent([Tag].self, forKey: .tags) ?? []
     }
