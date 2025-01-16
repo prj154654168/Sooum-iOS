@@ -94,6 +94,12 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
     }
         
     var initialState = State()
+    
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
 
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
@@ -138,9 +144,16 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
     }
     
     private func join() -> Observable<Mutation> {
-        return AuthManager.shared.join()
+        return self.provider.authManager.join()
             .map { result in
                 Mutation.signUpResult(result)
             }
+    }
+}
+
+extension OnboardingTermsOfServiceViewReactor {
+    
+    func reactorForNickname() -> OnboardingNicknameSettingViewReactor {
+        OnboardingNicknameSettingViewReactor(provider: self.provider)
     }
 }

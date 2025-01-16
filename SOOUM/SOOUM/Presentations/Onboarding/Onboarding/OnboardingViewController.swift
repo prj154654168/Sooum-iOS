@@ -15,7 +15,7 @@ import RxSwift
 import SnapKit
 import Then
 
-class OnboardingViewController: BaseViewController {
+class OnboardingViewController: BaseViewController, View {
     
     let backgroundImageView = UIImageView().then {
         $0.image = .init(.image(.login))
@@ -63,25 +63,6 @@ class OnboardingViewController: BaseViewController {
         $0.backgroundColor = .clear
     }
     
-    override func bind() {
-        startButtonLabel.rx.tapGesture()
-            .when(.recognized)
-            .subscribe(with: self) { object, _ in
-                let termsOfServiceVC = OnboardingTermsOfServiceViewController()
-                termsOfServiceVC.reactor = OnboardingTermsOfServiceViewReactor()
-                object.navigationController?.pushViewController(termsOfServiceVC, animated: true)
-            }
-            .disposed(by: disposeBag)
-      
-        oldUserButtonLabel.rx.tap
-            .subscribe(with: self) { object, _ in
-              let enterMemberTransferViewController = EnterMemberTransferViewController()
-              enterMemberTransferViewController.reactor = EnterMemberTransferViewReactor(entranceType: .onboarding)
-              object.navigationPush(enterMemberTransferViewController, animated: true, bottomBarHidden: true)
-            }
-            .disposed(by: disposeBag)
-    }
-    
     override func setupConstraints() {
         view.addSubview(backgroundImageView)
         backgroundImageView.snp.makeConstraints {
@@ -109,5 +90,28 @@ class OnboardingViewController: BaseViewController {
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
             $0.top.equalTo(startButtonLabel.snp.bottom).offset(10)
         }
+    }
+    
+    
+    // MARK: ReactorKit - bind
+    
+    func bind(reactor: OnboardingViewReactor) {
+        
+        startButtonLabel.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(with: self) { object, _ in
+                let termsOfServiceVC = OnboardingTermsOfServiceViewController()
+                termsOfServiceVC.reactor = reactor.reactorForTermsOfService()
+                object.navigationPush(termsOfServiceVC, animated: true)
+            }
+            .disposed(by: disposeBag)
+        
+        oldUserButtonLabel.rx.tap
+            .subscribe(with: self) { object, _ in
+              let enterMemberTransferViewController = EnterMemberTransferViewController()
+              enterMemberTransferViewController.reactor = reactor.reactorForEnterTransfer()
+              object.navigationPush(enterMemberTransferViewController, animated: true, bottomBarHidden: true)
+            }
+            .disposed(by: disposeBag)
     }
 }

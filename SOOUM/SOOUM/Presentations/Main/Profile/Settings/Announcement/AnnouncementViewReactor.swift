@@ -30,14 +30,18 @@ class AnnouncementViewReactor: Reactor {
         isLoading: false
     )
     
-    private let networkManager = NetworkManager.shared
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
             let request: SettingsRequest = .announcement
             
-            return self.networkManager.request(AnnouncementResponse.self, request: request)
+            return self.provider.networkManager.request(AnnouncementResponse.self, request: request)
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.announcements(response.embedded.announcements))
                 }
@@ -46,7 +50,7 @@ class AnnouncementViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsLoading(true)),
-                self.networkManager.request(AnnouncementResponse.self, request: request)
+                self.provider.networkManager.request(AnnouncementResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.announcements(response.embedded.announcements))
                     }

@@ -35,12 +35,12 @@ class ResignViewReactor: Reactor {
         isProcessing: false
     )
     
-    private let networkManager = NetworkManager.shared
-    private let authManager = AuthManager.shared
+    let provider: ManagerProviderType
     
     let banEndAt: Date?
     
-    init(banEndAt: Date? = nil) {
+    init(provider: ManagerProviderType, banEndAt: Date? = nil) {
+        self.provider = provider
         self.banEndAt = banEndAt
     }
     
@@ -49,14 +49,14 @@ class ResignViewReactor: Reactor {
         case let .check(isCheck):
             return .just(.updateCheck(!isCheck))
         case .resign:
-            let requset: SettingsRequest = .resign(token: self.authManager.authInfo.token)
+            let requset: SettingsRequest = .resign(token: self.provider.authManager.authInfo.token)
             
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.networkManager.request(Status.self, request: requset)
+                self.provider.networkManager.request(Status.self, request: requset)
                     .withUnretained(self)
                     .flatMapLatest { object, _ -> Observable<Mutation> in
-                        object.authManager.initializeAuthInfo()
+                        object.provider.authManager.initializeAuthInfo()
                         
                         return .just(.updateIsSuccess(true))
                     }

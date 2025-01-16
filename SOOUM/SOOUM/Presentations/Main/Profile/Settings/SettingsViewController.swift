@@ -241,7 +241,7 @@ class SettingsViewController: BaseNavigationViewController, View {
                 let subject = Text.inquiryMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                 let guideMessage = """
                     \(Text.identificationInfo)
-                    \(reactor.authManager.authInfo.token.refreshToken)\n
+                    \(reactor.provider.authManager.authInfo.token.refreshToken)\n
                     \(Text.inquiryMailGuideMessage)
                 """
                 let body = guideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -260,7 +260,7 @@ class SettingsViewController: BaseNavigationViewController, View {
                 let subject = Text.suggestMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                 let guideMessage = """
                     \(Text.identificationInfo)
-                    \(reactor.authManager.authInfo.token.refreshToken)\n
+                    \(reactor.provider.authManager.authInfo.token.refreshToken)\n
                     \(Text.suggestMailGuideMessage)
                 """
                 let body = guideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""

@@ -502,9 +502,11 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
 extension DetailViewController: SOMTagsDelegate {
     
     func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
+        
+        guard let reactor = self.reactor else { return }
+        
         let tagDetailVC = TagDetailViewController()
-        let tagDetailReactor = TagDetailViewrReactor(tagID: model.id)
-        tagDetailVC.reactor = tagDetailReactor
+        tagDetailVC.reactor = reactor.reactorForTagDetail(model.id)
         self.navigationPush(tagDetailVC, animated: true)
     }
 }

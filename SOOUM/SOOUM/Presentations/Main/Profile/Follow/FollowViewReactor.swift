@@ -55,17 +55,22 @@ class FollowViewReactor: Reactor {
         isLoading: false
     )
     
+    let provider: ManagerProviderType
     let entranceType: EntranceType
     let viewType: ViewType
     let memberId: String?
     
-    init(type entranceType: EntranceType, view viewType: ViewType, memberId: String? = nil) {
+    init(
+        provider: ManagerProviderType,
+        type entranceType: EntranceType,
+        view viewType: ViewType,
+        memberId: String? = nil
+    ) {
+        self.provider = provider
         self.entranceType = entranceType
         self.viewType = viewType
         self.memberId = memberId
     }
-    
-    private let networkManager = NetworkManager.shared
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
@@ -93,7 +98,7 @@ class FollowViewReactor: Reactor {
         case let .request(memberId):
             let request: ProfileRequest = .requestFollow(memberId: memberId)
             
-            return self.networkManager.request(Empty.self, request: request)
+            return self.provider.networkManager.request(Empty.self, request: request)
                 .flatMapLatest { _ -> Observable<Mutation> in
                     return .just(.updateIsRequest(true))
                 }
@@ -101,7 +106,7 @@ class FollowViewReactor: Reactor {
         case let .cancel(memberId):
             let request: ProfileRequest = .cancelFollow(memberId: memberId)
             
-            return self.networkManager.request(Empty.self, request: request)
+            return self.provider.networkManager.request(Empty.self, request: request)
                 .flatMapLatest { _ -> Observable<Mutation> in
                     return .just(.updateIsCancel(true))
                 }
@@ -157,13 +162,13 @@ extension FollowViewReactor {
         
         switch self.entranceType {
         case .following:
-            return self.networkManager.request(FollowingResponse.self, request: request)
+            return self.provider.networkManager.request(FollowingResponse.self, request: request)
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.follows(response.embedded.followings))
                 }
                 .catch(self.catchClosure)
         case .follower:
-            return self.networkManager.request(FollowerResponse.self, request: request)
+            return self.provider.networkManager.request(FollowerResponse.self, request: request)
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.follows(response.embedded.followers))
                 }
@@ -194,13 +199,13 @@ extension FollowViewReactor {
         
         switch self.entranceType {
         case .following:
-            return self.networkManager.request(FollowingResponse.self, request: request)
+            return self.provider.networkManager.request(FollowingResponse.self, request: request)
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.more(response.embedded.followings))
                 }
                 .catch(self.catchClosure)
         case .follower:
-            return self.networkManager.request(FollowerResponse.self, request: request)
+            return self.provider.networkManager.request(FollowerResponse.self, request: request)
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.more(response.embedded.followers))
                 }
@@ -212,11 +217,11 @@ extension FollowViewReactor {
 extension FollowViewReactor {
     
     func reactorForProfile(type: ProfileViewReactor.EntranceType, _ memberId: String) -> ProfileViewReactor {
-        ProfileViewReactor.init(type: type, memberId: memberId)
+        ProfileViewReactor(provider: self.provider, type: type, memberId: memberId)
     }
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor.init(pushInfo: nil)
+        MainTabBarReactor(provider: self.provider)
     }
 }
 

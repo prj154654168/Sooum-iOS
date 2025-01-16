@@ -31,17 +31,16 @@ class SettingsViewReactor: Reactor {
     
     var initialState: State
     
-    private let networkManager = NetworkManager.shared
-    private let pushManager = PushManager.shared
-    let authManager = AuthManager.shared
+    let provider: ManagerProviderType
     
     private let disposeBag = DisposeBag()
     
-    init() {
+    init(provider: ManagerProviderType) {
+        self.provider = provider
         
         self.initialState = .init(
             banEndAt: nil,
-            notificationStatus: self.pushManager.notificationStatus,
+            notificationStatus: self.provider.pushManager.notificationStatus,
             isProcessing: false
         )
         
@@ -51,7 +50,7 @@ class SettingsViewReactor: Reactor {
     
     private func subscribe() {
 
-        self.pushManager.rx.observe(\.notificationStatus)
+        (self.provider.pushManager as? PushManager)?.rx.observe(\.notificationStatus)
             .map(Action.updateNotificationStatus)
             .bind(to: self.action)
             .disposed(by: self.disposeBag)
@@ -63,12 +62,12 @@ class SettingsViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.networkManager.request(SettingsResponse.self, request: SettingsRequest.activate)
+                self.provider.networkManager.request(SettingsResponse.self, request: SettingsRequest.activate)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.updateBanEndAt(response.banEndAt))
                     }
                     .catch(self.catchClosure),
-                self.networkManager.request(
+                self.provider.networkManager.request(
                     NotificationAllowResponse.self,
                     request: SettingsRequest.notificationAllow(isAllowNotify: nil)
                 )
@@ -79,7 +78,7 @@ class SettingsViewReactor: Reactor {
                 .just(.updateIsProcessing(false))
             ])
         case let .updateNotificationStatus(state):
-            return self.networkManager.request(
+            return self.provider.networkManager.request(
                 Empty.self,
                 request: SettingsRequest.notificationAllow(isAllowNotify: state)
             )
@@ -118,22 +117,22 @@ extension SettingsViewReactor {
 extension SettingsViewReactor {
     
     func reactorForCommentHistory() -> CommentHistroyViewReactor {
-        CommentHistroyViewReactor.init()
+        CommentHistroyViewReactor(provider: self.provider)
     }
     
     func reactorForTransferIssue() -> IssueMemberTransferViewReactor {
-        IssueMemberTransferViewReactor.init()
+        IssueMemberTransferViewReactor(provider: self.provider)
     }
     
     func reactorForTransferEnter() -> EnterMemberTransferViewReactor {
-        EnterMemberTransferViewReactor.init(entranceType: .settings)
+        EnterMemberTransferViewReactor(provider: self.provider, entranceType: .settings)
     }
     
     func reactorForResign() -> ResignViewReactor {
-        ResignViewReactor.init(banEndAt: self.currentState.banEndAt)
+        ResignViewReactor(provider: self.provider, banEndAt: self.currentState.banEndAt)
     }
     
     func reactorForAnnouncement() -> AnnouncementViewReactor {
-        AnnouncementViewReactor.init()
+        AnnouncementViewReactor(provider: self.provider)
     }
 }

@@ -46,7 +46,12 @@ class OnboardingNicknameSettingViewReactor: Reactor {
     }
 
     var initialState = State()
-    private let networkManager = NetworkManager.shared
+    
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
 
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
@@ -87,12 +92,19 @@ class OnboardingNicknameSettingViewReactor: Reactor {
             return Observable.just(.success((nickname: nickname, isValid: .overEight)))
         }
         
-        return networkManager.request(NicknameValidationResponse.self, request: request)
+        return self.provider.networkManager.request(NicknameValidationResponse.self, request: request)
             .map { response in
                 Result.success((nickname: nickname, isValid: response.isAvailable ? .vaild : .invalid))
             }
             .catch { error in
                 Observable.just(Result.failure(error))
             }
+    }
+}
+
+extension OnboardingNicknameSettingViewReactor {
+    
+    func reactorForProfileImage(nickname: String) -> ProfileImageSettingViewReactor {
+        ProfileImageSettingViewReactor(provider: self.provider, nickname: nickname)
     }
 }

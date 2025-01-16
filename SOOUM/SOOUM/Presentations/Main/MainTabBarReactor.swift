@@ -36,7 +36,11 @@ class MainTabBarReactor: Reactor {
     private let willNavigate: EntranceType
     let pushInfo: NotificationInfo?
     
-    init(pushInfo: NotificationInfo? = nil) {
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType, pushInfo: NotificationInfo? = nil) {
+        self.provider = provider
+        
         var willNavigate: EntranceType {
             switch pushInfo?.notificationType {
             case .feedLike, .commentLike, .commentWrite:
@@ -71,22 +75,26 @@ class MainTabBarReactor: Reactor {
 extension MainTabBarReactor {
     
     func reactorForMainHome() -> MainHomeTabBarReactor {
-        MainHomeTabBarReactor.init()
+        MainHomeTabBarReactor(provider: self.provider)
     }
     
     func reactorForWriteCard() -> WriteCardViewReactor {
-        WriteCardViewReactor(type: .card)
+        WriteCardViewReactor(provider: self.provider, type: .card)
+    }
+    
+    func reactorForTags() -> TagsViewReactor {
+        TagsViewReactor(provider: self.provider)
     }
     
     func reactorForProfile() -> ProfileViewReactor {
-        ProfileViewReactor(type: .my, memberId: nil)
+        ProfileViewReactor(provider: self.provider, type: .my, memberId: nil)
     }
     
     func reactorForNoti() -> NotificationTabBarReactor {
-        NotificationTabBarReactor()
+        NotificationTabBarReactor(provider: self.provider)
     }
     
     func reactorForDetail(_ targetCardId: String) -> DetailViewReactor {
-        DetailViewReactor(type: .push, targetCardId)
+        DetailViewReactor(provider: self.provider, type: .push, targetCardId)
     }
 }

@@ -30,7 +30,11 @@ class IssueMemberTransferViewReactor: Reactor {
         isProcessing: false
     )
     
-    private let networkManager = NetworkManager.shared
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
@@ -39,7 +43,7 @@ class IssueMemberTransferViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.networkManager.request(TransferCodeResponse.self, request: request)
+                self.provider.networkManager.request(TransferCodeResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.updateTransferCode(response.transferCode))
                     }
@@ -51,7 +55,7 @@ class IssueMemberTransferViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.networkManager.request(TransferCodeResponse.self, request: request)
+                self.provider.networkManager.request(TransferCodeResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.updateTransferCode(response.transferCode))
                     }

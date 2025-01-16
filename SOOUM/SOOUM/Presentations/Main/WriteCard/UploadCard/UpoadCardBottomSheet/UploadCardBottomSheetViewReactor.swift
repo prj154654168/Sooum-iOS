@@ -53,10 +53,11 @@ class UploadCardBottomSheetViewReactor: Reactor {
        defaultImages: []
     )
     
-    private let networkManager = NetworkManager.shared
+    let provider: ManagerProviderType
     let requestType: RequestType
     
-    init(type requestType: RequestType) {
+    init(provider: ManagerProviderType, type requestType: RequestType) {
+        self.provider = provider
         self.requestType = requestType
     }
     
@@ -85,7 +86,7 @@ class UploadCardBottomSheetViewReactor: Reactor {
         
         let request: UploadRequest = .defaultImages
         
-        return self.networkManager.request(DefaultCardImageResponse.self, request: request)
+        return self.provider.networkManager.request(DefaultCardImageResponse.self, request: request)
             .map(\.embedded.imgURLInfoList)
             .flatMap { imageInfoList -> Observable<Mutation> in
                 let imageURLWithNames: [ImageURLWithName] = imageInfoList.map {
@@ -134,7 +135,7 @@ class UploadCardBottomSheetViewReactor: Reactor {
 
         let presignedURLRequest: UploadRequest = .presignedURL
         
-        return self.networkManager.request(PresignedStorageResponse.self, request: presignedURLRequest)
+        return self.provider.networkManager.request(PresignedStorageResponse.self, request: presignedURLRequest)
             .flatMap { [weak self] presignedResponse -> Observable<Mutation> in
                 guard let self = self else { return Observable.just(Mutation.myImageName("")) }
                 

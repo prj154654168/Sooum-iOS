@@ -128,6 +128,7 @@ class LaunchScreenViewController: BaseViewController, View {
             .filter { $0 == false }
             .subscribe(with: self) { object, _ in
                 let viewController = OnboardingViewController()
+                viewController.reactor = reactor.reactorForOnboarding()
                 let navigationController = UINavigationController(
                     rootViewController: viewController
                 )

@@ -35,6 +35,8 @@ class TagDetailViewrReactor: Reactor {
     
     var initialState = State()
     
+    let provider: ManagerProviderType
+    
     private let tagID: String
   
     var emptyTagMode: EmptyTagDetailTableViewCell.Mode {
@@ -44,8 +46,8 @@ class TagDetailViewrReactor: Reactor {
       return cardCnt == 0 ? .noCardsRegistered : .noCardsCanView
     }
     
-    init(initialState: State = State(), tagID: String) {
-        self.initialState = initialState
+    init(provider: ManagerProviderType, tagID: String) {
+        self.provider = provider
         self.tagID = tagID
     }
     
@@ -94,7 +96,7 @@ class TagDetailViewrReactor: Reactor {
     private func fetchTagCards() -> Observable<Mutation> {
         let request: TagRequest = .tagCard(tagID: tagID)
         
-        return NetworkManager.shared.request(TagDetailCardResponse.self, request: request)
+        return self.provider.networkManager.request(TagDetailCardResponse.self, request: request)
             .map { response in
                 return Mutation.tagCards(response.embedded.tagFeedCardDtoList)
             }
@@ -106,7 +108,7 @@ class TagDetailViewrReactor: Reactor {
     private func fetchTagInfo() -> Observable<Mutation> {
         let request: TagRequest = .tagInfo(tagID: tagID)
         
-        return NetworkManager.shared.request(TagInfoResponse.self, request: request)
+        return self.provider.networkManager.request(TagInfoResponse.self, request: request)
             .map { response in
                 return Mutation.tagInfo(response)
             }
@@ -119,7 +121,7 @@ class TagDetailViewrReactor: Reactor {
         
         let request: TagRequest = tagInfo.isFavorite ? .deleteFavorite(tagID: tagID) : .addFavorite(tagID: tagID)
 
-        return NetworkManager.shared.request(AddFavoriteTagResponse.self, request: request)
+        return self.provider.networkManager.request(AddFavoriteTagResponse.self, request: request)
             .map { _ in
                 let newTagInfo = TagInfoResponse(
                     content: tagInfo.content,
@@ -129,5 +131,12 @@ class TagDetailViewrReactor: Reactor {
                 )
                 return Mutation.updateFavorite(newTagInfo)
             }
+    }
+}
+
+extension TagDetailViewrReactor {
+    
+    func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
+        DetailViewReactor(provider: self.provider, selectedId)
     }
 }

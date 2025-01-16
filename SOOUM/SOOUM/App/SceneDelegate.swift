@@ -18,12 +18,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
 
         let viewController = LaunchScreenViewController()
-        viewController.reactor = LaunchScreenViewReactor()
+        viewController.reactor = LaunchScreenViewReactor(provider: appDelegate.provider)
 
         window?.rootViewController = viewController
         window?.backgroundColor = .white
@@ -36,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if let infoDic: [String: Any] = userInfo as? [String: Any] {
                 
                 let info = NotificationInfo(infoDic)
-                PushManager.shared.setupRootViewController(info, terminated: true)
+                appDelegate.provider.pushManager.setupRootViewController(info, terminated: true)
             }
         }
     }

@@ -42,13 +42,16 @@ class MainHomeDistanceViewReactor: Reactor {
         isProcessing: false
     )
     
-    private let networkManager = NetworkManager.shared
-    private let locationManager = LocationManager.shared
+    let provider: ManagerProviderType
     
     let simpleCache = SimpleCache.shared
     
     // TODO: 페이징
     // private let countPerLoading: Int = 10
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
     
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -130,8 +133,8 @@ extension MainHomeDistanceViewReactor {
     
     func refresh(_ distanceFilter: String) -> Observable<Mutation> {
         
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let latitude = self.provider.locationManager.coordinate.latitude
+        let longitude = self.provider.locationManager.coordinate.longitude
         
         let request: CardRequest = .distancCard(
             lastId: nil,
@@ -140,7 +143,7 @@ extension MainHomeDistanceViewReactor {
             distanceFilter: distanceFilter
         )
         
-        return self.networkManager.request(DistanceCardResponse.self, request: request)
+        return self.provider.networkManager.request(DistanceCardResponse.self, request: request)
             .map(\.embedded.cards)
             .withUnretained(self)
             .map { object, cards in
@@ -155,8 +158,8 @@ extension MainHomeDistanceViewReactor {
     
     func moreFind(_ lastId: String) -> Observable<Mutation> {
         
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let latitude = self.provider.locationManager.coordinate.latitude
+        let longitude = self.provider.locationManager.coordinate.longitude
         
         let distanceFilter = self.currentState.distanceFilter
         
@@ -167,7 +170,7 @@ extension MainHomeDistanceViewReactor {
             distanceFilter: distanceFilter
         )
         
-        return self.networkManager.request(DistanceCardResponse.self, request: request)
+        return self.provider.networkManager.request(DistanceCardResponse.self, request: request)
             .map(\.embedded.cards)
             .withUnretained(self)
             .map { object, cards in

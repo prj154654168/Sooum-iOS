@@ -51,12 +51,13 @@ class TagsViewController: BaseViewController, View {
     private var isRefreshEnabled: Bool = false
     private var isLoadingMore: Bool = false
     
-    override func bind() {
+    func bind(reactor: TagsViewReactor) {
+        
         tagSearchTextFieldView.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
                 let searchVC = TagSearchViewController()
-                searchVC.reactor = TagSearchViewReactor()
+                searchVC.reactor = reactor.reactorForSearch()
                 let navigationController = UINavigationController(
                     rootViewController: searchVC
                 )
@@ -66,9 +67,7 @@ class TagsViewController: BaseViewController, View {
                 object.present(navigationController, animated: false)
             }
             .disposed(by: self.disposeBag)
-    }
-    
-    func bind(reactor: TagsViewReactor) {
+        
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.fetchTags)
@@ -195,7 +194,7 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
             .when(.recognized)
             .subscribe(with: self) { object, gesture in
                 if cell.favoriteTagView.isTappedDirectly(gesture: gesture) {
-                    object.pushTagdetailVC(tagID: favoriteTag.id)
+                    object.pushTagdetailVC(reactor: reactor, tagID: favoriteTag.id)
                 }
             }
             .disposed(by: cell.disposeBag)
@@ -203,25 +202,25 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         cell.favoriteTagView.moreButtonStackView.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, gesture in
-                object.pushTagdetailVC(tagID: favoriteTag.id)
+                object.pushTagdetailVC(reactor: reactor, tagID: favoriteTag.id)
             }
             .disposed(by: cell.disposeBag)
 
         cell.previewCardTapped
             .subscribe(with: self) { object, previewCardID in
                 let detailViewController = DetailViewController()
-                detailViewController.reactor = DetailViewReactor(previewCardID)
-                self.navigationPush(detailViewController, animated: true)
+                detailViewController.reactor = reactor.reactorForDetail(previewCardID)
+                object.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: cell.disposeBag)
         
         return cell
     }
     
-    private func pushTagdetailVC(tagID: String) {
+    private func pushTagdetailVC(reactor: TagsViewReactor, tagID: String) {
         let tagDetailVC = TagDetailViewController()
-        tagDetailVC.reactor = TagDetailViewrReactor(tagID: tagID)
-        self.navigationController?.pushViewController(tagDetailVC, animated: true)
+        tagDetailVC.reactor = reactor.reactorForTagDetail(tagID)
+        self.navigationPush(tagDetailVC, animated: true)
     }
     
     private func createRecommendTagTableViewCell(indexPath: IndexPath) -> RecommendTagTableViewCell {
@@ -241,8 +240,8 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
                 .subscribe(with: self) { object, _ in
                     let tagID = reactor.currentState.recommendTags[indexPath.row].tagID
                     let tagDetailVC = TagDetailViewController()
-                    tagDetailVC.reactor = TagDetailViewrReactor(tagID: tagID)
-                    object.navigationController?.pushViewController(tagDetailVC, animated: true)
+                    tagDetailVC.reactor = reactor.reactorForTagDetail(tagID)
+                    object.navigationPush(tagDetailVC, animated: true)
                 }
                 .disposed(by: cell.disposeBag)
         }

@@ -94,7 +94,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
                 shouldNavigate && ((self?.reactor?.currentState.isAllAgreed) != nil)
             }
             .subscribe(with: self) { object, _ in
-                object.navigateToNicknameSetting()
+                object.navigateToNicknameSetting(reactor)
             }
             .disposed(by: disposeBag)
         
@@ -148,9 +148,9 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .disposed(by: self.disposeBag)
     }
     
-    private func navigateToNicknameSetting() {
+    private func navigateToNicknameSetting(_ reactor: OnboardingTermsOfServiceViewReactor) {
         let nicknameSettingVC = OnboardingNicknameSettingViewController()
-        nicknameSettingVC.reactor = OnboardingNicknameSettingViewReactor()
+        nicknameSettingVC.reactor = reactor.reactorForNickname()
         navigationController?.pushViewController(nicknameSettingVC, animated: true)
     }
 
