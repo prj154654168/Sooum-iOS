@@ -46,6 +46,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         $0.title = Text.wirteButtonTitle
         $0.typography = .som.body2WithBold
         $0.foregroundColor = .som.gray700
+        
+        $0.isEnabled = false
     }
     
     lazy var writeCardView = WriteCardView().then {
@@ -202,8 +204,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
         .disposed(by: self.disposeBag)
             
         // Update image for textView
-        self.uploadCardBottomSheetViewController.bottomSheetImageSelected
-            .distinctUntilChanged()
+        let bottomSheetImageSelected = self.uploadCardBottomSheetViewController.bottomSheetImageSelected.distinctUntilChanged().share()
+        bottomSheetImageSelected
+            .filterNil()
             .bind(to: self.writeCardView.writeCardTextView.rx.image)
             .disposed(by: self.disposeBag)
         
@@ -265,8 +268,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .share(replay: 1, scope: .whileConnected)
         
         // 네비게이션 바 작성하기 버튼 attributes 설정
-        content
-            .map { !$0.isEmpty }
+        Observable.combineLatest(
+            content,
+            bottomSheetImageSelected,
+            resultSelector: { $0.isEmpty == false && $1 != nil }
+        )
             .subscribe(with: self) { object, isEnabled in
                 
                 object.writeButton.isEnabled = isEnabled
