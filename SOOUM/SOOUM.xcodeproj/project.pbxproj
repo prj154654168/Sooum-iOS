@@ -376,6 +376,10 @@
 		388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388DA1032C8F545E00A9DD56 /* Typography+SOOUM.swift */; };
 		388FCAD02CFAC2BF0012C4D6 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388FCACF2CFAC2BF0012C4D6 /* Notification.swift */; };
 		388FCAD12CFAC2BF0012C4D6 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388FCACF2CFAC2BF0012C4D6 /* Notification.swift */; };
+		3893B6CE2D36728000F2004C /* ManagerProviderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3893B6CD2D36728000F2004C /* ManagerProviderType.swift */; };
+		3893B6CF2D36728000F2004C /* ManagerProviderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3893B6CD2D36728000F2004C /* ManagerProviderType.swift */; };
+		3893B6D12D36739500F2004C /* CompositeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3893B6D02D36739500F2004C /* CompositeManager.swift */; };
+		3893B6D22D36739500F2004C /* CompositeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3893B6D02D36739500F2004C /* CompositeManager.swift */; };
 		389681102CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */; };
 		389681112CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */; };
 		389EF8172D2F450000E053AE /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF8162D2F450000E053AE /* Log.swift */; };
@@ -462,6 +466,12 @@
 		38D869642CF821F900BF87DA /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D869622CF821F900BF87DA /* UserDefaults.swift */; };
 		38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
 		38D8E2922CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
+		38E9CE102D376E0E00E85A2D /* PushTokenSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */; };
+		38E9CE112D376E0E00E85A2D /* PushTokenSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */; };
+		38E9CE132D37711600E85A2D /* OnboardingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */; };
+		38E9CE142D37711600E85A2D /* OnboardingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */; };
+		38E9CE192D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */; };
+		38E9CE1A2D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */; };
 		38F131882CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */; };
 		38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */; };
 		38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3D92F2D06C2370049F575 /* SOMAnimationTransitioning.swift */; };
@@ -705,6 +715,8 @@
 		388DA1032C8F545E00A9DD56 /* Typography+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Typography+SOOUM.swift"; sourceTree = "<group>"; };
 		388DCC382C8707C200DC5329 /* Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-dev.plist"; sourceTree = "<group>"; };
 		388FCACF2CFAC2BF0012C4D6 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		3893B6CD2D36728000F2004C /* ManagerProviderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerProviderType.swift; sourceTree = "<group>"; };
+		3893B6D02D36739500F2004C /* CompositeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeManager.swift; sourceTree = "<group>"; };
 		3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewReactor.swift; sourceTree = "<group>"; };
 		389EF8162D2F450000E053AE /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		389EF8192D2F454600E053AE /* Log+Extract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+Extract.swift"; sourceTree = "<group>"; };
@@ -750,6 +762,9 @@
 		38D6F1852CC24C4F00E11530 /* WriteCardTextViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardTextViewDelegate.swift; sourceTree = "<group>"; };
 		38D869622CF821F900BF87DA /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		38D8E2902CCD232B00CE2E0A /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTokenSet.swift; sourceTree = "<group>"; };
+		38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewReactor.swift; sourceTree = "<group>"; };
+		38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingTokenInterceptor.swift; sourceTree = "<group>"; };
 		38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedTagResponse.swift; sourceTree = "<group>"; };
 		38F3D92F2D06C2370049F575 /* SOMAnimationTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMAnimationTransitioning.swift; sourceTree = "<group>"; };
 		38F70E5A2D1905D000B33C9D /* MainHomeTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeTabBarController.swift; sourceTree = "<group>"; };
@@ -880,6 +895,7 @@
 			isa = PBXGroup;
 			children = (
 				2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */,
+				38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -1210,8 +1226,9 @@
 			isa = PBXGroup;
 			children = (
 				381701702CD88374005FC220 /* CompositeInterceptor.swift */,
-				3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */,
+				38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */,
 				3817016D2CD882C2005FC220 /* TimeoutInterceptor.swift */,
+				3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */,
 			);
 			path = Interceptor;
 			sourceTree = "<group>";
@@ -1356,6 +1373,8 @@
 		385620EC2CA19C0D00E0AB5A /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				3893B6D02D36739500F2004C /* CompositeManager.swift */,
+				3893B6CD2D36728000F2004C /* ManagerProviderType.swift */,
 				388C96342CCE415B0061C598 /* DBManager */,
 				38D8E28F2CCD22E900CE2E0A /* AuthManager */,
 				38026E3D2CA2B44B0045E1CE /* LocationManager */,
@@ -1968,8 +1987,17 @@
 			isa = PBXGroup;
 			children = (
 				38D8E2902CCD232B00CE2E0A /* AuthManager.swift */,
+				38E9CE0E2D376DF400E85A2D /* Models */,
 			);
 			path = AuthManager;
+			sourceTree = "<group>";
+		};
+		38E9CE0E2D376DF400E85A2D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		38F131862CC7B7AB000D0475 /* WriteCard */ = {
@@ -2328,6 +2356,7 @@
 				3878D07E2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
 				3878B8632D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
 				2A44A4352CAC21A500DC463E /* SignUpResponse.swift in Sources */,
+				38E9CE112D376E0E00E85A2D /* PushTokenSet.swift in Sources */,
 				38F70E702D191DFB00B33C9D /* MainHomePopularViewReactor.swift in Sources */,
 				3878D0982CFFF2B800F9522F /* CommentHistroyViewController.swift in Sources */,
 				38F720AE2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */,
@@ -2363,6 +2392,7 @@
 				3887D03A2CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */,
+				3893B6D22D36739500F2004C /* CompositeManager.swift in Sources */,
 				38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				2AFD056E2D048CAF007C84AD /* TagRequest.swift in Sources */,
 				388698602D1984D600008600 /* NotificationViewReactor.swift in Sources */,
@@ -2390,6 +2420,7 @@
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				388A2D312D00D6A100E2F2F0 /* FollowViewReactor.swift in Sources */,
 				2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */,
+				3893B6CF2D36728000F2004C /* ManagerProviderType.swift in Sources */,
 				2AFF95692CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift in Sources */,
 				3866577F2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
@@ -2442,9 +2473,11 @@
 				2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */,
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
 				38405CCC2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
+				38E9CE1A2D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */,
 				38F88EBB2D2C1CB8002AD7A8 /* Info.swift in Sources */,
 				381A1D6B2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
 				2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
+				38E9CE142D37711600E85A2D /* OnboardingViewReactor.swift in Sources */,
 				2AFD05672D01CB30007C84AD /* TagInfoResponse.swift in Sources */,
 				2AE6B17C2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,
 				38F3D9312D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
@@ -2579,6 +2612,7 @@
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
+				38E9CE102D376E0E00E85A2D /* PushTokenSet.swift in Sources */,
 				2AFD05602D009FA1007C84AD /* TagDetailViewrReactor.swift in Sources */,
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				381A1D6A2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
@@ -2614,6 +2648,7 @@
 				38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */,
 				3886985F2D1984D600008600 /* NotificationViewReactor.swift in Sources */,
 				2AFD05692D03264C007C84AD /* AddFavoriteTagResponse.swift in Sources */,
+				3893B6D12D36739500F2004C /* CompositeManager.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				3816C0602CCDE35300C8688C /* ErrorInterceptor.swift in Sources */,
 				3803CF7D2D016DA200FD90DB /* TransferCodeResponse.swift in Sources */,
@@ -2641,6 +2676,7 @@
 				38121E342CA6DA4000602499 /* Date.swift in Sources */,
 				38F720A52CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
 				3878D0752CFFE01500F9522F /* SettingScrollViewHeader.swift in Sources */,
+				3893B6CE2D36728000F2004C /* ManagerProviderType.swift in Sources */,
 				2AFF95682CF5DFF800CBFB12 /* RecommendTagTableViewCell.swift in Sources */,
 				3880097B2CABEE3D002A9209 /* DetailViewController.swift in Sources */,
 				38D869632CF821F900BF87DA /* UserDefaults.swift in Sources */,
@@ -2693,9 +2729,11 @@
 				2AE6B18F2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
 				38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
 				385602B62D2FB18400118530 /* NotiPlaceholderViewCell.swift in Sources */,
+				38E9CE192D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */,
 				3802BDB82D0AF2F7001256EA /* PushManager+Rx.swift in Sources */,
 				3878D05C2CFFD10D00F9522F /* FollowingResponse.swift in Sources */,
 				38F70E652D19161800B33C9D /* MainHomeLatestViewReactor.swift in Sources */,
+				38E9CE132D37711600E85A2D /* OnboardingViewReactor.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */,
 				388A2D332D00D7BF00E2F2F0 /* UpdateProfileViewReactor.swift in Sources */,
@@ -3030,7 +3068,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100100;
+				CURRENT_PROJECT_VERSION = 100020;
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
@@ -3052,7 +3090,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D PRODUCTION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3077,7 +3115,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 100100;
+				CURRENT_PROJECT_VERSION = 100020;
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
@@ -3099,7 +3137,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D PRODUCTION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
