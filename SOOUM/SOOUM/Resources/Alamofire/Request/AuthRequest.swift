@@ -117,20 +117,7 @@ enum AuthRequest: BaseRequest {
             var request = URLRequest(url: url)
             request.method = self.method
             
-            // 재인증 API는 access와 refresh 둘 다 사용
-            switch self.authorizationType {
-            case .access:
-                let authPayloadForAccess = AuthManager.shared.authPayloadByAccess()
-                let authKeyForAccess = authPayloadForAccess.keys.first! as String
-                request.setValue(authPayloadForAccess[authKeyForAccess], forHTTPHeaderField: authKeyForAccess)
-            case .refresh:
-                let authPayloadForRefresh = AuthManager.shared.authPayloadByRefresh()
-                let authKeyForRefresh = authPayloadForRefresh.keys.first! as String
-                request.setValue(authPayloadForRefresh[authKeyForRefresh], forHTTPHeaderField: authKeyForRefresh)
-            default:
-                break
-            }
-            
+            request.setValue(self.authorizationType.rawValue, forHTTPHeaderField: "AuthorizationType")
             request.setValue(
                 Constants.ContentType.json.rawValue,
                 forHTTPHeaderField: Constants.HTTPHeader.contentType.rawValue

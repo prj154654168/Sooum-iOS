@@ -100,15 +100,7 @@ enum NotificationRequest: BaseRequest {
             var request = URLRequest(url: url)
             request.method = self.method
             
-            switch self.authorizationType {
-            case .access:
-                let authPayload = AuthManager.shared.authPayloadByAccess()
-                let authKey = authPayload.keys.first! as String
-                request.setValue(authPayload[authKey], forHTTPHeaderField: authKey)
-            default:
-                break
-            }
-            
+            request.setValue(self.authorizationType.rawValue, forHTTPHeaderField: "AuthorizationType")
             request.setValue(
                 Constants.ContentType.json.rawValue,
                 forHTTPHeaderField: Constants.HTTPHeader.contentType.rawValue
