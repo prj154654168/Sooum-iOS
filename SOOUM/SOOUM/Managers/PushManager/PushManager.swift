@@ -18,9 +18,7 @@ protocol PushManagerDelegate: AnyObject {
     func switchNotification(isOn: Bool, completion: ((Error?) -> Void)?)
 }
 
-class PushManager: NSObject, PushManagerDelegate {
-    
-    static let shared = PushManager()
+class PushManager: CompositeManager, PushManagerDelegate {
     
     var window: UIWindow? {
         let application = UIApplication.shared
@@ -35,14 +33,17 @@ class PushManager: NSObject, PushManagerDelegate {
     var canReceiveNotifications: Bool = true
     @objc dynamic var notificationStatus: Bool = true
     
-    override init() {
-        super.init()
+    override init(provider: ManagerProviderType) {
+        super.init(provider: provider)
         
         // 설정 앱의 알림 허용 유무와 동기화 하는 옵저버 제거
         // 서버 api를 통해서만 알림 허용 유무 변경
         // self.registerNotificationObserver()
         self.updateNotificationStatus()
     }
+}
+
+extension PushManager {
     
     
     // MARK: Navigation
@@ -62,7 +63,9 @@ class PushManager: NSObject, PushManagerDelegate {
     
     fileprivate func setupLaunchScreenViewController(_ pushInfo: NotificationInfo) {
         
-        let launchScreenReactor = LaunchScreenViewReactor(pushInfo: pushInfo)
+        guard let provider = self.provider else { return }
+        
+        let launchScreenReactor = LaunchScreenViewReactor(provider: provider, pushInfo: pushInfo)
         let launchScreenViewController = LaunchScreenViewController()
         launchScreenViewController.reactor = launchScreenReactor
         
@@ -72,7 +75,9 @@ class PushManager: NSObject, PushManagerDelegate {
     
     fileprivate func setupMainTabBarController(_ pushInfo: NotificationInfo) {
         
-        let mainTabBarReactor = MainTabBarReactor(pushInfo: pushInfo)
+        guard let provider = self.provider else { return }
+        
+        let mainTabBarReactor = MainTabBarReactor(provider: provider, pushInfo: pushInfo)
         let mainTabBarController = MainTabBarController()
         mainTabBarController.reactor = mainTabBarReactor
         

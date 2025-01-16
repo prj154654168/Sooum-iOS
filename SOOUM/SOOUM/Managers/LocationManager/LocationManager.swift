@@ -27,27 +27,30 @@ protocol LocationManagerDelegate: AnyObject {
     func locationManager(_ manager: LocationManager, didFailWithError error: Error)
 }
 
-class LocationManager: NSObject {
-   
-    static let shared = LocationManager()
-    
-    private let locationManager = CLLocationManager()
-    
-    weak var delegate: LocationManagerDelegate?
+class LocationManager: CompositeManager {
     
     private(set) var locationAuthStatus: AuthStatus
+    private(set) var locationManager: CLLocationManager
+    
+    weak var delegate: LocationManagerDelegate?
     
     var coordinate: Coordinate {
         let coordinate = SimpleDefaults.shared.loadLocation()
         return coordinate
     }
     
-    private override init() {
+    override init(provider: ManagerProviderType) {
         self.locationAuthStatus = .notDetermined
-        super.init()
+        self.locationManager = CLLocationManager()
+        
+        super.init(provider: provider)
+        
         self.locationManager.delegate = self
         self.updateLocationAuthStatus()
     }
+}
+
+extension LocationManager {
     
     /// 사용자에게 위치 권한을 요청합니다.
     func requestLocationPermission() {
@@ -58,7 +61,7 @@ class LocationManager: NSObject {
         return self.convertLocationAuthStatus(self.locationManager.authorizationStatus)
     }
     
-    func updateLocationAuthStatus() {
+    private func updateLocationAuthStatus() {
         let authStatus = self.convertLocationAuthStatus(self.locationManager.authorizationStatus)
         
         self.locationAuthStatus = authStatus
@@ -73,7 +76,7 @@ class LocationManager: NSObject {
         }
     }
     
-    func convertLocationAuthStatus(_ authStatus: CLAuthorizationStatus) -> AuthStatus {
+    private func convertLocationAuthStatus(_ authStatus: CLAuthorizationStatus) -> AuthStatus {
         switch authStatus {
         case .notDetermined:
             return .notDetermined

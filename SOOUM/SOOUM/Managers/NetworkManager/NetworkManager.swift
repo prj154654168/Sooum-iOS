@@ -22,9 +22,7 @@ protocol NetworkManagerDelegate: AnyObject {
     func checkClientVersion() -> Observable<String>
 }
 
-class NetworkManager {
-    
-    static let shared = NetworkManager()
+class NetworkManager: CompositeManager {
     
     let configuration: Configuration
     /// URLSession in Alamofire
@@ -72,16 +70,17 @@ class NetworkManager {
         }
     }
     
-    init() {
-        
+    override init(provider: ManagerProviderType) {
         self.configuration = Configuration()
         self.session = .init(
             configuration: configuration.sessionConfiguration,
-            interceptor: CompositeInterceptor(),
+            interceptor: CompositeInterceptor(provider: provider),
             eventMonitors: [LogginMonitor()]
         )
         self.decoder = configuration.decoder
         self.encoder = configuration.encoder
+        
+        super.init(provider: provider)
     }
     
     private func setupError(_ message: String, with code: Int = -99) -> NSError {
