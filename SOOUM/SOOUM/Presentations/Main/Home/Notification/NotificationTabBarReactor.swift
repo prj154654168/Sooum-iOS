@@ -15,28 +15,30 @@ class NotificationTabBarReactor: Reactor {
     
     struct State { }
     
-    var initialState: State {
-        .init()
-    }
+    var initialState: State { .init() }
     
-    let locationManager = LocationManager.shared
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
 }
 
 extension NotificationTabBarReactor {
     
     func reactorForTotal() -> NotificationViewReactor {
-        NotificationViewReactor.init(.total)
+        NotificationViewReactor(provider: self.provider, .total)
     }
     
     func reactorForComment() -> NotificationViewReactor {
-        NotificationViewReactor.init(.comment)
+        NotificationViewReactor(provider: self.provider, .comment)
     }
     
     func reactorForLike() -> NotificationViewReactor {
-        NotificationViewReactor.init(.like)
+        NotificationViewReactor(provider: self.provider, .like)
     }
     
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor.init(selectedId)
+        DetailViewReactor(provider: self.provider, selectedId)
     }
 }

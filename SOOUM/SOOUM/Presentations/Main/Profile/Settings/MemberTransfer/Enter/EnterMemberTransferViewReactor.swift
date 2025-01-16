@@ -34,10 +34,10 @@ class EnterMemberTransferViewReactor: Reactor {
     
     var initialState: State
     
-    private let networkManager = NetworkManager.shared
-    private let authManager = AuthManager.shared
+    let provider: ManagerProviderType
   
-    init(entranceType: EntranceType) {
+    init(provider: ManagerProviderType, entranceType: EntranceType) {
+        self.provider = provider
         self.initialState = .init(
             isSuccess: false,
             isProcessing: false,
@@ -52,20 +52,20 @@ class EnterMemberTransferViewReactor: Reactor {
             return .concat([
                 .just(.updateIsProcessing(true)),
                 
-                self.networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
+                self.provider.networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
                     .map(\.publicKey)
                     .withUnretained(self)
                     .flatMapLatest { object, publicKey -> Observable<Mutation> in
                         
-                        if let secKey = object.authManager.convertPEMToSecKey(pemString: publicKey),
-                           let encryptedDeviceId = object.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
+                        if let secKey = object.provider.authManager.convertPEMToSecKey(pemString: publicKey),
+                           let encryptedDeviceId = object.provider.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
                             
                             let request: SettingsRequest = .transferMember(
                                 transferId: transferCode,
                                 encryptedDeviceId: encryptedDeviceId
                             )
                             
-                            return self.networkManager.request(Empty.self, request: request)
+                            return self.provider.networkManager.request(Empty.self, request: request)
                                 .flatMapLatest { _ -> Observable<Mutation> in
                                     return .just(.enterTransferCode(true))
                                 }
@@ -100,5 +100,12 @@ extension EnterMemberTransferViewReactor {
                 .just(.updateIsProcessing(false))
             ])
         }
+    }
+}
+
+extension EnterMemberTransferViewReactor {
+    
+    func reactorForLaunch() -> LaunchScreenViewReactor {
+        LaunchScreenViewReactor(provider: self.provider)
     }
 }

@@ -19,7 +19,7 @@ import CocoaLumberjack
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    private let authManager = AuthManager.shared
+    let provider: ManagerProviderType = ManagerProviderContainer()
 
     /// APNS 등록 완료 핸들러
     var registerRemoteNotificationCompletion: ((Error?) -> Void)?
@@ -40,13 +40,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Set log
         self.setupCocoaLumberjack()
         
+        // Set managers
+        self.provider.initialize()
+        
         FirebaseApp.configure()
         // 파이어베이스 Meesaging 설정
         Messaging.messaging().delegate = self
         // 앱 실행 시 사용자에게 알림 허용 권한을 받음
         UNUserNotificationCenter.current().delegate = self
-        // 앱 알림 설정을 위한 초기화
-        _ = PushManager.init()
         
         // 앱 첫 실행 시 할 일
         self.todoFirstLaunch()
@@ -102,7 +103,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         if let infoDic = userInfo as? [String: Any] {
             
             let info = NotificationInfo(infoDic)
-            PushManager.shared.setupRootViewController(info, terminated: false)
+            self.provider.pushManager.setupRootViewController(info, terminated: false)
         }
 
         completionHandler()
@@ -131,7 +132,8 @@ extension AppDelegate: MessagingDelegate {
             apns: deviceToken,
             fcm: Messaging.messaging().fcmToken
         )
-        self.authManager.updateFcmToken(with: current, call: #function)
+        self.provider.authManager.updateFcmToken(with: current, call: #function)
+        
         
         Log.info("Call func: \(#function)")
 
@@ -144,7 +146,7 @@ extension AppDelegate: MessagingDelegate {
             apns: messaging.apnsToken,
             fcm: fcmToken
         )
-        self.authManager.updateFcmToken(with: current, call: #function)
+        self.provider.authManager.updateFcmToken(with: current, call: #function)
         
         Log.info("Call func: \(#function)")
     }

@@ -33,20 +33,23 @@ class MainHomeTabBarReactor: Reactor {
         isReadCompleted: false
     )
     
-    private let networkManager = NetworkManager.shared
-    let locationManager = LocationManager.shared
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .notisWithoutRead:
             let request: NotificationRequest = .totalWithoutReadCount
             
-            return self.networkManager.request(WithoutReadNotisCountResponse.self, request: request)
+            return self.provider.networkManager.request(WithoutReadNotisCountResponse.self, request: request)
                 .map { $0.unreadCnt == "0" }
                 .map(Mutation.notisWithoutRead)
         case let .requestRead(selectedId):
             let request: NotificationRequest = .requestRead(notificationId: selectedId)
-            return self.networkManager.request(Empty.self, request: request)
+            return self.provider.networkManager.request(Empty.self, request: request)
                 .map { _ in .updateIsReadCompleted(true) }
         }
     }
@@ -66,22 +69,22 @@ class MainHomeTabBarReactor: Reactor {
 extension MainHomeTabBarReactor {
     
     func reactorForLatest() -> MainHomeLatestViewReactor {
-        MainHomeLatestViewReactor.init()
+        MainHomeLatestViewReactor(provider: self.provider)
     }
     
     func reactorForPopular() -> MainHomePopularViewReactor {
-        MainHomePopularViewReactor.init()
+        MainHomePopularViewReactor(provider: self.provider)
     }
     
     func reactorForDistance() -> MainHomeDistanceViewReactor {
-        MainHomeDistanceViewReactor.init()
+        MainHomeDistanceViewReactor(provider: self.provider)
     }
     
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor.init(selectedId)
+        DetailViewReactor.init(provider: self.provider, selectedId)
     }
     
     func reactorForNoti() -> NotificationTabBarReactor {
-        NotificationTabBarReactor.init()
+        NotificationTabBarReactor(provider: self.provider)
     }
 }

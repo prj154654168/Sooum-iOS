@@ -52,15 +52,20 @@ class WriteCardViewReactor: Reactor {
         relatedTags: []
     )
     
-    private let networkManager = NetworkManager.shared
-    private let locationManager = LocationManager.shared
+    let provider: ManagerProviderType
     
     let requestType: RequestType
     
     private let parentCardId: String?
     let parentPungTime: Date?
     
-    init(type requestType: RequestType, parentCardId: String? = nil, parentPungTime: Date? = nil) {
+    init(
+        provider: ManagerProviderType,
+        type requestType: RequestType,
+        parentCardId: String? = nil,
+        parentPungTime: Date? = nil
+    ) {
+        self.provider = provider
         self.requestType = requestType
         self.parentCardId = parentCardId
         self.parentPungTime = parentPungTime
@@ -78,7 +83,7 @@ class WriteCardViewReactor: Reactor {
             imgName,
             feedTags
         ):
-            let coordinate = self.locationManager.coordinate
+            let coordinate = self.provider.locationManager.coordinate
             let trimedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
             
             let request: CardRequest = .writeCard(
@@ -94,7 +99,7 @@ class WriteCardViewReactor: Reactor {
                 feedTags: feedTags
             )
             
-            return self.networkManager.request(Status.self, request: request)
+            return self.provider.networkManager.request(Status.self, request: request)
                 .map { .writeCard($0.httpCode == 201) }
         case let .writeComment(
             isDistanceShared,
@@ -104,7 +109,7 @@ class WriteCardViewReactor: Reactor {
             imgName,
             commentTags
         ):
-            let coordinate = locationManager.coordinate
+            let coordinate = self.provider.locationManager.coordinate
             let trimedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
             
             let request: CardRequest = .writeComment(
@@ -119,12 +124,12 @@ class WriteCardViewReactor: Reactor {
                 commentTags: commentTags
             )
             
-            return self.networkManager.request(Status.self, request: request)
+            return self.provider.networkManager.request(Status.self, request: request)
                 .map { .writeCard($0.httpCode == 201) }
         case let .relatedTags(keyword):
             
             let request: CardRequest = .relatedTag(keyword: keyword, size: 5)
-            return self.networkManager.request(RelatedTagResponse.self, request: request)
+            return self.provider.networkManager.request(RelatedTagResponse.self, request: request)
                 .map(\.embedded.relatedTags)
                 .map { .relatedTags($0) }
         }
@@ -145,6 +150,9 @@ class WriteCardViewReactor: Reactor {
 extension WriteCardViewReactor {
     
     func reactorForUploadCard() -> UploadCardBottomSheetViewReactor {
-        UploadCardBottomSheetViewReactor.init(type: self.requestType == .card ? .card : .comment)
+        UploadCardBottomSheetViewReactor.init(
+            provider: self.provider,
+            type: self.requestType == .card ? .card : .comment
+        )
     }
 }

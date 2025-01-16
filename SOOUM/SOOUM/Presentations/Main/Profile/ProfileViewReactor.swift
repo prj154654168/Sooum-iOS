@@ -54,12 +54,13 @@ class ProfileViewReactor: Reactor {
         isProcessing: false
     )
     
-    private let networkManager = NetworkManager.shared
+    let provider: ManagerProviderType
     
     let entranceType: EntranceType
     private let memberId: String?
     
-    init(type entranceType: EntranceType, memberId: String?) {
+    init(provider: ManagerProviderType, type entranceType: EntranceType, memberId: String?) {
+        self.provider = provider
         self.entranceType = entranceType
         self.memberId = memberId
     }
@@ -107,13 +108,13 @@ class ProfileViewReactor: Reactor {
             
             if self.currentState.isBlocked {
                 let request: ReportRequest = .cancelBlockMember(id: self.memberId ?? "")
-                return self.networkManager.request(Empty.self, request: request)
+                return self.provider.networkManager.request(Empty.self, request: request)
                     .flatMapLatest { _ -> Observable<Mutation> in
                         return .just(.updateIsBlocked(false))
                     }
             } else {
                 let request: ReportRequest = .blockMember(id: self.memberId ?? "")
-                return self.networkManager.request(Status.self, request: request)
+                return self.provider.networkManager.request(Status.self, request: request)
                     .map { .updateIsBlocked($0.httpCode == 201) }
             }
             
@@ -122,14 +123,14 @@ class ProfileViewReactor: Reactor {
             if self.currentState.isFollow == true {
                 let request: ProfileRequest = .cancelFollow(memberId: self.memberId ?? "")
                 
-                return self.networkManager.request(Empty.self, request: request)
+                return self.provider.networkManager.request(Empty.self, request: request)
                     .flatMapLatest { _ -> Observable<Mutation> in
                         return .just(.updateIsFollow(false))
                     }
             } else {
                 let request: ProfileRequest = .requestFollow(memberId: self.memberId ?? "")
                 
-                return self.networkManager.request(Empty.self, request: request)
+                return self.provider.networkManager.request(Empty.self, request: request)
                     .flatMapLatest { _ -> Observable<Mutation> in
                         return .just(.updateIsFollow(true))
                     }
@@ -172,7 +173,7 @@ extension ProfileViewReactor {
             }
         }
         
-        return self.networkManager.request(ProfileResponse.self, request: request)
+        return self.provider.networkManager.request(ProfileResponse.self, request: request)
             .flatMapLatest { response -> Observable<Mutation> in
                 if (200...204).contains(response.status.httpCode) {
                     return .just(.profile(response.profile))
@@ -194,7 +195,7 @@ extension ProfileViewReactor {
             }
         }
         
-        return self.networkManager.request(WrittenCardResponse.self, request: request)
+        return self.provider.networkManager.request(WrittenCardResponse.self, request: request)
             .flatMapLatest { response -> Observable<Mutation> in
                 if (200...204).contains(response.status.httpCode) {
                     return .just(.writtenCards(response.embedded.writtenCards))
@@ -216,7 +217,7 @@ extension ProfileViewReactor {
             }
         }
         
-        return self.networkManager.request(WrittenCardResponse.self, request: request)
+        return self.provider.networkManager.request(WrittenCardResponse.self, request: request)
             .flatMapLatest { response -> Observable<Mutation> in
                 if (200...204).contains(response.status.httpCode) {
                     return .just(.moreWrittenCards(response.embedded.writtenCards))
@@ -240,19 +241,23 @@ extension ProfileViewReactor {
 extension ProfileViewReactor {
     
     func reactorForSettings() -> SettingsViewReactor {
-        SettingsViewReactor.init()
+        SettingsViewReactor(provider: self.provider)
     }
     
     func reactorForUpdate() -> UpdateProfileViewReactor {
-        UpdateProfileViewReactor.init(self.currentState.profile)
+        UpdateProfileViewReactor(provider: self.provider, self.currentState.profile)
     }
     
     func ractorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(selectedId)
+        DetailViewReactor(provider: self.provider, selectedId)
     }
     
     func reactorForFollow(type entranceType: FollowViewReactor.EntranceType) -> FollowViewReactor {
-        let viewType: FollowViewReactor.ViewType = self.entranceType == .my ? .my : .other
-        return FollowViewReactor(type: entranceType, view: viewType, memberId: self.memberId)
+        FollowViewReactor(
+            provider: self.provider,
+            type: entranceType,
+            view: self.entranceType == .my ? .my : .other,
+            memberId: self.memberId
+        )
     }
 }

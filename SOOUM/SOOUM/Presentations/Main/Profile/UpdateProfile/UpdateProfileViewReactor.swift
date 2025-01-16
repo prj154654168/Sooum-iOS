@@ -47,11 +47,13 @@ class UpdateProfileViewReactor: Reactor {
         errorMessage: nil
     )
     
-    private let networkManager = NetworkManager.shared
     private var imageName: String?
+    
+    let provider: ManagerProviderType
     var profile: Profile
     
-    init(_ profile: Profile) {
+    init(provider: ManagerProviderType, _ profile: Profile) {
+        self.provider = provider
         self.profile = profile
     }
     
@@ -68,7 +70,7 @@ class UpdateProfileViewReactor: Reactor {
             
             return .concat([
                 .just(.updateErrorMessage(nil)),
-                self.networkManager.request(NicknameValidationResponse.self, request: request)
+                self.provider.networkManager.request(NicknameValidationResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         let isAvailable = response.isAvailable
                         let errorMessage = isAvailable ? nil : ErrorMessages.inValid.rawValue
@@ -87,7 +89,7 @@ class UpdateProfileViewReactor: Reactor {
             return .concat([
                 .just(.updateIsProcessing(true)),
                 
-                self.networkManager.request(Empty.self, request: request)
+                self.provider.networkManager.request(Empty.self, request: request)
                     .flatMapLatest { _ -> Observable<Mutation> in
                         return .just(.updateIsSuccess(true))
                     },
@@ -123,7 +125,7 @@ extension UpdateProfileViewReactor {
             .flatMapLatest { object, presignedResponse -> Observable<Mutation> in
                 if let imageData = image.jpegData(compressionQuality: 0.5),
                    let url = URL(string: presignedResponse.strUrl) {
-                    return object.networkManager.upload(imageData, to: url)
+                    return object.provider.networkManager.upload(imageData, to: url)
                         .flatMapLatest { _ -> Observable<Mutation> in
                             return .empty()
                         }
@@ -135,7 +137,7 @@ extension UpdateProfileViewReactor {
     private func presignedURL() -> Observable<(strUrl: String, imageName: String)> {
         let request: JoinRequest = .profileImagePresignedURL
         
-        return self.networkManager.request(PresignedStorageResponse.self, request: request)
+        return self.provider.networkManager.request(PresignedStorageResponse.self, request: request)
             .withUnretained(self)
             .flatMapLatest { object, response -> Observable<(strUrl: String, imageName: String)> in
                 object.imageName = response.imgName

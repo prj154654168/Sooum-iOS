@@ -19,7 +19,7 @@ protocol BaseRequest: URLRequestConvertible {
     var authorizationType: AuthorizationType { get }
 }
 
-enum AuthorizationType {
+enum AuthorizationType: String {
     case access
     case refresh
     case none

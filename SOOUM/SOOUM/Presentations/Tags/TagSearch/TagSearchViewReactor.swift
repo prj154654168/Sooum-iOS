@@ -29,6 +29,12 @@ class TagSearchViewReactor: Reactor {
     
     var initialState = State()
     
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
+    
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case let .searchTag(keyword):
@@ -56,12 +62,19 @@ class TagSearchViewReactor: Reactor {
             return .just(.searchTags([]))
         }
         
-        return NetworkManager.shared.request(SearchTagsResponse.self, request: request)
+        return self.provider.networkManager.request(SearchTagsResponse.self, request: request)
             .map { response in
                 return Mutation.searchTags(response.embedded.relatedTagList)
             }
             .catch { _ in
                 return .just(.searchTags([]))
             }
+    }
+}
+
+extension TagSearchViewReactor {
+    
+    func reactorForTagDetail(_ tagID: String) -> TagDetailViewrReactor {
+        TagDetailViewrReactor(provider: self.provider, tagID: tagID)
     }
 }

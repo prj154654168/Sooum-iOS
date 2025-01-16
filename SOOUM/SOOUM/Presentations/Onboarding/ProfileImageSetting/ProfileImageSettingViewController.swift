@@ -67,7 +67,7 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .subscribe(with: self) { object, shouldNavigate in
                 let viewController = MainTabBarController()
-                viewController.reactor = MainTabBarReactor(pushInfo: nil)
+                viewController.reactor = reactor.reactorForMainTabBar()
                 let navigationController = UINavigationController(
                     rootViewController: viewController
                 )

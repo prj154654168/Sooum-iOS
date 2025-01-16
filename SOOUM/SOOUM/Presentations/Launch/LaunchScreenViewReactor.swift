@@ -47,12 +47,11 @@ class LaunchScreenViewReactor: Reactor {
         isRegistered: nil
     )
     
-    private let networkManager = NetworkManager.shared
-    private let authManager = AuthManager.shared
-    
+    let provider: ManagerProviderType
     let pushInfo: NotificationInfo?
     
-    init(pushInfo: NotificationInfo? = nil) {
+    init(provider: ManagerProviderType, pushInfo: NotificationInfo? = nil) {
+        self.provider = provider
         self.pushInfo = pushInfo
     }
     
@@ -81,20 +80,20 @@ class LaunchScreenViewReactor: Reactor {
 extension LaunchScreenViewReactor {
     
     private func login() -> Observable<Mutation> {
-        return self.authManager.certification()
+        return self.provider.authManager.certification()
             .map { .updateIsRegistered($0) }
     }
     
     private func check() -> Observable<Mutation> {
         
-        return self.networkManager.checkClientVersion()
+        return self.provider.networkManager.checkClientVersion()
             .withUnretained(self)
             .flatMapLatest { object, currentVersion -> Observable<Mutation> in
                 let model = Version(currentVerion: currentVersion)
                 if model.mustUpdate {
                     return .just(.check(true))
                 } else {
-                    return self.authManager.hasToken ? .just(.updateIsRegistered(true)) : object.login()
+                    return self.provider.authManager.hasToken ? .just(.updateIsRegistered(true)) : object.login()
                 }
             }
     }
@@ -102,7 +101,11 @@ extension LaunchScreenViewReactor {
     
 extension LaunchScreenViewReactor {
     
+    func reactorForOnboarding() -> OnboardingViewReactor {
+        OnboardingViewReactor(provider: self.provider)
+    }
+    
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(pushInfo: self.pushInfo)
+        MainTabBarReactor(provider: self.provider, pushInfo: self.pushInfo)
     }
 }

@@ -41,6 +41,12 @@ class TagsViewReactor: Reactor {
         self.currentState.favoriteTags.isEmpty
     }
     
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
+    
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .fetchTags:
@@ -92,7 +98,7 @@ class TagsViewReactor: Reactor {
     private func fetchFavoriteTags(with lastId: String? = nil) -> Observable<Mutation> {
         let request: TagRequest = .favorite(last: lastId)
         
-        return NetworkManager.shared.request(FavoriteTagsResponse.self, request: request)
+        return self.provider.networkManager.request(FavoriteTagsResponse.self, request: request)
             .map(\.embedded.favoriteTagList)
             .map(lastId == nil ? Mutation.favoriteTags : Mutation.more)
             .catch { _ in .just(.favoriteTags([])) }
@@ -101,12 +107,27 @@ class TagsViewReactor: Reactor {
     private func fetchRecommendTags() -> Observable<Mutation> {
         let request: TagRequest = .recommend
         
-        return NetworkManager.shared.request(RecommendTagsResponse.self, request: request)
+        return self.provider.networkManager.request(RecommendTagsResponse.self, request: request)
             .map { response in
                 return Mutation.recommendTags(response.embedded.recommendTagList)
             }
             .catch { _ in
                 return .just(.recommendTags([]))
             }
+    }
+}
+
+extension TagsViewReactor {
+    
+    func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
+        DetailViewReactor(provider: self.provider, selectedId)
+    }
+    
+    func reactorForSearch() -> TagSearchViewReactor {
+        TagSearchViewReactor(provider: self.provider)
+    }
+    
+    func reactorForTagDetail(_ tagID: String) -> TagDetailViewrReactor {
+        TagDetailViewrReactor(provider: self.provider, tagID: tagID)
     }
 }

@@ -69,11 +69,13 @@ class ReportViewReactor: Reactor {
     
     var initialState: State = .init(isDialogPresented: nil)
     
-    private let networkManager = NetworkManager.shared
     /// 신고할 카드 id
     private let id: String
     
-    init(_ id: String) {
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType, _ id: String) {
+        self.provider = provider
         self.id = id
     }
     
@@ -96,7 +98,7 @@ class ReportViewReactor: Reactor {
     func summitReport(reportType: ReportType) -> Observable<Mutation> {
         
         let request = ReportRequest.reportCard(id: id, reportType: reportType)
-        return self.networkManager.request(Status.self, request: request)
+        return self.provider.networkManager.request(Status.self, request: request)
             .map { .updateDialogPresent($0.httpCode == 201) }
     } 
 }

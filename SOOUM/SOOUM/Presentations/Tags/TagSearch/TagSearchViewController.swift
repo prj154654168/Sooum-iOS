@@ -176,7 +176,7 @@ extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
                 .subscribe(with: self) { object, _ in
                     let tagID = reactor.currentState.searchTags[indexPath.row].tagId
                     let tagDetailVC = TagDetailViewController()
-                    tagDetailVC.reactor = TagDetailViewrReactor(tagID: tagID)
+                    tagDetailVC.reactor = reactor.reactorForTagDetail(tagID)
                     object.navigationController?.pushViewController(tagDetailVC, animated: true)
                 }
                 .disposed(by: cell.disposeBag)

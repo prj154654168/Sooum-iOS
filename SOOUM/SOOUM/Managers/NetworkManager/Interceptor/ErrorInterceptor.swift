@@ -16,7 +16,11 @@ class ErrorInterceptor: RequestInterceptor {
     
     private let retryLimit: Int = 1
     
-    private let authManager = AuthManager.shared
+    private let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
     
     func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
         self.lock.lock(); defer { self.lock.unlock() }
@@ -34,7 +38,8 @@ class ErrorInterceptor: RequestInterceptor {
             return
         }
         
-        self.authManager.reAuthenticate(self.authManager.authInfo.token.accessToken) { result in
+        let accessToken = self.provider.authManager.authInfo.token.accessToken
+        self.provider.authManager.reAuthenticate(accessToken) { result in
             
             switch result {
             case .success:

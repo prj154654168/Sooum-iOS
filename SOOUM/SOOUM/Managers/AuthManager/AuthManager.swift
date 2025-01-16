@@ -24,22 +24,17 @@ protocol AuthManagerDelegate: AnyObject {
     var hasToken: Bool { get }
     func convertPEMToSecKey(pemString: String) -> SecKey?
     func encryptUUIDWithPublicKey(publicKey: SecKey) -> String?
+    func join() -> Observable<Bool>
     func certification() -> Observable<Bool>
     func reAuthenticate(_ accessToken: String, _ completion: @escaping (AuthResult) -> Void)
     func initializeAuthInfo()
     func updateTokens(_ token: Token)
+    func updateFcmToken(with tokenSet: PushTokenSet, call function: String)
     func authPayloadByAccess() -> [String: String]
     func authPayloadByRefresh() -> [String: String]
 }
 
-struct PushTokenSet: Equatable {
-    var apns: Data?
-    var fcm: String?
-}
-
-class AuthManager: AuthManagerDelegate {
-    
-    static let shared = AuthManager()
+class AuthManager: CompositeManager, AuthManagerDelegate {
     
     private var isReAuthenticating: Bool = false
     private var registeredToken: PushTokenSet?
@@ -56,6 +51,16 @@ class AuthManager: AuthManagerDelegate {
         let token = self.authInfo.token
         return !token.accessToken.isEmpty && !token.refreshToken.isEmpty
     }
+    
+    override init(provider: ManagerProviderType) {
+        super.init(provider: provider)
+    }
+}
+
+extension AuthManager {
+    
+    
+    // MARK: Asymmetric encryption
     
     func convertPEMToSecKey(pemString: String) -> SecKey? {
         let keyString = pemString
@@ -99,10 +104,14 @@ class AuthManager: AuthManagerDelegate {
         return (encryptedData as Data).base64EncodedString()
     }
     
+    
+    // MARK: Account Verification
+    
     func join() -> Observable<Bool> {
         
-        let networkManager = NetworkManager.shared
-        return networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
+        guard let provider = self.provider else { return .just(false) }
+        
+        return provider.networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
             .map(\.publicKey)
             .withUnretained(self)
             .flatMapLatest { object, publicKey -> Observable<Bool> in
@@ -119,7 +128,7 @@ class AuthManager: AuthManagerDelegate {
                         isAllowTermTwo: true,
                         isAllowTermThree: true
                     )
-                    return networkManager.request(SignUpResponse.self, request: request)
+                    return provider.networkManager.request(SignUpResponse.self, request: request)
                         .map { response in
                             object.authInfo.updateToken(response.token)
                             return true
@@ -131,8 +140,9 @@ class AuthManager: AuthManagerDelegate {
     
     func certification() -> Observable<Bool> {
         
-        let networkManager = NetworkManager.shared
-        return networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
+        guard let provider = self.provider else { return .just(false) }
+        
+        return provider.networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
             .map(\.publicKey)
             .withUnretained(self)
             .flatMapLatest { object, publicKey -> Observable<Bool> in
@@ -141,7 +151,7 @@ class AuthManager: AuthManagerDelegate {
                    let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
                     
                     let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
-                    return networkManager.request(SignInResponse.self, request: request)
+                    return provider.networkManager.request(SignInResponse.self, request: request)
                         .map { response -> Bool in
                             if response.isRegistered, let token = response.token {
                                 
@@ -174,7 +184,7 @@ class AuthManager: AuthManagerDelegate {
         
         let token = self.authInfo.token
         
-        guard authInfo.token.refreshToken.isEmpty == false else {
+        guard token.refreshToken.isEmpty == false else {
             let error = NSError(
                 domain: "SOOUM",
                 code: -99,
@@ -191,9 +201,10 @@ class AuthManager: AuthManagerDelegate {
         
         self.isReAuthenticating = true
         
-        let networkManager = NetworkManager.shared
+        guard let provider = self.provider else { return }
+        
         let request: AuthRequest = .reAuthenticationWithRefreshSession
-        networkManager.request(ReAuthenticationResponse.self, request: request)
+        provider.networkManager.request(ReAuthenticationResponse.self, request: request)
             .map(\.accessToken)
             .subscribe(
                 with: self,
@@ -258,9 +269,9 @@ class AuthManager: AuthManagerDelegate {
         }
         
         // 서버에 FCM token 업데이트
-        if let fcmToken = tokenSet.fcm {
+        if let fcmToken = tokenSet.fcm, let provider = self.provider {
             let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
-            NetworkManager.shared.request(Empty.self, request: request)
+            provider.networkManager.request(Empty.self, request: request)
                 .subscribe(
                     onNext: { _ in
                         Log.info("Update FCM token to server with", fcmToken)

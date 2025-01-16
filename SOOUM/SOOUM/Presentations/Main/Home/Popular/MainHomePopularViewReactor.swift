@@ -36,13 +36,16 @@ class MainHomePopularViewReactor: Reactor {
         isProcessing: false
     )
     
-    private let networkManager = NetworkManager.shared
-    private let locationManager = LocationManager.shared
+    let provider: ManagerProviderType
     
     let simpleCache = SimpleCache.shared
     
     // TODO: 페이징
     // private let countPerLoading: Int = 10
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
     
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -100,12 +103,12 @@ extension MainHomePopularViewReactor {
     
     func refresh() -> Observable<Mutation> {
         
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let latitude = self.provider.locationManager.coordinate.latitude
+        let longitude = self.provider.locationManager.coordinate.longitude
         
         let request: CardRequest = .popularCard(latitude: latitude, longitude: longitude)
         
-        return self.networkManager.request(PopularCardResponse.self, request: request)
+        return self.provider.networkManager.request(PopularCardResponse.self, request: request)
             .map(\.embedded.cards)
             .withUnretained(self)
             .map { object, cards in

@@ -184,7 +184,7 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
                 switch reactor.initialState.entranceType {
                 case .onboarding:
                     let viewController = LaunchScreenViewController()
-                    viewController.reactor = LaunchScreenViewReactor()
+                    viewController.reactor = reactor.reactorForLaunch()
                     object.view.window?.rootViewController = viewController
                 case .settings:
                     object.navigationPop()

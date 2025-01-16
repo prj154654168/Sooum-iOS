@@ -278,7 +278,7 @@ extension MainHomeTabBarController: SOMSwipeTabBarDelegate {
     
     func tabBar(_ tabBar: SOMSwipeTabBar, shouldSelectTabAt index: Int) -> Bool {
         
-        if index == 2, self.reactor?.locationManager.checkLocationAuthStatus() == .denied {
+        if index == 2, self.reactor?.provider.locationManager.checkLocationAuthStatus() == .denied {
             
             SOMDialogViewController.show(
                 title: Text.dialogTitle,
@@ -366,7 +366,7 @@ extension MainHomeTabBarController: UIPageViewControllerDataSource {
               currentIndex < self.pages.count - 1
         else { return nil }
         
-        if self.currentPage + 1 == 2, self.reactor?.locationManager.locationAuthStatus == .denied {
+        if self.currentPage + 1 == 2, self.reactor?.provider.locationManager.locationAuthStatus == .denied {
             
             SOMDialogViewController.show(
                 title: Text.dialogTitle,

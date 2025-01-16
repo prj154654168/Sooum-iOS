@@ -58,10 +58,7 @@ enum ReportRequest: BaseRequest {
     }
     
     var authorizationType: AuthorizationType {
-        switch self {
-        default:
-            return .access
-        }
+        return .access
     }
 
     func asURLRequest() throws -> URLRequest {
@@ -70,10 +67,7 @@ enum ReportRequest: BaseRequest {
             var request = URLRequest(url: url)
             request.method = self.method
             
-            let authPayload = AuthManager.shared.authPayloadByAccess()
-            let authKey = authPayload.keys.first! as String
-            request.setValue(authPayload[authKey], forHTTPHeaderField: authKey)
-            
+            request.setValue(self.authorizationType.rawValue, forHTTPHeaderField: "AuthorizationType")
             request.setValue(
                 Constants.ContentType.json.rawValue,
                 forHTTPHeaderField: Constants.HTTPHeader.contentType.rawValue

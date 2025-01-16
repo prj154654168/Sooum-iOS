@@ -35,10 +35,12 @@ class ProfileImageSettingViewReactor: Reactor {
     
     var initialState = State()
     
-    init(nickname: String, imageName: String? = nil, initialState: State = State()) {
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType, nickname: String, imageName: String? = nil) {
+        self.provider = provider
         self.nickname = nickname
         self.imageName = imageName
-        self.initialState = initialState
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -88,7 +90,7 @@ class ProfileImageSettingViewReactor: Reactor {
     private func fetchPresignedURL() -> Observable<(urlStr: String, imageName: String)> {
         let request: JoinRequest = .profileImagePresignedURL
         
-        return NetworkManager.shared.request(PresignedStorageResponse.self, request: request)
+        return self.provider.networkManager.request(PresignedStorageResponse.self, request: request)
             .withUnretained(self)
             .map { object, response in
                 object.imageName = response.imgName
@@ -123,7 +125,7 @@ class ProfileImageSettingViewReactor: Reactor {
     private func registerUser(userName: String, imageName: String) -> Observable<Mutation> {
         let request: JoinRequest = .registerUser(userName: userName, imageName: imageName)
         
-        return NetworkManager.shared.request(Empty.self, request: request)
+        return self.provider.networkManager.request(Empty.self, request: request)
             .map { _ in
                 return Mutation.registerUser(.success(()))
             }
@@ -133,5 +135,12 @@ class ProfileImageSettingViewReactor: Reactor {
                     code: -1
                 ))))
             }
+    }
+}
+
+extension ProfileImageSettingViewReactor {
+    
+    func reactorForMainTabBar() -> MainTabBarReactor {
+        MainTabBarReactor(provider: self.provider)
     }
 }

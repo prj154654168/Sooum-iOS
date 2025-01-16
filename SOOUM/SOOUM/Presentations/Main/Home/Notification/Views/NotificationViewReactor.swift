@@ -56,9 +56,10 @@ class NotificationViewReactor: Reactor {
     
     private let entranceType: EntranceType
     
-    private let networkManager = NetworkManager.shared
+    let provider: ManagerProviderType
     
-    init(_ entranceType: EntranceType) {
+    init(provider: ManagerProviderType, _ entranceType: EntranceType) {
+        self.provider = provider
         self.entranceType = entranceType
     }
     
@@ -111,7 +112,7 @@ class NotificationViewReactor: Reactor {
             
         case let .requestRead(selectedId):
             let request: NotificationRequest = .requestRead(notificationId: selectedId)
-            return self.networkManager.request(Empty.self, request: request)
+            return self.provider.networkManager.request(Empty.self, request: request)
                 .map { _ in .updateIsReadCompleted(true) }
         }
     }
@@ -155,7 +156,7 @@ extension NotificationViewReactor {
             }
         }
         
-        return self.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
+        return self.provider.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
             .map(\.commentHistoryInNotis)
             .map(isRead ? Mutation.notifications : Mutation.notificationsWithoutRead)
             .catch(self.catchClosure)
@@ -176,7 +177,7 @@ extension NotificationViewReactor {
             }
         }
         
-        return self.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
+        return self.provider.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
             .map(\.commentHistoryInNotis)
             .map(isRead ? Mutation.more : Mutation.moreWithoutRead)
             .catch(self.catchClosure)
@@ -195,7 +196,7 @@ extension NotificationViewReactor {
             }
         }
         
-        return self.networkManager.request(WithoutReadNotisCountResponse.self, request: request)
+        return self.provider.networkManager.request(WithoutReadNotisCountResponse.self, request: request)
             .map(\.unreadCnt)
             .map(Mutation.withoutReadNotiscount)
     }

@@ -35,7 +35,11 @@ class CommentHistroyViewReactor: Reactor {
         isLoading: false
     )
     
-    private let networkManager = NetworkManager.shared
+    let provider: ManagerProviderType
+    
+    init(provider: ManagerProviderType) {
+        self.provider = provider
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
@@ -44,7 +48,7 @@ class CommentHistroyViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.networkManager.request(CommentHistoryResponse.self, request: request)
+                self.provider.networkManager.request(CommentHistoryResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.commentHistories(response.embedded.commentHistories))
                     }
@@ -58,7 +62,7 @@ class CommentHistroyViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsLoading(true)),
-                self.networkManager.request(CommentHistoryResponse.self, request: request)
+                self.provider.networkManager.request(CommentHistoryResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.commentHistories(response.embedded.commentHistories))
                     }
@@ -71,7 +75,7 @@ class CommentHistroyViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.networkManager.request(CommentHistoryResponse.self, request: request)
+                self.provider.networkManager.request(CommentHistoryResponse.self, request: request)
                     .flatMapLatest { response -> Observable<Mutation> in
                         return .just(.more(response.embedded.commentHistories))
                     }
@@ -113,6 +117,6 @@ extension CommentHistroyViewReactor {
 extension CommentHistroyViewReactor {
     
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor.init(selectedId)
+        DetailViewReactor(provider: self.provider, selectedId)
     }
 }

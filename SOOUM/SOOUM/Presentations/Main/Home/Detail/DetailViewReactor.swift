@@ -60,18 +60,19 @@ class DetailViewReactor: Reactor {
         isErrorOccur: nil
     )
     
-    private let networkManager = NetworkManager.shared
-    private let locationManager = LocationManager.shared
+    let provider: ManagerProviderType
     
     let entranceType: EntranceType
     let selectedCardId: String
     var parentPungTime: Date?
     
     init(
+        provider: ManagerProviderType,
         type entranceType: EntranceType = .navi,
         _ selectedCardId: String,
         hasPungTime parentPungTime: Date? = nil
     ) {
+        self.provider = provider
         self.entranceType = entranceType
         self.selectedCardId = selectedCardId
         self.parentPungTime = parentPungTime
@@ -120,16 +121,16 @@ class DetailViewReactor: Reactor {
             ])
         case .delete:
             let request: CardRequest = .deleteCard(id: self.selectedCardId)
-            return self.networkManager.request(Status.self, request: request)
+            return self.provider.networkManager.request(Status.self, request: request)
                 .map { _ in .updateIsDeleted(true) }
         case .block:
             let request: ReportRequest = .blockMember(id: self.currentState.detailCard.member.id)
-            return self.networkManager.request(Status.self, request: request)
+            return self.provider.networkManager.request(Status.self, request: request)
                 .map { .updateIsBlocked($0.httpCode == 201) }
         case let .updateLike(isLike):
             let request: CardRequest = .updateLike(id: self.selectedCardId, isLike: isLike)
             return .concat([
-                self.networkManager.request(Status.self, request: request)
+                self.provider.networkManager.request(Status.self, request: request)
                     .filter { $0.httpCode != 400 }
                     .withUnretained(self)
                     .flatMapLatest { object, _ in object.fetchCardSummary() }
@@ -164,8 +165,8 @@ class DetailViewReactor: Reactor {
     }
     
     func fetchDetailCard() -> Observable<Mutation> {
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let latitude = self.provider.locationManager.coordinate.latitude
+        let longitude = self.provider.locationManager.coordinate.longitude
         
         let requset: CardRequest = .detailCard(
             id: self.selectedCardId,
@@ -173,7 +174,7 @@ class DetailViewReactor: Reactor {
             longitude: longitude
         )
         
-        return self.networkManager.request(DetailCardResponse.self, request: requset)
+        return self.provider.networkManager.request(DetailCardResponse.self, request: requset)
             .flatMapLatest { response -> Observable<Mutation> in
                 let detailCard = response.detailCard
                 let prevCard = response.prevCard
@@ -184,8 +185,8 @@ class DetailViewReactor: Reactor {
     }
     
     func fetchCommentCards() -> Observable<Mutation> {
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let latitude = self.provider.locationManager.coordinate.latitude
+        let longitude = self.provider.locationManager.coordinate.longitude
         
         let requset: CardRequest = .commentCard(
             id: self.selectedCardId,
@@ -193,15 +194,15 @@ class DetailViewReactor: Reactor {
             latitude: latitude,
             longitude: longitude
         )
-        return self.networkManager.request(CommentCardResponse.self, request: requset)
+        return self.provider.networkManager.request(CommentCardResponse.self, request: requset)
             .map(\.embedded.commentCards)
             .map(Mutation.commentCards)
             .catch(self.catchClosure)
     }
     
     func fetchMoreCommentCards(_ lastId: String) -> Observable<Mutation> {
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let latitude = self.provider.locationManager.coordinate.latitude
+        let longitude = self.provider.locationManager.coordinate.longitude
         
         let request: CardRequest = .commentCard(
             id: self.selectedCardId,
@@ -209,7 +210,7 @@ class DetailViewReactor: Reactor {
             latitude: latitude,
             longitude: longitude
         )
-        return self.networkManager.request(CommentCardResponse.self, request: request)
+        return self.provider.networkManager.request(CommentCardResponse.self, request: request)
             .map(\.embedded.commentCards)
             .map(Mutation.moreComment)
             .catch(self.catchClosure)
@@ -217,7 +218,7 @@ class DetailViewReactor: Reactor {
     
     func fetchCardSummary() -> Observable<Mutation> {
         let requset: CardRequest = .cardSummary(id: self.selectedCardId)
-        return self.networkManager.request(CardSummaryResponse.self, request: requset)
+        return self.provider.networkManager.request(CardSummaryResponse.self, request: requset)
             .map(\.cardSummary)
             .map(Mutation.cardSummary)
             .catch(self.catchClosure)
@@ -227,41 +228,47 @@ class DetailViewReactor: Reactor {
 extension DetailViewReactor {
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(pushInfo: nil)
+        MainTabBarReactor(provider: self.provider)
     }
     
     func reactorForMainHome() -> MainHomeTabBarReactor {
-        MainHomeTabBarReactor()
+        MainHomeTabBarReactor(provider: self.provider)
     }
     
     func reactorForPush(_ selectedId: String) -> DetailViewReactor {
         DetailViewReactor(
+            provider: self.provider,
             selectedId,
             hasPungTime: self.parentPungTime ?? self.currentState.detailCard.storyExpirationTime
         )
     }
     
     func reactorForReport() -> ReportViewReactor {
-        ReportViewReactor(self.selectedCardId)
+        ReportViewReactor(provider: self.provider, self.selectedCardId)
     }
     
     func reactorForWriteCard() -> WriteCardViewReactor {
         WriteCardViewReactor(
+            provider: self.provider,
             type: .comment,
             parentCardId: self.selectedCardId,
             parentPungTime: self.currentState.detailCard.storyExpirationTime ?? self.parentPungTime
         )
     }
     
+    func reactorForTagDetail(_ tagID: String) -> TagDetailViewrReactor {
+        TagDetailViewrReactor(provider: self.provider, tagID: tagID)
+    }
+    
     func reactorForProfile(
         type: ProfileViewReactor.EntranceType,
         _ memberId: String
     ) -> ProfileViewReactor {
-        ProfileViewReactor.init(type: type, memberId: memberId)
+        ProfileViewReactor(provider: self.provider, type: type, memberId: memberId)
     }
     
     func reactorForNoti() -> NotificationTabBarReactor {
-        NotificationTabBarReactor()
+        NotificationTabBarReactor(provider: self.provider)
     }
 }
 

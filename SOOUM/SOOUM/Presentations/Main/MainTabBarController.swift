@@ -30,6 +30,7 @@ class MainTabBarController: SOMTabBarController, View {
         super.viewDidLoad()
         
         self.delegate = self
+        self.reactor?.provider.locationManager.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,15 +44,12 @@ class MainTabBarController: SOMTabBarController, View {
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
                 // 위치 권한 요청
-                let locationManager = LocationManager.shared
-                locationManager.delegate = object
-                if locationManager.checkLocationAuthStatus() == .notDetermined {
-                    locationManager.requestLocationPermission()
+                if reactor.provider.locationManager.checkLocationAuthStatus() == .notDetermined {
+                    reactor.provider.locationManager.requestLocationPermission()
                 }
                 
                 // 알리 권한 요청
-                let pushManager = PushManager.shared
-                pushManager.switchNotification(isOn: true)
+                reactor.provider.pushManager.switchNotification(isOn: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -75,7 +73,7 @@ class MainTabBarController: SOMTabBarController, View {
         )
         
         let tagViewcontroller = TagsViewController()
-        tagViewcontroller.reactor = TagsViewReactor()
+        tagViewcontroller.reactor = reactor.reactorForTags()
         tagViewcontroller.tabBarItem = .init(
             title: Text.tagTitle,
             image: .init(.icon(.outlined(.star))),

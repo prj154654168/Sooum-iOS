@@ -8,7 +8,7 @@
 import RxSwift
 
 
-extension PushManager {
+extension PushManagerDelegate {
 
     func switchNotification(on: Bool) -> Observable<Error?> {
         return .create { observer in
