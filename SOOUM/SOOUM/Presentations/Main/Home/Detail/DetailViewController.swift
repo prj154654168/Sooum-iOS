@@ -195,6 +195,7 @@ class DetailViewController: BaseNavigationViewController, View {
             reactor.state.map(\.detailCard).distinctUntilChanged(),
             reactor.state.map(\.prevCard).distinctUntilChanged()
          )
+         .observe(on: MainScheduler.instance)
          .subscribe(with: self) { object, pair in
              object.detailCard = pair.0
              object.prevCard = pair.1
@@ -228,15 +229,10 @@ class DetailViewController: BaseNavigationViewController, View {
              .disposed(by: disposeBag)
          
          reactor.state.map(\.isDeleted)
+             .filterNil()
              .distinctUntilChanged()
-             .skip(1)
-             .subscribe(with: self) { object, isDeleted in
+             .subscribe(with: self) { object, _ in
                  UIApplication.topViewController?.dismiss(animated: true) {
-                     object.isDeleted = isDeleted
-                     
-                     UIView.performWithoutAnimation {
-                         object.collectionView.reloadData()
-                     }
                      
                      object.navigationPop()
                  }
@@ -255,19 +251,19 @@ class DetailViewController: BaseNavigationViewController, View {
              .filterNil()
              .filter { $0 }
              .subscribe(with: self) { object, _ in
-                 guard reactor.entranceType == .navi else {
+                 
+                 switch reactor.entranceType {
+                 case .navi:
+                     object.isDeleted = true
+                     UIView.performWithoutAnimation {
+                         object.collectionView.reloadData()
+                     }
+                 case .push:
                      let notificationTabBarController = NotificationTabBarController()
                      notificationTabBarController.reactor = reactor.reactorForNoti()
                      
-                     object.navigationController?.pushViewController(notificationTabBarController, animated: false)
+                     object.navigationPush(notificationTabBarController, animated: false)
                      object.navigationController?.viewControllers.removeAll(where: { $0.isKind(of: DetailViewController.self) })
-                     
-                     return
-                 }
-                 object.isDeleted = true
-                 
-                 UIView.performWithoutAnimation {
-                     object.collectionView.reloadData()
                  }
              }
              .disposed(by: self.disposeBag)
