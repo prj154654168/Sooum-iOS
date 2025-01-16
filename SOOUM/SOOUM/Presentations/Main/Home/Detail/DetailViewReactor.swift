@@ -41,7 +41,7 @@ class DetailViewReactor: Reactor {
         var prevCard: PrevCard?
         var commentCards: [Card]
         var cardSummary: CardSummary
-        var isDeleted: Bool
+        var isDeleted: Bool?
         var isBlocked: Bool
         var isLoading: Bool
         var isProcessing: Bool
@@ -53,7 +53,7 @@ class DetailViewReactor: Reactor {
         prevCard: nil,
         commentCards: [],
         cardSummary: .init(),
-        isDeleted: false,
+        isDeleted: nil,
         isBlocked: false,
         isLoading: false,
         isProcessing: false,
@@ -81,35 +81,31 @@ class DetailViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
+            
+            let combined = Observable.concat([
+                self.fetchDetailCard(),
+                self.fetchCommentCards(),
+                self.fetchCardSummary()
+            ])
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+            
             return .concat([
                 .just(.updateIsProcessing(true)),
-                
-                Observable.zip(
-                    self.fetchDetailCard(),
-                    self.fetchCommentCards(),
-                    self.fetchCardSummary()
-                )
-                .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
-                    Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
-                }
-                .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                
+                combined,
                 .just(.updateIsProcessing(false))
             ])
         case .refresh:
+            
+            let combined = Observable.concat([
+                self.fetchDetailCard(),
+                self.fetchCommentCards(),
+                self.fetchCardSummary()
+            ])
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+            
             return .concat([
                 .just(.updateIsLoading(true)),
-                
-                Observable.zip(
-                    self.fetchDetailCard(),
-                    self.fetchCommentCards(),
-                    self.fetchCardSummary()
-                )
-                .flatMap { detailCardMutation, commentCardsMutation, cardSummaryMutation in
-                    Observable.from([detailCardMutation, commentCardsMutation, cardSummaryMutation])
-                }
-                .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                
+                combined,
                 .just(.updateIsLoading(false))
             ])
         case let .moreFindForComment(lastId):
@@ -165,6 +161,8 @@ class DetailViewReactor: Reactor {
     }
     
     func fetchDetailCard() -> Observable<Mutation> {
+        guard (self.currentState.isErrorOccur ?? false) == false else { return .empty() }
+        
         let latitude = self.provider.locationManager.coordinate.latitude
         let longitude = self.provider.locationManager.coordinate.longitude
         
