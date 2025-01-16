@@ -61,7 +61,7 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
     /// 선택한 폰트
     var bottomSheetFontState = BehaviorRelay<SelectFontTableViewCell.FontType>(value: .gothic)
     /// 선택된 이미지 방출
-    var bottomSheetImageSelected = PublishRelay<UIImage>()
+    var bottomSheetImageSelected = BehaviorRelay<UIImage?>(value: nil)
     /// 이미지 이름 방출
     var bottomSheetImageNameSeleted = PublishRelay<String>()
     /// 바텀싯 옵션 변경 방출
@@ -154,7 +154,7 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
                 switch segment {
                 case .defaultImage:
                     object.bottomSheetImageNameSeleted.accept(object.selectedDefaultImage.value.imageWithName?.name ?? "")
-                    object.bottomSheetImageSelected.accept(object.selectedDefaultImage.value.imageWithName?.image ?? .init())
+                    object.bottomSheetImageSelected.accept(object.selectedDefaultImage.value.imageWithName?.image)
                 case .myImage:
                     if let selectedMyImage = object.selectedMyImage.value {
                         object.bottomSheetImageNameSeleted.accept(selectedMyImage.name)
@@ -166,9 +166,7 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         
         // 기본 이미지 선택 시 이미지 선택 이벤트 방출
         selectedDefaultImage
-            .compactMap {
-                return $0.imageWithName?.image
-            }
+            .compactMap(\.imageWithName?.image)
             .bind(to: bottomSheetImageSelected)
             .disposed(by: self.disposeBag)
         
