@@ -244,6 +244,8 @@ extension AuthManager {
                             } else {
                                 completion(.failure(error))
                             }
+                            
+                            object.isReAuthenticating = false
                         })
                         .disposed(by: self.disposeBag)
                 }
