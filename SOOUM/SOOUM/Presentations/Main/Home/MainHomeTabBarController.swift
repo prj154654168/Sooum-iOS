@@ -23,7 +23,10 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         static let tabDistanceTitle: String = "거리순"
         
         static let dialogTitle: String = "위치 정보 사용 설정"
-        static let dialogSubTitle: String = "위치 확인을 위해 권한 설정이 필요해요"
+        static let dialogMessage: String = "위치 확인을 위해 권한 설정이 필요해요"
+        
+        static let cancelActionTitle: String = "취소"
+        static let settingActionTitle: String = "설정"
     }
     
     
@@ -280,27 +283,34 @@ extension MainHomeTabBarController: SOMSwipeTabBarDelegate {
         
         if index == 2, self.reactor?.provider.locationManager.checkLocationAuthStatus() == .denied {
             
+            let cancelAction = SOMDialogAction(
+                title: Text.cancelActionTitle,
+                style: .gray,
+                action: {
+                    UIApplication.topViewController?.dismiss(animated: true)
+                }
+            )
+            let settingAction = SOMDialogAction(
+                title: Text.settingActionTitle,
+                style: .primary,
+                action: {
+                    let application = UIApplication.shared
+                    let openSettingsURLString: String = UIApplication.openSettingsURLString
+                    if let settingsURL = URL(string: openSettingsURLString),
+                       application.canOpenURL(settingsURL) {
+                        application.open(settingsURL)
+                    }
+                    
+                    UIApplication.topViewController?.dismiss(animated: true)
+                }
+            )
+            
             SOMDialogViewController.show(
                 title: Text.dialogTitle,
-                subTitle: Text.dialogSubTitle,
-                leftAction: .init(
-                    mode: .cancel,
-                    handler: { UIApplication.topViewController?.dismiss(animated: true) }
-                ),
-                rightAction: .init(
-                    mode: .setting,
-                    handler: {
-                        let application = UIApplication.shared
-                        let openSettingsURLString: String = UIApplication.openSettingsURLString
-                        if let settingsURL = URL(string: openSettingsURLString),
-                           application.canOpenURL(settingsURL) {
-                            application.open(settingsURL)
-                        }
-                        
-                        UIApplication.topViewController?.dismiss(animated: true)
-                    }
-                )
+                message: Text.dialogMessage,
+                actions: [cancelAction, settingAction]
             )
+            
             return false
         }
         
@@ -368,26 +378,32 @@ extension MainHomeTabBarController: UIPageViewControllerDataSource {
         
         if self.currentPage + 1 == 2, self.reactor?.provider.locationManager.locationAuthStatus == .denied {
             
+            let cancelAction = SOMDialogAction(
+                title: Text.cancelActionTitle,
+                style: .gray,
+                action: {
+                    UIApplication.topViewController?.dismiss(animated: true)
+                }
+            )
+            let settingAction = SOMDialogAction(
+                title: Text.settingActionTitle,
+                style: .primary,
+                action: {
+                    let application = UIApplication.shared
+                    let openSettingsURLString: String = UIApplication.openSettingsURLString
+                    if let settingsURL = URL(string: openSettingsURLString),
+                       application.canOpenURL(settingsURL) {
+                        application.open(settingsURL)
+                    }
+                    
+                    UIApplication.topViewController?.dismiss(animated: true)
+                }
+            )
+            
             SOMDialogViewController.show(
                 title: Text.dialogTitle,
-                subTitle: Text.dialogSubTitle,
-                leftAction: .init(
-                    mode: .cancel,
-                    handler: { UIApplication.topViewController?.dismiss(animated: true) }
-                ),
-                rightAction: .init(
-                    mode: .setting,
-                    handler: {
-                        let application = UIApplication.shared
-                        let openSettingsURLString: String = UIApplication.openSettingsURLString
-                        if let settingsURL = URL(string: openSettingsURLString),
-                           application.canOpenURL(settingsURL) {
-                            application.open(settingsURL)
-                        }
-                        
-                        UIApplication.topViewController?.dismiss(animated: true)
-                    }
-                )
+                message: Text.dialogMessage,
+                actions: [cancelAction, settingAction]
             )
             
             return nil

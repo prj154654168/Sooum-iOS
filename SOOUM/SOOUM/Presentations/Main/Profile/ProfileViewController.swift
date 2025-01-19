@@ -22,7 +22,10 @@ class ProfileViewController: BaseNavigationViewController, View {
         static let blockButtonTitle: String = "차단하기"
         
         static let blockDialogTitle: String = "정말 차단하시겠어요?"
-        static let blockDialogSubTitle: String = "해당 사용자의 카드와 답카드를 볼 수 없어요"
+        static let blockDialogMessage: String = "해당 사용자의 카드와 답카드를 볼 수 없어요"
+        
+        static let cancelActionTitle: String = "취소"
+        static let confirmActionTitle: String = "확인"
     }
     
     
@@ -163,17 +166,25 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         self.rightBlockButton.rx.tap
             .subscribe(with: self) { object, _ in
+                let cancelAction = SOMDialogAction(
+                    title: Text.cancelActionTitle,
+                    style: .gray,
+                    action: {
+                        UIApplication.topViewController?.dismiss(animated: true)
+                    }
+                )
+                let confirmAction = SOMDialogAction(
+                    title: Text.confirmActionTitle,
+                    style: .primary,
+                    action: {
+                        object.reactor?.action.onNext(.block)
+                    }
+                )
+                
                 SOMDialogViewController.show(
                     title: Text.blockDialogTitle,
-                    subTitle: Text.blockDialogSubTitle,
-                    leftAction: .init(
-                        mode: .cancel,
-                        handler: { UIApplication.topViewController?.dismiss(animated: true) }
-                    ),
-                    rightAction: .init(
-                        mode: .ok,
-                        handler: { object.reactor?.action.onNext(.block) }
-                    )
+                    message: Text.blockDialogMessage,
+                    actions: [cancelAction, confirmAction]
                 )
             }
             .disposed(by: self.disposeBag)

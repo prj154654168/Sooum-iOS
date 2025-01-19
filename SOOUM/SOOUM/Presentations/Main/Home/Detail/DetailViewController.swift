@@ -21,12 +21,16 @@ class DetailViewController: BaseNavigationViewController, View {
          static let moreBottomSheetEntryName: String = "moreButtonBottomSheetViewController"
          
          static let deleteDialogTitle: String = "카드를 삭제할까요?"
-         static let deleteDialogSubTitle: String = "삭제한 카드는 복구할 수 없어요"
+         static let deleteDialogMessage: String = "삭제한 카드는 복구할 수 없어요"
          static let deletePungDialogTitle: String = "시간 제한 카드를 삭제할까요?"
-         static let deletePungDialogSubTitle: String = "카드를 삭제하면,\n답카드가 자동으로 삭제되지 않아요"
+         static let deletePungDialogMessage: String = "카드를 삭제하면,\n답카드가 자동으로 삭제되지 않아요"
          
          static let blockDialogTitle: String = "해당 사용자를 차단할까요?"
-         static let blockDialogSubTitle: String = "해당 사용자의 모든 카드를 모두 볼 수 없어요"
+         static let blockDialogMessage: String = "해당 사용자의 모든 카드를 모두 볼 수 없어요"
+         
+         static let cancelActionTitle: String = "취소"
+         static let deleteActionTitle: String = "삭제하기"
+         static let blockActionTitle: String = "차단하기"
      }
      
      let rightHomeButton = SOMButton().then {
@@ -154,22 +158,28 @@ class DetailViewController: BaseNavigationViewController, View {
          self.moreButtonBottomSheetViewController.blockLabelButton.rx.tap
              .subscribe(with: self) { object, _ in
                  
+                 let cancelAction = SOMDialogAction(
+                     title: Text.cancelActionTitle,
+                     style: .gray,
+                     action: {
+                         UIApplication.topViewController?.dismiss(animated: true)
+                     }
+                 )
+                 let blockAction = SOMDialogAction(
+                    title: Text.blockActionTitle,
+                    style: .primary,
+                    action: {
+                        UIApplication.topViewController?.dismiss(animated: true) {
+                            reactor.action.onNext(.block)
+                            object.dismissBottomSheet()
+                        }
+                    }
+                 )
+                 
                  SOMDialogViewController.show(
                     title: Text.blockDialogTitle,
-                    subTitle: Text.blockDialogSubTitle,
-                    leftAction: .init(
-                        mode: .cancel,
-                        handler: { UIApplication.topViewController?.dismiss(animated: true) }
-                    ),
-                    rightAction: .init(
-                        mode: .block,
-                        handler: {
-                            UIApplication.topViewController?.dismiss(animated: true) {
-                                reactor.action.onNext(.block)
-                                object.dismissBottomSheet()
-                            }
-                        }
-                    )
+                    message: Text.blockDialogMessage,
+                    actions: [cancelAction, blockAction]
                  )
              }
              .disposed(by: self.disposeBag)
@@ -344,17 +354,26 @@ extension DetailViewController: UICollectionViewDataSource {
                 if object.detailCard.isOwnCard {
                     /// 자신의 카드일 때 카드 삭제하기
                     let isFeedAndPungCard = object.detailCard.isFeedCard == true && object.detailCard.storyExpirationTime != nil
+                    
+                    let cancelAction = SOMDialogAction(
+                        title: Text.cancelActionTitle,
+                        style: .gray,
+                        action: {
+                            UIApplication.topViewController?.dismiss(animated: true)
+                        }
+                    )
+                    let deleteAction = SOMDialogAction(
+                        title: Text.deleteActionTitle,
+                        style: .primary,
+                        action: {
+                            object.reactor?.action.onNext(.delete)
+                        }
+                    )
+                    
                     SOMDialogViewController.show(
                         title: isFeedAndPungCard ? Text.deletePungDialogTitle : Text.deleteDialogTitle,
-                        subTitle: isFeedAndPungCard ? Text.deletePungDialogSubTitle : Text.deleteDialogSubTitle,
-                        leftAction: .init(
-                            mode: .cancel,
-                            handler: { UIApplication.topViewController?.dismiss(animated: true) }
-                        ),
-                        rightAction: .init(
-                            mode: .delete,
-                            handler: { object.reactor?.action.onNext(.delete) }
-                        )
+                        message: isFeedAndPungCard ? Text.deletePungDialogMessage : Text.deleteDialogMessage,
+                        actions: [cancelAction, deleteAction]
                     )
                 } else {
                     /// 자신의 카드가 아닐 때 차단/신고하기
