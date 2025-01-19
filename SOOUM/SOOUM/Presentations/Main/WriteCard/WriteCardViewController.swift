@@ -23,10 +23,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let wirteButtonTitle: String = "작성하기"
         
         static let writeDialogTitle: String = "카드를 작성할까요?"
-        static let writeDialogSubTitle: String = "추가한 카드는 수정할 수 없어요"
+        static let writeDialogMessage: String = "추가한 카드는 수정할 수 없어요"
         
         static let failedWriteDialogTitle: String = "부적절한 사진으로 보여져요"
-        static let failedWriteDialogSubTitle: String = "적절한 사진으로 바꾸거나\n기본 이미지를 사용해주세요"
+        static let failedWriteDialogMessage: String = "적절한 사진으로 바꾸거나\n기본 이미지를 사용해주세요"
+        
+        static let cancelActionTitle: String = "취소"
+        static let addCardActionTitle: String = "카드추가"
+        static let confirmActionTitle: String = "확인"
     }
     
     private let timeLimitBackgroundView = UIView().then {
@@ -314,49 +318,54 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, combine in
                 let (optionState, imageName, imageType, font, content) = combine
                 
+                let cancelAction = SOMDialogAction(
+                    title: Text.cancelActionTitle,
+                    style: .gray,
+                    action: {
+                        UIApplication.topViewController?.dismiss(animated: true)
+                    }
+                )
+                let addCardAction = SOMDialogAction(
+                    title: Text.addCardActionTitle,
+                    style: .primary,
+                    action: {
+                        let feedTags = object.writtenTagModels.map { $0.originalText }
+                        if reactor.requestType == .card {
+                            
+                            reactor.action.onNext(
+                                .writeCard(
+                                    isDistanceShared: optionState[.distanceLimit] ?? false,
+                                    isPublic: optionState[.privateCard] ?? false,
+                                    isStory: optionState[.timeLimit] ?? false,
+                                    content: content,
+                                    font: font.rawValue,
+                                    imgType: imageType,
+                                    imgName: imageName,
+                                    feedTags: feedTags
+                                )
+                            )
+                        } else {
+                                    
+                            reactor.action.onNext(
+                                .writeComment(
+                                    isDistanceShared: optionState[.distanceLimit] ?? false,
+                                    content: content,
+                                    font: font.rawValue,
+                                    imgType: imageType,
+                                    imgName: imageName,
+                                    commentTags: feedTags
+                                )
+                            )
+                        }
+                                
+                        UIApplication.topViewController?.dismiss(animated: true)
+                    }
+                )
+                
                 SOMDialogViewController.show(
                     title: Text.writeDialogTitle,
-                    subTitle: Text.writeDialogSubTitle,
-                    leftAction: .init(
-                        mode: .cancel,
-                        handler: { UIApplication.topViewController?.dismiss(animated: true) }
-                    ),
-                    rightAction: .init(
-                        mode: .ok,
-                        handler: {
-                            
-                            let feedTags = object.writtenTagModels.map { $0.originalText }
-                            if reactor.requestType == .card {
-                                
-                                reactor.action.onNext(
-                                    .writeCard(
-                                        isDistanceShared: optionState[.distanceLimit] ?? false,
-                                        isPublic: optionState[.privateCard] ?? false,
-                                        isStory: optionState[.timeLimit] ?? false,
-                                        content: content,
-                                        font: font.rawValue,
-                                        imgType: imageType,
-                                        imgName: imageName,
-                                        feedTags: feedTags
-                                    )
-                                )
-                            } else {
-                                        
-                                reactor.action.onNext(
-                                    .writeComment(
-                                        isDistanceShared: optionState[.distanceLimit] ?? false,
-                                        content: content,
-                                        font: font.rawValue,
-                                        imgType: imageType,
-                                        imgName: imageName,
-                                        commentTags: feedTags
-                                    )
-                                )
-                            }
-                                    
-                            UIApplication.topViewController?.dismiss(animated: true)
-                        }
-                    )
+                    message: Text.writeDialogMessage,
+                    actions: [cancelAction, addCardAction]
                 )
             }
             .disposed(by: self.disposeBag)
@@ -403,13 +412,18 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     }
                 } else {
                     // 글추가 실패, 실패 다이얼로그 표시
+                    let confirmAction = SOMDialogAction(
+                        title: Text.confirmActionTitle,
+                        style: .primary,
+                        action: {
+                            UIApplication.topViewController?.dismiss(animated: true)
+                        }
+                    )
+                    
                     SOMDialogViewController.show(
                         title: Text.failedWriteDialogTitle,
-                        subTitle: Text.failedWriteDialogSubTitle,
-                        rightAction: .init(
-                            mode: .ok,
-                            handler: { UIApplication.topViewController?.dismiss(animated: true) }
-                        )
+                        message: Text.failedWriteDialogMessage,
+                        actions: [confirmAction]
                     )
                 }
             }

@@ -22,10 +22,12 @@ class ReportViewController: BaseNavigationViewController, View {
         static let tableViewTitle: String = "신고 사유 선택"
         
         static let successDialogTitle: String = "신고가 접수 되었어요"
-        static let successDialogSubTitle: String = "신고 내용을 확인한 후 조치할 예정이에요"
+        static let successDialogMessage: String = "신고 내용을 확인한 후 조치할 예정이에요"
         
         static let failedDialogTitle: String = "이미 신고를 한 카드에요"
-        static let failedDialogSubTitle: String = "이전 신고가 접수되어 처리 중이에요"
+        static let failedDialogMessage: String = "이전 신고가 접수되어 처리 중이에요"
+        
+        static let confirmActionTitle: String = "확인"
     }
         
     let tableViewTitleLabel = UILabel().then {
@@ -115,17 +117,20 @@ class ReportViewController: BaseNavigationViewController, View {
             .filterNil()
             .subscribe(with: self) { object, isDialogPresented in
                 
+                let confirmAction = SOMDialogAction(
+                    title: Text.confirmActionTitle,
+                    style: .primary,
+                    action: {
+                        UIApplication.topViewController?.dismiss(animated: true) {
+                            object.navigationPop()
+                        }
+                    }
+                )
+                
                 SOMDialogViewController.show(
                     title: isDialogPresented ? Text.successDialogTitle : Text.failedDialogTitle,
-                    subTitle: isDialogPresented ? Text.successDialogSubTitle : Text.failedDialogSubTitle,
-                    rightAction: .init(
-                        mode: .ok,
-                        handler: {
-                            UIApplication.topViewController?.dismiss(animated: true) {
-                                object.navigationPop()
-                            }
-                        }
-                    )
+                    message: isDialogPresented ? Text.successDialogMessage : Text.failedDialogMessage,
+                    actions: [confirmAction]
                 )
             }
             .disposed(by: self.disposeBag)
