@@ -115,12 +115,18 @@ extension NetworkManager: NetworkManagerDelegate {
                             observer.onCompleted()
                         }
                     case let .failure(error):
-                        if response.response?.statusCode == 400 {
-                            observer.onError(self?.setupError(
-                                "Bad Request: HTTP 400 received.",
-                                with: 400
-                            ) ?? .init())
+                        let statusCode = response.response?.statusCode
+                        switch statusCode {
+                        case 400:
+                            let nsError = self?.setupError("Bad Request: HTTP 400 received.", with: 400) ?? .init()
+                            observer.onError(nsError)
                             return
+                        case 423:
+                            let nsError = self?.setupError("LOCKED: HTTP 423 received.", with: 423) ?? .init()
+                            observer.onError(nsError)
+                            return
+                        default:
+                            break
                         }
                         
                         Log.error("Network or response format error: \(error)")
