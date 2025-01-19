@@ -21,7 +21,7 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
         static let navigationTitle: String = "답카드 히스토리"
     }
     
-    private let flowLayout = SOMTagsLayout().then {
+    private let flowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
         $0.minimumLineSpacing = .zero
         $0.minimumInteritemSpacing = .zero
