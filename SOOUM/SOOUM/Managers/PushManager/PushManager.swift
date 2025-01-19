@@ -11,7 +11,7 @@ import UIKit
 protocol PushManagerDelegate: AnyObject {
     
     var window: UIWindow? { get }
-    func setupRootViewController(_ info: NotificationInfo, terminated: Bool)
+    func setupRootViewController(_ info: NotificationInfo?, terminated: Bool)
     
     var canReceiveNotifications: Bool { get }
     var notificationStatus: Bool { get }
@@ -48,7 +48,7 @@ extension PushManager {
     
     // MARK: Navigation
     
-    func setupRootViewController(_ info: NotificationInfo, terminated: Bool) {
+    func setupRootViewController(_ info: NotificationInfo?, terminated: Bool) {
         
         DispatchQueue.main.async { [weak self] in
             if self?.window != nil {
@@ -61,7 +61,7 @@ extension PushManager {
         }
     }
     
-    fileprivate func setupLaunchScreenViewController(_ pushInfo: NotificationInfo) {
+    fileprivate func setupLaunchScreenViewController(_ pushInfo: NotificationInfo?) {
         
         guard let provider = self.provider else { return }
         
@@ -73,7 +73,7 @@ extension PushManager {
         self.window?.rootViewController = navigationController
     }
     
-    fileprivate func setupMainTabBarController(_ pushInfo: NotificationInfo) {
+    fileprivate func setupMainTabBarController(_ pushInfo: NotificationInfo?) {
         
         guard let provider = self.provider else { return }
         

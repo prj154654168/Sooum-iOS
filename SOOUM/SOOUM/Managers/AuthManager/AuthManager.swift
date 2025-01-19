@@ -237,17 +237,27 @@ extension AuthManager {
                 },
                 onError: { object, error in
                     
-                    object.certification()
-                        .subscribe(onNext: { isRegistered in
-                            if isRegistered {
-                                completion(.success)
-                            } else {
-                                completion(.failure(error))
-                            }
-                            
-                            object.isReAuthenticating = false
-                        })
-                        .disposed(by: self.disposeBag)
+                    let errorCode = (error as NSError).code
+                    switch errorCode {
+                    case 403:
+                        object.certification()
+                            .subscribe(onNext: { isRegistered in
+                                if isRegistered {
+                                    completion(.success)
+                                } else {
+                                    completion(.failure(error))
+                                }
+                            })
+                            .disposed(by: self.disposeBag)
+                        
+                    case 418:
+                        completion(.failure(error))
+                        object.provider?.pushManager.setupRootViewController(nil, terminated: false)
+                    default:
+                        break
+                    }
+                    
+                    object.isReAuthenticating = false
                 }
             )
             .disposed(by: self.disposeBag)
