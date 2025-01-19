@@ -48,33 +48,28 @@ extension UILabel {
         self.font = typography.font
 
         let updateClosure: (String?) -> Void = { [weak self] text in
-            if let text: String = text {
+            if let self = self, let text: String = text {
+                let alignment = typography.alignment
+                let lineBreakMode = self.lineBreakMode
+                let lineBreakStrategy = self.lineBreakStrategy
+                
                 let attributedString = NSMutableAttributedString(
                     string: text,
                     attributes: typography.attributes
                 )
                 closure?(attributedString)
-                self?.attributedText = attributedString
+                self.attributedText = attributedString
+                
+                self.textAlignment = alignment
+                self.lineBreakMode = lineBreakMode
+                self.lineBreakStrategy = lineBreakStrategy
             }
         }
 
         updateClosure(self.text)
 
-        self.onTextChange { [weak self] oldText, newText in
-            let lessThaniOS14: () -> Void = {
-                let alignment = self?.textAlignment ?? .left
-                let lineBreakMode = self?.lineBreakMode ?? .byTruncatingTail
-                updateClosure(newText)
-                self?.textAlignment = alignment
-                self?.lineBreakMode = lineBreakMode
-            }
-            if #available(iOS 14.0, *) {
-                let lineBreakStrategy = self?.lineBreakStrategy ?? .pushOut
-                lessThaniOS14()
-                self?.lineBreakStrategy = lineBreakStrategy
-            } else {
-                lessThaniOS14()
-            }
+        self.onTextChange { _, newText in
+            updateClosure(newText)
         }
     }
 

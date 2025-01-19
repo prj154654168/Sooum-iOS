@@ -13,6 +13,7 @@ class Typography: NSObject, NSCopying {
     private(set) var fontContainer: FontConrainer
     private(set) var lineHeight: CGFloat
     private(set) var letterSpacing: CGFloat
+    private(set) var alignment: NSTextAlignment
 
     var font: UIFont {
         return self.fontContainer.font
@@ -22,8 +23,8 @@ class Typography: NSObject, NSCopying {
         let paragraph = NSMutableParagraphStyle()
         paragraph.minimumLineHeight = self.lineHeight
         paragraph.maximumLineHeight = self.lineHeight
-        // TODO: 임시, \n 개행문자가 포함된 string을 정렬시키기 위해 추가
-        paragraph.alignment = .center
+        /// Set alignment == center
+        paragraph.alignment = self.alignment
         return paragraph
     }
 
@@ -39,10 +40,16 @@ class Typography: NSObject, NSCopying {
         ]
     }
 
-    init(fontContainer: FontConrainer, lineHeight: CGFloat, letterSpacing: CGFloat = 0) {
+    init(
+        fontContainer: FontConrainer,
+        lineHeight: CGFloat,
+        letterSpacing: CGFloat = 0,
+        alignment: NSTextAlignment = .center
+    ) {
         self.fontContainer = fontContainer
         self.lineHeight = lineHeight
         self.letterSpacing = letterSpacing
+        self.alignment = alignment
         super.init()
     }
 
@@ -63,10 +70,21 @@ class Typography: NSObject, NSCopying {
         new.lineHeight = lineHeight
         return new
     }
+    
+    func withAlignment(_ alignment: NSTextAlignment) -> Self {
+        let new = self.copy() as! Self
+        new.alignment = alignment
+        return new
+    }
 
     func copy(with zone: NSZone? = nil) -> Any {
         let fontContainer = self.fontContainer.copy() as! FontConrainer
-        return Typography(fontContainer: fontContainer, lineHeight: self.lineHeight)
+        return Typography(
+            fontContainer: fontContainer,
+            lineHeight: self.lineHeight,
+            letterSpacing: self.letterSpacing,
+            alignment: self.alignment
+        )
     }
 }
 
