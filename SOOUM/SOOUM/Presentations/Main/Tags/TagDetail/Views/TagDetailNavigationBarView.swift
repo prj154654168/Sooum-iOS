@@ -67,23 +67,27 @@ class TagDetailNavigationBarView: UIView {
             $0.size.equalTo(40)
         }
         
+        self.addSubview(favoriteButton)
+        favoriteButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.centerY.equalToSuperview()
+            $0.size.equalTo(40)
+        }
+        
         self.addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(18)
+            $0.leading.greaterThanOrEqualTo(backButton.snp.trailing).offset(20)
+            $0.trailing.lessThanOrEqualTo(favoriteButton.snp.leading).offset(-20)
             $0.centerX.equalToSuperview()
         }
         
         self.addSubview(subtitleLabel)
         subtitleLabel.snp.makeConstraints {
             $0.bottom.equalToSuperview().offset(-18)
+            $0.leading.greaterThanOrEqualTo(backButton.snp.trailing).offset(20)
+            $0.trailing.lessThanOrEqualTo(favoriteButton.snp.leading).offset(-20)
             $0.centerX.equalToSuperview()
-        }
-        
-        self.addSubview(favoriteButton)
-        favoriteButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.centerY.equalToSuperview()
-            $0.size.equalTo(40)
         }
     }
     

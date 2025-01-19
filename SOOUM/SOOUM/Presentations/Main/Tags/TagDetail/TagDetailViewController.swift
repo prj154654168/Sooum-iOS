@@ -40,6 +40,13 @@ class TagDetailViewController: BaseViewController, View {
     
     var isRefreshEnabled = false
     
+    // TODO: 임시 UINavigationBar 숨김처리
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.navigationController?.navigationBar.isHidden = true
+    }
+    
     override func setupConstraints() {
         self.view.addSubview(navBarView)
         navBarView.snp.makeConstraints {
