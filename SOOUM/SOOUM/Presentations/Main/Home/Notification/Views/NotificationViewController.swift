@@ -278,7 +278,7 @@ extension NotificationViewController: UITableViewDelegate {
                 $0.backgroundColor = .som.white
             }
             
-            let typography = Typography.som.body2WithBold
+            let typography = Typography.som.body2WithBold.withAlignment(.left)
             let frame = CGRect(x: 20, y: 16, width: UIScreen.main.bounds.width, height: typography.lineHeight)
             let label = UILabel().then {
                 $0.text = Text.withoutReadHeaderTitle + " (\(self.withoutReadNotisCount)개)"
