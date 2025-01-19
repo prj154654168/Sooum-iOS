@@ -1346,7 +1346,6 @@
 			children = (
 				38AA66202D3AA5EA00B3F6B2 /* Intro */,
 				38B6AACB2CA410C000CE6DB6 /* Main */,
-				2AFF95522CF3207F00CBFB12 /* Tags */,
 			);
 			path = Presentations;
 			sourceTree = "<group>";
@@ -1793,6 +1792,7 @@
 				38B6AACF2CA411DE00CE6DB6 /* Home */,
 				38D6F17A2CC2401700E11530 /* WriteCard */,
 				382D5CF42CFE9B6400BFA23E /* Profile */,
+				2AFF95522CF3207F00CBFB12 /* Tags */,
 			);
 			path = Main;
 			sourceTree = "<group>";
