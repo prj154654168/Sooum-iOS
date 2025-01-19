@@ -7,135 +7,128 @@
 
 import UIKit
 
-import RxGesture
-import RxSwift
+import SnapKit
+import Then
+
 
 class SOMDialogViewController: UIViewController {
     
-    /// 버튼 디스플레이 모드 설정
-    enum ButtonMode {
-        case cancel
-        case ok
-        case delete
-        case report
-        case block
-        case setting
-        case exit
-        case update
-        
-        var text: String {
-            switch self {
-            case .cancel:
-                "취소"
-            case .ok:
-                "확인"
-            case .delete:
-                "삭제하기"
-            case .report:
-                "신고하기"
-            case .block:
-                "차단하기"
-            case .setting:
-                "설정"
-            case .exit:
-                "종료하기"
-            case .update:
-                "업데이트"
-            }
-        }
-        
-        var bgColor: UIColor {
-            switch self {
-            case .cancel, .exit:
-                .som.gray300
-            default:
-                .som.p300
-            }
-        }
-        
-        var textColor: UIColor {
-            switch self {
-            case .cancel, .exit:
-                .som.gray700
-            default:
-                .som.white
-            }
-        }
+    
+    // MARK: Views
+    
+    /// container 밖의 영역
+    private let backgroundButton = UIButton().then {
+        $0.backgroundColor = .som.dim
     }
     
-    /// 버튼 액션
-    class Action {
-        var mode: ButtonMode?
-        var handler: () -> Void
-        
-        init(mode: ButtonMode?, handler: @escaping () -> Void) {
-            self.mode = mode
-            self.handler = handler
-        }
-    }
-    
-    // MARK: - property
-    private var titleText: String?
-    private var subTitleText: String?
-
-    /// 좌측 버튼에 적용할 액션
-    var leftAction: Action?
-    /// 우측 버튼에 적용할 액션
-    var rightAction: Action?
-    /// 딤뷰 탭했을 경우 적용할 핸들러. nil일 경우 탭되지 않음
-    var dimViewAction: Action?
-    
-    var completion: ((SOMDialogViewController) -> Void)?
-    
-    let disposeBag = DisposeBag()
-    
-    // MARK: - UI
-    
-    /// 다이얼로그 루트 컨테이너 뷰
-    let containerView = UIView().then {
+    private let containerView = UIView().then {
         $0.backgroundColor = .som.white
         $0.layer.cornerRadius = 20
     }
     
-    /// 제목 표시 라벨
-    let titleLabel = UILabel().then {
-        $0.text = ""
+    private let titleLabel = UILabel().then {
         $0.textColor = .som.black
         $0.typography = .som.body1WithBold
-    }
-    
-    /// 부제목 표시 라벨
-    let subTitleLabel = UILabel().then {
-        $0.textColor = .som.gray600
-        $0.typography = .som.body2WithRegular
+        $0.lineBreakMode = .byWordWrapping
+        $0.lineBreakStrategy = .hangulWordPriority
         $0.numberOfLines = 0
     }
     
-    /// 버튼 스택 뷰
-    let buttonStackView = UIStackView().then {
-        $0.alignment = .fill
+    private let messageLabel = UILabel().then {
+        $0.textColor = .som.gray600
+        $0.typography = .som.body2WithRegular
+        $0.lineBreakMode = .byWordWrapping
+        $0.lineBreakStrategy = .hangulWordPriority
+        $0.numberOfLines = 0
+    }
+    private let messageView: UIView?
+    
+    private let buttonContainer = UIStackView().then {
         $0.axis = .horizontal
+        $0.alignment = .fill
         $0.distribution = .fillEqually
         $0.spacing = 8
     }
     
-    let leftButton = UIButton().then {
-        $0.layer.cornerRadius = 10
-        $0.titleLabel?.typography = .som.body1WithBold
+    
+    // MARK: Variables
+    
+    private(set) var actions = [SOMDialogAction]()
+    
+    private var message: String? {
+        set {
+            if let message = newValue {
+                let attributes = Typography.som.body2WithRegular.attributes
+                self.messageLabel.attributedText = .init(string: message, attributes: attributes)
+            }
+            self.messageLabel.isHidden = (newValue == nil)
+        }
+        get {
+            self.messageLabel.text
+        }
     }
     
-    let rightButton = UIButton().then {
-        $0.layer.cornerRadius = 10
-        $0.titleLabel?.typography = .som.body1WithBold
+    var dismissesWhenBackgroundTouched: Bool {
+        set {
+            self.backgroundButton.removeTarget(self, action: #selector(self.touched), for: .touchUpInside)
+            if newValue {
+                self.backgroundButton.addTarget(self, action: #selector(self.touched), for: .touchUpInside)
+            }
+            self.backgroundButton.isEnabled = newValue
+        }
+        get {
+            return self.backgroundButton.isEnabled
+        }
     }
     
-    // MARK: - LifeCycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        initUI()
-        bindUIData()
-        action()
+    var completion: ((SOMDialogViewController) -> Void)?
+    
+    
+    // MARK: Objc func
+    
+    @objc
+    private func touched(_ button: UIButton) {
+        self.dismiss(animated: true)
     }
+    
+    @objc
+    private func tap(_ button: UIButton) {
+        if let action = self.actions.first(where: { $0.tag == button.tag }) {
+            action.action?()
+        }
+    }
+    
+    
+    // MARK: Initalization
+    
+    convenience init(
+        title: String,
+        message: String,
+        completion: ((SOMDialogViewController) -> Void)? = nil
+    ) {
+        self.init(title: title, messageView: nil, completion: completion)
+        
+        self.message = message
+    }
+    
+    init(title: String, messageView: UIView?, completion: ((SOMDialogViewController) -> Void)? = nil) {
+        self.messageView = messageView
+        
+        super.init(nibName: nil, bundle: nil)
+        
+        self.setupConstraints()
+        
+        let attributes = Typography.som.body1WithBold.attributes
+        self.titleLabel.attributedText = .init(string: title, attributes: attributes)
+        self.completion = completion
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    // MARK: Override func
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -143,121 +136,80 @@ class SOMDialogViewController: UIViewController {
         self.completion?(self)
     }
 
-    // MARK: - setData
-    func setData(
-        title: String?,
-        subTitle: String?,
-        leftAction: Action?,
-        rightAction: Action?,
-        dimViewAction: Action?,
-        completion: ((SOMDialogViewController) -> Void)? = nil
-    ) {
-        self.titleText = title
-        self.subTitleText = subTitle
-        self.leftAction = leftAction
-        self.rightAction = rightAction
-        self.dimViewAction = dimViewAction
-        self.completion = completion
-    }
     
-    // MARK: - initUI
-    private func initUI() {
-        self.view.backgroundColor = .som.dim
-        addSubviews()
-        initConstraint()
-    }
+    // MARK: Private func
     
-    // MARK: - addSubviews
-    private func addSubviews() {
-        self.view.addSubviews(containerView)
-        containerView.addSubviews(titleLabel, subTitleLabel, buttonStackView)
-        buttonStackView.addArrangedSubviews(leftButton, rightButton)
-    }
-    
-    // MARK: - initConstraint
-    private func initConstraint() {
-        containerView.snp.makeConstraints {
-            $0.centerX.centerY.equalToSuperview()
-            $0.width.equalToSuperview().multipliedBy(0.75)
+    private func setupConstraints() {
+        
+        self.view.addSubview(self.backgroundButton)
+        self.backgroundButton.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
-        titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(24)
+        self.view.addSubview(self.containerView)
+        self.containerView.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalToSuperview().offset(32)
+            $0.trailing.equalToSuperview().offset(-32)
+        }
+        
+        self.containerView.addSubview(self.titleLabel)
+        self.titleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(20)
+            $0.leading.greaterThanOrEqualToSuperview().offset(20)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
             $0.centerX.equalToSuperview()
         }
         
-        subTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(8)
-            $0.centerX.equalToSuperview()
+        if let messageView = self.messageView {
+            
+            self.containerView.addSubview(messageView)
+            messageView.snp.makeConstraints {
+                $0.top.equalTo(self.titleLabel.snp.bottom).offset(20)
+                $0.leading.equalToSuperview().offset(20)
+                $0.trailing.equalToSuperview().offset(-20)
+            }
+        } else {
+            
+            self.containerView.addSubview(self.messageLabel)
+            self.messageLabel.snp.makeConstraints {
+                $0.top.equalTo(self.titleLabel.snp.bottom).offset(12)
+                $0.leading.greaterThanOrEqualToSuperview().offset(20)
+                $0.trailing.lessThanOrEqualToSuperview().offset(-20)
+                $0.centerX.equalToSuperview()
+            }
         }
         
-        buttonStackView.snp.makeConstraints {
-            $0.top.equalTo(subTitleLabel.snp.bottom).offset(22)
+        self.containerView.addSubview(self.buttonContainer)
+        self.buttonContainer.snp.makeConstraints {
+            let hasMessage = self.message != nil
+            $0.top.equalTo((self.messageView ?? self.messageLabel).snp.bottom).offset(hasMessage ? 20 : 27)
             $0.bottom.equalToSuperview().offset(-14)
-            $0.centerX.equalToSuperview()
             $0.leading.equalToSuperview().offset(14)
-        }
-        
-        leftButton.snp.makeConstraints {
-            $0.height.equalTo(46)
-        }
-        
-        rightButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().offset(-14)
             $0.height.equalTo(46)
         }
     }
     
-    // MARK: - bindUIData
-    private func bindUIData() {
-        // 제목 및 부제목 텍스트
-        titleLabel.text = titleText
-        // TODO: 임시, \n 개행문자가 들어간 string의 정렬을 위해 추가
-        // subTitleLabel.text = subTitleText
-        subTitleLabel.attributedText = NSAttributedString(
-            string: subTitleText ?? "",
-            attributes: Typography.som.body2WithRegular.attributes
-        )
+    
+    // MARK: Public func
+    
+    func setAction(_ action: SOMDialogAction) {
         
-        // 좌측 버튼 설정
-        if let leftAction = leftAction {
-            leftButton.setTitle(leftAction.mode?.text ?? "취소", for: .normal)
-            leftButton.backgroundColor = leftAction.mode?.bgColor ?? .som.gray300
-            leftButton.setTitleColor(leftAction.mode?.textColor ?? .som.black, for: .normal)
-        } else {
-            leftButton.removeFromSuperview()
+        self.actions.append(action)
+        
+        let button = SOMButton().then {
+            $0.title = action.title
+            $0.typography = .som.body1WithBold
+            $0.foregroundColor = action.style.foregroundColor
+            
+            $0.backgroundColor = action.style.backgroundColor
+            $0.layer.cornerRadius = 12
+            $0.clipsToBounds = true
         }
+        button.tag = action.tag
+        button.addTarget(self, action: #selector(self.tap), for: .touchUpInside)
         
-        // 우측 버튼 설정
-        if let rightAction = rightAction {
-            rightButton.setTitle(rightAction.mode?.text ?? "확인", for: .normal)
-            rightButton.backgroundColor = rightAction.mode?.bgColor ?? .som.p300
-            rightButton.setTitleColor(rightAction.mode?.textColor ?? .som.white, for: .normal)
-        } else {
-            rightButton.removeFromSuperview()
-        }
-    }
-        
-    // MARK: - action
-    private func action() {
-        self.view.rx.tapGesture()
-            .when(.recognized)
-            .subscribe(with: self) { object, gesture in
-                if object.view.isTappedDirectly(gesture: gesture) {
-                    object.dimViewAction?.handler()
-                }
-            }
-            .disposed(by: disposeBag)
-        
-        leftButton.rx.tap
-            .subscribe(with: self) { object, _ in
-                object.leftAction?.handler()
-            }
-            .disposed(by: disposeBag)
-        
-        rightButton.rx.tap
-            .subscribe(with: self) { object, _ in
-                object.rightAction?.handler()
-            }
-            .disposed(by: disposeBag)
+        self.buttonContainer.addArrangedSubview(button)
     }
 }

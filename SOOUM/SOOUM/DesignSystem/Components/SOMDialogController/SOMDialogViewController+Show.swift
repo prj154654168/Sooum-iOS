@@ -13,27 +13,50 @@ extension SOMDialogViewController {
     @discardableResult
     static func show(
         title: String,
-        subTitle: String,
-        leftAction: Action? = nil,
-        rightAction: Action?,
-        dimViewAction: Action? = nil,
+        message: String,
+        actions: [SOMDialogAction],
+        dismissesWhenBackgroundTouched: Bool = false,
         completion: ((SOMDialogViewController) -> Void)? = nil
     ) -> SOMDialogViewController {
         
         return self.show { window in
             
-            let dialogViewController = SOMDialogViewController()
-            dialogViewController.setData(
+            let dialogViewController = SOMDialogViewController(
                 title: title,
-                subTitle: subTitle,
-                leftAction: leftAction,
-                rightAction: rightAction,
-                dimViewAction: dimViewAction,
-                completion: { dialogViewController in
+                message: message,
+                completion: { alertController in
                     window.windowScene = nil
-                    completion?(dialogViewController)
+                    completion?(alertController)
                 }
             )
+            dialogViewController.dismissesWhenBackgroundTouched = dismissesWhenBackgroundTouched
+            actions.forEach(dialogViewController.setAction)
+            
+            return dialogViewController
+        }
+    }
+    
+    @discardableResult
+    static func show(
+        title: String,
+        messageView: UIView,
+        actions: [SOMDialogAction],
+        dismissesWhenBackgroundTouched: Bool = false,
+        completion: ((SOMDialogViewController) -> Void)? = nil
+    ) -> SOMDialogViewController {
+        
+        return self.show { window in
+            
+            let dialogViewController = SOMDialogViewController(
+                title: title,
+                messageView: messageView,
+                completion: { alertController in
+                    window.windowScene = nil
+                    completion?(alertController)
+                }
+            )
+            dialogViewController.dismissesWhenBackgroundTouched = dismissesWhenBackgroundTouched
+            actions.forEach(dialogViewController.setAction)
             
             return dialogViewController
         }
