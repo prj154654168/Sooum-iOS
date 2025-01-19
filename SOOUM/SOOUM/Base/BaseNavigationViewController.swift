@@ -50,6 +50,7 @@ class BaseNavigationViewController: BaseViewController {
         set {
             self.additionalSafeAreaInsets.top = newValue ? 0 : self.navigationBarHeight
             self.navigationBar.isHidden = newValue
+            self.navigationBarBackgroundView.isHidden = newValue
         }
         get {
             self.navigationBar.isHidden
