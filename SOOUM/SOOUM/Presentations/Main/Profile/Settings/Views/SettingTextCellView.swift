@@ -32,7 +32,7 @@ class SettingTextCellView: UIView {
         $0.onTintColor = .som.p300
         $0.thumbTintColor = .som.white
         
-        $0.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        $0.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
     }
     
     let backgroundButton = UIButton()
@@ -82,6 +82,8 @@ class SettingTextCellView: UIView {
             self.toggleSwitch.snp.makeConstraints {
                 $0.centerY.equalToSuperview()
                 $0.trailing.equalToSuperview().offset(-20)
+                $0.width.equalTo(40)
+                $0.height.equalTo(24)
             }
             
             self.addSubview(self.backgroundButton)
