@@ -81,7 +81,13 @@ class DetailViewController: BaseNavigationViewController, View {
      var isRefreshEnabled = false
      
      
-     // MARK: - Life Cycles
+     // MARK: Override func
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.hidesBottomBarWhenPushed = true
+    }
      
      override func setupNaviBar() {
          super.setupNaviBar()
@@ -134,17 +140,9 @@ class DetailViewController: BaseNavigationViewController, View {
      func bind(reactor: DetailViewReactor) {
          
          // Action
-         let viewWillAppear = self.rx.viewWillAppear.share()
-         viewWillAppear
+         self.rx.viewWillAppear
              .map { _ in Reactor.Action.landing }
              .bind(to: reactor.action)
-             .disposed(by: self.disposeBag)
-         
-         // 탭바 숨김
-         viewWillAppear
-             .subscribe(with: self) { object, _ in
-                 object.hidesBottomBarWhenPushed = true
-             }
              .disposed(by: self.disposeBag)
          
          self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
