@@ -33,7 +33,7 @@ class UploadCardBottomSheetSegmentView: UIView {
     }
     
     let myImageButtonLabel = UILabel().then {
-        $0.typography = .som.body1WithRegular
+        $0.typography = .som.body1WithBold
         $0.textAlignment = .center
         $0.textColor = .som.gray400
         $0.text = "내 사진"
