@@ -132,6 +132,7 @@ class BaseNavigationViewController: BaseViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         // setupNaviBar() 가 viewWillAppear(_:)에서 호출되지 않게 함
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = self.navigationPopGestureEnabled
         
         // 순환참조가 발생할 경우 약한 참조인 delegate가 nil이 되기 때문에,
         // 네비게이션바 설정이 무시될 수 있습니다. 이를 방어하기 위해 네비게이션바를 설정합니다.
@@ -150,7 +151,6 @@ extension BaseNavigationViewController: UIGestureRecognizerDelegate {
         return self.navigationPopGestureEnabled
     }
 }
-
 
 extension Reactive where Base: BaseNavigationViewController {
 
