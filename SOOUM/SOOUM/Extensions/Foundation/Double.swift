@@ -24,8 +24,12 @@ extension Double {
         case ..<0.1:
             return "100m 이내"
         case 0.1..<1:
-            let roundedDistance = ceil(self * 1000)
-            return "\(Int(roundedDistance))m 이내"
+            let roundedDistance = ceil(self * 10) / 10
+            if roundedDistance >= 1 {
+                return "1km 이내"
+            } else {
+                return "\(Int(roundedDistance * 1000))m 이내"
+            }
         case 1..<100:
             let roundedDistance = ceil(self / 5) * 5
             return "\(Int(roundedDistance))km 이내"
