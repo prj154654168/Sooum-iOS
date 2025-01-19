@@ -27,19 +27,16 @@ class SOMNavigationBar: UIView {
     static let height: CGFloat = 44
     
     private let centerContainer = UIView()
-
     private let leftContainer = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .center
         $0.distribution = .equalSpacing
     }
-    
     private let leftButtonsView = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .center
         $0.distribution = .equalSpacing
     }
-    
     private let rightButtonsView = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .center
@@ -48,6 +45,12 @@ class SOMNavigationBar: UIView {
     
     private var centerContainerCenterXConstraint: Constraint?
     private var centerContainerLeadingConstraint: Constraint?
+    
+    private var leftContainerLeadingConstraint: Constraint?
+    private var leftContainerTrailingConstraint: Constraint?
+    
+    private var rightButtonsViewLeadingConstraint: Constraint?
+    private var rightButtonsViewTrailingConstraint: Constraint?
     
     /// 타이틀 (text == label / logo == image)
     let titleLabel = UILabel().then {
@@ -77,13 +80,20 @@ class SOMNavigationBar: UIView {
         get { self.backButton.isHidden }
     }
     
-    
-    /// leftButtons 혹은 rightButtons 간격
-    var spacing: CGFloat = 0 {
+    var spacing: CGFloat = 20 {
         didSet {
-            self.leftContainer.spacing = self.spacing
-            self.leftButtonsView.spacing = self.spacing
-            self.rightButtonsView.spacing = self.spacing
+            self.refreshConstraints()
+        }
+    }
+    
+    var leftInset: CGFloat = 20 {
+        didSet {
+            self.refreshConstraints()
+        }
+    }
+    var rightInset: CGFloat = 20 {
+        didSet {
+            self.refreshConstraints()
         }
     }
     
@@ -112,20 +122,26 @@ class SOMNavigationBar: UIView {
         self.addSubview(self.leftContainer)
         self.leftContainer.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
+            self.leftContainerLeadingConstraint = $0.leading.equalToSuperview().offset(self.leftInset).constraint
+            self.leftContainerTrailingConstraint = $0.trailing.lessThanOrEqualTo(self.centerContainer.snp.leading)
+                .offset(-self.spacing)
+                .constraint
+            $0.size.equalTo(0).priority(.low)
         }
-        
         self.leftContainer.addArrangedSubview(self.backButton)
         self.backButton.snp.makeConstraints {
             $0.size.equalTo(24)
         }
-        
         self.leftContainer.addArrangedSubview(self.leftButtonsView)
         
         self.addSubview(self.rightButtonsView)
         self.rightButtonsView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().offset(-20)
+            self.rightButtonsViewLeadingConstraint = $0.leading.greaterThanOrEqualTo(self.centerContainer.snp.trailing)
+                .offset(self.spacing)
+                .constraint
+            self.rightButtonsViewTrailingConstraint = $0.trailing.equalToSuperview().offset(-self.rightInset).constraint
+            $0.size.equalTo(0).priority(.low)
         }
     }
     
@@ -156,6 +172,21 @@ class SOMNavigationBar: UIView {
         }
     }
     
+    private func refreshConstraints() {
+        
+        self.leftContainer.spacing = self.spacing
+        self.leftButtonsView.spacing = self.spacing
+        self.rightButtonsView.spacing = self.spacing
+        
+        self.leftContainerLeadingConstraint?.update(offset: self.leftInset)
+        let isLeftContainerEmpty = self.backButton.isHidden && self.leftButtonsView.arrangedSubviews.isEmpty
+        self.leftContainerTrailingConstraint?.update(offset: isLeftContainerEmpty ? 0 : -self.spacing)
+        
+        let isRightButtonsViewEmpty = self.rightButtonsView.arrangedSubviews.isEmpty
+        self.rightButtonsViewLeadingConstraint?.update(offset: isRightButtonsViewEmpty ? 0 : self.spacing)
+        self.rightButtonsViewTrailingConstraint?.update(offset: -self.rightInset)
+    }
+    
     private func prepare() {
         self.titleView = nil
     }
@@ -171,20 +202,24 @@ class SOMNavigationBar: UIView {
     }
     
     func setLeftButtons(_ buttons: [UIButton]) {
+        self.leftButtonsView.isHidden = buttons.isEmpty
         self.leftButtons?.forEach { $0.removeFromSuperview() }
         buttons.forEach {
             $0.setContentCompressionResistancePriority(.defaultHigh + 1, for: .horizontal)
             $0.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
             self.leftButtonsView.addArrangedSubview($0)
         }
+        self.refreshConstraints()
     }
     
     func setRightButtons(_ buttons: [UIButton]) {
+        self.rightButtonsView.isHidden = buttons.isEmpty
         self.rightButtons?.forEach { $0.removeFromSuperview() }
         buttons.forEach {
             $0.setContentCompressionResistancePriority(.defaultHigh + 1, for: .horizontal)
             $0.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
             self.rightButtonsView.addArrangedSubview($0)
         }
+        self.refreshConstraints()
     }
 }
