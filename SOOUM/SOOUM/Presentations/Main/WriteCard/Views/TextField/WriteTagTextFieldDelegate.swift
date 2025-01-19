@@ -15,7 +15,7 @@ protocol WriteTagTextFieldDelegate: AnyObject {
     func textFieldShouldEndEditing(_ textField: WriteTagTextField) -> Bool
     func textFieldDidEndEditing(_ textField: WriteTagTextField)
 
-    func textField(_ textField: WriteTagTextField, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool
+    func textField(_ textField: WriteTagTextField, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool
 
     func textFieldReturnKeyClicked(_ textField: WriteTagTextField) -> Bool
 }
@@ -28,7 +28,7 @@ extension WriteTagTextFieldDelegate {
     func textFieldShouldEndEditing(_ textField: WriteTagTextField) -> Bool { true }
     func textFieldDidEndEditing(_ textField: WriteTagTextField) { }
 
-    func textField(_ textField: WriteTagTextField, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool { true }
+    func textField(_ textField: WriteTagTextField, shouldChangeTextIn range: NSRange, replacementText string: String) -> Bool { true }
 
     func textFieldReturnKeyClicked(_ textField: WriteTagTextField) -> Bool { true }
 }
