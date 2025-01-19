@@ -466,6 +466,8 @@
 		38D869642CF821F900BF87DA /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D869622CF821F900BF87DA /* UserDefaults.swift */; };
 		38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
 		38D8E2922CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
+		38E7FBEF2D3CF6BB00A359CD /* SOMDialogAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */; };
+		38E7FBF02D3CF6BC00A359CD /* SOMDialogAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */; };
 		38E9CE102D376E0E00E85A2D /* PushTokenSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */; };
 		38E9CE112D376E0E00E85A2D /* PushTokenSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */; };
 		38E9CE132D37711600E85A2D /* OnboardingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */; };
@@ -725,6 +727,7 @@
 		38A627162CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayoutConfigure.swift; sourceTree = "<group>"; };
 		38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndCommentView.swift; sourceTree = "<group>"; };
 		38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreBottomSheetViewController.swift; sourceTree = "<group>"; };
+		38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogAction.swift; sourceTree = "<group>"; };
 		38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMDialogViewController+Show.swift"; sourceTree = "<group>"; };
 		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTopButtonView.swift; sourceTree = "<group>"; };
@@ -1771,6 +1774,7 @@
 		38AE56572D0489E500CAA431 /* SOMDialogController */ = {
 			isa = PBXGroup;
 			children = (
+				38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */,
 				2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */,
 				38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */,
 			);
@@ -2353,6 +2357,7 @@
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				38CC49892CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */,
 				38F70E5C2D1905D000B33C9D /* MainHomeTabBarController.swift in Sources */,
+				38E7FBF02D3CF6BC00A359CD /* SOMDialogAction.swift in Sources */,
 				3878D07E2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
 				3878B8632D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
 				2A44A4352CAC21A500DC463E /* SignUpResponse.swift in Sources */,
@@ -2609,6 +2614,7 @@
 				3887D0392CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				3803CF7A2D016BDB00FD90DB /* IssueMemberTransferViewReactor.swift in Sources */,
 				38C2D4172CFEAACA00CEA092 /* ProfileViewFooterCell.swift in Sources */,
+				38E7FBEF2D3CF6BB00A359CD /* SOMDialogAction.swift in Sources */,
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
