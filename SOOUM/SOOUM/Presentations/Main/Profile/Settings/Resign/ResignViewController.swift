@@ -45,31 +45,29 @@ class ResignViewController: BaseNavigationViewController, View {
     private let firstDotLabel = UILabel().then {
         $0.text = Text.dot
         $0.textColor = .som.gray600
-        $0.textAlignment = .center
         $0.typography = .som.body2WithRegular
     }
     private let firstResignGuideLabel = UILabel().then {
         $0.text = Text.firstResignGuide
         $0.textColor = .som.gray600
-        $0.textAlignment = .left
-        $0.typography = .som.body2WithRegular
-        $0.numberOfLines = 2
+        $0.typography = .som.body2WithRegular.withAlignment(.left)
         $0.lineBreakMode = .byWordWrapping
+        $0.lineBreakStrategy = .hangulWordPriority
+        $0.numberOfLines = 0
     }
     
     private let secondDotLabel = UILabel().then {
         $0.text = Text.dot
         $0.textColor = .som.gray600
-        $0.textAlignment = .center
         $0.typography = .som.body2WithRegular
     }
     private let secondResignGuideLabel = UILabel().then {
         $0.text = Text.secondResignGuide
         $0.textColor = .som.gray600
-        $0.textAlignment = .left
-        $0.typography = .som.body2WithRegular
-        $0.numberOfLines = 2
+        $0.typography = .som.body2WithRegular.withAlignment(.left)
         $0.lineBreakMode = .byWordWrapping
+        $0.lineBreakStrategy = .hangulWordPriority
+        $0.numberOfLines = 0
     }
     
     private let checkBoxButton = UIButton()
@@ -134,12 +132,11 @@ class ResignViewController: BaseNavigationViewController, View {
         self.firstDotLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(20)
             $0.leading.equalToSuperview().offset(19)
-            $0.width.equalTo(8)
         }
         resignGuideBackgroundView.addSubview(self.firstResignGuideLabel)
         self.firstResignGuideLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(20)
-            $0.leading.equalTo(self.firstDotLabel.snp.trailing).offset(2)
+            $0.leading.equalTo(self.firstDotLabel.snp.trailing).offset(4)
             $0.trailing.equalToSuperview().offset(-19)
         }
         
@@ -147,13 +144,12 @@ class ResignViewController: BaseNavigationViewController, View {
         self.secondDotLabel.snp.makeConstraints {
             $0.top.equalTo(self.firstResignGuideLabel.snp.bottom)
             $0.leading.equalToSuperview().offset(19)
-            $0.width.equalTo(8)
         }
         resignGuideBackgroundView.addSubview(self.secondResignGuideLabel)
         self.secondResignGuideLabel.snp.makeConstraints {
             $0.top.equalTo(self.firstResignGuideLabel.snp.bottom)
             $0.bottom.equalToSuperview().offset(-20)
-            $0.leading.equalTo(self.secondDotLabel.snp.trailing).offset(2)
+            $0.leading.equalTo(self.secondDotLabel.snp.trailing).offset(4)
             $0.trailing.equalToSuperview().offset(-19)
         }
         
