@@ -964,20 +964,12 @@
 		2AE6B1602CBFB7C000FA5C3C /* UploadCard */ = {
 			isa = PBXGroup;
 			children = (
-				2AE6B1612CBFB7D200FA5C3C /* UpoadCardBottomSheet */,
-			);
-			path = UploadCard;
-			sourceTree = "<group>";
-		};
-		2AE6B1612CBFB7D200FA5C3C /* UpoadCardBottomSheet */ = {
-			isa = PBXGroup;
-			children = (
 				2AE6B1622CBFB7FB00FA5C3C /* UploadCardBottomSheetViewController.swift */,
 				2AE6B1652CBFB81000FA5C3C /* UploadCardBottomSheetViewReactor.swift */,
 				2AE6B16F2CBFD00E00FA5C3C /* Cells */,
 				2AE6B16B2CBFBC3F00FA5C3C /* Views */,
 			);
-			path = UpoadCardBottomSheet;
+			path = UploadCard;
 			sourceTree = "<group>";
 		};
 		2AE6B16B2CBFBC3F00FA5C3C /* Views */ = {
@@ -1791,8 +1783,8 @@
 				38B6AAE12CA4787200CE6DB6 /* MainTabBarReactor.swift */,
 				38B6AACF2CA411DE00CE6DB6 /* Home */,
 				38D6F17A2CC2401700E11530 /* WriteCard */,
-				382D5CF42CFE9B6400BFA23E /* Profile */,
 				2AFF95522CF3207F00CBFB12 /* Tags */,
+				382D5CF42CFE9B6400BFA23E /* Profile */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -1974,8 +1966,8 @@
 			children = (
 				38D6F17B2CC2406700E11530 /* WriteCardViewController.swift */,
 				3887D0322CC5335200FB52E1 /* WriteCardViewReactor.swift */,
-				38D6F17E2CC2412500E11530 /* Views */,
 				2AE6B1602CBFB7C000FA5C3C /* UploadCard */,
+				38D6F17E2CC2412500E11530 /* Views */,
 			);
 			path = WriteCard;
 			sourceTree = "<group>";
