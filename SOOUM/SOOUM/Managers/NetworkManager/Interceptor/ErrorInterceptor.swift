@@ -44,7 +44,7 @@ class ErrorInterceptor: RequestInterceptor {
             switch result {
             case .success:
                 completion(.retry)
-            case .failure(let error):
+            case let .failure(error):
                 Log.error("ReAuthenticate failed. \(error.localizedDescription)")
                 completion(.doNotRetry)
             }

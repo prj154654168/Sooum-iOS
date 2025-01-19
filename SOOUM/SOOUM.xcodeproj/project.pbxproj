@@ -983,12 +983,12 @@
 		2AE6B16F2CBFD00E00FA5C3C /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				2AE6B17D2CBFEA4200FA5C3C /* Views */,
 				2AE6B18E2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift */,
 				2AE6B1702CBFD04900FA5C3C /* SelectDefaultImageTableViewCell.swift */,
 				2AE6B1912CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift */,
 				2AE6B1772CBFE49D00FA5C3C /* SelectFontTableViewCell.swift */,
 				2AE6B17A2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift */,
+				2AE6B17D2CBFEA4200FA5C3C /* Views */,
 				2AE6B1732CBFD58B00FA5C3C /* Cells */,
 			);
 			path = Cells;

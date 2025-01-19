@@ -121,6 +121,14 @@ extension NetworkManager: NetworkManagerDelegate {
                             let nsError = self?.setupError("Bad Request: HTTP 400 received.", with: 400) ?? .init()
                             observer.onError(nsError)
                             return
+                        case 403:
+                            let nsError = self?.setupError("Expire RefreshToken: HTTP 403 received,", with: 403) ?? .init()
+                            observer.onError(nsError)
+                            return
+                        case 418:
+                            let nsError = self?.setupError("Stop using token: HTTP 418 received,", with: 418) ?? .init()
+                            observer.onError(nsError)
+                            return
                         case 423:
                             let nsError = self?.setupError("LOCKED: HTTP 423 received.", with: 423) ?? .init()
                             observer.onError(nsError)
