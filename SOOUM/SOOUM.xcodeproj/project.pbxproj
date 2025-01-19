@@ -28,12 +28,8 @@
 		2A45B3702CE4C5510071026A /* RegisterUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */; };
 		2A5BB7B92CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */; };
 		2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */; };
-		2A5BB7BE2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7BD2CDB870000E1C799 /* OnboardingGuideLabelView.swift */; };
-		2A5BB7BF2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7BD2CDB870000E1C799 /* OnboardingGuideLabelView.swift */; };
-		2A5BB7C22CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */; };
-		2A5BB7C32CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */; };
-		2A5BB7C52CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */; };
-		2A5BB7C62CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */; };
+		2A5BB7BE2CDB870000E1C799 /* OnboardingGuideMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7BD2CDB870000E1C799 /* OnboardingGuideMessageView.swift */; };
+		2A5BB7BF2CDB870000E1C799 /* OnboardingGuideMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7BD2CDB870000E1C799 /* OnboardingGuideMessageView.swift */; };
 		2A5BB7C92CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */; };
 		2A5BB7CA2CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */; };
 		2A5BB7CD2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */; };
@@ -44,8 +40,6 @@
 		2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */; };
 		2A5BB7D92CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */; };
 		2A5BB7DA2CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */; };
-		2A5BB7DD2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */; };
-		2A5BB7DE2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */; };
 		2A5BB7E02CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7DF2CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift */; };
 		2A5BB7E12CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7DF2CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift */; };
 		2A5BB7E32CDCD97300E1C799 /* JoinRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7E22CDCD97300E1C799 /* JoinRequest.swift */; };
@@ -173,6 +167,10 @@
 		3816C05D2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816C05B2CCDDF3D00C8688C /* ReAuthenticationResponse.swift */; };
 		3816C0602CCDE35300C8688C /* ErrorInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */; };
 		3816C0612CCDE35300C8688C /* ErrorInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */; };
+		3816E2372D3BEE7E004CC196 /* TermsOfServiceCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816E2362D3BEE7E004CC196 /* TermsOfServiceCellView.swift */; };
+		3816E2382D3BEE7E004CC196 /* TermsOfServiceCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816E2362D3BEE7E004CC196 /* TermsOfServiceCellView.swift */; };
+		3816E23A2D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816E2392D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift */; };
+		3816E23B2D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3816E2392D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift */; };
 		3817016E2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3817016D2CD882C2005FC220 /* TimeoutInterceptor.swift */; };
 		3817016F2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3817016D2CD882C2005FC220 /* TimeoutInterceptor.swift */; };
 		381701712CD88374005FC220 /* CompositeInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381701702CD88374005FC220 /* CompositeInterceptor.swift */; };
@@ -396,6 +394,8 @@
 		38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
 		38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
 		38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
+		38AA66262D3AC3F500B3F6B2 /* DialogMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66252D3AC3F500B3F6B2 /* DialogMessageView.swift */; };
+		38AA66272D3AC3F500B3F6B2 /* DialogMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66252D3AC3F500B3F6B2 /* DialogMessageView.swift */; };
 		38AE565C2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
 		38AE565D2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
 		38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
@@ -474,6 +474,8 @@
 		38E9CE142D37711600E85A2D /* OnboardingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */; };
 		38E9CE192D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */; };
 		38E9CE1A2D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */; };
+		38F006AA2D395A7F001AC5F7 /* SuspensionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F006A92D395A7F001AC5F7 /* SuspensionResponse.swift */; };
+		38F006AB2D395A7F001AC5F7 /* SuspensionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F006A92D395A7F001AC5F7 /* SuspensionResponse.swift */; };
 		38F131882CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */; };
 		38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */; };
 		38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3D92F2D06C2370049F575 /* SOMAnimationTransitioning.swift */; };
@@ -535,15 +537,12 @@
 		2A44A4362CAC227300DC463E /* BaseAuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAuthResponse.swift; sourceTree = "<group>"; };
 		2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUserResponse.swift; sourceTree = "<group>"; };
 		2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceViewController.swift; sourceTree = "<group>"; };
-		2A5BB7BD2CDB870000E1C799 /* OnboardingGuideLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingGuideLabelView.swift; sourceTree = "<group>"; };
-		2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceTableViewCell.swift; sourceTree = "<group>"; };
-		2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonView.swift; sourceTree = "<group>"; };
+		2A5BB7BD2CDB870000E1C799 /* OnboardingGuideMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingGuideMessageView.swift; sourceTree = "<group>"; };
 		2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameSettingViewController.swift; sourceTree = "<group>"; };
 		2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSettingViewController.swift; sourceTree = "<group>"; };
 		2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceAgreeButtonView.swift; sourceTree = "<group>"; };
 		2A5BB7D82CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameTextFieldView.swift; sourceTree = "<group>"; };
-		2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingProfileImageSettingView.swift; sourceTree = "<group>"; };
 		2A5BB7DF2CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameSettingViewReactor.swift; sourceTree = "<group>"; };
 		2A5BB7E22CDCD97300E1C799 /* JoinRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinRequest.swift; sourceTree = "<group>"; };
 		2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameValidationResponse.swift; sourceTree = "<group>"; };
@@ -613,6 +612,8 @@
 		38121E332CA6DA4000602499 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		3816C05B2CCDDF3D00C8688C /* ReAuthenticationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReAuthenticationResponse.swift; sourceTree = "<group>"; };
 		3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorInterceptor.swift; sourceTree = "<group>"; };
+		3816E2362D3BEE7E004CC196 /* TermsOfServiceCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsOfServiceCellView.swift; sourceTree = "<group>"; };
+		3816E2392D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TermsOfServiceCellView+Rx.swift"; sourceTree = "<group>"; };
 		3817016D2CD882C2005FC220 /* TimeoutInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutInterceptor.swift; sourceTree = "<group>"; };
 		381701702CD88374005FC220 /* CompositeInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeInterceptor.swift; sourceTree = "<group>"; };
 		381701772CD88854005FC220 /* LogginMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogginMonitor.swift; sourceTree = "<group>"; };
@@ -728,6 +729,7 @@
 		38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndCommentView.swift; sourceTree = "<group>"; };
 		38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreBottomSheetViewController.swift; sourceTree = "<group>"; };
 		38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogAction.swift; sourceTree = "<group>"; };
+		38AA66252D3AC3F500B3F6B2 /* DialogMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogMessageView.swift; sourceTree = "<group>"; };
 		38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMDialogViewController+Show.swift"; sourceTree = "<group>"; };
 		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTopButtonView.swift; sourceTree = "<group>"; };
@@ -768,6 +770,7 @@
 		38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTokenSet.swift; sourceTree = "<group>"; };
 		38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewReactor.swift; sourceTree = "<group>"; };
 		38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingTokenInterceptor.swift; sourceTree = "<group>"; };
+		38F006A92D395A7F001AC5F7 /* SuspensionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspensionResponse.swift; sourceTree = "<group>"; };
 		38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedTagResponse.swift; sourceTree = "<group>"; };
 		38F3D92F2D06C2370049F575 /* SOMAnimationTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMAnimationTransitioning.swift; sourceTree = "<group>"; };
 		38F70E5A2D1905D000B33C9D /* MainHomeTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainHomeTabBarController.swift; sourceTree = "<group>"; };
@@ -852,7 +855,6 @@
 				2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */,
 				2A032EFC2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift */,
 				2A5BB7D32CDCA5BE00E1C799 /* Views */,
-				2A5BB7C02CDB893D00E1C799 /* Cells */,
 			);
 			path = TermsOfService;
 			sourceTree = "<group>";
@@ -860,18 +862,9 @@
 		2A5BB7BC2CDB86E500E1C799 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2A5BB7BD2CDB870000E1C799 /* OnboardingGuideLabelView.swift */,
-				2A5BB7C42CDBA05400E1C799 /* PrimaryButtonView.swift */,
+				2A5BB7BD2CDB870000E1C799 /* OnboardingGuideMessageView.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		2A5BB7C02CDB893D00E1C799 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				2A5BB7C12CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift */,
-			);
-			path = Cells;
 			sourceTree = "<group>";
 		};
 		2A5BB7C72CDBA4F400E1C799 /* NicknameSetting */ = {
@@ -889,7 +882,6 @@
 			children = (
 				2A5BB7CC2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift */,
 				2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */,
-				2A5BB7DB2CDCBB5C00E1C799 /* Views */,
 			);
 			path = ProfileImageSetting;
 			sourceTree = "<group>";
@@ -899,6 +891,7 @@
 			children = (
 				2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */,
 				38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */,
+				38AA66242D3AC3E400B3F6B2 /* Views */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -907,6 +900,8 @@
 			isa = PBXGroup;
 			children = (
 				2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */,
+				3816E2362D3BEE7E004CC196 /* TermsOfServiceCellView.swift */,
+				3816E2392D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -919,17 +914,10 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		2A5BB7DB2CDCBB5C00E1C799 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				2A5BB7DC2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		2A5BB7E52CDCDC2B00E1C799 /* Join */ = {
 			isa = PBXGroup;
 			children = (
+				38F006A92D395A7F001AC5F7 /* SuspensionResponse.swift */,
 				2A5BB7E62CDCDC3600E1C799 /* NicknameValidationResponse.swift */,
 				2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */,
 			);
@@ -1356,8 +1344,7 @@
 		385071972CA2956D00A7905A /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
-				385071982CA2958100A7905A /* Launch */,
-				2A5BB7B72CDB856D00E1C799 /* Onboarding */,
+				38AA66202D3AA5EA00B3F6B2 /* Intro */,
 				38B6AACB2CA410C000CE6DB6 /* Main */,
 				2AFF95522CF3207F00CBFB12 /* Tags */,
 			);
@@ -1769,6 +1756,23 @@
 				38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */,
 			);
 			path = MoreBottomSheet;
+			sourceTree = "<group>";
+		};
+		38AA66202D3AA5EA00B3F6B2 /* Intro */ = {
+			isa = PBXGroup;
+			children = (
+				385071982CA2958100A7905A /* Launch */,
+				2A5BB7B72CDB856D00E1C799 /* Onboarding */,
+			);
+			path = Intro;
+			sourceTree = "<group>";
+		};
+		38AA66242D3AC3E400B3F6B2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				38AA66252D3AC3F500B3F6B2 /* DialogMessageView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		38AE56572D0489E500CAA431 /* SOMDialogController */ = {
@@ -2335,6 +2339,7 @@
 				2ACBD4182CC963390057C013 /* DefaultCardImageResponse.swift in Sources */,
 				3803CF782D01685000FD90DB /* CommentHistroyViewReactor.swift in Sources */,
 				38816DA32D004DED00EB87D6 /* UpdateProfileView.swift in Sources */,
+				3816E23B2D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift in Sources */,
 				2AFD054A2CFF7687007C84AD /* RecommendTagsResponse.swift in Sources */,
 				38773E7D2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */,
 				38CC49862CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */,
@@ -2353,11 +2358,11 @@
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				385009C32D363525007175A1 /* FilterNil.swift in Sources */,
 				3816C05D2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */,
-				2A5BB7C62CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */,
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				38CC49892CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */,
 				38F70E5C2D1905D000B33C9D /* MainHomeTabBarController.swift in Sources */,
 				38E7FBF02D3CF6BC00A359CD /* SOMDialogAction.swift in Sources */,
+				38AA66272D3AC3F500B3F6B2 /* DialogMessageView.swift in Sources */,
 				3878D07E2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
 				3878B8632D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
 				2A44A4352CAC21A500DC463E /* SignUpResponse.swift in Sources */,
@@ -2384,12 +2389,11 @@
 				2A5BB7E82CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
 				2AFF95622CF33A3900CBFB12 /* FavoriteTagView.swift in Sources */,
 				2A032EFE2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */,
-				2A5BB7C32CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */,
 				388C96372CCE41700061C598 /* AuthInfo.swift in Sources */,
 				3878D0892CFFEF0F00F9522F /* TermsOfServiceTextCellView+Rx.swift in Sources */,
 				38F720B62CD4F15900DF32B5 /* PopularCardResponse.swift in Sources */,
 				3878D0702CFFDF9600F9522F /* SettingTextCellView.swift in Sources */,
-				2A5BB7BF2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */,
+				2A5BB7BF2CDB870000E1C799 /* OnboardingGuideMessageView.swift in Sources */,
 				388A2D2E2D00A45800E2F2F0 /* writtenCardResponse.swift in Sources */,
 				3878D07A2CFFE1E800F9522F /* ResignViewController.swift in Sources */,
 				38738D4C2D2FDCC300C37574 /* WithoutReadNotisCountResponse.swift in Sources */,
@@ -2507,7 +2511,6 @@
 				388698662D1998DB00008600 /* NotificationTabBarReactor.swift in Sources */,
 				381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
-				2A5BB7DE2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */,
 				3803CF832D017DB800FD90DB /* EnterMemberTransferViewController.swift in Sources */,
 				38F720A62CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
 				388693A02CF77FA7005F9EF3 /* UIApplication+Top.swift in Sources */,
@@ -2528,6 +2531,7 @@
 				2ACBD41E2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
 				2A5BB7DA2CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */,
 				3878D0682CFFDAF100F9522F /* OtherFollowViewCell.swift in Sources */,
+				38F006AB2D395A7F001AC5F7 /* SuspensionResponse.swift in Sources */,
 				2AE6B1792CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */,
 				389EF81B2D2F454600E053AE /* Log+Extract.swift in Sources */,
 				381701792CD88854005FC220 /* LogginMonitor.swift in Sources */,
@@ -2551,6 +2555,7 @@
 				381DEA8D2CD4BE4A009F1FE9 /* Card.swift in Sources */,
 				384972A42CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
 				38D6F1812CC2413400E11530 /* WriteCardTextView.swift in Sources */,
+				3816E2382D3BEE7E004CC196 /* TermsOfServiceCellView.swift in Sources */,
 				3878F4722CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				3803CF862D017DC700FD90DB /* EnterMemberTransferViewReactor.swift in Sources */,
 				38B6AAE32CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
@@ -2571,7 +2576,7 @@
 				38F88EBA2D2C1CB8002AD7A8 /* Info.swift in Sources */,
 				3834FADD2D11C5AC00C9108D /* SimpleCache.swift in Sources */,
 				38D563842D1719B1006265AA /* SOMSwipeTabBarItem.swift in Sources */,
-				2A5BB7BE2CDB870000E1C799 /* OnboardingGuideLabelView.swift in Sources */,
+				2A5BB7BE2CDB870000E1C799 /* OnboardingGuideMessageView.swift in Sources */,
 				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
 				2AFD05632D00A1E1007C84AD /* TagDetailCardResponse.swift in Sources */,
 				2A048E842C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
@@ -2591,7 +2596,7 @@
 				3830FFA62CEC6E3100ABA9FD /* Kingfisher.swift in Sources */,
 				3878D0672CFFDAF100F9522F /* OtherFollowViewCell.swift in Sources */,
 				381701782CD88854005FC220 /* LogginMonitor.swift in Sources */,
-				2A5BB7C52CDBA05400E1C799 /* PrimaryButtonView.swift in Sources */,
+				3816E23A2D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift in Sources */,
 				2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */,
 				3803CF822D017DB800FD90DB /* EnterMemberTransferViewController.swift in Sources */,
 				2AE6B14C2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */,
@@ -2615,6 +2620,7 @@
 				3803CF7A2D016BDB00FD90DB /* IssueMemberTransferViewReactor.swift in Sources */,
 				38C2D4172CFEAACA00CEA092 /* ProfileViewFooterCell.swift in Sources */,
 				38E7FBEF2D3CF6BB00A359CD /* SOMDialogAction.swift in Sources */,
+				38AA66262D3AC3F500B3F6B2 /* DialogMessageView.swift in Sources */,
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
@@ -2723,7 +2729,6 @@
 				2A44A42A2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
 				2A5BB7B92CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
 				2AFD05462CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */,
-				2A5BB7DD2CDCBB6400E1C799 /* OnboardingProfileImageSettingView.swift in Sources */,
 				2AFD054F2CFF79D8007C84AD /* TagsViewReactor.swift in Sources */,
 				2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */,
 				388698652D1998DB00008600 /* NotificationTabBarReactor.swift in Sources */,
@@ -2754,7 +2759,6 @@
 				2AE6B1752CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */,
 				38601E1A2D3139BB00A465A9 /* TagInfoResponse.swift in Sources */,
 				382E15362D15A6460097B09C /* NotificationTabBarController.swift in Sources */,
-				2A5BB7C22CDB895A00E1C799 /* OnboardingTermsOfServiceTableViewCell.swift in Sources */,
 				2A34AFB52D144F08007BD7E7 /* EmptyTagDetailTableViewCell.swift in Sources */,
 				3803CF742D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
 				2AFF95702CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */,
@@ -2785,6 +2789,7 @@
 				38F70E5E2D190FBD00B33C9D /* MainHomeTabBarReactor.swift in Sources */,
 				38601E182D31399400A465A9 /* CardRequest.swift in Sources */,
 				2A5BB7FA2CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift in Sources */,
+				38F006AA2D395A7F001AC5F7 /* SuspensionResponse.swift in Sources */,
 				3878D06F2CFFDF9600F9522F /* SettingTextCellView.swift in Sources */,
 				38B8A5842CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				2AFF95612CF33A3900CBFB12 /* FavoriteTagView.swift in Sources */,
@@ -2808,6 +2813,7 @@
 				2AFD05552D0082DE007C84AD /* SearchTagsResponse.swift in Sources */,
 				38B8A5882CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
 				389EF8172D2F450000E053AE /* Log.swift in Sources */,
+				3816E2372D3BEE7E004CC196 /* TermsOfServiceCellView.swift in Sources */,
 				38738D4B2D2FDCC300C37574 /* WithoutReadNotisCountResponse.swift in Sources */,
 				388698622D1986B100008600 /* NotificationRequest.swift in Sources */,
 				38572CDE2D2254E800B07C69 /* PlaceholderViewCell.swift in Sources */,

@@ -140,7 +140,7 @@ class UploadCardBottomSheetViewReactor: Reactor {
                 guard let self = self else { return Observable.just(Mutation.myImageName("")) }
                 
                 // 2. presigned URL을 통해 이미지를 업로드합니다.
-                guard let url = URL(string: presignedResponse.url.href) else {
+                guard let url = URL(string: presignedResponse.url.url) else {
                     return Observable.just(Mutation.myImageName(""))
                 }
                 

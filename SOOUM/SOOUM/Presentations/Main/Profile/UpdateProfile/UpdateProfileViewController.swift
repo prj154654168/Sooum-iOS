@@ -107,13 +107,13 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         let nickname = self.updateProfileView.textField.rx.text.orEmpty.distinctUntilChanged()
         nickname
             .debounce(.seconds(1), scheduler: MainScheduler.instance)
-            .map { Reactor.Action.checkValidate($0) }
+            .map(Reactor.Action.checkValidate)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         self.completeButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(nickname)
-            .map { Reactor.Action.updateProfile($0) }
+            .map(Reactor.Action.updateProfile)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -126,10 +126,9 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isValid)
             .distinctUntilChanged()
             .subscribe(with: self) { object, isValid in
-                
-                object.completeButton.isEnabled = isValid
                 object.completeButton.foregroundColor = isValid ? .som.white : .som.gray600
                 object.completeButton.backgroundColor = isValid ? .som.p300 : .som.gray300
+                object.completeButton.isEnabled = isValid
             }
             .disposed(by: self.disposeBag)
         
@@ -179,11 +178,13 @@ extension UpdateProfileViewController {
         config.wordings.crop = "자르기"
         
         let picker = YPImagePicker(configuration: config)
-        picker.didFinishPicking { [weak picker] items, cancelled in
+        picker.didFinishPicking { [weak self] items, cancelled in
+            
+            guard let self = self, let reactor = self.reactor else { return }
             
             if cancelled {
                 Log.error("Picker was canceled")
-                picker?.dismiss(animated: true, completion: nil)
+                picker.dismiss(animated: true, completion: nil)
                 return
             }
             
@@ -191,7 +192,7 @@ extension UpdateProfileViewController {
                 self.updateProfileView.image = image
                 reactor.action.onNext(.updateImage(image))
             }
-            picker?.dismiss(animated: true, completion: nil)
+            picker.dismiss(animated: true, completion: nil)
         }
         
         self.present(picker, animated: true, completion: nil)

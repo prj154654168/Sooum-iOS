@@ -141,7 +141,8 @@ extension UpdateProfileViewReactor {
             .withUnretained(self)
             .flatMapLatest { object, response -> Observable<(strUrl: String, imageName: String)> in
                 object.imageName = response.imgName
-                return .just((response.url.href, response.imgName))
+                let result = (response.url.url, response.imgName)
+                return .just(result)
             }
     }
 }

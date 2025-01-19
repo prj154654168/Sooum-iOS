@@ -8,10 +8,17 @@
 import UIKit
 
 import ReactorKit
-import RxCocoa
 import RxSwift
 
+
 enum TermsOfService: CaseIterable {
+    
+    enum Text {
+        static let termsOfSeviceUrlString: String = "https://mewing-space-6d3.notion.site/3f92380d536a4b569921d2809ed147ef?pvs=4"
+        static let locationServiceUrlString: String = "https://mewing-space-6d3.notion.site/45d151f68ba74b23b24483ad8b2662b4?pvs=4"
+        static let privacyPolicyUrlString: String = "https://mewing-space-6d3.notion.site/44e378c9d11d45159859492434b6b128?pvs=4"
+    }
+    
     case termsOfService
     case locationService
     case privacyPolicy
@@ -27,24 +34,14 @@ enum TermsOfService: CaseIterable {
         }
     }
     
-    var indexPath: IndexPath {
-        switch self {
-        case .termsOfService: IndexPath(row: 0, section: 0)
-        case .locationService: IndexPath(row: 1, section: 0)
-        case .privacyPolicy: IndexPath(row: 2, section: 0)
-        }
-    }
-    
-    var notionURL: URL {
+    var url: URL {
         switch self {
         case .termsOfService:
-            return URL(string: "https://mewing-space-6d3.notion.site/3f92380d536a4b569921d2809ed147ef?pvs=4")!
-
+            return URL(string: Text.termsOfSeviceUrlString)!
         case .locationService:
-            return URL(string: "https://mewing-space-6d3.notion.site/45d151f68ba74b23b24483ad8b2662b4?pvs=4")!
-            
+            return URL(string: Text.locationServiceUrlString)!
         case .privacyPolicy:
-            return URL(string: "https://mewing-space-6d3.notion.site/44e378c9d11d45159859492434b6b128?pvs=4")!
+            return URL(string: Text.privacyPolicyUrlString)!
         }
     }
 }
@@ -77,7 +74,7 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
     
     struct State {
         /// 다음 화면으로 넘어가기 필요 여부
-        fileprivate(set) var shoulNavigate: Bool = false
+        fileprivate(set) var shouldNavigate: Bool = false
         /// 이용약관 동의 여부
         fileprivate(set) var isTermsOfServiceAgreed = false
         /// 위치 동의 여부
@@ -92,7 +89,6 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
                 && self.isPrivacyPolicyAgreed
         }
     }
-        
     var initialState = State()
     
     let provider: ManagerProviderType
@@ -104,7 +100,8 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .signUp:
-            return join()
+            return self.provider.authManager.join()
+                .map(Mutation.signUpResult)
             
         case .termsOfServiceAgree:
             return .just(.setIsTermsOfServiceAgreed(!self.currentState.isTermsOfServiceAgreed))
@@ -128,8 +125,8 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case let .signUpResult(result):
-            newState.shoulNavigate = result
+        case let .signUpResult(shouldNavigate):
+            newState.shouldNavigate = shouldNavigate
             
         case let .setIsTermsOfServiceAgreed(isAgreed):
             newState.isTermsOfServiceAgreed = isAgreed
@@ -141,13 +138,6 @@ class OnboardingTermsOfServiceViewReactor: Reactor {
             newState.isPrivacyPolicyAgreed = isAgreed
         }
         return newState
-    }
-    
-    private func join() -> Observable<Mutation> {
-        return self.provider.authManager.join()
-            .map { result in
-                Mutation.signUpResult(result)
-            }
     }
 }
 
