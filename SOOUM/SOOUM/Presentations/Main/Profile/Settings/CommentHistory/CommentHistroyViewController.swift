@@ -83,7 +83,7 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
     func bind(reactor: CommentHistroyViewReactor) {
         
         // Action
-        self.rx.viewDidLoad
+        self.rx.viewWillAppear
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
