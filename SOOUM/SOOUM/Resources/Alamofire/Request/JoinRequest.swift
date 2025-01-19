@@ -11,12 +11,15 @@ import Alamofire
 
 enum JoinRequest: BaseRequest {
     
+    case suspension(encryptedDeviceId: String)
     case validateNickname(nickname: String)
     case profileImagePresignedURL
-    case registerUser(userName: String, imageName: String)
+    case registerUser(userName: String, imageName: String?)
     
     var path: String {
         switch self {
+        case .suspension:
+            return "/members/suspension"
         case .validateNickname(let nickname):
             return "/profiles/nickname/available"
         case .profileImagePresignedURL:
@@ -28,7 +31,7 @@ enum JoinRequest: BaseRequest {
     
     var method: HTTPMethod {
         switch self {
-        case .validateNickname:
+        case .suspension, .validateNickname:
             return .post
         case .registerUser:
             return .patch
@@ -39,22 +42,24 @@ enum JoinRequest: BaseRequest {
     
     var parameters: Parameters {
         switch self {
+        case let .suspension(encryptedDeviceId):
+            return ["encryptedDeviceId": encryptedDeviceId]
         case let .validateNickname(nickname):
             return ["nickname": nickname]
         case .profileImagePresignedURL:
             return ["extension": "JPEG"]
         case .registerUser(let nickname, let profileImg):
-            let profileImg = profileImg.isEmpty ? "" : profileImg
-            return [
-                "nickname": nickname,
-                "profileImg": profileImg.isEmpty ? nil : profileImg
-            ].compactMapValues { $0 }
+            if let profileImg = profileImg {
+                return ["nickname": nickname, "profileImg": profileImg]
+            } else {
+                return ["nickname": nickname]
+            }
         }
     }
         
     var encoding: ParameterEncoding {
         switch self {
-        case .registerUser, .validateNickname:
+        case .suspension, .registerUser, .validateNickname:
             return JSONEncoding.default
         default:
             return URLEncoding.queryString
@@ -63,7 +68,7 @@ enum JoinRequest: BaseRequest {
     
     var authorizationType: AuthorizationType {
         switch self {
-        case .validateNickname:
+        case .suspension, .validateNickname:
             return .none
         default:
             return .access
