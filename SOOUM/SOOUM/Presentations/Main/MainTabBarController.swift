@@ -74,7 +74,8 @@ class MainTabBarController: SOMTabBarController, View {
         
         let tagViewcontroller = TagsViewController()
         tagViewcontroller.reactor = reactor.reactorForTags()
-        tagViewcontroller.tabBarItem = .init(
+        let tagNavigationController = UINavigationController(rootViewController: tagViewcontroller)
+        tagNavigationController.tabBarItem = .init(
             title: Text.tagTitle,
             image: .init(.icon(.outlined(.star))),
             tag: 2
@@ -94,7 +95,7 @@ class MainTabBarController: SOMTabBarController, View {
         self.viewControllers = [
             mainHomeNavigationController,
             writeCardViewController,
-            tagViewcontroller,
+            tagNavigationController,
             profileNavigationController
         ]
         
