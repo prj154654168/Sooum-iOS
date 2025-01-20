@@ -10,5 +10,8 @@ import Foundation
 
 extension Notification.Name {
     
+    /// Update tabBarHidden
     static let hidesBottomBarWhenPushedDidChange = Notification.Name("hidesBottomBarWhenPushedDidChange")
+    /// Update location auth state
+    static let changedLocationAuthorization = Notification.Name("changedLocationAuthorization")
 }

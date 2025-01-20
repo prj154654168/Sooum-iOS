@@ -109,7 +109,29 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
         $0.delegate = self
     }
     
+    
+    // MARK: Initalization
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .changedLocationAuthorization, object: nil)
+    }
+    
+    
+    // MARK: Override func
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.changedLocationAuthorization),
+            name: .changedLocationAuthorization,
+            object: nil
+        )
+    }
+    
     override func setupConstraints() {
+        super.setupConstraints()
         
         self.view.backgroundColor = .som.white
         
@@ -218,6 +240,15 @@ class UploadCardBottomSheetViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
     }
+    
+    
+    // MARK: Objc func
+    
+    @objc
+    private func changedLocationAuthorization(_ notification: Notification) {
+        
+        self.tableView.reloadSections(IndexSet(3...3), with: .automatic)
+    }
 }
 
 // MARK: - UITableVie
@@ -315,15 +346,18 @@ extension UploadCardBottomSheetViewController: UITableViewDataSource, UITableVie
             for: indexPath
         ) as! UploadCardSettingTableViewCell
         
+        let isDeniedLocationAuthStatus = self.reactor?.provider.locationManager.checkLocationAuthStatus() == .denied
         if self.reactor?.requestType == .card {
             cell.setData(
                 cellOption: Section.OtherSettings.allCases[indexPath.item],
-                globalCardOptionState: bottomSheetOptionState
+                globalCardOptionState: bottomSheetOptionState,
+                isDeniedLocationAuthStatus: isDeniedLocationAuthStatus
             )
         } else {
             cell.setData(
                 cellOption: Section.OtherSettings.distanceLimit,
-                globalCardOptionState: bottomSheetOptionState
+                globalCardOptionState: bottomSheetOptionState,
+                isDeniedLocationAuthStatus: isDeniedLocationAuthStatus
             )
         }
         
