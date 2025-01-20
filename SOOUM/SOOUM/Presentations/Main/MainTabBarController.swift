@@ -181,6 +181,7 @@ extension MainTabBarController: LocationManagerDelegate {
     
     func locationManager(_ manager: LocationManager, didChangeAuthStatus status: AuthStatus) {
         Log.debug("Change location auth status", status)
+        NotificationCenter.default.post(name: .changedLocationAuthorization, object: nil)
     }
     
     func locationManager(_ manager: LocationManager, didFailWithError error: any Error) {

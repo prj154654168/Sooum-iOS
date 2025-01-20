@@ -72,17 +72,25 @@ class UploadCardSettingTableViewCell: UITableViewCell {
     // MARK: - setData
     func setData(
         cellOption: UploadCardBottomSheetViewController.Section.OtherSettings,
-        globalCardOptionState: BehaviorRelay<[UploadCardBottomSheetViewController.Section.OtherSettings: Bool]>
+        globalCardOptionState: BehaviorRelay<[UploadCardBottomSheetViewController.Section.OtherSettings: Bool]>,
+        isDeniedLocationAuthStatus: Bool
     ) {
         self.cellOption = cellOption
         titleLabel.text = cellOption.title
         descLabel.text = cellOption.description
+        
+        if cellOption == .distanceLimit, isDeniedLocationAuthStatus {
+            globalCardOptionState.accept([cellOption: true])
+        }
         self.globalCardOption = globalCardOptionState
         cellToggleState.accept(globalCardOptionState.value[cellOption] ?? false)
         
         bind()
         
-        toggleView.setData(toggleState: cellToggleState)
+        toggleView.setData(
+            toggleState: cellToggleState,
+            isDeniedLocationAuthStatus: (cellOption == .distanceLimit) && isDeniedLocationAuthStatus
+        )
     }
     
     func bind() {

@@ -16,6 +16,14 @@ import Then
 
 class ToggleView: UIView {
     
+    enum Text {
+        static let dialogTitle: String = "위치 정보 사용 설정"
+        static let dialogMessage: String = "위치 확인을 위해 권한 설정이 필요해요"
+        
+        static let cancelActionTitle: String = "취소"
+        static let settingActionTitle: String = "설정"
+    }
+    
     var toggleState: BehaviorRelay<Bool>?
     
     var disposeBag = DisposeBag()
@@ -44,7 +52,7 @@ class ToggleView: UIView {
         disposeBag = DisposeBag()
     }
     
-    func setData(toggleState: BehaviorRelay<Bool>) {
+    func setData(toggleState: BehaviorRelay<Bool>, isDeniedLocationAuthStatus: Bool) {
         self.toggleState = toggleState
         self.toggleState?
             .subscribe(with: self) { object, toggleState in
@@ -52,7 +60,11 @@ class ToggleView: UIView {
             }
         .disposed(by: self.disposeBag)
         
-        action()
+        if isDeniedLocationAuthStatus {
+            showDialog()
+        } else {
+            action()
+        }
     }
 
     private func setupConstraint() {
@@ -69,6 +81,41 @@ class ToggleView: UIView {
             $0.size.equalTo(20)
             $0.leading.equalToSuperview().offset(2)
         }
+    }
+    
+    private func showDialog() {
+        self.rx.tapGesture()
+            .when(.recognized)
+            .subscribe(onNext: { _ in
+                let cancelAction = SOMDialogAction(
+                    title: Text.cancelActionTitle,
+                    style: .gray,
+                    action: {
+                        UIApplication.topViewController?.dismiss(animated: true)
+                    }
+                )
+                let settingAction = SOMDialogAction(
+                    title: Text.settingActionTitle,
+                    style: .primary,
+                    action: {
+                        let application = UIApplication.shared
+                        let openSettingsURLString: String = UIApplication.openSettingsURLString
+                        if let settingsURL = URL(string: openSettingsURLString),
+                           application.canOpenURL(settingsURL) {
+                            application.open(settingsURL)
+                        }
+                        
+                        UIApplication.topViewController?.dismiss(animated: true)
+                    }
+                )
+                
+                SOMDialogViewController.show(
+                    title: Text.dialogTitle,
+                    message: Text.dialogMessage,
+                    actions: [cancelAction, settingAction]
+                )
+            })
+            .disposed(by: self.disposeBag)
     }
     
     private func action() {
