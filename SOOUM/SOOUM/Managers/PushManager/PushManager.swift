@@ -92,7 +92,7 @@ extension PushManager {
 
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(updateNotificationStatus),
+            selector: #selector(self.updateNotificationStatus),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )

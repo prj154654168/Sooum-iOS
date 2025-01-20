@@ -16,6 +16,7 @@ class WriteCardViewReactor: Reactor {
     }
     
     enum Action: Equatable {
+        case landing
         case writeCard(
             isDistanceShared: Bool,
             isPublic: Bool,
@@ -38,16 +39,19 @@ class WriteCardViewReactor: Reactor {
     }
     
     enum Mutation {
+        case updateBanEndAt(Date?)
         case writeCard(Bool)
         case relatedTags([RelatedTag])
     }
     
     struct State {
+        var banEndAt: Date?
         var isWrite: Bool?
         var relatedTags: [RelatedTag]
     }
     
     var initialState: State = .init(
+        banEndAt: nil,
         isWrite: nil,
         relatedTags: []
     )
@@ -73,6 +77,12 @@ class WriteCardViewReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .landing:
+            
+            return self.provider.networkManager.request(SettingsResponse.self, request: SettingsRequest.activate)
+                .flatMapLatest { response -> Observable<Mutation> in
+                    return .just(.updateBanEndAt(response.banEndAt))
+                }
         case let .writeCard(
             isDistanceShared,
             isPublic,
@@ -138,6 +148,8 @@ class WriteCardViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var state: State = state
         switch mutation {
+        case let .updateBanEndAt(banEndAt):
+            state.banEndAt = banEndAt
         case let .writeCard(isWrite):
             state.isWrite = isWrite
         case let .relatedTags(relatedTags):
