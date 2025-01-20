@@ -65,9 +65,9 @@ class EnterMemberTransferViewReactor: Reactor {
                                 encryptedDeviceId: encryptedDeviceId
                             )
                             
-                            return self.provider.networkManager.request(Empty.self, request: request)
-                                .flatMapLatest { _ -> Observable<Mutation> in
-                                    return .just(.enterTransferCode(true))
+                            return self.provider.networkManager.request(Status.self, request: request)
+                                .flatMapLatest { response -> Observable<Mutation> in
+                                    return .just(.enterTransferCode(response.httpCode != 400))
                                 }
                         } else {
                             return .just(.enterTransferCode(false))
@@ -97,6 +97,7 @@ extension EnterMemberTransferViewReactor {
     var catchClosure: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
             .concat([
+                .just(.enterTransferCode(false)),
                 .just(.updateIsProcessing(false))
             ])
         }
