@@ -90,6 +90,10 @@ extension Date {
         return self.toString("yyyy년 MM월 dd일")
     }
     
+    var banEndDetailFormatted: String {
+        return self.toString("yyyy년 MM월 dd일 HH시 mm분")
+    }
+    
     var announcementFormatted: String {
         return self.toString("yyyy. MM. dd")
     }

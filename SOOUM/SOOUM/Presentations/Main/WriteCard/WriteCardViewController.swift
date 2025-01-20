@@ -28,10 +28,22 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let failedWriteDialogTitle: String = "부적절한 사진으로 보여져요"
         static let failedWriteDialogMessage: String = "적절한 사진으로 바꾸거나\n기본 이미지를 사용해주세요"
         
+        static let donotWirteDialogTitle: String = "카드를 작성할 수 없어요"
+        static let donotWirteDialogTopMessage: String = "지속적인 신고 접수로 인해"
+        static let donotWirteDialogBottomMessage: String = "까지\n카드를 작성할 수 없어요"
+        
+        
         static let cancelActionTitle: String = "취소"
         static let addCardActionTitle: String = "카드추가"
         static let confirmActionTitle: String = "확인"
     }
+    
+    enum ConstValue {
+        static let maxCharacterForTag: Int = 15
+    }
+    
+    
+    // MARK: Views
     
     private let timeLimitBackgroundView = UIView().then {
         $0.backgroundColor = .som.p200
@@ -54,12 +66,19 @@ class WriteCardViewController: BaseNavigationViewController, View {
         $0.isEnabled = false
     }
     
-    lazy var writeCardView = WriteCardView().then {
+    private lazy var writeCardView = WriteCardView().then {
         $0.writeCardTextView.delegate = self
         $0.writeTagTextField.delegate = self
         $0.writtenTags.delegate = self
         $0.relatedTags.delegate = self
     }
+    
+    private let uploadCardBottomSheetViewController = UploadCardBottomSheetViewController()
+    
+    private var writtenTagModels = [SOMTagModel]()
+    
+    
+    // MARK: Override variables
     
     override var navigationBarHeight: CGFloat {
         58
@@ -69,9 +88,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         false
     }
     
-    private let uploadCardBottomSheetViewController = UploadCardBottomSheetViewController()
     
-    private var writtenTagModels = [SOMTagModel]()
+    // MARK: Variables
     
     private var keyboardHeight: CGFloat = 0
     
@@ -82,7 +100,23 @@ class WriteCardViewController: BaseNavigationViewController, View {
     private var serialTimer: Disposable?
     
     
-    // MARK: - Life Cycles
+    // MARK: Override func
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.setupNaviBar()
+        
+        guard self.presentedViewController == nil else { return }
+        self.showBottomSheet(
+            presented: self.uploadCardBottomSheetViewController,
+            dismissWhenScreenDidTap: true,
+            isHandleBar: true,
+            neverDismiss: true,
+            maxHeight: self.maxHeight,
+            initalHeight: self.initalHeight
+        )
+    }
     
     override func setupNaviBar() {
         super.setupNaviBar()
@@ -132,23 +166,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.uploadCardBottomSheetViewController.reactor = self.reactor?.reactorForUploadCard()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.setupNaviBar()
-        
-        guard self.presentedViewController == nil else { return }
-        
-        self.showBottomSheet(
-            presented: self.uploadCardBottomSheetViewController,
-            dismissWhenScreenDidTap: true,
-            isHandleBar: true,
-            neverDismiss: true,
-            maxHeight: self.maxHeight,
-            initalHeight: self.initalHeight
-        )
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -158,10 +175,17 @@ class WriteCardViewController: BaseNavigationViewController, View {
     }
     
     
-    // MARK: - ReactorKit - bind
+    // MARK: ReactorKit - bind
     
     func bind(reactor: WriteCardViewReactor) {
         
+        // landing
+        self.rx.viewWillAppear
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        // 피드 및 답글 작성 시 바텀 시트 높이 및 태그 입력 영역 숨김 처리
         if reactor.requestType == .comment {
             self.maxHeight = 38 + 24 + ((UIScreen.main.bounds.width - 40) * 0.5) + 28 + 92 + 74 + 19
             
@@ -174,38 +198,34 @@ class WriteCardViewController: BaseNavigationViewController, View {
         }
         
         // Keyboard, bottomSheet interaction
-        Observable.combineLatest(
-            RxKeyboard.instance.isHidden.asObservable(),
-            self.rx.viewWillDisappear
-        )
-        .subscribe(with: self) { object, combined in
-            
-            let (isHidden, willDisppear) = combined
-            
-            guard willDisppear == false else { return }
-            
-            if isHidden {
+        RxKeyboard.instance.isHidden
+            .drive(with: self) { object, isHidden in
                 
-                // 현재 present 된 viewController가 없을 때 표시
-                guard object.presentedViewController == nil else { return }
+                // 부모 뷰로 돌아갈 때, 아래 조건 무시
+                guard object.isMovingFromParent == false else { return }
                 
-                object.showBottomSheet(
-                    presented: object.uploadCardBottomSheetViewController,
-                    dismissWhenScreenDidTap: true,
-                    isHandleBar: true,
-                    neverDismiss: true,
-                    maxHeight: object.maxHeight,
-                    initalHeight: object.initalHeight
-                )
-            } else {
-                
-                // 현재 present 된 viewController가 있을 때 dismiss
-                guard object.presentedViewController != nil else { return }
-                
-                object.dismissBottomSheet()
+                if isHidden {
+                    
+                    // 현재 present 된 viewController가 없을 때 표시
+                    guard object.presentedViewController == nil else { return }
+                    
+                    object.showBottomSheet(
+                        presented: object.uploadCardBottomSheetViewController,
+                        dismissWhenScreenDidTap: true,
+                        isHandleBar: true,
+                        neverDismiss: true,
+                        maxHeight: object.maxHeight,
+                        initalHeight: object.initalHeight
+                    )
+                } else {
+                    
+                    // 현재 present 된 viewController가 있을 때 dismiss
+                    guard object.presentedViewController != nil else { return }
+                    
+                    object.dismissBottomSheet()
+                }
             }
-        }
-        .disposed(by: self.disposeBag)
+            .disposed(by: self.disposeBag)
             
         // Update image for textView
         let bottomSheetImageSelected = self.uploadCardBottomSheetViewController.bottomSheetImageSelected.distinctUntilChanged().share()
@@ -371,6 +391,27 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // State
+        reactor.state.map(\.banEndAt)
+            .filterNil()
+            .subscribe(with: self) { object, banEndAt in
+                let confirmAction = SOMDialogAction(
+                    title: Text.confirmActionTitle,
+                    style: .primary,
+                    action: {
+                        UIApplication.topViewController?.dismiss(animated: true) {
+                            object.navigationPop()
+                        }
+                    }
+                )
+                
+                SOMDialogViewController.show(
+                    title: Text.donotWirteDialogTitle,
+                    message: "\(Text.donotWirteDialogTopMessage)\n\(banEndAt.banEndDetailFormatted)\(Text.donotWirteDialogBottomMessage)",
+                    actions: [confirmAction]
+                )
+            }
+            .disposed(by: self.disposeBag)
+        
         let relatedTags = reactor.state.map(\.relatedTags).distinctUntilChanged().share()
         writtenTagText
             .map { $0.isEmpty }
@@ -430,6 +471,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
     }
     
+    
+    // MARK: Private func
+    
     // 펑 이벤트 구독
     private func subscribePungTime() {
         self.serialTimer?.dispose()
@@ -455,6 +499,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
 }
 
 
+// MARK: WriteCardTextViewDelegate
+
 extension WriteCardViewController: WriteCardTextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: WriteCardTextView) {
@@ -471,6 +517,9 @@ extension WriteCardViewController: WriteCardTextViewDelegate {
     }
 }
 
+
+// MARK: WriteTagTextFieldDelegate
+
 extension WriteCardViewController: WriteTagTextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: WriteTagTextField) {
@@ -486,6 +535,18 @@ extension WriteCardViewController: WriteTagTextFieldDelegate {
         }
     }
     
+    func textField(
+        _ textField: WriteTagTextField,
+        shouldChangeTextIn range: NSRange,
+        replacementText string: String
+    ) -> Bool {
+        
+        let nsString: NSString? = textField.text as NSString?
+        let newString: String = nsString?.replacingCharacters(in: range, with: string) ?? ""
+        
+        return newString.count < ConstValue.maxCharacterForTag + 1
+    }
+    
     func textFieldReturnKeyClicked(_ textField: WriteTagTextField) -> Bool {
         
         if self.writeCardView.writeTagTextField.isFirstResponder {
@@ -496,6 +557,9 @@ extension WriteCardViewController: WriteTagTextFieldDelegate {
         return true
     }
 }
+
+
+// MARK: SOMTagsDelegate
 
 extension WriteCardViewController: SOMTagsDelegate {
     
