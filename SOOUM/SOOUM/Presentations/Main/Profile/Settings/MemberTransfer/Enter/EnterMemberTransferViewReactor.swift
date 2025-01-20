@@ -66,7 +66,10 @@ class EnterMemberTransferViewReactor: Reactor {
                             )
                             
                             return self.provider.networkManager.request(Status.self, request: request)
-                                .flatMapLatest { response -> Observable<Mutation> in
+                                .withUnretained(self)
+                                .flatMapLatest { object, response -> Observable<Mutation> in
+                                    object.provider.authManager.initializeAuthInfo()
+                                    
                                     return .just(.enterTransferCode(response.httpCode != 400))
                                 }
                         } else {
