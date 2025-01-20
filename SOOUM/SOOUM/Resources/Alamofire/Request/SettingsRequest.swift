@@ -62,7 +62,7 @@ enum SettingsRequest: BaseRequest {
                 return [:]
             }
         case let .transferMember(transferId, encryptedDeviceId):
-            return ["transferId": transferId, "encryptedDeviceId": encryptedDeviceId]
+            return ["deviceType": "IOS", "transferId": transferId, "encryptedDeviceId": encryptedDeviceId]
         case let .commentHistory(lastId):
             if let lastId = lastId {
                 return ["lastId": lastId]
