@@ -83,6 +83,7 @@ class WriteCardViewReactor: Reactor {
                 .flatMapLatest { response -> Observable<Mutation> in
                     return .just(.updateBanEndAt(response.banEndAt))
                 }
+                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
         case let .writeCard(
             isDistanceShared,
             isPublic,
