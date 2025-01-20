@@ -81,9 +81,14 @@ class SettingsViewController: BaseNavigationViewController, View {
     
     private let userBlockedBackgroundView = UIView()
     private let userBlockedLabel = UILabel().then {
-        $0.text = Text.userBlockedGuideMessage
-        $0.textColor = .som.black
-        $0.typography = .som.body1WithBold
+        let range = (Text.userBlockedGuideMessage as NSString).range(of: "정지")
+        let typography = Typography.som.body1WithBold
+        let attributedString = NSMutableAttributedString(
+            string: Text.userBlockedGuideMessage,
+            attributes: typography.attributes
+        )
+        attributedString.addAttribute(.foregroundColor, value: UIColor.som.red, range: range)
+        $0.attributedText = attributedString
     }
     private let unBlockDateLabel = UILabel().then {
         $0.text = Text.unBlockDate
@@ -133,6 +138,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             $0.alignment = .fill
             $0.setCustomSpacing(18, after: self.commentHistoryCellView)
             $0.setCustomSpacing(18, after: self.resignCellView)
+            $0.setCustomSpacing(20, after: self.suggestionCellView)
         }
         self.scrollView.addSubview(container)
         container.snp.makeConstraints {
@@ -148,15 +154,10 @@ class SettingsViewController: BaseNavigationViewController, View {
             $0.alignment = .center
             $0.distribution = .equalSpacing
         }
-        // TODO: API 연동 후 계정 정지일 때, height == 20 + 93 + 31, 활성화일 때, height == 31
-        self.userBlockedBackgroundView.snp.makeConstraints {
-            let height: CGFloat = 20 + 93 + 31
-            $0.height.equalTo(height)
-        }
         self.userBlockedBackgroundView.addSubview(userBlockContainer)
         userBlockContainer.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
-            $0.bottom.equalToSuperview().offset(-31)
+            $0.top.equalToSuperview().offset(22)
+            $0.bottom.equalToSuperview().offset(-22)
             $0.leading.trailing.equalToSuperview()
         }
     }
