@@ -275,7 +275,7 @@ extension AuthManager {
         }
         
         // 이전에 업로드 성공한 토큰이 다시 등록되는 경우 무시
-        guard self.registeredToken?.fcm != tokenSet.fcm else {
+        guard prevTokenSet?.fcm != tokenSet.fcm else {
             Log.info("Ignored already registered token set. (from: \(function))")
             return
         }
