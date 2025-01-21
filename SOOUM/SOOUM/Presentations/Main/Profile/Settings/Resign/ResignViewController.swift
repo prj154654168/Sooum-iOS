@@ -28,6 +28,10 @@ class ResignViewController: BaseNavigationViewController, View {
         static let secondResignGuideWithBanTo: String = "까지 재가입이 불가능해요"
         static let checkResignGuide: String = "위 안내사항을 모두 확인했습니다"
         static let resignButtonTitle: String = "탈퇴하기"
+        
+        static let dialogTitle: String = "계정이 이전된 기기입니다"
+        static let dialogMessge: String = "탈퇴 요청은 계정 이관코드를 입력한 기기에서 진행해주세요"
+        static let confirmActionTitle: String = "확인"
     }
     
     private let firstResignTitleLabel = UILabel().then {
@@ -215,19 +219,42 @@ class ResignViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map((\.isSuccess))
+        reactor.state.map(\.isSuccess)
             .distinctUntilChanged()
             .filter { $0 }
             .subscribe(with: self) { object, _ in
                 guard let window = object.view.window else { return }
                 
                 let onboardingViewController = OnboardingViewController()
+                onboardingViewController.reactor = reactor.reactorForOnboarding()
                 onboardingViewController.modalTransitionStyle = .crossDissolve
                 
                 let navigationViewController = UINavigationController(rootViewController: onboardingViewController)
                 window.rootViewController = navigationViewController
                 
                 object.navigationController?.viewControllers = []
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isError)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                let confirmAction = SOMDialogAction(
+                    title: Text.confirmActionTitle,
+                    style: .primary,
+                    action: {
+                        UIApplication.topViewController?.dismiss(animated: true) {
+                            object.navigationPop()
+                        }
+                    }
+                )
+                
+                SOMDialogViewController.show(
+                    title: Text.dialogTitle,
+                    message: Text.dialogMessge,
+                    actions: [confirmAction]
+                )
             }
             .disposed(by: self.disposeBag)
     }

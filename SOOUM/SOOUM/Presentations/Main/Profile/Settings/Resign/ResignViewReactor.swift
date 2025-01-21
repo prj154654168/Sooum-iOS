@@ -21,18 +21,21 @@ class ResignViewReactor: Reactor {
         case updateCheck(Bool)
         case updateIsSuccess(Bool)
         case updateIsProcessing(Bool)
+        case updateError(Bool)
     }
     
     struct State {
         var isCheck: Bool
         var isSuccess: Bool
         var isProcessing: Bool
+        var isError: Bool
     }
     
     var initialState: State = .init(
         isCheck: false,
         isSuccess: false,
-        isProcessing: false
+        isProcessing: false,
+        isError: false
     )
     
     let provider: ManagerProviderType
@@ -55,14 +58,21 @@ class ResignViewReactor: Reactor {
                 .just(.updateIsProcessing(true)),
                 self.provider.networkManager.request(Status.self, request: requset)
                     .withUnretained(self)
-                    .flatMapLatest { object, _ -> Observable<Mutation> in
-                        object.provider.authManager.initializeAuthInfo()
-                        
-                        return .concat([
-                            object.provider.pushManager.switchNotification(on: false)
-                                .flatMapLatest { error -> Observable<Mutation> in .empty() },
-                            .just(.updateIsSuccess(true))
-                        ])
+                    .flatMapLatest { object, response -> Observable<Mutation> in
+                        switch response.httpCode {
+                        case 418:
+                            return .just(.updateError(true))
+                        case 0:
+                            object.provider.authManager.initializeAuthInfo()
+                            
+                            return .concat([
+                                object.provider.pushManager.switchNotification(on: false)
+                                    .flatMapLatest { error -> Observable<Mutation> in .empty() },
+                                .just(.updateIsSuccess(response.httpCode == 0))
+                            ])
+                        default:
+                            return .empty()
+                        }
                     }
                     .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
@@ -79,6 +89,8 @@ class ResignViewReactor: Reactor {
             state.isSuccess = isSuccess
         case let .updateIsProcessing(isProcessing):
             state.isProcessing = isProcessing
+        case let .updateError(isError):
+            state.isError = isError
         }
         return state
     }
@@ -86,9 +98,19 @@ class ResignViewReactor: Reactor {
 
 extension ResignViewReactor {
     
+    func reactorForOnboarding() -> OnboardingViewReactor {
+        OnboardingViewReactor(provider: self.provider)
+    }
+}
+
+extension ResignViewReactor {
+    
     var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { _ in
-            .concat([
+        return { error in
+            
+            let nsError = error as NSError
+            return .concat([
+                .just(.updateError(nsError.code == 418)),
                 .just(.updateIsProcessing(false))
             ])
         }
