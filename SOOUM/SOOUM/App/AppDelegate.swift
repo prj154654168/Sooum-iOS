@@ -168,9 +168,6 @@ extension AppDelegate {
         
         guard UserDefaults.isFirstLaunch else { return }
         
-        // 앱 첫 실행 시 fcm token 요청 (회원가입 필수)
-        UIApplication.shared.registerForRemoteNotifications()
-        
         // 앱 첫 실행 시 token 정보 제거
         AuthKeyChain.shared.delete(.accessToken)
         AuthKeyChain.shared.delete(.refreshToken)

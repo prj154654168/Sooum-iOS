@@ -49,7 +49,7 @@ class MainTabBarController: SOMTabBarController, View {
                 }
                 
                 // 알리 권한 요청
-                reactor.provider.pushManager.switchNotification(isOn: true)
+                reactor.provider.pushManager.switchNotification(isOn: true, completion: nil)
             }
             .disposed(by: self.disposeBag)
         

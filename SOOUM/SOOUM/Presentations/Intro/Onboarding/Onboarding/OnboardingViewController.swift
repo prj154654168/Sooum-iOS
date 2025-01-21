@@ -119,6 +119,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
         
         // Action
         self.rx.viewDidLoad
+            .do(onNext: { reactor.provider.pushManager.switchNotification(isOn: true, completion: nil) })
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)

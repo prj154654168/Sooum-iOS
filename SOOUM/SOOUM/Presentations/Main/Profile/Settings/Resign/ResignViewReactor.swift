@@ -58,7 +58,11 @@ class ResignViewReactor: Reactor {
                     .flatMapLatest { object, _ -> Observable<Mutation> in
                         object.provider.authManager.initializeAuthInfo()
                         
-                        return .just(.updateIsSuccess(true))
+                        return .concat([
+                            object.provider.pushManager.switchNotification(on: false)
+                                .flatMapLatest { error -> Observable<Mutation> in .empty() },
+                            .just(.updateIsSuccess(true))
+                        ])
                     }
                     .catch(self.catchClosure),
                 .just(.updateIsProcessing(false))
