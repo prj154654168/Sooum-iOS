@@ -126,7 +126,7 @@ extension NetworkManager: NetworkManagerDelegate {
                             observer.onError(nsError)
                             return
                         case 418:
-                            let nsError = self?.setupError("Stop using token: HTTP 418 received,", with: 418) ?? .init()
+                            let nsError = self?.setupError("Stop using RefreshToken: HTTP 418 received,", with: 418) ?? .init()
                             observer.onError(nsError)
                             return
                         case 423:

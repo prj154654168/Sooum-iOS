@@ -249,10 +249,6 @@ extension AuthManager {
                                 }
                             })
                             .disposed(by: self.disposeBag)
-                        
-                    case 418:
-                        completion(.failure(error))
-                        object.provider?.pushManager.setupRootViewController(nil, terminated: false)
                     default:
                         break
                     }
