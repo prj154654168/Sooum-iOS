@@ -154,25 +154,6 @@ extension AppDelegate: MessagingDelegate {
 
 extension AppDelegate {
     
-    /// FCMToken 초기화
-    func reRegistrationFCMToken() {
-        
-        // 기존 푸시 알림 등록 해제
-        UIApplication.shared.unregisterForRemoteNotifications()
-        // 기존 fcmToken 삭제
-        Messaging.messaging().deleteToken { error in
-            if let error = error {
-                Log.error("Error delete FCMToken: \(error)")
-                return
-            } else {
-                // 푸시 알림 재등록
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    UIApplication.shared.registerForRemoteNotifications()
-                }
-            }
-        }
-    }
-    
     /// CocoaLumberjack 설정
     private func setupCocoaLumberjack() {
         DDLog.add(DDOSLogger.sharedInstance) // Uses os_log

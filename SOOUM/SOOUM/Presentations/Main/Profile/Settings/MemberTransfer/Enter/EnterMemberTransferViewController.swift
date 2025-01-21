@@ -181,9 +181,6 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .filter { $0 }
             .subscribe(with: self) { object, _ in
-                guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-                appDelegate.reRegistrationFCMToken()
-                
                 let launchScreenViewController = LaunchScreenViewController()
                 launchScreenViewController.reactor = reactor.reactorForLaunch()
                 object.view.window?.rootViewController = launchScreenViewController
