@@ -146,7 +146,6 @@ class OnboardingViewController: BaseNavigationViewController, View {
         // State
         reactor.state.map(\.suspension)
             .filterNil()
-            .distinctUntilChanged()
             .subscribe(with: self) { object, suspension in
                 let dialogMessageView = DialogMessageView(
                     isBanUser: suspension.isBanUser,
