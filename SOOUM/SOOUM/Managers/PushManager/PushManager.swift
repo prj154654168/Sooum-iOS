@@ -36,9 +36,7 @@ class PushManager: CompositeManager, PushManagerDelegate {
     override init(provider: ManagerProviderType) {
         super.init(provider: provider)
         
-        // 설정 앱의 알림 허용 유무와 동기화 하는 옵저버 제거
-        // 서버 api를 통해서만 알림 허용 유무 변경
-        // self.registerNotificationObserver()
+        self.registerNotificationObserver()
         self.updateNotificationStatus()
     }
 }
@@ -107,6 +105,9 @@ extension PushManager {
             .getNotificationSettings { [weak self] settings in
                 let authorized: Bool = (settings.authorizationStatus == .authorized)
                 DispatchQueue.main.async { [weak self] in
+                    if authorized && UIApplication.shared.isRegisteredForRemoteNotifications == false {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
                     let registered: Bool = UIApplication.shared.isRegisteredForRemoteNotifications
                     let localStatus: Bool = SimpleDefaults.shared.loadRemoteNotificationActivation()
                     self?.canReceiveNotifications = registered && authorized
@@ -125,16 +126,15 @@ extension PushManager {
 
             if isOn {
 
-                // 서버 api를 통해서만 알림 허용 유무 변경
-                // let appDelegate: AppDelegate? = application.delegate as? AppDelegate
-                // appDelegate?.registerRemoteNotificationCompletion = { [weak self] error in
-                //     if let error: Error = error {
-                //         self?.notificationStatus = false
-                //         completion?(error)
-                //     } else {
-                //         completion?(nil)
-                //     }
-                // }
+                let appDelegate: AppDelegate? = application.delegate as? AppDelegate
+                appDelegate?.registerRemoteNotificationCompletion = { [weak self] error in
+                    if let error: Error = error {
+                        self?.notificationStatus = false
+                        completion?(error)
+                    } else {
+                        completion?(nil)
+                    }
+                }
 
                 UNUserNotificationCenter.current().requestAuthorization(
                     options: [.alert, .badge, .sound],
