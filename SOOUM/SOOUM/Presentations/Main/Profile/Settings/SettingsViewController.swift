@@ -184,7 +184,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.notificationSettingCellView.rx.didSelect
-            .throttle(.seconds(1), scheduler: MainScheduler.instance)
+            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
             .withUnretained(self)
             .map { object, _ in Reactor.Action.updateNotificationStatus(!object.notificationSettingCellView.toggleSwitch.isOn) }
             .bind(to: reactor.action)

@@ -40,20 +40,9 @@ class SettingsViewReactor: Reactor {
         
         self.initialState = .init(
             banEndAt: nil,
-            notificationStatus: self.provider.pushManager.notificationStatus,
+            notificationStatus: provider.pushManager.notificationStatus,
             isProcessing: false
         )
-        
-        // 서버 api를 통해서만 알림 허용 유무 변경
-        // self.subscribe()
-    }
-    
-    private func subscribe() {
-
-        (self.provider.pushManager as? PushManager)?.rx.observe(\.notificationStatus)
-            .map(Action.updateNotificationStatus)
-            .bind(to: self.action)
-            .disposed(by: self.disposeBag)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
