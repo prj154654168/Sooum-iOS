@@ -20,7 +20,7 @@ enum JoinRequest: BaseRequest {
         switch self {
         case .suspension:
             return "/members/suspension"
-        case .validateNickname(let nickname):
+        case .validateNickname:
             return "/profiles/nickname/available"
         case .profileImagePresignedURL:
             return "/imgs/profiles/upload"
