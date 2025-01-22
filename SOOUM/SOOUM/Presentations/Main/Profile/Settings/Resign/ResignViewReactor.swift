@@ -64,11 +64,12 @@ class ResignViewReactor: Reactor {
                             return .just(.updateError(true))
                         case 0:
                             object.provider.authManager.initializeAuthInfo()
+                            SimpleDefaults.shared.initRemoteNotificationActivation()
                             
                             return .concat([
                                 object.provider.pushManager.switchNotification(on: false)
                                     .flatMapLatest { error -> Observable<Mutation> in .empty() },
-                                .just(.updateIsSuccess(response.httpCode == 0))
+                                .just(.updateIsSuccess(true))
                             ])
                         default:
                             return .empty()
