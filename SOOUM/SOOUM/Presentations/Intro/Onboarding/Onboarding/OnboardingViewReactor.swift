@@ -41,9 +41,13 @@ class OnboardingViewReactor: Reactor {
         switch action {
         case .landing:
             
-            return self.check()
-                .compactMap(\.value)
-                .map(Mutation.check)
+            return .concat([
+                self.check()
+                    .compactMap(\.value)
+                    .map(Mutation.check),
+                self.provider.pushManager.switchNotification(on: true)
+                    .flatMapLatest { _ -> Observable<Mutation> in .empty() }
+            ])
         case .reset:
             
             return .just(.shouldNavigate(false))

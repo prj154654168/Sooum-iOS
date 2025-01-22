@@ -117,12 +117,10 @@ extension AuthManager {
             .flatMapLatest { object, publicKey -> Observable<Bool> in
                 
                 if let secKey = object.convertPEMToSecKey(pemString: publicKey),
-                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey),
-                   let fcmToken = object.registeredToken?.fcm {
+                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
                     
                     let request: AuthRequest = .signUp(
                         encryptedDeviceId: encryptedDeviceId,
-                        firebaseToken: fcmToken,
                         isAllowNotify: true,
                         isAllowTermOne: true,
                         isAllowTermTwo: true,
@@ -131,6 +129,11 @@ extension AuthManager {
                     return provider.networkManager.request(SignUpResponse.self, request: request)
                         .map { response in
                             object.authInfo.updateToken(response.token)
+                            
+                            // FCM token 업데이트
+                            if let tokenSet = self.registeredToken {
+                                object.updateFcmToken(with: tokenSet, call: #function)
+                            }
                             return true
                         }
                 }
@@ -157,7 +160,7 @@ extension AuthManager {
                                 
                                 object.authInfo.updateToken(token)
                                 
-                                // 서버에 FCM token 업데이트
+                                // FCM token 업데이트
                                 if let tokenSet = object.registeredToken {
                                     object.updateFcmToken(with: tokenSet, call: #function)
                                 }
@@ -225,7 +228,7 @@ extension AuthManager {
                             )
                         )
                         
-                        // 서버에 FCM token 업데이트
+                        // FCM token 업데이트
                         if let tokenSet = object.registeredToken {
                             object.updateFcmToken(with: tokenSet, call: #function)
                         }
