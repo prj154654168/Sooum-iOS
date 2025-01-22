@@ -21,17 +21,22 @@ class MainTabBarReactor: Reactor {
 
     enum Action: Equatable {
         case judgeEntrance
+        case updateNotificationStatus(Bool)
     }
     
     enum Mutation {
         case updateEntrance
+        case updateNotificationStatus(Bool)
     }
     
     struct State {
         var entranceType: EntranceType
+        var notificationStatus: Bool
     }
     
-    var initialState: State = .init(entranceType: .none)
+    private let disposeBag = DisposeBag()
+    
+    var initialState: State
     
     private let willNavigate: EntranceType
     let pushInfo: NotificationInfo?
@@ -53,12 +58,23 @@ class MainTabBarReactor: Reactor {
         }
         self.willNavigate = willNavigate
         self.pushInfo = pushInfo
+        
+        self.initialState = .init(
+            entranceType: .none,
+            notificationStatus: provider.pushManager.notificationStatus
+        )
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .judgeEntrance:
-            return .just(.updateEntrance)
+            return .concat([
+                .just(.updateEntrance),
+                self.provider.pushManager.switchNotification(on: true)
+                    .flatMapLatest { error -> Observable<Mutation> in .empty() }
+            ])
+        case let .updateNotificationStatus(status):
+            return .just(.updateNotificationStatus(status))
         }
     }
     
@@ -67,8 +83,21 @@ class MainTabBarReactor: Reactor {
         switch mutation {
         case .updateEntrance:
             state.entranceType = self.willNavigate
+        case let .updateNotificationStatus(status):
+            state.notificationStatus = status
         }
         return state
+    }
+}
+
+extension MainTabBarReactor {
+    
+    private func subscribe() {
+        
+        (self.provider.pushManager as? PushManager)?.rx.observe(\.notificationStatus)
+            .map(Action.updateNotificationStatus)
+            .bind(to: self.action)
+            .disposed(by: self.disposeBag)
     }
 }
 
