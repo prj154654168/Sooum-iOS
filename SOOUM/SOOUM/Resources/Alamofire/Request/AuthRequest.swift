@@ -19,7 +19,6 @@ enum AuthRequest: BaseRequest {
     /// 회원가입
     case signUp(
         encryptedDeviceId: String,
-        firebaseToken: String,
         isAllowNotify: Bool,
         isAllowTermOne: Bool,
         isAllowTermTwo: Bool,
@@ -66,7 +65,6 @@ enum AuthRequest: BaseRequest {
             return ["encryptedDeviceId": encryptedDeviceId]
         case let .signUp(
             encryptedDeviceId,
-            firebaseToken,
             isAllowNotify,
             isAllowTermOne,
             isAllowTermTwo,
@@ -76,7 +74,6 @@ enum AuthRequest: BaseRequest {
                 "memberInfo": [
                     "encryptedDeviceId": encryptedDeviceId,
                     "deviceType": "IOS",
-                    "firebaseToken": firebaseToken,
                     "isAllowNotify": isAllowNotify
                 ] as [String: Any],
                 "policy": [
