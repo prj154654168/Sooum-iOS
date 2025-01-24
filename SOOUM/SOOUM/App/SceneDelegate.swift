@@ -7,6 +7,9 @@
 
 import UIKit
 
+import Kingfisher
+
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -50,5 +53,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneWillEnterForeground(_ scene: UIScene) { }
 
-    func sceneDidEnterBackground(_ scene: UIScene) { }
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        // 앱이 백그라운드 상태로 전환 되면, 모든 캐시 삭제
+        Kingfisher.ImageCache.default.clearCache()
+    }
 }
