@@ -10,13 +10,13 @@ import ReactorKit
 
 class MainHomeLatestViewReactor: Reactor {
     
-    // isUpdate == true 일 때, more
-    typealias CardsWithUpdate = (cards: [Card], isUpdate: Bool)
+    // hasMoreUpdate == true 일 때, moreFind
+    typealias CardsWithUpdate = (cards: [Card], hasMoreUpdate: Bool)
     
     enum Action: Equatable {
-        case landing(fromToParent: Bool)
+        case landing
         case refresh
-        case moreFind(lastId: String)
+        case moreFind(String)
     }
     
     enum Mutation {
@@ -27,9 +27,19 @@ class MainHomeLatestViewReactor: Reactor {
     }
     
     struct State {
-        var displayedCardsWithUpdate: CardsWithUpdate?
-        var isLoading: Bool
-        var isProcessing: Bool
+        fileprivate(set) var displayedCardsWithUpdate: CardsWithUpdate?
+        fileprivate(set) var isLoading: Bool
+        fileprivate(set) var isProcessing: Bool
+        
+        var displayedCards: [Card] {
+            return self.displayedCardsWithUpdate?.cards ?? []
+        }
+        var isDisplayedCardsEmpty: Bool {
+            return self.displayedCards.isEmpty
+        }
+        var displayedCardsCount: Int {
+            return self.isDisplayedCardsEmpty ? 1 : self.displayedCards.count
+        }
     }
     
     var initialState: State = .init(
@@ -39,8 +49,6 @@ class MainHomeLatestViewReactor: Reactor {
     )
     
     let provider: ManagerProviderType
-    
-    let simpleCache = SimpleCache.shared
     
     // TODO: 페이징
     // private let countPerLoading: Int = 10
@@ -52,34 +60,16 @@ class MainHomeLatestViewReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case let .landing(fromToParent):
+        case .landing:
             
-            // Navigation pop 으로 인한 표시이거나 (최우선),
-            // 캐시가 존재하지 않으면 서버 요청
-            if fromToParent {
-                
-                // Pop 으로 인한 viewWillAppear 일 때, 딜레이 및 로딩 제거
-                return self.refresh()
-            } else {
-                
-                if self.simpleCache.isEmpty(type: .latest) {
-                    
-                    // 캐시가 존재하지 않을 떄
-                    return .concat([
-                        .just(.updateIsProcessing(true)),
-                        self.refresh()
-                            .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                        .just(.updateIsProcessing(false))
-                    ])
-                } else {
-                    
-                    // 캐시가 존재하면 캐싱된 데이터 사용
-                    let cachedCards = self.simpleCache.loadMainHomeCards(type: .latest) ?? []
-                    
-                    return .just(.cards((cards: cachedCards, isUpdate: false)))
-                }
-            }
+            return .concat([
+                .just(.updateIsProcessing(true)),
+                self.refresh()
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                .just(.updateIsProcessing(false))
+            ])
         case .refresh:
+            
             return .concat([
                 .just(.updateIsLoading(true)),
                 self.refresh()
@@ -87,6 +77,7 @@ class MainHomeLatestViewReactor: Reactor {
                 .just(.updateIsLoading(false))
             ])
         case let .moreFind(lastId):
+            
             return .concat([
                 .just(.updateIsProcessing(true)),
                 self.moreFind(lastId)
@@ -103,7 +94,7 @@ class MainHomeLatestViewReactor: Reactor {
             state.displayedCardsWithUpdate = displayedCardsWithUpdate
         case let .more(displayedCardsWithUpdate):
             state.displayedCardsWithUpdate?.cards += displayedCardsWithUpdate.cards
-            state.displayedCardsWithUpdate?.isUpdate = displayedCardsWithUpdate.isUpdate
+            state.displayedCardsWithUpdate?.hasMoreUpdate = displayedCardsWithUpdate.hasMoreUpdate
         case let .updateIsLoading(isLoading):
             state.isLoading = isLoading
         case let .updateIsProcessing(isProcessing):
@@ -121,17 +112,9 @@ extension MainHomeLatestViewReactor {
         let longitude = self.provider.locationManager.coordinate.longitude
         
         let request: CardRequest = .latestCard(lastId: nil, latitude: latitude, longitude: longitude)
-        
         return self.provider.networkManager.request(LatestCardResponse.self, request: request)
             .map(\.embedded.cards)
-            .withUnretained(self)
-            .map { object, cards in
-                
-                // 서버 응답 캐싱
-                object.simpleCache.saveMainHomeCards(type: .latest, datas: cards)
-                
-                return .cards((cards: cards, isUpdate: false))
-            }
+            .map { Mutation.cards((cards: $0, hasMoreUpdate: false)) }
             .catch(self.catchClosure)
     }
     
@@ -141,20 +124,9 @@ extension MainHomeLatestViewReactor {
         let longitude = self.provider.locationManager.coordinate.longitude
         
         let request: CardRequest = .latestCard(lastId: lastId, latitude: latitude, longitude: longitude)
-        
         return self.provider.networkManager.request(LatestCardResponse.self, request: request)
             .map(\.embedded.cards)
-            .withUnretained(self)
-            .map { object, cards in
-                
-                let cachedCards = object.simpleCache.loadMainHomeCards(type: .latest) ?? []
-                var newCards = cachedCards
-                newCards += cards
-                
-                object.simpleCache.saveMainHomeCards(type: .latest, datas: newCards)
-                
-                return .more((cards: cards, isUpdate: true))
-            }
+            .map { Mutation.more((cards: $0, hasMoreUpdate: true)) }
             .catch(self.catchClosure)
     }
 }
@@ -164,7 +136,7 @@ extension MainHomeLatestViewReactor {
     var catchClosure: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
             .concat([
-                .just(.cards((cards: [], isUpdate: false))),
+                .just(.cards((cards: [], hasMoreUpdate: false))),
                 .just(.updateIsProcessing(false)),
                 .just(.updateIsLoading(false))
             ])
@@ -183,6 +155,6 @@ extension MainHomeLatestViewReactor {
         curr currCardsWithUpdate: CardsWithUpdate
     ) -> Bool {
         return prevCardsWithUpdate.cards == currCardsWithUpdate.cards &&
-            prevCardsWithUpdate.isUpdate == currCardsWithUpdate.isUpdate
+            prevCardsWithUpdate.hasMoreUpdate == currCardsWithUpdate.hasMoreUpdate
     }
 }
