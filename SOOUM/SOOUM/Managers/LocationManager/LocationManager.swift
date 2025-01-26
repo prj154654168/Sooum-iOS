@@ -19,38 +19,32 @@ enum AuthStatus {
 
 protocol LocationManagerDelegate: AnyObject {
     
-    func locationManager(
-        _ manager: LocationManager,
-        didUpdateCoordinate coordinate: CLLocationCoordinate2D
-    )
-    func locationManager(_ manager: LocationManager, didChangeAuthStatus status: AuthStatus)
-    func locationManager(_ manager: LocationManager, didFailWithError error: Error)
+    var coordinate: Coordinate { get }
+    func requestLocationPermission()
+    func checkLocationAuthStatus() -> AuthStatus
 }
 
-class LocationManager: CompositeManager {
-    
-    private(set) var locationAuthStatus: AuthStatus
+class LocationManager: CompositeManager<LocationManagerConfigruation> {
     private(set) var locationManager: CLLocationManager
-    
-    weak var delegate: LocationManagerDelegate?
+    private(set) var locationAuthStatus: AuthStatus
     
     var coordinate: Coordinate {
         let coordinate = SimpleDefaults.shared.loadLocation()
         return coordinate
     }
     
-    override init(provider: ManagerProviderType) {
+    override init(provider: ManagerTypeDelegate, configure: LocationManagerConfigruation) {
         self.locationAuthStatus = .notDetermined
         self.locationManager = CLLocationManager()
         
-        super.init(provider: provider)
+        super.init(provider: provider, configure: configure)
         
         self.locationManager.delegate = self
         self.updateLocationAuthStatus()
     }
 }
 
-extension LocationManager {
+extension LocationManager: LocationManagerDelegate {
     
     /// 사용자에게 위치 권한을 요청합니다.
     func requestLocationPermission() {
@@ -65,7 +59,9 @@ extension LocationManager {
         let authStatus = self.convertLocationAuthStatus(self.locationManager.authorizationStatus)
         
         self.locationAuthStatus = authStatus
-        self.delegate?.locationManager(self, didChangeAuthStatus: authStatus)
+        
+        Log.debug("Change location auth status", authStatus)
+        NotificationCenter.default.post(name: .changedLocationAuthorization, object: nil)
         
         switch authStatus {
         case .authorizedAlways, .authorizedWhenInUse:
@@ -104,15 +100,16 @@ extension LocationManager: CLLocationManagerDelegate {
             longitude: coordinate.longitude.description
         )
         SimpleDefaults.shared.saveLocation(convert)
-        self.delegate?.locationManager(self, didUpdateCoordinate: coordinate)
+        
+        Log.debug("Update location coordinate: \(coordinate)")
     }
     
     /// 오류 처리
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        self.delegate?.locationManager(self, didFailWithError: error)
+        Log.error("Update location error", error.localizedDescription)
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        updateLocationAuthStatus()
+        self.updateLocationAuthStatus()
     }
 }

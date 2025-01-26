@@ -30,7 +30,6 @@ class MainTabBarController: SOMTabBarController, View {
         super.viewDidLoad()
         
         self.delegate = self
-        self.reactor?.provider.locationManager.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -165,23 +164,4 @@ extension MainTabBarController: SOMTabBarControllerDelegate {
         _ tabBarController: SOMTabBarController,
         didSelect viewController: UIViewController
     ) { }
-}
-
-extension MainTabBarController: LocationManagerDelegate {
-    
-    func locationManager(
-        _ manager: LocationManager,
-        didUpdateCoordinate coordinate: CLLocationCoordinate2D
-    ) {
-        Log.debug("Update location coordinate: \(coordinate)")
-    }
-    
-    func locationManager(_ manager: LocationManager, didChangeAuthStatus status: AuthStatus) {
-        Log.debug("Change location auth status", status)
-        NotificationCenter.default.post(name: .changedLocationAuthorization, object: nil)
-    }
-    
-    func locationManager(_ manager: LocationManager, didFailWithError error: any Error) {
-        Log.error("Update location error", error.localizedDescription)
-    }
 }
