@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Kingfisher
 import SnapKit
 import Then
 
@@ -33,6 +34,8 @@ class MainHomePopularViewController: BaseViewController, View {
         $0.refreshControl = SOMRefreshControl()
         
         $0.dataSource = self
+        $0.prefetchDataSource = self
+        
         $0.delegate = self
     }
     
@@ -42,9 +45,6 @@ class MainHomePopularViewController: BaseViewController, View {
     
     
     // MARK: Variables
-    
-    // tableView에 표시될 카드 정보
-    private var displayedCards = [Card]()
     
     // tableView 정보
     private var currentOffset: CGFloat = 0
@@ -101,22 +101,20 @@ class MainHomePopularViewController: BaseViewController, View {
         
         // Action
         self.rx.viewWillAppear
-            .withUnretained(self)
-            .map { object, _ in object.isViewLoaded == false }
-            .map(Reactor.Action.landing)
+            .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        let isLoading = reactor.state.map(\.isLoading).distinctUntilChanged().share()
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
-            .withLatestFrom(reactor.state.map(\.isLoading))
+            .withLatestFrom(isLoading)
             .filter { $0 == false }
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        reactor.state.map(\.isLoading)
-            .distinctUntilChanged()
+        isLoading
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
@@ -131,29 +129,47 @@ class MainHomePopularViewController: BaseViewController, View {
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.displayedCardsWithUpdate)
+        reactor.state.map(\.displayedCards)
             .filterNil()
-            .distinctUntilChanged(reactor.canUpdateCells)
-            .subscribe(with: self) { object, displayedCardsWithUpdate in
-                let displayedCards = displayedCardsWithUpdate.cards
-                let isUpdate = displayedCardsWithUpdate.isUpdate
-                
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, displayedCards in
                 object.tableView.isHidden = false
                 
-                // isUpdate == true 일 때, 추가된 카드만 로드
-                if isUpdate {
-                    let indexPathForInsert: [IndexPath] = displayedCards.enumerated()
-                        .filter { object.displayedCards.contains($0.element) == false }
-                        .map { IndexPath(row: $0.offset, section: 0) }
-                    
-                    object.displayedCards = displayedCards
-                    object.tableView.insertRows(at: indexPathForInsert, with: .fade)
-                } else {
-                    object.displayedCards = displayedCards
-                    object.tableView.reloadData()
-                }
+                object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
+    }
+}
+
+extension MainHomePopularViewController {
+    
+    private func cellForPlaceholder(_ tableView: UITableView, for indexPath: IndexPath) -> UITableViewCell {
+        
+        let placeholder = tableView.dequeueReusableCell(
+            withIdentifier: "placeholder",
+            for: indexPath
+        ) as! PlaceholderViewCell
+        
+        return placeholder
+    }
+    
+    private func cellForMainHome(
+        _ tableView: UITableView,
+        for indexPath: IndexPath,
+        with reactor: MainHomePopularViewReactor
+    ) -> UITableViewCell {
+        guard let displayedCards = reactor.currentState.displayedCards else { return .init(frame: .zero) }
+        
+        let model = SOMCardModel(data: displayedCards[indexPath.row])
+        let cell: MainHomeViewCell = tableView.dequeueReusableCell(
+            withIdentifier: "cell",
+            for: indexPath
+        ) as! MainHomeViewCell
+        cell.setModel(model)
+        // 카드 하단 contents 스택 순서 변경 (인기순)
+        cell.changeOrderInCardContentStack(1)
+        
+        return cell
     }
 }
 
@@ -163,32 +179,33 @@ class MainHomePopularViewController: BaseViewController, View {
 extension MainHomePopularViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.displayedCards.isEmpty ? 1 : self.displayedCards.count
+        return self.reactor?.currentState.displayedCardsCount ?? 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let reactor = self.reactor else { return .init(frame: .zero) }
         
-        if self.displayedCards.isEmpty {
+        if reactor.currentState.isDisplayedCardsEmpty {
             
-            let placeholder = tableView.dequeueReusableCell(
-                withIdentifier: "placeholder",
-                for: indexPath
-            ) as! PlaceholderViewCell
-            
-            return placeholder
+            return self.cellForPlaceholder(tableView, for: indexPath)
         } else {
             
-            let model = SOMCardModel(data: self.displayedCards[indexPath.row])
-            
-            let cell: MainHomeViewCell = tableView.dequeueReusableCell(
-                withIdentifier: "cell",
-                for: indexPath
-            ) as! MainHomeViewCell
-            cell.setModel(model)
-            // 카드 하단 contents 스택 순서 변경 (인기순)
-            cell.changeOrderInCardContentStack(1)
-            
-            return cell
+            return self.cellForMainHome(tableView, for: indexPath, with: reactor)
+        }
+    }
+}
+
+extension MainHomePopularViewController: UITableViewDataSourcePrefetching {
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        guard let reactor = self.reactor,
+                let displayedCards = reactor.currentState.displayedCards
+        else { return }
+        
+        indexPaths.forEach { indexPath in
+            // 데이터 로드 전, 이미지 캐싱
+            let strUrl = displayedCards[indexPath.row].backgroundImgURL.url
+            KingfisherManager.shared.download(strUrl: strUrl) { _ in }
         }
     }
 }
@@ -196,13 +213,15 @@ extension MainHomePopularViewController: UITableViewDataSource {
 extension MainHomePopularViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedId = self.displayedCards[indexPath.row].id
+        guard let reactor = self.reactor,
+                let selectedId = reactor.currentState.displayedCards?[indexPath.row].id
+        else { return }
         
         self.willPushCardId.accept(selectedId)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.displayedCards.isEmpty ? self.tableView.bounds.height : self.cellHeight
+        return (self.reactor?.currentState.isDisplayedCardsEmpty ?? true) ? tableView.bounds.height : self.cellHeight
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -220,8 +239,8 @@ extension MainHomePopularViewController: UITableViewDelegate {
             
             self.hidesHeaderContainer.accept(false)
             self.currentOffset = offset
-            
             self.moveTopButton.isHidden = true
+            
             return
         }
         

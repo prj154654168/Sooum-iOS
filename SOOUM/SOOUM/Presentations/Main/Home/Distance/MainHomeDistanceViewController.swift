@@ -7,6 +7,7 @@
 
 import UIKit
 
+import Kingfisher
 import SnapKit
 import Then
 
@@ -33,6 +34,8 @@ class MainHomeDistanceViewController: BaseViewController, View {
         $0.refreshControl = SOMRefreshControl()
         
         $0.dataSource = self
+        $0.prefetchDataSource = self
+        
         $0.delegate = self
     }
     
@@ -42,9 +45,6 @@ class MainHomeDistanceViewController: BaseViewController, View {
     
     
     // MARK: Variables
-    
-    // tableView에 표시될 카드 정보
-    private var displayedCards = [Card]()
     
     // tableView 정보
     private var currentOffset: CGFloat = 0
@@ -101,22 +101,21 @@ class MainHomeDistanceViewController: BaseViewController, View {
         
         // Action
         self.rx.viewWillAppear
-            .withUnretained(self)
-            .map { object, _ in object.isViewLoaded == false }
-            .map(Reactor.Action.landing)
+            .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        let isLoading = reactor.state.map(\.isLoading).distinctUntilChanged().share()
+        // isLoading == true && isRefreshing == false 일 때, 이벤트 무시
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
-            .withLatestFrom(reactor.state.map(\.isLoading))
+            .withLatestFrom(isLoading)
             .filter { $0 == false }
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        reactor.state.map(\.isLoading)
-            .distinctUntilChanged()
+        isLoading
             .do(onNext: { [weak self] isLoading in
                 if isLoading { self?.isLoadingMore = false }
             })
@@ -142,24 +141,61 @@ class MainHomeDistanceViewController: BaseViewController, View {
             .distinctUntilChanged(reactor.canUpdateCells)
             .subscribe(with: self) { object, displayedCardsWithUpdate in
                 let displayedCards = displayedCardsWithUpdate.cards
-                let isUpdate = displayedCardsWithUpdate.isUpdate
+                let hasMoreUpdate = displayedCardsWithUpdate.hasMoreUpdate
                 
                 object.tableView.isHidden = false
                 
-                // isUpdate == true 일 때, 추가된 카드만 로드
-                if isUpdate {
-                    let indexPathForInsert: [IndexPath] = displayedCards.enumerated()
-                        .filter { object.displayedCards.contains($0.element) == false }
+                // hasMoreUpdate == true일 때, 추가된 데이터만 로드
+                if hasMoreUpdate {
+                    
+                    let lastSectionIndex = object.tableView.numberOfSections - 1
+                    let lastRowIndex = object.tableView.numberOfRows(inSection: lastSectionIndex) - 1
+                    let loadedDisplayedCards = displayedCards[0...lastRowIndex]
+                    let indexPathForInsert = displayedCards.enumerated()
+                        .filter { loadedDisplayedCards.contains($0.element) == false }
                         .map { IndexPath(row: $0.offset, section: 0) }
                     
-                    object.displayedCards = displayedCards
-                    object.tableView.insertRows(at: indexPathForInsert, with: .fade)
+                    object.tableView.performBatchUpdates {
+                        object.tableView.insertRows(at: indexPathForInsert, with: .fade)
+                    }
                 } else {
-                    object.displayedCards = displayedCards
+                    
                     object.tableView.reloadData()
                 }
             }
             .disposed(by: self.disposeBag)
+    }
+}
+
+extension MainHomeDistanceViewController {
+    
+    private func cellForPlaceholder(_ tableView: UITableView, for indexPath: IndexPath) -> UITableViewCell {
+        
+        let placeholder = tableView.dequeueReusableCell(
+            withIdentifier: "placeholder",
+            for: indexPath
+        ) as! PlaceholderViewCell
+        
+        return placeholder
+    }
+    
+    private func cellForMainHome(
+        _ tableView: UITableView,
+        for indexPath: IndexPath,
+        with reactor: MainHomeDistanceViewReactor
+    ) -> UITableViewCell {
+        
+        let displayedCards = reactor.currentState.displayedCards
+        let model = SOMCardModel(data: displayedCards[indexPath.row])
+        let cell: MainHomeViewCell = tableView.dequeueReusableCell(
+            withIdentifier: "cell",
+            for: indexPath
+        ) as! MainHomeViewCell
+        cell.setModel(model)
+        // 카드 하단 contents 스택 순서 변경 (최신순)
+        cell.changeOrderInCardContentStack(2)
+        
+        return cell
     }
 }
 
@@ -169,32 +205,30 @@ class MainHomeDistanceViewController: BaseViewController, View {
 extension MainHomeDistanceViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.displayedCards.isEmpty ? 1 : self.displayedCards.count
+        return self.reactor?.currentState.displayedCardsCount ?? 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if self.displayedCards.isEmpty {
-            
-            let placeholder = tableView.dequeueReusableCell(
-                withIdentifier: "placeholder",
-                for: indexPath
-            ) as! PlaceholderViewCell
-            
-            return placeholder
+        guard let reactor = self.reactor else { return .init(frame: .zero) }
+        
+        if reactor.currentState.isDisplayedCardsEmpty {
+            return self.cellForPlaceholder(tableView, for: indexPath)
         } else {
-            
-            let model = SOMCardModel(data: self.displayedCards[indexPath.row])
-            
-            let cell: MainHomeViewCell = tableView.dequeueReusableCell(
-                withIdentifier: "cell",
-                for: indexPath
-            ) as! MainHomeViewCell
-            cell.setModel(model)
-            // 카드 하단 contents 스택 순서 변경 (거리순)
-            cell.changeOrderInCardContentStack(2)
-            
-            return cell
+            return self.cellForMainHome(tableView, for: indexPath, with: reactor)
+        }
+    }
+}
+
+extension MainHomeDistanceViewController: UITableViewDataSourcePrefetching {
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        guard let reactor = self.reactor else { return }
+        
+        indexPaths.forEach { indexPath in
+            // 데이터 로드 전, 이미지 캐싱
+            let strUrl = reactor.currentState.displayedCards[indexPath.row].backgroundImgURL.url
+            KingfisherManager.shared.download(strUrl: strUrl) { _ in }
         }
     }
 }
@@ -202,17 +236,18 @@ extension MainHomeDistanceViewController: UITableViewDataSource {
 extension MainHomeDistanceViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedId = self.displayedCards[indexPath.row].id
+        guard let reactor = self.reactor else { return }
         
+        let selectedId = reactor.currentState.displayedCards[indexPath.row].id
         self.willPushCardId.accept(selectedId)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.displayedCards.isEmpty ? self.tableView.bounds.height : self.cellHeight
+        return (self.reactor?.currentState.isDisplayedCardsEmpty ?? true) ? tableView.bounds.height : self.cellHeight
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard self.displayedCards.isEmpty == false else { return }
+        guard self.reactor?.currentState.isDisplayedCardsEmpty == false else { return }
         
         let lastSectionIndex = tableView.numberOfSections - 1
         let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
@@ -222,12 +257,8 @@ extension MainHomeDistanceViewController: UITableViewDelegate {
            indexPath.row == lastRowIndex,
            let reactor = self.reactor {
             
-            // 캐시된 데이터가 존재하고, 현재 표시된 수보다 캐시된 수가 같거나 적으면
-            if let loadedCards = reactor.simpleCache.loadMainHomeCards(type: .distance),
-               self.displayedCards.count >= loadedCards.count {
-                let lastId = self.displayedCards[indexPath.row].id
-                reactor.action.onNext(.moreFind(lastId: lastId))
-            }
+            let lastId = reactor.currentState.displayedCards[indexPath.row].id
+            reactor.action.onNext(.moreFind(lastId))
         }
     }
     

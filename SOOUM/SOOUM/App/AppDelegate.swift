@@ -132,10 +132,7 @@ extension AppDelegate: MessagingDelegate {
             apns: deviceToken,
             fcm: Messaging.messaging().fcmToken
         )
-        self.provider.authManager.updateFcmToken(with: current, call: #function)
-        
-        
-        Log.info("Call func: \(#function)")
+        self.provider.networkManager.registerFCMToken(with: current, #function)
 
         self.registerRemoteNotificationCompletion?(nil)
     }
@@ -146,9 +143,7 @@ extension AppDelegate: MessagingDelegate {
             apns: messaging.apnsToken,
             fcm: fcmToken
         )
-        self.provider.authManager.updateFcmToken(with: current, call: #function)
-        
-        Log.info("Call func: \(#function)")
+        self.provider.networkManager.registerFCMToken(with: current, #function)
     }
 }
 

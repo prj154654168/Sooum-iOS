@@ -15,13 +15,14 @@ extension KingfisherManager {
     func download(strUrl: String?, completion: @escaping (UIImage?) -> Void) {
         
         if let strUrl = strUrl, let url = URL(string: strUrl) {
-            
-            self.retrieveImage(with: url) { result in
+            // 캐시 만료 기간 하루로 설정
+            let resource = Kingfisher.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+            self.retrieveImage(with: resource, options: [.memoryCacheExpiration(.days(1))]) { result in
                 switch result {
                 case let .success(result):
                     completion(result.image)
                 case let .failure(error):
-                    Log.error("Download image failed with kingfisher \(error.localizedDescription)")
+                    Log.error("Error download image failed with kingfisher \(error.localizedDescription)")
                     self.cancel(strUrl: strUrl)
                     completion(nil)
                 }

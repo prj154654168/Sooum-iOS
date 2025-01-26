@@ -25,10 +25,12 @@ class OnboardingViewReactor: Reactor {
     struct State {
         fileprivate(set) var suspension: Suspension?
         fileprivate(set) var shouldNavigate: Bool = false
+        fileprivate(set) var shouldHideTransfer: Bool
     }
 
     var initialState: State = .init(
-        suspension: nil
+        suspension: nil,
+        shouldHideTransfer: UserDefaults.standard.bool(forKey: "AppFlag")
     )
     
     let provider: ManagerProviderType

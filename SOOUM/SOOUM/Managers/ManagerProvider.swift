@@ -1,5 +1,5 @@
 //
-//  ManagerProviderType.swift
+//  ManagerProvider.swift
 //  SOOUM
 //
 //  Created by 오현식 on 1/14/25.
@@ -12,14 +12,16 @@ protocol ManagerProviderType: AnyObject {
     var authManager: AuthManagerDelegate { get }
     var pushManager: PushManagerDelegate { get }
     var networkManager: NetworkManagerDelegate { get }
-    var locationManager: LocationManager { get }
+    var locationManager: LocationManagerDelegate { get }
 }
 
 final class ManagerProviderContainer: ManagerProviderType {
-    lazy var authManager: AuthManagerDelegate = AuthManager(provider: self)
-    lazy var pushManager: PushManagerDelegate = PushManager(provider: self)
-    lazy var networkManager: NetworkManagerDelegate = NetworkManager(provider: self)
-    lazy var locationManager: LocationManager = LocationManager(provider: self)
+    lazy var managerType: ManagerTypeDelegate = ManagerTypeContainer()
+    
+    var authManager: AuthManagerDelegate { self.managerType.authManager }
+    var pushManager: PushManagerDelegate { self.managerType.pushManager }
+    var networkManager: NetworkManagerDelegate { self.managerType.networkManager }
+    var locationManager: LocationManagerDelegate { self.managerType.locationManager }
 }
 
 extension ManagerProviderType {
