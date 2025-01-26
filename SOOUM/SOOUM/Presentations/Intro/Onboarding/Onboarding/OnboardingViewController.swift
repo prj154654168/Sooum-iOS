@@ -71,7 +71,6 @@ class OnboardingViewController: BaseNavigationViewController, View {
         )
         $0.foregroundColor = UIColor(hex: "#B4B4B4")
         $0.hasUnderlined = true
-        $0.isHidden = UserDefaults.standard.bool(forKey: "AppFlag")
     }
     
     // MARK: Override func
@@ -173,6 +172,12 @@ class OnboardingViewController: BaseNavigationViewController, View {
                 let termsOfServiceViewController = OnboardingTermsOfServiceViewController()
                 termsOfServiceViewController.reactor = reactor.reactorForTermsOfService()
                 object.navigationPush(termsOfServiceViewController, animated: true)
+            }
+            .disposed(by: self.disposeBag)
+      
+        reactor.state.map(\.shouldHideTransfer)
+            .subscribe(with: self) { object, shouldHide in
+                object.oldUserButton.isHidden = shouldHide
             }
             .disposed(by: self.disposeBag)
     }
