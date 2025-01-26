@@ -12,9 +12,9 @@ import Alamofire
 
 class AddingTokenInterceptor: RequestInterceptor {
     
-    private let provider: ManagerProviderType
+    private let provider: ManagerTypeDelegate
     
-    init(provider: ManagerProviderType) {
+    init(provider: ManagerTypeDelegate) {
         self.provider = provider
     }
     

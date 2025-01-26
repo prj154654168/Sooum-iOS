@@ -29,15 +29,13 @@ protocol AuthManagerDelegate: AnyObject {
     func reAuthenticate(_ accessToken: String, _ completion: @escaping (AuthResult) -> Void)
     func initializeAuthInfo()
     func updateTokens(_ token: Token)
-    func updateFcmToken(with tokenSet: PushTokenSet, call function: String)
     func authPayloadByAccess() -> [String: String]
     func authPayloadByRefresh() -> [String: String]
 }
 
-class AuthManager: CompositeManager, AuthManagerDelegate {
+class AuthManager: CompositeManager<AuthManagerConfiguration> {
     
     private var isReAuthenticating: Bool = false
-    private var registeredToken: PushTokenSet?
     
     private var disposeBag = DisposeBag()
     
@@ -52,12 +50,12 @@ class AuthManager: CompositeManager, AuthManagerDelegate {
         return !token.accessToken.isEmpty && !token.refreshToken.isEmpty
     }
     
-    override init(provider: ManagerProviderType) {
-        super.init(provider: provider)
+    override init(provider: ManagerTypeDelegate, configure: AuthManagerConfiguration) {
+        super.init(provider: provider, configure: configure)
     }
 }
 
-extension AuthManager {
+extension AuthManager: AuthManagerDelegate {
     
     
     // MARK: Asymmetric encryption
@@ -131,9 +129,7 @@ extension AuthManager {
                             object.authInfo.updateToken(response.token)
                             
                             // FCM token 업데이트
-                            if let tokenSet = self.registeredToken {
-                                object.updateFcmToken(with: tokenSet, call: #function)
-                            }
+                            object.provider?.networkManager.registerFCMToken(from: #function)
                             return true
                         }
                 }
@@ -161,10 +157,7 @@ extension AuthManager {
                                 object.authInfo.updateToken(token)
                                 
                                 // FCM token 업데이트
-                                if let tokenSet = object.registeredToken {
-                                    object.updateFcmToken(with: tokenSet, call: #function)
-                                }
-                                
+                                object.provider?.networkManager.registerFCMToken(from: #function)
                                 return true
                             } else {
                                 return false
@@ -229,9 +222,7 @@ extension AuthManager {
                         )
                         
                         // FCM token 업데이트
-                        if let tokenSet = object.registeredToken {
-                            object.updateFcmToken(with: tokenSet, call: #function)
-                        }
+                        object.provider?.networkManager.registerFCMToken(from: #function)
                         
                         completion(.success)
                     }
@@ -260,42 +251,6 @@ extension AuthManager {
                 }
             )
             .disposed(by: self.disposeBag)
-    }
-    
-    func updateFcmToken(with tokenSet: PushTokenSet, call function: String) {
-        
-        let prevTokenSet = self.registeredToken
-        self.registeredToken = tokenSet
-        
-        // // 토큰이 없는 경우 업데이트에 실패하므로 무시
-        guard self.hasToken else {
-            Log.info("Can't upload fcm token without authorization token. (from: \(function))")
-            return
-        }
-        
-        // TODO: 이전에 업로드 성공한 토큰이 다시 등록되는 경우 무시, 계정 이관 이슈로 중복 토큰도 항상 업데이트
-        // guard prevTokenSet?.fcm != tokenSet.fcm else {
-        //     Log.info("Ignored already registered token set. (from: \(function))")
-        //     return
-        // }
-        
-        // 서버에 FCM token 업데이트
-        if let fcmToken = tokenSet.fcm, let provider = self.provider {
-            let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
-            provider.networkManager.request(Empty.self, request: request)
-                .subscribe(
-                    onNext: { _ in
-                        Log.info("Update FCM token to server with", fcmToken)
-                    },
-                    onError: { error in
-                        Log.error("Failed to update FCM token to server: not found user")
-                    }
-                )
-                .disposed(by: self.disposeBag)
-        } else {
-            self.registeredToken = prevTokenSet
-            Log.info("Failed to update FCM token to server: not found device unique id")
-        }
     }
     
     func initializeAuthInfo() {

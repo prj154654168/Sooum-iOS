@@ -18,7 +18,7 @@ protocol PushManagerDelegate: AnyObject {
     func switchNotification(isOn: Bool, completion: ((Error?) -> Void)?)
 }
 
-class PushManager: CompositeManager, PushManagerDelegate {
+class PushManager: CompositeManager<PushManagerConfiguration> {
     
     var window: UIWindow? {
         let application = UIApplication.shared
@@ -33,15 +33,15 @@ class PushManager: CompositeManager, PushManagerDelegate {
     var canReceiveNotifications: Bool = true
     @objc dynamic var notificationStatus: Bool = true
     
-    override init(provider: ManagerProviderType) {
-        super.init(provider: provider)
+    override init(provider: ManagerTypeDelegate, configure: PushManagerConfiguration) {
+        super.init(provider: provider, configure: configure)
         
         self.registerNotificationObserver()
         self.updateNotificationStatus()
     }
 }
 
-extension PushManager {
+extension PushManager: PushManagerDelegate {
     
     
     // MARK: Navigation
@@ -61,7 +61,8 @@ extension PushManager {
     
     fileprivate func setupLaunchScreenViewController(_ pushInfo: NotificationInfo?) {
         
-        guard let provider = self.provider else { return }
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let provider = appDelegate.provider
         
         let launchScreenReactor = LaunchScreenViewReactor(provider: provider, pushInfo: pushInfo)
         let launchScreenViewController = LaunchScreenViewController()
@@ -73,7 +74,8 @@ extension PushManager {
     
     fileprivate func setupMainTabBarController(_ pushInfo: NotificationInfo?) {
         
-        guard let provider = self.provider else { return }
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        let provider = appDelegate.provider
         
         let mainTabBarReactor = MainTabBarReactor(provider: provider, pushInfo: pushInfo)
         let mainTabBarController = MainTabBarController()
