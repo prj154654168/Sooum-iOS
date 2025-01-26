@@ -73,7 +73,6 @@ class OnboardingViewController: BaseNavigationViewController, View {
         $0.hasUnderlined = true
     }
     
-    
     // MARK: Override func
     
     override func viewWillAppear(_ animated: Bool) {
@@ -173,6 +172,12 @@ class OnboardingViewController: BaseNavigationViewController, View {
                 let termsOfServiceViewController = OnboardingTermsOfServiceViewController()
                 termsOfServiceViewController.reactor = reactor.reactorForTermsOfService()
                 object.navigationPush(termsOfServiceViewController, animated: true)
+            }
+            .disposed(by: self.disposeBag)
+      
+        reactor.state.map(\.shouldHideTransfer)
+            .subscribe(with: self) { object, shouldHide in
+                object.oldUserButton.isHidden = shouldHide
             }
             .disposed(by: self.disposeBag)
     }
