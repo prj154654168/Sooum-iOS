@@ -69,8 +69,12 @@ class SettingsViewController: BaseNavigationViewController, View {
     private let commentHistoryCellView = SettingTextCellView(title: Text.commentHistoryTitle)
     
     private let userSettingHeader = SettingScrollViewHeader(title: Text.userSettingTitle)
-    private let issueUserTransferCodeCellView = SettingTextCellView(title: Text.issueUserTransferCodeTitle)
-    private let enterUserTransferCodeCellView = SettingTextCellView(title: Text.enterUserTransferCodeTitle)
+    private let issueUserTransferCodeCellView = SettingTextCellView(title: Text.issueUserTransferCodeTitle).then {
+        $0.isHidden = UserDefaults.standard.bool(forKey: "AppFlag")
+    }
+    private let enterUserTransferCodeCellView = SettingTextCellView(title: Text.enterUserTransferCodeTitle).then {
+        $0.isHidden = UserDefaults.standard.bool(forKey: "AppFlag")
+    }
     private let acceptTermsCellView = SettingTextCellView(title: Text.acceptTermsTitle)
     private let resignCellView = SettingTextCellView(title: Text.resignTitle, titleColor: .som.red)
     
