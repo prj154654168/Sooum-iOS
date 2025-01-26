@@ -8,6 +8,7 @@
 import Foundation
 
 import Alamofire
+import FirebaseMessaging
 import RxSwift
 
 
@@ -20,67 +21,31 @@ protocol NetworkManagerDelegate: AnyObject {
     ) -> Observable<Result<Void, Error>>
     
     func checkClientVersion() -> Observable<String>
+    
+    func registerFCMToken(with tokenSet: PushTokenSet, _ function: String)
+    func registerFCMToken(from function: String)
 }
 
-class NetworkManager: CompositeManager {
+class NetworkManager: CompositeManager<NetworkManagerConfiguration> {
     
-    let configuration: Configuration
+    let configuration: NetworkManagerConfiguration.Configuration
     /// URLSession in Alamofire
     let session: Session
     
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
     
-    struct Configuration {
-        /// `URLSessionConfiguration.default`
-        var sessionConfiguration: URLSessionConfiguration
-        /// URLSession delegate that allows you to monitor the underlying URLSession
-        var sessionDelegate: URLSessionDelegate?
-        /// Overrides the default delegate queue
-        var sessionDelegateQueue: OperationQueue?
-        /// By default, uses `yyyy-MM-dd'T'HH:mm:ss.SSSSSS` date decoding strategy
-        var decoder: JSONDecoder
-        /// By default, uses `yyyy-MM-dd'T'HH:mm:ss.SSSSSS` date encoding strategy
-        var encoder: JSONEncoder
-        
-        /// Initializes the configuration
-        init(
-            sessionConfiguration: URLSessionConfiguration = .default,
-            sessionDelegate: URLSessionDelegate? = nil,
-            sessionDelegateQueue: OperationQueue? = nil
-        ) {
-            
-            self.sessionConfiguration = sessionConfiguration
-            self.sessionConfiguration.timeoutIntervalForRequest = 20.0
-            self.sessionConfiguration.timeoutIntervalForResource = 20.0
-            
-            self.sessionDelegate = sessionDelegate
-            self.sessionDelegateQueue = sessionDelegateQueue
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
-            /// UTC 기준
-            formatter.timeZone = .Korea
-            formatter.locale = .Korea
-            
-            self.decoder = JSONDecoder()
-            self.decoder.dateDecodingStrategy = .formatted(formatter)
-            self.encoder = JSONEncoder()
-            self.encoder.dateEncodingStrategy = .formatted(formatter)
-        }
-    }
-    
-    override init(provider: ManagerProviderType) {
-        self.configuration = Configuration()
+    override init(provider: ManagerTypeDelegate, configure: NetworkManagerConfiguration) {
+        self.configuration = configure.configuration
         self.session = .init(
-            configuration: configuration.sessionConfiguration,
+            configuration: configure.configuration.sessionConfiguration,
             interceptor: CompositeInterceptor(provider: provider),
             eventMonitors: [LogginMonitor()]
         )
-        self.decoder = configuration.decoder
-        self.encoder = configuration.encoder
+        self.decoder = configure.configuration.decoder
+        self.encoder = configure.configuration.encoder
         
-        super.init(provider: provider)
+        super.init(provider: provider, configure: configure)
     }
     
     private func setupError(_ message: String, with code: Int = -99) -> NSError {
@@ -95,6 +60,9 @@ class NetworkManager: CompositeManager {
 }
 
 extension NetworkManager: NetworkManagerDelegate {
+    
+    
+    // MARK: Request network sevice
     
     func request<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T> {
         return Observable.create { [weak self] observer -> Disposable in
@@ -177,6 +145,9 @@ extension NetworkManager: NetworkManagerDelegate {
         }
     }
     
+    
+    // MARK: Check version
+    
     func checkClientVersion() -> Observable<String> {
         
         return Observable.create { [weak self] observer -> Disposable in
@@ -202,5 +173,59 @@ extension NetworkManager: NetworkManagerDelegate {
                 task?.cancel()
             }
         }
+    }
+    
+    
+    // MARK: Register FCM token
+    
+    static var registeredToken: PushTokenSet?
+    static var fcmDisposeBag = DisposeBag()
+    
+    func registerFCMToken(with tokenSet: PushTokenSet, _ function: String) {
+        
+        // AccessToken이 없는 경우 업데이트에 실패하므로 무시
+        guard let provider = self.provider, provider.authManager.hasToken else {
+            Log.info("Can't upload fcm token without authorization token. (from: \(function))")
+            return
+        }
+        
+        
+        let prevTokenSet: PushTokenSet? = Self.registeredToken
+        // TODO: 이전에 업로드 성공한 토큰이 다시 등록되는 경우 무시, 계정 이관 이슈로 중복 토큰도 항상 업데이트
+        // guard tokenSet != Self.registeredToken else {
+        //     Log.info("Ignored already registered token set. (from: \(`func`))")
+        //     return
+        // }
+        
+        guard let fcmToken = tokenSet.fcm, let apns = tokenSet.apns else { return }
+        Log.info("Firebase registration token: \(fcmToken) [with \(apns)] (from: \(function))")
+        
+        // 서버에 FCM token 등록
+        if let fcmToken = tokenSet.fcm, let provider = self.provider {
+            
+            let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
+            provider.networkManager.request(Empty.self, request: request)
+                .subscribe(
+                    onNext: { _ in
+                        Log.info("Update FCM token to server with", fcmToken)
+                    },
+                    onError: { _ in
+                        Log.error("Failed to update FCM token to server: not found user")
+                    }
+                )
+                .disposed(by: Self.fcmDisposeBag)
+        } else {
+            
+            Self.registeredToken = prevTokenSet
+            Log.info("Failed to update FCM token to server: not found device unique id")
+        }
+    }
+    
+    func registerFCMToken(from func: String) {
+        let tokenSet = PushTokenSet(
+            apns: nil,
+            fcm: Messaging.messaging().fcmToken
+        )
+        self.registerFCMToken(with: tokenSet, `func`)
     }
 }

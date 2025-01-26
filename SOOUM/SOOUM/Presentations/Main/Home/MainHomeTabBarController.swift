@@ -377,7 +377,7 @@ extension MainHomeTabBarController: UIPageViewControllerDataSource {
               currentIndex < self.pages.count - 1
         else { return nil }
         
-        if self.currentPage + 1 == 2, self.reactor?.provider.locationManager.locationAuthStatus == .denied {
+        if self.currentPage + 1 == 2, self.reactor?.provider.locationManager.checkLocationAuthStatus() == .denied {
             
             let cancelAction = SOMDialogAction(
                 title: Text.cancelActionTitle,

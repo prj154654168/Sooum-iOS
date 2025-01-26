@@ -8,11 +8,13 @@
 import Foundation
 
 
-class CompositeManager: NSObject {
+class CompositeManager<C: ManagerConfiguration>: NSObject {
     
-    weak var provider: ManagerProviderType?
+    weak var provider: ManagerTypeDelegate?
+    var configure: C?
     
-    init(provider: ManagerProviderType) {
+    init(provider: ManagerTypeDelegate, configure: C) {
         self.provider = provider
+        self.configure = configure
     }
 }
