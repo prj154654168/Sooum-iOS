@@ -71,8 +71,8 @@ class OnboardingViewController: BaseNavigationViewController, View {
         )
         $0.foregroundColor = UIColor(hex: "#B4B4B4")
         $0.hasUnderlined = true
+        $0.isHidden = UserDefaults.standard.bool(forKey: "AppFlag")
     }
-    
     
     // MARK: Override func
     

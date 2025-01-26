@@ -112,7 +112,13 @@ extension LaunchScreenViewReactor {
         return provider.networkManager.request(Bool.self, request: request)
             .map { flag in
                 UserDefaults.standard.set(flag, forKey: "AppFlag")
+                print("@@@ AppFlag 성공", flag)
                 return Mutation.appFlag(flag)
+            }
+            .catch { _ in
+                print("@@@ AppFlag 안됨 true")
+                UserDefaults.standard.set(true, forKey: "AppFlag")
+                return .just(Mutation.appFlag(false))
             }
     }
 }
