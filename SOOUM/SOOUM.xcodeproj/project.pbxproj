@@ -26,6 +26,8 @@
 		2A45B36D2CE3A3E30071026A /* ProfileImageSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7F92CE277AF00E1C799 /* ProfileImageSettingViewReactor.swift */; };
 		2A45B36F2CE4C5510071026A /* RegisterUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */; };
 		2A45B3702CE4C5510071026A /* RegisterUserResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */; };
+		2A5ABA342D464E0B00BF6C9B /* ConfigureRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5ABA332D464E0B00BF6C9B /* ConfigureRequest.swift */; };
+		2A5ABA352D464E0B00BF6C9B /* ConfigureRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5ABA332D464E0B00BF6C9B /* ConfigureRequest.swift */; };
 		2A5BB7B92CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */; };
 		2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */; };
 		2A5BB7BE2CDB870000E1C799 /* OnboardingGuideMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7BD2CDB870000E1C799 /* OnboardingGuideMessageView.swift */; };
@@ -536,6 +538,7 @@
 		2A44A4332CAC21A500DC463E /* SignUpResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpResponse.swift; sourceTree = "<group>"; };
 		2A44A4362CAC227300DC463E /* BaseAuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAuthResponse.swift; sourceTree = "<group>"; };
 		2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUserResponse.swift; sourceTree = "<group>"; };
+		2A5ABA332D464E0B00BF6C9B /* ConfigureRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureRequest.swift; sourceTree = "<group>"; };
 		2A5BB7B82CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTermsOfServiceViewController.swift; sourceTree = "<group>"; };
 		2A5BB7BD2CDB870000E1C799 /* OnboardingGuideMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingGuideMessageView.swift; sourceTree = "<group>"; };
 		2A5BB7C82CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNicknameSettingViewController.swift; sourceTree = "<group>"; };
@@ -1849,6 +1852,7 @@
 		38B6AAE92CA47F6200CE6DB6 /* Request */ = {
 			isa = PBXGroup;
 			children = (
+				2A5ABA332D464E0B00BF6C9B /* ConfigureRequest.swift */,
 				384972A02CA4DEC00012FCA1 /* CardRequest.swift */,
 				2AE6B1592CBEAEC000FA5C3C /* ReportRequest.swift */,
 				38389B9B2CCCF98B006728AF /* AuthRequest.swift */,
@@ -2324,6 +2328,7 @@
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
 				38389BA02CCCFB7D006728AF /* AuthKeyChain.swift in Sources */,
 				2A048E852C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
+				2A5ABA342D464E0B00BF6C9B /* ConfigureRequest.swift in Sources */,
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				38F720B42CD4F15900DF32B5 /* LatestCardResponse.swift in Sources */,
 				3803CF6A2D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */,
@@ -2582,6 +2587,7 @@
 				38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */,
+				2A5ABA352D464E0B00BF6C9B /* ConfigureRequest.swift in Sources */,
 				38D6F17C2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
 				388698512D191F2100008600 /* MainHomeDistanceViewController.swift in Sources */,
