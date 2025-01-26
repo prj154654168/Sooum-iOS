@@ -69,12 +69,8 @@ class SettingsViewController: BaseNavigationViewController, View {
     private let commentHistoryCellView = SettingTextCellView(title: Text.commentHistoryTitle)
     
     private let userSettingHeader = SettingScrollViewHeader(title: Text.userSettingTitle)
-    private let issueUserTransferCodeCellView = SettingTextCellView(title: Text.issueUserTransferCodeTitle).then {
-        $0.isHidden = UserDefaults.standard.bool(forKey: "AppFlag")
-    }
-    private let enterUserTransferCodeCellView = SettingTextCellView(title: Text.enterUserTransferCodeTitle).then {
-        $0.isHidden = UserDefaults.standard.bool(forKey: "AppFlag")
-    }
+    private let issueUserTransferCodeCellView = SettingTextCellView(title: Text.issueUserTransferCodeTitle)
+    private let enterUserTransferCodeCellView = SettingTextCellView(title: Text.enterUserTransferCodeTitle)
     private let acceptTermsCellView = SettingTextCellView(title: Text.acceptTermsTitle)
     private let resignCellView = SettingTextCellView(title: Text.resignTitle, titleColor: .som.red)
     
@@ -135,7 +131,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             self.serviceCenterHeader,
             self.announcementCellView,
             self.inquiryCellView,
-            self.suggestionCellView, 
+            self.suggestionCellView,
             self.userBlockedBackgroundView
         ]).then {
             $0.axis = .vertical
@@ -169,9 +165,9 @@ class SettingsViewController: BaseNavigationViewController, View {
     override func bind() {
         super.bind()
         
-        #if DEVELOP
+#if DEVELOP
         self.setupDebugging()
-        #endif
+#endif
     }
     
     
@@ -297,16 +293,24 @@ class SettingsViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .bind(to: self.notificationSettingCellView.toggleSwitch.rx.isOn)
             .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.shouldHideTransfer)
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, shouldHide in
+                object.issueUserTransferCodeCellView.isHidden = shouldHide
+                object.enterUserTransferCodeCellView.isHidden = shouldHide
+            }
+            .disposed(by: self.disposeBag)
     }
 }
 
 extension SettingsViewController {
     
     private func setupDebugging() {
-
+        
         let longPressRecognizer = UILongPressGestureRecognizer()
         self.appSettingHeader.addGestureRecognizer(longPressRecognizer)
-
+        
         longPressRecognizer.rx.event
             .flatMapLatest { _ in Log.extract() }
             .subscribe(

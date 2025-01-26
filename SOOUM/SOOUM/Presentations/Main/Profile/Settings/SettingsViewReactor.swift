@@ -24,9 +24,10 @@ class SettingsViewReactor: Reactor {
     }
     
     struct State {
-        var banEndAt: Date?
-        var notificationStatus: Bool
-        var isProcessing: Bool
+        fileprivate(set) var banEndAt: Date?
+        fileprivate(set) var notificationStatus: Bool
+        fileprivate(set) var isProcessing: Bool
+        fileprivate(set) var shouldHideTransfer: Bool
     }
     
     var initialState: State
@@ -41,7 +42,8 @@ class SettingsViewReactor: Reactor {
         self.initialState = .init(
             banEndAt: nil,
             notificationStatus: provider.pushManager.notificationStatus,
-            isProcessing: false
+            isProcessing: false,
+            shouldHideTransfer: UserDefaults.standard.bool(forKey: "AppFlag")
         )
     }
     

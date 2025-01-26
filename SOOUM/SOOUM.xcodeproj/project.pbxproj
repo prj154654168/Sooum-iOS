@@ -600,7 +600,7 @@
 		3802BDAB2D0AC1FB001256EA /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		3802BDB02D0AE900001256EA /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
 		3802BDB72D0AF2F7001256EA /* PushManager+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PushManager+Rx.swift"; sourceTree = "<group>"; };
-		3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewReactor.swift; sourceTree = "<group>"; };
+		3803CF682D0156BA00FD90DB /* SettingsViewReactor.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewReactor.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3803CF6B2D0156FC00FD90DB /* SettingsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRequest.swift; sourceTree = "<group>"; };
 		3803CF6F2D0159A500FD90DB /* SettingsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsResponse.swift; sourceTree = "<group>"; };
 		3803CF732D0166D700FD90DB /* CommentHistoryViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentHistoryViewCell.swift; sourceTree = "<group>"; };
@@ -668,7 +668,7 @@
 		3878D05E2CFFD45100F9522F /* FollowerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowerResponse.swift; sourceTree = "<group>"; };
 		3878D0622CFFD66700F9522F /* FollowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowViewController.swift; sourceTree = "<group>"; };
 		3878D0662CFFDAF100F9522F /* OtherFollowViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherFollowViewCell.swift; sourceTree = "<group>"; };
-		3878D06A2CFFDF1F00F9522F /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		3878D06A2CFFDF1F00F9522F /* SettingsViewController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		3878D06E2CFFDF9600F9522F /* SettingTextCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTextCellView.swift; sourceTree = "<group>"; };
 		3878D0712CFFDFEF00F9522F /* SettingTextCellView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingTextCellView+Rx.swift"; sourceTree = "<group>"; };
 		3878D0742CFFE01500F9522F /* SettingScrollViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingScrollViewHeader.swift; sourceTree = "<group>"; };
