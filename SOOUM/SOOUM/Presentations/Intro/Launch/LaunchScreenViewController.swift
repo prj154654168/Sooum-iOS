@@ -143,6 +143,9 @@ class LaunchScreenViewController: BaseViewController, View {
             }
             .disposed(by: self.disposeBag)
     }
+}
+
+extension LaunchScreenViewController {
     
     private func animate(to height: CGFloat, completion: @escaping ((Bool) -> Void)) {
         
