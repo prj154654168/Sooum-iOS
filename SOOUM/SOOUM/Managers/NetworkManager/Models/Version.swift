@@ -27,4 +27,8 @@ extension Version {
     var mustUpdate: Bool {
         Self.thisAppVersion.currentVerion.compare(self.currentVerion, options: .numeric).rawValue < 0
     }
+  
+    var shouldHideTransfer: Bool {
+        Self.thisAppVersion.currentVerion.compare(self.currentVerion, options: .numeric).rawValue > 0
+    }
 }
