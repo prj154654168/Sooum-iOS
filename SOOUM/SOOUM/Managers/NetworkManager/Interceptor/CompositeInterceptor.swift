@@ -36,7 +36,9 @@ class CompositeInterceptor: RequestInterceptor {
         
         // ErrorInterceptor의 retry 적용
         if let errorInterceptor = self.interceptors.first(where: { $0 is ErrorInterceptor }) as? ErrorInterceptor {
-            errorInterceptor.retry(request, for: session, dueTo: error, completion: completion)
+            errorInterceptor.retry(request, for: session, dueTo: error) { result in
+                completion(result)
+            }
         } else {
             completion(.doNotRetryWithError(error))
         }
