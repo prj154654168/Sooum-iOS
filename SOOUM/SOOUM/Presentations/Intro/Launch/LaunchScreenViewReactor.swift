@@ -60,7 +60,10 @@ class LaunchScreenViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .launch:
-            return self.check()
+            return .concat([
+                self.fetchAppFlag(),
+                self.check()
+            ])
         }
     }
     
@@ -96,12 +99,24 @@ extension LaunchScreenViewReactor {
             .withUnretained(self)
             .flatMapLatest { object, currentVersion -> Observable<Mutation> in
                 let model = Version(currentVerion: currentVersion)
-                UserDefaults.standard.set(model.shouldHideTransfer, forKey: "AppFlag")
                 if model.mustUpdate {
                     return .just(.check(true))
                 } else {
                     return self.provider.authManager.hasToken ? .just(.updateIsRegistered(true)) : object.login()
                 }
+            }
+    }
+    
+    private func fetchAppFlag() -> Observable<Mutation> {
+        let request: ConfigureRequest = .appFlag
+        return provider.networkManager.request(Bool.self, request: request)
+            .map { flag in
+                UserDefaults.standard.set(flag, forKey: "AppFlag")
+                return Mutation.appFlag(flag)
+            }
+            .catch { _ in
+                UserDefaults.standard.set(true, forKey: "AppFlag")
+                return .just(Mutation.appFlag(false))
             }
     }
 }
