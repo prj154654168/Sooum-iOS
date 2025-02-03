@@ -28,15 +28,13 @@ protocol NetworkManagerDelegate: AnyObject {
 
 class NetworkManager: CompositeManager<NetworkManagerConfiguration> {
     
-    let configuration: NetworkManagerConfiguration.Configuration
     /// URLSession in Alamofire
-    let session: Session
+    private let session: Session
     
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
     
     override init(provider: ManagerTypeDelegate, configure: NetworkManagerConfiguration) {
-        self.configuration = configure.configuration
         self.session = .init(
             configuration: configure.configuration.sessionConfiguration,
             interceptor: CompositeInterceptor(provider: provider),
