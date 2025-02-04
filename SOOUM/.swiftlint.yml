@@ -157,6 +157,7 @@ excluded:
   - Pods
   - SOOUM/Resources
   - SOOUM/Models
+  - SOOUM-DevTests
   - Pods
 
 # 👉🏻 Options
