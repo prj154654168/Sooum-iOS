@@ -15,9 +15,9 @@ import RxSwift
 import SnapKit
 import Then
 
-class TagSearchViewController: BaseViewController, View {
+class TagSearchViewController: BaseNavigationViewController, View {
     
-    let backButton = UIButton().then {
+    let tagBackButton = UIButton().then {
         $0.setImage(.arrowBackOutlined, for: .normal)
         $0.tintColor = .som.black
     }
@@ -45,6 +45,7 @@ class TagSearchViewController: BaseViewController, View {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        isNavigationBarHidden = true
         self.setupToolbar()
     }
     
@@ -58,25 +59,12 @@ class TagSearchViewController: BaseViewController, View {
     
     override func viewDidAppear(_ animated: Bool) {
         tagSearchTextFieldView.textField.becomeFirstResponder()
-        UIView.animate(withDuration: 0.1) {
-            self.backButton.snp.updateConstraints {
-                $0.size.equalTo(40)
-            }
-            self.view.layoutIfNeeded()
-        }
     }
     
     override func bind() {
         backButton.rx.tap
             .subscribe(with: self) { object, _ in
-                UIView.animate(withDuration: 0.1) {
-                    object.backButton.snp.updateConstraints {
-                        $0.size.equalTo(0)
-                    }
-                    object.view.layoutIfNeeded()
-                } completion: { _ in
-                    object.pop()
-                }
+              object.navigationPop(animated: false)
             }
             .disposed(by: self.disposeBag)
         
@@ -106,17 +94,16 @@ class TagSearchViewController: BaseViewController, View {
     
     override func setupConstraints() {
         super.setupConstraints()
-        
         self.view.addSubview(backButton)
         backButton.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
-            $0.size.equalTo(0)
+            $0.size.equalTo(40)
         }
         
         self.view.addSubview(tagSearchTextFieldView)
         tagSearchTextFieldView.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(20)
-            $0.leading.equalTo(backButton.snp.trailing)
+          $0.leading.equalTo(backButton.snp.trailing).offset(4)
             $0.trailing.equalToSuperview().offset(-16)
             $0.centerY.equalTo(backButton)
         }
@@ -137,7 +124,7 @@ class TagSearchViewController: BaseViewController, View {
                 self.view.alpha = 0
             },
             completion: { _ in
-                self.navigationController?.dismiss(animated: false)
+              self.navigationPop(animated: false)
             }
         )
     }

@@ -9,7 +9,7 @@ import UIKit
 
 import ReactorKit
 
-class TagsViewController: BaseViewController, View {
+class TagsViewController: BaseNavigationViewController, View {
     
     enum TagType: Int, CaseIterable {
         case favorite
@@ -58,13 +58,7 @@ class TagsViewController: BaseViewController, View {
             .subscribe(with: self) { object, _ in
                 let searchVC = TagSearchViewController()
                 searchVC.reactor = reactor.reactorForSearch()
-                let navigationController = UINavigationController(
-                    rootViewController: searchVC
-                )
-                navigationController.modalTransitionStyle = .crossDissolve
-                navigationController.modalPresentationStyle = .overFullScreen
-                navigationController.navigationBar.isHidden = true
-                object.present(navigationController, animated: false)
+                self.navigationPush(searchVC, animated: false)
             }
             .disposed(by: self.disposeBag)
         
@@ -118,7 +112,8 @@ class TagsViewController: BaseViewController, View {
     
     override func setupConstraints() {
         super.setupConstraints()
-        
+      
+        isNavigationBarHidden = true
         self.view.addSubview(tagSearchTextFieldView)
         tagSearchTextFieldView.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(20)

@@ -68,9 +68,8 @@ class MainTabBarController: SOMTabBarController, View {
             tag: 1
         )
         
-        let tagViewcontroller = TagsViewController()
-        tagViewcontroller.reactor = reactor.reactorForTags()
-        let tagNavigationController = UINavigationController(rootViewController: tagViewcontroller)
+        let tagNavigationController = TagsViewController()
+        tagNavigationController.reactor = reactor.reactorForTags()
         tagNavigationController.tabBarItem = .init(
             title: Text.tagTitle,
             image: .init(.icon(.outlined(.star))),

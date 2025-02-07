@@ -784,7 +784,7 @@
 		38B543E72D4617EA00DDF2C5 /* NetworkManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerConfiguration.swift; sourceTree = "<group>"; };
 		38B543EA2D461B1A00DDF2C5 /* LocationManagerConfigruation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerConfigruation.swift; sourceTree = "<group>"; };
 		38B543ED2D46506300DDF2C5 /* ManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerType.swift; sourceTree = "<group>"; };
-		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTopButtonView.swift; sourceTree = "<group>"; };
 		38B6AADA2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewReactor.swift; sourceTree = "<group>"; tabWidth = 4; };
 		38B6AADE2CA4777200CE6DB6 /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
