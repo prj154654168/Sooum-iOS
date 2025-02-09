@@ -278,40 +278,53 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
     }
 }
 
+
+// MARK: Private func
+
+extension MainHomeTabBarController {
+    
+    private func showLocationPermissionDialog() {
+        
+        let cancelAction = SOMDialogAction(
+            title: Text.cancelActionTitle,
+            style: .gray,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        let settingAction = SOMDialogAction(
+            title: Text.settingActionTitle,
+            style: .primary,
+            action: {
+                let application = UIApplication.shared
+                let openSettingsURLString: String = UIApplication.openSettingsURLString
+                if let settingsURL = URL(string: openSettingsURLString),
+                   application.canOpenURL(settingsURL) {
+                    application.open(settingsURL)
+                }
+                
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.dialogTitle,
+            message: Text.dialogMessage,
+            actions: [cancelAction, settingAction]
+        )
+    }
+}
+
+
+// MARK: SOMSwipeTabBarDelegate
+
 extension MainHomeTabBarController: SOMSwipeTabBarDelegate {
     
     func tabBar(_ tabBar: SOMSwipeTabBar, shouldSelectTabAt index: Int) -> Bool {
         
         if index == 2, self.reactor?.provider.locationManager.checkLocationAuthStatus() == .denied {
             
-            let cancelAction = SOMDialogAction(
-                title: Text.cancelActionTitle,
-                style: .gray,
-                action: {
-                    UIApplication.topViewController?.dismiss(animated: true)
-                }
-            )
-            let settingAction = SOMDialogAction(
-                title: Text.settingActionTitle,
-                style: .primary,
-                action: {
-                    let application = UIApplication.shared
-                    let openSettingsURLString: String = UIApplication.openSettingsURLString
-                    if let settingsURL = URL(string: openSettingsURLString),
-                       application.canOpenURL(settingsURL) {
-                        application.open(settingsURL)
-                    }
-                    
-                    UIApplication.topViewController?.dismiss(animated: true)
-                }
-            )
-            
-            SOMDialogViewController.show(
-                title: Text.dialogTitle,
-                message: Text.dialogMessage,
-                actions: [cancelAction, settingAction]
-            )
-            
+            self.showLocationPermissionDialog()
             return false
         }
         
@@ -345,6 +358,9 @@ extension MainHomeTabBarController: SOMSwipeTabBarDelegate {
     }
 }
 
+
+// MARK: SOMLocationFilterDelegate
+
 extension MainHomeTabBarController: SOMLocationFilterDelegate {
     
     func filter(_ filter: SOMLocationFilter, didSelectDistanceAt distance: SOMLocationFilter.Distance) {
@@ -355,6 +371,9 @@ extension MainHomeTabBarController: SOMLocationFilterDelegate {
         mainHomeDistanceViewController.reactor?.action.onNext(.distanceFilter(distance.rawValue))
     }
 }
+
+
+// MARK: UIPageViewController dataSource and delegate
 
 extension MainHomeTabBarController: UIPageViewControllerDataSource {
 
@@ -377,39 +396,11 @@ extension MainHomeTabBarController: UIPageViewControllerDataSource {
               currentIndex < self.pages.count - 1
         else { return nil }
         
-        if self.currentPage + 1 == 2, self.reactor?.provider.locationManager.checkLocationAuthStatus() == .denied {
-            
-            let cancelAction = SOMDialogAction(
-                title: Text.cancelActionTitle,
-                style: .gray,
-                action: {
-                    UIApplication.topViewController?.dismiss(animated: true)
-                }
-            )
-            let settingAction = SOMDialogAction(
-                title: Text.settingActionTitle,
-                style: .primary,
-                action: {
-                    let application = UIApplication.shared
-                    let openSettingsURLString: String = UIApplication.openSettingsURLString
-                    if let settingsURL = URL(string: openSettingsURLString),
-                       application.canOpenURL(settingsURL) {
-                        application.open(settingsURL)
-                    }
-                    
-                    UIApplication.topViewController?.dismiss(animated: true)
-                }
-            )
-            
-            SOMDialogViewController.show(
-                title: Text.dialogTitle,
-                message: Text.dialogMessage,
-                actions: [cancelAction, settingAction]
-            )
-            
+        // TODO: 임시, 위치 권한 허용 X일 때, 거리순 탭으로 진입 시 스와이프 제스처 막음
+        if currentIndex == 1,
+           self.reactor?.provider.locationManager.checkLocationAuthStatus() == .denied {
             return nil
         } else {
-            
             return self.pages[currentIndex + 1]
         }
     }
