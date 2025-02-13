@@ -45,8 +45,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    func sceneDidDisconnect(_ scene: UIScene) { }
-
     func sceneDidBecomeActive(_ scene: UIScene) { }
 
     func sceneWillResignActive(_ scene: UIScene) { }
@@ -55,6 +53,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidEnterBackground(_ scene: UIScene) {
         // 앱이 백그라운드 상태로 전환 되면, 모든 캐시 삭제
+        Kingfisher.ImageCache.default.clearCache()
+    }
+    
+    func sceneDidDisconnect(_ scene: UIScene) {
+        // 앱이 완전히 종료되었을 때, 모든 캐시 삭제
         Kingfisher.ImageCache.default.clearCache()
     }
 }

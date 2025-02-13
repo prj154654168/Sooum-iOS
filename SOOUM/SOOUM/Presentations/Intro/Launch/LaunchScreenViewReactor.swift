@@ -60,7 +60,14 @@ class LaunchScreenViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .launch:
-            return self.check()
+            // 계정 이관에 성공했을 때, 온보딩 화면으로 전환
+            let isTransfered = self.pushInfo?.isTransfered ?? false
+            if isTransfered {
+                self.provider.authManager.initializeAuthInfo()
+                return .just(.updateIsRegistered(false))
+            } else {
+                return self.check()
+            }
         }
     }
     
@@ -96,7 +103,9 @@ extension LaunchScreenViewReactor {
             .withUnretained(self)
             .flatMapLatest { object, currentVersion -> Observable<Mutation> in
                 let model = Version(currentVerion: currentVersion)
+                
                 UserDefaults.standard.set(model.shouldHideTransfer, forKey: "AppFlag")
+                
                 if model.mustUpdate {
                     return .just(.check(true))
                 } else {
