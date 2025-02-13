@@ -40,6 +40,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Set log
         self.setupCocoaLumberjack()
         
+        // Initalize token
+        self.initializeTokenWhenFirstLaunch()
+        
         // Set managers
         self.provider.initialize()
         
@@ -48,9 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Messaging.messaging().delegate = self
         // 앱 실행 시 사용자에게 알림 허용 권한을 받음
         UNUserNotificationCenter.current().delegate = self
-        
-        // 앱 첫 실행 시 할 일
-        self.todoFirstLaunch()
         
         return true
     }
@@ -159,8 +159,7 @@ extension AppDelegate {
         DDLog.add(fileLogger)
     }
     
-    private func todoFirstLaunch() {
-        
+    private func initializeTokenWhenFirstLaunch() {
         guard UserDefaults.isFirstLaunch else { return }
         
         // 앱 첫 실행 시 token 정보 제거
