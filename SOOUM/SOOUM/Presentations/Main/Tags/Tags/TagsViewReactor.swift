@@ -44,7 +44,7 @@ class TagsViewReactor: Reactor {
     
     private var lastID: String?
     private var isFetching = false
-    private let pageSize = 10
+    private let pageSize = 20
     private var isLastPage = false
     
     let provider: ManagerProviderType
@@ -131,7 +131,6 @@ class TagsViewReactor: Reactor {
         return self.provider.networkManager.request(FavoriteTagsResponse.self, request: request)
             .map { response -> Mutation in
                 let items = response.embedded.favoriteTagList
-                
                 self.isLastPage = items.count < self.pageSize
                 self.isFetching = false
                 return lastId == nil ? .favoriteTags(items) : .more(items)
