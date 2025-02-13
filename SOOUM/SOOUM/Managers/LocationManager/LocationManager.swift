@@ -20,6 +20,7 @@ enum AuthStatus {
 protocol LocationManagerDelegate: AnyObject {
     
     var coordinate: Coordinate { get }
+    var hasCoordinate: Bool { get }
     func requestLocationPermission()
     func checkLocationAuthStatus() -> AuthStatus
 }
@@ -31,6 +32,10 @@ class LocationManager: CompositeManager<LocationManagerConfigruation> {
     var coordinate: Coordinate {
         let coordinate = SimpleDefaults.shared.loadLocation()
         return coordinate
+    }
+    
+    var hasCoordinate: Bool {
+        return self.coordinate.latitude.isEmpty == false && self.coordinate.longitude.isEmpty == false
     }
     
     override init(provider: ManagerTypeDelegate, configure: LocationManagerConfigruation) {

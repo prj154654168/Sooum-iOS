@@ -54,6 +54,7 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
     // MARK: Views
     
     private let headerContainer = UIStackView().then {
+        $0.backgroundColor = .som.white
         $0.axis = .vertical
     }
     
@@ -81,15 +82,15 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
     private var pages = [UIViewController]()
     private var currentPage: Int = 0
     
-    private var headerContainerHeight: CGFloat = SOMSwipeTabBar.Height.mainHome
-    
     private var animator: UIViewPropertyAnimator?
+    
+    private var locationFilterHeight: CGFloat = 0
     
     
     // MARK: Constraints
     
+    private var headerTapBarHeightConstraint: Constraint?
     private var headerLocationFilterHeightConstraint: Constraint?
-    private var pageViewTopConstraint: Constraint?
     
     
     // MARK: Override func
@@ -159,6 +160,13 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
     override func setupConstraints() {
         super.setupConstraints()
         
+        self.addChild(self.pageViewController)
+        self.view.addSubview(self.pageViewController.view)
+        self.pageViewController.view.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            $0.bottom.leading.trailing.equalToSuperview()
+        }
+        
         self.view.addSubview(self.headerContainer)
         self.headerContainer.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
@@ -166,20 +174,11 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
         }
         self.headerContainer.addArrangedSubview(self.headerTapBar)
         self.headerTapBar.snp.makeConstraints {
-            $0.height.equalTo(SOMSwipeTabBar.Height.mainHome)
+            self.headerTapBarHeightConstraint = $0.height.equalTo(SOMSwipeTabBar.Height.mainHome).priority(.high).constraint
         }
         self.headerContainer.addArrangedSubview(self.headerLocationFilter)
         self.headerLocationFilter.snp.makeConstraints {
             self.headerLocationFilterHeightConstraint = $0.height.equalTo(0).priority(.high).constraint
-        }
-        
-        self.addChild(self.pageViewController)
-        self.view.addSubview(self.pageViewController.view)
-        self.pageViewController.view.snp.makeConstraints {
-            self.pageViewTopConstraint = $0.top.equalTo(self.headerContainer.snp.bottom)
-                .priority(.high)
-                .constraint
-            $0.bottom.leading.trailing.equalToSuperview()
         }
     }
     
@@ -226,13 +225,16 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
                 object.animator?.stopAnimation(false)
                 object.animator?.finishAnimation(at: .end)
             }
-            
-            object.headerContainer.isHidden = hidesHeaderContainer
-            
-            object.pageViewTopConstraint?.deactivate()
-            object.pageViewController.view.snp.makeConstraints {
-                let top = hidesHeaderContainer ? object.view.safeAreaLayoutGuide.snp.top : object.headerContainer.snp.bottom
-                object.pageViewTopConstraint = $0.top.equalTo(top).priority(.high).constraint
+            // 헤더 뷰 높이 조절
+            object.headerTapBarHeightConstraint?.deactivate()
+            object.headerLocationFilterHeightConstraint?.deactivate()
+            object.headerTapBar.snp.makeConstraints {
+                let height = hidesHeaderContainer ? 0 : SOMSwipeTabBar.Height.mainHome
+                object.headerTapBarHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+            }
+            object.headerLocationFilter.snp.makeConstraints {
+                let height = hidesHeaderContainer ? 0 : object.locationFilterHeight
+                object.headerLocationFilterHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
             }
             
             // 애니메이션 추가
@@ -243,10 +245,11 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
             }
             // 새 애니메이션 시작
             object.animator?.startAnimation()
-            // 애니메이션이 끝난 후 animator 초기화
             object.animator?.addCompletion { position in
-                
+                // 애니메이션이 끝난 후 animator 초기화
                 if position == .end { object.animator = nil }
+                // Update headerContainer hidden
+                object.headerContainer.isHidden = hidesHeaderContainer
             }
         }
         .disposed(by: self.disposeBag)
@@ -278,40 +281,53 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
     }
 }
 
+
+// MARK: Private func
+
+extension MainHomeTabBarController {
+    
+    private func showLocationPermissionDialog() {
+        
+        let cancelAction = SOMDialogAction(
+            title: Text.cancelActionTitle,
+            style: .gray,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        let settingAction = SOMDialogAction(
+            title: Text.settingActionTitle,
+            style: .primary,
+            action: {
+                let application = UIApplication.shared
+                let openSettingsURLString: String = UIApplication.openSettingsURLString
+                if let settingsURL = URL(string: openSettingsURLString),
+                   application.canOpenURL(settingsURL) {
+                    application.open(settingsURL)
+                }
+                
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.dialogTitle,
+            message: Text.dialogMessage,
+            actions: [cancelAction, settingAction]
+        )
+    }
+}
+
+
+// MARK: SOMSwipeTabBarDelegate
+
 extension MainHomeTabBarController: SOMSwipeTabBarDelegate {
     
     func tabBar(_ tabBar: SOMSwipeTabBar, shouldSelectTabAt index: Int) -> Bool {
         
         if index == 2, self.reactor?.provider.locationManager.checkLocationAuthStatus() == .denied {
             
-            let cancelAction = SOMDialogAction(
-                title: Text.cancelActionTitle,
-                style: .gray,
-                action: {
-                    UIApplication.topViewController?.dismiss(animated: true)
-                }
-            )
-            let settingAction = SOMDialogAction(
-                title: Text.settingActionTitle,
-                style: .primary,
-                action: {
-                    let application = UIApplication.shared
-                    let openSettingsURLString: String = UIApplication.openSettingsURLString
-                    if let settingsURL = URL(string: openSettingsURLString),
-                       application.canOpenURL(settingsURL) {
-                        application.open(settingsURL)
-                    }
-                    
-                    UIApplication.topViewController?.dismiss(animated: true)
-                }
-            )
-            
-            SOMDialogViewController.show(
-                title: Text.dialogTitle,
-                message: Text.dialogMessage,
-                actions: [cancelAction, settingAction]
-            )
-            
+            self.showLocationPermissionDialog()
             return false
         }
         
@@ -322,10 +338,11 @@ extension MainHomeTabBarController: SOMSwipeTabBarDelegate {
         
         let hidesLocationFilter = index != 2
         
+        self.locationFilterHeight = hidesLocationFilter ? 0 : SOMLocationFilter.height
+        
         self.headerLocationFilterHeightConstraint?.deactivate()
         self.headerLocationFilter.snp.makeConstraints {
-            let height = hidesLocationFilter ? 0 : SOMLocationFilter.height
-            self.headerLocationFilterHeightConstraint = $0.height.equalTo(height).priority(.high).constraint
+            self.headerLocationFilterHeightConstraint = $0.height.equalTo(self.locationFilterHeight).priority(.high).constraint
         }
         
         UIView.performWithoutAnimation {
@@ -345,6 +362,9 @@ extension MainHomeTabBarController: SOMSwipeTabBarDelegate {
     }
 }
 
+
+// MARK: SOMLocationFilterDelegate
+
 extension MainHomeTabBarController: SOMLocationFilterDelegate {
     
     func filter(_ filter: SOMLocationFilter, didSelectDistanceAt distance: SOMLocationFilter.Distance) {
@@ -355,6 +375,9 @@ extension MainHomeTabBarController: SOMLocationFilterDelegate {
         mainHomeDistanceViewController.reactor?.action.onNext(.distanceFilter(distance.rawValue))
     }
 }
+
+
+// MARK: UIPageViewController dataSource and delegate
 
 extension MainHomeTabBarController: UIPageViewControllerDataSource {
 
@@ -377,39 +400,11 @@ extension MainHomeTabBarController: UIPageViewControllerDataSource {
               currentIndex < self.pages.count - 1
         else { return nil }
         
-        if self.currentPage + 1 == 2, self.reactor?.provider.locationManager.checkLocationAuthStatus() == .denied {
-            
-            let cancelAction = SOMDialogAction(
-                title: Text.cancelActionTitle,
-                style: .gray,
-                action: {
-                    UIApplication.topViewController?.dismiss(animated: true)
-                }
-            )
-            let settingAction = SOMDialogAction(
-                title: Text.settingActionTitle,
-                style: .primary,
-                action: {
-                    let application = UIApplication.shared
-                    let openSettingsURLString: String = UIApplication.openSettingsURLString
-                    if let settingsURL = URL(string: openSettingsURLString),
-                       application.canOpenURL(settingsURL) {
-                        application.open(settingsURL)
-                    }
-                    
-                    UIApplication.topViewController?.dismiss(animated: true)
-                }
-            )
-            
-            SOMDialogViewController.show(
-                title: Text.dialogTitle,
-                message: Text.dialogMessage,
-                actions: [cancelAction, settingAction]
-            )
-            
+        // TODO: 임시, 위치 권한 허용 X일 때, 거리순 탭으로 진입 시 스와이프 제스처 막음
+        if currentIndex == 1,
+           self.reactor?.provider.locationManager.checkLocationAuthStatus() == .denied {
             return nil
         } else {
-            
             return self.pages[currentIndex + 1]
         }
     }
