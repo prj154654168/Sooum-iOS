@@ -155,7 +155,7 @@ extension AppDelegate {
 
         let fileLogger: DDFileLogger = DDFileLogger() // File Logger
         fileLogger.rollingFrequency = 60 * 60 * 24 // 24 hours
-        fileLogger.logFileManager.maximumNumberOfLogFiles = 7
+        fileLogger.logFileManager.maximumNumberOfLogFiles = 1 // Always recent
         DDLog.add(fileLogger)
     }
     
