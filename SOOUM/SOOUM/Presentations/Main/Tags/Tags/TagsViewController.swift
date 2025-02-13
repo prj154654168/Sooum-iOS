@@ -64,7 +64,7 @@ class TagsViewController: BaseNavigationViewController, View {
         
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
-                reactor.action.onNext(.fetchTags)
+              reactor.action.onNext(.initialize)
             }
             .disposed(by: self.disposeBag)
         
@@ -72,16 +72,10 @@ class TagsViewController: BaseNavigationViewController, View {
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(isLoading)
             .filter { $0 == false }
-            .map { _ in Reactor.Action.fetchTags }
+            .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
 
-        reactor.state.map(\.favoriteTags)
-            .subscribe(with: self) { object, _ in
-                object.tableView.reloadData()
-            }
-            .disposed(by: self.disposeBag)
-        
         reactor.state.map(\.favoriteTags)
             .subscribe(with: self) { object, _ in
                 object.tableView.reloadData()
@@ -295,22 +289,7 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let reactor = self.reactor,
-                reactor.currentState.favoriteTags.isEmpty == false
-        else { return }
-        
-        let sectionForFavorite = TagType.favorite.rawValue
-        let lastRowForFavorite = tableView.numberOfRows(inSection: sectionForFavorite) - 1
-        
-        if self.isLoadingMore,
-           indexPath.section == sectionForFavorite,
-           indexPath.row == lastRowForFavorite {
-            
-            let lastId = reactor.currentState.favoriteTags[indexPath.row].id
-            reactor.action.onNext(.moreFind(lastId))
-        }
-    }
+
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
@@ -321,15 +300,16 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.size.height
         
-        let offset = scrollView.contentOffset.y
-        
-        // 당겨서 새로고침 상황일 때
-        guard offset > 0 else { return }
-        
-        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
-        self.isLoadingMore = offset > self.currentOffset
-        self.currentOffset = offset
+        if offsetY > contentHeight - height - 1200 {
+            guard let reactor = self.reactor, !isLoadingMore else {
+                return
+            }
+          reactor.action.onNext(.moreFind)
+        }
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
