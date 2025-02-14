@@ -54,6 +54,7 @@ class TagsViewReactor: Reactor {
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
+        print("@@@", action)
         switch action {
             
         case .initialize:
@@ -116,6 +117,7 @@ class TagsViewReactor: Reactor {
         case let .setProcessing(isProcessing):
             newState.isProcessing = isProcessing
         }
+        print("@@@", state.favoriteTags.count)
         return newState
     }
     
@@ -131,13 +133,13 @@ class TagsViewReactor: Reactor {
         return self.provider.networkManager.request(FavoriteTagsResponse.self, request: request)
             .map { response -> Mutation in
                 let items = response.embedded.favoriteTagList
-                self.isLastPage = items.count < self.pageSize
                 self.isFetching = false
                 return lastId == nil ? .favoriteTags(items) : .more(items)
             }
             .catch { _ in
                 self.isFetching = false
-                return .just(.favoriteTags([]))
+                self.isLastPage = true
+                return .empty()
             }
     }
     

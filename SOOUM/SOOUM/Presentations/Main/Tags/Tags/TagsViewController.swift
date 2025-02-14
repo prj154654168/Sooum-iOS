@@ -47,6 +47,7 @@ class TagsViewController: BaseNavigationViewController, View {
         $0.refreshControl = SOMRefreshControl()
     }
     
+    private let loadMoreTrigger = PublishSubject<Void>()
     private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = false
     private var isLoadingMore: Bool = false
@@ -75,6 +76,14 @@ class TagsViewController: BaseNavigationViewController, View {
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
+      
+      loadMoreTrigger
+          .throttle(.milliseconds(500), scheduler: MainScheduler.instance) // 0.5초 동안 한 번만 실행
+          .subscribe(with: self) { object, _ in
+              guard let reactor = object.reactor, !reactor.currentState.isLoading else { return }
+              reactor.action.onNext(.moreFind)
+          }
+          .disposed(by: disposeBag)
 
         reactor.state.map(\.favoriteTags)
             .subscribe(with: self) { object, _ in
@@ -305,10 +314,7 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         let height = scrollView.frame.size.height
         
         if offsetY > contentHeight - height - 1200 {
-            guard let reactor = self.reactor, !isLoadingMore else {
-                return
-            }
-          reactor.action.onNext(.moreFind)
+            loadMoreTrigger.onNext(())
         }
     }
     
