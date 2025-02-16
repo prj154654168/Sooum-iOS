@@ -77,14 +77,14 @@ class TagsViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
       
-      loadMoreTrigger
-          .throttle(.milliseconds(500), scheduler: MainScheduler.instance) // 0.5초 동안 한 번만 실행
-          .subscribe(with: self) { object, _ in
-              guard let reactor = object.reactor, !reactor.currentState.isLoading else { return }
-              reactor.action.onNext(.moreFind)
-          }
-          .disposed(by: disposeBag)
-
+        loadMoreTrigger
+            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                guard let reactor = object.reactor else { return }
+                reactor.action.onNext(.loadMoreFavorite)
+            }
+            .disposed(by: disposeBag)
+      
         reactor.state.map(\.favoriteTags)
             .subscribe(with: self) { object, _ in
                 object.tableView.reloadData()

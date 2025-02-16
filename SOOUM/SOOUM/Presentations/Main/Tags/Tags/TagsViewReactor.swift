@@ -14,16 +14,16 @@ class TagsViewReactor: Reactor {
     enum Action {
         case initialize
         case refresh
-        case moreFind
+        case loadMoreFavorite
     }
     
     enum Mutation {
         /// 즐겨찾기 태그 fetch
-        case favoriteTags([FavoriteTagsResponse.FavoriteTagList])
+        case setFavoriteTags([FavoriteTagsResponse.FavoriteTagList])
         /// 즐겨찾기 태그 more
-        case more([FavoriteTagsResponse.FavoriteTagList])
+        case appendFavoriteTags([FavoriteTagsResponse.FavoriteTagList])
         /// 추천 태그 fetch
-        case recommendTags([RecommendTagsResponse.RecommendTag])
+        case setRecommendTags([RecommendTagsResponse.RecommendTag])
         case setLoading(Bool)
         case setProcessing(Bool)
     }
@@ -87,7 +87,7 @@ class TagsViewReactor: Reactor {
                 .just(.setLoading(false))
             ])
             
-        case .moreFind:
+        case .loadMoreFavorite:
             guard !isFetching, !isLastPage else {
                 return .empty()
             }
@@ -102,13 +102,13 @@ class TagsViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case let .favoriteTags(favoriteTags):
+        case let .setFavoriteTags(favoriteTags):
             newState.favoriteTags = favoriteTags
             
-        case let .more(favoriteTags):
+        case let .appendFavoriteTags(favoriteTags):
             newState.favoriteTags += favoriteTags
             
-        case let .recommendTags(recommendTags):
+        case let .setRecommendTags(recommendTags):
             newState.recommendTags = recommendTags
             
         case let .setLoading(isLoading):
@@ -134,7 +134,7 @@ class TagsViewReactor: Reactor {
             .map { response -> Mutation in
                 let items = response.embedded.favoriteTagList
                 self.isFetching = false
-                return lastId == nil ? .favoriteTags(items) : .more(items)
+                return lastId == nil ? .setFavoriteTags(items) : .appendFavoriteTags(items)
             }
             .catch { _ in
                 self.isFetching = false
@@ -150,10 +150,10 @@ class TagsViewReactor: Reactor {
         
         return self.provider.networkManager.request(RecommendTagsResponse.self, request: request)
             .map { response in
-                return Mutation.recommendTags(response.embedded.recommendTagList)
+                return Mutation.setRecommendTags(response.embedded.recommendTagList)
             }
             .catch { _ in
-                return .just(.recommendTags([]))
+                return .just(.setRecommendTags([]))
             }
     }
 }
