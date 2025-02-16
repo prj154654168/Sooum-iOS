@@ -48,12 +48,8 @@ class TagsViewController: BaseNavigationViewController, View {
     }
     
     private let loadMoreTrigger = PublishSubject<Void>()
-    private var currentOffset: CGFloat = 0
-    private var isRefreshEnabled: Bool = false
-    private var isLoadingMore: Bool = false
     
     func bind(reactor: TagsViewReactor) {
-        
         tagSearchTextFieldView.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
@@ -92,23 +88,12 @@ class TagsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         isLoading
-            .do(onNext: { [weak self] isLoading in
-                if isLoading { self?.isLoadingMore = false }
-            })
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()
                 }
-            }
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.isProcessing)
-            .distinctUntilChanged()
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                object.isLoadingMore = false
             }
             .disposed(by: self.disposeBag)
     }
@@ -298,16 +283,6 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        
-        let offset = scrollView.contentOffset.y
-        
-        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
-        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
-    }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
@@ -323,8 +298,7 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         let offset = scrollView.contentOffset.y
         
         // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
-        if self.isRefreshEnabled,
-           let refreshControl = self.tableView.refreshControl,
+        if let refreshControl = self.tableView.refreshControl,
            offset <= -(refreshControl.frame.origin.y + 40) {
             
             refreshControl.beginRefreshingFromTop()
