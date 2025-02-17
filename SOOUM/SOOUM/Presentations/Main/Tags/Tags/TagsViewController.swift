@@ -9,7 +9,7 @@ import UIKit
 
 import ReactorKit
 
-class TagsViewController: BaseViewController, View {
+class TagsViewController: BaseNavigationViewController, View {
     
     enum TagType: Int, CaseIterable {
         case favorite
@@ -47,30 +47,21 @@ class TagsViewController: BaseViewController, View {
         $0.refreshControl = SOMRefreshControl()
     }
     
-    private var currentOffset: CGFloat = 0
-    private var isRefreshEnabled: Bool = false
-    private var isLoadingMore: Bool = false
+    private let loadMoreTrigger = PublishSubject<Void>()
     
     func bind(reactor: TagsViewReactor) {
-        
         tagSearchTextFieldView.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
                 let searchVC = TagSearchViewController()
                 searchVC.reactor = reactor.reactorForSearch()
-                let navigationController = UINavigationController(
-                    rootViewController: searchVC
-                )
-                navigationController.modalTransitionStyle = .crossDissolve
-                navigationController.modalPresentationStyle = .overFullScreen
-                navigationController.navigationBar.isHidden = true
-                object.present(navigationController, animated: false)
+                self.navigationPush(searchVC, animated: false)
             }
             .disposed(by: self.disposeBag)
         
         self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
-                reactor.action.onNext(.fetchTags)
+              reactor.action.onNext(.initialize)
             }
             .disposed(by: self.disposeBag)
         
@@ -78,16 +69,18 @@ class TagsViewController: BaseViewController, View {
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
             .withLatestFrom(isLoading)
             .filter { $0 == false }
-            .map { _ in Reactor.Action.fetchTags }
+            .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
-
-        reactor.state.map(\.favoriteTags)
+      
+        loadMoreTrigger
+            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                object.tableView.reloadData()
+                guard let reactor = object.reactor else { return }
+                reactor.action.onNext(.loadMoreFavorite)
             }
-            .disposed(by: self.disposeBag)
-        
+            .disposed(by: disposeBag)
+      
         reactor.state.map(\.favoriteTags)
             .subscribe(with: self) { object, _ in
                 object.tableView.reloadData()
@@ -95,9 +88,6 @@ class TagsViewController: BaseViewController, View {
             .disposed(by: self.disposeBag)
         
         isLoading
-            .do(onNext: { [weak self] isLoading in
-                if isLoading { self?.isLoadingMore = false }
-            })
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
                     tableView.refreshControl?.beginRefreshingFromTop()
@@ -106,19 +96,12 @@ class TagsViewController: BaseViewController, View {
                 }
             }
             .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.isProcessing)
-            .distinctUntilChanged()
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                object.isLoadingMore = false
-            }
-            .disposed(by: self.disposeBag)
     }
     
     override func setupConstraints() {
         super.setupConstraints()
-        
+      
+        isNavigationBarHidden = true
         self.view.addSubview(tagSearchTextFieldView)
         tagSearchTextFieldView.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(20)
@@ -300,41 +283,14 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        guard let reactor = self.reactor,
-                reactor.currentState.favoriteTags.isEmpty == false
-        else { return }
-        
-        let sectionForFavorite = TagType.favorite.rawValue
-        let lastRowForFavorite = tableView.numberOfRows(inSection: sectionForFavorite) - 1
-        
-        if self.isLoadingMore,
-           indexPath.section == sectionForFavorite,
-           indexPath.row == lastRowForFavorite {
-            
-            let lastId = reactor.currentState.favoriteTags[indexPath.row].id
-            reactor.action.onNext(.moreFind(lastId))
-        }
-    }
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        
-        let offset = scrollView.contentOffset.y
-        
-        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
-        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
-    }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+        let height = scrollView.frame.size.height
         
-        let offset = scrollView.contentOffset.y
-        
-        // 당겨서 새로고침 상황일 때
-        guard offset > 0 else { return }
-        
-        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
-        self.isLoadingMore = offset > self.currentOffset
-        self.currentOffset = offset
+        if offsetY > contentHeight - height - 1200 {
+            loadMoreTrigger.onNext(())
+        }
     }
     
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -342,8 +298,7 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         let offset = scrollView.contentOffset.y
         
         // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
-        if self.isRefreshEnabled,
-           let refreshControl = self.tableView.refreshControl,
+        if let refreshControl = self.tableView.refreshControl,
            offset <= -(refreshControl.frame.origin.y + 40) {
             
             refreshControl.beginRefreshingFromTop()

@@ -12,17 +12,18 @@ import ReactorKit
 class TagsViewReactor: Reactor {
     
     enum Action {
-        case fetchTags
-        case moreFind(String)
+        case initialize
+        case refresh
+        case loadMoreFavorite
     }
     
     enum Mutation {
         /// 즐겨찾기 태그 fetch
-        case favoriteTags([FavoriteTagsResponse.FavoriteTagList])
+        case setFavoriteTags([FavoriteTagsResponse.FavoriteTagList])
         /// 즐겨찾기 태그 more
-        case more([FavoriteTagsResponse.FavoriteTagList])
+        case appendFavoriteTags([FavoriteTagsResponse.FavoriteTagList])
         /// 추천 태그 fetch
-        case recommendTags([RecommendTagsResponse.RecommendTag])
+        case setRecommendTags([RecommendTagsResponse.RecommendTag])
         case setLoading(Bool)
         case setProcessing(Bool)
     }
@@ -41,6 +42,11 @@ class TagsViewReactor: Reactor {
         self.currentState.favoriteTags.isEmpty
     }
     
+    private var lastID: String?
+    private var isFetching = false
+    private let pageSize = 20
+    private var isLastPage = false
+    
     let provider: ManagerProviderType
     
     init(provider: ManagerProviderType) {
@@ -49,9 +55,26 @@ class TagsViewReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .fetchTags:
             
-            let combined = Observable.concat([
+        case .initialize:
+            isFetching = false
+            isLastPage = false
+            lastID = nil
+            let zipped = Observable.concat([
+                self.fetchFavoriteTags(),
+                self.fetchRecommendTags()
+            ])
+            return .concat([
+                .just(.setLoading(true)),
+                zipped,
+                .just(.setLoading(false))
+            ])
+            
+        case .refresh:
+            isFetching = false
+            isLastPage = false
+            lastID = nil
+            let zipped = Observable.concat([
                 self.fetchFavoriteTags(),
                 self.fetchRecommendTags()
             ])
@@ -59,16 +82,17 @@ class TagsViewReactor: Reactor {
             
             return .concat([
                 .just(.setLoading(true)),
-                combined,
+                zipped,
                 .just(.setLoading(false))
             ])
             
-        case let .moreFind(lastId):
-            
+        case .loadMoreFavorite:
+            guard !isFetching, !isLastPage else {
+                return .empty()
+            }
             return .concat([
                 .just(.setProcessing(true)),
-                self.fetchFavoriteTags(with: lastId)
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
+                self.fetchFavoriteTags(with: currentState.favoriteTags.last?.id),
                 .just(.setProcessing(false))
             ])
         }
@@ -77,13 +101,13 @@ class TagsViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case let .favoriteTags(favoriteTags):
+        case let .setFavoriteTags(favoriteTags):
             newState.favoriteTags = favoriteTags
             
-        case let .more(favoriteTags):
+        case let .appendFavoriteTags(favoriteTags):
             newState.favoriteTags += favoriteTags
             
-        case let .recommendTags(recommendTags):
+        case let .setRecommendTags(recommendTags):
             newState.recommendTags = recommendTags
             
         case let .setLoading(isLoading):
@@ -96,12 +120,25 @@ class TagsViewReactor: Reactor {
     }
     
     private func fetchFavoriteTags(with lastId: String? = nil) -> Observable<Mutation> {
+        guard !isFetching, !isLastPage else {
+            return .empty()
+        }
+        
+        isFetching = true
+        
         let request: TagRequest = .favorite(last: lastId)
         
         return self.provider.networkManager.request(FavoriteTagsResponse.self, request: request)
-            .map(\.embedded.favoriteTagList)
-            .map(lastId == nil ? Mutation.favoriteTags : Mutation.more)
-            .catch { _ in .just(.favoriteTags([])) }
+            .map { response -> Mutation in
+                let items = response.embedded.favoriteTagList
+                self.isFetching = false
+                return lastId == nil ? .setFavoriteTags(items) : .appendFavoriteTags(items)
+            }
+            .catch { _ in
+                self.isFetching = false
+                self.isLastPage = true
+                return .empty()
+            }
     }
     
     private func fetchRecommendTags() -> Observable<Mutation> {
@@ -109,10 +146,10 @@ class TagsViewReactor: Reactor {
         
         return self.provider.networkManager.request(RecommendTagsResponse.self, request: request)
             .map { response in
-                return Mutation.recommendTags(response.embedded.recommendTagList)
+                return Mutation.setRecommendTags(response.embedded.recommendTagList)
             }
             .catch { _ in
-                return .just(.recommendTags([]))
+                return .just(.setRecommendTags([]))
             }
     }
 }
