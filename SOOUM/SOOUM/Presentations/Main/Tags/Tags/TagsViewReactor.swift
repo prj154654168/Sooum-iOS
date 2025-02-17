@@ -54,7 +54,6 @@ class TagsViewReactor: Reactor {
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
-        print("@@@", action)
         switch action {
             
         case .initialize:
@@ -117,7 +116,6 @@ class TagsViewReactor: Reactor {
         case let .setProcessing(isProcessing):
             newState.isProcessing = isProcessing
         }
-        print("@@@", state.favoriteTags.count)
         return newState
     }
     
@@ -144,8 +142,6 @@ class TagsViewReactor: Reactor {
     }
     
     private func fetchRecommendTags() -> Observable<Mutation> {
-        print("\(type(of: self)) - \(#function)", action)
-        
         let request: TagRequest = .recommend
         
         return self.provider.networkManager.request(RecommendTagsResponse.self, request: request)
