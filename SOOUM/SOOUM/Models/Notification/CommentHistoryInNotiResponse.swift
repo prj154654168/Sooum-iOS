@@ -55,6 +55,7 @@ struct CommentHistoryInNoti: Equatable, Codable {
         case commentWrite = "COMMENT_WRITE"
         case blocked = "BLOCKED"
         case delete = "DELETED"
+        case transfer = "TRANSFER_SUCCESS"
         
         var description: String {
             switch self {

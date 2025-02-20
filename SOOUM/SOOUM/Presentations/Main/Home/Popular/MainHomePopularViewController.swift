@@ -26,6 +26,8 @@ class MainHomePopularViewController: BaseViewController, View {
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
+        $0.contentInset.top = SOMSwipeTabBar.Height.mainHome
+        
         $0.isHidden = true
         
         $0.register(MainHomeViewCell.self, forCellReuseIdentifier: "cell")
