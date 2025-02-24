@@ -16,7 +16,7 @@ extension KingfisherManager {
         
         if let strUrl = strUrl, let url = URL(string: strUrl) {
             // 캐시 만료 기간 하루로 설정
-            let resource = Kingfisher.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
+            let resource = Kingfisher.KF.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
             self.retrieveImage(with: resource, options: [.memoryCacheExpiration(.days(1))]) { result in
                 switch result {
                 case let .success(result):

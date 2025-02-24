@@ -5,8 +5,8 @@ use_frameworks!
 inhibit_all_warnings!
 
 def pods
-  pod 'RxSwift', '~> 6.7.1'
-  pod 'RxCocoa', '~> 6.7.1'
+  pod 'RxSwift', '~> 6.8.0'
+  pod 'RxCocoa', '~> 6.8.0'
   pod 'RxKeyboard', '~> 2.0.0'
   pod 'ReactorKit', '~> 3.2.0'
   pod 'RxGesture', '~> 4.0.4'
