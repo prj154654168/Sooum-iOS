@@ -13,13 +13,13 @@ def pods
   
   pod 'Alamofire', '~> 5.9.1'
 
-  pod 'Firebase/Analytics', '~> 10.19.0'
-  pod 'Firebase/Crashlytics', '~> 10.19.0'
-  pod 'Firebase/Messaging', '~> 10.19.0'
+  pod 'Firebase/Analytics', '~> 10.22.0'
+  pod 'Firebase/Crashlytics', '~> 10.22.0'
+  pod 'Firebase/Messaging', '~> 10.22.0'
   
   pod 'SnapKit', '~> 5.7.1'
   pod 'Then', '~> 3.0.0'
-  pod 'Kingfisher', '~> 6.0.0'
+  pod 'Kingfisher', '~> 7.10.0'
   pod 'YPImagePicker', '~> 5.2.2'
 
   pod 'CocoaLumberjack/Swift', '~> 3.7.2'
