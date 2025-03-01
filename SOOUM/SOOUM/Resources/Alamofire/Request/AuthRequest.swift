@@ -84,6 +84,8 @@ enum AuthRequest: BaseRequest {
             ]
         case let .updateFCM(fcmToken):
             return ["fcmToken": fcmToken]
+        case .updateCheck:
+            return ["version": Version.thisAppVersion]
         default:
             return [:]
         }
@@ -109,8 +111,19 @@ enum AuthRequest: BaseRequest {
         }
     }
     
+    var version: APIVersion {
+        switch self {
+        case .updateCheck:
+            return .v2
+        default:
+            return .v1
+        }
+    }
+    
     func asURLRequest() throws -> URLRequest {
-        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        
+        let pathWithAPIVersion = self.path + self.version.rawValue
+        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(pathWithAPIVersion) {
             var request = URLRequest(url: url)
             request.method = self.method
             

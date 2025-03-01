@@ -50,14 +50,14 @@ enum TagRequest: BaseRequest {
         
     var method: HTTPMethod {
         switch self {
-        case .favorite, .recommend, .search, .tagInfo, .tagCard:
-            return .get
-            
-        case .addFavorite(tagID: let tagID):
+        case .addFavorite(_):
             return .post
             
-        case .deleteFavorite(tagID: let tagID):
+        case .deleteFavorite(_):
             return .delete
+            
+        default:
+            return .get
         }
     }
     
@@ -71,10 +71,7 @@ enum TagRequest: BaseRequest {
             }
             
         case let .search(keyword):
-            return [
-                "keyword": keyword,
-                "size": 20
-            ]
+            return ["keyword": keyword, "size": 20]
             
         default:
             return [:]
@@ -88,10 +85,15 @@ enum TagRequest: BaseRequest {
     var authorizationType: AuthorizationType {
         return .access
     }
+    
+    var version: APIVersion {
+        return .v1
+    }
         
     func asURLRequest() throws -> URLRequest {
 
-        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        let pathWithAPIVersion = self.path + self.version.rawValue
+        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(pathWithAPIVersion) {
             var request = URLRequest(url: url)
             request.method = self.method
             
