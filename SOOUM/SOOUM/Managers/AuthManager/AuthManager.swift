@@ -36,6 +36,7 @@ protocol AuthManagerDelegate: AnyObject {
 class AuthManager: CompositeManager<AuthManagerConfiguration> {
     
     private var isReAuthenticating: Bool = false
+    private var pendingResults: [(AuthResult) -> Void] = []
     
     private var disposeBag = DisposeBag()
     
@@ -190,12 +191,21 @@ extension AuthManager: AuthManagerDelegate {
             return
         }
         
-        guard self.isReAuthenticating == false, accessToken == token.accessToken else {
+        /// 1개 이상의 API에서 reAuthenticate 요청 했을 때,
+        /// 기존 요청이 끝날 떄까지 대기
+        guard self.isReAuthenticating == false else {
+            self.pendingResults.append(completion)
+            return
+        }
+        
+        /// AccessToken이 업데이트 됐다면, 즉시 성공 처리
+        guard accessToken == token.accessToken else {
             completion(.success)
             return
         }
         
         self.isReAuthenticating = true
+        self.pendingResults.append(completion)
         
         guard let provider = self.provider else { return }
         
@@ -211,7 +221,7 @@ extension AuthManager: AuthManagerDelegate {
                             code: -99,
                             userInfo: [NSLocalizedDescriptionKey: "Session not refresh"]
                         )
-                        completion(.failure(error))
+                        object.excutePendingResults(.failure(error))
                     } else {
                         
                         object.updateTokens(
@@ -224,7 +234,7 @@ extension AuthManager: AuthManagerDelegate {
                         // FCM token 업데이트
                         object.provider?.networkManager.registerFCMToken(from: #function)
                         
-                        completion(.success)
+                        object.excutePendingResults(.success)
                     }
                     
                     object.isReAuthenticating = false
@@ -237,9 +247,9 @@ extension AuthManager: AuthManagerDelegate {
                         object.certification()
                             .subscribe(onNext: { isRegistered in
                                 if isRegistered {
-                                    completion(.success)
+                                    object.excutePendingResults(.success)
                                 } else {
-                                    completion(.failure(error))
+                                    object.excutePendingResults(.failure(error))
                                 }
                             })
                             .disposed(by: self.disposeBag)
@@ -267,5 +277,14 @@ extension AuthManager: AuthManagerDelegate {
     
     func authPayloadByRefresh() -> [String: String] {
         return ["Authorization": "Bearer \(self.authInfo.token.refreshToken)"]
+    }
+}
+
+extension AuthManager {
+    
+    /// success 또는 failure가 발생하면 모든 API 요청에 새로운 토큰을 적용하도록 실행
+    private func excutePendingResults(_ result: AuthResult) {
+        self.pendingResults.forEach { $0(result) }
+        self.pendingResults.removeAll()
     }
 }
