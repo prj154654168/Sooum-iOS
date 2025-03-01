@@ -17,6 +17,12 @@ protocol BaseRequest: URLRequestConvertible {
     var parameters: Parameters { get }
     var encoding: ParameterEncoding { get }
     var authorizationType: AuthorizationType { get }
+    var version: APIVersion { get }
+}
+
+enum APIVersion: String {
+    case v1 = ""
+    case v2 = "/v2"
 }
 
 enum AuthorizationType: String {
