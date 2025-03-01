@@ -101,12 +101,12 @@ extension LaunchScreenViewReactor {
         
         return self.provider.networkManager.checkClientVersion()
             .withUnretained(self)
-            .flatMapLatest { object, currentVersion -> Observable<Mutation> in
-                let model = Version(currentVerion: currentVersion)
+            .flatMapLatest { object, currentVersionStatus -> Observable<Mutation> in
+                let version = Version(status: currentVersionStatus)
                 
-                UserDefaults.standard.set(model.shouldHideTransfer, forKey: "AppFlag")
+                UserDefaults.standard.set(version.shouldHideTransfer, forKey: "AppFlag")
                 
-                if model.mustUpdate {
+                if version.mustUpdate {
                     return .just(.check(true))
                 } else {
                     return self.provider.authManager.hasToken ? .just(.updateIsRegistered(true)) : object.login()
