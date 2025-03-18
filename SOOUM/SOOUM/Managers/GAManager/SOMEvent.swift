@@ -18,6 +18,10 @@ enum SOMEvent {
     enum ClickPositionKey {
       /// 카드 상세화면에서 태그 클릭
       static let post = "post"
+      /// 즐겨찾기 태그 목록에서 태그 클릭
+      static let favorite = "favorite"
+      /// 즐겨찾기 태그 목록의 미리보기 카드 클릭
+      static let favorite_preview = "favorite_preview"
       /// 추천 태그 목록에서 태그 클릭
       static let recommendation = "recommendation"
       /// 태그 검색 결과에서 태그 클릭
