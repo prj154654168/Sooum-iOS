@@ -6,14 +6,14 @@
 //
 
 enum SOMEvent {
-  enum WriteCard: FirebaseLoggable {
+  enum WriteCard: AnalyticsEventProtocol {
     /// 글쓰기 화면에서 태그를 추가하고 글을 작성하지 않음
     case dismiss_with_tag(tag_count: Int, tag_texts: [String])
     /// 글쓰기 화면에서 태그를 추가하고 글을 작성
     case add_tag(tag_count: Int, tag_texts: [String])
   }
   
-  enum Tag: FirebaseLoggable {
+  enum Tag: AnalyticsEventProtocol {
     /// 태그를 클릭한 위치
     enum ClickPositionKey {
       /// 카드 상세화면에서 태그 클릭
@@ -27,7 +27,7 @@ enum SOMEvent {
     case tag_click(tag_text: String, click_position: String)
   }
   
-  enum Comment: FirebaseLoggable {
+  enum Comment: AnalyticsEventProtocol {
     /// 사용자가 댓글을 작성
     ///
     /// - Parameters:

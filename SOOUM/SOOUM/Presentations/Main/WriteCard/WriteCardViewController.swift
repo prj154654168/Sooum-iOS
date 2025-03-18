@@ -117,6 +117,22 @@ class WriteCardViewController: BaseNavigationViewController, View {
             initalHeight: self.initalHeight
         )
     }
+  
+    deinit {
+      guard let isWrite = self.reactor?.currentState.isWrite else {
+        return
+      }
+      let tagStrs = writtenTagModels.map { $0.originalText }
+      if isWrite {
+        GAManager.shared.logEvent(
+          event: SOMEvent.WriteCard.add_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
+        )
+      } else {
+        GAManager.shared.logEvent(
+          event: SOMEvent.WriteCard.dismiss_with_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
+        )
+      }
+    }
     
     override func setupNaviBar() {
         super.setupNaviBar()
