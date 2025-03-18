@@ -177,6 +177,12 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
             .when(.recognized)
             .subscribe(with: self) { object, gesture in
                 if cell.favoriteTagView.isTappedDirectly(gesture: gesture) {
+                    GAManager.shared.logEvent(
+                        event: SOMEvent.Tag.tag_click(
+                            tag_text: favoriteTag.tagContent,
+                            click_position: SOMEvent.Tag.ClickPositionKey.favorite
+                        )
+                    )
                     object.pushTagdetailVC(reactor: reactor, tagID: favoriteTag.id)
                 }
             }
@@ -185,12 +191,24 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
         cell.favoriteTagView.moreButtonStackView.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, gesture in
+                GAManager.shared.logEvent(
+                    event: SOMEvent.Tag.tag_click(
+                        tag_text: favoriteTag.tagContent,
+                        click_position: SOMEvent.Tag.ClickPositionKey.favorite
+                    )
+                )
                 object.pushTagdetailVC(reactor: reactor, tagID: favoriteTag.id)
             }
             .disposed(by: cell.disposeBag)
 
         cell.previewCardTapped
             .subscribe(with: self) { object, previewCardID in
+                GAManager.shared.logEvent(
+                    event: SOMEvent.Tag.tag_click(
+                        tag_text: favoriteTag.tagContent,
+                        click_position: SOMEvent.Tag.ClickPositionKey.favorite_preview
+                    )
+                )
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(previewCardID)
                 object.navigationPush(detailViewController, animated: true)
