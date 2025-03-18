@@ -239,8 +239,15 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
             cell.contentView.rx.tapGesture()
                 .when(.recognized)
                 .subscribe(with: self) { object, _ in
-                    let tagID = reactor.currentState.recommendTags[indexPath.row].tagID
+                    let recommendTag = reactor.currentState.recommendTags[indexPath.row]
+                    let tagID = recommendTag.tagID
                     let tagDetailVC = TagDetailViewController()
+                    GAManager.shared.logEvent(
+                        event: SOMEvent.Tag.tag_click(
+                            tag_text: recommendTag.tagContent,
+                            click_position: SOMEvent.Tag.ClickPositionKey.recommendation
+                        )
+                    )
                     tagDetailVC.reactor = reactor.reactorForTagDetail(tagID)
                     object.navigationPush(tagDetailVC, animated: true)
                 }
