@@ -21,7 +21,6 @@ enum NotificationRequest: BaseRequest {
     case likeWithoutRead(lastId: String?)
     case likeRead(lastId: String?)
     case likeWihoutReadCount
-    
     case requestRead(notificationId: String)
     
     var path: String {
@@ -32,42 +31,51 @@ enum NotificationRequest: BaseRequest {
             } else {
                 return "/notifications/unread"
             }
+            
         case let .totalRead(lastId):
             if let lastId = lastId {
                 return "/notifications/read/\(lastId)"
             } else {
                 return "/notifications/read"
             }
+            
         case .totalWithoutReadCount:
             return "/notifications/unread-cnt"
+            
         case let .commentWithoutRead(lastId):
             if let lastId = lastId {
                 return "/notifications/card/unread/\(lastId)"
             } else {
                 return "/notifications/card/unread"
             }
+            
         case let .commentRead(lastId):
             if let lastId = lastId {
                 return "/notifications/card/read/\(lastId)"
             } else {
                 return "/notifications/card/read"
             }
+            
         case .commentWithoutReadCount:
             return "/notifications/card/unread-cnt"
+            
         case let .likeWithoutRead(lastId):
             if let lastId = lastId {
                 return "/notifications/like/unread/\(lastId)"
             } else {
                 return "/notifications/like/unread"
             }
+            
         case let .likeRead(lastId):
             if let lastId = lastId {
                 return "/notifications/like/read/\(lastId)"
             } else {
                 return "/notifications/like/read"
             }
+            
         case .likeWihoutReadCount:
             return "/notifications/like/unread-cnt"
+            
         case let .requestRead(notificationId):
             return "/notifications/\(notificationId)/read"
         }
@@ -94,9 +102,14 @@ enum NotificationRequest: BaseRequest {
         return .access
     }
     
+    var version: APIVersion {
+        return .v1
+    }
+    
     func asURLRequest() throws -> URLRequest {
         
-        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        let pathWithAPIVersion = self.path + self.version.rawValue
+        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(pathWithAPIVersion) {
             var request = URLRequest(url: url)
             request.method = self.method
             
