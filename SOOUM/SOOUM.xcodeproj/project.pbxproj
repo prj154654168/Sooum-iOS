@@ -56,8 +56,8 @@
 		2A980B9E2D803E9D007DFA45 /* FirebaseLoggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980B9C2D803E9D007DFA45 /* FirebaseLoggable.swift */; };
 		2A980BA02D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */; };
 		2A980BA12D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */; };
-		2A980BA42D803EEA007DFA45 /* SMEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA32D803EE2007DFA45 /* SMEvent.swift */; };
-		2A980BA52D803EEA007DFA45 /* SMEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA32D803EE2007DFA45 /* SMEvent.swift */; };
+		2A980BA42D803EEA007DFA45 /* SOMEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA32D803EE2007DFA45 /* SOMEvent.swift */; };
+		2A980BA52D803EEA007DFA45 /* SOMEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA32D803EE2007DFA45 /* SOMEvent.swift */; };
 		2A980BA82D803F04007DFA45 /* GAManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA72D803F04007DFA45 /* GAManager.swift */; };
 		2A980BA92D803F04007DFA45 /* GAManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA72D803F04007DFA45 /* GAManager.swift */; };
 		2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4122CC944FB0057C013 /* UploadRequest.swift */; };
@@ -599,7 +599,7 @@
 		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
 		2A980B9C2D803E9D007DFA45 /* FirebaseLoggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseLoggable.swift; sourceTree = "<group>"; };
 		2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEventProtocol.swift; sourceTree = "<group>"; };
-		2A980BA32D803EE2007DFA45 /* SMEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMEvent.swift; sourceTree = "<group>"; };
+		2A980BA32D803EE2007DFA45 /* SOMEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMEvent.swift; sourceTree = "<group>"; };
 		2A980BA72D803F04007DFA45 /* GAManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GAManager.swift; sourceTree = "<group>"; };
 		2ACBD4122CC944FB0057C013 /* UploadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadRequest.swift; sourceTree = "<group>"; };
 		2ACBD4162CC963390057C013 /* DefaultCardImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCardImageResponse.swift; sourceTree = "<group>"; };
@@ -1008,7 +1008,7 @@
 			isa = PBXGroup;
 			children = (
 				2A980BA72D803F04007DFA45 /* GAManager.swift */,
-				2A980BA32D803EE2007DFA45 /* SMEvent.swift */,
+				2A980BA32D803EE2007DFA45 /* SOMEvent.swift */,
 				2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */,
 				2A980B9C2D803E9D007DFA45 /* FirebaseLoggable.swift */,
 			);
@@ -2597,7 +2597,7 @@
 				38572CD92D2230C900B07C69 /* NotificationAllowResponse.swift in Sources */,
 				382E15402D15AF4F0097B09C /* CommentHistoryInNotiResponse.swift in Sources */,
 				388698632D1986B100008600 /* NotificationRequest.swift in Sources */,
-				2A980BA52D803EEA007DFA45 /* SMEvent.swift in Sources */,
+				2A980BA52D803EEA007DFA45 /* SOMEvent.swift in Sources */,
 				38C2D4152CFEA9CC00CEA092 /* MyProfileViewCell.swift in Sources */,
 				38F720B22CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */,
 				38FD4DB52D034F6600BF5FF1 /* MyFollowerViewCell.swift in Sources */,
@@ -2885,7 +2885,7 @@
 				38F720B12CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */,
 				38816DA22D004DED00EB87D6 /* UpdateProfileView.swift in Sources */,
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
-				2A980BA42D803EEA007DFA45 /* SMEvent.swift in Sources */,
+				2A980BA42D803EEA007DFA45 /* SOMEvent.swift in Sources */,
 				2AFD05492CFF7687007C84AD /* RecommendTagsResponse.swift in Sources */,
 				2AE6B17F2CBFEA5200FA5C3C /* ToggleView.swift in Sources */,
 				38601E1B2D3139D000A465A9 /* RecommendTagView.swift in Sources */,
