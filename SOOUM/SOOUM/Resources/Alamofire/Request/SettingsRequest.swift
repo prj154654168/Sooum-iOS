@@ -62,7 +62,11 @@ enum SettingsRequest: BaseRequest {
                 return [:]
             }
         case let .transferMember(transferId, encryptedDeviceId):
-            return ["deviceType": "IOS", "transferId": transferId, "encryptedDeviceId": encryptedDeviceId]
+            return [
+                "deviceType": "IOS",
+                "transferId": transferId,
+                "encryptedDeviceId": encryptedDeviceId
+            ]
         case let .commentHistory(lastId):
             if let lastId = lastId {
                 return ["lastId": lastId]
@@ -71,7 +75,8 @@ enum SettingsRequest: BaseRequest {
             }
         case let .resign(token):
             return ["accessToken": token.accessToken, "refreshToken": token.refreshToken]
-        default: return [:]
+        default:
+            return [:]
         }
     }
 
@@ -89,10 +94,15 @@ enum SettingsRequest: BaseRequest {
     var authorizationType: AuthorizationType {
         return .access
     }
+    
+    var version: APIVersion {
+        return .v1
+    }
 
     func asURLRequest() throws -> URLRequest {
 
-        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        let pathWithAPIVersion = self.path + self.version.rawValue
+        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(pathWithAPIVersion) {
             var request = URLRequest(url: url)
             request.method = self.method
             

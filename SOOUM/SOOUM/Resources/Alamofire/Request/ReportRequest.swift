@@ -60,10 +60,15 @@ enum ReportRequest: BaseRequest {
     var authorizationType: AuthorizationType {
         return .access
     }
+    
+    var version: APIVersion {
+        return .v1
+    }
 
     func asURLRequest() throws -> URLRequest {
 
-        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        let pathWithAPIVersion = self.path + self.version.rawValue
+        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(pathWithAPIVersion) {
             var request = URLRequest(url: url)
             request.method = self.method
             
