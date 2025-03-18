@@ -367,7 +367,13 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     action: {
                         let feedTags = object.writtenTagModels.map { $0.originalText }
                         if reactor.requestType == .card {
-                            
+                            GAManager.shared.logEvent(
+                                event: SOMEvent.Comment.add_comment(
+                                  comment_length: content.count,
+                                  parent_post_id: reactor.parentCardId ?? "",
+                                  image_attached: imageType == "USER"
+                                )
+                            )
                             reactor.action.onNext(
                                 .writeCard(
                                     isDistanceShared: optionState[.distanceLimit] ?? false,
