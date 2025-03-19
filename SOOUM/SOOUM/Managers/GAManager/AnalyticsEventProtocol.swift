@@ -22,12 +22,10 @@ extension AnalyticsEventProtocol {
     // (1) 우선 "self"를 미러링 -> enum의 유일한 자식(child)이 "someEvent"라는 케이스
     let paramDict = Mirror(reflecting: self).children.reduce(into: [String: FirebaseLoggable]()) { dict, child in
       guard let caseLabel = child.label else {
-        print("❌ parameters 라벨 없음: \(child)")
         return
       }
       
       let caseValue = child.value
-      // (2) 이제 이 값이 튜플인지 확인
       let caseMirror = Mirror(reflecting: caseValue)
       if caseMirror.displayStyle == .tuple {
         // 🔑 "someEvent(num: 2, text: \"테스트\")" 이런 형태로 들어옴
@@ -40,17 +38,12 @@ extension AnalyticsEventProtocol {
           // (4) FirebaseLoggable 등 타입 검사
           if paramValue is FirebaseLoggable {
             dict[paramLabel] = paramValue as? any FirebaseLoggable
-          } else {
-            print("❌ Unsupported type: \(type(of: paramValue)) for key: \(paramLabel)")
           }
         }
       }
       else if caseValue is FirebaseLoggable {
         // (단일 파라미터인 경우)
         dict[caseLabel] = caseValue as? any FirebaseLoggable
-      }
-      else {
-        print("❌ Unsupported type: \(type(of: caseValue)) for key: \(caseLabel)")
       }
     }
 
