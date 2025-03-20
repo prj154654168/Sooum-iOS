@@ -52,6 +52,14 @@
 		2A62805B2D084FEB00803BE9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A62805A2D084FEB00803BE9 /* GoogleService-Info.plist */; };
 		2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
 		2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */; };
+		2A980B9D2D803E9D007DFA45 /* FirebaseLoggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980B9C2D803E9D007DFA45 /* FirebaseLoggable.swift */; };
+		2A980B9E2D803E9D007DFA45 /* FirebaseLoggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980B9C2D803E9D007DFA45 /* FirebaseLoggable.swift */; };
+		2A980BA02D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */; };
+		2A980BA12D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */; };
+		2A980BA42D803EEA007DFA45 /* SOMEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA32D803EE2007DFA45 /* SOMEvent.swift */; };
+		2A980BA52D803EEA007DFA45 /* SOMEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA32D803EE2007DFA45 /* SOMEvent.swift */; };
+		2A980BA82D803F04007DFA45 /* GAManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA72D803F04007DFA45 /* GAManager.swift */; };
+		2A980BA92D803F04007DFA45 /* GAManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA72D803F04007DFA45 /* GAManager.swift */; };
 		2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4122CC944FB0057C013 /* UploadRequest.swift */; };
 		2ACBD4142CC944FB0057C013 /* UploadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4122CC944FB0057C013 /* UploadRequest.swift */; };
 		2ACBD4172CC963390057C013 /* DefaultCardImageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ACBD4162CC963390057C013 /* DefaultCardImageResponse.swift */; };
@@ -589,6 +597,10 @@
 		2A6280602D085C6200803BE9 /* SOOUM.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SOOUM.entitlements; sourceTree = "<group>"; };
 		2A6280612D085C7600803BE9 /* SOOUM-Dev.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "SOOUM-Dev.entitlements"; sourceTree = "<group>"; };
 		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
+		2A980B9C2D803E9D007DFA45 /* FirebaseLoggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseLoggable.swift; sourceTree = "<group>"; };
+		2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEventProtocol.swift; sourceTree = "<group>"; };
+		2A980BA32D803EE2007DFA45 /* SOMEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMEvent.swift; sourceTree = "<group>"; };
+		2A980BA72D803F04007DFA45 /* GAManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GAManager.swift; sourceTree = "<group>"; };
 		2ACBD4122CC944FB0057C013 /* UploadRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadRequest.swift; sourceTree = "<group>"; };
 		2ACBD4162CC963390057C013 /* DefaultCardImageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultCardImageResponse.swift; sourceTree = "<group>"; };
 		2ACBD4192CCA03790057C013 /* ImageURLWithName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageURLWithName.swift; sourceTree = "<group>"; };
@@ -990,6 +1002,17 @@
 				2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */,
 			);
 			path = Join;
+			sourceTree = "<group>";
+		};
+		2A980B9B2D803E8B007DFA45 /* GAManager */ = {
+			isa = PBXGroup;
+			children = (
+				2A980BA72D803F04007DFA45 /* GAManager.swift */,
+				2A980BA32D803EE2007DFA45 /* SOMEvent.swift */,
+				2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */,
+				2A980B9C2D803E9D007DFA45 /* FirebaseLoggable.swift */,
+			);
+			path = GAManager;
 			sourceTree = "<group>";
 		};
 		2ACBD4152CC9631B0057C013 /* UploadCard */ = {
@@ -1446,6 +1469,7 @@
 		385620EC2CA19C0D00E0AB5A /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				2A980B9B2D803E8B007DFA45 /* GAManager */,
 				3893B6D02D36739500F2004C /* CompositeManager.swift */,
 				38B543ED2D46506300DDF2C5 /* ManagerType.swift */,
 				3893B6CD2D36728000F2004C /* ManagerProvider.swift */,
@@ -2573,6 +2597,7 @@
 				38572CD92D2230C900B07C69 /* NotificationAllowResponse.swift in Sources */,
 				382E15402D15AF4F0097B09C /* CommentHistoryInNotiResponse.swift in Sources */,
 				388698632D1986B100008600 /* NotificationRequest.swift in Sources */,
+				2A980BA52D803EEA007DFA45 /* SOMEvent.swift in Sources */,
 				38C2D4152CFEA9CC00CEA092 /* MyProfileViewCell.swift in Sources */,
 				38F720B22CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */,
 				38FD4DB52D034F6600BF5FF1 /* MyFollowerViewCell.swift in Sources */,
@@ -2638,12 +2663,14 @@
 				381701722CD88374005FC220 /* CompositeInterceptor.swift in Sources */,
 				2A5BB7CA2CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
+				2A980BA12D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */,
 				3803CF712D0159A500FD90DB /* SettingsResponse.swift in Sources */,
 				2A5BB7E12CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */,
 				3803CF7E2D016DA200FD90DB /* TransferCodeResponse.swift in Sources */,
 				38F70E5F2D190FBD00B33C9D /* MainHomeTabBarReactor.swift in Sources */,
 				3834FADE2D11C5AC00C9108D /* SimpleCache.swift in Sources */,
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
+				2A980BA92D803F04007DFA45 /* GAManager.swift in Sources */,
 				2AFF95752CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */,
 				2AFD05472CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */,
 				38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
@@ -2663,6 +2690,7 @@
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				2AE6B1932CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				38F88EBF2D2C1E22002AD7A8 /* Version.swift in Sources */,
+				2A980B9E2D803E9D007DFA45 /* FirebaseLoggable.swift in Sources */,
 				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				3830FFA72CEC6E3100ABA9FD /* Kingfisher.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
@@ -2857,6 +2885,7 @@
 				38F720B12CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */,
 				38816DA22D004DED00EB87D6 /* UpdateProfileView.swift in Sources */,
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
+				2A980BA42D803EEA007DFA45 /* SOMEvent.swift in Sources */,
 				2AFD05492CFF7687007C84AD /* RecommendTagsResponse.swift in Sources */,
 				2AE6B17F2CBFEA5200FA5C3C /* ToggleView.swift in Sources */,
 				38601E1B2D3139D000A465A9 /* RecommendTagView.swift in Sources */,
@@ -2922,12 +2951,14 @@
 				3878B8622D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
 				2AFD05522D007F2F007C84AD /* TagSearchViewReactor.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
+				2A980BA02D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */,
 				38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
 				2A5BB7C92CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				3803CF6C2D0156FC00FD90DB /* SettingsRequest.swift in Sources */,
 				2AE6B1492CBC15BF00FA5C3C /* ReportViewController.swift in Sources */,
 				3887D0332CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */,
 				38D6F1802CC2413400E11530 /* WriteCardTextView.swift in Sources */,
+				2A980BA82D803F04007DFA45 /* GAManager.swift in Sources */,
 				387D852C2D08320A005D9D22 /* SOMCardModel.swift in Sources */,
 				2AFD055D2D009513007C84AD /* TagDetailNavigationBarView.swift in Sources */,
 				385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
@@ -2947,6 +2978,7 @@
 				2ACBD41D2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
 				2ACBD4172CC963390057C013 /* DefaultCardImageResponse.swift in Sources */,
 				38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
+				2A980B9D2D803E9D007DFA45 /* FirebaseLoggable.swift in Sources */,
 				382E153A2D15A67A0097B09C /* NotificationViewCell.swift in Sources */,
 				3886939F2CF77FA7005F9EF3 /* UIApplication+Top.swift in Sources */,
 				3878D05F2CFFD45100F9522F /* FollowerResponse.swift in Sources */,

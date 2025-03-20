@@ -60,7 +60,7 @@ class WriteCardViewReactor: Reactor {
     
     let requestType: RequestType
     
-    private let parentCardId: String?
+    let parentCardId: String?
     let parentPungTime: Date?
     
     init(

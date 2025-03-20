@@ -517,7 +517,12 @@ extension DetailViewController: SOMTagsDelegate {
     func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
         
         guard let reactor = self.reactor else { return }
-        
+        GAManager.shared.logEvent(
+            event: SOMEvent.Tag.tag_click(
+                tag_text: model.originalText,
+                click_position: SOMEvent.Tag.ClickPositionKey.post
+            )
+        )
         let tagDetailVC = TagDetailViewController()
         tagDetailVC.reactor = reactor.reactorForTagDetail(model.id)
         self.navigationPush(tagDetailVC, animated: true)

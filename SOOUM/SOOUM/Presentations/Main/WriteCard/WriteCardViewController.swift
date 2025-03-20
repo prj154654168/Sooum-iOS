@@ -117,6 +117,22 @@ class WriteCardViewController: BaseNavigationViewController, View {
             initalHeight: self.initalHeight
         )
     }
+  
+    deinit {
+      guard let isWrite = self.reactor?.currentState.isWrite else {
+        return
+      }
+      let tagStrs = writtenTagModels.map { $0.originalText }
+      if isWrite {
+        GAManager.shared.logEvent(
+          event: SOMEvent.WriteCard.add_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
+        )
+      } else {
+        GAManager.shared.logEvent(
+          event: SOMEvent.WriteCard.dismiss_with_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
+        )
+      }
+    }
     
     override func setupNaviBar() {
         super.setupNaviBar()
@@ -351,7 +367,13 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     action: {
                         let feedTags = object.writtenTagModels.map { $0.originalText }
                         if reactor.requestType == .card {
-                            
+                            GAManager.shared.logEvent(
+                                event: SOMEvent.Comment.add_comment(
+                                  comment_length: content.count,
+                                  parent_post_id: reactor.parentCardId ?? "",
+                                  image_attached: imageType == "USER"
+                                )
+                            )
                             reactor.action.onNext(
                                 .writeCard(
                                     isDistanceShared: optionState[.distanceLimit] ?? false,
