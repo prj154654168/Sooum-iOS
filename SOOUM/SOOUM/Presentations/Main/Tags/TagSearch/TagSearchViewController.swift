@@ -157,10 +157,17 @@ extension TagSearchViewController: UITableViewDataSource, UITableViewDelegate {
             return cell
         }
         if reactor.currentState.searchTags.indices.contains(indexPath.row) {
+            let tag = reactor.currentState.searchTags[indexPath.row]
             cell.setData(searchRelatedTag: reactor.currentState.searchTags[indexPath.row])
             cell.contentView.rx.tapGesture()
                 .when(.recognized)
                 .subscribe(with: self) { object, _ in
+                    GAManager.shared.logEvent(
+                        event: SOMEvent.Tag.tag_click(
+                            tag_text: tag.content,
+                            click_position: SOMEvent.Tag.ClickPositionKey.search_result
+                        )
+                    )
                     let tagID = reactor.currentState.searchTags[indexPath.row].tagId
                     let tagDetailVC = TagDetailViewController()
                     tagDetailVC.reactor = reactor.reactorForTagDetail(tagID)
