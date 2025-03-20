@@ -117,22 +117,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
             initalHeight: self.initalHeight
         )
     }
-  
-    deinit {
-      guard let isWrite = self.reactor?.currentState.isWrite else {
-        return
-      }
-      let tagStrs = writtenTagModels.map { $0.originalText }
-      if isWrite {
-        GAManager.shared.logEvent(
-          event: SOMEvent.WriteCard.add_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
-        )
-      } else {
-        GAManager.shared.logEvent(
-          event: SOMEvent.WriteCard.dismiss_with_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
-        )
-      }
-    }
     
     override func setupNaviBar() {
         super.setupNaviBar()
@@ -461,8 +445,13 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .delay(.seconds(1), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, isWrite in
                 
+                // GA 태그 추적용
+                let tagStrs = object.writtenTagModels.map { $0.originalText }
                 // 글추가 성공
                 if isWrite {
+                    GAManager.shared.logEvent(
+                        event: SOMEvent.WriteCard.add_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
+                    )
                     // 키보드가 표시되어 있을 때, 이전 화면으로 전환
                     if object.presentedViewController == nil {
                         
@@ -474,6 +463,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
                         })
                     }
                 } else {
+                    GAManager.shared.logEvent(
+                        event: SOMEvent.WriteCard.dismiss_with_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
+                    )
                     // 글추가 실패, 실패 다이얼로그 표시
                     let confirmAction = SOMDialogAction(
                         title: Text.confirmActionTitle,
