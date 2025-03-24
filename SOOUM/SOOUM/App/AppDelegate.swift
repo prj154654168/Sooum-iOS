@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Clarity
+
 import Firebase
 import FirebaseCore
 import FirebaseMessaging
@@ -51,6 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Messaging.messaging().delegate = self
         // 앱 실행 시 사용자에게 알림 허용 권한을 받음
         UNUserNotificationCenter.current().delegate = self
+        
+        // Initalize clarity
+        let clarityConfig = ClarityConfig(projectId: Info.clarityId)
+        ClaritySDK.initialize(config: clarityConfig)
         
         return true
     }
