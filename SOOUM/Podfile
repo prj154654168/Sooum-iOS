@@ -16,6 +16,8 @@ def pods
   pod 'Firebase/Analytics', '~> 10.22.0'
   pod 'Firebase/Crashlytics', '~> 10.22.0'
   pod 'Firebase/Messaging', '~> 10.22.0'
+
+  pod 'Clarity'
   
   pod 'SnapKit', '~> 5.7.1'
   pod 'Then', '~> 3.0.0'
