@@ -20,8 +20,6 @@ protocol NetworkManagerDelegate: AnyObject {
         to url: URLConvertible
     ) -> Observable<Result<Void, Error>>
     
-    func checkClientVersion() -> Observable<String>
-    
     func registerFCMToken(with tokenSet: PushTokenSet, _ function: String)
     func registerFCMToken(from function: String)
 }
@@ -136,36 +134,6 @@ extension NetworkManager: NetworkManagerDelegate {
                             observer.onCompleted()
                         }
                     case .failure(let error):
-                        Log.error("Network or response format error: \(error)")
-                        observer.onError(error)
-                    }
-                }
-            
-            return Disposables.create {
-                task?.cancel()
-            }
-        }
-    }
-    
-    
-    // MARK: Check version
-    
-    func checkClientVersion() -> Observable<String> {
-        
-        return Observable.create { [weak self] observer -> Disposable in
-            
-            let task = self?.session.request(AuthRequest.updateCheck)
-                .validate(statusCode: 200..<500)
-                .responseString { response in
-                    switch response.result {
-                    case let .success(value):
-                        if let error = response.error {
-                            observer.onError(error)
-                        } else {
-                            observer.onNext(value)
-                            observer.onCompleted()
-                        }
-                    case let .failure(error):
                         Log.error("Network or response format error: \(error)")
                         observer.onError(error)
                     }

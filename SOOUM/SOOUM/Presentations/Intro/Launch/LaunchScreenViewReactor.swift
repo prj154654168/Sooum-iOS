@@ -99,7 +99,7 @@ extension LaunchScreenViewReactor {
     
     private func check() -> Observable<Mutation> {
         
-        return self.provider.networkManager.checkClientVersion()
+        return self.provider.networkManager.request(String.self, request: AuthRequest.updateCheck)
             .withUnretained(self)
             .flatMapLatest { object, currentVersionStatus -> Observable<Mutation> in
                 let version = Version(status: currentVersionStatus)
