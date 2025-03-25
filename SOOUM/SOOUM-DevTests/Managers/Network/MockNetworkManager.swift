@@ -62,8 +62,6 @@ class MockNetworkManager: CompositeManager<NetworkManagerConfiguration>, Network
         }
     }
     
-    func checkClientVersion() -> Observable<String> { return Observable.just("1.0.0") }
-    
     func registerFCMToken(with tokenSet: PushTokenSet, _ function: String) { }
     
     func registerFCMToken(from function: String) { }
