@@ -3145,6 +3145,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
+				SOOUM_CLARITY_ID = qrggvyniav;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
@@ -3195,6 +3196,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
+				SOOUM_CLARITY_ID = qrggvyniav;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
@@ -3321,6 +3323,7 @@
 				SDKROOT = iphoneos;
 				SOOUM_APP_ID = "";
 				SOOUM_CAMERA_DESCRIPTION = "숨에서 내 사진을 공유할 수 있도록 카메라 접근 권한을 허용해주세요.";
+				SOOUM_CLARITY_ID = "";
 				SOOUM_DISPLAY_NAME = "";
 				SOOUM_LIBRARY_DESCRIPTION = "게시글이나 프로필 업로드를 위해 권한이 필요합니다.";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
@@ -3384,6 +3387,7 @@
 				SDKROOT = iphoneos;
 				SOOUM_APP_ID = "";
 				SOOUM_CAMERA_DESCRIPTION = "숨에서 내 사진을 공유할 수 있도록 카메라 접근 권한을 허용해주세요.";
+				SOOUM_CLARITY_ID = "";
 				SOOUM_DISPLAY_NAME = "";
 				SOOUM_LIBRARY_DESCRIPTION = "게시글이나 프로필 업로드를 위해 권한이 필요합니다.";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
@@ -3428,6 +3432,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_APP_ID = 6740403078;
+				SOOUM_CLARITY_ID = qrghkiok4a;
 				SOOUM_DISPLAY_NAME = "숨";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;
@@ -3475,6 +3480,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_APP_ID = 6740403078;
+				SOOUM_CLARITY_ID = qrghkiok4a;
 				SOOUM_DISPLAY_NAME = "숨";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;

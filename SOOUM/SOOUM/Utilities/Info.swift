@@ -21,4 +21,8 @@ enum Info {
     static var appVersion: String {
         return self["CFBundleShortVersionString"]!
     }
+    
+    static var clarityId: String {
+        return self["ClarityId"]!
+    }
 }

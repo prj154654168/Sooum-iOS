@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (5.9.1)
+  - Clarity (3.0.5)
   - CocoaLumberjack/Core (3.7.4)
   - CocoaLumberjack/Swift (3.7.4):
     - CocoaLumberjack/Core
@@ -161,6 +162,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 5.9.1)
+  - Clarity
   - CocoaLumberjack/Swift (~> 3.7.2)
   - Firebase/Analytics (~> 10.22.0)
   - Firebase/Crashlytics (~> 10.22.0)
@@ -179,6 +181,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
+    - Clarity
     - CocoaLumberjack
     - Firebase
     - FirebaseAnalytics
@@ -212,6 +215,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
+  Clarity: 214d0e426d63a8f6edbcd2a39edb5d2955728e0e
   CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
   Firebase: 797fd7297b7e1be954432743a0b3f90038e45a71
   FirebaseAnalytics: 8d0ff929c63b7f72260f332b86ccf569776b75d3
@@ -243,6 +247,6 @@ SPEC CHECKSUMS:
   WeakMapTable: 05c694ce8439a7a9ebabb56187287a63c57673d6
   YPImagePicker: afc81b3cffab05a6e7261c5daf80dc31b4e917b4
 
-PODFILE CHECKSUM: 5afa4c06a66d0d721f236c40cbfde6522d70d537
+PODFILE CHECKSUM: 77a47a04877511a9af2378cb76d7e51ca6d46f27
 
 COCOAPODS: 1.16.2
