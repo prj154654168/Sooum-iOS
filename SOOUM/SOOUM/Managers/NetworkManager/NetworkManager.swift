@@ -44,14 +44,11 @@ class NetworkManager: CompositeManager<NetworkManagerConfiguration> {
         super.init(provider: provider, configure: configure)
     }
     
-    private func setupError(_ message: String, with code: Int = -99) -> NSError {
+    private func setupError(with statusCode: Int) -> NSError? {
+        guard (400..<500).contains(statusCode) else { return nil }
         
-        let error: NSError = .init(
-            domain: "SOOUM",
-            code: code,
-            userInfo: [NSLocalizedDescriptionKey: message]
-        )
-        return error
+        let definedError = DefinedError.error(with: statusCode)
+        return definedError.toNSError()
     }
 }
 
@@ -70,43 +67,25 @@ extension NetworkManager: NetworkManagerDelegate {
                     decoder: self?.decoder ?? JSONDecoder(),
                     emptyResponseCodes: [200, 201, 204, 205]
                 ) { response in
+                    let statusCode = response.response?.statusCode ?? 0
+                    
                     switch response.result {
                     case let .success(value):
-                        if let error = response.error {
-                            observer.onError(error)
+                        if let nsError = self?.setupError(with: statusCode) {
+                            Log.error(nsError.localizedDescription)
+                            observer.onError(nsError)
                         } else {
                             observer.onNext(value)
                             observer.onCompleted()
                         }
                     case let .failure(error):
-                        let statusCode = response.response?.statusCode
-                        switch statusCode {
-                        case 400:
-                            let nsError = self?.setupError("Bad Request: HTTP 400 received.", with: 400) ?? .init()
+                        if let nsError = self?.setupError(with: statusCode) {
+                            Log.error(nsError.localizedDescription)
                             observer.onError(nsError)
-                            return
-                        case 401:
-                            let nsError = self?.setupError("Unauthorization: 401 received.", with: 401) ?? .init()
-                            observer.onError(nsError)
-                            return
-                        case 403:
-                            let nsError = self?.setupError("Expire RefreshToken: HTTP 403 received,", with: 403) ?? .init()
-                            observer.onError(nsError)
-                            return
-                        case 418:
-                            let nsError = self?.setupError("Stop using RefreshToken: HTTP 418 received,", with: 418) ?? .init()
-                            observer.onError(nsError)
-                            return
-                        case 423:
-                            let nsError = self?.setupError("LOCKED: HTTP 423 received.", with: 423) ?? .init()
-                            observer.onError(nsError)
-                            return
-                        default:
-                            break
+                        } else {
+                            Log.error("Network or response format error: with \(error.localizedDescription)")
+                            observer.onError(error)
                         }
-                        
-                        Log.error("Network or response format error: \(error)")
-                        observer.onError(error)
                     }
                 }
             
@@ -127,13 +106,9 @@ extension NetworkManager: NetworkManagerDelegate {
                 .response { response in
                     switch response.result {
                     case .success:
-                        if let error = response.error {
-                            observer.onError(error)
-                        } else {
-                            observer.onNext(.success(()))
-                            observer.onCompleted()
-                        }
-                    case .failure(let error):
+                        observer.onNext(.success(()))
+                        observer.onCompleted()
+                    case let .failure(error):
                         Log.error("Network or response format error: \(error)")
                         observer.onError(error)
                     }
@@ -144,9 +119,12 @@ extension NetworkManager: NetworkManagerDelegate {
             }
         }
     }
-    
-    
-    // MARK: Register FCM token
+}
+
+
+// MARK: Register FCM token
+
+extension NetworkManager {
     
     static var registeredToken: PushTokenSet?
     static var fcmDisposeBag = DisposeBag()
