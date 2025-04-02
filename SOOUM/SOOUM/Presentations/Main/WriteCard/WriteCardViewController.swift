@@ -25,13 +25,15 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let writeDialogTitle: String = "카드를 작성할까요?"
         static let writeDialogMessage: String = "추가한 카드는 수정할 수 없어요"
         
-        static let failedWriteDialogTitle: String = "부적절한 사진으로 보여져요"
-        static let failedWriteDialogMessage: String = "적절한 사진으로 바꾸거나\n기본 이미지를 사용해주세요"
+        static let unusablePhotoDialogTitle: String = "부적절한 사진으로 보여져요"
+        static let unusablePhotoDialogMessage: String = "적절한 사진으로 바꾸거나\n기본 이미지를 사용해주세요"
         
         static let donotWirteDialogTitle: String = "카드를 작성할 수 없어요"
         static let donotWirteDialogTopMessage: String = "지속적인 신고 접수로 인해"
         static let donotWirteDialogBottomMessage: String = "까지\n카드를 작성할 수 없어요"
         
+        static let deletedCardDialogTitle: String = "카드가 삭제되었어요"
+        static let deletedCardDialogMessage: String = "삭제된 카드에는 답카드를 작성할 수 없어요"
         
         static let cancelActionTitle: String = "취소"
         static let addCardActionTitle: String = "카드추가"
@@ -442,45 +444,54 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isWrite)
             .filterNil()
+            .filter { $0 == true }
             .delay(.seconds(1), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, isWrite in
                 
                 // GA 태그 추적용
                 let tagStrs = object.writtenTagModels.map { $0.originalText }
+                GAManager.shared.logEvent(
+                    event: SOMEvent.WriteCard.add_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
+                )
                 // 글추가 성공
-                if isWrite {
-                    GAManager.shared.logEvent(
-                        event: SOMEvent.WriteCard.add_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
-                    )
-                    // 키보드가 표시되어 있을 때, 이전 화면으로 전환
-                    if object.presentedViewController == nil {
-                        
-                        object.navigationPop()
-                    } else {
-                        // 바텀싯이 표시되어 있을 때, 바텀싯 제거 후 이전 화면으로 전환
-                        object.dismissBottomSheet(completion: {
-                            object.navigationPop()
-                        })
-                    }
-                } else {
-                    GAManager.shared.logEvent(
-                        event: SOMEvent.WriteCard.dismiss_with_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
-                    )
-                    // 글추가 실패, 실패 다이얼로그 표시
-                    let confirmAction = SOMDialogAction(
-                        title: Text.confirmActionTitle,
-                        style: .primary,
-                        action: {
-                            UIApplication.topViewController?.dismiss(animated: true)
-                        }
-                    )
+                // 키보드가 표시되어 있을 때, 이전 화면으로 전환
+                if object.presentedViewController == nil {
                     
-                    SOMDialogViewController.show(
-                        title: Text.failedWriteDialogTitle,
-                        message: Text.failedWriteDialogMessage,
-                        actions: [confirmAction]
-                    )
+                    object.navigationPop()
+                } else {
+                    // 바텀싯이 표시되어 있을 때, 바텀싯 제거 후 이전 화면으로 전환
+                    object.dismissBottomSheet(completion: {
+                        object.navigationPop()
+                    })
                 }
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.errorCode)
+            .filterNil()
+            .delay(.seconds(1), scheduler: MainScheduler.instance)
+            .subscribe(with: self) { object, errorCode in
+                // GA 태그 추적용
+                let tagStrs = object.writtenTagModels.map { $0.originalText }
+                GAManager.shared.logEvent(
+                    event: SOMEvent.WriteCard.dismiss_with_tag(tag_count: tagStrs.count, tag_texts: tagStrs)
+                )
+                // 글추가 실패, 실패 다이얼로그 표시
+                let confirmAction = SOMDialogAction(
+                    title: Text.confirmActionTitle,
+                    style: .primary,
+                    action: {
+                        UIApplication.topViewController?.dismiss(animated: true)
+                    }
+                )
+                
+                let failedWriteDialogTitle = errorCode == 402 ? Text.deletedCardDialogTitle : Text.unusablePhotoDialogTitle
+                let failedWriteDialogMessage = errorCode == 402 ? Text.deletedCardDialogMessage : Text.unusablePhotoDialogMessage
+                SOMDialogViewController.show(
+                    title: failedWriteDialogTitle,
+                    message: failedWriteDialogMessage,
+                    actions: [confirmAction]
+                )
             }
             .disposed(by: self.disposeBag)
     }
