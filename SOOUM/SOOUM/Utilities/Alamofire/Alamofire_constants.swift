@@ -15,7 +15,11 @@ struct Constants {
     }
     
     static var endpoint: String {
+        #if DEVELOP
+        return self.serverEndpoint(scheme: "http://")
+        #elseif PRODUCTION
         return self.serverEndpoint(scheme: "https://")
+        #endif
     }
     
     enum HTTPHeader: String {

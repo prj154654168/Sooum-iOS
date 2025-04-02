@@ -3148,7 +3148,7 @@
 				SOOUM_CLARITY_ID = qrggvyniav;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
+				SOOUM_SERVER_ENDPOINT = "ec2-52-79-234-222.ap-northeast-2.compute.amazonaws.com:8080";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -3199,7 +3199,7 @@
 				SOOUM_CLARITY_ID = qrggvyniav;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
+				SOOUM_SERVER_ENDPOINT = "ec2-52-79-234-222.ap-northeast-2.compute.amazonaws.com:8080";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
