@@ -14,6 +14,12 @@ import Then
 class LikeAndCommentView: UIView {
     
     let likeBackgroundButton = UIButton()
+    private let likeContainer = UIStackView().then {
+        $0.axis = .horizontal
+        $0.alignment = .center
+        $0.distribution = .equalSpacing
+        $0.spacing = 4
+    }
     private let likeImageView = UIImageView().then {
         $0.image = .init(.icon(.outlined(.heart)))
         $0.tintColor = .som.gray800
@@ -25,6 +31,12 @@ class LikeAndCommentView: UIView {
     }
     
     let commentBackgroundButton = UIButton()
+    private let commentContainer = UIStackView().then {
+        $0.axis = .horizontal
+        $0.alignment = .center
+        $0.distribution = .equalSpacing
+        $0.spacing = 4
+    }
     private let commentImageView = UIImageView().then {
         $0.image = .init(.icon(.outlined(.commentAdd)))
         $0.tintColor = .som.gray800
@@ -68,46 +80,32 @@ class LikeAndCommentView: UIView {
     
     private func setupConstraints() {
         
-        let likeContainer = UIStackView(
-            arrangedSubviews: [
-                self.likeImageView,
-                self.likeCountLabel
-            ]
-        ).then {
+        let container = UIStackView(arrangedSubviews: [
+            self.likeContainer,
+            self.commentContainer
+        ]).then {
             $0.axis = .horizontal
             $0.alignment = .center
             $0.distribution = .equalSpacing
-            $0.spacing = 4
+            $0.spacing = 6
         }
-        self.addSubviews(likeContainer)
-        likeContainer.snp.makeConstraints {
+        self.addSubview(container)
+        container.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(20)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
         }
-        self.addSubviews(self.likeBackgroundButton)
+        
+        self.likeContainer.addArrangedSubviews(self.likeImageView, self.likeCountLabel)
+        self.addSubview(self.likeBackgroundButton)
         self.likeBackgroundButton.snp.makeConstraints {
             $0.edges.equalTo(likeContainer)
         }
         
-        let commentContainer = UIStackView(
-            arrangedSubviews: [
-                self.commentImageView,
-                self.commentCountLabel
-            ]
-        ).then {
-            $0.axis = .horizontal
-            $0.alignment = .center
-            $0.distribution = .equalSpacing
-            $0.spacing = 4
-        }
-        self.addSubviews(commentContainer)
-        commentContainer.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalTo(likeContainer.snp.trailing).offset(6)
-        }
-        self.addSubviews(self.commentBackgroundButton)
+        self.commentContainer.addArrangedSubviews(self.commentImageView, self.commentCountLabel)
+        self.addSubview(self.commentBackgroundButton)
         self.commentBackgroundButton.snp.makeConstraints {
-            $0.edges.equalTo(commentContainer)
+            $0.edges.equalTo(self.commentContainer)
         }
     }
     
@@ -116,5 +114,10 @@ class LikeAndCommentView: UIView {
         self.likeImageView.image = .init(.icon(isSelected ? .filled(.heart) : .outlined(.heart)))
         self.likeImageView.tintColor = isSelected ? .som.p300 : .som.gray800
         self.likeCountLabel.textColor = isSelected ? .som.p300 : .som.gray800
+    }
+    
+    func updateViewsWhenDeleted() {
+        self.likeContainer.removeFromSuperview()
+        self.commentBackgroundButton.removeFromSuperview()
     }
 }

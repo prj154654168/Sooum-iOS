@@ -55,6 +55,14 @@ class DetailViewFooter: UICollectionReusableView {
     
     var commentCards = [Card]()
     
+    var isDeletedCard: Bool = false {
+        didSet {
+            if isDeletedCard {
+                self.likeAndCommentView.updateViewsWhenDeleted()
+            }
+        }
+    }
+    
     private var currentOffset: CGFloat = 0
     private var isLoadingMore: Bool = false
     

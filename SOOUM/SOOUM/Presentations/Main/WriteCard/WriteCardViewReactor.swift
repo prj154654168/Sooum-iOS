@@ -42,18 +42,21 @@ class WriteCardViewReactor: Reactor {
         case updateBanEndAt(Date?)
         case writeCard(Bool)
         case relatedTags([RelatedTag])
+        case updateError(Int?)
     }
     
     struct State {
         var banEndAt: Date?
         var isWrite: Bool?
         var relatedTags: [RelatedTag]
+        var errorCode: Int?
     }
     
     var initialState: State = .init(
         banEndAt: nil,
         isWrite: nil,
-        relatedTags: []
+        relatedTags: [],
+        errorCode: nil
     )
     
     let provider: ManagerProviderType
@@ -112,6 +115,7 @@ class WriteCardViewReactor: Reactor {
             
             return self.provider.networkManager.request(Status.self, request: request)
                 .map { .writeCard($0.httpCode == 201) }
+                .catch(self.catchClosure)
         case let .writeComment(
             isDistanceShared,
             content,
@@ -137,6 +141,7 @@ class WriteCardViewReactor: Reactor {
             
             return self.provider.networkManager.request(Status.self, request: request)
                 .map { .writeCard($0.httpCode == 201) }
+                .catch(self.catchClosure)
         case let .relatedTags(keyword):
             
             let request: CardRequest = .relatedTag(keyword: keyword, size: 5)
@@ -155,8 +160,21 @@ class WriteCardViewReactor: Reactor {
             state.isWrite = isWrite
         case let .relatedTags(relatedTags):
             state.relatedTags = relatedTags
+        case let .updateError(errorCode):
+            state.errorCode = errorCode
         }
         return state
+    }
+}
+
+extension WriteCardViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { error in
+            
+            let nsError = error as NSError
+            return .just(.updateError(nsError.code))
+        }
     }
 }
 

@@ -54,7 +54,7 @@ class WriteCardTextView: UIView {
         $0.isScrollEnabled = true
         
         $0.enablesReturnKeyAutomatically = true
-        $0.returnKeyType = .done
+        $0.returnKeyType = .go
         
         $0.autocapitalizationType = .none
         $0.autocorrectionType = .no
