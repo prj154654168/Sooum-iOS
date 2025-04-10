@@ -422,6 +422,7 @@ extension DetailViewController: UICollectionViewDataSource {
                 ) as! DetailViewFooter
             
             footer.setDatas(self.commentCards, cardSummary: self.cardSummary)
+            footer.isDeletedCard = self.isDeleted
             
             guard let reactor = self.reactor else { return footer }
             

@@ -139,6 +139,8 @@
 		2AFF95752CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95732CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift */; };
 		2AFF95782CF5F0B000CBFB12 /* TagPreviewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95772CF5F0B000CBFB12 /* TagPreviewCardView.swift */; };
 		2AFF95792CF5F0B000CBFB12 /* TagPreviewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF95772CF5F0B000CBFB12 /* TagPreviewCardView.swift */; };
+		3800575C2D9C12CB00E58A19 /* DefinedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3800575B2D9C12CB00E58A19 /* DefinedError.swift */; };
+		3800575D2D9C12CB00E58A19 /* DefinedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3800575B2D9C12CB00E58A19 /* DefinedError.swift */; };
 		38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38026E3E2CA2B45A0045E1CE /* LocationManager.swift */; };
 		3802BDAC2D0AC1FB001256EA /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3802BDAB2D0AC1FB001256EA /* UIImage.swift */; };
@@ -643,6 +645,7 @@
 		2AFF95732CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPreviewCardCollectionViewCell.swift; sourceTree = "<group>"; };
 		2AFF95772CF5F0B000CBFB12 /* TagPreviewCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPreviewCardView.swift; sourceTree = "<group>"; };
 		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3800575B2D9C12CB00E58A19 /* DefinedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefinedError.swift; sourceTree = "<group>"; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		3802BDAB2D0AC1FB001256EA /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		3802BDB02D0AE900001256EA /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
@@ -1485,6 +1488,7 @@
 		385620ED2CA19C2200E0AB5A /* NetworkManager */ = {
 			isa = PBXGroup;
 			children = (
+				3800575B2D9C12CB00E58A19 /* DefinedError.swift */,
 				385620EE2CA19C9500E0AB5A /* NetworkManager.swift */,
 				38B543E72D4617EA00DDF2C5 /* NetworkManagerConfiguration.swift */,
 				38F88EBC2D2C1E19002AD7A8 /* Models */,
@@ -2624,6 +2628,7 @@
 				2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				2A5BB7CE2CDBB7D100E1C799 /* ProfileImageSettingViewController.swift in Sources */,
 				3893B6D22D36739500F2004C /* CompositeManager.swift in Sources */,
+				3800575D2D9C12CB00E58A19 /* DefinedError.swift in Sources */,
 				38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				2AFD056E2D048CAF007C84AD /* TagRequest.swift in Sources */,
 				388698602D1984D600008600 /* NotificationViewReactor.swift in Sources */,
@@ -2912,6 +2917,7 @@
 				38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */,
 				3886985F2D1984D600008600 /* NotificationViewReactor.swift in Sources */,
 				2AFD05692D03264C007C84AD /* AddFavoriteTagResponse.swift in Sources */,
+				3800575C2D9C12CB00E58A19 /* DefinedError.swift in Sources */,
 				3893B6D12D36739500F2004C /* CompositeManager.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				3816C0602CCDE35300C8688C /* ErrorInterceptor.swift in Sources */,
@@ -3148,7 +3154,7 @@
 				SOOUM_CLARITY_ID = qrggvyniav;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
+				SOOUM_SERVER_ENDPOINT = "ec2-52-79-234-222.ap-northeast-2.compute.amazonaws.com:8080";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -3199,7 +3205,7 @@
 				SOOUM_CLARITY_ID = qrggvyniav;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
-				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
+				SOOUM_SERVER_ENDPOINT = "ec2-52-79-234-222.ap-northeast-2.compute.amazonaws.com:8080";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
