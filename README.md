@@ -2,8 +2,6 @@
   <img width="680" alt="sooum_title" src="https://github.com/user-attachments/assets/8c807798-2f9c-48d0-8327-436eb59ad082"/>
 </div>
 
-
-
 # About SOOUM
  - **숨**은 완전한 익명성을 보장하는 카드형 SNS 앱 서비스입니다. 사용자들이 자유롭게 생각을 공유할 수 있는 안전한 공간을 제공합니다.
  - 사용자의 개인정보 사용을 최소화하기 위해 하나의 기기당 하나의 계정을 발급하고, 계정을 위한 ID는 비대칭 키 암호화를 사용해 안전하게 사용합니다.
@@ -11,13 +9,19 @@
  - 해시태그 검색을 통해 특정 키워드의 피드를 구경할 수 있습니다.
  - 다양한 사용자들을 팔로우하며 피드에 공감 혹은 답카드 작성으로 표현할 수 있습니다.
 
+<div align="center">
+  <a href="https://apps.apple.com/kr/app/%EC%88%A8-%EC%B9%B4%EB%93%9C%ED%98%95-%EC%9D%B5%EB%AA%85-sns/id6740403078">
+    <img width="160" alt="Download on the App Store" src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/ko-kr?size=250x83"/>
+  </a>
+</div>
+
 # Preview
 <div align="center">
   <img width="5580" alt="Preview" src="https://github.com/user-attachments/assets/5b41aa70-8304-4e40-8bae-8ba674febbf6"/>
 </div>
 
 # Features
-### 네트워크 레이어
+### 1. 네트워크 레이어
 
 HTTP 네트워킹을 위한 Alamofire와 반응형 프로그래밍을 위한 RxSwift를 활용한 네트워킹 레이어를 포함하고 있습니다. 이 프로젝트에선 적절한 오류 처리, 요청 구성 및 환경별 엔드포인트를 갖춘 RESTful API 호출을 위한 깔끔한 프로토콜 지향 아키텍처를 제공합니다.
 
@@ -62,7 +66,7 @@ enum DefinedError: Error, LocalizedError {
 
     ...
 ```
-### 테스트하기 쉬운 매니저
+### 2. 테스트하기 쉬운 매니저
 
 의존성 주입을 활용하여 매니저 객체들을 효율적으로 구성하고 테스트하기 쉬운 아키텍처를 구현했습니다. 이 접근 방식은 코드의 결합도를 낮추고, 단위 테스트를 용이하게 하며, 애플리케이션의 유지보수성을 크게 향상시킵니다.
 
@@ -106,7 +110,7 @@ final class MockManagerProviderContainer: ManagerProviderType {
 }
 ```
 
-### 단방향 데이터 흐름 아키텍처
+### 3. 단방향 데이터 흐름 아키텍처
 을 활용하여 단방향 데이터 흐름 아키텍처를 구현했습니다. 이 아키텍처는 앞서 설명한 의존성 주입 기반 관리자 패턴과 결합하여 예측 가능하고 테스트하기 쉬운 코드베이스를 구축합니다.
 
 ReactorKit의 가장 큰 특징은 데이터가 한 방향으로만 흐른다는 것입니다:
