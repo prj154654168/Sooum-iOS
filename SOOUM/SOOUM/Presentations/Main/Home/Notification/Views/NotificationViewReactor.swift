@@ -111,6 +111,7 @@ class NotificationViewReactor: Reactor {
             ])
             
         case let .requestRead(selectedId):
+            self.provider.pushManager.deleteNotification(notificationId: selectedId)
             let request: NotificationRequest = .requestRead(notificationId: selectedId)
             return self.provider.networkManager.request(Empty.self, request: request)
                 .map { _ in .updateIsReadCompleted(true) }
