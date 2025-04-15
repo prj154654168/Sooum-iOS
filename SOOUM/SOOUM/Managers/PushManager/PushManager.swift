@@ -16,6 +16,7 @@ protocol PushManagerDelegate: AnyObject {
     var canReceiveNotifications: Bool { get }
     var notificationStatus: Bool { get }
     func switchNotification(isOn: Bool, completion: ((Error?) -> Void)?)
+    func deleteNotification(notificationId: String)
 }
 
 class PushManager: CompositeManager<PushManagerConfiguration> {
@@ -162,6 +163,21 @@ extension PushManager: PushManagerDelegate {
             }
         }
     }
+    
+    func deleteNotification(notificationId: String) {
+        UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
+            let matchedIds = notifications
+                .filter {
+                    ($0.request.content.userInfo["notificationId"] as? String) == notificationId
+                }
+                .map { $0.request.identifier }
+            
+            if !matchedIds.isEmpty {
+                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: matchedIds)
+            }
+        }
+    }
+    
 }
 
 extension PushManagerDelegate {
