@@ -13,7 +13,7 @@ jobs:
 
     env:
       XC_WORKSPACE: SOOUM/SOOUM.xcworkspace
-      XC_SCHEME: SOOUM/SOOUM-Dev
+      XC_SCHEME: SOOUM-Dev
       XC_DESTINATION: platform=iOS Simulator,name=iPhone 16,OS=18.0
 
     steps:
