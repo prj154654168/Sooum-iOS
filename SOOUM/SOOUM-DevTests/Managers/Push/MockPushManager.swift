@@ -27,4 +27,6 @@ class MockPushManager: CompositeManager<PushManagerConfiguration>, PushManagerDe
         self.notificationStatus = isOn && self.canReceiveNotifications
         completion?(nil)
     }
+    
+    func deleteNotification(notificationId: String) { }
 }

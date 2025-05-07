@@ -22,6 +22,7 @@ enum MockRequest: BaseRequest {
     var parameters: Parameters { [:] }
     var encoding: ParameterEncoding { URLEncoding.default }
     var authorizationType: AuthorizationType { return .none }
+    var version: APIVersion { return .v1 }
     func asURLRequest() throws -> URLRequest { URLRequest(url: URL(string: "http://test.com")!) }
 }
 

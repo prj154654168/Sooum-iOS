@@ -177,7 +177,6 @@ extension PushManager: PushManagerDelegate {
             }
         }
     }
-    
 }
 
 extension PushManagerDelegate {
