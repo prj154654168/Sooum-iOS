@@ -1,0 +1,53 @@
+name: CI
+
+# main, develop 브랜치에 직접 푸시와 PR을 열었을 때
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+
+    env:
+      XC_WORKSPACE: SOOUM/SOOUM.xcworkspace
+      XC_SCHEME: SOOUM/SOOUM-Dev
+      XC_DESTINATION: platform=iOS Simulator,name=iPhone 16,OS=18.0
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pods cache
+        uses: actions/cache@v4
+        id: pods-cache
+        with:
+          path: |
+            SOOUM/Pods
+            SOOUM/Podfile.lock
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Pod install
+        if: steps.pods-cache.outputs.cache-hit != 'true'
+        run: |
+          cd SOOUM && pod install --repo-update --clean-install
+
+      - name: Run SwiftLint
+        run: .github/workflows/swiftlint.sh --strict
+        shell: bash
+
+      # 테스트 결과 출력
+      - name: Xcpretty install
+        run: gem install xcpretty
+
+      - name: Build and run tests
+        run: |
+          xcodebuild clean test \
+          -workspace "$XC_WORKSPACE" \
+          -scheme "$XC_SCHEME" \
+          -destination "$XC_DESTINATION" \
+          -enableCodeCoverage YES \
+          | xcpretty --test --color
