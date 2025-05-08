@@ -164,16 +164,52 @@ extension PushManager: PushManagerDelegate {
         }
     }
     
+    // TODO: 임시, removeDeliveredNotifications(withIdentifiers: ) 의도한 동작 X
+    // 모든 알림을 삭제 후 특정 알림을 제외한 알림을 재 요청한다.
     func deleteNotification(notificationId: String) {
-        UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
-            let matchedIds = notifications
-                .filter {
-                    ($0.request.content.userInfo["notificationId"] as? String) == notificationId
-                }
-                .map { $0.request.identifier }
+        let current = UNUserNotificationCenter.current()
+        
+        Log.debug("remove notification with userInfo ID: \(notificationId)")
+        
+        current.getDeliveredNotifications { notifications in
             
-            if !matchedIds.isEmpty {
-                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: matchedIds)
+            guard notifications.isEmpty == false else {
+                Log.debug("No delivered notifications to remove.")
+                return
+            }
+            
+            let requestsToKeep = notifications
+                .filter { ($0.request.content.userInfo["notificationId"] as? String) != notificationId }
+                .map {
+                    let identifier = $0.request.identifier
+                    let contentToKeep = $0.request.content.mutableCopy() as! UNMutableNotificationContent
+                    contentToKeep.userInfo["isReAddedNotifications"] = true
+                    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+                    
+                    // 아주 짧은 시간 뒤에 다시 발송
+                    return UNNotificationRequest(
+                        identifier: identifier,
+                        content: contentToKeep,
+                        trigger: trigger
+                    )
+                }
+            Log.debug("Preparing to remove all notifications and re-add \(requestsToKeep.count) notifications.")
+            
+            current.removeAllDeliveredNotifications()
+            Log.debug("Called removeAllDeliveredNotifications.")
+            
+            if requestsToKeep.isEmpty {
+                Log.debug("No notifications to re-add.")
+            } else {
+                requestsToKeep.forEach { request in
+                    current.add(request) { error in
+                        if let error = error {
+                            Log.error("Error re-adding notification (ID: \(request.identifier)): \(error.localizedDescription)")
+                        } else {
+                            Log.debug("Successfully re-added notification (ID: \(request.identifier))")
+                        }
+                    }
+                }
             }
         }
     }
