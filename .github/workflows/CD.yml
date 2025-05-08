@@ -6,7 +6,7 @@ on:
   # 버전과 빌드 번호가 변경되었을 때
   push:
     branches: [develop]
-    paths: [**.xcodeproj/**]
+    paths: [SOOUM/**.xcodeproj/**]
     
 jobs:
   upload-testflight:
