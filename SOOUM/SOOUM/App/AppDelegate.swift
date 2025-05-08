@@ -93,7 +93,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo
         self.setupOnboardingWhenTransferSuccessed(userInfo)
         
-        let options: UNNotificationPresentationOptions = [.sound, .list, .banner]
+        var options: UNNotificationPresentationOptions
+        if let isReAddedNotifications = userInfo["isReAddedNotifications"] as? Bool, isReAddedNotifications {
+            options = [.list]
+        } else {
+            options = [.sound, .list, .banner]
+        }
         completionHandler(options)
     }
     

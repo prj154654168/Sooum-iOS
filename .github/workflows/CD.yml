@@ -2,9 +2,11 @@
 name: Dev CD
 
 on:
-  #  develop 브랜치로 직접 푸시 했을 때
+  # develop 브랜치로 직접 푸시 했을 때
+  # 버전과 빌드 번호가 변경되었을 때
   push:
     branches: [develop]
+    paths: [**.xcodeproj/**]
     
 jobs:
   upload-testflight:
