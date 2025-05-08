@@ -40,8 +40,7 @@ extension AnalyticsEventProtocol {
             dict[paramLabel] = paramValue as? any FirebaseLoggable
           }
         }
-      }
-      else if caseValue is FirebaseLoggable {
+      } else if caseValue is FirebaseLoggable {
         // (단일 파라미터인 경우)
         dict[caseLabel] = caseValue as? any FirebaseLoggable
       }

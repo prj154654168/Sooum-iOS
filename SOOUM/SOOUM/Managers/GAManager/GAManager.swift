@@ -5,7 +5,6 @@
 //  Created by JDeoks on 3/11/25.
 //
 
-import Foundation
 import FirebaseAnalytics
 
 class GAManager {
