@@ -47,3 +47,34 @@ extension SOOUMStyle where Base == UIColor {
     // Dim
     static let dim = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
 }
+
+extension V2Style where Base == UIColor {
+    
+    // Gray Scale
+    static let white =      UIColor(hex: "#FFFFFF")
+    static let gray100 =    UIColor(hex: "#F5F7FA")
+    static let gray200 =    UIColor(hex: "#E4EAF1")
+    static let gray300 =    UIColor(hex: "#BFC9D3")
+    static let gray400 =    UIColor(hex: "#919DA9")
+    static let gray500 =    UIColor(hex: "#5D6369")
+    static let gray600 =    UIColor(hex: "#3A3F44")
+    static let black =      UIColor(hex: "#212121")
+    
+    // Primary
+    static let pLight1 =    UIColor(hex: "#D7F1F9")
+    static let pLight2 =    UIColor(hex: "#8CE1F4")
+    static let pMain =      UIColor(hex: "#20C6EC")
+    static let pDark =      UIColor(hex: "#07ABD0")
+    
+    // Success
+    static let gLight =     UIColor(hex: "#D3F5EB")
+    static let gMain =      UIColor(hex: "#009262")
+    
+    // Warning
+    static let yLight =     UIColor(hex: "#FFF0D7")
+    static let yMain =      UIColor(hex: "#FFB240")
+    
+    // Danger
+    static let rLight =     UIColor(hex: "#FFE1DF")
+    static let rMain =      UIColor(hex: "#EE3A26")
+}
