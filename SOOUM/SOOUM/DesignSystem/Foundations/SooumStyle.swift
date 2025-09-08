@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 // MARK: Styles
 
 public protocol SOOUMStyleCompatible {
@@ -16,6 +17,15 @@ public protocol SOOUMStyleCompatible {
 
 public struct SOOUMStyle<Base> { }
 
+public struct V2Style<Base> { }
+
 public extension SOOUMStyleCompatible {
     static var som: SOOUMStyle<Self>.Type { SOOUMStyle<Self>.self }
+}
+
+
+// MARK: V2
+
+public extension SOOUMStyle {
+    static var v2: V2Style<Base>.Type { V2Style<Base>.self }
 }
