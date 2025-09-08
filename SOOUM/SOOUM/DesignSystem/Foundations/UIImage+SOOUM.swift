@@ -17,6 +17,7 @@ extension UIImage {
         enum IconStyle {
             case filled(Filled)
             case outlined(Outlined)
+            case v2(V2IconStyle)
             
             enum Filled: String {
                 case addCard
@@ -64,10 +65,12 @@ extension UIImage {
             
             var imageName: String {
                 switch self {
-                case .filled(let filled):
+                case let .filled(filled):
                     return "\(filled.rawValue)_filled"
-                case .outlined(let outlined):
+                case let .outlined(outlined):
                     return "\(outlined.rawValue)_outlined"
+                case let .v2(iconStyle):
+                    return iconStyle.imageName
                 }
             }
         }
@@ -81,9 +84,9 @@ extension UIImage {
         
         var imageName: String {
             switch self {
-            case .icon(let iconStyle):
+            case let .icon(iconStyle):
                 return iconStyle.imageName
-            case .image(let imageStyle):
+            case let .image(imageStyle):
                 return imageStyle.rawValue
             case .logo:
                 return "logo"
@@ -97,5 +100,74 @@ extension UIImage {
     
     convenience init?(_ som: SOOUMType) {
         self.init(named: som.imageName)
+    }
+}
+
+
+// MARK: V2
+
+extension UIImage.SOOUMType {
+    
+    enum V2IconStyle {
+        case filled(Filled)
+        case outlined(Outlined)
+        
+        enum Filled: String {
+            case bell
+            case camera
+            case danger
+            case heart
+            case home
+            case image
+            case location
+            case message_circle
+            case message_square
+            case settings
+            case star
+            case tag
+            case time
+            case trash
+            case user
+            case write
+        }
+        
+        enum Outlined: String {
+            case bell
+            case camera
+            case check
+            case danger
+            case delete
+            case down
+            case error
+            case heart
+            case home
+            case image
+            case left
+            case location
+            case message_circle
+            case message_square
+            case more
+            case plus
+            case right
+            case search
+            case settings
+            case star
+            case swap
+            case tag
+            case time
+            case trash
+            case up
+            case user
+            case write
+        }
+        
+        var imageName: String {
+            switch self {
+            case let .filled(filled):
+                return "\(filled.rawValue)_filled"
+            case let .outlined(outlined):
+                return "\(outlined.rawValue)_outlined"
+            }
+        }
     }
 }
