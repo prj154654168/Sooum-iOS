@@ -76,6 +76,88 @@ extension Typography: SOOUMStyleCompatible { }
 extension SOOUMStyle where Base == Typography {
     
     
+    // MARK: v1
+    
+    // Pretendard
+    static var head1WithBold: Typography = .init(
+        fontContainer: BuiltInFont(size: 22, weight: .semibold),
+        lineHeight: 23,
+        letterSpacing: -0.003
+    )
+    static var head1WithRegular: Typography = .init(
+        fontContainer: BuiltInFont(size: 22, weight: .medium),
+        lineHeight: 28,
+        letterSpacing: -0.003
+    )
+    
+    static var head2WithBold: Typography = .init(
+        fontContainer: BuiltInFont(size: 18, weight: .semibold),
+        lineHeight: 24,
+        letterSpacing: -0.003
+    )
+    static var head2WithRegular: Typography = .init(
+        fontContainer: BuiltInFont(size: 18, weight: .regular),
+        lineHeight: 24,
+        letterSpacing: -0.003
+    )
+    
+    static var body1WithBold: Typography = .init(
+        fontContainer: BuiltInFont(size: 16, weight: .semibold),
+        lineHeight: 24,
+        letterSpacing: -0.004
+    )
+    static var body1WithRegular: Typography = .init(
+        fontContainer: BuiltInFont(size: 16, weight: .regular),
+        lineHeight: 24,
+        letterSpacing: -0.004
+    )
+    
+    static var body2WithBold: Typography = .init(
+        fontContainer: BuiltInFont(size: 14, weight: .medium),
+        lineHeight: 20,
+        letterSpacing: -0.004
+    )
+    static var body2WithRegular: Typography = .init(
+        fontContainer: BuiltInFont(size: 14, weight: .regular),
+        lineHeight: 20,
+        letterSpacing: -0.004
+    )
+    
+    static var body3WithBold: Typography = .init(
+        fontContainer: BuiltInFont(size: 12, weight: .medium),
+        lineHeight: 17,
+        letterSpacing: -0.004
+    )
+    static var body3WithRegular: Typography = .init(
+        fontContainer: BuiltInFont(size: 12, weight: .regular),
+        lineHeight: 17,
+        letterSpacing: -0.004
+    )
+    
+    static var caption: Typography = .init(
+        fontContainer: BuiltInFont(size: 10, weight: .medium),
+        lineHeight: 14,
+        letterSpacing: -0.004
+    )
+    
+    // shcool
+    
+    static var schoolBody1WithBold: Typography = .init(
+        fontContainer: BuiltInFont(type: .school, size: 18, weight: .bold),
+        lineHeight: 25,
+        letterSpacing: -0.004
+    )
+    
+    static var schoolBody1WithLight: Typography = .init(
+        fontContainer: BuiltInFont(type: .school, size: 18, weight: .light),
+        lineHeight: 25,
+        letterSpacing: -0.004
+    )
+}
+
+extension V2Style where Base == Typography {
+    
+    
     // MARK: v2
     
     // Pretandard
@@ -175,84 +257,5 @@ extension SOOUMStyle where Base == Typography {
         fontContainer: BuiltInFont(size: 10, weight: .medium),
         lineHeight: 15,
         letterSpacing: -0.025
-    )
-    
-    
-    // MARK: v1
-    
-    // Pretendard
-    static var head1WithBold: Typography = .init(
-        fontContainer: BuiltInFont(size: 22, weight: .semibold),
-        lineHeight: 23,
-        letterSpacing: -0.003
-    )
-    static var head1WithRegular: Typography = .init(
-        fontContainer: BuiltInFont(size: 22, weight: .medium),
-        lineHeight: 28,
-        letterSpacing: -0.003
-    )
-    
-    static var head2WithBold: Typography = .init(
-        fontContainer: BuiltInFont(size: 18, weight: .semibold),
-        lineHeight: 24,
-        letterSpacing: -0.003
-    )
-    static var head2WithRegular: Typography = .init(
-        fontContainer: BuiltInFont(size: 18, weight: .regular),
-        lineHeight: 24,
-        letterSpacing: -0.003
-    )
-    
-    static var body1WithBold: Typography = .init(
-        fontContainer: BuiltInFont(size: 16, weight: .semibold),
-        lineHeight: 24,
-        letterSpacing: -0.004
-    )
-    static var body1WithRegular: Typography = .init(
-        fontContainer: BuiltInFont(size: 16, weight: .regular),
-        lineHeight: 24,
-        letterSpacing: -0.004
-    )
-    
-    static var body2WithBold: Typography = .init(
-        fontContainer: BuiltInFont(size: 14, weight: .medium),
-        lineHeight: 20,
-        letterSpacing: -0.004
-    )
-    static var body2WithRegular: Typography = .init(
-        fontContainer: BuiltInFont(size: 14, weight: .regular),
-        lineHeight: 20,
-        letterSpacing: -0.004
-    )
-    
-    static var body3WithBold: Typography = .init(
-        fontContainer: BuiltInFont(size: 12, weight: .medium),
-        lineHeight: 17,
-        letterSpacing: -0.004
-    )
-    static var body3WithRegular: Typography = .init(
-        fontContainer: BuiltInFont(size: 12, weight: .regular),
-        lineHeight: 17,
-        letterSpacing: -0.004
-    )
-    
-    static var caption: Typography = .init(
-        fontContainer: BuiltInFont(size: 10, weight: .medium),
-        lineHeight: 14,
-        letterSpacing: -0.004
-    )
-    
-    // shcool
-    
-    static var schoolBody1WithBold: Typography = .init(
-        fontContainer: BuiltInFont(type: .school, size: 18, weight: .bold),
-        lineHeight: 25,
-        letterSpacing: -0.004
-    )
-    
-    static var schoolBody1WithLight: Typography = .init(
-        fontContainer: BuiltInFont(type: .school, size: 18, weight: .light),
-        lineHeight: 25,
-        letterSpacing: -0.004
     )
 }
