@@ -12,7 +12,7 @@ extension UIImage {
     enum SOOUMType: Equatable {
         case icon(IconStyle)
         case image(ImageStyle)
-        case logo
+        case logo(LogoStyle)
         
         enum IconStyle {
             case filled(Filled)
@@ -75,11 +75,39 @@ extension UIImage {
             }
         }
         
-        enum ImageStyle: String {
-            case cancelTag
-            case errorTriangle
-            case login
-            case sooumLogo
+        enum ImageStyle {
+            case defaultStyle(DefaultStyle)
+            case v2(V2ImageStyle)
+            
+            enum DefaultStyle: String {
+                case cancelTag
+                case errorTriangle
+                case login
+                case sooumLogo
+            }
+            
+            var imageName: String {
+                switch self {
+                case let .defaultStyle(defaultStyle):
+                    return defaultStyle.rawValue
+                case let .v2(imageStyle):
+                    return imageStyle.rawValue
+                }
+            }
+        }
+        
+        enum LogoStyle {
+            case logo
+            case v2(V2LogoStyle)
+            
+            var imageName: String {
+                switch self {
+                case .logo:
+                    return "logo"
+                case let .v2(logoStyle):
+                    return logoStyle.rawValue
+                }
+            }
         }
         
         var imageName: String {
@@ -87,9 +115,9 @@ extension UIImage {
             case let .icon(iconStyle):
                 return iconStyle.imageName
             case let .image(imageStyle):
-                return imageStyle.rawValue
-            case .logo:
-                return "logo"
+                return imageStyle.imageName
+            case let .logo(logoStyle):
+                return logoStyle.imageName
             }
         }
         
@@ -169,5 +197,13 @@ extension UIImage.SOOUMType {
                 return "\(outlined.rawValue)_outlined"
             }
         }
+    }
+    
+    enum V2ImageStyle: String {
+        case onboarding
+    }
+    
+    enum V2LogoStyle: String {
+        case logo_white
     }
 }
