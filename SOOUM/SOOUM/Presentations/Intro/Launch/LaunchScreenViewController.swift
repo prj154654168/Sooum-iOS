@@ -32,7 +32,7 @@ class LaunchScreenViewController: BaseViewController, View {
         $0.backgroundColor = UIColor(hex: "#A2E3FF")
     }
     
-    let imageView = UIImageView(image: .init(.logo)).then {
+    let imageView = UIImageView(image: .init(.logo(.logo))).then {
         $0.contentMode = .scaleAspectFit
         $0.tintColor = .som.white
     }
