@@ -11,8 +11,8 @@ import UIKit
 class BuiltInFont: FontConrainer {
     
     enum FontType: String {
-        case pretendard =   "PretendardVariable"
-        case school =       "HakgyoansimChilpanjiugaeTTF"
+        case pretendard = "PretendardVariable"
+        case school = "HakgyoansimChilpanjiugaeTTF"
     }
     
     var type: FontType
@@ -52,15 +52,15 @@ fileprivate extension UIFont {
     static func builtInFontName(type fontType: BuiltInFont.FontType, with weight: Weight) -> String {
         let weightName: String = {
             switch weight {
-            case .thin: return              "Thin"
-            case .ultraLight: return        "ExtraLight"
+            case .thin: return "Thin"
+            case .ultraLight: return "ExtraLight"
             case .light: return fontType == .pretendard ? "Light" : "L"
-            case .medium: return            "Medium"
-            case .semibold: return          "SemiBold"
-            case .bold: return fontType ==  .pretendard ? "Bold" : "B"
-            case .heavy: return             "ExtraBold"
-            case .black: return             "Black"
-            default: return                 "Regular"
+            case .medium: return "Medium"
+            case .semibold: return "SemiBold"
+            case .bold: return fontType == .pretendard ? "Bold" : "B"
+            case .heavy: return "ExtraBold"
+            case .black: return "Black"
+            default: return "Regular"
             }
         }()
         return "\(fontType.rawValue)-\(weightName)"
