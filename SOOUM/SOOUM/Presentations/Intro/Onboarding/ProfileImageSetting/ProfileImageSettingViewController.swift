@@ -32,7 +32,7 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
     private let guideMessageView = OnboardingGuideMessageView(title: Text.title, message: Text.message)
     
     private let profileImageView = UIImageView().then {
-        $0.image = .init(.image(.sooumLogo))
+        $0.image = .init(.image(.defaultStyle(.sooumLogo)))
         $0.layer.cornerRadius = 128 * 0.5
         $0.clipsToBounds = true
     }

@@ -57,7 +57,7 @@ class OnboardingNicknameTextFieldView: UIView {
     }
     
     private let errorImageView = UIImageView().then {
-        $0.image = .init(.image(.errorTriangle))
+        $0.image = .init(.image(.defaultStyle(.errorTriangle)))
         $0.tintColor = .som.red
     }
     

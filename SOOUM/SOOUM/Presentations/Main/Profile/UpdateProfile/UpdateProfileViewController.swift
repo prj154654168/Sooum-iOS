@@ -93,7 +93,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
     func bind(reactor: UpdateProfileViewReactor) {
         
         KingfisherManager.shared.download(strUrl: reactor.profile.profileImg?.url) { [weak self] image in
-            self?.updateProfileView.image = image ?? .init(.image(.sooumLogo))
+            self?.updateProfileView.image = image ?? .init(.image(.defaultStyle(.sooumLogo)))
         }
         self.updateProfileView.text = reactor.profile.nickname
         

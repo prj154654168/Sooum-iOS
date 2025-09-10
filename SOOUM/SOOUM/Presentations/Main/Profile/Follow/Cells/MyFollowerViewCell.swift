@@ -120,7 +120,7 @@ class MyFollowerViewCell: UITableViewCell {
         if let url = follow.backgroundImgURL?.url {
             self.profileImageView.setImage(strUrl: url)
         } else {
-            self.profileImageView.image = .init(.image(.sooumLogo))
+            self.profileImageView.image = .init(.image(.defaultStyle(.sooumLogo)))
         }
         self.profileNickname.text = follow.nickname
     }

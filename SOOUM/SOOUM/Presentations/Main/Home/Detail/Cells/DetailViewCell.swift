@@ -114,7 +114,7 @@ class DetailViewCell: UICollectionViewCell {
             if let strUrl = self.member.profileImgUrl?.url {
                 self.memberImageView.setImage(strUrl: strUrl)
             } else {
-                self.memberImageView.image = .init(.image(.sooumLogo))
+                self.memberImageView.image = .init(.image(.defaultStyle(.sooumLogo)))
             }
             self.memberLabel.text = self.member.nickname
         }

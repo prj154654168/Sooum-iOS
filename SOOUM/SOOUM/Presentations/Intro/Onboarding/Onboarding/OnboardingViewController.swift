@@ -32,7 +32,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
     // MARK: Views
     
     private let backgroundImageView = UIImageView().then {
-        $0.image = .init(.image(.login))
+        $0.image = .init(.image(.defaultStyle(.login)))
         $0.contentMode = .scaleAspectFill
     }
     

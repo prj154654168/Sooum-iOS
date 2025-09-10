@@ -180,7 +180,7 @@ class MyProfileViewCell: UICollectionViewCell {
         if let profileImg = profile.profileImg {
             self.profileImageView.setImage(strUrl: profileImg.url)
         } else {
-            self.profileImageView.image = .init(.image(.sooumLogo))
+            self.profileImageView.image = .init(.image(.defaultStyle(.sooumLogo)))
         }
         self.totalCardCountLabel.text = profile.cardCnt
         self.totalFollowingCountLabel.text = profile.followingCnt
