@@ -17,7 +17,7 @@ class SOMDialogAction {
         var backgroundColor: UIColor {
             switch self {
             case .primary:
-                return .som.p300
+                return .som.v2.black
             case .gray:
                 return .som.gray300
             }
@@ -26,7 +26,7 @@ class SOMDialogAction {
         var foregroundColor: UIColor {
             switch self {
             case .primary:
-                return .som.white
+                return .som.v2.white
             case .gray:
                 return .som.gray700
             }

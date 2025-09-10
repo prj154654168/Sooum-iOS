@@ -18,25 +18,25 @@ class SOMDialogViewController: UIViewController {
     
     /// container 밖의 영역
     private let backgroundButton = UIButton().then {
-        $0.backgroundColor = .som.dim
+        $0.backgroundColor = .som.v2.dim
     }
     
     private let containerView = UIView().then {
-        $0.backgroundColor = .som.white
+        $0.backgroundColor = .som.v2.white
         $0.layer.cornerRadius = 20
     }
     
     private let titleLabel = UILabel().then {
-        $0.textColor = .som.black
-        $0.typography = .som.body1WithBold
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.head3
         $0.lineBreakMode = .byWordWrapping
         $0.lineBreakStrategy = .hangulWordPriority
         $0.numberOfLines = 0
     }
     
     private let messageLabel = UILabel().then {
-        $0.textColor = .som.gray600
-        $0.typography = .som.body2WithRegular
+        $0.textColor = .som.v2.gray600
+        $0.typography = .som.v2.body1
         $0.lineBreakMode = .byWordWrapping
         $0.lineBreakStrategy = .hangulWordPriority
         $0.numberOfLines = 0
@@ -58,7 +58,7 @@ class SOMDialogViewController: UIViewController {
     private var message: String? {
         set {
             if let message = newValue {
-                let attributes = Typography.som.body2WithRegular.attributes
+                let attributes = Typography.som.v2.body1.attributes
                 self.messageLabel.attributedText = .init(string: message, attributes: attributes)
             }
             self.messageLabel.isHidden = (newValue == nil)
@@ -104,22 +104,31 @@ class SOMDialogViewController: UIViewController {
     convenience init(
         title: String,
         message: String,
+        textAlignment: NSTextAlignment = .center,
         completion: ((SOMDialogViewController) -> Void)? = nil
     ) {
-        self.init(title: title, messageView: nil, completion: completion)
+        self.init(title: title, messageView: nil, textAlignment: textAlignment, completion: completion)
         
         self.message = message
+        self.messageLabel.textAlignment = textAlignment
     }
     
-    init(title: String, messageView: UIView?, completion: ((SOMDialogViewController) -> Void)? = nil) {
+    init(
+        title: String,
+        messageView: UIView?,
+        textAlignment: NSTextAlignment = .center,
+        completion: ((SOMDialogViewController) -> Void)? = nil
+    ) {
         self.messageView = messageView
         
         super.init(nibName: nil, bundle: nil)
         
         self.setupConstraints()
         
-        let attributes = Typography.som.body1WithBold.attributes
+        let attributes = Typography.som.v2.head3.attributes
         self.titleLabel.attributedText = .init(string: title, attributes: attributes)
+        self.titleLabel.textAlignment = textAlignment
+        
         self.completion = completion
     }
     
@@ -149,16 +158,15 @@ class SOMDialogViewController: UIViewController {
         self.view.addSubview(self.containerView)
         self.containerView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(32)
-            $0.trailing.equalToSuperview().offset(-32)
+            $0.leading.equalToSuperview().offset(52)
+            $0.trailing.equalToSuperview().offset(-52)
         }
         
         self.containerView.addSubview(self.titleLabel)
         self.titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
-            $0.leading.greaterThanOrEqualToSuperview().offset(20)
-            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
-            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(24)
+            $0.trailing.equalToSuperview().offset(-24)
         }
         
         if let messageView = self.messageView {
@@ -166,28 +174,27 @@ class SOMDialogViewController: UIViewController {
             self.containerView.addSubview(messageView)
             messageView.snp.makeConstraints {
                 $0.top.equalTo(self.titleLabel.snp.bottom).offset(20)
-                $0.leading.equalToSuperview().offset(20)
-                $0.trailing.equalToSuperview().offset(-20)
+                $0.leading.equalToSuperview().offset(24)
+                $0.trailing.equalToSuperview().offset(-24)
             }
         } else {
             
             self.containerView.addSubview(self.messageLabel)
             self.messageLabel.snp.makeConstraints {
-                $0.top.equalTo(self.titleLabel.snp.bottom).offset(12)
-                $0.leading.greaterThanOrEqualToSuperview().offset(20)
-                $0.trailing.lessThanOrEqualToSuperview().offset(-20)
-                $0.centerX.equalToSuperview()
+                $0.top.equalTo(self.titleLabel.snp.bottom).offset(6)
+                $0.leading.equalToSuperview().offset(24)
+                $0.trailing.equalToSuperview().offset(-24)
             }
         }
         
         self.containerView.addSubview(self.buttonContainer)
         self.buttonContainer.snp.makeConstraints {
             let hasMessage = self.message != nil
-            $0.top.equalTo((self.messageView ?? self.messageLabel).snp.bottom).offset(hasMessage ? 20 : 27)
-            $0.bottom.equalToSuperview().offset(-14)
-            $0.leading.equalToSuperview().offset(14)
-            $0.trailing.equalToSuperview().offset(-14)
-            $0.height.equalTo(46)
+            $0.top.equalTo((self.messageView ?? self.messageLabel).snp.bottom).offset(hasMessage ? 20 : 24)
+            $0.bottom.equalToSuperview().offset(-16)
+            $0.leading.equalToSuperview().offset(24)
+            $0.trailing.equalToSuperview().offset(-24)
+            $0.height.equalTo(48)
         }
     }
     
@@ -200,11 +207,11 @@ class SOMDialogViewController: UIViewController {
         
         let button = SOMButton().then {
             $0.title = action.title
-            $0.typography = .som.body1WithBold
+            $0.typography = .som.v2.subtitle1
             $0.foregroundColor = action.style.foregroundColor
             
             $0.backgroundColor = action.style.backgroundColor
-            $0.layer.cornerRadius = 12
+            $0.layer.cornerRadius = 10
             $0.clipsToBounds = true
         }
         button.tag = action.tag
