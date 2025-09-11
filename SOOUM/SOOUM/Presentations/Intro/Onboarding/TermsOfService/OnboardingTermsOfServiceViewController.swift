@@ -19,6 +19,8 @@ import RxSwift
 class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View {
     
     enum Text {
+        static let navigationTitle: String = "회원가입"
+        
         static let guideMessageTitle: String = "숨 서비스 이용을 위해\n동의해주세요"
         
         static let termsOfSeviceUrlString: String = "https://mewing-space-6d3.notion.site/3f92380d536a4b569921d2809ed147ef?pvs=4"
@@ -82,6 +84,12 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
     
     
     // MARK: Override func
+    
+    override func setupNaviBar() {
+        super.setupNaviBar()
+        
+        self.navigationBar.title = Text.navigationTitle
+    }
         
     override func setupConstraints() {
         super.setupConstraints()

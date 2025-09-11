@@ -53,12 +53,12 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             "코뿔소", "물소", "개구리", "거북이"
         ]
         
-        static let title: String = "반가워요!\n당신을 어떻게 부르면 될까요?"
-        static let message: String = "닉네임은 추후 변경이 가능해요"
+        static let navigationTitle: String = "회원가입"
         
-        static let placeholder: String = "닉네임을 입력해주세요"
+        static let title: String = "숨에서 사용할 닉네임을\n입력해주세요"
+        static let guideMessage: String = "최대 8자까지 입력할 수 있어요"
         
-        static let confirmButtonTitle: String = "확인"
+        static let nextButtonTitle: String = "다음"
     }
     
     
@@ -66,44 +66,45 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
 
     private let guideMessageView = OnboardingGuideMessageView(title: Text.title, currentNumber: 2)
     
-    private let nicknameTextField = OnboardingNicknameTextFieldView().then {
-        $0.placeholder = Text.placeholder
-    }
+    private let nicknameTextField = OnboardingNicknameTextFieldView()
     
     private let nextButton = SOMButton().then {
-        $0.title = Text.confirmButtonTitle
-        $0.typography = .som.body1WithBold
-        $0.foregroundColor = .som.gray600
-        
-        $0.backgroundColor = .som.gray300
-        $0.layer.cornerRadius = 12
-        $0.clipsToBounds = true
+        $0.title = Text.nextButtonTitle
+        $0.typography = .som.v2.title1
+        $0.foregroundColor = .som.v2.white
+        $0.backgroundColor = .som.v2.black
     }
     
     
     // MARK: Override func
     
+    override func setupNaviBar() {
+        super.setupNaviBar()
+        
+        self.navigationBar.title = Text.navigationTitle
+    }
+    
     override func setupConstraints() {
         
         self.view.addSubview(self.guideMessageView)
         self.guideMessageView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(28)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(16)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
         
-        self.view.addSubview(nicknameTextField)
+        self.view.addSubview(self.nicknameTextField)
         nicknameTextField.snp.makeConstraints {
-            $0.top.equalTo(self.guideMessageView.snp.bottom).offset(24)
+            $0.top.equalTo(self.guideMessageView.snp.bottom).offset(32)
             $0.leading.trailing.equalToSuperview()
         }
         
         self.view.addSubview(self.nextButton)
         self.nextButton.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide).offset(-12)
-            $0.height.equalTo(48)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(56)
         }
     }
     
@@ -150,16 +151,15 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         // State
         reactor.state.map(\.isValid)
             .distinctUntilChanged()
-            .subscribe(with: self, onNext: { object, isValid in
-                object.nextButton.foregroundColor = isValid ? .som.white : .som.gray600
-                object.nextButton.backgroundColor = isValid ? .som.p300 : .som.gray300
-                object.nextButton.isEnabled = isValid
-            })
+            .bind(to: self.nextButton.rx.isEnabled)
             .disposed(by: disposeBag)
         
         reactor.state.map(\.errorMessage)
             .distinctUntilChanged()
-            .bind(to: self.nicknameTextField.rx.errorMessage)
+            .subscribe(with: self) { object, errorMessage in
+                object.nicknameTextField.guideMessage = errorMessage == nil ? Text.guideMessage : errorMessage
+                object.nicknameTextField.hasError = errorMessage != nil
+            }
             .disposed(by: self.disposeBag)
     }
 }

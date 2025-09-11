@@ -17,8 +17,8 @@ class OnboardingNicknameTextFieldView: UIView {
     // MARK: Views
     
     private lazy var textFieldBackgroundView = UIView().then {
-        $0.backgroundColor = .som.gray50
-        $0.layer.cornerRadius = 12
+        $0.backgroundColor = .som.v2.gray100
+        $0.layer.cornerRadius = 10
         
         let gestureRecognizer = UITapGestureRecognizer(
             target: self,
@@ -30,9 +30,9 @@ class OnboardingNicknameTextFieldView: UIView {
     lazy var textField = UITextField().then {
         let paragraphStyle = NSMutableParagraphStyle()
         $0.defaultTextAttributes[.paragraphStyle] = paragraphStyle
-        $0.defaultTextAttributes[.foregroundColor] = UIColor.som.black
-        $0.defaultTextAttributes[.font] = Typography.som.body1WithRegular.font
-        $0.tintColor = .som.p300
+        $0.defaultTextAttributes[.foregroundColor] = UIColor.som.v2.black
+        $0.defaultTextAttributes[.font] = Typography.som.v2.subtitle1.font
+        $0.tintColor = UIColor.som.v2.black
         
         $0.enablesReturnKeyAutomatically = true
         $0.returnKeyType = .go
@@ -47,33 +47,26 @@ class OnboardingNicknameTextFieldView: UIView {
         $0.delegate = self
     }
     
-    private let errorMessageContainer = UIStackView().then {
+    private let guideMessageContainer = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .center
-        $0.distribution = .equalSpacing
-        $0.spacing = 4
-        
-        $0.isHidden = true
+        $0.spacing = 6
     }
     
     private let errorImageView = UIImageView().then {
-        $0.image = .init(.image(.defaultStyle(.errorTriangle)))
-        $0.tintColor = .som.red
+        $0.image = .init(.icon(.v2(.outlined(.error))))
+        $0.tintColor = .som.v2.rMain
+        $0.isHidden = true
     }
     
-    private let errorMessageLabel = UILabel().then {
-        $0.textColor = .som.red
-        $0.typography = .som.body2WithBold
-    }
-    
-    private let characterLabel = UILabel().then {
-        $0.textColor = .som.gray500
-        $0.typography = .som.body1WithRegular
+    private let guideMessageLabel = UILabel().then {
+        $0.textColor = .som.v2.gray500
+        $0.typography = .som.v2.caption2
     }
     
     private lazy var clearButton = SOMButton().then {
-        $0.image = .init(.icon(.outlined(.cancel)))
-        $0.foregroundColor = .som.black
+        $0.image = .init(.icon(.v2(.outlined(.delete))))
+        $0.foregroundColor = .som.v2.gray500
         
         let gestureRecognizer = UITapGestureRecognizer(
             target: self,
@@ -96,33 +89,22 @@ class OnboardingNicknameTextFieldView: UIView {
         }
     }
     
-    var placeholder: String? {
+    var guideMessage: String? {
         set {
-            if let string: String = newValue {
-                self.textField.attributedPlaceholder = NSAttributedString(
-                    string: string,
-                    attributes: [
-                        .foregroundColor: UIColor.som.gray500,
-                        .font: Typography.som.body1WithRegular.font
-                    ]
-                )
-            } else {
-                self.textField.attributedPlaceholder = nil
-            }
+            self.guideMessageLabel.text = newValue
         }
-        
         get {
-            return self.textField.attributedPlaceholder?.string
+            return self.guideMessageLabel.text
         }
     }
     
-    var errorMessage: String? {
+    var hasError: Bool {
         set {
-            self.errorMessageContainer.isHidden = newValue == nil
-            self.errorMessageLabel.text = newValue
+            self.errorImageView.isHidden = newValue == false
+            self.guideMessageLabel.textColor = newValue == false ? .som.v2.gray500 : .som.v2.rMain
         }
         get {
-            return self.errorMessageLabel.text
+            self.errorImageView.isHidden == false
         }
     }
     
@@ -185,43 +167,37 @@ class OnboardingNicknameTextFieldView: UIView {
         self.addSubview(self.textFieldBackgroundView)
         self.textFieldBackgroundView.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(52)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(54)
         }
         self.textFieldBackgroundView.addSubview(self.textField)
         self.textField.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(12)
+            $0.leading.equalToSuperview().offset(24)
         }
         
         self.textFieldBackgroundView.addSubview(self.clearButton)
         self.clearButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalTo(self.textField.snp.trailing).offset(9)
-            $0.trailing.equalToSuperview().offset(-8)
-            $0.size.equalTo(32)
-        }
-        
-        self.addSubview(self.errorMessageContainer)
-        self.errorMessageContainer.snp.makeConstraints {
-            $0.top.equalTo(self.textFieldBackgroundView.snp.bottom).offset(10)
-            $0.bottom.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
-            $0.height.equalTo(24)
-        }
-        self.errorMessageContainer.addArrangedSubview(self.errorImageView)
-        self.errorImageView.snp.makeConstraints {
+            $0.leading.equalTo(self.textField.snp.trailing).offset(14)
+            $0.trailing.equalToSuperview().offset(-24)
             $0.size.equalTo(24)
         }
-        self.errorMessageContainer.addArrangedSubview(self.errorMessageLabel)
         
-        self.addSubview(self.characterLabel)
-        self.characterLabel.snp.makeConstraints {
-            $0.top.equalTo(self.textFieldBackgroundView.snp.bottom).offset(12)
-            $0.leading.greaterThanOrEqualTo(self.errorMessageContainer.snp.trailing).offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+        self.addSubview(self.guideMessageContainer)
+        self.guideMessageContainer.snp.makeConstraints {
+            $0.top.equalTo(self.textFieldBackgroundView.snp.bottom).offset(8)
+            $0.bottom.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-16)
+            $0.height.equalTo(18)
         }
+        self.guideMessageContainer.addArrangedSubview(self.errorImageView)
+        self.errorImageView.snp.makeConstraints {
+            $0.size.equalTo(16)
+        }
+        self.guideMessageContainer.addArrangedSubview(self.guideMessageLabel)
     }
 }
 
@@ -246,13 +222,6 @@ extension OnboardingNicknameTextFieldView: UITextFieldDelegate {
         
         self.clearButton.isHidden = newString.isEmpty
         return newString.count < self.maxCharacter + 1
-    }
-    
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        
-        let text = textField.text ?? ""
-        self.clearButton.isHidden = text.isEmpty
-        self.characterLabel.text = text.count.description + "/" + self.maxCharacter.description
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

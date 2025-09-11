@@ -33,7 +33,7 @@ class OnboardingNumberingView: UIView {
     var currentNumber: Int? {
         willSet {
             self.container.subviews.forEach { view in
-                if view.tag == newValue {
+                if view.tag <= newValue ?? 1 {
                     view.backgroundColor = Color.selectedBackgroundColor
                     view.layer.borderColor = Color.selectedBorderColor.cgColor
                 }
