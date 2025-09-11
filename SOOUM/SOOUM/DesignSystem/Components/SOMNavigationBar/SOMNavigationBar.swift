@@ -24,7 +24,7 @@ class SOMNavigationBar: UIView {
     }
     
     /// 네비게이션 바 높이
-    static let height: CGFloat = 44
+    static let height: CGFloat = 48
     
     private let centerContainer = UIView()
     private let leftContainer = UIStackView().then {
@@ -54,8 +54,8 @@ class SOMNavigationBar: UIView {
     
     /// 타이틀 (text == label / logo == image)
     let titleLabel = UILabel().then {
-        $0.textColor = .som.black
-        $0.typography = .som.body1WithBold
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.title1
     }
     var title: String? {
         set { self.titleLabel.text = newValue }
@@ -72,26 +72,26 @@ class SOMNavigationBar: UIView {
     
     /// 네비게이션 바 뒤로가기 버튼
     let backButton = SOMButton().then {
-        $0.image = .init(.icon(.outlined(.arrowBack)))
-        $0.foregroundColor = .som.black
+        $0.image = .init(.icon(.v2(.outlined(.left))))
+        $0.foregroundColor = .som.v2.black
     }
     var hidesBackButton: Bool {
         set { self.backButton.isHidden = newValue }
         get { self.backButton.isHidden }
     }
     
-    var spacing: CGFloat = 20 {
+    var spacing: CGFloat = 12 {
         didSet {
             self.refreshConstraints()
         }
     }
     
-    var leftInset: CGFloat = 20 {
+    var leftInset: CGFloat = 16 {
         didSet {
             self.refreshConstraints()
         }
     }
-    var rightInset: CGFloat = 20 {
+    var rightInset: CGFloat = 16 {
         didSet {
             self.refreshConstraints()
         }
