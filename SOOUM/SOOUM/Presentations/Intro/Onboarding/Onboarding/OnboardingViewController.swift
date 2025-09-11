@@ -18,12 +18,23 @@ import Then
 class OnboardingViewController: BaseNavigationViewController, View {
     
     enum Text {
-        static let guideText: String = "당신의 소중한 이야기를\n익명의 친구들에게 들려주세요"
-        static let startButtonText: String = "숨 시작하기"
-        static let oldUserButtonText: String = "기존 계정이 있으신가요?"
+        static let guideTitle: String = "숨겨진 진심이 모이는 공간"
+        static let guideSubTitle: String = "당신의 이야기를 편하게 남겨요"
         
-        static let banUserDialogTitle: String = "기존 정지된 계정으로\n가입이 불가능 합니다."
-        static let resignDialogTitle: String = "최근 탈퇴한 이력이 있습니다."
+        static let firstGuideMessage: String = "숨은 가입 시 어떤 개인정보도 요구하지 않아요"
+        static let secondGuideMessage: String = "자동으로 추천되는 닉네임으로 5초면 가입해요"
+        static let thirdGuideMessage: String = "익명으로 솔직한 이야기를 나눠요"
+        
+        static let startButtonTitle: String = "숨 시작하기"
+        static let oldUserButtontitle: String = "기존 계정이 있으신가요?"
+        
+        static let banUserDialogTitle: String = "가입할 수 없는 계정이에요"
+        static let banUserDialogLeadingMessage: String = "이 계정은 정지된 이력이 있습니다. 새 계정은 "
+        
+        static let resignDialogTitle: String = "최근 탈퇴한 계정이에요"
+        static let resignDialogLeadingMessage: String = "탈퇴일로부터 7일 후 새 계정을 만들 수 있습니다. 새 계정은 "
+        
+        static let dialogTrailingMessage: String = "부터 만들 수 있습니다."
         
         static let confirmActionTitle: String = "확인"
     }
@@ -31,49 +42,55 @@ class OnboardingViewController: BaseNavigationViewController, View {
     
     // MARK: Views
     
-    private let backgroundImageView = UIImageView().then {
-        $0.image = .init(.image(.defaultStyle(.login)))
-        $0.contentMode = .scaleAspectFill
+    private let guideTitleLabel = UILabel().then {
+        $0.text = Text.guideTitle
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.head1
     }
     
-    private let guideLabel = UILabel().then {
-        $0.text = Text.guideText
-        $0.textColor = .som.p300
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 22, weight: .semibold),
-            lineHeight: 35,
-            letterSpacing: 0.05,
-            alignment: .left
-        )
-        $0.numberOfLines = 0
+    private let guideSubTitleLabel = UILabel().then {
+        $0.text = Text.guideSubTitle
+        $0.textColor = .som.v2.gray500
+        $0.typography = .som.v2.title2
+    }
+    
+    private let onboardingImageView = UIImageView().then {
+        $0.image = .init(.image(.v2(.onboarding)))
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private let guideMessageContainer = UIStackView().then {
+        $0.axis = .vertical
+        $0.alignment = .fill
+        $0.distribution = .equalSpacing
+        $0.spacing = 6
     }
     
     private let startButton = SOMButton().then {
-        $0.title = Text.startButtonText
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 16, weight: .heavy),
-            lineHeight: 20,
-            letterSpacing: 0.05
-        )
-        $0.foregroundColor = .som.white
-        
-        $0.backgroundColor = .som.p300
-        $0.layer.cornerRadius = 12
-        $0.clipsToBounds = true
+        $0.title = Text.startButtonTitle
+        $0.typography = .som.v2.title1
+        $0.foregroundColor = .som.v2.white
+        $0.backgroundColor = .som.v2.black
     }
     
     private let oldUserButton = SOMButton().then {
-        $0.title = Text.oldUserButtonText
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 14, weight: .bold),
-            lineHeight: 20,
-            letterSpacing: 0.05
-        )
-        $0.foregroundColor = UIColor(hex: "#B4B4B4")
+        $0.title = Text.oldUserButtontitle
+        $0.typography = .som.v2.body1
+        $0.foregroundColor = .som.v2.gray500
         $0.hasUnderlined = true
     }
     
     // MARK: Override func
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.setupGuideMessage([
+            Text.firstGuideMessage,
+            Text.secondGuideMessage,
+            Text.thirdGuideMessage
+        ])
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -84,30 +101,45 @@ class OnboardingViewController: BaseNavigationViewController, View {
     override func setupConstraints() {
         super.setupConstraints()
         
-        self.view.addSubview(self.backgroundImageView)
-        self.backgroundImageView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+        self.view.addSubview(self.guideTitleLabel)
+        self.guideTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(60)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-16)
         }
         
-        self.view.addSubview(self.guideLabel)
-        self.guideLabel.snp.makeConstraints {
-            /// 실 기기 높이 * 0.6
-            $0.top.equalToSuperview().offset(UIScreen.main.bounds.height * 0.6)
-            $0.leading.equalToSuperview().offset(20)
+        self.view.addSubview(self.guideSubTitleLabel)
+        self.guideSubTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(self.guideTitleLabel.snp.bottom).offset(4)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-16)
         }
         
-        self.view.addSubview(self.startButton)
-        self.startButton.snp.makeConstraints {
-            $0.bottom.equalToSuperview().offset(-128)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(56)
+        self.view.addSubview(self.onboardingImageView)
+        self.onboardingImageView.snp.makeConstraints {
+            $0.top.equalTo(self.guideSubTitleLabel.snp.bottom).offset(80)
+            $0.centerX.equalToSuperview()
+        }
+        
+        self.view.addSubview(self.guideMessageContainer)
+        self.guideMessageContainer.snp.makeConstraints {
+            $0.top.equalTo(self.onboardingImageView.snp.bottom).offset(60)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
         
         self.view.addSubview(self.oldUserButton)
         self.oldUserButton.snp.makeConstraints {
-            $0.top.equalTo(self.startButton.snp.bottom).offset(21)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(6)
             $0.centerX.equalToSuperview()
+        }
+        
+        self.view.addSubview(self.startButton)
+        self.startButton.snp.makeConstraints {
+            $0.bottom.equalTo(self.oldUserButton.snp.top).offset(-14)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(56)
         }
     }
     
@@ -145,10 +177,8 @@ class OnboardingViewController: BaseNavigationViewController, View {
         reactor.state.map(\.suspension)
             .filterNil()
             .subscribe(with: self) { object, suspension in
-                let dialogMessageView = DialogMessageView(
-                    isBanUser: suspension.isBanUser,
-                    banDateString: suspension.untilBan.banEndFormatted
-                )
+                let dialogLeadingMessage = suspension.isBanUser ? Text.banUserDialogLeadingMessage : Text.resignDialogLeadingMessage
+                let dialogMessage = dialogLeadingMessage + suspension.untilBan.banEndFormatted + Text.dialogTrailingMessage
                 
                 let confirmAction = SOMDialogAction(
                     title: Text.confirmActionTitle,
@@ -160,7 +190,8 @@ class OnboardingViewController: BaseNavigationViewController, View {
                 
                 SOMDialogViewController.show(
                     title: suspension.isBanUser ? Text.banUserDialogTitle : Text.resignDialogTitle,
-                    messageView: dialogMessageView,
+                    message: dialogMessage,
+                    textAlignment: .left,
                     actions: [confirmAction]
                 )
             }
@@ -180,5 +211,36 @@ class OnboardingViewController: BaseNavigationViewController, View {
                 object.oldUserButton.isHidden = shouldHide
             }
             .disposed(by: self.disposeBag)
+    }
+}
+
+extension OnboardingViewController {
+    
+    func setupGuideMessage(_ messages: [String]) {
+        
+        messages.forEach { message in
+            
+            let imageView = UIImageView().then {
+                $0.image = .init(.image(.v2(.check_square_light)))
+                $0.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+            }
+            
+            let label = UILabel().then {
+                $0.text = message
+                $0.textColor = .som.v2.gray400
+                $0.typography = .som.v2.body1
+                $0.textAlignment = .left
+            }
+            
+            let container = UIStackView(arrangedSubviews: [imageView, label]).then {
+                $0.axis = .horizontal
+                $0.spacing = 8
+            }
+            container.snp.makeConstraints {
+                $0.height.equalTo(24)
+            }
+            
+            self.guideMessageContainer.addArrangedSubview(container)
+        }
     }
 }

@@ -414,8 +414,6 @@
 		38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
 		38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
 		38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
-		38AA66262D3AC3F500B3F6B2 /* DialogMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66252D3AC3F500B3F6B2 /* DialogMessageView.swift */; };
-		38AA66272D3AC3F500B3F6B2 /* DialogMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66252D3AC3F500B3F6B2 /* DialogMessageView.swift */; };
 		38AE565C2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
 		38AE565D2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
 		38B543DF2D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */; };
@@ -791,7 +789,6 @@
 		38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndCommentView.swift; sourceTree = "<group>"; };
 		38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreBottomSheetViewController.swift; sourceTree = "<group>"; };
 		38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogAction.swift; sourceTree = "<group>"; };
-		38AA66252D3AC3F500B3F6B2 /* DialogMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogMessageView.swift; sourceTree = "<group>"; };
 		38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMDialogViewController+Show.swift"; sourceTree = "<group>"; };
 		38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerConfiguration.swift; sourceTree = "<group>"; };
 		38B543E12D46179500DDF2C5 /* AuthManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManagerConfiguration.swift; sourceTree = "<group>"; };
@@ -974,7 +971,6 @@
 			children = (
 				2A5BB7D02CDC7ADC00E1C799 /* OnboardingViewController.swift */,
 				38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */,
-				38AA66242D3AC3E400B3F6B2 /* Views */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -1904,14 +1900,6 @@
 			path = Intro;
 			sourceTree = "<group>";
 		};
-		38AA66242D3AC3E400B3F6B2 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				38AA66252D3AC3F500B3F6B2 /* DialogMessageView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
 		38AE56572D0489E500CAA431 /* SOMDialogController */ = {
 			isa = PBXGroup;
 			children = (
@@ -2587,7 +2575,6 @@
 				38CC49892CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */,
 				38F70E5C2D1905D000B33C9D /* MainHomeTabBarController.swift in Sources */,
 				38E7FBF02D3CF6BC00A359CD /* SOMDialogAction.swift in Sources */,
-				38AA66272D3AC3F500B3F6B2 /* DialogMessageView.swift in Sources */,
 				3878D07E2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
 				3878B8632D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
 				2A44A4352CAC21A500DC463E /* SignUpResponse.swift in Sources */,
@@ -2876,7 +2863,6 @@
 				3803CF7A2D016BDB00FD90DB /* IssueMemberTransferViewReactor.swift in Sources */,
 				38C2D4172CFEAACA00CEA092 /* ProfileViewFooterCell.swift in Sources */,
 				38E7FBEF2D3CF6BB00A359CD /* SOMDialogAction.swift in Sources */,
-				38AA66262D3AC3F500B3F6B2 /* DialogMessageView.swift in Sources */,
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
