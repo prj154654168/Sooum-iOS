@@ -21,17 +21,14 @@ class OnboardingGuideMessageView: UIView {
     
     // MARK: Views
     
+    private let numberingView = OnboardingNumberingView(numbers: [1, 2, 3])
+    
     private let titleLabel = UILabel().then {
-        $0.textColor = .som.black
-        $0.typography = .som.head1WithRegular.withAlignment(.left)
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.head2
         $0.lineBreakMode = .byWordWrapping
         $0.lineBreakStrategy = .hangulWordPriority
         $0.numberOfLines = 0
-    }
-    
-    private let messageLabel = UILabel().then {
-        $0.textColor = .som.gray500
-        $0.typography = .som.body2WithRegular
     }
     
     
@@ -46,24 +43,23 @@ class OnboardingGuideMessageView: UIView {
         }
     }
     
-    var message: String? {
+    var currentNumber: Int {
         set {
-            self.messageLabel.text = newValue
-            self.messageLabel.isHidden = newValue == nil
+            self.numberingView.currentNumber = newValue
         }
         get {
-            return self.messageLabel.text
+            self.numberingView.currentNumber ?? 0
         }
     }
     
     
     // MARK: Initalization
     
-    convenience init(title: String, message: String? = nil) {
+    convenience init(title: String, currentNumber: Int) {
         self.init(frame: .zero)
         
         self.title = title
-        self.message = message
+        self.currentNumber = currentNumber
     }
     
     override init(frame: CGRect) {
@@ -81,15 +77,15 @@ class OnboardingGuideMessageView: UIView {
     
     private func setupConstraints() {
         
-        self.addSubview(self.titleLabel)
-        self.titleLabel.snp.makeConstraints {
+        self.addSubview(self.numberingView)
+        self.numberingView.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
             $0.trailing.lessThanOrEqualToSuperview()
         }
         
-        self.addSubview(self.messageLabel)
-        self.messageLabel.snp.makeConstraints {
-            $0.top.equalTo(self.titleLabel.snp.bottom).offset(16)
+        self.addSubview(self.titleLabel)
+        self.titleLabel.snp.makeConstraints {
+            $0.top.equalTo(self.numberingView.snp.bottom).offset(16)
             $0.bottom.leading.equalToSuperview()
             $0.trailing.lessThanOrEqualToSuperview()
         }

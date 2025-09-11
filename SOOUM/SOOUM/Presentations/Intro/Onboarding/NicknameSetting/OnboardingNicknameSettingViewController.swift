@@ -64,7 +64,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
     
     // MARK: Views
 
-    private let guideMessageView = OnboardingGuideMessageView(title: Text.title, message: Text.message)
+    private let guideMessageView = OnboardingGuideMessageView(title: Text.title, currentNumber: 2)
     
     private let nicknameTextField = OnboardingNicknameTextFieldView().then {
         $0.placeholder = Text.placeholder

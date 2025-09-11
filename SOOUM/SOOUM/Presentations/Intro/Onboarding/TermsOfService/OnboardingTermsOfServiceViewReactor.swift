@@ -10,42 +10,6 @@ import UIKit
 import ReactorKit
 import RxSwift
 
-
-enum TermsOfService: CaseIterable {
-    
-    enum Text {
-        static let termsOfSeviceUrlString: String = "https://mewing-space-6d3.notion.site/3f92380d536a4b569921d2809ed147ef?pvs=4"
-        static let locationServiceUrlString: String = "https://mewing-space-6d3.notion.site/45d151f68ba74b23b24483ad8b2662b4?pvs=4"
-        static let privacyPolicyUrlString: String = "https://mewing-space-6d3.notion.site/44e378c9d11d45159859492434b6b128?pvs=4"
-    }
-    
-    case termsOfService
-    case locationService
-    case privacyPolicy
-    
-    var text: String {
-        switch self {
-        case .termsOfService:
-            "[필수] 서비스 이용 약관"
-        case .locationService:
-            "[필수] 위치정보 이용 약관"
-        case .privacyPolicy:
-            "[필수] 개인정보 처리 방침"
-        }
-    }
-    
-    var url: URL {
-        switch self {
-        case .termsOfService:
-            return URL(string: Text.termsOfSeviceUrlString)!
-        case .locationService:
-            return URL(string: Text.locationServiceUrlString)!
-        case .privacyPolicy:
-            return URL(string: Text.privacyPolicyUrlString)!
-        }
-    }
-}
-
 class OnboardingTermsOfServiceViewReactor: Reactor {
         
     enum Action {

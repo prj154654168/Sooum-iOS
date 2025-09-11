@@ -19,15 +19,52 @@ import RxSwift
 class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View {
     
     enum Text {
-        static let guideMessageTitle: String = "숨을 시작하기 위해서는\n약관 동의가 필요해요"
+        static let guideMessageTitle: String = "숨 서비스 이용을 위해\n동의해주세요"
         
-        static let confirmButtonTitle: String = "확인"
+        static let termsOfSeviceUrlString: String = "https://mewing-space-6d3.notion.site/3f92380d536a4b569921d2809ed147ef?pvs=4"
+        static let locationServiceUrlString: String = "https://mewing-space-6d3.notion.site/45d151f68ba74b23b24483ad8b2662b4?pvs=4"
+        static let privacyPolicyUrlString: String = "https://mewing-space-6d3.notion.site/44e378c9d11d45159859492434b6b128?pvs=4"
+        
+        static let nextButtonTitle: String = "다음"
     }
+    
+    enum TermsOfService: CaseIterable {
+        
+        case termsOfService
+        case locationService
+        case privacyPolicy
+        
+        var text: String {
+            switch self {
+            case .termsOfService:
+                "[필수] 서비스 이용 약관"
+            case .locationService:
+                "[필수] 위치정보 이용 약관"
+            case .privacyPolicy:
+                "[필수] 개인정보 처리 방침"
+            }
+        }
+        
+        var url: URL {
+            switch self {
+            case .termsOfService:
+                return URL(string: Text.termsOfSeviceUrlString)!
+            case .locationService:
+                return URL(string: Text.locationServiceUrlString)!
+            case .privacyPolicy:
+                return URL(string: Text.privacyPolicyUrlString)!
+            }
+        }
+    }
+
     
     
     // MARK: Views
     
-    private let guideMessageView = OnboardingGuideMessageView(title: Text.guideMessageTitle)
+    private let guideMessageView = OnboardingGuideMessageView(
+        title: Text.guideMessageTitle,
+        currentNumber: 1
+    )
     
     private let agreeAllButtonView = TermsOfServiceAgreeButtonView()
     
@@ -36,13 +73,11 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
     private let privacyPolicyCellView = TermsOfServiceCellView(title: TermsOfService.privacyPolicy.text)
     
     private let nextButton = SOMButton().then {
-        $0.title = Text.confirmButtonTitle
-        $0.typography = .som.body1WithBold
-        $0.foregroundColor = .som.gray600
-        
-        $0.backgroundColor = .som.gray300
-        $0.layer.cornerRadius = 12
-        $0.clipsToBounds = true
+        $0.title = Text.nextButtonTitle
+        $0.typography = .som.v2.title1
+        $0.foregroundColor = .som.v2.white
+        $0.backgroundColor = .som.v2.black
+        $0.isEnabled = false
     }
     
     
@@ -53,43 +88,45 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
         
         self.view.addSubview(self.guideMessageView)
         self.guideMessageView.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(28)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(16)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
         
         self.view.addSubview(self.agreeAllButtonView)
         self.agreeAllButtonView.snp.makeConstraints {
-            $0.top.equalTo(self.guideMessageView.snp.bottom).offset(44)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(60)
+            $0.top.equalTo(self.guideMessageView.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
         
         self.view.addSubview(self.termsOfServiceCellView)
         self.termsOfServiceCellView.snp.makeConstraints {
-            $0.top.equalTo(self.agreeAllButtonView.snp.bottom).offset(36)
-            $0.leading.trailing.equalToSuperview()
+            $0.top.equalTo(self.agreeAllButtonView.snp.bottom).offset(8)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
         
         self.view.addSubview(self.locationServiceCellView)
         self.locationServiceCellView.snp.makeConstraints {
             $0.top.equalTo(self.termsOfServiceCellView.snp.bottom)
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
         
         self.view.addSubview(self.privacyPolicyCellView)
         self.privacyPolicyCellView.snp.makeConstraints {
             $0.top.equalTo(self.locationServiceCellView.snp.bottom)
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
         
         self.view.addSubview(self.nextButton)
         self.nextButton.snp.makeConstraints {
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-12)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(48)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(56)
         }
     }
     
@@ -99,8 +136,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
     func bind(reactor: OnboardingTermsOfServiceViewReactor) {
         
         // Action
-        self.agreeAllButtonView.rx.tapGesture()
-            .when(.recognized)
+        self.agreeAllButtonView.rx.didSelect
             .map { _ in Reactor.Action.allAgree }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -176,9 +212,6 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .distinctUntilChanged()
             .subscribe(with: self) { object, isAllAgreed in
                 object.agreeAllButtonView.updateState(isAllAgreed)
-                
-                object.nextButton.foregroundColor = isAllAgreed ? .som.white : .som.gray600
-                object.nextButton.backgroundColor = isAllAgreed ? .som.p300 : .som.gray300
                 object.nextButton.isEnabled = isAllAgreed
             }
             .disposed(by: self.disposeBag)

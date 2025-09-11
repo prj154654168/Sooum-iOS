@@ -29,7 +29,7 @@ class ProfileImageSettingViewController: BaseNavigationViewController, View {
     
     // MARK: Views
     
-    private let guideMessageView = OnboardingGuideMessageView(title: Text.title, message: Text.message)
+    private let guideMessageView = OnboardingGuideMessageView(title: Text.title, currentNumber: 3)
     
     private let profileImageView = UIImageView().then {
         $0.image = .init(.image(.defaultStyle(.sooumLogo)))

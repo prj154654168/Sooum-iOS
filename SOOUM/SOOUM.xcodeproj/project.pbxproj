@@ -428,6 +428,10 @@
 		38B543EC2D461B1A00DDF2C5 /* LocationManagerConfigruation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543EA2D461B1A00DDF2C5 /* LocationManagerConfigruation.swift */; };
 		38B543EE2D46506300DDF2C5 /* ManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543ED2D46506300DDF2C5 /* ManagerType.swift */; };
 		38B543EF2D46506300DDF2C5 /* ManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543ED2D46506300DDF2C5 /* ManagerType.swift */; };
+		38B65E792E72A29F00DF6919 /* OnboardingNumberingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B65E782E72A29100DF6919 /* OnboardingNumberingView.swift */; };
+		38B65E7A2E72A29F00DF6919 /* OnboardingNumberingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B65E782E72A29100DF6919 /* OnboardingNumberingView.swift */; };
+		38B65E7C2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B65E7B2E72ADB500DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift */; };
+		38B65E7D2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B65E7B2E72ADB500DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift */; };
 		38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
 		38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
 		38B6AAD82CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */; };
@@ -796,6 +800,8 @@
 		38B543E72D4617EA00DDF2C5 /* NetworkManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerConfiguration.swift; sourceTree = "<group>"; };
 		38B543EA2D461B1A00DDF2C5 /* LocationManagerConfigruation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerConfigruation.swift; sourceTree = "<group>"; };
 		38B543ED2D46506300DDF2C5 /* ManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerType.swift; sourceTree = "<group>"; };
+		38B65E782E72A29100DF6919 /* OnboardingNumberingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNumberingView.swift; sourceTree = "<group>"; };
+		38B65E7B2E72ADB500DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TermsOfServiceAgreeButtonView+Rx.swift"; sourceTree = "<group>"; };
 		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		38B6AAD72CA424AE00CE6DB6 /* MoveTopButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveTopButtonView.swift; sourceTree = "<group>"; };
 		38B6AADA2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewReactor.swift; sourceTree = "<group>"; tabWidth = 4; };
@@ -942,6 +948,7 @@
 		2A5BB7BC2CDB86E500E1C799 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				38B65E782E72A29100DF6919 /* OnboardingNumberingView.swift */,
 				2A5BB7BD2CDB870000E1C799 /* OnboardingGuideMessageView.swift */,
 			);
 			path = Views;
@@ -978,6 +985,7 @@
 		2A5BB7D32CDCA5BE00E1C799 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				38B65E7B2E72ADB500DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift */,
 				2A5BB7D42CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift */,
 				3816E2362D3BEE7E004CC196 /* TermsOfServiceCellView.swift */,
 				3816E2392D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift */,
@@ -2589,6 +2597,7 @@
 				382E15402D15AF4F0097B09C /* CommentHistoryInNotiResponse.swift in Sources */,
 				388698632D1986B100008600 /* NotificationRequest.swift in Sources */,
 				2A980BA52D803EEA007DFA45 /* SOMEvent.swift in Sources */,
+				38B65E7C2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */,
 				38C2D4152CFEA9CC00CEA092 /* MyProfileViewCell.swift in Sources */,
 				38F720B22CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */,
 				38FD4DB52D034F6600BF5FF1 /* MyFollowerViewCell.swift in Sources */,
@@ -2764,6 +2773,7 @@
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				3803CF6D2D0156FC00FD90DB /* SettingsRequest.swift in Sources */,
 				2A5BB7E42CDCD97300E1C799 /* JoinRequest.swift in Sources */,
+				38B65E7A2E72A29F00DF6919 /* OnboardingNumberingView.swift in Sources */,
 				2AFD055E2D009513007C84AD /* TagDetailNavigationBarView.swift in Sources */,
 				2AFF95652CF33D9F00CBFB12 /* TagsHeaderView.swift in Sources */,
 				38B543EC2D461B1A00DDF2C5 /* LocationManagerConfigruation.swift in Sources */,
@@ -2877,6 +2887,7 @@
 				38816DA22D004DED00EB87D6 /* UpdateProfileView.swift in Sources */,
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				2A980BA42D803EEA007DFA45 /* SOMEvent.swift in Sources */,
+				38B65E7D2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */,
 				2AFD05492CFF7687007C84AD /* RecommendTagsResponse.swift in Sources */,
 				2AE6B17F2CBFEA5200FA5C3C /* ToggleView.swift in Sources */,
 				38601E1B2D3139D000A465A9 /* RecommendTagView.swift in Sources */,
@@ -3052,6 +3063,7 @@
 				2AE6B16D2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */,
 				38F720A72CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */,
 				38B6AAE22CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
+				38B65E792E72A29F00DF6919 /* OnboardingNumberingView.swift in Sources */,
 				2A5BB7D52CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				2AFF95782CF5F0B000CBFB12 /* TagPreviewCardView.swift in Sources */,
 				38B543EB2D461B1A00DDF2C5 /* LocationManagerConfigruation.swift in Sources */,
