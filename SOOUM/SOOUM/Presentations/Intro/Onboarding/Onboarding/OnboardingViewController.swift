@@ -176,6 +176,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
         // State
         reactor.state.map(\.suspension)
             .filterNil()
+            .distinctUntilChanged()
             .subscribe(with: self) { object, suspension in
                 let dialogLeadingMessage = suspension.isBanUser ? Text.banUserDialogLeadingMessage : Text.resignDialogLeadingMessage
                 let dialogMessage = dialogLeadingMessage + suspension.untilBan.banEndFormatted + Text.dialogTrailingMessage
