@@ -426,6 +426,10 @@
 		38AE77D52E74580000B6FD13 /* OnboardingCompletedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77D32E7457F400B6FD13 /* OnboardingCompletedViewController.swift */; };
 		38AE77D72E7459F400B6FD13 /* OnboardingCompletedViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77D62E7459EA00B6FD13 /* OnboardingCompletedViewReactor.swift */; };
 		38AE77D82E7459F400B6FD13 /* OnboardingCompletedViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77D62E7459EA00B6FD13 /* OnboardingCompletedViewReactor.swift */; };
+		38AE77DB2E745FFF00B6FD13 /* EnterMemberTransferTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77DA2E745FF700B6FD13 /* EnterMemberTransferTextFieldView.swift */; };
+		38AE77DC2E745FFF00B6FD13 /* EnterMemberTransferTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77DA2E745FF700B6FD13 /* EnterMemberTransferTextFieldView.swift */; };
+		38AE77DE2E7465F500B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77DD2E7465E600B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift */; };
+		38AE77DF2E7465F500B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77DD2E7465E600B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift */; };
 		38B543DF2D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */; };
 		38B543E02D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */; };
 		38B543E22D46179500DDF2C5 /* AuthManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543E12D46179500DDF2C5 /* AuthManagerConfiguration.swift */; };
@@ -813,6 +817,8 @@
 		38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMDialogViewController+Show.swift"; sourceTree = "<group>"; };
 		38AE77D32E7457F400B6FD13 /* OnboardingCompletedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingCompletedViewController.swift; sourceTree = "<group>"; };
 		38AE77D62E7459EA00B6FD13 /* OnboardingCompletedViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingCompletedViewReactor.swift; sourceTree = "<group>"; };
+		38AE77DA2E745FF700B6FD13 /* EnterMemberTransferTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterMemberTransferTextFieldView.swift; sourceTree = "<group>"; };
+		38AE77DD2E7465E600B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnterMemberTransferTextFieldView+Rx.swift"; sourceTree = "<group>"; };
 		38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerConfiguration.swift; sourceTree = "<group>"; };
 		38B543E12D46179500DDF2C5 /* AuthManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManagerConfiguration.swift; sourceTree = "<group>"; };
 		38B543E42D4617CB00DDF2C5 /* PushManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManagerConfiguration.swift; sourceTree = "<group>"; };
@@ -1315,6 +1321,7 @@
 			children = (
 				3803CF812D017DB800FD90DB /* EnterMemberTransferViewController.swift */,
 				3803CF842D017DC700FD90DB /* EnterMemberTransferViewReactor.swift */,
+				38AE77D92E745FF100B6FD13 /* Views */,
 			);
 			path = Enter;
 			sourceTree = "<group>";
@@ -1967,6 +1974,15 @@
 				38AE77D62E7459EA00B6FD13 /* OnboardingCompletedViewReactor.swift */,
 			);
 			path = Completed;
+			sourceTree = "<group>";
+		};
+		38AE77D92E745FF100B6FD13 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				38AE77DD2E7465E600B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift */,
+				38AE77DA2E745FF700B6FD13 /* EnterMemberTransferTextFieldView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		38B6AACB2CA410C000CE6DB6 /* Main */ = {
@@ -2718,6 +2734,7 @@
 				38D522692E742F610044911B /* SOMLoadingIndicatorView.swift in Sources */,
 				38D869642CF821F900BF87DA /* UserDefaults.swift in Sources */,
 				2AE6B1902CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
+				38AE77DB2E745FFF00B6FD13 /* EnterMemberTransferTextFieldView.swift in Sources */,
 				3878D0602CFFD45100F9522F /* FollowerResponse.swift in Sources */,
 				381701722CD88374005FC220 /* CompositeInterceptor.swift in Sources */,
 				2A5BB7CA2CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
@@ -2848,6 +2865,7 @@
 				384972A42CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
 				38D6F1812CC2413400E11530 /* WriteCardTextView.swift in Sources */,
 				3816E2382D3BEE7E004CC196 /* TermsOfServiceCellView.swift in Sources */,
+				38AE77DE2E7465F500B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift in Sources */,
 				3878F4722CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				3803CF862D017DC700FD90DB /* EnterMemberTransferViewReactor.swift in Sources */,
 				38B6AAE32CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
@@ -3014,6 +3032,7 @@
 				38D522682E742F610044911B /* SOMLoadingIndicatorView.swift in Sources */,
 				38D869632CF821F900BF87DA /* UserDefaults.swift in Sources */,
 				385620F22CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
+				38AE77DC2E745FFF00B6FD13 /* EnterMemberTransferTextFieldView.swift in Sources */,
 				38389B9F2CCCFB7D006728AF /* AuthKeyChain.swift in Sources */,
 				3878B8622D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
 				2AFD05522D007F2F007C84AD /* TagSearchViewReactor.swift in Sources */,
@@ -3144,6 +3163,7 @@
 				38B8A5882CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
 				389EF8172D2F450000E053AE /* Log.swift in Sources */,
 				3816E2372D3BEE7E004CC196 /* TermsOfServiceCellView.swift in Sources */,
+				38AE77DF2E7465F500B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift in Sources */,
 				38738D4B2D2FDCC300C37574 /* WithoutReadNotisCountResponse.swift in Sources */,
 				388698622D1986B100008600 /* NotificationRequest.swift in Sources */,
 				38572CDE2D2254E800B07C69 /* PlaceholderViewCell.swift in Sources */,
