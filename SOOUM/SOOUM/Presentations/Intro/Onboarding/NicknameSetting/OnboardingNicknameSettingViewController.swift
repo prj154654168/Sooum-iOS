@@ -94,7 +94,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         }
         
         self.view.addSubview(self.nicknameTextField)
-        nicknameTextField.snp.makeConstraints {
+        self.nicknameTextField.snp.makeConstraints {
             $0.top.equalTo(self.guideMessageView.snp.bottom).offset(32)
             $0.leading.trailing.equalToSuperview()
         }
