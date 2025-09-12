@@ -118,9 +118,9 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
     func bind(reactor: OnboardingProfileImageSettingViewReactor) {
         
         // Action
-        Observable.combineLatest(
-            self.profileImageView.rx.tapGesture().when(.ended),
-            self.cameraButton.rx.tap
+        Observable.merge(
+            self.profileImageView.rx.tapGesture().when(.ended).map { _ in },
+            self.cameraButton.rx.tap.asObservable()
         )
         .subscribe(with: self) { object, _ in
             let selectProfileBottomFloatView = SelectProfileBottomFloatView(actions: self.actions)
