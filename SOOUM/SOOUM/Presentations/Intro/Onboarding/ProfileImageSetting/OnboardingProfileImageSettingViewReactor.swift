@@ -112,7 +112,7 @@ extension OnboardingProfileImageSettingViewReactor {
 
 extension OnboardingProfileImageSettingViewReactor {
     
-    func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(provider: self.provider)
+    func reactorForCompleted() -> OnboardingCompletedViewReactor {
+        OnboardingCompletedViewReactor(provider: self.provider)
     }
 }

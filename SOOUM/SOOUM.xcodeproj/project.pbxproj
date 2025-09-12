@@ -422,6 +422,10 @@
 		38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
 		38AE565C2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
 		38AE565D2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
+		38AE77D42E74580000B6FD13 /* OnboardingCompletedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77D32E7457F400B6FD13 /* OnboardingCompletedViewController.swift */; };
+		38AE77D52E74580000B6FD13 /* OnboardingCompletedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77D32E7457F400B6FD13 /* OnboardingCompletedViewController.swift */; };
+		38AE77D72E7459F400B6FD13 /* OnboardingCompletedViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77D62E7459EA00B6FD13 /* OnboardingCompletedViewReactor.swift */; };
+		38AE77D82E7459F400B6FD13 /* OnboardingCompletedViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77D62E7459EA00B6FD13 /* OnboardingCompletedViewReactor.swift */; };
 		38B543DF2D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */; };
 		38B543E02D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */; };
 		38B543E22D46179500DDF2C5 /* AuthManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543E12D46179500DDF2C5 /* AuthManagerConfiguration.swift */; };
@@ -807,6 +811,8 @@
 		38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreBottomSheetViewController.swift; sourceTree = "<group>"; };
 		38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogAction.swift; sourceTree = "<group>"; };
 		38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMDialogViewController+Show.swift"; sourceTree = "<group>"; };
+		38AE77D32E7457F400B6FD13 /* OnboardingCompletedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingCompletedViewController.swift; sourceTree = "<group>"; };
+		38AE77D62E7459EA00B6FD13 /* OnboardingCompletedViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingCompletedViewReactor.swift; sourceTree = "<group>"; };
 		38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerConfiguration.swift; sourceTree = "<group>"; };
 		38B543E12D46179500DDF2C5 /* AuthManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManagerConfiguration.swift; sourceTree = "<group>"; };
 		38B543E42D4617CB00DDF2C5 /* PushManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManagerConfiguration.swift; sourceTree = "<group>"; };
@@ -945,6 +951,7 @@
 				2A5BB7BB2CDB86DD00E1C799 /* TermsOfService */,
 				2A5BB7C72CDBA4F400E1C799 /* NicknameSetting */,
 				2A5BB7CB2CDBB7B200E1C799 /* ProfileImageSetting */,
+				38AE77D22E7457E700B6FD13 /* Completed */,
 				2A5BB7BC2CDB86E500E1C799 /* Views */,
 			);
 			path = Onboarding;
@@ -1953,6 +1960,15 @@
 			path = SOMDialogController;
 			sourceTree = "<group>";
 		};
+		38AE77D22E7457E700B6FD13 /* Completed */ = {
+			isa = PBXGroup;
+			children = (
+				38AE77D32E7457F400B6FD13 /* OnboardingCompletedViewController.swift */,
+				38AE77D62E7459EA00B6FD13 /* OnboardingCompletedViewReactor.swift */,
+			);
+			path = Completed;
+			sourceTree = "<group>";
+		};
 		38B6AACB2CA410C000CE6DB6 /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -2659,6 +2675,7 @@
 				3878D07A2CFFE1E800F9522F /* ResignViewController.swift in Sources */,
 				38738D4C2D2FDCC300C37574 /* WithoutReadNotisCountResponse.swift in Sources */,
 				38A627182CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */,
+				38AE77D82E7459F400B6FD13 /* OnboardingCompletedViewReactor.swift in Sources */,
 				3887D03A2CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */,
 				2A5BB7CE2CDBB7D100E1C799 /* OnboardingProfileImageSettingViewController.swift in Sources */,
@@ -2804,6 +2821,7 @@
 				2A5BB7DA2CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */,
 				3878D0682CFFDAF100F9522F /* OtherFollowViewCell.swift in Sources */,
 				38F006AB2D395A7F001AC5F7 /* SuspensionResponse.swift in Sources */,
+				38AE77D42E74580000B6FD13 /* OnboardingCompletedViewController.swift in Sources */,
 				2AE6B1792CBFE49D00FA5C3C /* SelectFontTableViewCell.swift in Sources */,
 				389EF81B2D2F454600E053AE /* Log+Extract.swift in Sources */,
 				381701792CD88854005FC220 /* LogginMonitor.swift in Sources */,
@@ -2953,6 +2971,7 @@
 				389EF81A2D2F454600E053AE /* Log+Extract.swift in Sources */,
 				38C2D4142CFEA9CC00CEA092 /* MyProfileViewCell.swift in Sources */,
 				3803CF882D01914200FD90DB /* ResignViewReactor.swift in Sources */,
+				38AE77D72E7459F400B6FD13 /* OnboardingCompletedViewReactor.swift in Sources */,
 				38816D9E2D004A5E00EB87D6 /* UpdateProfileViewController.swift in Sources */,
 				38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */,
 				3886985F2D1984D600008600 /* NotificationViewReactor.swift in Sources */,
@@ -3098,6 +3117,7 @@
 				38601E182D31399400A465A9 /* CardRequest.swift in Sources */,
 				2A5BB7FA2CE277AF00E1C799 /* OnboardingProfileImageSettingViewReactor.swift in Sources */,
 				38F006AA2D395A7F001AC5F7 /* SuspensionResponse.swift in Sources */,
+				38AE77D52E74580000B6FD13 /* OnboardingCompletedViewController.swift in Sources */,
 				3878D06F2CFFDF9600F9522F /* SettingTextCellView.swift in Sources */,
 				38B8A5842CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				2AFF95612CF33A3900CBFB12 /* FavoriteTagView.swift in Sources */,

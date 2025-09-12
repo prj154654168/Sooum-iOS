@@ -146,12 +146,9 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
             .distinctUntilChanged()
             .filter { $0 }
             .subscribe(with: self) { object, _ in
-                let viewController = MainTabBarController()
-                viewController.reactor = reactor.reactorForMainTabBar()
-                let navigationController = UINavigationController(
-                    rootViewController: viewController
-                )
-                object.view.window?.rootViewController = navigationController
+                let viewController = OnboardingCompletedViewController()
+                viewController.reactor = reactor.reactorForCompleted()
+                object.navigationPush(viewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
