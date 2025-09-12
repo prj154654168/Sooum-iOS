@@ -65,8 +65,10 @@ class LaunchScreenViewReactor: Reactor {
             if isTransfered {
                 self.provider.authManager.initializeAuthInfo()
                 return .just(.updateIsRegistered(false))
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance)
             } else {
                 return self.check()
+                    .delay(.milliseconds(500), scheduler: MainScheduler.instance)
             }
         }
     }
