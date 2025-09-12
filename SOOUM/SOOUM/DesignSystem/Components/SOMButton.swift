@@ -107,7 +107,7 @@ private extension SOMButton {
                         if self.backgroundColor == .som.v2.gray100 {
                             return .som.v2.gray200
                         }
-                        if self.backgroundColor == .clear {
+                        if self.backgroundColor == .clear || self.backgroundColor == .som.v2.white{
                             return .som.v2.gray100
                         }
                         return self.backgroundColor ?? .clear
@@ -144,8 +144,6 @@ private extension SOMButton {
             if self.hasUnderlined == true {
                 attributes.updateValue(NSUnderlineStyle.single.rawValue, forKey: .underlineStyle)
                 attributes.updateValue(foregroundColor, forKey: .underlineColor)
-                
-                // configuration?.contentInsets = .init(top: 6, leading: 16, bottom: 6, trailing: 16)
             }
             
             if let inset = self.inset {

@@ -78,6 +78,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
         $0.typography = .som.v2.body1
         $0.foregroundColor = .som.v2.gray500
         $0.hasUnderlined = true
+        $0.inset = .init(top: 6, left: 16, bottom: 6, right: 16)
     }
     
     
@@ -177,7 +178,6 @@ class OnboardingViewController: BaseNavigationViewController, View {
         // State
         reactor.state.map(\.suspension)
             .filterNil()
-            .distinctUntilChanged()
             .subscribe(with: self) { object, suspension in
                 let dialogLeadingMessage = suspension.isBanUser ? Text.banUserDialogLeadingMessage : Text.resignDialogLeadingMessage
                 let dialogMessage = dialogLeadingMessage + suspension.untilBan.banEndFormatted + Text.dialogTrailingMessage
