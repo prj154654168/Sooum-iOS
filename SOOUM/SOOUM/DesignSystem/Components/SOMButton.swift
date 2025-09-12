@@ -7,20 +7,11 @@
 
 import UIKit
 
-
 class SOMButton: UIButton {
     
     var title: String? {
         didSet {
             if oldValue != self.title {
-                self.setNeedsUpdateConfiguration()
-            }
-        }
-    }
-    
-    var image: UIImage? {
-        didSet {
-            if oldValue != self.image {
                 self.setNeedsUpdateConfiguration()
             }
         }
@@ -34,17 +25,41 @@ class SOMButton: UIButton {
         }
     }
     
-    var foregroundColor: UIColor? {
+    var hasUnderlined: Bool? {
         didSet {
-            if oldValue != self.foregroundColor {
+            if oldValue != self.hasUnderlined {
                 self.setNeedsUpdateConfiguration()
             }
         }
     }
     
-    var hasUnderlined: Bool? {
+    var inset: UIEdgeInsets? {
         didSet {
-            if oldValue != self.hasUnderlined {
+            if oldValue != self.inset {
+                self.setNeedsUpdateConfiguration()
+            }
+        }
+    }
+    
+    var image: UIImage? {
+        didSet {
+            if oldValue != self.image {
+                self.setNeedsUpdateConfiguration()
+            }
+        }
+    }
+    
+    var imagePlacement: NSDirectionalRectEdge? {
+        didSet {
+            if oldValue != self.imagePlacement {
+                self.setNeedsUpdateConfiguration()
+            }
+        }
+    }
+    
+    var foregroundColor: UIColor? {
+        didSet {
+            if oldValue != self.foregroundColor {
                 self.setNeedsUpdateConfiguration()
             }
         }
@@ -117,6 +132,8 @@ private extension SOMButton {
         if let image = self.image {
             configuration?.image = image
             configuration?.imageColorTransformer = UIConfigurationColorTransformer { _ in foregroundColor }
+            configuration?.imagePadding = 8
+            configuration?.imagePlacement = self.imagePlacement ?? .leading
         }
         
         if let title = self.title, let typography = self.typography {
@@ -128,19 +145,22 @@ private extension SOMButton {
                 attributes.updateValue(NSUnderlineStyle.single.rawValue, forKey: .underlineStyle)
                 attributes.updateValue(foregroundColor, forKey: .underlineColor)
                 
-                configuration?.contentInsets = .init(top: 6, leading: 16, bottom: 6, trailing: 16)
+                // configuration?.contentInsets = .init(top: 6, leading: 16, bottom: 6, trailing: 16)
+            }
+            
+            if let inset = self.inset {
+                configuration?.contentInsets = .init(
+                    top: inset.top,
+                    leading: inset.left,
+                    bottom: inset.bottom,
+                    trailing: inset.right
+                )
             }
             
             configuration?.attributedTitle = .init(title, attributes: AttributeContainer(attributes))
             configuration?.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { _ in
                 AttributeContainer(attributes)
             }
-        }
-        
-        if image == nil {
-            configuration?.titleAlignment = .center
-        } else {
-            configuration?.imagePadding = 8
         }
     }
 }
