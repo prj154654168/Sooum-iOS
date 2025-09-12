@@ -101,6 +101,8 @@ class BaseNavigationViewController: BaseViewController {
             $0.trailing.equalTo(self.navigationBar.snp.trailing)
             $0.height.equalTo(1.4)
         }
+        // 로딩 뷰는 항상 최상단에 표시
+        self.view.bringSubviewToFront(self.loadingIndicatorView)
     }
 
     override func bind() {

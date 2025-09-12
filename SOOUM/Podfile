@@ -26,6 +26,8 @@ def pods
   pod 'SwiftEntryKit', '~> 2.0.0'
 
   pod 'CocoaLumberjack/Swift', '~> 3.7.2'
+
+  pod 'lottie-ios'
 end
 
 target 'SOOUM-Dev' do
