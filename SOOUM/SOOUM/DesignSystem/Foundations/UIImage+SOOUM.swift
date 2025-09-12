@@ -147,6 +147,7 @@ extension UIImage.SOOUMType {
             case heart
             case home
             case image
+            case info
             case location
             case message_circle
             case message_square
