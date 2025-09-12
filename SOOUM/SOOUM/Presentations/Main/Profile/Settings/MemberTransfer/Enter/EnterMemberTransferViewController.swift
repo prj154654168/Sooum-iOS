@@ -28,6 +28,10 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         static let guideTitle: String = "내 계정 가져오기 안내"
         static let guideMessage: String = "기존 휴대폰의 숨 앱 [설정>내 계정 내보내기]에서 발급한 코드를 입력하면, 기존 계정을 현재 휴대폰에서 그대로 사용할 수 있어요"
         
+        static let dialogTitle: String = "유효하지 않은 코드예요"
+        static let dialogMessage: String = "코드를 확인한 뒤 다시 시도해주세요."
+        static let dialogConfirmButtonTitle: String = "확인"
+        
         static let confirmButtonTitle: String = "확인"
     }
     
@@ -177,13 +181,35 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isSuccess)
-            .distinctUntilChanged()
+        let isSuccess = reactor.state.map(\.isSuccess).distinctUntilChanged().share()
+        
+        isSuccess
             .filter { $0 }
             .subscribe(with: self) { object, _ in
                 let launchScreenViewController = LaunchScreenViewController()
                 launchScreenViewController.reactor = reactor.reactorForLaunch()
                 object.view.window?.rootViewController = launchScreenViewController
+            }
+            .disposed(by: self.disposeBag)
+        
+        isSuccess
+            .filter { $0 == false }
+            .subscribe(with: self) { object, _ in
+                
+                let confirmAction = SOMDialogAction(
+                    title: Text.dialogConfirmButtonTitle,
+                    style: .primary,
+                    action: {
+                        UIApplication.topViewController?.dismiss(animated: true)
+                    }
+                )
+                
+                SOMDialogViewController.show(
+                    title: Text.dialogTitle,
+                    message: Text.dialogMessage,
+                    textAlignment: .left,
+                    actions: [confirmAction]
+                )
             }
             .disposed(by: self.disposeBag)
     }
