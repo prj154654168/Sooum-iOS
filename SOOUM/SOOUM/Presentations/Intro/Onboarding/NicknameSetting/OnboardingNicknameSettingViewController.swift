@@ -142,7 +142,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         self.nextButton.rx.tap
             .withLatestFrom(nickname)
             .subscribe(with: self) { object, nickname in
-                let profileImageVC = ProfileImageSettingViewController()
+                let profileImageVC = OnboardingProfileImageSettingViewController()
                 profileImageVC.reactor = reactor.reactorForProfileImage(nickname: nickname)
                 object.navigationPush(profileImageVC, animated: true)
             }

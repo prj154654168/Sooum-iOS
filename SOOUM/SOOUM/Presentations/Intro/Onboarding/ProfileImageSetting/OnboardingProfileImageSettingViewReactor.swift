@@ -1,5 +1,5 @@
 //
-//  ProfileImageSettingViewReactor.swift
+//  OnboardingProfileImageSettingViewReactor.swift
 //  SOOUM
 //
 //  Created by JDeoks on 11/12/24.
@@ -10,7 +10,7 @@ import ReactorKit
 import Alamofire
 
 
-class ProfileImageSettingViewReactor: Reactor {
+class OnboardingProfileImageSettingViewReactor: Reactor {
     
     enum Action {
         case updateImage(UIImage)
@@ -20,11 +20,13 @@ class ProfileImageSettingViewReactor: Reactor {
     enum Mutation {
         case updateImage(UIImage)
         case updateIsSuccess(Bool)
+        case updateIsLoading(Bool)
     }
     
     struct State {
         var profileImage: UIImage?
         var isSuccess: Bool
+        var isLoading: Bool
     }
     
     var nickname: String
@@ -32,7 +34,8 @@ class ProfileImageSettingViewReactor: Reactor {
     
     var initialState: State = .init(
         profileImage: nil,
-        isSuccess: false
+        isSuccess: false,
+        isLoading: false
     )
     
     let provider: ManagerProviderType
@@ -45,7 +48,12 @@ class ProfileImageSettingViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case let .updateImage(image):
-            return self.updateImage(image)
+            return .concat([
+                .just(.updateIsLoading(true)),
+                self.updateImage(image),
+                .just(.updateIsLoading(false))
+            ])
+            
         case .updateProfile:
             let trimedNickname = self.nickname.trimmingCharacters(in: .whitespacesAndNewlines)
             let request: JoinRequest = .registerUser(userName: trimedNickname, imageName: self.imageName)
@@ -64,12 +72,14 @@ class ProfileImageSettingViewReactor: Reactor {
             newState.profileImage = profileImage
         case let .updateIsSuccess(isSuccess):
             newState.isSuccess = isSuccess
+        case let .updateIsLoading(isLoading):
+            newState.isLoading = isLoading
         }
         return newState
     }
 }
 
-extension ProfileImageSettingViewReactor {
+extension OnboardingProfileImageSettingViewReactor {
     
     private func updateImage(_ image: UIImage) -> Observable<Mutation> {
         return self.presignedURL()
@@ -100,7 +110,7 @@ extension ProfileImageSettingViewReactor {
     }
 }
 
-extension ProfileImageSettingViewReactor {
+extension OnboardingProfileImageSettingViewReactor {
     
     func reactorForMainTabBar() -> MainTabBarReactor {
         MainTabBarReactor(provider: self.provider)

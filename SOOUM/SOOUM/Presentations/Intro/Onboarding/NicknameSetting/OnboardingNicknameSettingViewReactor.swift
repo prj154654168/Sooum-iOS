@@ -81,7 +81,7 @@ class OnboardingNicknameSettingViewReactor: Reactor {
 
 extension OnboardingNicknameSettingViewReactor {
     
-    func reactorForProfileImage(nickname: String) -> ProfileImageSettingViewReactor {
-        ProfileImageSettingViewReactor(provider: self.provider, nickname: nickname)
+    func reactorForProfileImage(nickname: String) -> OnboardingProfileImageSettingViewReactor {
+        OnboardingProfileImageSettingViewReactor(provider: self.provider, nickname: nickname)
     }
 }
