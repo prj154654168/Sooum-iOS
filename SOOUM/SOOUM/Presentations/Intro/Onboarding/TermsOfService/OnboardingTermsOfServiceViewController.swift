@@ -219,7 +219,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
         reactor.state.map(\.isAllAgreed)
             .distinctUntilChanged()
             .subscribe(with: self) { object, isAllAgreed in
-                object.agreeAllButtonView.updateState(isAllAgreed)
+                object.agreeAllButtonView.updateState(isAllAgreed, animated: false)
                 object.nextButton.isEnabled = isAllAgreed
             }
             .disposed(by: self.disposeBag)
@@ -227,21 +227,21 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
         reactor.state.map(\.isTermsOfServiceAgreed)
             .distinctUntilChanged()
             .subscribe(with: self) { object, isTermsOfServiceAgreed in
-                object.termsOfServiceCellView.updateState(isTermsOfServiceAgreed)
+                object.termsOfServiceCellView.updateState(isTermsOfServiceAgreed, animated: false)
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.isLocationAgreed)
             .distinctUntilChanged()
             .subscribe(with: self) { object, isLocationAgreed in
-                object.locationServiceCellView.updateState(isLocationAgreed)
+                object.locationServiceCellView.updateState(isLocationAgreed, animated: false)
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.isPrivacyPolicyAgreed)
             .distinctUntilChanged()
             .subscribe(with: self) { object, isPrivacyPolicyAgreed in
-                object.privacyPolicyCellView.updateState(isPrivacyPolicyAgreed)
+                object.privacyPolicyCellView.updateState(isPrivacyPolicyAgreed, animated: false)
             }
             .disposed(by: self.disposeBag)
     }
