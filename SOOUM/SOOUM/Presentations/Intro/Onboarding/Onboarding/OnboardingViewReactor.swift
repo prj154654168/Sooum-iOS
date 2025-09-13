@@ -18,7 +18,7 @@ class OnboardingViewReactor: Reactor {
     
     
     enum Mutation {
-        case check(Suspension)
+        case check(Suspension?)
         case shouldNavigate(Bool)
     }
 
@@ -44,20 +44,19 @@ class OnboardingViewReactor: Reactor {
         case .landing:
             
             return .concat([
-                self.check()
-                    .compactMap(\.value)
-                    .map(Mutation.check),
+                self.check(),
                 self.provider.pushManager.switchNotification(on: true)
                     .flatMapLatest { _ -> Observable<Mutation> in .empty() }
             ])
         case .reset:
             
-            return .just(.shouldNavigate(false))
+            return .concat([
+                .just(.check(nil)),
+                .just(.shouldNavigate(false))
+            ])
         case .check:
             
             return self.check()
-                .map { $0 == nil }
-                .map(Mutation.shouldNavigate)
         }
     }
     
@@ -75,7 +74,7 @@ class OnboardingViewReactor: Reactor {
 
 extension OnboardingViewReactor {
     
-    private func check() -> Observable<Suspension?> {
+    private func check() -> Observable<Mutation> {
         
         return self.provider.networkManager.request(
             RSAKeyResponse.self,
@@ -83,7 +82,7 @@ extension OnboardingViewReactor {
         )
         .map(\.publicKey)
         .withUnretained(self)
-        .flatMapLatest { object, publicKey -> Observable<Suspension?> in
+        .flatMapLatest { object, publicKey -> Observable<Mutation> in
             
             if let secKey = object.provider.authManager.convertPEMToSecKey(pemString: publicKey),
                let encryptedDeviceId = object.provider.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
@@ -91,8 +90,12 @@ extension OnboardingViewReactor {
                 let request: JoinRequest = .suspension(encryptedDeviceId: encryptedDeviceId)
                 return object.provider.networkManager.request(SuspensionResponse.self, request: request)
                     .map(\.suspension)
+                    .map { $0 == nil ? .shouldNavigate(true): .check($0) }
             } else {
-                return .empty()
+                return .concat([
+                    .just(.shouldNavigate(false)),
+                    .just(.check(nil))
+                ])
             }
         }
     }
