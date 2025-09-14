@@ -12,19 +12,15 @@ class OnboardingViewReactor: Reactor {
     
     enum Action: Equatable {
         case landing
-        case reset
-        case check
     }
     
     
     enum Mutation {
         case check(Suspension?)
-        case shouldNavigate(Bool)
     }
 
     struct State {
         fileprivate(set) var suspension: Suspension?
-        fileprivate(set) var shouldNavigate: Bool = false
         fileprivate(set) var shouldHideTransfer: Bool
     }
 
@@ -44,29 +40,19 @@ class OnboardingViewReactor: Reactor {
         case .landing:
             
             return .concat([
-                self.check(),
+                self.check()
+                    .compactMap(Mutation.check),
                 self.provider.pushManager.switchNotification(on: true)
                     .flatMapLatest { _ -> Observable<Mutation> in .empty() }
             ])
-        case .reset:
-            
-            return .concat([
-                .just(.check(nil)),
-                .just(.shouldNavigate(false))
-            ])
-        case .check:
-            
-            return self.check()
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        var state = state
+        var newState = state
         switch mutation {
         case let .check(suspension):
-            state.suspension = suspension
-        case let .shouldNavigate(shouldNavigate):
-            state.shouldNavigate = shouldNavigate
+            newState.suspension = suspension
         }
         return state
     }
@@ -74,7 +60,7 @@ class OnboardingViewReactor: Reactor {
 
 extension OnboardingViewReactor {
     
-    private func check() -> Observable<Mutation> {
+    private func check() -> Observable<Suspension?> {
         
         return self.provider.networkManager.request(
             RSAKeyResponse.self,
@@ -82,7 +68,7 @@ extension OnboardingViewReactor {
         )
         .map(\.publicKey)
         .withUnretained(self)
-        .flatMapLatest { object, publicKey -> Observable<Mutation> in
+        .flatMapLatest { object, publicKey -> Observable<Suspension?> in
             
             if let secKey = object.provider.authManager.convertPEMToSecKey(pemString: publicKey),
                let encryptedDeviceId = object.provider.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
@@ -90,12 +76,8 @@ extension OnboardingViewReactor {
                 let request: JoinRequest = .suspension(encryptedDeviceId: encryptedDeviceId)
                 return object.provider.networkManager.request(SuspensionResponse.self, request: request)
                     .map(\.suspension)
-                    .map { $0 == nil ? .shouldNavigate(true): .check($0) }
             } else {
-                return .concat([
-                    .just(.shouldNavigate(false)),
-                    .just(.check(nil))
-                ])
+                return .just(nil)
             }
         }
     }

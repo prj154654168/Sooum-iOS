@@ -156,16 +156,26 @@ class OnboardingViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.rx.viewWillAppear
-            .map { _ in Reactor.Action.reset }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
+        let startButtonTapped = self.startButton.rx.tap.share()
+        let suspension = reactor.state.map(\.suspension).share()
         
-        // Navigation
-        self.startButton.rx.tap
-            .map { _ in Reactor.Action.check }
-            .bind(to: reactor.action)
+        startButtonTapped
+            .withLatestFrom(suspension)
+            .filter { $0 == nil }
+            .subscribe(with: self) { object, _ in
+                let termsOfServiceViewController = OnboardingTermsOfServiceViewController()
+                termsOfServiceViewController.reactor = reactor.reactorForTermsOfService()
+                object.navigationPush(termsOfServiceViewController, animated: true)
+            }
             .disposed(by: disposeBag)
+        
+        startButtonTapped
+            .withLatestFrom(suspension)
+            .filterNil()
+            .subscribe(with: self) { object, suspension in
+                object.showDialog(suspension)
+            }
+            .disposed(by: self.disposeBag)
         
         self.oldUserButton.rx.tap
             .subscribe(with: self) { object, _ in
@@ -176,38 +186,15 @@ class OnboardingViewController: BaseNavigationViewController, View {
             .disposed(by: disposeBag)
         
         // State
-        reactor.state.map(\.suspension)
+        suspension
             .filterNil()
+            .take(1)
             .subscribe(with: self) { object, suspension in
-                let dialogLeadingMessage = suspension.isBanUser ? Text.banUserDialogLeadingMessage : Text.resignDialogLeadingMessage
-                let dialogMessage = dialogLeadingMessage + suspension.untilBan.banEndFormatted + Text.dialogTrailingMessage
-                
-                let confirmAction = SOMDialogAction(
-                    title: Text.confirmActionTitle,
-                    style: .primary,
-                    action: {
-                        UIApplication.topViewController?.dismiss(animated: true)
-                    }
-                )
-                
-                SOMDialogViewController.show(
-                    title: suspension.isBanUser ? Text.banUserDialogTitle : Text.resignDialogTitle,
-                    message: dialogMessage,
-                    textAlignment: .left,
-                    actions: [confirmAction]
-                )
+                object.showDialog(suspension)
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.shouldNavigate)
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                let termsOfServiceViewController = OnboardingTermsOfServiceViewController()
-                termsOfServiceViewController.reactor = reactor.reactorForTermsOfService()
-                object.navigationPush(termsOfServiceViewController, animated: true)
-            }
-            .disposed(by: self.disposeBag)
-      
+        
         reactor.state.map(\.shouldHideTransfer)
             .subscribe(with: self) { object, shouldHide in
                 object.oldUserButton.isHidden = shouldHide
@@ -217,6 +204,26 @@ class OnboardingViewController: BaseNavigationViewController, View {
 }
 
 extension OnboardingViewController {
+    
+    func showDialog(_ suspension: Suspension) {
+        let dialogLeadingMessage = suspension.isBanUser ? Text.banUserDialogLeadingMessage : Text.resignDialogLeadingMessage
+        let dialogMessage = dialogLeadingMessage + suspension.untilBan.banEndFormatted + Text.dialogTrailingMessage
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: suspension.isBanUser ? Text.banUserDialogTitle : Text.resignDialogTitle,
+            message: dialogMessage,
+            textAlignment: .left,
+            actions: [confirmAction]
+        )
+    }
     
     func setupGuideMessage(_ messages: [String]) {
         
