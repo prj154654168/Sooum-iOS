@@ -27,11 +27,23 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         static let completeButtonTitle: String = "완료"
         static let passButtonTitle: String = "건너뛰기"
         
+        static let inappositeDialogTitle: String = "부적절한 사진으로 보여져요"
+        static let inappositeDialogMessage: String = "다른 사진으로 변경하거나 기본 이미지를 사용해 주세요."
+        static let inappositeDialogConfirmButtonTitle: String = "확인"
+        
         static let selectProfileEntryName: String = "selectProfile"
         
         static let selectProfileFirstButtonTitle: String = "앨범에서 사진 선택"
         static let selectProfileSecondButtonTitle: String = "사진 찍기"
         static let selectProfileThirdButtonTitle: String = "기본 이미지 적용"
+        
+        static let selectPhotoFullScreenNextTitle: String = "다음"
+        static let selectPhotoFullScreenCancelTitle: String = "취소"
+        static let selectPhotoFullScreenSaveTitle: String = "저장"
+        static let selectPhotoFullScreenAlbumsTitle: String = "앨범"
+        static let selectPhotoFullScreenCameraTitle: String = "카메라"
+        static let selectPhotoFullScreenLibraryTitle: String = "갤러리"
+        static let selectPhotoFullScreenCropTitle: String = "자르기"
     }
     
     
@@ -163,6 +175,29 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
             }
             .disposed(by: self.disposeBag)
         
+        reactor.state.map(\.hasErrors)
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                
+                let actions: [SOMDialogAction] = [
+                    .init(
+                        title: Text.inappositeDialogConfirmButtonTitle,
+                        style: .primary,
+                        action: {
+                            UIApplication.topViewController?.dismiss(animated: true)
+                        }
+                    )
+                ]
+                
+                SOMDialogViewController.show(
+                    title: Text.inappositeDialogTitle,
+                    message: Text.inappositeDialogMessage,
+                    textAlignment: .left,
+                    actions: actions
+                )
+            }
+            .disposed(by: self.disposeBag)
+        
         reactor.state.map(\.profileImage)
             .distinctUntilChanged()
             .subscribe(with: self) { object, profileImage in
@@ -215,13 +250,13 @@ extension OnboardingProfileImageSettingViewController {
         config.startOnScreen = screen
         config.shouldSaveNewPicturesToAlbum = false
         
-        config.wordings.next = "다음"
-        config.wordings.cancel = "취소"
-        config.wordings.save = "저장"
-        config.wordings.albumsTitle = "앨범"
-        config.wordings.cameraTitle = "카메라"
-        config.wordings.libraryTitle = "갤러리"
-        config.wordings.crop = "자르기"
+        config.wordings.next = Text.selectPhotoFullScreenNextTitle
+        config.wordings.cancel = Text.selectPhotoFullScreenCancelTitle
+        config.wordings.save = Text.selectPhotoFullScreenSaveTitle
+        config.wordings.albumsTitle = Text.selectPhotoFullScreenAlbumsTitle
+        config.wordings.cameraTitle = Text.selectPhotoFullScreenCameraTitle
+        config.wordings.libraryTitle = Text.selectPhotoFullScreenLibraryTitle
+        config.wordings.crop = Text.selectPhotoFullScreenCropTitle
         
         let picker = YPImagePicker(configuration: config)
         picker.didFinishPicking { [weak self] items, cancelled in

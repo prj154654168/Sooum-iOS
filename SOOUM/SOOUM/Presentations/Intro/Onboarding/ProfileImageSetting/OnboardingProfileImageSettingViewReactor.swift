@@ -21,12 +21,14 @@ class OnboardingProfileImageSettingViewReactor: Reactor {
         case updateImage(UIImage)
         case updateIsSuccess(Bool)
         case updateIsLoading(Bool)
+        case updateErrors(Bool)
     }
     
     struct State {
         var profileImage: UIImage?
         var isSuccess: Bool
         var isLoading: Bool
+        var hasErrors: Bool
     }
     
     var nickname: String
@@ -35,7 +37,8 @@ class OnboardingProfileImageSettingViewReactor: Reactor {
     var initialState: State = .init(
         profileImage: nil,
         isSuccess: false,
-        isLoading: false
+        isLoading: false,
+        hasErrors: true
     )
     
     let provider: ManagerProviderType
@@ -62,6 +65,7 @@ class OnboardingProfileImageSettingViewReactor: Reactor {
                 .flatMapLatest { _ -> Observable<Mutation> in
                     return .just(.updateIsSuccess(true))
                 }
+                .catch(self.catchClosure)
         }
     }
     
@@ -74,6 +78,8 @@ class OnboardingProfileImageSettingViewReactor: Reactor {
             newState.isSuccess = isSuccess
         case let .updateIsLoading(isLoading):
             newState.isLoading = isLoading
+        case let .updateErrors(hasErrors):
+            newState.hasErrors = hasErrors
         }
         return newState
     }
@@ -89,7 +95,10 @@ extension OnboardingProfileImageSettingViewReactor {
                    let url = URL(string: presignedResponse.strUrl) {
                     return object.provider.networkManager.upload(imageData, to: url)
                         .flatMapLatest { _ -> Observable<Mutation> in
-                            return .just(.updateImage(image))
+                            return .concat([
+                                .just(.updateImage(image)),
+                                .just(.updateErrors(false))
+                            ])
                         }
                 } else {
                     return .empty()
@@ -107,6 +116,21 @@ extension OnboardingProfileImageSettingViewReactor {
                 let result = (response.url.url, response.imgName)
                 return .just(result)
             }
+    }
+    
+    private var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { error in
+            
+            let nsError = error as NSError
+            let endProcessing = Observable<Mutation>.concat([
+                .just(.updateIsSuccess(false)),
+                .just(.updateIsLoading(false)),
+                // 부적절한 이미지 업로드 에러 코드 == 402
+                .just(.updateErrors(nsError.code == 402))
+            ])
+            
+            return endProcessing
+        }
     }
 }
 
