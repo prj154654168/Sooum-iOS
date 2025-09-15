@@ -1755,9 +1755,7 @@
 				2A6280602D085C6200803BE9 /* SOOUM.entitlements */,
 				387FBAFA2C8702C200A5E139 /* LaunchScreen.storyboard */,
 				2A6280612D085C7600803BE9 /* SOOUM-Dev.entitlements */,
-				38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */,
-				38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */,
-				388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */,
+				3880DE182E785C90000B12E2 /* Font */,
 				38B6AAE82CA47F5C00CE6DB6 /* Alamofire */,
 				387FBB152C87044700A5E139 /* Develop */,
 				387FBB062C8703F600A5E139 /* Production */,
@@ -1807,6 +1805,16 @@
 				388009962CAC20EC002A9209 /* SOMTags+Rx.swift */,
 			);
 			path = SOMTags;
+			sourceTree = "<group>";
+		};
+		3880DE182E785C90000B12E2 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				38D3CB142CC2362B001EC280 /* Hakgyoansim-Bold.ttf */,
+				38D3CB152CC2362B001EC280 /* Hakgyoansim-Light.ttf */,
+				388DA1002C8F538400A9DD56 /* PretendardVariable.ttf */,
+			);
+			path = Font;
 			sourceTree = "<group>";
 		};
 		38816D9C2D004A3000EB87D6 /* UpdateProfile */ = {
