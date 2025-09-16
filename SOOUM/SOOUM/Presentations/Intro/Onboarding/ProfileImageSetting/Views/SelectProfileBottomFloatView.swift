@@ -50,7 +50,7 @@ private extension SelectProfileBottomFloatView {
     func setupConstraints() {
         
         self.snp.makeConstraints {
-            $0.width.equalTo(UIScreen.main.bounds.width -  16 * 2)
+            $0.width.equalTo(UIScreen.main.bounds.width - 16 * 2)
         }
         
         let handleView = UIView().then {

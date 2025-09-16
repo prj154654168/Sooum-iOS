@@ -13,9 +13,10 @@ import RxGesture
 import RxSwift
 
 import SnapKit
+import SwiftEntryKit
 import Then
 import YPImagePicker
-import SwiftEntryKit
+
 
 class OnboardingProfileImageSettingViewController: BaseNavigationViewController, View {
     

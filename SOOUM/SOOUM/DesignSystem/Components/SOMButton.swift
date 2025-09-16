@@ -107,7 +107,7 @@ private extension SOMButton {
                         if self.backgroundColor == .som.v2.gray100 {
                             return .som.v2.gray200
                         }
-                        if self.backgroundColor == .clear || self.backgroundColor == .som.v2.white{
+                        if self.backgroundColor == .clear || self.backgroundColor == .som.v2.white {
                             return .som.v2.gray100
                         }
                         return self.backgroundColor ?? .clear

@@ -70,7 +70,7 @@ extension UIImage {
                 case let .outlined(outlined):
                     return "\(outlined.rawValue)_outlined"
                 case let .v2(iconStyle):
-                    return iconStyle.imageName
+                    return "v2_\(iconStyle.imageName)"
                 }
             }
         }
@@ -91,7 +91,7 @@ extension UIImage {
                 case let .defaultStyle(defaultStyle):
                     return defaultStyle.rawValue
                 case let .v2(imageStyle):
-                    return imageStyle.rawValue
+                    return "v2_\(imageStyle.rawValue)"
                 }
             }
         }
@@ -105,7 +105,7 @@ extension UIImage {
                 case .logo:
                     return "logo"
                 case let .v2(logoStyle):
-                    return logoStyle.rawValue
+                    return "v2_\(logoStyle.rawValue)"
                 }
             }
         }
