@@ -19,8 +19,6 @@
 		2A44A42A2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */; };
 		2A44A42B2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */; };
 		2A44A42D2CAC14C800DC463E /* SignInResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A42C2CAC14C800DC463E /* SignInResponse.swift */; };
-		2A44A4342CAC21A500DC463E /* SignUpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4332CAC21A500DC463E /* SignUpResponse.swift */; };
-		2A44A4352CAC21A500DC463E /* SignUpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4332CAC21A500DC463E /* SignUpResponse.swift */; };
 		2A44A4372CAC227300DC463E /* BaseAuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4362CAC227300DC463E /* BaseAuthResponse.swift */; };
 		2A44A4382CAC227300DC463E /* BaseAuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A44A4362CAC227300DC463E /* BaseAuthResponse.swift */; };
 		2A45B36D2CE3A3E30071026A /* OnboardingProfileImageSettingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5BB7F92CE277AF00E1C799 /* OnboardingProfileImageSettingViewReactor.swift */; };
@@ -378,6 +376,44 @@
 		3887D03A2CC5504500FB52E1 /* UITextField+Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3887D0382CC5504500FB52E1 /* UITextField+Typography.swift */; };
 		38899E582E7936DD0030F7CA /* SooumStyle_V2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E572E7936D50030F7CA /* SooumStyle_V2.swift */; };
 		38899E592E7936DD0030F7CA /* SooumStyle_V2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E572E7936D50030F7CA /* SooumStyle_V2.swift */; };
+		38899E5E2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E5D2E7937DB0030F7CA /* NicknameValidateResponse.swift */; };
+		38899E5F2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E5D2E7937DB0030F7CA /* NicknameValidateResponse.swift */; };
+		38899E612E7938C70030F7CA /* CheckAvailableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E602E7938B50030F7CA /* CheckAvailableRequest.swift */; };
+		38899E622E7938C70030F7CA /* CheckAvailableRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E602E7938B50030F7CA /* CheckAvailableRequest.swift */; };
+		38899E662E7939600030F7CA /* CheckAvailableResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E652E79395E0030F7CA /* CheckAvailableResponse.swift */; };
+		38899E672E7939600030F7CA /* CheckAvailableResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E652E79395E0030F7CA /* CheckAvailableResponse.swift */; };
+		38899E6B2E793AFD0030F7CA /* CheckAvailable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E6A2E793AF70030F7CA /* CheckAvailable.swift */; };
+		38899E6C2E793AFD0030F7CA /* CheckAvailable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E6A2E793AF70030F7CA /* CheckAvailable.swift */; };
+		38899E6E2E79400C0030F7CA /* ImageUrlInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E6D2E79400B0030F7CA /* ImageUrlInfoResponse.swift */; };
+		38899E6F2E79400C0030F7CA /* ImageUrlInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E6D2E79400B0030F7CA /* ImageUrlInfoResponse.swift */; };
+		38899E712E79402C0030F7CA /* ImageUrlInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E702E7940280030F7CA /* ImageUrlInfo.swift */; };
+		38899E722E79402C0030F7CA /* ImageUrlInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E702E7940280030F7CA /* ImageUrlInfo.swift */; };
+		38899E742E79430A0030F7CA /* SignUpRequestInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E732E7943070030F7CA /* SignUpRequestInfo.swift */; };
+		38899E752E79430A0030F7CA /* SignUpRequestInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E732E7943070030F7CA /* SignUpRequestInfo.swift */; };
+		38899E772E7945F00030F7CA /* SignUpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E762E7945EB0030F7CA /* SignUpRequest.swift */; };
+		38899E782E7945F00030F7CA /* SignUpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E762E7945EB0030F7CA /* SignUpRequest.swift */; };
+		38899E7D2E794B420030F7CA /* SignUpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E7C2E794B3D0030F7CA /* SignUpResponse.swift */; };
+		38899E7E2E794B420030F7CA /* SignUpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E7C2E794B3D0030F7CA /* SignUpResponse.swift */; };
+		38899E802E794C050030F7CA /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E7F2E794C010030F7CA /* LoginRequest.swift */; };
+		38899E812E794C050030F7CA /* LoginRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E7F2E794C010030F7CA /* LoginRequest.swift */; };
+		38899E832E794C360030F7CA /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E822E794C330030F7CA /* LoginResponse.swift */; };
+		38899E842E794C360030F7CA /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E822E794C330030F7CA /* LoginResponse.swift */; };
+		38899E862E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E852E794CE90030F7CA /* NetworkManager_FCM.swift */; };
+		38899E872E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E852E794CE90030F7CA /* NetworkManager_FCM.swift */; };
+		38899E892E794D620030F7CA /* NetworkManager_Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E882E794D5D0030F7CA /* NetworkManager_Version.swift */; };
+		38899E8A2E794D620030F7CA /* NetworkManager_Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E882E794D5D0030F7CA /* NetworkManager_Version.swift */; };
+		38899E8C2E794E690030F7CA /* AppVersionStatusResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E8B2E794E680030F7CA /* AppVersionStatusResponse.swift */; };
+		38899E8D2E794E690030F7CA /* AppVersionStatusResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E8B2E794E680030F7CA /* AppVersionStatusResponse.swift */; };
+		38899E8F2E7951200030F7CA /* KeyInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E8E2E79511F0030F7CA /* KeyInfoResponse.swift */; };
+		38899E902E7951200030F7CA /* KeyInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E8E2E79511F0030F7CA /* KeyInfoResponse.swift */; };
+		38899E932E79518F0030F7CA /* NotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E922E79518E0030F7CA /* NotificationInfo.swift */; };
+		38899E942E79518F0030F7CA /* NotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E922E79518E0030F7CA /* NotificationInfo.swift */; };
+		38899E962E7953310030F7CA /* NotificationInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E952E7953300030F7CA /* NotificationInfoResponse.swift */; };
+		38899E972E7953310030F7CA /* NotificationInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E952E7953300030F7CA /* NotificationInfoResponse.swift */; };
+		38899E992E7954680030F7CA /* BlockedNotificationInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E982E7954670030F7CA /* BlockedNotificationInfoResponse.swift */; };
+		38899E9A2E7954680030F7CA /* BlockedNotificationInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E982E7954670030F7CA /* BlockedNotificationInfoResponse.swift */; };
+		38899E9C2E7954D90030F7CA /* DeleteNotificationInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E9B2E7954D70030F7CA /* DeleteNotificationInfoResponse.swift */; };
+		38899E9D2E7954D90030F7CA /* DeleteNotificationInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38899E9B2E7954D70030F7CA /* DeleteNotificationInfoResponse.swift */; };
 		388A2D2D2D00A45800E2F2F0 /* writtenCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388A2D2C2D00A45800E2F2F0 /* writtenCardResponse.swift */; };
 		388A2D2E2D00A45800E2F2F0 /* writtenCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388A2D2C2D00A45800E2F2F0 /* writtenCardResponse.swift */; };
 		388A2D302D00D6A100E2F2F0 /* FollowViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388A2D2F2D00D6A100E2F2F0 /* FollowViewReactor.swift */; };
@@ -602,7 +638,6 @@
 		2A34AFB42D144EEF007BD7E7 /* EmptyTagDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyTagDetailTableViewCell.swift; sourceTree = "<group>"; };
 		2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyResponse.swift; sourceTree = "<group>"; };
 		2A44A42C2CAC14C800DC463E /* SignInResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInResponse.swift; sourceTree = "<group>"; };
-		2A44A4332CAC21A500DC463E /* SignUpResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpResponse.swift; sourceTree = "<group>"; };
 		2A44A4362CAC227300DC463E /* BaseAuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAuthResponse.swift; sourceTree = "<group>"; };
 		2A45B36E2CE4C5510071026A /* RegisterUserResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterUserResponse.swift; sourceTree = "<group>"; };
 		2A5ABA332D464E0B00BF6C9B /* ConfigureRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureRequest.swift; sourceTree = "<group>"; };
@@ -793,6 +828,25 @@
 		3887D0352CC5335D00FB52E1 /* WriteCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardView.swift; sourceTree = "<group>"; };
 		3887D0382CC5504500FB52E1 /* UITextField+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Typography.swift"; sourceTree = "<group>"; };
 		38899E572E7936D50030F7CA /* SooumStyle_V2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SooumStyle_V2.swift; sourceTree = "<group>"; };
+		38899E5D2E7937DB0030F7CA /* NicknameValidateResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameValidateResponse.swift; sourceTree = "<group>"; };
+		38899E602E7938B50030F7CA /* CheckAvailableRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckAvailableRequest.swift; sourceTree = "<group>"; };
+		38899E652E79395E0030F7CA /* CheckAvailableResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckAvailableResponse.swift; sourceTree = "<group>"; };
+		38899E6A2E793AF70030F7CA /* CheckAvailable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckAvailable.swift; sourceTree = "<group>"; };
+		38899E6D2E79400B0030F7CA /* ImageUrlInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUrlInfoResponse.swift; sourceTree = "<group>"; };
+		38899E702E7940280030F7CA /* ImageUrlInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUrlInfo.swift; sourceTree = "<group>"; };
+		38899E732E7943070030F7CA /* SignUpRequestInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRequestInfo.swift; sourceTree = "<group>"; };
+		38899E762E7945EB0030F7CA /* SignUpRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpRequest.swift; sourceTree = "<group>"; };
+		38899E7C2E794B3D0030F7CA /* SignUpResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpResponse.swift; sourceTree = "<group>"; };
+		38899E7F2E794C010030F7CA /* LoginRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRequest.swift; sourceTree = "<group>"; };
+		38899E822E794C330030F7CA /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		38899E852E794CE90030F7CA /* NetworkManager_FCM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager_FCM.swift; sourceTree = "<group>"; };
+		38899E882E794D5D0030F7CA /* NetworkManager_Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager_Version.swift; sourceTree = "<group>"; };
+		38899E8B2E794E680030F7CA /* AppVersionStatusResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionStatusResponse.swift; sourceTree = "<group>"; };
+		38899E8E2E79511F0030F7CA /* KeyInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyInfoResponse.swift; sourceTree = "<group>"; };
+		38899E922E79518E0030F7CA /* NotificationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationInfo.swift; sourceTree = "<group>"; };
+		38899E952E7953300030F7CA /* NotificationInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationInfoResponse.swift; sourceTree = "<group>"; };
+		38899E982E7954670030F7CA /* BlockedNotificationInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedNotificationInfoResponse.swift; sourceTree = "<group>"; };
+		38899E9B2E7954D70030F7CA /* DeleteNotificationInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteNotificationInfoResponse.swift; sourceTree = "<group>"; };
 		388A2D2C2D00A45800E2F2F0 /* writtenCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = writtenCardResponse.swift; sourceTree = "<group>"; };
 		388A2D2F2D00D6A100E2F2F0 /* FollowViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowViewReactor.swift; sourceTree = "<group>"; };
 		388A2D322D00D7BF00E2F2F0 /* UpdateProfileViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProfileViewReactor.swift; sourceTree = "<group>"; };
@@ -1453,7 +1507,6 @@
 				2A44A4362CAC227300DC463E /* BaseAuthResponse.swift */,
 				2A44A4292CAC09AE00DC463E /* RSAKeyResponse.swift */,
 				2A44A42C2CAC14C800DC463E /* SignInResponse.swift */,
-				2A44A4332CAC21A500DC463E /* SignUpResponse.swift */,
 				3816C05B2CCDDF3D00C8688C /* ReAuthenticationResponse.swift */,
 			);
 			path = Auth;
@@ -1527,6 +1580,8 @@
 			isa = PBXGroup;
 			children = (
 				3800575B2D9C12CB00E58A19 /* DefinedError.swift */,
+				38899E882E794D5D0030F7CA /* NetworkManager_Version.swift */,
+				38899E852E794CE90030F7CA /* NetworkManager_FCM.swift */,
 				385620EE2CA19C9500E0AB5A /* NetworkManager.swift */,
 				38B543E72D4617EA00DDF2C5 /* NetworkManagerConfiguration.swift */,
 				38F88EBC2D2C1E19002AD7A8 /* Models */,
@@ -1731,7 +1786,8 @@
 				388371F62C8C8E7F004212EB /* DesignSystem */,
 				387FBB032C87036D00A5E139 /* App */,
 				38FDC2B42C9E745B00C094C2 /* Base */,
-				385620EC2CA19C0D00E0AB5A /* Managers */,
+				38899E5C2E79378A0030F7CA /* Data */,
+				38899E682E793AD10030F7CA /* Domain */,
 				38B6AAE42CA47E8D00CE6DB6 /* Models */,
 				385071972CA2956D00A7905A /* Presentations */,
 				388371FE2C8C8FAC004212EB /* Extensions */,
@@ -1912,6 +1968,79 @@
 				388371F82C8C8EB1004212EB /* SooumStyle.swift */,
 			);
 			path = Style;
+			sourceTree = "<group>";
+		};
+		38899E5A2E79374E0030F7CA /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		38899E5B2E7937660030F7CA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				38899E642E7938D50030F7CA /* Requests */,
+				38899E632E7938CD0030F7CA /* Responses */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		38899E5C2E79378A0030F7CA /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				38899E5B2E7937660030F7CA /* Models */,
+				385620EC2CA19C0D00E0AB5A /* Managers */,
+				38899E5A2E79374E0030F7CA /* Repositories */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		38899E632E7938CD0030F7CA /* Responses */ = {
+			isa = PBXGroup;
+			children = (
+				38899E9B2E7954D70030F7CA /* DeleteNotificationInfoResponse.swift */,
+				38899E982E7954670030F7CA /* BlockedNotificationInfoResponse.swift */,
+				38899E952E7953300030F7CA /* NotificationInfoResponse.swift */,
+				38899E8E2E79511F0030F7CA /* KeyInfoResponse.swift */,
+				38899E8B2E794E680030F7CA /* AppVersionStatusResponse.swift */,
+				38899E822E794C330030F7CA /* LoginResponse.swift */,
+				38899E7C2E794B3D0030F7CA /* SignUpResponse.swift */,
+				38899E6D2E79400B0030F7CA /* ImageUrlInfoResponse.swift */,
+				38899E652E79395E0030F7CA /* CheckAvailableResponse.swift */,
+				38899E5D2E7937DB0030F7CA /* NicknameValidateResponse.swift */,
+			);
+			path = Responses;
+			sourceTree = "<group>";
+		};
+		38899E642E7938D50030F7CA /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				38899E7F2E794C010030F7CA /* LoginRequest.swift */,
+				38899E762E7945EB0030F7CA /* SignUpRequest.swift */,
+				38899E602E7938B50030F7CA /* CheckAvailableRequest.swift */,
+			);
+			path = Requests;
+			sourceTree = "<group>";
+		};
+		38899E682E793AD10030F7CA /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				38899E692E793AEA0030F7CA /* Models */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		38899E692E793AEA0030F7CA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				38899E922E79518E0030F7CA /* NotificationInfo.swift */,
+				38F88EBD2D2C1E22002AD7A8 /* Version.swift */,
+				38899E732E7943070030F7CA /* SignUpRequestInfo.swift */,
+				38899E702E7940280030F7CA /* ImageUrlInfo.swift */,
+				38899E6A2E793AF70030F7CA /* CheckAvailable.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		388D8ADD2E73E60B0044BA79 /* SwiftEntryKit */ = {
@@ -2301,7 +2430,6 @@
 		38F88EBC2D2C1E19002AD7A8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				38F88EBD2D2C1E22002AD7A8 /* Version.swift */,
 				38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */,
 			);
 			path = Models;
@@ -2642,6 +2770,7 @@
 				38389BA02CCCFB7D006728AF /* AuthKeyChain.swift in Sources */,
 				2A048E852C9BE01300FFD485 /* SOMLocationFilterCollectionViewCell.swift in Sources */,
 				2A5ABA342D464E0B00BF6C9B /* ConfigureRequest.swift in Sources */,
+				38899E902E7951200030F7CA /* KeyInfoResponse.swift in Sources */,
 				388371FA2C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				38F720B42CD4F15900DF32B5 /* LatestCardResponse.swift in Sources */,
 				3803CF6A2D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */,
@@ -2675,17 +2804,21 @@
 				38E7FBF02D3CF6BC00A359CD /* SOMDialogAction.swift in Sources */,
 				3878D07E2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
 				3878B8632D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
-				2A44A4352CAC21A500DC463E /* SignUpResponse.swift in Sources */,
+				38899E742E79430A0030F7CA /* SignUpRequestInfo.swift in Sources */,
 				38E9CE112D376E0E00E85A2D /* PushTokenSet.swift in Sources */,
 				38F70E702D191DFB00B33C9D /* MainHomePopularViewReactor.swift in Sources */,
 				3878D0982CFFF2B800F9522F /* CommentHistroyViewController.swift in Sources */,
+				38899E6F2E79400C0030F7CA /* ImageUrlInfoResponse.swift in Sources */,
 				38F720AE2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */,
 				2AFD056A2D03264C007C84AD /* AddFavoriteTagResponse.swift in Sources */,
 				2AFD05532D007F2F007C84AD /* TagSearchViewReactor.swift in Sources */,
+				38899E9C2E7954D90030F7CA /* DeleteNotificationInfoResponse.swift in Sources */,
 				2A44A42B2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
+				38899E8C2E794E690030F7CA /* AppVersionStatusResponse.swift in Sources */,
 				38A721962E73E7140071E1D8 /* View+SwiftEntryKit.swift in Sources */,
 				38572CD92D2230C900B07C69 /* NotificationAllowResponse.swift in Sources */,
 				382E15402D15AF4F0097B09C /* CommentHistoryInNotiResponse.swift in Sources */,
+				38899E612E7938C70030F7CA /* CheckAvailableRequest.swift in Sources */,
 				388698632D1986B100008600 /* NotificationRequest.swift in Sources */,
 				2A980BA52D803EEA007DFA45 /* SOMEvent.swift in Sources */,
 				38B65E7C2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */,
@@ -2717,9 +2850,11 @@
 				2A5BB7CE2CDBB7D100E1C799 /* OnboardingProfileImageSettingViewController.swift in Sources */,
 				3893B6D22D36739500F2004C /* CompositeManager.swift in Sources */,
 				3800575D2D9C12CB00E58A19 /* DefinedError.swift in Sources */,
+				38899E942E79518F0030F7CA /* NotificationInfo.swift in Sources */,
 				38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				2AFD056E2D048CAF007C84AD /* TagRequest.swift in Sources */,
 				388698602D1984D600008600 /* NotificationViewReactor.swift in Sources */,
+				38899E862E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */,
 				38C2D4212CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */,
 				38816D9F2D004A5E00EB87D6 /* UpdateProfileViewController.swift in Sources */,
 				38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
@@ -2742,6 +2877,7 @@
 				2A45B36D2CE3A3E30071026A /* OnboardingProfileImageSettingViewReactor.swift in Sources */,
 				38D5CE0C2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				382D5CF72CFE9B8600BFA23E /* ProfileViewController.swift in Sources */,
+				38899E892E794D620030F7CA /* NetworkManager_Version.swift in Sources */,
 				388698552D191F4B00008600 /* MainHomeDistanceViewReactor.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				388A2D312D00D6A100E2F2F0 /* FollowViewReactor.swift in Sources */,
@@ -2753,6 +2889,7 @@
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
 				38D522692E742F610044911B /* SOMLoadingIndicatorView.swift in Sources */,
 				38D869642CF821F900BF87DA /* UserDefaults.swift in Sources */,
+				38899E672E7939600030F7CA /* CheckAvailableResponse.swift in Sources */,
 				2AE6B1902CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
 				38AE77DB2E745FFF00B6FD13 /* EnterMemberTransferTextFieldView.swift in Sources */,
 				3878D0602CFFD45100F9522F /* FollowerResponse.swift in Sources */,
@@ -2768,8 +2905,10 @@
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				2A980BA92D803F04007DFA45 /* GAManager.swift in Sources */,
 				2AFF95752CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */,
+				38899E722E79402C0030F7CA /* ImageUrlInfo.swift in Sources */,
 				2AFD05472CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */,
 				38B6AAD92CA424AE00CE6DB6 /* MoveTopButtonView.swift in Sources */,
+				38899E7E2E794B420030F7CA /* SignUpResponse.swift in Sources */,
 				2AE6B16E2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */,
 				38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				3816C0612CCDE35300C8688C /* ErrorInterceptor.swift in Sources */,
@@ -2793,6 +2932,7 @@
 				2A44A4382CAC227300DC463E /* BaseAuthResponse.swift in Sources */,
 				2AFD05562D0082DE007C84AD /* SearchTagsResponse.swift in Sources */,
 				385053562C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
+				38899E9A2E7954680030F7CA /* BlockedNotificationInfoResponse.swift in Sources */,
 				2AE6B14D2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */,
 				38FD4DAC2D032CF000BF5FF1 /* AnnouncementResponse.swift in Sources */,
 				3880098F2CABF4C2002A9209 /* SOMTag.swift in Sources */,
@@ -2802,6 +2942,7 @@
 				38B543E62D4617CB00DDF2C5 /* PushManagerConfiguration.swift in Sources */,
 				2AE6B14A2CBC15BF00FA5C3C /* ReportViewController.swift in Sources */,
 				388D8AE02E73E6190044BA79 /* SwiftEntryKit.swift in Sources */,
+				38899E962E7953310030F7CA /* NotificationInfoResponse.swift in Sources */,
 				2AFD055A2D008D23007C84AD /* TagDetailViewController.swift in Sources */,
 				2AE6B1552CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */,
@@ -2830,10 +2971,12 @@
 				38F720B92CD4F16500DF32B5 /* CardProtocol.swift in Sources */,
 				38121E352CA6DA4000602499 /* Date.swift in Sources */,
 				2A34AFB62D144F08007BD7E7 /* EmptyTagDetailTableViewCell.swift in Sources */,
+				38899E6B2E793AFD0030F7CA /* CheckAvailable.swift in Sources */,
 				3803CF752D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
 				38C2D4182CFEAACA00CEA092 /* ProfileViewFooterCell.swift in Sources */,
 				381DEA8C2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				388698662D1998DB00008600 /* NotificationTabBarReactor.swift in Sources */,
+				38899E782E7945F00030F7CA /* SignUpRequest.swift in Sources */,
 				381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				2A048E7C2C9BDF5F00FFD485 /* SOMLocationFilter.swift in Sources */,
 				3803CF832D017DB800FD90DB /* EnterMemberTransferViewController.swift in Sources */,
@@ -2852,6 +2995,7 @@
 				3878F4752CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				3878D0862CFFED7800F9522F /* TermsOfServiceTextCellView.swift in Sources */,
 				2ACBD4142CC944FB0057C013 /* UploadRequest.swift in Sources */,
+				38899E832E794C360030F7CA /* LoginResponse.swift in Sources */,
 				2ACBD41B2CCA03790057C013 /* ImageURLWithName.swift in Sources */,
 				38B6AAE02CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				2ACBD41E2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
@@ -2863,10 +3007,12 @@
 				389EF81B2D2F454600E053AE /* Log+Extract.swift in Sources */,
 				381701792CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				388698522D191F2100008600 /* MainHomeDistanceViewController.swift in Sources */,
+				38899E802E794C050030F7CA /* LoginRequest.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				2AFD05612D009FA1007C84AD /* TagDetailViewrReactor.swift in Sources */,
 				3887D0372CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
 				38B8A58C2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
+				38899E5E2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				3803CF6D2D0156FC00FD90DB /* SettingsRequest.swift in Sources */,
 				2A5BB7E42CDCD97300E1C799 /* JoinRequest.swift in Sources */,
@@ -2921,7 +3067,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				38FD4DAE2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift in Sources */,
-				2A44A4342CAC21A500DC463E /* SignUpResponse.swift in Sources */,
 				385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				38F88EBA2D2C1CB8002AD7A8 /* Info.swift in Sources */,
 				3834FADD2D11C5AC00C9108D /* SimpleCache.swift in Sources */,
@@ -2942,6 +3087,7 @@
 				38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				2A5ABA352D464E0B00BF6C9B /* ConfigureRequest.swift in Sources */,
 				38D6F17C2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
+				38899E8F2E7951200030F7CA /* KeyInfoResponse.swift in Sources */,
 				3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */,
 				388698512D191F2100008600 /* MainHomeDistanceViewController.swift in Sources */,
 				3830FFA62CEC6E3100ABA9FD /* Kingfisher.swift in Sources */,
@@ -2975,16 +3121,21 @@
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
+				38899E752E79430A0030F7CA /* SignUpRequestInfo.swift in Sources */,
 				38E9CE102D376E0E00E85A2D /* PushTokenSet.swift in Sources */,
 				2AFD05602D009FA1007C84AD /* TagDetailViewrReactor.swift in Sources */,
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
+				38899E6E2E79400C0030F7CA /* ImageUrlInfoResponse.swift in Sources */,
 				381A1D6A2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
 				38F70E622D19113E00B33C9D /* MainHomeLatestViewController.swift in Sources */,
 				38F70E6F2D191DFB00B33C9D /* MainHomePopularViewReactor.swift in Sources */,
+				38899E9D2E7954D90030F7CA /* DeleteNotificationInfoResponse.swift in Sources */,
 				3878D0792CFFE1E800F9522F /* ResignViewController.swift in Sources */,
+				38899E8D2E794E690030F7CA /* AppVersionStatusResponse.swift in Sources */,
 				38A721952E73E7140071E1D8 /* View+SwiftEntryKit.swift in Sources */,
 				38F720B12CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */,
 				38816DA22D004DED00EB87D6 /* UpdateProfileView.swift in Sources */,
+				38899E622E7938C70030F7CA /* CheckAvailableRequest.swift in Sources */,
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				2A980BA42D803EEA007DFA45 /* SOMEvent.swift in Sources */,
 				38B65E7D2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */,
@@ -3016,9 +3167,11 @@
 				3886985F2D1984D600008600 /* NotificationViewReactor.swift in Sources */,
 				2AFD05692D03264C007C84AD /* AddFavoriteTagResponse.swift in Sources */,
 				3800575C2D9C12CB00E58A19 /* DefinedError.swift in Sources */,
+				38899E932E79518F0030F7CA /* NotificationInfo.swift in Sources */,
 				3893B6D12D36739500F2004C /* CompositeManager.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
 				3816C0602CCDE35300C8688C /* ErrorInterceptor.swift in Sources */,
+				38899E872E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */,
 				3803CF7D2D016DA200FD90DB /* TransferCodeResponse.swift in Sources */,
 				2AFF955A2CF3227900CBFB12 /* TagSearchTextFieldView.swift in Sources */,
 				2A44A42D2CAC14C800DC463E /* SignInResponse.swift in Sources */,
@@ -3041,6 +3194,7 @@
 				3850719A2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
 				38D055C32CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
 				38CE94BF2C904D460004B238 /* SOMNavigationBar.swift in Sources */,
+				38899E8A2E794D620030F7CA /* NetworkManager_Version.swift in Sources */,
 				2A45B36F2CE4C5510071026A /* RegisterUserResponse.swift in Sources */,
 				388698582D1982DE00008600 /* NotificationViewController.swift in Sources */,
 				38121E342CA6DA4000602499 /* Date.swift in Sources */,
@@ -3052,6 +3206,7 @@
 				3880097B2CABEE3D002A9209 /* DetailViewController.swift in Sources */,
 				38D522682E742F610044911B /* SOMLoadingIndicatorView.swift in Sources */,
 				38D869632CF821F900BF87DA /* UserDefaults.swift in Sources */,
+				38899E662E7939600030F7CA /* CheckAvailableResponse.swift in Sources */,
 				385620F22CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				38AE77DC2E745FFF00B6FD13 /* EnterMemberTransferTextFieldView.swift in Sources */,
 				38389B9F2CCCFB7D006728AF /* AuthKeyChain.swift in Sources */,
@@ -3067,8 +3222,10 @@
 				38D6F1802CC2413400E11530 /* WriteCardTextView.swift in Sources */,
 				2A980BA82D803F04007DFA45 /* GAManager.swift in Sources */,
 				387D852C2D08320A005D9D22 /* SOMCardModel.swift in Sources */,
+				38899E712E79402C0030F7CA /* ImageUrlInfo.swift in Sources */,
 				2AFD055D2D009513007C84AD /* TagDetailNavigationBarView.swift in Sources */,
 				385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
+				38899E7D2E794B420030F7CA /* SignUpResponse.swift in Sources */,
 				3803CF692D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */,
 				38F720B82CD4F16500DF32B5 /* CardProtocol.swift in Sources */,
 				38F131882CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
@@ -3092,6 +3249,7 @@
 				3878D0972CFFF2B800F9522F /* CommentHistroyViewController.swift in Sources */,
 				2A44A42A2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
 				2A5BB7B92CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
+				38899E992E7954680030F7CA /* BlockedNotificationInfoResponse.swift in Sources */,
 				2AFD05462CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */,
 				2AFD054F2CFF79D8007C84AD /* TagsViewReactor.swift in Sources */,
 				2ACBD4132CC944FB0057C013 /* UploadRequest.swift in Sources */,
@@ -3101,6 +3259,7 @@
 				38B543E52D4617CB00DDF2C5 /* PushManagerConfiguration.swift in Sources */,
 				2AE6B1502CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
 				388D8ADF2E73E6190044BA79 /* SwiftEntryKit.swift in Sources */,
+				38899E972E7953310030F7CA /* NotificationInfoResponse.swift in Sources */,
 				2AFF95552CF3222400CBFB12 /* TagsViewController.swift in Sources */,
 				2AE6B1922CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				2AE6B18F2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
@@ -3129,10 +3288,12 @@
 				3803CF742D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
 				2AFF95702CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */,
 				384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
+				38899E6C2E793AFD0030F7CA /* CheckAvailable.swift in Sources */,
 				3802BDB12D0AE900001256EA /* PushManager.swift in Sources */,
 				2A5BB7E72CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
 				3803CF772D01685000FD90DB /* CommentHistroyViewReactor.swift in Sources */,
+				38899E772E7945F00030F7CA /* SignUpRequest.swift in Sources */,
 				3816C05C2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */,
 				3878D07D2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
 				381DEA8B2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
@@ -3151,6 +3312,7 @@
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				38C2D4112CFE9EF300CEA092 /* OtherProfileViewCell.swift in Sources */,
 				2AFF955D2CF328DE00CBFB12 /* FavoriteTagTableViewCell.swift in Sources */,
+				38899E842E794C360030F7CA /* LoginResponse.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
 				38F70E5E2D190FBD00B33C9D /* MainHomeTabBarReactor.swift in Sources */,
@@ -3162,10 +3324,12 @@
 				38B8A5842CAE9CC4000AFE83 /* MainHomeViewCell.swift in Sources */,
 				2AFF95612CF33A3900CBFB12 /* FavoriteTagView.swift in Sources */,
 				3803CF852D017DC700FD90DB /* EnterMemberTransferViewReactor.swift in Sources */,
+				38899E812E794C050030F7CA /* LoginRequest.swift in Sources */,
 				38D488CA2D0C557300F2D38D /* SOMButton.swift in Sources */,
 				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				3878D06B2CFFDF1F00F9522F /* SettingsViewController.swift in Sources */,
 				3878D0882CFFEF0F00F9522F /* TermsOfServiceTextCellView+Rx.swift in Sources */,
+				38899E5F2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */,
 				2AE6B16D2CBFBC7600FA5C3C /* UploadCardBottomSheetSegmentView.swift in Sources */,
 				38F720A72CD4F15900DF32B5 /* CommentCardResponse.swift in Sources */,
 				38B6AAE22CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
