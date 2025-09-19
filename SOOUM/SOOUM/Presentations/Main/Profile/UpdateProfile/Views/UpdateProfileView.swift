@@ -19,7 +19,7 @@ class UpdateProfileView: UIView {
     }
     
     private let profileImageView = UIImageView().then {
-        $0.image = .init(.image(.sooumLogo))
+        $0.image = .init(.image(.defaultStyle(.sooumLogo)))
         $0.layer.cornerRadius = 128 * 0.5
         $0.clipsToBounds = true
     }
@@ -81,7 +81,7 @@ class UpdateProfileView: UIView {
     }
     
     private let errorImageView = UIImageView().then {
-        $0.image = .init(.image(.errorTriangle))
+        $0.image = .init(.image(.defaultStyle(.errorTriangle)))
     }
     
     private let errorMessageLabel = UILabel().then {

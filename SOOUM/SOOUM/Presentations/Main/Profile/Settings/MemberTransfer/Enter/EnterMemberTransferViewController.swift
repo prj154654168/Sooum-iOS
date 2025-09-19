@@ -18,70 +18,49 @@ import RxSwift
 class EnterMemberTransferViewController: BaseNavigationViewController, View {
     
     enum Text {
-        static let navigationTitle: String = "계정 이관 코드 입력"
-        static let transferEnterMessage: String = "발급받은 코드를 입력해주세요"
-        static let transferEnterButtonTitle: String = "계정 이관하기"
+        static let navigationTitle: String = "내 계정 가져오기"
+        
+        static let title: String = "기존 계정이 있으신가요?"
+        
+        static let placeholderText: String = "코드 입력"
+        static let textfieldGuideMessage: String = "코드는 발급 후 24시간 동안 유효해요"
+        
+        static let guideTitle: String = "내 계정 가져오기 안내"
+        static let guideMessage: String = "기존 휴대폰의 숨 앱 [설정>내 계정 내보내기]에서 발급한 코드를 입력하면, 기존 계정을 현재 휴대폰에서 그대로 사용할 수 있어요"
+        
+        static let dialogTitle: String = "유효하지 않은 코드예요"
+        static let dialogMessage: String = "코드를 확인한 뒤 다시 시도해주세요."
+        static let dialogConfirmButtonTitle: String = "확인"
+        
+        static let confirmButtonTitle: String = "확인"
     }
     
-    private let transferEnterMessageLabel = UILabel().then {
-        $0.text = Text.transferEnterMessage
-        $0.textColor = .som.gray800
-        $0.typography = .som.body1WithBold
+    private let titleLabel = UILabel().then {
+        $0.text = Text.title
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.head2
     }
     
-    private lazy var textFieldBackgroundView = UIView().then {
-        $0.backgroundColor = .som.gray50
-        $0.layer.borderColor = UIColor.som.p300.cgColor
-        $0.layer.borderWidth = 2
-        $0.layer.cornerRadius = 12
-        
-        let gestureRecognizer = UITapGestureRecognizer(
-            target: self,
-            action: #selector(self.touch)
-        )
-        $0.addGestureRecognizer(gestureRecognizer)
-    }
-    private lazy var textField = UITextField().then {
-        let paragraphStyle = NSMutableParagraphStyle()
-        $0.defaultTextAttributes[.paragraphStyle] = paragraphStyle
-        $0.defaultTextAttributes[.foregroundColor] = UIColor.som.black
-        $0.defaultTextAttributes[.font] = Typography.som.body1WithRegular.font
-        $0.tintColor = .som.p300
-        
-        $0.textAlignment = .center
-        
-        $0.enablesReturnKeyAutomatically = true
-        $0.returnKeyType = .go
-        
-        $0.autocapitalizationType = .none
-        $0.autocorrectionType = .no
-        $0.spellCheckingType = .no
-        
-        $0.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        $0.setContentCompressionResistancePriority(.defaultHigh + 1, for: .vertical)
-        
-        $0.delegate = self
+    private let transferTextField = EnterMemberTransferTextFieldView().then {
+        $0.placeholder = Text.placeholderText
+        $0.guideMessage = Text.textfieldGuideMessage
     }
     
-    private let transferMemberButton = SOMButton().then {
-        $0.title = Text.transferEnterButtonTitle
-        $0.typography = .som.body1WithBold
-        $0.foregroundColor = .som.white
-        
-        $0.backgroundColor = .som.p300
-        $0.layer.cornerRadius = 12
-        $0.clipsToBounds = true
+    private let container = UIStackView().then {
+        $0.axis = .vertical
+        $0.spacing = 16
+    }
+    
+    private let confirmButton = SOMButton().then {
+        $0.title = Text.confirmButtonTitle
+        $0.typography = .som.v2.title1
+        $0.foregroundColor = .som.v2.white
+        $0.backgroundColor = .som.v2.black
+        $0.isEnabled = false
     }
     
     
     // MARK: Override func
-    
-    @objc
-    private func touch(sender: UIGestureRecognizer) {
-        if !self.textField.isFirstResponder {
-            self.textField.becomeFirstResponder()
-        }
-    }
     
     override func setupNaviBar() {
         super.setupNaviBar()
@@ -89,61 +68,91 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         self.navigationBar.title = Text.navigationTitle
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.textField.becomeFirstResponder()
-    }
-    
     override func setupConstraints() {
         super.setupConstraints()
         
-        let transferBackgroundView = UIView().then {
-            $0.backgroundColor = .som.gray50
-            $0.layer.cornerRadius = 22
-            $0.clipsToBounds = true
-        }
-        self.view.addSubview(transferBackgroundView)
-        transferBackgroundView.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(149)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+        self.view.addSubview(self.titleLabel)
+        self.titleLabel.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(16)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-16)
         }
         
-        transferBackgroundView.addSubview(self.transferEnterMessageLabel)
-        self.transferEnterMessageLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(44)
-            $0.centerX.equalToSuperview()
+        self.view.addSubview(self.transferTextField)
+        self.transferTextField.snp.makeConstraints {
+            $0.top.equalTo(self.titleLabel.snp.bottom).offset(32)
+            $0.leading.trailing.equalToSuperview()
         }
         
-        transferBackgroundView.addSubview(self.textFieldBackgroundView)
-        self.textFieldBackgroundView.snp.makeConstraints {
-            $0.top.equalTo(self.transferEnterMessageLabel.snp.bottom).offset(46)
-            $0.bottom.trailing.equalToSuperview().offset(-20)
-            $0.leading.equalToSuperview().offset(20)
-            $0.height.equalTo(64)
+        let guideTitleView = UIView()
+        let guideTitleImageView = UIImageView().then {
+            $0.image = .init(.icon(.v2(.filled(.info))))
+            $0.tintColor = .som.v2.black
         }
-        self.textFieldBackgroundView.addSubview(self.textField)
-        self.textField.snp.makeConstraints {
+        let guideTitleLabel = UILabel().then {
+            $0.text = Text.guideTitle
+            $0.textColor = .som.v2.black
+            $0.typography = .som.v2.subtitle2
+        }
+        guideTitleView.addSubview(guideTitleImageView)
+        guideTitleImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.leading.equalToSuperview()
+            $0.size.equalTo(16)
+        }
+        guideTitleView.addSubview(guideTitleLabel)
+        guideTitleLabel.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview()
+            $0.leading.equalTo(guideTitleImageView.snp.trailing).offset(6)
+            $0.trailing.lessThanOrEqualToSuperview()
         }
         
-        self.view.addSubview(self.transferMemberButton)
-        self.transferMemberButton.snp.makeConstraints {
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-12)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(48)
+        let guideMessageLabel = UILabel().then {
+            $0.text = Text.guideMessage
+            $0.textColor = .som.v2.gray500
+            $0.typography = .som.v2.caption2
+            $0.numberOfLines = 0
+            $0.lineBreakMode = .byCharWrapping
+        }
+        
+        let guideView = UIView().then {
+            $0.backgroundColor = .som.v2.pLight1
+            $0.layer.cornerRadius = 10
+        }
+        guideView.addSubview(guideTitleView)
+        guideTitleView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(14)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+        }
+        
+        guideView.addSubview(guideMessageLabel)
+        guideMessageLabel.snp.makeConstraints {
+            $0.top.equalTo(guideTitleView.snp.bottom).offset(4)
+            $0.bottom.equalToSuperview().offset(-14)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+        }
+        self.container.addArrangedSubview(guideView)
+        
+        self.confirmButton.snp.makeConstraints {
+            $0.height.equalTo(56)
+        }
+        self.container.addArrangedSubview(self.confirmButton)
+        
+        self.view.addSubview(self.container)
+        self.container.snp.makeConstraints {
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
     }
     
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
         super.updatedKeyboard(withoutBottomSafeInset: height)
         
-        let margin: CGFloat = height + 24
-        self.transferMemberButton.snp.updateConstraints {
+        let margin: CGFloat = height + 12
+        self.container.snp.updateConstraints {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-margin)
         }
     }
@@ -154,18 +163,13 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
     func bind(reactor: EnterMemberTransferViewReactor) {
         
         // Action
-        let transferCode = self.textField.rx.text.orEmpty.distinctUntilChanged()
+        let transferCode = self.transferTextField.rx.text.orEmpty.distinctUntilChanged()
         transferCode
-            .map { $0.isEmpty }
-            .subscribe(with: self) { object, isEmpty in
-                
-                object.transferMemberButton.isEnabled = isEmpty == false
-                object.transferMemberButton.foregroundColor = isEmpty ? .som.gray600 : .som.white
-                object.transferMemberButton.backgroundColor = isEmpty ? .som.gray300 : .som.p300
-            }
+            .map { $0.isEmpty == false }
+            .bind(to: self.confirmButton.rx.isEnabled)
             .disposed(by: self.disposeBag)
         
-        self.transferMemberButton.rx.throttleTap(.seconds(1))
+        self.confirmButton.rx.throttleTap
             .withLatestFrom(transferCode)
             .map(Reactor.Action.enterTransferCode)
             .bind(to: reactor.action)
@@ -177,14 +181,35 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
             .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isSuccess)
-            .distinctUntilChanged()
+        let isSuccess = reactor.state.map(\.isSuccess).distinctUntilChanged().share()
+        
+        isSuccess
             .filter { $0 }
             .subscribe(with: self) { object, _ in
                 let launchScreenViewController = LaunchScreenViewController()
                 launchScreenViewController.reactor = reactor.reactorForLaunch()
                 object.view.window?.rootViewController = launchScreenViewController
             }
+            .disposed(by: self.disposeBag)
+        
+        isSuccess
+            .filter { $0 == false }
+            .subscribe(onNext: { _ in
+                let confirmAction = SOMDialogAction(
+                    title: Text.dialogConfirmButtonTitle,
+                    style: .primary,
+                    action: {
+                        UIApplication.topViewController?.dismiss(animated: true)
+                    }
+                )
+                
+                SOMDialogViewController.show(
+                    title: Text.dialogTitle,
+                    message: Text.dialogMessage,
+                    textAlignment: .left,
+                    actions: [confirmAction]
+                )
+            })
             .disposed(by: self.disposeBag)
     }
 }

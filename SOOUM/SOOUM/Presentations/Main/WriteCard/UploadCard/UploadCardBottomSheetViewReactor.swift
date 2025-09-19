@@ -64,9 +64,11 @@ class UploadCardBottomSheetViewReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .fetchNewDefaultImage:
-            return fetchDefaultImages()
+            // return fetchDefaultImages()
+            return .empty()
         case let .seleteMyImage(myImage):
-            return uploadMyImage(myImage: myImage)
+            // return uploadMyImage(myImage: myImage)
+            return .empty()
         }
     }
     
@@ -82,29 +84,29 @@ class UploadCardBottomSheetViewReactor: Reactor {
         return state
     }
     
-    func fetchDefaultImages() -> Observable<Mutation> {
-        
-        let request: UploadRequest = .defaultImages
-        
-        return self.provider.networkManager.request(DefaultCardImageResponse.self, request: request)
-            .map(\.embedded.imgURLInfoList)
-            .flatMap { imageInfoList -> Observable<Mutation> in
-                let imageURLWithNames: [ImageURLWithName] = imageInfoList.map {
-                    ImageURLWithName(name: $0.imgName, urlString: $0.url.href)
-                }
-                return Observable.from(imageURLWithNames)
-                    .withUnretained(self)
-                    .flatMap { object, imageURLWithName -> Observable<ImageWithName?> in
-                        object.downloadImage(imageURLWithName: imageURLWithName)
-                    } // 각 ImageURLWithName를 옵저버블<ImageURLWithName>로 바꾼 후
-                    .compactMap { $0 } // nil 값 제거
-                    .toArray()
-                    .asObservable()
-                    .map { imagesWithNames in
-                        return Mutation.defaultImages(imagesWithNames)
-                    }
-            }
-    }
+//    func fetchDefaultImages() -> Observable<Mutation> {
+//        
+//        let request: UploadRequest = .defaultImages
+//        
+//        return self.provider.networkManager.request(DefaultCardImageResponse.self, request: request)
+//            .map(\.embedded.imgURLInfoList)
+//            .flatMap { imageInfoList -> Observable<Mutation> in
+//                let imageURLWithNames: [ImageURLWithName] = imageInfoList.map {
+//                    ImageURLWithName(name: $0.imgName, urlString: $0.url.href)
+//                }
+//                return Observable.from(imageURLWithNames)
+//                    .withUnretained(self)
+//                    .flatMap { object, imageURLWithName -> Observable<ImageWithName?> in
+//                        object.downloadImage(imageURLWithName: imageURLWithName)
+//                    } // 각 ImageURLWithName를 옵저버블<ImageURLWithName>로 바꾼 후
+//                    .compactMap { $0 } // nil 값 제거
+//                    .toArray()
+//                    .asObservable()
+//                    .map { imagesWithNames in
+//                        return Mutation.defaultImages(imagesWithNames)
+//                    }
+//            }
+//    }
     
     private func downloadImage(imageURLWithName: ImageURLWithName) -> Observable<ImageWithName?> {
         guard let url = URL(string: imageURLWithName.urlString) else {
@@ -131,35 +133,35 @@ class UploadCardBottomSheetViewReactor: Reactor {
         }
     }
     
-    func uploadMyImage(myImage: UIImage) -> Observable<Mutation> {
-
-        let presignedURLRequest: UploadRequest = .presignedURL
-        
-        return self.provider.networkManager.request(PresignedStorageResponse.self, request: presignedURLRequest)
-            .flatMap { [weak self] presignedResponse -> Observable<Mutation> in
-                guard let self = self else { return Observable.just(Mutation.myImageName("")) }
-                
-                // 2. presigned URL을 통해 이미지를 업로드합니다.
-                guard let url = URL(string: presignedResponse.url.url) else {
-                    return Observable.just(Mutation.myImageName(""))
-                }
-                
-                return Observable.create { observer in
-                    self.uploadImageToURL(image: myImage, url: url) { result in
-                        switch result {
-                        case .success:
-                            observer.onNext(Mutation.myImageName(presignedResponse.imgName))
-                            observer.onCompleted()
-                        case .failure(let error):
-                            // 4. 실패 시 에러 방출
-                            observer.onError(error)
-                        }
-                    }
-                    
-                    return Disposables.create()
-                }
-            }
-    }
+//    func uploadMyImage(myImage: UIImage) -> Observable<Mutation> {
+//
+//        let presignedURLRequest: UploadRequest = .presignedURL
+//        
+//        return self.provider.networkManager.request(PresignedStorageResponse.self, request: presignedURLRequest)
+//            .flatMap { [weak self] presignedResponse -> Observable<Mutation> in
+//                guard let self = self else { return Observable.just(Mutation.myImageName("")) }
+//                
+//                // 2. presigned URL을 통해 이미지를 업로드합니다.
+//                guard let url = URL(string: presignedResponse.url.url) else {
+//                    return Observable.just(Mutation.myImageName(""))
+//                }
+//                
+//                return Observable.create { observer in
+//                    self.uploadImageToURL(image: myImage, url: url) { result in
+//                        switch result {
+//                        case .success:
+//                            observer.onNext(Mutation.myImageName(presignedResponse.imgName))
+//                            observer.onCompleted()
+//                        case .failure(let error):
+//                            // 4. 실패 시 에러 방출
+//                            observer.onError(error)
+//                        }
+//                    }
+//                    
+//                    return Disposables.create()
+//                }
+//            }
+//    }
     
     func uploadImageToURL(image: UIImage, url: URL, completion: @escaping (Result<Void, Error>) -> Void) {
 

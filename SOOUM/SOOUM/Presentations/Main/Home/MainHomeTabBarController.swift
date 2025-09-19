@@ -33,7 +33,7 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
     // MARK: Set navigationBar Items
     
     private let logo = UIImageView().then {
-        $0.image = .init(.logo)
+        $0.image = .init(.logo(.logo))
         $0.tintColor = .som.p300
         $0.contentMode = .scaleAspectFit
     }
@@ -147,9 +147,9 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
                     if let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                        let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
                         
-                        let viewController = OnboardingViewController()
-                        viewController.reactor = OnboardingViewReactor(provider: object.reactor!.provider)
-                        window.rootViewController = UINavigationController(rootViewController: viewController)
+                        // let viewController = OnboardingViewController()
+                        // viewController.reactor = OnboardingViewReactor(provider: object.reactor!.provider)
+                        // window.rootViewController = UINavigationController(rootViewController: viewController)
                     }
                 }
             }

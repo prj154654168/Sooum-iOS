@@ -115,9 +115,9 @@ extension SettingsViewReactor {
         IssueMemberTransferViewReactor(provider: self.provider)
     }
     
-    func reactorForTransferEnter() -> EnterMemberTransferViewReactor {
-        EnterMemberTransferViewReactor(provider: self.provider, entranceType: .settings)
-    }
+    // func reactorForTransferEnter() -> EnterMemberTransferViewReactor {
+    //     EnterMemberTransferViewReactor(provider: self.provider, entranceType: .settings)
+    // }
     
     func reactorForResign() -> ResignViewReactor {
         ResignViewReactor(provider: self.provider, banEndAt: self.currentState.banEndAt)

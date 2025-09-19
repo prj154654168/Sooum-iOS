@@ -101,13 +101,12 @@ class BaseNavigationViewController: BaseViewController {
             $0.trailing.equalTo(self.navigationBar.snp.trailing)
             $0.height.equalTo(1.4)
         }
+        // 로딩 뷰는 항상 최상단에 표시
+        self.view.bringSubviewToFront(self.loadingIndicatorView)
     }
 
     override func bind() {
         super.bind()
-
-        self.navigationController?.delegate = self
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
 
         self.backButton.rx.tap
             .subscribe(with: self) { object, _ in
@@ -147,7 +146,14 @@ class BaseNavigationViewController: BaseViewController {
 
 extension BaseNavigationViewController: UIGestureRecognizerDelegate {
 
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.navigationPopGestureEnabled
+    }
+    
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
         return self.navigationPopGestureEnabled
     }
 }

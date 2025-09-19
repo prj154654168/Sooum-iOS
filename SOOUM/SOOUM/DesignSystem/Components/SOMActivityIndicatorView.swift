@@ -71,13 +71,13 @@ class SOMActivityIndicatorView: UIActivityIndicatorView {
         
         self.tintColor = .clear
         
-        self.addSubviews(self.backgroundView)
+        self.addSubview(self.backgroundView)
         self.backgroundView.snp.makeConstraints {
             $0.center.equalToSuperview()
             $0.size.equalTo(40)
         }
         
-        self.backgroundView.addSubviews(self.imageView)
+        self.backgroundView.addSubview(self.imageView)
         self.imageView.snp.makeConstraints {
             $0.center.equalToSuperview()
             $0.size.equalTo(28)

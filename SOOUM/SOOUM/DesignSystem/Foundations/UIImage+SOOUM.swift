@@ -12,11 +12,12 @@ extension UIImage {
     enum SOOUMType: Equatable {
         case icon(IconStyle)
         case image(ImageStyle)
-        case logo
+        case logo(LogoStyle)
         
         enum IconStyle {
             case filled(Filled)
             case outlined(Outlined)
+            case v2(V2IconStyle)
             
             enum Filled: String {
                 case addCard
@@ -64,29 +65,59 @@ extension UIImage {
             
             var imageName: String {
                 switch self {
-                case .filled(let filled):
+                case let .filled(filled):
                     return "\(filled.rawValue)_filled"
-                case .outlined(let outlined):
+                case let .outlined(outlined):
                     return "\(outlined.rawValue)_outlined"
+                case let .v2(iconStyle):
+                    return "v2_\(iconStyle.imageName)"
                 }
             }
         }
         
-        enum ImageStyle: String {
-            case cancelTag
-            case errorTriangle
-            case login
-            case sooumLogo
+        enum ImageStyle {
+            case defaultStyle(DefaultStyle)
+            case v2(V2ImageStyle)
+            
+            enum DefaultStyle: String {
+                case cancelTag
+                case errorTriangle
+                case login
+                case sooumLogo
+            }
+            
+            var imageName: String {
+                switch self {
+                case let .defaultStyle(defaultStyle):
+                    return defaultStyle.rawValue
+                case let .v2(imageStyle):
+                    return "v2_\(imageStyle.rawValue)"
+                }
+            }
+        }
+        
+        enum LogoStyle {
+            case logo
+            case v2(V2LogoStyle)
+            
+            var imageName: String {
+                switch self {
+                case .logo:
+                    return "logo"
+                case let .v2(logoStyle):
+                    return "v2_\(logoStyle.rawValue)"
+                }
+            }
         }
         
         var imageName: String {
             switch self {
-            case .icon(let iconStyle):
+            case let .icon(iconStyle):
                 return iconStyle.imageName
-            case .image(let imageStyle):
-                return imageStyle.rawValue
-            case .logo:
-                return "logo"
+            case let .image(imageStyle):
+                return imageStyle.imageName
+            case let .logo(logoStyle):
+                return logoStyle.imageName
             }
         }
         
@@ -97,5 +128,86 @@ extension UIImage {
     
     convenience init?(_ som: SOOUMType) {
         self.init(named: som.imageName)
+    }
+}
+
+
+// MARK: V2
+
+extension UIImage.SOOUMType {
+    
+    enum V2IconStyle {
+        case filled(Filled)
+        case outlined(Outlined)
+        
+        enum Filled: String {
+            case bell
+            case camera
+            case danger
+            case heart
+            case home
+            case image
+            case info
+            case location
+            case message_circle
+            case message_square
+            case settings
+            case star
+            case tag
+            case time
+            case trash
+            case user
+            case write
+        }
+        
+        enum Outlined: String {
+            case bell
+            case camera
+            case check
+            case danger
+            case delete
+            case down
+            case error
+            case heart
+            case home
+            case image
+            case left
+            case location
+            case message_circle
+            case message_square
+            case more
+            case plus
+            case right
+            case search
+            case settings
+            case star
+            case swap
+            case tag
+            case time
+            case trash
+            case up
+            case user
+            case write
+        }
+        
+        var imageName: String {
+            switch self {
+            case let .filled(filled):
+                return "\(filled.rawValue)_filled"
+            case let .outlined(outlined):
+                return "\(outlined.rawValue)_outlined"
+            }
+        }
+    }
+    
+    enum V2ImageStyle: String {
+        case onboarding
+        case onboarding_finish
+        case check_square_light
+        case profile
+    }
+    
+    enum V2LogoStyle: String {
+        case logo_white
     }
 }

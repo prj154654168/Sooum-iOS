@@ -13,12 +13,15 @@ import RxSwift
 import SnapKit
 import Then
 
+import Lottie
+
 
 class BaseViewController: UIViewController {
 
     var disposeBag = DisposeBag()
     
     let activityIndicatorView = SOMActivityIndicatorView()
+    let loadingIndicatorView = SOMLoadingIndicatorView()
 
     private(set) var isEndEditingWhenWillDisappear: Bool = true
     
@@ -57,6 +60,11 @@ class BaseViewController: UIViewController {
         self.activityIndicatorView.snp.makeConstraints {
             $0.centerX.equalTo(self.view.safeAreaLayoutGuide.snp.centerX)
             $0.centerY.equalTo(self.view.safeAreaLayoutGuide.snp.centerY)
+        }
+        
+        self.view.addSubview(self.loadingIndicatorView)
+        self.loadingIndicatorView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
 
         self.bind()

@@ -14,7 +14,7 @@ import Then
 class TermsOfServiceAgreeButtonView: UIView {
     
     enum Text {
-        static let title: String = "약관 전체 동의"
+        static let title: String = "전체 동의하기"
     }
     
     
@@ -22,13 +22,17 @@ class TermsOfServiceAgreeButtonView: UIView {
     
     private let checkImageView = UIImageView().then {
         $0.image = .init(.icon(.outlined(.check)))
-        $0.tintColor = .som.gray600
+        $0.tintColor = .som.v2.gray400
     }
     
     private let titleLabel = UILabel().then {
         $0.text = Text.title
-        $0.textColor = .som.gray600
-        $0.typography = .som.head2WithRegular
+        $0.textColor = .som.v2.gray600
+        $0.typography = .som.v2.title1
+    }
+    
+    let backgroundButton = SOMButton().then {
+        $0.backgroundColor = .som.v2.gray100
     }
     
     
@@ -49,21 +53,31 @@ class TermsOfServiceAgreeButtonView: UIView {
     
     private func setupConstraints() {
         
-        self.layer.borderColor = UIColor.som.gray300.cgColor
-        self.layer.borderWidth = 1
-        self.layer.cornerRadius = 12
+        let container = UIView()
+        self.addSubview(container)
+        container.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(56)
+        }
         
-        self.addSubview(self.checkImageView)
+        container.addSubview(self.backgroundButton)
+        self.backgroundButton.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        container.addSubview(self.checkImageView)
         self.checkImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(24)
             $0.size.equalTo(24)
         }
         
-        self.addSubview(self.titleLabel)
+        container.addSubview(self.titleLabel)
         self.titleLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalTo(self.checkImageView.snp.trailing).offset(6)
+            $0.leading.equalTo(self.checkImageView.snp.trailing).offset(8)
             $0.trailing.lessThanOrEqualToSuperview()
         }
     }
@@ -76,9 +90,7 @@ class TermsOfServiceAgreeButtonView: UIView {
         let animationDuration: TimeInterval = animated ? 0.25 : 0
         
         UIView.animate(withDuration: animationDuration) {
-            self.layer.borderColor = state ? UIColor.som.p300.cgColor : UIColor.som.gray300.cgColor
-            self.checkImageView.tintColor = state ? .som.p300 : .som.gray600
-            self.titleLabel.textColor = state ? .som.p300 : .som.gray600
+            self.checkImageView.tintColor = state ? .som.v2.pDark : .som.v2.gray400
         }
     }
 }

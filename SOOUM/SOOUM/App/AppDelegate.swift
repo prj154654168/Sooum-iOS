@@ -21,7 +21,7 @@ import CocoaLumberjack
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    let provider: ManagerProviderType = ManagerProviderContainer()
+    let appDIContainer: AppDIContainerable = AppDIContainer()
 
     /// APNS 등록 완료 핸들러
     var registerRemoteNotificationCompletion: ((Error?) -> Void)?
@@ -44,9 +44,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Initalize token
         self.initializeTokenWhenFirstLaunch()
-        
-        // Set managers
-        self.provider.initialize()
         
         FirebaseApp.configure()
         // 파이어베이스 Meesaging 설정
@@ -108,13 +105,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
-        if let infoDic = userInfo as? [String: Any] {
-            
-            let info = NotificationInfo(infoDic)
-            // 계정 이관 성공 알림일 경우 (런치 화면 > 온보딩 화면), 아닐 경우 메인 홈 탭바 화면 전환
-            self.provider.pushManager.setupRootViewController(info, terminated: info.isTransfered)
-        }
+        // let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
+        // if let infoDic = userInfo as? [String: Any] {
+        //
+        //     let info = NotificationInfo(infoDic)
+        //     // 계정 이관 성공 알림일 경우 (런치 화면 > 온보딩 화면), 아닐 경우 메인 홈 탭바 화면 전환
+        //     self.provider.pushManager.setupRootViewController(info, terminated: info.isTransfered)
+        // }
 
         completionHandler()
     }
@@ -154,7 +151,8 @@ extension AppDelegate: MessagingDelegate {
             apns: deviceToken,
             fcm: Messaging.messaging().fcmToken
         )
-        self.provider.networkManager.registerFCMToken(with: current, #function)
+        let provider = self.appDIContainer.rootContainer.resolve(ManagerProviderType.self)
+        provider.networkManager.registerFCMToken(with: current, #function)
 
         self.registerRemoteNotificationCompletion?(nil)
     }
@@ -165,7 +163,8 @@ extension AppDelegate: MessagingDelegate {
             apns: messaging.apnsToken,
             fcm: fcmToken
         )
-        self.provider.networkManager.registerFCMToken(with: current, #function)
+        let provider = self.appDIContainer.rootContainer.resolve(ManagerProviderType.self)
+        provider.networkManager.registerFCMToken(with: current, #function)
     }
 }
 
@@ -190,12 +189,12 @@ extension AppDelegate {
     }
     
     private func setupOnboardingWhenTransferSuccessed(_ userInfo: [AnyHashable: Any]?) {
-        guard let infoDic = userInfo as? [String: Any] else { return }
+        // guard let infoDic = userInfo as? [String: Any] else { return }
         
-        let info = NotificationInfo(infoDic)
-        if info.isTransfered {
-            
-            self.provider.pushManager.setupRootViewController(info, terminated: true)
-        }
+        // let info = NotificationInfo(infoDic)
+        // if info.isTransfered {
+        // 
+        //     self.provider.pushManager.setupRootViewController(info, terminated: true)
+        // }
     }
 }

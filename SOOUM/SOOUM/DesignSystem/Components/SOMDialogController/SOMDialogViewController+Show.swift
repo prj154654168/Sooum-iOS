@@ -14,6 +14,7 @@ extension SOMDialogViewController {
     static func show(
         title: String,
         message: String,
+        textAlignment: NSTextAlignment = .center,
         actions: [SOMDialogAction],
         dismissesWhenBackgroundTouched: Bool = false,
         completion: ((SOMDialogViewController) -> Void)? = nil
@@ -24,6 +25,7 @@ extension SOMDialogViewController {
             let dialogViewController = SOMDialogViewController(
                 title: title,
                 message: message,
+                textAlignment: textAlignment,
                 completion: { alertController in
                     window.windowScene = nil
                     completion?(alertController)
@@ -40,6 +42,7 @@ extension SOMDialogViewController {
     static func show(
         title: String,
         messageView: UIView,
+        textAlignment: NSTextAlignment = .center,
         actions: [SOMDialogAction],
         dismissesWhenBackgroundTouched: Bool = false,
         completion: ((SOMDialogViewController) -> Void)? = nil
@@ -50,6 +53,7 @@ extension SOMDialogViewController {
             let dialogViewController = SOMDialogViewController(
                 title: title,
                 messageView: messageView,
+                textAlignment: textAlignment,
                 completion: { alertController in
                     window.windowScene = nil
                     completion?(alertController)

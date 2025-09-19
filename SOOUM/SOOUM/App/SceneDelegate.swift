@@ -23,25 +23,25 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
         
-        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
-        window?.windowScene = windowScene
+        self.window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+        self.window?.windowScene = windowScene
 
         let viewController = LaunchScreenViewController()
-        viewController.reactor = LaunchScreenViewReactor(provider: appDelegate.provider)
+        viewController.reactor = LaunchScreenViewReactor(dependencies: appDelegate.appDIContainer)
 
-        window?.rootViewController = viewController
-        window?.backgroundColor = .white
-        window?.makeKeyAndVisible()
+        self.window?.rootViewController = viewController
+        self.window?.backgroundColor = .white
+        self.window?.makeKeyAndVisible()
         
         /// 앱이 완전히 종료되었을 때 push notification에 대한 응답을 했을 때 실행할 코드 작성
         if let response: UNNotificationResponse = connectionOptions.notificationResponse {
-            let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
+            // let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
 
-            if let infoDic: [String: Any] = userInfo as? [String: Any] {
-                
-                let info = NotificationInfo(infoDic)
-                appDelegate.provider.pushManager.setupRootViewController(info, terminated: true)
-            }
+            // if let infoDic: [String: Any] = userInfo as? [String: Any] {
+            //
+            //     let info = NotificationInfo(infoDic)
+            //     appDelegate.provider.pushManager.setupRootViewController(info, terminated: true)
+            // }
         }
     }
 

@@ -15,7 +15,7 @@ extension Reactive where Base: TermsOfServiceCellView {
         self.base.backgroundButton.rx.tap
     }
     
-    var nextSelect: ControlEvent<Void> {
-        self.base.nextButton.rx.tap
+    var moveSelect: ControlEvent<Void> {
+        self.base.moveButton.rx.tap
     }
 }

@@ -67,48 +67,49 @@ class NotificationViewReactor: Reactor {
         switch action {
         case .landing:
             
-            let combined = Observable.concat([
-                self.withoutReadNotisCount(),
-                self.notifications(with: false),
-                self.notifications(with: true)
-            ])
-                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            
-            return .concat([
-                .just(.updateIsProcessing(true)),
-                combined,
-                .just(.updateIsProcessing(false))
-            ])
-            
+//            let combined = Observable.concat([
+//                self.withoutReadNotisCount(),
+//                self.notifications(with: false),
+//                self.notifications(with: true)
+//            ])
+//                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+//            
+//            return .concat([
+//                .just(.updateIsProcessing(true)),
+//                combined,
+//                .just(.updateIsProcessing(false))
+//            ])
+            return .empty()
         case .refresh:
             
-            let combined = Observable.concat([
-                self.withoutReadNotisCount(),
-                self.notifications(with: false),
-                self.notifications(with: true)
-            ])
-                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            
-            return .concat([
-                .just(.updateIsLoading(true)),
-                combined,
-                .just(.updateIsLoading(false))
-            ])
-            
+//            let combined = Observable.concat([
+//                self.withoutReadNotisCount(),
+//                self.notifications(with: false),
+//                self.notifications(with: true)
+//            ])
+//                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+//            
+//            return .concat([
+//                .just(.updateIsLoading(true)),
+//                combined,
+//                .just(.updateIsLoading(false))
+//            ])
+            return .empty()
         case let .moreFind(withoutReadLastId, readLastId):
             
-            let combined = Observable.concat([
-                self.withoutReadNotisCount(),
-                self.moreNotifications(with: false, lastId: withoutReadLastId),
-                self.moreNotifications(with: true, lastId: readLastId)
-            ])
-                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            
-            return .concat([
-                .just(.updateIsProcessing(true)),
-                combined,
-                .just(.updateIsProcessing(false))
-            ])
+//            let combined = Observable.concat([
+//                self.withoutReadNotisCount(),
+//                self.moreNotifications(with: false, lastId: withoutReadLastId),
+//                self.moreNotifications(with: true, lastId: readLastId)
+//            ])
+//                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+//            
+//            return .concat([
+//                .just(.updateIsProcessing(true)),
+//                combined,
+//                .just(.updateIsProcessing(false))
+//            ])
+            return .empty()
             
         case let .requestRead(selectedId):
             self.provider.pushManager.deleteNotification(notificationId: selectedId)
@@ -142,71 +143,71 @@ class NotificationViewReactor: Reactor {
     }
 }
 
-extension NotificationViewReactor {
-    
-    private func notifications(with isRead: Bool) -> Observable<Mutation> {
-        
-        var request: NotificationRequest {
-            switch self.entranceType {
-            case .total:
-                return isRead ? .totalRead(lastId: nil) : .totalWithoutRead(lastId: nil)
-            case .comment:
-                return isRead ? .commentRead(lastId: nil) : .commentWithoutRead(lastId: nil)
-            case .like:
-                return isRead ? .likeRead(lastId: nil) : .likeWithoutRead(lastId: nil)
-            }
-        }
-        
-        return self.provider.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
-            .map(\.commentHistoryInNotis)
-            .map(isRead ? Mutation.notifications : Mutation.notificationsWithoutRead)
-            .catch(self.catchClosure)
-    }
-    
-    private func moreNotifications(with isRead: Bool, lastId: String?) -> Observable<Mutation> {
-        
-        guard let lastId = lastId else { return .just(.more([])) }
-        
-        var request: NotificationRequest {
-            switch self.entranceType {
-            case .total:
-                return isRead ? .totalRead(lastId: lastId) : .totalWithoutRead(lastId: lastId)
-            case .comment:
-                return isRead ? .commentRead(lastId: lastId) : .commentWithoutRead(lastId: lastId)
-            case .like:
-                return isRead ? .likeRead(lastId: lastId) : .likeWithoutRead(lastId: lastId)
-            }
-        }
-        
-        return self.provider.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
-            .map(\.commentHistoryInNotis)
-            .map(isRead ? Mutation.more : Mutation.moreWithoutRead)
-            .catch(self.catchClosure)
-    }
-    
-    private func withoutReadNotisCount() -> Observable<Mutation> {
-        
-        var request: NotificationRequest {
-            switch self.entranceType {
-            case .total:
-                return .totalWithoutReadCount
-            case .comment:
-                return .commentWithoutReadCount
-            case .like:
-                return .likeWihoutReadCount
-            }
-        }
-        
-        return self.provider.networkManager.request(WithoutReadNotisCountResponse.self, request: request)
-            .map(\.unreadCnt)
-            .map(Mutation.withoutReadNotiscount)
-    }
-    
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { _ in
-            .concat([
-                .just(.updateIsProcessing(false))
-            ])
-        }
-    }
-}
+//extension NotificationViewReactor {
+//    
+//    private func notifications(with isRead: Bool) -> Observable<Mutation> {
+//        
+//        var request: NotificationRequest {
+//            switch self.entranceType {
+//            case .total:
+//                return isRead ? .totalRead(lastId: nil) : .totalWithoutRead(lastId: nil)
+//            case .comment:
+//                return isRead ? .commentRead(lastId: nil) : .commentWithoutRead(lastId: nil)
+//            case .like:
+//                return isRead ? .likeRead(lastId: nil) : .likeWithoutRead(lastId: nil)
+//            }
+//        }
+//        
+//        return self.provider.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
+//            .map(\.commentHistoryInNotis)
+//            .map(isRead ? Mutation.notifications : Mutation.notificationsWithoutRead)
+//            .catch(self.catchClosure)
+//    }
+//    
+//    private func moreNotifications(with isRead: Bool, lastId: String?) -> Observable<Mutation> {
+//        
+//        guard let lastId = lastId else { return .just(.more([])) }
+//        
+//        var request: NotificationRequest {
+//            switch self.entranceType {
+//            case .total:
+//                return isRead ? .totalRead(lastId: lastId) : .totalWithoutRead(lastId: lastId)
+//            case .comment:
+//                return isRead ? .commentRead(lastId: lastId) : .commentWithoutRead(lastId: lastId)
+//            case .like:
+//                return isRead ? .likeRead(lastId: lastId) : .likeWithoutRead(lastId: lastId)
+//            }
+//        }
+//        
+//        return self.provider.networkManager.request(CommentHistoryInNotiResponse.self, request: request)
+//            .map(\.commentHistoryInNotis)
+//            .map(isRead ? Mutation.more : Mutation.moreWithoutRead)
+//            .catch(self.catchClosure)
+//    }
+//    
+//    private func withoutReadNotisCount() -> Observable<Mutation> {
+//        
+//        var request: NotificationRequest {
+//            switch self.entranceType {
+//            case .total:
+//                return .totalWithoutReadCount
+//            case .comment:
+//                return .commentWithoutReadCount
+//            case .like:
+//                return .likeWihoutReadCount
+//            }
+//        }
+//        
+//        return self.provider.networkManager.request(WithoutReadNotisCountResponse.self, request: request)
+//            .map(\.unreadCnt)
+//            .map(Mutation.withoutReadNotiscount)
+//    }
+//    
+//    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+//        return { _ in
+//            .concat([
+//                .just(.updateIsProcessing(false))
+//            ])
+//        }
+//    }
+//}
