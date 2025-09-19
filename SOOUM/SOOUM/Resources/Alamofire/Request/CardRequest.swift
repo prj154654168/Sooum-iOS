@@ -234,14 +234,10 @@ enum CardRequest: BaseRequest {
     var authorizationType: AuthorizationType {
         return .access
     }
-    
-    var version: APIVersion {
-        return .v1
-    }
 
     func asURLRequest() throws -> URLRequest {
 
-        let pathWithAPIVersion = self.path + self.version.rawValue
+        let pathWithAPIVersion = self.path
         if let url = URL(string: Constants.endpoint)?.appendingPathComponent(pathWithAPIVersion) {
             var request = URLRequest(url: url)
             request.method = self.method

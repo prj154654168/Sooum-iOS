@@ -1,51 +1,41 @@
 //
-//  ConfigureRequest.swift
+//  VersionRequest.swift
 //  SOOUM
 //
-//  Created by JDeoks on 1/26/25.
+//  Created by 오현식 on 9/16/25.
 //
-
-import Foundation
 
 import Alamofire
 
-
-enum ConfigureRequest: BaseRequest {
-
-    case appFlag
-
+enum VersionRequest: BaseRequest {
+    
+    case version
+    
     var path: String {
-        switch self {
-        case .appFlag:
-            "/app/version/flag"
-        }
+        #if PRODUCTION
+        /// 구버전 업데이트를 위한 API
+        return "app/version/ios/v2"
+        #elseif DEVELOP
+        return "/api/version/IOS"
+        #endif
     }
-
+    
     var method: HTTPMethod {
-        switch self {
-        case .appFlag:
-            return .get
-        }
+        return .get
     }
-
+    
     var parameters: Parameters {
-        switch self {
-        case .appFlag:
-            return [:]
-        }
+        return ["version": Info.appVersion]
     }
-
+    
     var encoding: ParameterEncoding {
-        switch self {
-        case .appFlag:
-            return URLEncoding.default
-        }
+        return URLEncoding.default
     }
     
     var authorizationType: AuthorizationType {
-        return .access
+        return .none
     }
-
+    
     func asURLRequest() throws -> URLRequest {
         
         if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
@@ -61,10 +51,11 @@ enum ConfigureRequest: BaseRequest {
                 Constants.ContentType.json.rawValue,
                 forHTTPHeaderField: Constants.HTTPHeader.acceptType.rawValue
             )
-            let encoded = try encoding.encode(request, with: self.parameters)
+            
+            let encoded = try self.encoding.encode(request, with: self.parameters)
             return encoded
         } else {
-            return URLRequest(url: URL(string: "")!)
+            return .init(url: URL(string: "")!)
         }
     }
 }
