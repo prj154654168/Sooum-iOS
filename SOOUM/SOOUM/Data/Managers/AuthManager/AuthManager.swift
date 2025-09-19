@@ -24,9 +24,11 @@ protocol AuthManagerDelegate: AnyObject {
     var hasToken: Bool { get }
     func convertPEMToSecKey(pemString: String) -> SecKey?
     func encryptUUIDWithPublicKey(publicKey: SecKey) -> String?
-    func join() -> Observable<Bool>
+    func publicKey() -> Observable<String?>
+    func available() -> Observable<CheckAvailableResponse>
+    func join(nickname: String, profileImageName: String?) -> Observable<Bool>
     func certification() -> Observable<Bool>
-    func reAuthenticate(_ accessToken: String, _ completion: @escaping (AuthResult) -> Void)
+    func reAuthenticate(_ token: Token, _ completion: @escaping (AuthResult) -> Void)
     func initializeAuthInfo()
     func updateTokens(_ token: Token)
     func authPayloadByAccess() -> [String: String]
@@ -106,63 +108,90 @@ extension AuthManager: AuthManagerDelegate {
     
     // MARK: Account Verification
     
-    func join() -> Observable<Bool> {
+    func publicKey() -> Observable<String?> {
         
-        guard let provider = self.provider else { return .just(false) }
+        guard let provider = self.provider else { return .just(nil) }
         
-        return provider.networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
+        let request: AuthRequest = .publicKey
+        return provider.networkManager.fetch(KeyInfoResponse.self, request: request)
             .map(\.publicKey)
+    }
+    
+    func available() -> Observable<CheckAvailableResponse> {
+        
+        return self.publicKey()
+            .withUnretained(self)
+            .flatMapLatest { object, publicKey -> Observable<CheckAvailableResponse> in
+                
+                if let publicKey = publicKey,
+                   let secKey = object.convertPEMToSecKey(pemString: publicKey),
+                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey),
+                   let provider = object.provider {
+                    
+                    let request: UserRequest = .checkAvailable(encryptedDeviceId: encryptedDeviceId)
+                    return provider.networkManager.perform(CheckAvailableResponse.self, request: request)
+                } else {
+                    return .just(CheckAvailableResponse.emptyValue())
+                }
+            }
+    }
+    
+    func join(nickname: String, profileImageName: String?) -> Observable<Bool> {
+        
+        return self.publicKey()
             .withUnretained(self)
             .flatMapLatest { object, publicKey -> Observable<Bool> in
                 
-                if let secKey = object.convertPEMToSecKey(pemString: publicKey),
-                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
+                if let publicKey = publicKey,
+                   let secKey = object.convertPEMToSecKey(pemString: publicKey),
+                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey),
+                   let provider = object.provider {
                     
                     let request: AuthRequest = .signUp(
                         encryptedDeviceId: encryptedDeviceId,
-                        isAllowNotify: true,
-                        isAllowTermOne: true,
-                        isAllowTermTwo: true,
-                        isAllowTermThree: true
+                        isNotificationAgreed: provider.pushManager.notificationStatus,
+                        nickname: nickname,
+                        profileImageName: profileImageName
                     )
-                    return provider.networkManager.request(SignUpResponse.self, request: request)
-                        .map { response in
-                            object.authInfo.updateToken(response.token)
+                    return provider.networkManager.perform(SignUpResponse.self, request: request)
+                        .map(\.token)
+                        .flatMapLatest { token -> Observable<Bool> in
+                            
+                            // session token 업데이트
+                            object.authInfo.updateToken(token)
                             
                             // FCM token 업데이트
-                            object.provider?.networkManager.registerFCMToken(from: #function)
-                            return true
+                            provider.networkManager.registerFCMToken(from: #function)
+                            return .just(true)
                         }
+                } else {
+                    return .just(false)
                 }
-                return .just(false)
             }
     }
     
     func certification() -> Observable<Bool> {
         
-        guard let provider = self.provider else { return .just(false) }
-        
-        return provider.networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
-            .map(\.publicKey)
+        return self.publicKey()
             .withUnretained(self)
             .flatMapLatest { object, publicKey -> Observable<Bool> in
-                
-                if let secKey = object.convertPEMToSecKey(pemString: publicKey),
-                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
+            
+                if let publicKey = publicKey,
+                   let secKey = object.convertPEMToSecKey(pemString: publicKey),
+                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey),
+                   let provider = object.provider {
                     
                     let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
-                    return provider.networkManager.request(SignInResponse.self, request: request)
-                        .map { response -> Bool in
-                            if response.isRegistered, let token = response.token {
-                                
-                                object.authInfo.updateToken(token)
-                                
-                                // FCM token 업데이트
-                                object.provider?.networkManager.registerFCMToken(from: #function)
-                                return true
-                            } else {
-                                return false
-                            }
+                    return provider.networkManager.perform(LoginResponse.self, request: request)
+                        .map(\.token)
+                        .flatMapLatest { token -> Observable<Bool> in
+                            
+                            // session token 업데이트
+                            object.authInfo.updateToken(token)
+                            
+                            // FCM token 업데이트
+                            provider.networkManager.registerFCMToken(from: #function)
+                            return .just(true)
                         }
                 } else {
                     return .just(false)
@@ -177,11 +206,9 @@ extension AuthManager: AuthManagerDelegate {
         3. 재인증 완료된 후, 이전의 호출이 이전 토큰을 가지고 시도할 수 있기 때문에, 호출의 토큰과 현재 토큰이 같은 때만 통과시킨다
         4. RefreshToken 도 유효하지 않다면 로그인 시도
      */
-    func reAuthenticate(_ accessToken: String, _ completion: @escaping (AuthResult) -> Void) {
+    func reAuthenticate(_ token: Token, _ completion: @escaping (AuthResult) -> Void) {
         
-        let token = self.authInfo.token
-        
-        guard token.refreshToken.isEmpty == false else {
+        guard self.authInfo.token.refreshToken.isEmpty == false else {
             let error = NSError(
                 domain: "SOOUM",
                 code: -99,
@@ -199,7 +226,7 @@ extension AuthManager: AuthManagerDelegate {
         }
         
         /// AccessToken이 업데이트 됐다면, 즉시 성공 처리
-        guard accessToken == token.accessToken else {
+        guard token.accessToken == self.authInfo.token.accessToken else {
             completion(.success)
             return
         }
@@ -209,54 +236,52 @@ extension AuthManager: AuthManagerDelegate {
         
         guard let provider = self.provider else { return }
         
-        let request: AuthRequest = .reAuthenticationWithRefreshSession
-        provider.networkManager.request(ReAuthenticationResponse.self, request: request)
-            .map(\.accessToken)
+        let request: AuthRequest = .reAuthenticationWithRefreshSession(token: token)
+        provider.networkManager.perform(TokenResponse.self, request: request)
+            .map(\.token)
+            .withUnretained(self)
+            .flatMapLatest { object, token -> Observable<AuthResult> in
+                
+                if token.accessToken.isEmpty || token.refreshToken.isEmpty {
+                    let error = NSError(
+                        domain: "SOOUM",
+                        code: -99,
+                        userInfo: [NSLocalizedDescriptionKey: "Session not refresh"]
+                    )
+                    return .just(.failure(error))
+                } else {
+                
+                    object.updateTokens(token)
+                    
+                    // FCM token 업데이트
+                    provider.networkManager.registerFCMToken(from: #function)
+                    
+                    return .just(.success)
+                }
+            }
+            .catch { [weak self] error -> Observable<AuthResult> in
+                
+                guard let self = self else { return .just(.failure(error))}
+                
+                let errorCode = (error as NSError).code
+                if errorCode == 403 {
+                    
+                    return self.certification()
+                        .map { isRegistered -> AuthResult in
+                            return isRegistered ? .success : .failure(error)
+                        }
+                } else {
+                    return .just(.failure(error))
+                }
+            }
             .subscribe(
                 with: self,
-                onNext: { object, accessToken in
-                    if accessToken.isEmpty {
-                        let error = NSError(
-                            domain: "SOOUM",
-                            code: -99,
-                            userInfo: [NSLocalizedDescriptionKey: "Session not refresh"]
-                        )
-                        object.excutePendingResults(.failure(error))
-                    } else {
-                        
-                        object.updateTokens(
-                            .init(
-                                accessToken: accessToken,
-                                refreshToken: token.refreshToken
-                            )
-                        )
-                        
-                        // FCM token 업데이트
-                        object.provider?.networkManager.registerFCMToken(from: #function)
-                        
-                        object.excutePendingResults(.success)
-                    }
-                    
+                onNext: { object, result in
+                    object.excutePendingResults(result)
                     object.isReAuthenticating = false
                 },
                 onError: { object, error in
-                    
-                    let errorCode = (error as NSError).code
-                    switch errorCode {
-                    case 403:
-                        object.certification()
-                            .subscribe(onNext: { isRegistered in
-                                if isRegistered {
-                                    object.excutePendingResults(.success)
-                                } else {
-                                    object.excutePendingResults(.failure(error))
-                                }
-                            })
-                            .disposed(by: self.disposeBag)
-                    default:
-                        break
-                    }
-                    
+                    object.excutePendingResults(.failure(error))
                     object.isReAuthenticating = false
                 }
             )

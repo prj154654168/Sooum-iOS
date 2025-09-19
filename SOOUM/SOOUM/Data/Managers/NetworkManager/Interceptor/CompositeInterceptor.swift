@@ -12,13 +12,11 @@ import Alamofire
 
 class CompositeInterceptor: RequestInterceptor {
     
-    private let provider: ManagerTypeDelegate
     private let interceptors: [RequestInterceptor]
     
     private let timeoutInterval: TimeInterval = 20.0
     
     init(provider: ManagerTypeDelegate) {
-        self.provider = provider
         
         self.interceptors = [
             AddingTokenInterceptor(provider: provider),

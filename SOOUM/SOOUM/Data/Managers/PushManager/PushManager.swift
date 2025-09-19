@@ -11,7 +11,7 @@ import UIKit
 protocol PushManagerDelegate: AnyObject {
     
     var window: UIWindow? { get }
-    func setupRootViewController(_ info: NotificationInfo?, terminated: Bool)
+//    func setupRootViewController(_ info: NotificationInfo?, terminated: Bool)
     
     var canReceiveNotifications: Bool { get }
     var notificationStatus: Bool { get }
@@ -47,44 +47,46 @@ extension PushManager: PushManagerDelegate {
     
     // MARK: Navigation
     
-    func setupRootViewController(_ info: NotificationInfo?, terminated: Bool) {
-        
-        DispatchQueue.main.async { [weak self] in
-            if self?.window != nil {
-                if terminated {
-                    self?.setupLaunchScreenViewController(info)
-                } else {
-                    self?.setupMainTabBarController(info)
-                }
-            }
-        }
-    }
-    
-    fileprivate func setupLaunchScreenViewController(_ pushInfo: NotificationInfo?) {
-        
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        let provider = appDelegate.provider
-        
-        let launchScreenReactor = LaunchScreenViewReactor(provider: provider, pushInfo: pushInfo)
-        let launchScreenViewController = LaunchScreenViewController()
-        launchScreenViewController.reactor = launchScreenReactor
-        
-        let navigationController = UINavigationController(rootViewController: launchScreenViewController)
-        self.window?.rootViewController = navigationController
-    }
-    
-    fileprivate func setupMainTabBarController(_ pushInfo: NotificationInfo?) {
-        
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        let provider = appDelegate.provider
-        
-        let mainTabBarReactor = MainTabBarReactor(provider: provider, pushInfo: pushInfo)
-        let mainTabBarController = MainTabBarController()
-        mainTabBarController.reactor = mainTabBarReactor
-        
-        let navigationController = UINavigationController(rootViewController: mainTabBarController)
-        self.window?.rootViewController = navigationController
-    }
+//    func setupRootViewController(_ info: NotificationInfo?, terminated: Bool) {
+//        
+//        DispatchQueue.main.async { [weak self] in
+//            if self?.window != nil {
+//                if terminated {
+//                    self?.setupLaunchScreenViewController(info)
+//                } else {
+//                    self?.setupMainTabBarController(info)
+//                }
+//            }
+//        }
+//    }
+//    
+//    fileprivate func setupLaunchScreenViewController(_ pushInfo: NotificationInfo?) {
+//        
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+//        let appDIContainer = appDelegate.appDIContainer
+//        
+//        _ = appDIContainer.setupLaunchContainer(with: pushInfo)
+//        
+//        let launchScreenReactor = LaunchScreenViewReactor(provider: provider, pushInfo: pushInfo)
+//        let launchScreenViewController = LaunchScreenViewController()
+//        launchScreenViewController.reactor = launchScreenReactor
+//        
+//        let navigationController = UINavigationController(rootViewController: launchScreenViewController)
+//        self.window?.rootViewController = navigationController
+//    }
+//    
+//    fileprivate func setupMainTabBarController(_ pushInfo: NotificationInfo?) {
+//        
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+//        let provider = appDelegate.provider
+//        
+//        let mainTabBarReactor = MainTabBarReactor(provider: provider, pushInfo: pushInfo)
+//        let mainTabBarController = MainTabBarController()
+//        mainTabBarController.reactor = mainTabBarReactor
+//        
+//        let navigationController = UINavigationController(rootViewController: mainTabBarController)
+//        self.window?.rootViewController = navigationController
+//    }
     
     
     // MARK: Notification

@@ -7,14 +7,18 @@
 
 import Foundation
 
+import Alamofire
+
 
 enum DefinedError: Error, LocalizedError {
     case badRequest
     case unauthorized
     case payment
     case forbidden
+    case notFound
     case teapot
     case locked
+    case invalidMethod(HTTPMethod)
     case unknown(Int)
     
     static func error(with statusCode: Int) -> Self {
@@ -27,6 +31,8 @@ enum DefinedError: Error, LocalizedError {
             return .payment
         case 403:
             return .forbidden
+        case 404:
+            return .notFound
         case 418:
             return .teapot
         case 423:
@@ -46,10 +52,14 @@ enum DefinedError: Error, LocalizedError {
             return "Delete parent card: HTTP 402 received."
         case .forbidden:
             return "Expire RefreshToken: HTTP 403 received."
+        case .notFound:
+            return "Not Found: HTTP 404 received"
         case .teapot:
             return "Stop using RefreshToken: HTTP 418 received."
         case .locked:
             return "LOCKED: HTTP 423 received."
+        case let .invalidMethod(httpMethod):
+            return "Invalid Method: HTTPMethod \(httpMethod) was not expected"
         case let .unknown(statusCode):
             return "Unknown error: HTTP \(statusCode) received."
         }
@@ -61,8 +71,10 @@ enum DefinedError: Error, LocalizedError {
         case .unauthorized: 401
         case .payment: 402
         case .forbidden: 403
+        case .notFound: 404
         case .teapot: 418
         case .locked: 423
+        case .invalidMethod: -99
         case let .unknown(statusCode): statusCode
         }
         

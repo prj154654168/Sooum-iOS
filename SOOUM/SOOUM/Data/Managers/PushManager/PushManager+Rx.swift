@@ -11,8 +11,8 @@ import RxSwift
 extension PushManagerDelegate {
 
     func switchNotification(on: Bool) -> Observable<Error?> {
-        return .create { observer in
-            self.switchNotification(isOn: on) { error in
+        return Observable.create { [weak self] observer in
+            self?.switchNotification(isOn: on) { error in
                 if let error: Error = error {
                     observer.onNext(error)
                 } else {

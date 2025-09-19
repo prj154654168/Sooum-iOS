@@ -38,8 +38,8 @@ class ErrorInterceptor: RequestInterceptor {
             return
         }
         
-        let accessToken = self.provider.authManager.authInfo.token.accessToken
-        self.provider.authManager.reAuthenticate(accessToken) { result in
+        let token = self.provider.authManager.authInfo.token
+        self.provider.authManager.reAuthenticate(token) { result in
             
             switch result {
             case .success:

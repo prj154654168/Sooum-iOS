@@ -39,10 +39,10 @@ extension NetworkManager {
         Log.info("Firebase registration token: \(fcmToken) [with \(apns)] (from: \(function))")
         
         // 서버에 FCM token 등록
-        if let fcmToken = tokenSet.fcm, let provider = self.provider {
+        if let fcmToken = tokenSet.fcm {
             
-            let request: AuthRequest = .updateFCM(fcmToken: fcmToken)
-            provider.networkManager.request(Empty.self, request: request)
+            let request: UserRequest = .updateFCMToken(fcmToken: fcmToken)
+            provider.networkManager.perform(Empty.self, request: request)
                 .subscribe(
                     onNext: { _ in
                         Log.info("Update FCM token to server with", fcmToken)

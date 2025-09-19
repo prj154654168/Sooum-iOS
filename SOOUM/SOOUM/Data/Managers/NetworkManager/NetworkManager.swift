@@ -19,8 +19,14 @@ protocol NetworkManagerDelegate: AnyObject {
         to url: URLConvertible
     ) -> Observable<Result<Void, Error>>
     
+    func fetch<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T>
+    func perform<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T>
+
     func registerFCMToken(with tokenSet: PushTokenSet, _ function: String)
     func registerFCMToken(from function: String)
+    
+    func version() -> Observable<Result<AppVersionStatusResponse, Error>>
+    func updateCheck() -> Observable<AppVersionStatusResponse>
 }
 
 class NetworkManager: CompositeManager<NetworkManagerConfiguration> {
@@ -117,5 +123,23 @@ extension NetworkManager: NetworkManagerDelegate {
                 task?.cancel()
             }
         }
+    }
+    
+    func fetch<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T> {
+        
+        guard request.method == .get else {
+            return Observable.error(DefinedError.invalidMethod(request.method))
+        }
+        
+        return self.request(object, request: request)
+    }
+    
+    func perform<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T> {
+        
+        guard request.method == .post || request.method == .patch || request.method == .delete else {
+            return Observable.error(DefinedError.invalidMethod(request.method))
+        }
+        
+        return self.request(object, request: request)
     }
 }
