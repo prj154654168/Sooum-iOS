@@ -13,9 +13,3 @@ struct Links: Codable {
     let login: URLString?
     let home: URLString?
 }
-
-// MARK: - Token
-struct Token: Codable {
-    var accessToken: String
-    var refreshToken: String
-}

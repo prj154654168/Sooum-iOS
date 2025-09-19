@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 
 
-struct SignInResponse: Codable {
+struct SignInResponse: Decodable {
     let status: Status
     let isRegistered: Bool
     let token: Token?

@@ -7,14 +7,9 @@
 
 import Foundation
 
-
 struct Version {
     
     let currentVersionStatus: Status
-    
-    enum CodingKeys: String, CodingKey {
-        case currentVersionStatus = "status"
-    }
 }
 
 extension Version {
@@ -55,4 +50,9 @@ extension Version {
 }
 
 extension Version.Status: Decodable { }
-extension Version: Decodable { }
+extension Version: Decodable {
+    
+    enum CodingKeys: String, CodingKey {
+        case currentVersionStatus = "status"
+    }
+}

@@ -7,16 +7,22 @@
 
 import Alamofire
 
-struct SignUpResponse: Decodable {
+struct SignUpResponse {
     
-    let accessToken: String
-    let refreshToken: String
-    let nickname: String
+    let token: Token
 }
 
 extension SignUpResponse: EmptyResponse {
     
     static func emptyValue() -> SignUpResponse {
-        SignUpResponse(accessToken: "", refreshToken: "", nickname: "")
+        SignUpResponse(token: Token.defaultValue)
+    }
+}
+
+extension SignUpResponse: Decodable {
+    
+    init(from decoder: any Decoder) throws {
+        let singleContainer = try decoder.singleValueContainer()
+        self.token = try singleContainer.decode(Token.self)
     }
 }

@@ -11,11 +11,6 @@ struct BlockedNotificationInfoResponse {
     
     let notificationInfo: CommonNotificationInfo
     let blockExpirationDateTime: Date
-    
-    enum CodingKeys: CodingKey {
-        case notificationInfo
-        case blockExpirationDateTime
-    }
 }
 
 extension BlockedNotificationInfoResponse: EmptyResponse {
@@ -29,6 +24,11 @@ extension BlockedNotificationInfoResponse: EmptyResponse {
 }
 
 extension BlockedNotificationInfoResponse: Decodable {
+    
+    enum CodingKeys: CodingKey {
+        case notificationInfo
+        case blockExpirationDateTime
+    }
     
     init(from decoder: any Decoder) throws {
         let singleContainer = try decoder.singleValueContainer()

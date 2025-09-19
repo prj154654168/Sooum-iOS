@@ -12,12 +12,6 @@ struct NotificationInfoResponse {
     let notificationInfo: CommonNotificationInfo
     let targetCardId: String
     let nickName: String
-    
-    enum CodingKeys: CodingKey {
-        case notificationInfo
-        case targetCardId
-        case nickName
-    }
 }
 
 extension NotificationInfoResponse: EmptyResponse {
@@ -32,6 +26,12 @@ extension NotificationInfoResponse: EmptyResponse {
 }
 
 extension NotificationInfoResponse: Decodable {
+    
+    enum CodingKeys: CodingKey {
+        case notificationInfo
+        case targetCardId
+        case nickName
+    }
     
     init(from decoder: any Decoder) throws {
         let singleContainer = try decoder.singleValueContainer()
