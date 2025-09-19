@@ -108,9 +108,6 @@ class BaseNavigationViewController: BaseViewController {
     override func bind() {
         super.bind()
 
-        self.navigationController?.delegate = self
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-
         self.backButton.rx.tap
             .subscribe(with: self) { object, _ in
                 object.navigationPop(
@@ -149,7 +146,14 @@ class BaseNavigationViewController: BaseViewController {
 
 extension BaseNavigationViewController: UIGestureRecognizerDelegate {
 
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return self.navigationPopGestureEnabled
+    }
+    
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
         return self.navigationPopGestureEnabled
     }
 }
