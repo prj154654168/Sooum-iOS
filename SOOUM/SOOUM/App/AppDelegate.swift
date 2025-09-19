@@ -105,7 +105,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
+        // let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
         // if let infoDic = userInfo as? [String: Any] {
         //
         //     let info = NotificationInfo(infoDic)
@@ -189,7 +189,7 @@ extension AppDelegate {
     }
     
     private func setupOnboardingWhenTransferSuccessed(_ userInfo: [AnyHashable: Any]?) {
-        guard let infoDic = userInfo as? [String: Any] else { return }
+        // guard let infoDic = userInfo as? [String: Any] else { return }
         
         // let info = NotificationInfo(infoDic)
         // if info.isTransfered {
