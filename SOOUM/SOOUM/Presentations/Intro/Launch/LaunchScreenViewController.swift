@@ -117,8 +117,6 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
                 let navigationController = UINavigationController(
                     rootViewController: viewController
                 )
-                // 제스처 뒤로가기를 위한 델리게이트 설정
-                navigationController.interactivePopGestureRecognizer?.delegate = object
                 object.view.window?.rootViewController = navigationController
             }
             .disposed(by: self.disposeBag)

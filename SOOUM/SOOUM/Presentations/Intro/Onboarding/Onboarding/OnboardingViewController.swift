@@ -87,6 +87,9 @@ class OnboardingViewController: BaseNavigationViewController, View {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 제스처 뒤로가기를 위한 델리게이트 설정
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
         self.setupGuideMessage([
             Text.firstGuideMessage,
             Text.secondGuideMessage,
