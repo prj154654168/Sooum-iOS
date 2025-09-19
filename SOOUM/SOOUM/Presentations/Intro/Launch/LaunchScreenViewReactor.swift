@@ -38,10 +38,10 @@ class LaunchScreenViewReactor: Reactor {
     }
     
     struct State {
-        var mustUpdate: Bool
+        fileprivate(set) var mustUpdate: Bool
         /// deviceId 서버 등록 여부, 로그인 성공 여부
-        var isRegistered: Bool?
-        var appFlag: Bool?
+        fileprivate(set) var isRegistered: Bool?
+        fileprivate(set) var appFlag: Bool?
     }
     
     var initialState: State = .init(
@@ -49,11 +49,18 @@ class LaunchScreenViewReactor: Reactor {
         isRegistered: nil
     )
     
-    let provider: ManagerProviderType
-    let pushInfo: NotificationInfo?
+    // TODO: 임시, 추후 Coordinator 패턴 적용 후 필요한 UseCase만 사용
+    private let dependencies: AppDIContainerable
+    private let authUseCase: AuthUseCase
+    private let versionUseCase: AppVersionUseCase
     
-    init(provider: ManagerProviderType, pushInfo: NotificationInfo? = nil) {
-        self.provider = provider
+    private let pushInfo: NotificationInfo?
+    
+    init(dependencies: AppDIContainerable, pushInfo: NotificationInfo? = nil) {
+        self.dependencies = dependencies
+        self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
+        self.versionUseCase = dependencies.rootContainer.resolve(AppVersionUseCase.self)
+        
         self.pushInfo = pushInfo
     }
     
@@ -63,7 +70,7 @@ class LaunchScreenViewReactor: Reactor {
             // 계정 이관에 성공했을 때, 온보딩 화면으로 전환
             let isTransfered = self.pushInfo?.isTransfered ?? false
             if isTransfered {
-                self.provider.authManager.initializeAuthInfo()
+                self.authUseCase.initializeAuthInfo()
                 return .just(.updateIsRegistered(false))
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance)
             } else {
@@ -95,35 +102,61 @@ class LaunchScreenViewReactor: Reactor {
 extension LaunchScreenViewReactor {
     
     private func login() -> Observable<Mutation> {
-        return self.provider.authManager.certification()
+        return self.authUseCase.login()
             .map { .updateIsRegistered($0) }
+            .catch(self.catchClosure)
     }
     
     private func check() -> Observable<Mutation> {
         
-        return self.provider.networkManager.request(String.self, request: AuthRequest.updateCheck)
+        #if PRODUCTION
+        return self.versionUseCase.oldVersion()
             .withUnretained(self)
-            .flatMapLatest { object, currentVersionStatus -> Observable<Mutation> in
-                let version = Version(status: currentVersionStatus)
+            .flatMapLatest { object, version -> Observable<Mutation> in
                 
                 UserDefaults.standard.set(version.shouldHideTransfer, forKey: "AppFlag")
                 
                 if version.mustUpdate {
                     return .just(.check(true))
                 } else {
-                    return self.provider.authManager.hasToken ? .just(.updateIsRegistered(true)) : object.login()
+                    return object.authUseCase.hasToken() ? .just(.updateIsRegistered(true)) : object.login()
                 }
             }
+        #elseif DEVELOP
+        return self.versionUseCase.version()
+            .withUnretained(self)
+            .flatMapLatest { object, version -> Observable<Mutation> in
+                
+                UserDefaults.standard.set(version.shouldHideTransfer, forKey: "AppFlag")
+                
+                if version.mustUpdate {
+                    return .just(.check(true))
+                } else {
+                    return object.authUseCase.hasToken() ? .just(.updateIsRegistered(true)) : object.login()
+                }
+            }
+        #endif
+    }
+}
+
+private extension LaunchScreenViewReactor {
+    
+    private var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { error in
+            
+            let nsError = error as NSError
+            return nsError.code == 404 ? .just(.updateIsRegistered(false)) : .empty()
+        }
     }
 }
 
 extension LaunchScreenViewReactor {
     
     func reactorForOnboarding() -> OnboardingViewReactor {
-        OnboardingViewReactor(provider: self.provider)
+        OnboardingViewReactor(dependencies: self.dependencies)
     }
     
-    func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(provider: self.provider, pushInfo: self.pushInfo)
-    }
+//    func reactorForMainTabBar() -> MainTabBarReactor {
+//        MainTabBarReactor(provider: self.provider, pushInfo: self.pushInfo)
+//    }
 }

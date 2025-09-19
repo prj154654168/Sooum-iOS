@@ -18,41 +18,6 @@ import RxSwift
 class OnboardingNicknameSettingViewController: BaseNavigationViewController, View {
     
     enum Text {
-        static let adjectives = [
-            "공부하는", "생각하는", "사랑하는", "노래하는",
-            "요리하는", "운동하는", "여행하는", "대화하는",
-            "청소하는", "정리하는", "그리는", "사진하는",
-            "연구하는", "설계하는", "개발하는", "관리하는",
-            "발표하는", "수업하는", "교육하는", "상담하는",
-            "치료하는", "분석하는", "조사하는", "기록하는",
-            "편집하는", "제작하는", "수리하는", "판매하는",
-            "구매하는", "투자하는", "기획하는", "운영하는",
-            "지원하는", "협력하는", "참여하는", "소통하는",
-            "개선하는", "실천하는", "실험하는", "탐구하는",
-            "수집하는", "배달하는", "전달하는", "연결하는",
-            "조정하는", "선택하는", "결정하는", "준비하는",
-            "확인하는", "수업하는", "연습하는", "발표하는",
-            "기록하는", "정리하는", "대처하는", "해결하는",
-            "조율하는", "탐색하는", "분석하는", "실천하는"
-        ]
-        static let nouns = [
-            "강아지", "고양이", "기린", "토끼",
-            "사자", "호랑이", "악어", "코끼리",
-            "판다", "부엉이", "까치", "앵무새",
-            "여우", "오리", "수달", "다람쥐",
-            "펭귄", "참새", "갈매기", "도마뱀",
-            "우산", "책상", "가방", "의자",
-            "시계", "안경", "컵", "접시",
-            "전화기", "자전거", "냉장고", "라디오",
-            "바나나", "케이크", "모자", "열쇠",
-            "지도", "구두", "텀블러", "바구니",
-            "공책", "거울", "청소기", "햄스터",
-            "낙타", "두더지", "돌고래", "문어",
-            "미어캣", "오소리", "다슬기", "해파리",
-            "원숭이", "홍학", "물개", "바다표",
-            "코뿔소", "물소", "개구리", "거북이"
-        ]
-        
         static let navigationTitle: String = "회원가입"
         
         static let title: String = "숨에서 사용할 닉네임을\n입력해주세요"
@@ -126,33 +91,37 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         // Action
         let nickname = self.nicknameTextField.textField.rx.text.orEmpty.distinctUntilChanged().share()
         nickname
-            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .map(Reactor.Action.checkValidate)
             .bind(to: reactor.action)
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
         
         self.rx.viewDidLoad
-            .map { _ in Text.adjectives.randomElement()! + " " + Text.nouns.randomElement()! }
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        self.nextButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                let profileImageSettingVC = OnboardingProfileImageSettingViewController()
+                profileImageSettingVC.reactor = reactor.reactorForProfileImage()
+                object.navigationPush(profileImageSettingVC, animated: true)
+            }
+            .disposed(by: self.disposeBag)
+
+        // State
+        reactor.state.map(\.nickname)
+            .distinctUntilChanged()
             .subscribe(with: self) { object, randomText in
                 object.nicknameTextField.text = randomText
                 object.nicknameTextField.textField.sendActions(for: .editingChanged)
             }
             .disposed(by: self.disposeBag)
         
-        self.nextButton.rx.tap
-            .withLatestFrom(nickname)
-            .subscribe(with: self) { object, nickname in
-                let profileImageVC = OnboardingProfileImageSettingViewController()
-                profileImageVC.reactor = reactor.reactorForProfileImage(nickname: nickname)
-                object.navigationPush(profileImageVC, animated: true)
-            }
-            .disposed(by: disposeBag)
-
-        // State
         reactor.state.map(\.isValid)
             .distinctUntilChanged()
             .bind(to: self.nextButton.rx.isEnabled)
-            .disposed(by: disposeBag)
+            .disposed(by: self.disposeBag)
         
         reactor.state.map(\.errorMessage)
             .distinctUntilChanged()

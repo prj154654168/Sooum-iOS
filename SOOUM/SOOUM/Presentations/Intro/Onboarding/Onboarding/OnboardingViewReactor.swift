@@ -16,23 +16,28 @@ class OnboardingViewReactor: Reactor {
     
     
     enum Mutation {
-        case check(Suspension?)
+        case check(CheckAvailable?)
     }
 
     struct State {
-        fileprivate(set) var suspension: Suspension?
+        fileprivate(set) var checkAvailable: CheckAvailable?
         fileprivate(set) var shouldHideTransfer: Bool
     }
 
     var initialState: State = .init(
-        suspension: nil,
+        checkAvailable: nil,
         shouldHideTransfer: UserDefaults.standard.bool(forKey: "AppFlag")
     )
     
-    let provider: ManagerProviderType
+    private let dependencies: AppDIContainerable
+    private let userUseCase: UserUseCase
+    private let pushManager: PushManagerDelegate
     
-    init(provider: ManagerProviderType) {
-        self.provider = provider
+    init(dependencies: AppDIContainerable) {
+        self.dependencies = dependencies
+        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        let provider = dependencies.rootContainer.resolve(ManagerProviderType.self)
+        self.pushManager = provider.pushManager
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -42,7 +47,7 @@ class OnboardingViewReactor: Reactor {
             return .concat([
                 self.check()
                     .compactMap(Mutation.check),
-                self.provider.pushManager.switchNotification(on: true)
+                self.pushManager.switchNotification(on: true)
                     .flatMapLatest { _ -> Observable<Mutation> in .empty() }
             ])
         }
@@ -51,8 +56,8 @@ class OnboardingViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
-        case let .check(suspension):
-            newState.suspension = suspension
+        case let .check(checkAvailable):
+            newState.checkAvailable = checkAvailable
         }
         return state
     }
@@ -60,36 +65,23 @@ class OnboardingViewReactor: Reactor {
 
 extension OnboardingViewReactor {
     
-    private func check() -> Observable<Suspension?> {
+    private func check() -> Observable<CheckAvailable?> {
         
-        return self.provider.networkManager.request(
-            RSAKeyResponse.self,
-            request: AuthRequest.getPublicKey
-        )
-        .map(\.publicKey)
-        .withUnretained(self)
-        .flatMapLatest { object, publicKey -> Observable<Suspension?> in
-            
-            if let secKey = object.provider.authManager.convertPEMToSecKey(pemString: publicKey),
-               let encryptedDeviceId = object.provider.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
+        return self.userUseCase.isAvailableCheck()
+            .flatMapLatest { checkAvailable -> Observable<CheckAvailable?> in
                 
-                let request: JoinRequest = .suspension(encryptedDeviceId: encryptedDeviceId)
-                return object.provider.networkManager.request(SuspensionResponse.self, request: request)
-                    .map(\.suspension)
-            } else {
-                return .just(nil)
+                return checkAvailable == .defaultValue ? .just(nil) : .just(checkAvailable)
             }
-        }
     }
 }
 
 extension OnboardingViewReactor {
     
     func reactorForTermsOfService() -> OnboardingTermsOfServiceViewReactor {
-        OnboardingTermsOfServiceViewReactor(provider: self.provider)
+        OnboardingTermsOfServiceViewReactor(dependencies: self.dependencies)
     }
     
     func reactorForEnterTransfer() -> EnterMemberTransferViewReactor {
-        EnterMemberTransferViewReactor(provider: self.provider, entranceType: .onboarding)
+        EnterMemberTransferViewReactor(dependencies: self.dependencies, entranceType: .onboarding)
     }
 }

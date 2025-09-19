@@ -208,9 +208,9 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         self.enterUserTransferCodeCellView.rx.didSelect
             .subscribe(with: self) { object, _ in
-                let enterMemberTransferViewController = EnterMemberTransferViewController()
-                enterMemberTransferViewController.reactor = reactor.reactorForTransferEnter()
-                object.navigationPush(enterMemberTransferViewController, animated: true, bottomBarHidden: true)
+                // let enterMemberTransferViewController = EnterMemberTransferViewController()
+                // enterMemberTransferViewController.reactor = reactor.reactorForTransferEnter()
+                // object.navigationPush(enterMemberTransferViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: self.disposeBag)
         

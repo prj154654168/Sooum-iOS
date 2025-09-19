@@ -99,9 +99,9 @@ class ResignViewReactor: Reactor {
 
 extension ResignViewReactor {
     
-    func reactorForOnboarding() -> OnboardingViewReactor {
-        OnboardingViewReactor(provider: self.provider)
-    }
+    // func reactorForOnboarding() -> OnboardingViewReactor {
+    //     OnboardingViewReactor(provider: self.provider)
+    // }
 }
 
 extension ResignViewReactor {

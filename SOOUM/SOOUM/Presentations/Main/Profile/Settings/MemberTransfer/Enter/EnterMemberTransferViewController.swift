@@ -194,8 +194,7 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         
         isSuccess
             .filter { $0 == false }
-            .subscribe(with: self) { object, _ in
-                
+            .subscribe(onNext: { _ in
                 let confirmAction = SOMDialogAction(
                     title: Text.dialogConfirmButtonTitle,
                     style: .primary,
@@ -210,7 +209,7 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
                     textAlignment: .left,
                     actions: [confirmAction]
                 )
-            }
+            })
             .disposed(by: self.disposeBag)
     }
 }

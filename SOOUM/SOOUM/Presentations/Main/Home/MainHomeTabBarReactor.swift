@@ -42,11 +42,12 @@ class MainHomeTabBarReactor: Reactor {
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .notisWithoutRead:
-            let request: NotificationRequest = .totalWithoutReadCount
-            
-            return self.provider.networkManager.request(WithoutReadNotisCountResponse.self, request: request)
-                .map { $0.unreadCnt == "0" }
-                .map(Mutation.notisWithoutRead)
+           //  let request: NotificationRequest = .totalWithoutReadCount
+           //
+           //  return self.provider.networkManager.request(WithoutReadNotisCountResponse.self, request: request)
+           //      .map { $0.unreadCnt == "0" }
+           //      .map(Mutation.notisWithoutRead)
+            return .empty()
         case let .requestRead(selectedId):
             let request: NotificationRequest = .requestRead(notificationId: selectedId)
             return self.provider.networkManager.request(Empty.self, request: request)

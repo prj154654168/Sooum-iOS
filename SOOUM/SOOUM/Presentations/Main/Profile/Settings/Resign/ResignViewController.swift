@@ -225,12 +225,12 @@ class ResignViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 guard let window = object.view.window else { return }
                 
-                let onboardingViewController = OnboardingViewController()
-                onboardingViewController.reactor = reactor.reactorForOnboarding()
-                onboardingViewController.modalTransitionStyle = .crossDissolve
+                // let onboardingViewController = OnboardingViewController()
+                // onboardingViewController.reactor = reactor.reactorForOnboarding()
+                // onboardingViewController.modalTransitionStyle = .crossDissolve
                 
-                let navigationViewController = UINavigationController(rootViewController: onboardingViewController)
-                window.rootViewController = navigationViewController
+                // let navigationViewController = UINavigationController(rootViewController: onboardingViewController)
+                // window.rootViewController = navigationViewController
                 
                 object.navigationController?.viewControllers = []
             }

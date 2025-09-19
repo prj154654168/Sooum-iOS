@@ -58,7 +58,6 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             }
         }
     }
-
     
     
     // MARK: Views
@@ -104,34 +103,34 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
         self.view.addSubview(self.agreeAllButtonView)
         self.agreeAllButtonView.snp.makeConstraints {
             $0.top.equalTo(self.guideMessageView.snp.bottom).offset(32)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
         }
         
         self.view.addSubview(self.termsOfServiceCellView)
         self.termsOfServiceCellView.snp.makeConstraints {
             $0.top.equalTo(self.agreeAllButtonView.snp.bottom).offset(8)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
         }
         
         self.view.addSubview(self.locationServiceCellView)
         self.locationServiceCellView.snp.makeConstraints {
             $0.top.equalTo(self.termsOfServiceCellView.snp.bottom)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
         }
         
         self.view.addSubview(self.privacyPolicyCellView)
         self.privacyPolicyCellView.snp.makeConstraints {
             $0.top.equalTo(self.locationServiceCellView.snp.bottom)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
         }
         
         self.view.addSubview(self.nextButton)
         self.nextButton.snp.makeConstraints {
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)
             $0.height.equalTo(56)
@@ -154,7 +153,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.termsOfServiceCellView.rx.nextSelect
+        self.termsOfServiceCellView.rx.moveSelect
             .subscribe(onNext: { _ in
                 if UIApplication.shared.canOpenURL(TermsOfService.termsOfService.url) {
                     UIApplication.shared.open(
@@ -171,7 +170,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.locationServiceCellView.rx.nextSelect
+        self.locationServiceCellView.rx.moveSelect
             .subscribe(onNext: { _ in
                 if UIApplication.shared.canOpenURL(TermsOfService.locationService.url) {
                     UIApplication.shared.open(
@@ -188,7 +187,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.privacyPolicyCellView.rx.nextSelect
+        self.privacyPolicyCellView.rx.moveSelect
             .subscribe(onNext: { _ in
                 if UIApplication.shared.canOpenURL(TermsOfService.privacyPolicy.url) {
                     UIApplication.shared.open(
@@ -201,13 +200,6 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .disposed(by: self.disposeBag)
         
         self.nextButton.rx.tap
-            .map { _ in Reactor.Action.signUp }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        // State
-        reactor.state.map(\.shouldNavigate)
-            .filter { $0 }
             .subscribe(with: self) { object, _ in
                 let nicknameSettingVC = OnboardingNicknameSettingViewController()
                 nicknameSettingVC.reactor = reactor.reactorForNickname()

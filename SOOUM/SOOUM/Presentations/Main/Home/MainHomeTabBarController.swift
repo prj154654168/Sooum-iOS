@@ -147,9 +147,9 @@ class MainHomeTabBarController: BaseNavigationViewController, View {
                     if let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                        let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
                         
-                        let viewController = OnboardingViewController()
-                        viewController.reactor = OnboardingViewReactor(provider: object.reactor!.provider)
-                        window.rootViewController = UINavigationController(rootViewController: viewController)
+                        // let viewController = OnboardingViewController()
+                        // viewController.reactor = OnboardingViewReactor(provider: object.reactor!.provider)
+                        // window.rootViewController = UINavigationController(rootViewController: viewController)
                     }
                 }
             }

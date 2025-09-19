@@ -15,7 +15,7 @@ import SnapKit
 import Then
 
 
-class LaunchScreenViewController: BaseViewController, View {
+class LaunchScreenViewController: BaseNavigationViewController, View {
     
     enum Text {
         static let updateVerionTitle: String = "업데이트 안내"
@@ -36,6 +36,10 @@ class LaunchScreenViewController: BaseViewController, View {
     }
     
     override func setupConstraints() {
+        super.setupConstraints()
+        
+        self.isNavigationBarHidden = true
+        
         self.view.backgroundColor = .som.v2.pMain
         
         self.view.addSubview(self.imageView)
@@ -58,7 +62,7 @@ class LaunchScreenViewController: BaseViewController, View {
         reactor.state.map(\.mustUpdate)
             .distinctUntilChanged()
             .filter { $0 }
-            .subscribe(with: self) { object, _ in
+            .subscribe(onNext: { _ in
                 
                 let updateAction = SOMDialogAction(
                     title: Text.updateActionTitle,
@@ -88,7 +92,7 @@ class LaunchScreenViewController: BaseViewController, View {
                     textAlignment: .left,
                     actions: [updateAction]
                 )
-            }
+            })
             .disposed(by: self.disposeBag)
 
         // 로그인 성공 시 홈 화면으로 전환
@@ -96,12 +100,12 @@ class LaunchScreenViewController: BaseViewController, View {
         isRegistered
             .filter { $0 == true }
             .subscribe(with: self) { object, _ in
-                let viewController = MainTabBarController()
-                viewController.reactor = reactor.reactorForMainTabBar()
-                let navigationController = UINavigationController(
-                    rootViewController: viewController
-                )
-                object.view.window?.rootViewController = navigationController
+                // let viewController = MainTabBarController()
+                // viewController.reactor = reactor.reactorForMainTabBar()
+                // let navigationController = UINavigationController(
+                //     rootViewController: viewController
+                // )
+                // object.view.window?.rootViewController = navigationController
             }
             .disposed(by: self.disposeBag)
         // 로그인 실패 시 온보딩 화면으로 전환
@@ -113,6 +117,8 @@ class LaunchScreenViewController: BaseViewController, View {
                 let navigationController = UINavigationController(
                     rootViewController: viewController
                 )
+                // 제스처 뒤로가기를 위한 델리게이트 설정
+                navigationController.interactivePopGestureRecognizer?.delegate = object
                 object.view.window?.rootViewController = navigationController
             }
             .disposed(by: self.disposeBag)

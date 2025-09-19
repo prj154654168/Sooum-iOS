@@ -136,7 +136,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
             self.cameraButton.rx.tap.asObservable()
         )
         .subscribe(with: self) { object, _ in
-            let selectProfileBottomFloatView = SelectProfileBottomFloatView(actions: self.actions)
+            let selectProfileBottomFloatView = SelectProfileBottomFloatView(actions: object.actions)
             
             var wrapper: SwiftEntryKitViewWrapper = selectProfileBottomFloatView.sek
             wrapper.entryName = Text.selectProfileEntryName
@@ -145,17 +145,17 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         .disposed(by: self.disposeBag)
 
         self.completeButton.rx.tap
-            .map { _ in Reactor.Action.updateProfile }
+            .map { _ in Reactor.Action.signUp }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
 
         self.passButton.rx.tap
-            .map { _ in Reactor.Action.updateProfile }
+            .map { _ in Reactor.Action.signUp }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
 
         // State
-        reactor.state.map(\.isSuccess)
+        reactor.state.map(\.isSignUp)
             .distinctUntilChanged()
             .filter { $0 }
             .subscribe(with: self) { object, _ in
@@ -178,7 +178,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         
         reactor.state.map(\.hasErrors)
             .filter { $0 }
-            .subscribe(with: self) { object, _ in
+            .subscribe(onNext: { _ in
                 
                 let actions: [SOMDialogAction] = [
                     .init(
@@ -196,7 +196,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
                     textAlignment: .left,
                     actions: actions
                 )
-            }
+            })
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.profileImage)
@@ -207,17 +207,17 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
                 var actions: [SelectProfileBottomFloatView.FloatAction] = [
                     .init(
                         title: Text.selectProfileFirstButtonTitle,
-                        action: {
+                        action: { [weak object] in
                             SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
-                                object.showPickerForLibrary(for: .library)
+                                object?.showPicker(for: .library)
                             }
                         }
                     ),
                     .init(
                         title: Text.selectProfileSecondButtonTitle,
-                        action: {
+                        action: { [weak object] in
                             SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
-                                object.showPickerForLibrary(for: .photo)
+                                object?.showPicker(for: .photo)
                             }
                         }
                     )
@@ -226,11 +226,15 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
                 if profileImage != nil {
                     actions.append(.init(
                         title: Text.selectProfileThirdButtonTitle,
-                        action: { /* TODO: 기본 이미지 변경 API 붙이기 */ }
+                        action: {
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                reactor.action.onNext(.setDefaultImage)
+                            }
+                        }
                     ))
                 }
                 
-                self.actions = actions
+                object.actions = actions
             }
             .disposed(by: self.disposeBag)
     }
@@ -238,7 +242,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
 
 extension OnboardingProfileImageSettingViewController {
     
-    func showPickerForLibrary(for screen: YPPickerScreen) {
+    func showPicker(for screen: YPPickerScreen) {
         
         var config = YPImagePickerConfiguration()
         
@@ -260,23 +264,22 @@ extension OnboardingProfileImageSettingViewController {
         config.wordings.crop = Text.selectPhotoFullScreenCropTitle
         
         let picker = YPImagePicker(configuration: config)
-        picker.didFinishPicking { [weak self] items, cancelled in
-            
-            guard let self = self, let reactor = self.reactor else { return }
+        picker.didFinishPicking { [weak self, weak picker] items, cancelled in
             
             if cancelled {
                 Log.debug("Picker was canceled")
-                picker.dismiss(animated: true, completion: nil)
+                picker?.dismiss(animated: true, completion: nil)
                 return
             }
             
-            if let image = items.singlePhoto?.image {
-                reactor.action.onNext(.updateImage(image))
+            if let image = items.singlePhoto?.image, let reactor = self?.reactor {
+                reactor.action.onNext(.uploadImage(image))
             } else {
                 Log.error("Error occured while picking an image")
             }
-            picker.dismiss(animated: true, completion: nil)
+            picker?.dismiss(animated: true, completion: nil)
         }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
             self.present(picker, animated: true, completion: nil)
         }

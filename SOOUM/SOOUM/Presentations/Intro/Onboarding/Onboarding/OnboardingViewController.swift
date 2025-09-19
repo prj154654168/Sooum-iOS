@@ -157,10 +157,10 @@ class OnboardingViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         let startButtonTapped = self.startButton.rx.tap.share()
-        let suspension = reactor.state.map(\.suspension).share()
+        let checkAvailable = reactor.state.map(\.checkAvailable).share()
         
         startButtonTapped
-            .withLatestFrom(suspension)
+            .withLatestFrom(checkAvailable)
             .filter { $0 == nil }
             .subscribe(with: self) { object, _ in
                 let termsOfServiceViewController = OnboardingTermsOfServiceViewController()
@@ -170,10 +170,13 @@ class OnboardingViewController: BaseNavigationViewController, View {
             .disposed(by: disposeBag)
         
         startButtonTapped
-            .withLatestFrom(suspension)
+            .withLatestFrom(checkAvailable)
             .filterNil()
-            .subscribe(with: self) { object, suspension in
-                object.showDialog(suspension)
+            .subscribe(with: self) { object, checkAvailable in
+                
+                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
+                    object.showDialog(checkAvailable.banned, at: rejoinAvailableAt)
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -186,11 +189,14 @@ class OnboardingViewController: BaseNavigationViewController, View {
             .disposed(by: disposeBag)
         
         // State
-        suspension
+        checkAvailable
             .filterNil()
             .take(1)
-            .subscribe(with: self) { object, suspension in
-                object.showDialog(suspension)
+            .subscribe(with: self) { object, checkAvailable in
+                
+                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
+                    object.showDialog(checkAvailable.banned, at: rejoinAvailableAt)
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -205,9 +211,9 @@ class OnboardingViewController: BaseNavigationViewController, View {
 
 extension OnboardingViewController {
     
-    func showDialog(_ suspension: Suspension) {
-        let dialogLeadingMessage = suspension.isBanUser ? Text.banUserDialogLeadingMessage : Text.resignDialogLeadingMessage
-        let dialogMessage = dialogLeadingMessage + suspension.untilBan.banEndFormatted + Text.dialogTrailingMessage
+    func showDialog(_ isBanned: Bool, at rejoinAvailableAt: Date) {
+        let dialogLeadingMessage = isBanned ? Text.banUserDialogLeadingMessage : Text.resignDialogLeadingMessage
+        let dialogMessage = dialogLeadingMessage + rejoinAvailableAt.banEndFormatted + Text.dialogTrailingMessage
         
         let confirmAction = SOMDialogAction(
             title: Text.confirmActionTitle,
@@ -218,7 +224,7 @@ extension OnboardingViewController {
         )
         
         SOMDialogViewController.show(
-            title: suspension.isBanUser ? Text.banUserDialogTitle : Text.resignDialogTitle,
+            title: isBanned ? Text.banUserDialogTitle : Text.resignDialogTitle,
             message: dialogMessage,
             textAlignment: .left,
             actions: [confirmAction]

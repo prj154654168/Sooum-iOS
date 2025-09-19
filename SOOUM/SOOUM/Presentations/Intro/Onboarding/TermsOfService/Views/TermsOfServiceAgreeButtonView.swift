@@ -53,24 +53,28 @@ class TermsOfServiceAgreeButtonView: UIView {
     
     private func setupConstraints() {
         
-        self.snp.makeConstraints {
-            $0.width.equalTo(UIScreen.main.bounds.width)
+        let container = UIView()
+        self.addSubview(container)
+        container.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
             $0.height.equalTo(56)
         }
         
-        self.addSubview(self.backgroundButton)
+        container.addSubview(self.backgroundButton)
         self.backgroundButton.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         
-        self.addSubview(self.checkImageView)
+        container.addSubview(self.checkImageView)
         self.checkImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(24)
             $0.size.equalTo(24)
         }
         
-        self.addSubview(self.titleLabel)
+        container.addSubview(self.titleLabel)
         self.titleLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalTo(self.checkImageView.snp.trailing).offset(8)
