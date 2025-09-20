@@ -53,7 +53,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
     private let guideMessageView = OnboardingGuideMessageView(title: Text.title, currentNumber: 3)
     
     private let profileImageView = UIImageView().then {
-        $0.image = .init(.image(.v2(.profile)))
+        $0.image = .init(.image(.v2(.profile_large)))
         $0.layer.cornerRadius = 120 * 0.5
         $0.clipsToBounds = true
     }
@@ -202,7 +202,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         reactor.state.map(\.profileImage)
             .distinctUntilChanged()
             .subscribe(with: self) { object, profileImage in
-                object.profileImageView.image = profileImage ?? .init(.image(.v2(.profile)))
+                object.profileImageView.image = profileImage ?? .init(.image(.v2(.profile_large)))
                 
                 var actions: [SelectProfileBottomFloatView.FloatAction] = [
                     .init(
