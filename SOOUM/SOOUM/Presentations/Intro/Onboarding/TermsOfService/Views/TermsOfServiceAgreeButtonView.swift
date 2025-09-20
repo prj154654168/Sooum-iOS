@@ -21,7 +21,7 @@ class TermsOfServiceAgreeButtonView: UIView {
     // MARK: Views
     
     private let checkImageView = UIImageView().then {
-        $0.image = .init(.icon(.outlined(.check)))
+        $0.image = .init(.icon(.v2(.outlined(.check))))
         $0.tintColor = .som.v2.gray400
     }
     

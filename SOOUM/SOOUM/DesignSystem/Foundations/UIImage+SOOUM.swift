@@ -204,7 +204,7 @@ extension UIImage.SOOUMType {
         case onboarding
         case onboarding_finish
         case check_square_light
-        case profile
+        case profile_large
     }
     
     enum V2LogoStyle: String {

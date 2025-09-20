@@ -38,6 +38,7 @@ extension UITextView {
         self.typingAttributes = attributes
     }
 
+    /// When self.text == nil, must set typography when input text
     var typography: Typography? {
         set {
             if let typography: Typography = newValue {

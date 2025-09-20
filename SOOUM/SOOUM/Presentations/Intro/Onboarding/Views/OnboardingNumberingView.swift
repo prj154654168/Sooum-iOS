@@ -85,8 +85,8 @@ private extension OnboardingNumberingView {
             
             let label = UILabel().then {
                 $0.text = "\(number)"
-                $0.textColor = .white
-                $0.typography = .som.v2.subtitle2
+                $0.textColor = .som.v2.white
+                $0.typography = .som.v2.subtitle3
             }
             
             backgroundView.addSubview(label)
