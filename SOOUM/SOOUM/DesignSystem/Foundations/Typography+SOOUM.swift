@@ -214,6 +214,14 @@ extension V2Style where Base == Typography {
     ///
     /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
     static var subtitle2: Typography = .init(
+        fontContainer: BuiltInFont(size: 14, weight: .bold),
+        lineHeight: 21,
+        letterSpacing: -0.025
+    )
+    /// Size: 14, Line height: 21
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var subtitle3: Typography = .init(
         fontContainer: BuiltInFont(size: 14, weight: .semibold),
         lineHeight: 21,
         letterSpacing: -0.025

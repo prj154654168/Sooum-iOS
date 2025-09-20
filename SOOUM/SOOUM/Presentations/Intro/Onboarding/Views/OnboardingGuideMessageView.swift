@@ -25,7 +25,7 @@ class OnboardingGuideMessageView: UIView {
     
     private let titleLabel = UILabel().then {
         $0.textColor = .som.v2.black
-        $0.typography = .som.v2.head2
+        $0.typography = .som.v2.head2.withAlignment(.left)
         $0.lineBreakMode = .byWordWrapping
         $0.lineBreakStrategy = .hangulWordPriority
         $0.numberOfLines = 0
@@ -36,7 +36,8 @@ class OnboardingGuideMessageView: UIView {
     
     var title: String? {
         set {
-            self.titleLabel.text = newValue
+            let attributes = Typography.som.v2.head2.withAlignment(.left).attributes
+            self.titleLabel.attributedText = .init(string: newValue ?? "", attributes: attributes)
         }
         get {
             return self.titleLabel.text
