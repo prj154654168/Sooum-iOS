@@ -110,7 +110,7 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         let guideMessageLabel = UILabel().then {
             $0.text = Text.guideMessage
             $0.textColor = .som.v2.gray500
-            $0.typography = .som.v2.caption2
+            $0.typography = .som.v2.caption2.withAlignment(.left)
             $0.numberOfLines = 0
             $0.lineBreakMode = .byCharWrapping
         }
