@@ -78,8 +78,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
         $0.typography = .som.v2.body1
         $0.foregroundColor = .som.v2.gray500
         $0.backgroundColor = .som.v2.white
-        $0.hasUnderlined = true
-        $0.inset = .init(top: 6, left: 16, bottom: 6, right: 16)
+        $0.inset = .init(top: 6, left: 0, bottom: 6, right: 0)
     }
     
     
@@ -137,7 +136,8 @@ class OnboardingViewController: BaseNavigationViewController, View {
         self.view.addSubview(self.oldUserButton)
         self.oldUserButton.snp.makeConstraints {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(6)
-            $0.centerX.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
         
         self.view.addSubview(self.startButton)
