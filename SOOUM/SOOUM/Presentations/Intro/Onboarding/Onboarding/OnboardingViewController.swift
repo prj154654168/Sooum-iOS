@@ -142,7 +142,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
         
         self.view.addSubview(self.startButton)
         self.startButton.snp.makeConstraints {
-            $0.bottom.equalTo(self.oldUserButton.snp.top).offset(-14)
+            $0.bottom.equalTo(self.oldUserButton.snp.top).offset(-8)
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)
             $0.height.equalTo(56)
