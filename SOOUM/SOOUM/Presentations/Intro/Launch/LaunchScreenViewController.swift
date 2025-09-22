@@ -44,8 +44,7 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         
         self.view.addSubview(self.imageView)
         self.imageView.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.centerY.equalTo(self.view.safeAreaLayoutGuide.snp.centerY)
+            $0.center.equalToSuperview()
             $0.width.equalTo(200)
             $0.height.equalTo(33)
         }
