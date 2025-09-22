@@ -81,6 +81,9 @@ class OnboardingCompletedViewController: BaseNavigationViewController, View {
         }
     }
     
+    
+    // MARK: ReactorKit - bind
+    
     func bind(reactor: OnboardingCompletedViewReactor) {
         
         // Action

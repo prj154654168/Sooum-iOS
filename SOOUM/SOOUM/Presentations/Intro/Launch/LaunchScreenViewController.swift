@@ -27,9 +27,15 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         static let updateActionTitle: String = "새로워진 숨 사용하기"
     }
     
+    
+    // MARK: Views
+    
     let imageView = UIImageView(image: .init(.logo(.v2(.logo_white)))).then {
         $0.contentMode = .scaleAspectFit
     }
+    
+    
+    // MARK: Override func
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -49,6 +55,9 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
             $0.height.equalTo(33)
         }
     }
+    
+    
+    // MARK: ReactorKit - bind
     
     func bind(reactor: LaunchScreenViewReactor) {
         
