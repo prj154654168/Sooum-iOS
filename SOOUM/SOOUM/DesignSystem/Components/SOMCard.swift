@@ -37,7 +37,7 @@ class SOMCard: UIView {
     // 본문 dim 배경
     let cardTextBackgroundBlurView = UIView().then {
         $0.backgroundColor = .som.v2.dim
-        $0.layer.cornerRadius = 16
+        $0.layer.cornerRadius = 12
         $0.clipsToBounds = true
     }
     
