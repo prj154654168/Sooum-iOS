@@ -7,7 +7,7 @@
 
 import Alamofire
 
-struct NotificationInfoResponse {
+struct NotificationInfoResponse: Hashable, Equatable {
     
     let notificationInfo: CommonNotificationInfo
     let targetCardId: String
@@ -38,7 +38,7 @@ extension NotificationInfoResponse: Decodable {
         self.notificationInfo = try singleContainer.decode(CommonNotificationInfo.self)
         
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.targetCardId = String(try container.decode(Int.self, forKey: .targetCardId))
+        self.targetCardId = String(try container.decode(Int64.self, forKey: .targetCardId))
         self.nickName = try container.decode(String.self, forKey: .nickName)
     }
 }

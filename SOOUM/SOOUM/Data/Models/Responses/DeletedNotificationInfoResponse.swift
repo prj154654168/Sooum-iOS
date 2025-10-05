@@ -7,19 +7,19 @@
 
 import Alamofire
 
-struct DeleteNotificationInfoResponse {
+struct DeletedNotificationInfoResponse: Hashable, Equatable {
     
     let notificationInfo: CommonNotificationInfo
 }
 
-extension DeleteNotificationInfoResponse: EmptyResponse {
+extension DeletedNotificationInfoResponse: EmptyResponse {
     
-    static func emptyValue() -> DeleteNotificationInfoResponse {
-        DeleteNotificationInfoResponse(notificationInfo: CommonNotificationInfo.defaultValue)
+    static func emptyValue() -> DeletedNotificationInfoResponse {
+        DeletedNotificationInfoResponse(notificationInfo: CommonNotificationInfo.defaultValue)
     }
 }
 
-extension DeleteNotificationInfoResponse: Decodable {
+extension DeletedNotificationInfoResponse: Decodable {
     
     init(from decoder: any Decoder) throws {
         let singleContainer = try decoder.singleValueContainer()
