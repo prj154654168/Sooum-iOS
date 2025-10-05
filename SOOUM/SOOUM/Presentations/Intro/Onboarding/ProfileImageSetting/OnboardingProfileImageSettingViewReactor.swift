@@ -136,8 +136,8 @@ extension OnboardingProfileImageSettingViewReactor {
                 .just(.updateImageInfo(nil, nil)),
                 .just(.updateIsSignUp(false)),
                 .just(.updateIsLoading(false)),
-                // 부적절한 이미지 업로드 에러 코드 == 402
-                .just(.updateErrors(nsError.code == 402))
+                // 부적절한 이미지 업로드 에러 코드 == 422
+                .just(.updateErrors(nsError.code == 422))
             ])
             
             return endProcessing

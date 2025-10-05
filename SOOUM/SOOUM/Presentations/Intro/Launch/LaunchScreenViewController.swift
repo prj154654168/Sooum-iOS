@@ -108,12 +108,12 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         isRegistered
             .filter { $0 == true }
             .subscribe(with: self) { object, _ in
-                // let viewController = MainTabBarController()
-                // viewController.reactor = reactor.reactorForMainTabBar()
-                // let navigationController = UINavigationController(
-                //     rootViewController: viewController
-                // )
-                // object.view.window?.rootViewController = navigationController
+                let viewController = MainTabBarController()
+                viewController.reactor = reactor.reactorForMainTabBar()
+                let navigationController = UINavigationController(
+                    rootViewController: viewController
+                )
+                object.view.window?.rootViewController = navigationController
             }
             .disposed(by: self.disposeBag)
         // 로그인 실패 시 온보딩 화면으로 전환

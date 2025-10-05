@@ -53,7 +53,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         
         self.view.addSubview(self.guideMessageView)
         self.guideMessageView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(16)
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(16)
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)
         }
@@ -66,7 +66,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         
         self.view.addSubview(self.nextButton)
         self.nextButton.snp.makeConstraints {
-            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)
             $0.height.equalTo(56)
