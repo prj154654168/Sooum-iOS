@@ -140,18 +140,18 @@ class SOMStickyTabBar: UIView {
     
     private func setupConstraints() {
         
+        self.addSubview(self.bottomSeperator)
+        self.bottomSeperator.snp.makeConstraints {
+            $0.bottom.leading.trailing.equalToSuperview()
+            $0.height.equalTo(1)
+        }
+        
         self.addSubview(self.tabBarItemContainer)
         self.tabBarItemContainer.snp.makeConstraints {
             self.tabBarItemContainerTopConstraint = $0.top.equalToSuperview().offset(self.inset.top).constraint
             self.tabBarItemContainerBottomConstraint = $0.bottom.equalToSuperview().offset(-self.inset.bottom).constraint
             self.tabBarItemContainerLeadingConstraint = $0.leading.equalToSuperview().offset(self.inset.left).constraint
             self.tabBarItemContainerTrailingConstraint = $0.trailing.lessThanOrEqualToSuperview().offset(-self.inset.right).constraint
-        }
-        
-        self.addSubview(self.bottomSeperator)
-        self.bottomSeperator.snp.makeConstraints {
-            $0.bottom.leading.trailing.equalToSuperview()
-            $0.height.equalTo(1)
         }
     }
     
