@@ -16,6 +16,7 @@ import FirebaseMessaging
 import RxSwift
 
 import CocoaLumberjack
+import Kingfisher
 
 
 @main
@@ -44,6 +45,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Initalize token
         self.initializeTokenWhenFirstLaunch()
+        
+        // Set Kinfisher caching limit
+        self.setupKingfisherCacheLimit()
         
         FirebaseApp.configure()
         // 파이어베이스 Meesaging 설정
@@ -186,6 +190,19 @@ extension AppDelegate {
         // 앱 첫 실행 시 token 정보 제거
         AuthKeyChain.shared.delete(.accessToken)
         AuthKeyChain.shared.delete(.refreshToken)
+    }
+    
+    private func setupKingfisherCacheLimit() {
+        let cache = ImageCache.default
+        
+        /// 500MB
+        let diskLimit: UInt = 500 * 1024 * 1024
+        cache.diskStorage.config.sizeLimit = diskLimit
+        /// 디스크 캐시는 일주일 제한
+        cache.diskStorage.config.expiration = .days(7)
+        /// 100MB
+        let memoryLimit: Int = 100 * 1024 * 1024
+        cache.memoryStorage.config.totalCostLimit = memoryLimit
     }
     
     private func setupOnboardingWhenTransferSuccessed(_ userInfo: [AnyHashable: Any]?) {

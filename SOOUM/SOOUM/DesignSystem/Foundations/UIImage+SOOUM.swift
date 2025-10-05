@@ -142,21 +142,29 @@ extension UIImage.SOOUMType {
         
         enum Filled: String {
             case bell
+            case bomb
             case camera
+            case card
             case danger
             case heart
             case home
             case image
             case info
             case location
+            case lock
+            case mail
             case message_circle
             case message_square
+            case notice
+            case official
             case settings
             case star
             case tag
             case time
+            case tool
             case trash
             case user
+            case users
             case write
         }
         
@@ -204,10 +212,13 @@ extension UIImage.SOOUMType {
         case onboarding
         case onboarding_finish
         case check_square_light
+        case placeholder_home
+        case placeholder_notification
         case profile_large
     }
     
     enum V2LogoStyle: String {
         case logo_white
+        case logo_black
     }
 }
