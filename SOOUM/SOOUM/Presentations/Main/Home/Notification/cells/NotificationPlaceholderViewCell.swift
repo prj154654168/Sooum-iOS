@@ -1,5 +1,5 @@
 //
-//  NotiPlaceholderViewCell.swift
+//  NotificationPlaceholderViewCell.swift
 //  SOOUM
 //
 //  Created by 오현식 on 1/9/25.
@@ -11,21 +11,25 @@ import SnapKit
 import Then
 
 
-class NotiPlaceholderViewCell: UITableViewCell {
-    
-    static let cellIdentifier = String(reflecting: NotiPlaceholderViewCell.self)
+class NotificationPlaceholderViewCell: UITableViewCell {
     
     enum Text {
-        static let placeholderLabelText: String = "알림이 아직 없어요"
+        static let placeholderLabelText: String = "아직 표시할 알림이 없어요"
     }
+    
+    static let cellIdentifier = String(reflecting: NotificationPlaceholderViewCell.self)
     
     
     // MARK: Views
     
+    private let placeholderImage = UIImageView().then {
+        $0.image = .init(.image(.v2(.placeholder_notification)))
+    }
+    
     private let placeholderLabel = UILabel().then {
         $0.text = Text.placeholderLabelText
-        $0.textColor = .init(hex: "#B4B4B4")
-        $0.typography = .som.body1WithBold
+        $0.textColor = .som.v2.gray400
+        $0.typography = .som.v2.body1
     }
     
     
@@ -35,7 +39,6 @@ class NotiPlaceholderViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.selectionStyle = .none
-        self.backgroundColor = .clear
         self.isUserInteractionEnabled = false
         
         self.setupConstraints()
@@ -50,9 +53,17 @@ class NotiPlaceholderViewCell: UITableViewCell {
     
     private func setupConstraints() {
         
+        self.contentView.addSubview(self.placeholderImage)
+        self.placeholderImage.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(UIScreen.main.bounds.height * 0.2)
+            $0.centerX.equalToSuperview()
+        }
+        
         self.contentView.addSubview(self.placeholderLabel)
+        
         self.placeholderLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(UIScreen.main.bounds.height * 0.3)
+            $0.top.equalTo(self.placeholderImage.snp.bottom).offset(20)
+            $0.bottom.equalToSuperview()
             $0.centerX.equalToSuperview()
         }
     }

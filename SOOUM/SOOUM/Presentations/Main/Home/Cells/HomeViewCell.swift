@@ -1,5 +1,5 @@
 //
-//  MainHomeViewCell.swift
+//  HomeViewCell.swift
 //  SOOUM
 //
 //  Created by 오현식 on 10/3/24.
@@ -11,9 +11,17 @@ import SnapKit
 import Then
 
 
-class MainHomeViewCell: UITableViewCell {
+class HomeViewCell: UITableViewCell {
+    
+    static let cellIdentifier = String(reflecting: HomeViewCell.self)
+    
+    
+    // MARK: Views
     
     let cardView = SOMCard()
+    
+    
+    // MARK: Initialize
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -28,33 +36,37 @@ class MainHomeViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: Override func
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         
         self.cardView.prepareForReuse()
     }
     
+    
+    // MARK: Private func
+    
     private func setupConstraints() {
         
         self.contentView.addSubview(self.cardView)
         self.cardView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(10)
-            $0.bottom.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.top.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-10)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
     }
     
-    func setModel(_ model: SOMCardModel) {
+    
+    // MARK: Public info
+    
+    func bind(_ model: BaseCardInfo) {
         self.cardView.setModel(model: model)
     }
     
     func setData(tagCard: TagDetailCardResponse.TagFeedCard) {
         self.cardView.setData(tagCard: tagCard)
-    }
-    
-    /// 컨텐츠 모드에 따라 정보 스택뷰 순서 변경
-    func changeOrderInCardContentStack(_ selectedIndex: Int) {
-        self.cardView.changeOrderInCardContentStack(selectedIndex)
     }
 }

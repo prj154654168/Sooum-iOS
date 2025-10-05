@@ -13,49 +13,49 @@ import Then
 
 class NotificationViewCell: UITableViewCell {
     
+    enum Text {
+        static let cardTitle: String = "카드"
+        static let feedLikeContents: String = "님이 회원님의 카드에 좋아요를 남겼어요."
+        static let commentLikeContents: String = "님이 회원님의 답카드에 좋아요를 남겼어요."
+        static let commentWriteContents: String = "님이 답카드를 남겼어요. 알림을 눌러 대화를 이어가 보세요."
+        
+        static let followTitle: String = "팔로우"
+        static let followContents: String = "님이 회원님을 팔로우하기 시작했어요."
+        
+        static let deletedAndBlockedTitle: String = "제한"
+        static let deletedContents: String = "운영정책 위반으로 인해 작성된 카드가 삭제 처리되었습니다."
+        static let blockedLeadingContents: String = "운영정책 위반으로 인해 "
+        static let blockedTrailingContents: String = "까지 카드추가가 제한됩니다."
+    }
+    
     static let cellIdentifier = String(reflecting: NotificationViewCell.self)
     
-    private let feedCardImageView = UIImageView().then {
-        $0.layer.cornerRadius = 6
-        $0.clipsToBounds = true
-    }
     
-    private let feedCardDimView = UIView().then {
-        $0.backgroundColor = .black.withAlphaComponent(0.3)
-    }
+    // MARK: Views
     
-    private let feedCardContentLabel = UILabel().then {
-        $0.textColor = .som.white
-        $0.textAlignment = .center
-        $0.numberOfLines = 0
-        $0.lineBreakMode = .byTruncatingTail
-        $0.typography = .init(
-            fontContainer: BuiltInFont(size: 3, weight: .bold),
-            lineHeight: 5,
-            letterSpacing: -0.04
-        )
-    }
+    private let iconView = UIImageView()
     
-    private let notificationTitleLabel = UILabel().then {
-        $0.textColor = .som.gray700
-        $0.textAlignment = .center
-        $0.typography = .som.body3WithBold
+    private let titleLabel = UILabel().then {
+        $0.textColor = .som.v2.gray400
     }
     
     private let timeGapLabel = UILabel().then {
         $0.textColor = .som.gray400
-        $0.textAlignment = .center
-        $0.typography = .som.body3WithBold
     }
     
-    private let dotWithoutReadView = UIView().then {
-        $0.backgroundColor = .som.red
-        $0.layer.cornerRadius = 6 * 0.5
-        $0.clipsToBounds = true
+    private let contentLabel = UILabel().then {
+        $0.textColor = .som.v2.gray600
+        $0.numberOfLines = 0
+        $0.textAlignment = .left
     }
+    
+    
+    // MARK: Override func
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.selectionStyle = .none
         
         self.setupConstraints()
     }
@@ -64,63 +64,135 @@ class NotificationViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: Private func
+    
     private func setupConstraints() {
         
-        self.contentView.addSubview(self.feedCardImageView)
-        self.feedCardImageView.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
-            $0.size.equalTo(40)
+        let titleContinaer = UIView()
+        self.contentView.addSubview(titleContinaer)
+        titleContinaer.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(24)
+            $0.trailing.equalToSuperview().offset(-24)
         }
         
-        self.feedCardImageView.addSubview(self.feedCardDimView)
-        self.feedCardDimView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+        titleContinaer.addSubview(self.iconView)
+        self.iconView.snp.makeConstraints {
+            $0.centerY.leading.equalToSuperview()
+            $0.size.equalTo(16)
         }
         
-        self.feedCardImageView.addSubview(self.feedCardContentLabel)
-        self.feedCardContentLabel.snp.makeConstraints {
-            $0.top.leading.equalToSuperview().offset(5)
-            $0.bottom.trailing.equalToSuperview().offset(-5)
+        titleContinaer.addSubview(self.titleLabel)
+        self.titleLabel.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalTo(self.iconView.snp.trailing).offset(8)
         }
         
-        self.contentView.addSubview(self.notificationTitleLabel)
-        self.notificationTitleLabel.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalTo(self.feedCardImageView.snp.trailing).offset(20)
-        }
-        
-        self.contentView.addSubview(self.timeGapLabel)
+        titleContinaer.addSubview(self.timeGapLabel)
         self.timeGapLabel.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.greaterThanOrEqualTo(self.notificationTitleLabel.snp.trailing).offset(9)
-            $0.trailing.equalToSuperview().offset(-26)
+            $0.verticalEdges.trailing.equalToSuperview()
+            $0.leading.greaterThanOrEqualTo(self.titleLabel.snp.trailing).offset(8)
         }
         
-        self.contentView.addSubview(self.dotWithoutReadView)
-        self.dotWithoutReadView.snp.makeConstraints {
-            $0.top.equalTo(self.timeGapLabel.snp.top)
-            $0.leading.equalTo(self.timeGapLabel.snp.trailing)
-            $0.size.equalTo(6)
+        self.contentView.addSubview(self.contentLabel)
+        self.contentLabel.snp.makeConstraints {
+            $0.top.equalTo(titleContinaer.snp.bottom).offset(4)
+            $0.bottom.equalToSuperview().offset(-16)
+            $0.leading.equalToSuperview().offset(48)
+            $0.trailing.equalToSuperview().offset(-24)
         }
     }
     
-    func bind(_ model: CommentHistoryInNoti, isReaded: Bool) {
+    func bind(_ model: CompositeNotificationInfo, isReaded: Bool) {
         
-        self.feedCardImageView.setImage(strUrl: model.feedCardImgURL?.url)
-        self.feedCardContentLabel.text = model.content
+        self.backgroundColor = isReaded ? .som.v2.white : .som.v2.pLight1
         
-        let text: String = {
-            switch model.type {
-            case .feedLike, .commentLike: return "님이 카드에 공감하였습니다."
-            case .commentWrite: return "님이 답카드를 작성했습니다."
-            default: return ""
+        var iconInfo: (image: UIImage?, color: UIColor)? {
+            switch model {
+            case .default:
+                return (.init(.icon(.v2(.filled(.card)))), .som.v2.pMain)
+            case .follow:
+                return (.init(.icon(.v2(.filled(.users)))), .som.v2.pMain)
+            case .deleted, .blocked:
+                return (.init(.icon(.v2(.filled(.danger)))), .som.v2.yMain)
             }
-        }()
-        self.notificationTitleLabel.text = "\(model.nickName ?? "")\(text)"
+        }
         
-        self.timeGapLabel.text = model.createAt.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
+        var titleInfo: (text: String, typography: Typography)? {
+            let typography = isReaded ? Typography.som.v2.caption2 : Typography.som.v2.caption1
+            switch model {
+            case .default:
+                return (Text.cardTitle, typography)
+            case .follow:
+                return (Text.followTitle, typography)
+            case .deleted:
+                return (Text.deletedAndBlockedTitle, typography)
+            case .blocked:
+                return (Text.deletedAndBlockedTitle, typography)
+            }
+        }
         
-        self.dotWithoutReadView.isHidden = isReaded
+        var timeGapInfo: (text: String, typography: Typography)? {
+            let typography = isReaded ? Typography.som.v2.caption2 : Typography.som.v2.caption1
+            switch model {
+            case let .default(notification):
+                let timeGapText = notification.notificationInfo.createTime.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
+                return (timeGapText, typography)
+            case let .follow(notification):
+                let timeGapText = notification.notificationInfo.createTime.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
+                return (timeGapText, typography)
+            case let .deleted(notification):
+                let timeGapText = notification.notificationInfo.createTime.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
+                return (timeGapText, typography)
+            case let .blocked(notification):
+                let timeGapText = notification.notificationInfo.createTime.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
+                return (timeGapText, typography)
+            }
+        }
+        
+        var contentsInfo: (text: String, typography: Typography)? {
+            let typography = isReaded ? Typography.som.v2.subtitle1.withAlignment(.left) : Typography.som.v2.title2.withAlignment(.left)
+            switch model {
+            case let .default(notification):
+                switch notification.notificationInfo.notificationType {
+                case .feedLike:
+                    return ("\(notification.nickName)\(Text.feedLikeContents)", typography)
+                case .commentLike:
+                    return ("\(notification.nickName)\(Text.commentLikeContents)", typography)
+                case .commentWrite:
+                    return ("\(notification.nickName)\(Text.commentWriteContents)", typography)
+                default:
+                    return nil
+                }
+            case let .follow(notification):
+                return ("\(notification.nickname)\(Text.followContents)", typography)
+            case .deleted:
+                return (Text.deletedContents, typography)
+            case let .blocked(notification):
+                let text = "\(Text.blockedLeadingContents)\(notification.blockExpirationDateTime.banEndFormatted)\(Text.blockedTrailingContents)"
+                return (text, typography)
+            }
+        }
+        
+        if let iconInfo = iconInfo {
+            self.iconView.image = iconInfo.image
+            self.iconView.tintColor = iconInfo.color
+        }
+        
+        if let titleInfo = titleInfo {
+            self.titleLabel.attributedText = .init(string: titleInfo.text, attributes: titleInfo.typography.attributes)
+            self.titleLabel.typography = titleInfo.typography
+        }
+        
+        if let timeGapInfo = timeGapInfo {
+            self.timeGapLabel.attributedText = .init(string: timeGapInfo.text, attributes: timeGapInfo.typography.attributes)
+            self.timeGapLabel.typography = timeGapInfo.typography
+        }
+        
+        if let contentsInfo = contentsInfo {
+            self.contentLabel.attributedText = .init(string: contentsInfo.text, attributes: contentsInfo.typography.attributes)
+            self.contentLabel.typography = contentsInfo.typography
+        }
     }
 }

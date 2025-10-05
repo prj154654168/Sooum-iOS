@@ -41,10 +41,14 @@ class MainTabBarReactor: Reactor {
     private let willNavigate: EntranceType
     let pushInfo: NotificationInfo?
     
-    let provider: ManagerProviderType
+    private let dependencies: AppDIContainerable
+    let pushManager: PushManagerDelegate
+    let locationManager: LocationManagerDelegate
     
-    init(provider: ManagerProviderType, pushInfo: NotificationInfo? = nil) {
-        self.provider = provider
+    init(dependencies: AppDIContainerable, pushInfo: NotificationInfo? = nil) {
+        self.dependencies = dependencies
+        self.pushManager = dependencies.rootContainer.resolve(ManagerProviderType.self).pushManager
+        self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
         
         var willNavigate: EntranceType {
             switch pushInfo?.notificationType {
@@ -61,7 +65,7 @@ class MainTabBarReactor: Reactor {
         
         self.initialState = .init(
             entranceType: .none,
-            notificationStatus: provider.pushManager.notificationStatus
+            notificationStatus: self.pushManager.notificationStatus
         )
     }
     
@@ -70,7 +74,7 @@ class MainTabBarReactor: Reactor {
         case .judgeEntrance:
             return .concat([
                 .just(.updateEntrance),
-                self.provider.pushManager.switchNotification(on: true)
+                self.pushManager.switchNotification(on: true)
                     .flatMapLatest { error -> Observable<Mutation> in .empty() }
             ])
         case let .updateNotificationStatus(status):
@@ -92,38 +96,27 @@ class MainTabBarReactor: Reactor {
 
 extension MainTabBarReactor {
     
-    private func subscribe() {
-        
-        (self.provider.pushManager as? PushManager)?.rx.observe(\.notificationStatus)
-            .map(Action.updateNotificationStatus)
-            .bind(to: self.action)
-            .disposed(by: self.disposeBag)
-    }
-}
-
-extension MainTabBarReactor {
-    
-    func reactorForMainHome() -> MainHomeTabBarReactor {
-        MainHomeTabBarReactor(provider: self.provider)
+    func reactorForHome() -> HomeViewReactor {
+        HomeViewReactor(dependencies: self.dependencies)
     }
     
-    func reactorForWriteCard() -> WriteCardViewReactor {
-        WriteCardViewReactor(provider: self.provider, type: .card)
+    // func reactorForWriteCard() -> WriteCardViewReactor {
+    //     WriteCardViewReactor(provider: self.provider, type: .card)
+    // }
+    
+    // func reactorForTags() -> TagsViewReactor {
+    //     TagsViewReactor(provider: self.provider)
+    // }
+    
+    // func reactorForProfile() -> ProfileViewReactor {
+    //     ProfileViewReactor(provider: self.provider, type: .my, memberId: nil)
+    // }
+    
+    func reactorForNoti() -> NotificationViewReactor {
+        NotificationViewReactor(dependencies: self.dependencies)
     }
     
-    func reactorForTags() -> TagsViewReactor {
-        TagsViewReactor(provider: self.provider)
-    }
-    
-    func reactorForProfile() -> ProfileViewReactor {
-        ProfileViewReactor(provider: self.provider, type: .my, memberId: nil)
-    }
-    
-    func reactorForNoti() -> NotificationTabBarReactor {
-        NotificationTabBarReactor(provider: self.provider)
-    }
-    
-    func reactorForDetail(_ targetCardId: String) -> DetailViewReactor {
-        DetailViewReactor(provider: self.provider, type: .push, targetCardId)
-    }
+    // func reactorForDetail(_ targetCardId: String) -> DetailViewReactor {
+    //     DetailViewReactor(provider: self.provider, type: .push, targetCardId)
+    // }
 }
