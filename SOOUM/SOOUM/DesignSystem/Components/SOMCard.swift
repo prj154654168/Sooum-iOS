@@ -30,6 +30,7 @@ class SOMCard: UIView {
     /// 배경 이미지
     let rootContainerImageView = UIImageView().then {
         $0.layer.cornerRadius = 16
+        $0.layer.borderWidth = 1
         $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
     }
@@ -374,8 +375,7 @@ class SOMCard: UIView {
         self.model = model
         // 카드 배경 이미지
         self.rootContainerImageView.setImage(strUrl: model.cardImgURL, with: model.cardImgName)
-        self.rootContainerImageView.layer.borderColor = model.isAdminCard ? UIColor.som.v2.pMain.cgColor : UIColor.som.v2.white.cgColor
-        self.rootContainerImageView.layer.borderWidth = model.isAdminCard ? 1 : 0
+        self.rootContainerImageView.layer.borderColor = model.isAdminCard ? UIColor.som.v2.pMain.cgColor : UIColor.som.v2.gray100.cgColor
         
         // 카드 본문
         // TODO: 임시, 폰트 추가되면 수정
