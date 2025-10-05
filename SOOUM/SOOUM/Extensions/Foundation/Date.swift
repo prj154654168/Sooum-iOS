@@ -47,7 +47,7 @@ extension Date {
         }
         
         if days > 29 && days < 369 {
-            return "\(days)개월 전".trimmingCharacters(in: .whitespaces)
+            return "\(days / 30)개월 전".trimmingCharacters(in: .whitespaces)
         }
         
         if days > 6 && days < 30 {
