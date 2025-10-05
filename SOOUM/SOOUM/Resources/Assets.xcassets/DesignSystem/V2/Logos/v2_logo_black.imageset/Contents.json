@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "v2_write_filled.svg",
+      "filename" : "v2_logo_black.svg",
       "idiom" : "universal"
     }
   ],
@@ -11,6 +11,6 @@
   },
   "properties" : {
     "preserves-vector-representation" : true,
-    "template-rendering-intent" : "template"
+    "template-rendering-intent" : "original"
   }
 }
