@@ -66,7 +66,7 @@ class ProfileViewFooterCell: UICollectionViewCell {
     }
     
     func setModel(_ writtenCard: WrittenCard) {
-        self.backgroundImageView.setImage(strUrl: writtenCard.backgroundImgURL.url)
+        self.backgroundImageView.setImage(strUrl: writtenCard.backgroundImgURL.url, with: "")
         self.contentLabel.typography = writtenCard.font == .pretendard ? .som.body3WithRegular : .som.schoolBody1WithLight
         self.contentLabel.text = writtenCard.content
         self.contentLabel.textAlignment = .center

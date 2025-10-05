@@ -94,7 +94,7 @@ class DetailViewCell: UICollectionViewCell {
         didSet {
             if let prevCard = self.prevCard {
                 self.isPrevCardExist = true
-                self.prevCardBackgroundImageView.setImage(strUrl: prevCard.previousCardImgLink?.url ?? "")
+                self.prevCardBackgroundImageView.setImage(strUrl: prevCard.previousCardImgLink?.url ?? "", with: "")
             } else {
                 self.isPrevCardExist = false
             }
@@ -112,7 +112,7 @@ class DetailViewCell: UICollectionViewCell {
     var member: Member = .init() {
         didSet {
             if let strUrl = self.member.profileImgUrl?.url {
-                self.memberImageView.setImage(strUrl: strUrl)
+                self.memberImageView.setImage(strUrl: strUrl, with: "")
             } else {
                 self.memberImageView.image = .init(.image(.defaultStyle(.sooumLogo)))
             }
@@ -233,9 +233,8 @@ class DetailViewCell: UICollectionViewCell {
         }
     }
     
-    func setDatas(_ model: SOMCardModel, tags: [SOMTagModel]) {
+    func setDatas(_ model: BaseCardInfo, tags: [SOMTagModel]) {
         self.cardView.setModel(model: model)
-        self.cardView.removeLikeAndCommentInStack()
         self.tags.setModels(tags)
         self.tags.snp.updateConstraints {
             $0.height.equalTo(tags.isEmpty ? 40 : 59)

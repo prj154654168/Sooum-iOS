@@ -157,8 +157,8 @@ extension DetailViewFooter: UICollectionViewDataSource {
         as! DetailViewFooterCell
         
         let commentCard = self.commentCards[indexPath.row]
-        let model: SOMCardModel = .init(data: commentCard)
-        cell.setModel(model)
+        // let model: SOMCardModel = .init(data: commentCard)
+        // cell.setModel(model)
         
         return cell
     }

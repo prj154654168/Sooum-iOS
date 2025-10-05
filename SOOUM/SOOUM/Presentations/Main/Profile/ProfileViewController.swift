@@ -148,11 +148,12 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         self.backButton.rx.tap
             .subscribe(with: self) { object, _ in
-                if object.isBlocked {
-                    object.navigationPop(to: MainHomeTabBarController.self, animated: true)
-                } else {
-                    object.navigationPop()
-                }
+                // if object.isBlocked {
+                //     object.navigationPop(to: MainHomeTabBarController.self, animated: true)
+                // } else {
+                //     object.navigationPop()
+                // }
+                object.navigationPop()
             }
             .disposed(by: self.disposeBag)
         

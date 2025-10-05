@@ -178,7 +178,7 @@ class MyProfileViewCell: UICollectionViewCell {
     
     func setModel(_ profile: Profile) {
         if let profileImg = profile.profileImg {
-            self.profileImageView.setImage(strUrl: profileImg.url)
+            self.profileImageView.setImage(strUrl: profileImg.url, with: "")
         } else {
             self.profileImageView.image = .init(.image(.defaultStyle(.sooumLogo)))
         }

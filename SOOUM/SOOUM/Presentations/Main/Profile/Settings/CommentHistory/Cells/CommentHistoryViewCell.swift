@@ -63,7 +63,7 @@ class CommentHistoryViewCell: UICollectionViewCell {
     }
     
     func setModel(_ strUrl: String, content: String) {
-        self.backgroundImageView.setImage(strUrl: strUrl)
+        self.backgroundImageView.setImage(strUrl: strUrl, with: "")
         self.contentLabel.text = content
     }
 }

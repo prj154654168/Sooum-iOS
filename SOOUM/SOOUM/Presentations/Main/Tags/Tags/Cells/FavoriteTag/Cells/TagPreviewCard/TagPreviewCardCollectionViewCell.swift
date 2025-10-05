@@ -32,7 +32,7 @@ class TagPreviewCardCollectionViewCell: UICollectionViewCell {
     }
     
     func setData(previewCard: FavoriteTagsResponse.PreviewCard) {
-        tagPreviewCardView.rootContainerImageView.setImage(strUrl: previewCard.backgroundImgURL.href)
+        tagPreviewCardView.rootContainerImageView.setImage(strUrl: previewCard.backgroundImgURL.href, with: "")
         tagPreviewCardView.cardTextContentLabel.text = previewCard.content
     }
     
