@@ -161,7 +161,8 @@ class HomeViewController: BaseNavigationViewController, View {
     
     private var cellHeight: CGFloat {
         let width: CGFloat = (UIScreen.main.bounds.width - 16 * 2) * 0.5
-        return width + 10  /// 가로 + bottom inset
+        /// (가로 : 세로 = 2 : 1) + bottom contents container height + bottom inset
+        return width + 34 + 10
     }
     
     
