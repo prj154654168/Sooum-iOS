@@ -12,22 +12,12 @@ enum NotificationRequest: BaseRequest {
     
     /// 읽지 않은 알림 전체 조회
     case unreadNotifications(lastId: String?)
-    /// 읽지 않은 카드 알림 조회
-    case unreadCardNotifications(lastId: String?)
-    /// 읽지 않은 팔로우 알림 조회
-    case unreadFollowNotifications(lastId: String?)
-    /// 읽지 않은 공지 알림 조회
-    case unreadNoticeNoticeNotifications(lastId: String?)
     /// 읽은 알림 전체 조회
     case readNotifications(lastId: String?)
-    /// 읽은 카드 알림 조회
-    case readCardNotifications(lastId: String?)
-    /// 읽은 팔로우 알림 조회
-    case readFollowNotifications(lastId: String?)
-    /// 읽은 공지 알림 조회
-    case readNoticeNoticeNotifications(lastId: String?)
     /// 알림 읽음 요청
     case requestRead(notificationId: String)
+    /// 공지 조회
+    case notices(lastId: String?)
     
     var path: String {
         switch self {
@@ -38,27 +28,6 @@ enum NotificationRequest: BaseRequest {
                 return "/api/notifications/unread"
             }
             
-        case let .unreadCardNotifications(lastId):
-            if let lastId = lastId {
-                return "/api/notifications/unread/card/\(lastId)"
-            } else {
-                return "/api/notifications/unread/card"
-            }
-            
-        case let .unreadFollowNotifications(lastId):
-            if let lastId = lastId {
-                return "/api/notifications/unread/follow/\(lastId)"
-            } else {
-                return "/api/notifications/unread/follow"
-            }
-            
-        case let .unreadNoticeNoticeNotifications(lastId):
-            if let lastId = lastId {
-                return "/api/notifications/unread/notice/\(lastId)"
-            } else {
-                return "/api/notifications/unread/notice"
-            }
-            
         case let .readNotifications(lastId):
             if let lastId = lastId {
                 return "/api/notifications/read/\(lastId)"
@@ -66,29 +35,15 @@ enum NotificationRequest: BaseRequest {
                 return "/api/notifications/read"
             }
             
-        case let .readCardNotifications(lastId):
-            if let lastId = lastId {
-                return "/api/notifications/read/card/\(lastId)"
-            } else {
-                return "/api/notifications/read/card"
-            }
-            
-        case let .readFollowNotifications(lastId):
-            if let lastId = lastId {
-                return "/api/notifications/read/follow/\(lastId)"
-            } else {
-                return "/api/notifications/read/follow"
-            }
-            
-        case let .readNoticeNoticeNotifications(lastId):
-            if let lastId = lastId {
-                return "/api/notifications/read/notice/\(lastId)"
-            } else {
-                return "/api/notifications/read/notice"
-            }
-            
         case let .requestRead(notificationId):
             return "/api/notifications/\(notificationId)/read"
+            
+        case let .notices(lastId):
+            if let lastId = lastId {
+                return "/api/notices/\(lastId)"
+            } else {
+                return "/api/notices"
+            }
         }
     }
     

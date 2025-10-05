@@ -60,19 +60,19 @@ enum CardRequest: BaseRequest {
         switch self {
         case let .latestCard(lastId, _, _):
             if let lastId = lastId {
-                return "/cards/home/latest/\(lastId)"
+                return "/api/cards/feeds/latest/\(lastId)"
             } else {
-                return "/cards/home/latest"
+                return "/api/cards/feeds/latest"
             }
             
         case .popularCard:
-            return "/cards/home/popular"
+            return "/api/cards/feeds/popular"
             
         case let .distancCard(lastId, _, _, _):
             if let lastId = lastId{
-                return "/cards/home/distance/\(lastId)"
+                return "/api/cards/feeds/distance/\(lastId)"
             } else {
-                return "/cards/home/distance"
+                return "/api/cards/feeds/distance"
             }
             
         case let .detailCard(id, _, _):
@@ -131,7 +131,7 @@ enum CardRequest: BaseRequest {
             }
             
         case let .distancCard(_, latitude, longitude, distanceFilter):
-            return ["latitude": latitude, "longitude": longitude, "distanceFilter": distanceFilter]
+            return ["latitude": latitude, "longitude": longitude, "distance": distanceFilter]
             
         case let .detailCard(_, latitude, longitude):
             if let latitude = latitude, let longitude = longitude {
