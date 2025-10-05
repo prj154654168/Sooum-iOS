@@ -95,7 +95,8 @@ class HomeViewReactor: Reactor {
                     NoticeInfo(id: "1", noticeType: .news, message: "숨이 새로운 서비스로 찾아올 예정이에요", url: "", createdAt: Date()),
                     NoticeInfo(id: "2", noticeType: .announcement, message: "숨 공식 인스타그램 안내드려요", url: "", createdAt: Date()),
                     NoticeInfo(id: "3", noticeType: .maintenance, message: "카드 작성 시 발생했던 오류가 해결됐어요", url: "", createdAt: Date())
-                ]))
+                ])),
+                .just(.updateHasUnreadNotifications(true))
             ])
         case .refresh:
             

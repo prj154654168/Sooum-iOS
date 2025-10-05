@@ -64,7 +64,6 @@ class HomeViewController: BaseNavigationViewController, View {
     private let dotWithoutReadView = UIView().then {
         $0.backgroundColor = .som.v2.rMain
         $0.layer.cornerRadius = 5 * 0.5
-        $0.clipsToBounds = true
         $0.isHidden = true
     }
     
@@ -207,15 +206,16 @@ class HomeViewController: BaseNavigationViewController, View {
         
         self.navigationBar.hidesBackButton = true
         
-        self.rightAlamButton.snp.makeConstraints {
-            $0.size.equalTo(24)
-        }
-        (self.rightAlamButton.imageView ?? self.rightAlamButton).addSubview(self.dotWithoutReadView)
+        self.rightAlamButton.addSubview(self.dotWithoutReadView)
         self.dotWithoutReadView.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.trailing.equalToSuperview()
+            $0.top.equalToSuperview().offset(12)
+            $0.trailing.equalToSuperview().offset(-12)
             $0.size.equalTo(5)
         }
+        self.rightAlamButton.snp.makeConstraints {
+            $0.size.equalTo(48)
+        }
+        
         self.navigationBar.setRightButtons([self.rightAlamButton])
     }
     
