@@ -70,6 +70,7 @@ class SOMLoadingIndicatorView: UIView {
         self.backgroundView.addSubviews(self.animationView)
         self.animationView.snp.makeConstraints {
             $0.center.equalToSuperview()
+            $0.size.equalTo(60)
         }
     }
 }

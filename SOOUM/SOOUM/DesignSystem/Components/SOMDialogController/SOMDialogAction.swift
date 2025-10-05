@@ -19,7 +19,7 @@ class SOMDialogAction {
             case .primary:
                 return .som.v2.black
             case .gray:
-                return .som.gray300
+                return .som.v2.gray100
             }
         }
         
@@ -28,7 +28,7 @@ class SOMDialogAction {
             case .primary:
                 return .som.v2.white
             case .gray:
-                return .som.gray700
+                return .som.v2.gray600
             }
         }
     }
