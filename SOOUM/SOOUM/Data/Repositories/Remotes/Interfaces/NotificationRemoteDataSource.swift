@@ -11,13 +11,8 @@ import RxSwift
 
 protocol NotificationRemoteDataSource {
     
-    func unreadNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func unreadCardNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func unreadFollowNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func unreadNoticeNoticeNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func readNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func readCardNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func readFollowNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func readNoticeNoticeNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
+    func unreadNotifications(lastId: String?) -> Observable<CompositeNotificationInfoResponse>
+    func readNotifications(lastId: String?) -> Observable<CompositeNotificationInfoResponse>
     func requestRead(notificationId: String) -> Observable<Int>
+    func notices(lastId: String?) -> Observable<NoticeInfoResponse>
 }

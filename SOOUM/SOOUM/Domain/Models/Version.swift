@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Version {
+struct Version: Equatable {
     
     let currentVersionStatus: Status
 }

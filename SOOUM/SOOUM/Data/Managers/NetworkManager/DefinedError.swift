@@ -17,6 +17,7 @@ enum DefinedError: Error, LocalizedError {
     case forbidden
     case notFound
     case teapot
+    case invlid
     case locked
     case invalidMethod(HTTPMethod)
     case unknown(Int)
@@ -35,6 +36,8 @@ enum DefinedError: Error, LocalizedError {
             return .notFound
         case 418:
             return .teapot
+        case 422:
+            return .invlid
         case 423:
             return .locked
         default:
@@ -56,6 +59,8 @@ enum DefinedError: Error, LocalizedError {
             return "Not Found: HTTP 404 received"
         case .teapot:
             return "Stop using RefreshToken: HTTP 418 received."
+        case .invlid:
+            return "Invlid Image: HTTP 422 received."
         case .locked:
             return "LOCKED: HTTP 423 received."
         case let .invalidMethod(httpMethod):
@@ -73,6 +78,7 @@ enum DefinedError: Error, LocalizedError {
         case .forbidden: 403
         case .notFound: 404
         case .teapot: 418
+        case .invlid: 422
         case .locked: 423
         case .invalidMethod: -99
         case let .unknown(statusCode): statusCode
