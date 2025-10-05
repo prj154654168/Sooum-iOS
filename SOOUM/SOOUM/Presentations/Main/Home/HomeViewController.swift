@@ -251,7 +251,7 @@ class HomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // tabBar 표시
-        self.rx.viewWillAppear
+        self.rx.viewDidAppear
             .subscribe(with: self) { object, _ in
                 object.hidesBottomBarWhenPushed = false
             }
