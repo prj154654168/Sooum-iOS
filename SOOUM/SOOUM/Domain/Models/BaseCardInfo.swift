@@ -29,6 +29,11 @@ extension BaseCardInfo {
         case ridi = "RIDI"
         case kkookkkook = "KKOOKKKOOK"
     }
+    /// 사용할 이미지 유형
+    enum ImageType: String, Decodable {
+        case `default` = "DEFAULT"
+        case user = "USER"
+    }
 }
 
 extension BaseCardInfo {
