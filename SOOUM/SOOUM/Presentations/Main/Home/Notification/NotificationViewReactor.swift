@@ -85,9 +85,6 @@ class NotificationViewReactor: Reactor {
                  // )
                  // .map(Mutation.notifications)
                  // .catch(self.catchClosure),
-                 // self.notificationUseCase.notices(lastId: nil)
-                 //    .map(Mutation.notices)
-                 //    .catch(self.catchClosure)
                 .just(.notifications(
                     unreads: [
                         CompositeNotificationInfo.default(.init(
@@ -119,11 +116,9 @@ class NotificationViewReactor: Reactor {
                         ))
                     ]
                 )),
-                .just(.notices([
-                    NoticeInfo(id: "1", noticeType: .news, message: "숨이 새로운 서비스로 찾아올 예정이에요", url: "", createdAt: Date()),
-                    NoticeInfo(id: "2", noticeType: .announcement, message: "숨 공식 인스타그램 안내드려요", url: "", createdAt: Date()),
-                    NoticeInfo(id: "3", noticeType: .maintenance, message: "카드 작성 시 발생했던 오류가 해결됐어요", url: "", createdAt: Date())
-                ]))
+                self.notificationUseCase.notices(lastId: nil)
+                   .map(Mutation.notices)
+                   .catch(self.catchClosureNotices)
             ])
         case .refresh:
             
@@ -136,7 +131,7 @@ class NotificationViewReactor: Reactor {
                         self.notificationUseCase.readNotifications(lastId: nil)
                     )
                     .map(Mutation.notifications)
-                    .catch(self.catchClosure),
+                    .catch(self.catchClosureNotis),
                     .just(.updateIsRefreshing(false))
                 ])
                 
@@ -145,7 +140,7 @@ class NotificationViewReactor: Reactor {
                     .just(.updateIsRefreshing(true)),
                     self.notificationUseCase.notices(lastId: nil)
                         .map(Mutation.notices)
-                        .catch(self.catchClosure),
+                        .catch(self.catchClosureNotices),
                     .just(.updateIsRefreshing(false))
                 ])
             }
@@ -158,13 +153,13 @@ class NotificationViewReactor: Reactor {
             case let .activity(activityType):
                 return .concat([
                     self.moreNotification(activityType, with: lastId)
-                        .catch(self.catchClosure)
+                        .catch(self.catchClosureNotis)
                 ])
             case .notice:
                 return .concat([
                     self.notificationUseCase.notices(lastId: lastId)
                         .map(Mutation.moreNotices)
-                        .catch(self.catchClosure)
+                        .catch(self.catchClosureNotices)
                 ])
             }
         case let .requestRead(selectedId):
@@ -200,10 +195,18 @@ class NotificationViewReactor: Reactor {
 
 extension NotificationViewReactor {
     
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+    var catchClosureNotis: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
             .concat([
                 .just(.notifications(unreads: [], reads: [])),
+                .just(.updateIsRefreshing(false))
+            ])
+        }
+    }
+    
+    var catchClosureNotices: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
                 .just(.notices([])),
                 .just(.updateIsRefreshing(false))
             ])

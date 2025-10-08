@@ -191,7 +191,7 @@ class NotificationViewController: BaseNavigationViewController, View {
                 notices: $0.notices
             )
         }
-        .observe(on: MainScheduler.instance)
+        .observe(on: MainScheduler.asyncInstance)
         .subscribe(with: self) { object, displayStats in
             
             var snapshot = Snapshot()
@@ -298,9 +298,8 @@ extension NotificationViewController: UITableViewDelegate {
         switch item {
         case let .notice(notice):
             
-            if let url = URL(string: notice.url),
+            if let urlString = notice.url, let url = URL(string: urlString),
                UIApplication.shared.canOpenURL(url) {
-                
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         case let .unread(notification):

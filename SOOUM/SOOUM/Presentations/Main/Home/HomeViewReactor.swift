@@ -89,14 +89,9 @@ class HomeViewReactor: Reactor {
             let distanceFilter = self.currentState.distanceFilter
             return .concat([
                 self.refresh(displayType, distanceFilter)
-                    .catch(self.catchClosure),
-                // self.unreadNotifications()
-                .just(.notices([
-                    NoticeInfo(id: "1", noticeType: .news, message: "숨이 새로운 서비스로 찾아올 예정이에요", url: "", createdAt: Date()),
-                    NoticeInfo(id: "2", noticeType: .announcement, message: "숨 공식 인스타그램 안내드려요", url: "", createdAt: Date()),
-                    NoticeInfo(id: "3", noticeType: .maintenance, message: "카드 작성 시 발생했던 오류가 해결됐어요", url: "", createdAt: Date())
-                ])),
-                .just(.updateHasUnreadNotifications(true))
+                    .catch(self.catchClosureForCards),
+                self.unreadNotifications()
+                    .catch(self.catchClosureForNotis)
             ])
         case .refresh:
             
@@ -105,8 +100,9 @@ class HomeViewReactor: Reactor {
             return .concat([
                 .just(.updateIsRefreshing(true)),
                 self.refresh(displayType, distanceFilter)
-                    .catch(self.catchClosure),
-                self.unreadNotifications(),
+                    .catch(self.catchClosureForCards),
+                self.unreadNotifications()
+                    .catch(self.catchClosureForNotis),
                 .just(.updateIsRefreshing(false))
             ])
         case let .moreFind(lastId):
@@ -122,21 +118,21 @@ class HomeViewReactor: Reactor {
                         return .just(.cards(latestCards))
                     } else {
                         return self.refresh(.latest, distanceFilter)
-                            .catch(self.catchClosure)
+                            .catch(self.catchClosureForCards)
                     }
                 case .popular:
                     if let popularCards = self.currentState.popularCards {
                         return .just(.cards(popularCards))
                     } else {
                         return self.refresh(.popular, distanceFilter)
-                            .catch(self.catchClosure)
+                            .catch(self.catchClosureForCards)
                     }
                 case .distance:
                     if let distanceCards = self.currentState.distanceCards {
                         return .just(.cards(distanceCards))
                     } else {
                         return self.refresh(.distance, distanceFilter)
-                            .catch(self.catchClosure)
+                            .catch(self.catchClosureForCards)
                     }
                 }
             }
@@ -151,6 +147,7 @@ class HomeViewReactor: Reactor {
             return .concat([
                 .just(.updateDistanceFilter(distanceFilter)),
                 self.refresh(displayType, distanceFilter)
+                    .catch(self.catchClosureForCards)
             ])
         }
     }
@@ -249,10 +246,20 @@ private extension HomeViewReactor {
 
 extension HomeViewReactor {
     
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+    var catchClosureForCards: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
             .concat([
                 .just(.cards([])),
+                .just(.updateIsRefreshing(false))
+            ])
+        }
+    }
+    
+    var catchClosureForNotis: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.notices([])),
+                .just(.updateHasUnreadNotifications(false)),
                 .just(.updateIsRefreshing(false))
             ])
         }
