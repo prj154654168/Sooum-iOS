@@ -38,15 +38,36 @@ struct NetworkManagerConfiguration: ManagerConfiguration {
             self.sessionDelegate = sessionDelegate
             self.sessionDelegateQueue = sessionDelegateQueue
             
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
-            formatter.locale = .Korea
-            formatter.timeZone = .Korea
+            let fullFormatter = DateFormatter()
+            fullFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+            fullFormatter.locale = .Korea
+            fullFormatter.timeZone = .Korea
+            
+            let shortFormatter = DateFormatter()
+            shortFormatter.dateFormat = "yyyy-MM-dd"
+            shortFormatter.locale = .Korea
+            shortFormatter.timeZone = .Korea
             
             self.decoder = JSONDecoder()
-            self.decoder.dateDecodingStrategy = .formatted(formatter)
+            self.decoder.dateDecodingStrategy = .custom { decoder in
+                let singleContainer = try decoder.singleValueContainer()
+                let dateString = try singleContainer.decode(String.self)
+                
+                if let date = fullFormatter.date(from: dateString) {
+                    return date
+                }
+                
+                if let date = shortFormatter.date(from: dateString) {
+                    return date
+                }
+                
+                throw DecodingError.dataCorruptedError(
+                    in: singleContainer,
+                    debugDescription: "Date string \(dateString) cannot be decoded"
+                )
+            }
             self.encoder = JSONEncoder()
-            self.encoder.dateEncodingStrategy = .formatted(formatter)
+            self.encoder.dateEncodingStrategy = .formatted(fullFormatter)
         }
     }
     
