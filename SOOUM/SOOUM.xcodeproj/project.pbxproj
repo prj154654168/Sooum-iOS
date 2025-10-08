@@ -108,7 +108,6 @@
 		2AFD05612D009FA1007C84AD /* TagDetailViewrReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD055F2D009FA1007C84AD /* TagDetailViewrReactor.swift */; };
 		2AFD05632D00A1E1007C84AD /* TagDetailCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05622D00A1E1007C84AD /* TagDetailCardResponse.swift */; };
 		2AFD05642D00A1E1007C84AD /* TagDetailCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05622D00A1E1007C84AD /* TagDetailCardResponse.swift */; };
-		2AFD05672D01CB30007C84AD /* TagInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05652D01CB30007C84AD /* TagInfoResponse.swift */; };
 		2AFD05692D03264C007C84AD /* AddFavoriteTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05682D03264C007C84AD /* AddFavoriteTagResponse.swift */; };
 		2AFD056A2D03264C007C84AD /* AddFavoriteTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05682D03264C007C84AD /* AddFavoriteTagResponse.swift */; };
 		2AFD056D2D048C84007C84AD /* FavoriteTagTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF955C2CF328DE00CBFB12 /* FavoriteTagTableViewCell.swift */; };
@@ -296,7 +295,6 @@
 		385E65A42CBE56D00032E120 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385E65A22CBE56D00032E120 /* Coordinate.swift */; };
 		38601E182D31399400A465A9 /* CardRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384972A02CA4DEC00012FCA1 /* CardRequest.swift */; };
 		38601E192D3139A500A465A9 /* TagDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05582D008D23007C84AD /* TagDetailViewController.swift */; };
-		38601E1A2D3139BB00A465A9 /* TagInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05652D01CB30007C84AD /* TagInfoResponse.swift */; };
 		38601E1B2D3139D000A465A9 /* RecommendTagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFF956A2CF5E00600CBFB12 /* RecommendTagView.swift */; };
 		38601E1C2D313A8200A465A9 /* SOMNavigationBar+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878FE0C2D0365C800D8955C /* SOMNavigationBar+Rx.swift */; };
 		38608B302CB5195D0066BB40 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38608B2F2CB5195D0066BB40 /* Card.swift */; };
@@ -588,6 +586,26 @@
 		38C2D41B2CFEAAED00CEA092 /* ProfileViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D4192CFEAAED00CEA092 /* ProfileViewFooter.swift */; };
 		38C2D4202CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D41F2CFEB82400CEA092 /* ProfileViewReactor.swift */; };
 		38C2D4212CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2D41F2CFEB82400CEA092 /* ProfileViewReactor.swift */; };
+		38C9AF0B2E965EFB00B401C0 /* DefaultImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF0A2E965EEE00B401C0 /* DefaultImage.swift */; };
+		38C9AF0C2E965EFB00B401C0 /* DefaultImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF0A2E965EEE00B401C0 /* DefaultImage.swift */; };
+		38C9AF0E2E96602300B401C0 /* DefaultImagesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF0D2E96601E00B401C0 /* DefaultImagesResponse.swift */; };
+		38C9AF0F2E96602300B401C0 /* DefaultImagesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF0D2E96601E00B401C0 /* DefaultImagesResponse.swift */; };
+		38C9AF112E96656600B401C0 /* TagInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF102E96656400B401C0 /* TagInfo.swift */; };
+		38C9AF122E96656600B401C0 /* TagInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF102E96656400B401C0 /* TagInfo.swift */; };
+		38C9AF142E9665C900B401C0 /* TagInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF132E9665C500B401C0 /* TagInfoResponse.swift */; };
+		38C9AF152E9665C900B401C0 /* TagInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF132E9665C500B401C0 /* TagInfoResponse.swift */; };
+		38C9AF172E96693600B401C0 /* TagRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF162E96692900B401C0 /* TagRemoteDataSource.swift */; };
+		38C9AF182E96693600B401C0 /* TagRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF162E96692900B401C0 /* TagRemoteDataSource.swift */; };
+		38C9AF1A2E96696C00B401C0 /* TagRemoteDataSourceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF192E96696500B401C0 /* TagRemoteDataSourceImpl.swift */; };
+		38C9AF1B2E96696C00B401C0 /* TagRemoteDataSourceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF192E96696500B401C0 /* TagRemoteDataSourceImpl.swift */; };
+		38C9AF202E9669F600B401C0 /* TagRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF1F2E9669F100B401C0 /* TagRepository.swift */; };
+		38C9AF212E9669F600B401C0 /* TagRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF1F2E9669F100B401C0 /* TagRepository.swift */; };
+		38C9AF232E966A1B00B401C0 /* TagRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF222E966A1300B401C0 /* TagRepositoryImpl.swift */; };
+		38C9AF242E966A1B00B401C0 /* TagRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF222E966A1300B401C0 /* TagRepositoryImpl.swift */; };
+		38C9AF262E966A6300B401C0 /* TagUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF252E966A6100B401C0 /* TagUseCase.swift */; };
+		38C9AF272E966A6300B401C0 /* TagUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF252E966A6100B401C0 /* TagUseCase.swift */; };
+		38C9AF292E966A8F00B401C0 /* TagUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF282E966A8B00B401C0 /* TagUseCaseImpl.swift */; };
+		38C9AF2A2E966A8F00B401C0 /* TagUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF282E966A8B00B401C0 /* TagUseCaseImpl.swift */; };
 		38CC49822CDE3854007A0145 /* SOMPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49812CDE3854007A0145 /* SOMPresentationController.swift */; };
 		38CC49832CDE3854007A0145 /* SOMPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49812CDE3854007A0145 /* SOMPresentationController.swift */; };
 		38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49842CDE3885007A0145 /* SOMTransitioningDelegate.swift */; };
@@ -764,7 +782,6 @@
 		2AFD055C2D009513007C84AD /* TagDetailNavigationBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailNavigationBarView.swift; sourceTree = "<group>"; };
 		2AFD055F2D009FA1007C84AD /* TagDetailViewrReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailViewrReactor.swift; sourceTree = "<group>"; };
 		2AFD05622D00A1E1007C84AD /* TagDetailCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailCardResponse.swift; sourceTree = "<group>"; };
-		2AFD05652D01CB30007C84AD /* TagInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagInfoResponse.swift; sourceTree = "<group>"; };
 		2AFD05682D03264C007C84AD /* AddFavoriteTagResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFavoriteTagResponse.swift; sourceTree = "<group>"; };
 		2AFF95542CF3222400CBFB12 /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
 		2AFF95592CF3227900CBFB12 /* TagSearchTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchTextFieldView.swift; sourceTree = "<group>"; };
@@ -1016,6 +1033,16 @@
 		38C2D4162CFEAACA00CEA092 /* ProfileViewFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewFooterCell.swift; sourceTree = "<group>"; };
 		38C2D4192CFEAAED00CEA092 /* ProfileViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewFooter.swift; sourceTree = "<group>"; };
 		38C2D41F2CFEB82400CEA092 /* ProfileViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewReactor.swift; sourceTree = "<group>"; };
+		38C9AF0A2E965EEE00B401C0 /* DefaultImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultImage.swift; sourceTree = "<group>"; };
+		38C9AF0D2E96601E00B401C0 /* DefaultImagesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultImagesResponse.swift; sourceTree = "<group>"; };
+		38C9AF102E96656400B401C0 /* TagInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagInfo.swift; sourceTree = "<group>"; };
+		38C9AF132E9665C500B401C0 /* TagInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagInfoResponse.swift; sourceTree = "<group>"; };
+		38C9AF162E96692900B401C0 /* TagRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRemoteDataSource.swift; sourceTree = "<group>"; };
+		38C9AF192E96696500B401C0 /* TagRemoteDataSourceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRemoteDataSourceImpl.swift; sourceTree = "<group>"; };
+		38C9AF1F2E9669F100B401C0 /* TagRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRepository.swift; sourceTree = "<group>"; };
+		38C9AF222E966A1300B401C0 /* TagRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRepositoryImpl.swift; sourceTree = "<group>"; };
+		38C9AF252E966A6100B401C0 /* TagUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagUseCase.swift; sourceTree = "<group>"; };
+		38C9AF282E966A8B00B401C0 /* TagUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagUseCaseImpl.swift; sourceTree = "<group>"; };
 		38CC49812CDE3854007A0145 /* SOMPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMPresentationController.swift; sourceTree = "<group>"; };
 		38CC49842CDE3885007A0145 /* SOMTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTransitioningDelegate.swift; sourceTree = "<group>"; };
 		38CC49872CDE3972007A0145 /* SOMPresentationController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMPresentationController+Show.swift"; sourceTree = "<group>"; };
@@ -1309,7 +1336,6 @@
 				2AFD05482CFF7687007C84AD /* RecommendTagsResponse.swift */,
 				2AFD05542D0082DE007C84AD /* SearchTagsResponse.swift */,
 				2AFD05622D00A1E1007C84AD /* TagDetailCardResponse.swift */,
-				2AFD05652D01CB30007C84AD /* TagInfoResponse.swift */,
 				2AFD05682D03264C007C84AD /* AddFavoriteTagResponse.swift */,
 			);
 			path = Tags;
@@ -2091,11 +2117,12 @@
 		38899E5A2E79374E0030F7CA /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				3889A2452E79ADBD0030F7CA /* AppVersionRepositoryImpl.swift */,
+				3889A2822E79D7CE0030F7CA /* AuthRepositoryImpl.swift */,
 				380F42322E884FD4009AC59E /* CardRepositoryImpl.swift */,
 				3889A28E2E79D8800030F7CA /* NotificationRepositoryImpl.swift */,
-				3889A2822E79D7CE0030F7CA /* AuthRepositoryImpl.swift */,
+				38C9AF222E966A1300B401C0 /* TagRepositoryImpl.swift */,
 				3889A2612E79BB540030F7CA /* UserRepositoryImpl.swift */,
-				3889A2452E79ADBD0030F7CA /* AppVersionRepositoryImpl.swift */,
 				38899E9F2E799A7E0030F7CA /* Remotes */,
 				38899E9E2E799A740030F7CA /* Locals */,
 			);
@@ -2123,9 +2150,11 @@
 		38899E632E7938CD0030F7CA /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				38C9AF0D2E96601E00B401C0 /* DefaultImagesResponse.swift */,
 				380F42292E884E85009AC59E /* HomeCardInfoResponse.swift */,
 				38FEBE632E86629F002916A8 /* NoticeInfoResponse.swift */,
 				3887176C2E7BDBA800C6143B /* NicknameResponse.swift */,
+				38C9AF132E9665C500B401C0 /* TagInfoResponse.swift */,
 				3889A27C2E79C5670030F7CA /* ToeknResponse.swift */,
 				38FEBE5A2E8652D2002916A8 /* CompositeNotificationInfoResponse.swift */,
 				38899E952E7953300030F7CA /* NotificationInfoResponse.swift */,
@@ -2157,13 +2186,15 @@
 			isa = PBXGroup;
 			children = (
 				380F42262E884B6F009AC59E /* BaseCardInfo.swift */,
-				380F42202E87ECA2009AC59E /* CompositeNotificationInfo.swift */,
-				38FEBE602E8661F2002916A8 /* NoticeInfo.swift */,
-				3889A27F2E79D0230030F7CA /* Token.swift */,
 				38899E922E79518E0030F7CA /* CommonNotificationInfo.swift */,
-				38F88EBD2D2C1E22002AD7A8 /* Version.swift */,
-				38899E702E7940280030F7CA /* ImageUrlInfo.swift */,
+				380F42202E87ECA2009AC59E /* CompositeNotificationInfo.swift */,
 				38899E6A2E793AF70030F7CA /* CheckAvailable.swift */,
+				38C9AF0A2E965EEE00B401C0 /* DefaultImage.swift */,
+				38899E702E7940280030F7CA /* ImageUrlInfo.swift */,
+				38FEBE602E8661F2002916A8 /* NoticeInfo.swift */,
+				38C9AF102E96656400B401C0 /* TagInfo.swift */,
+				3889A27F2E79D0230030F7CA /* Token.swift */,
+				38F88EBD2D2C1E22002AD7A8 /* Version.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -2180,11 +2211,12 @@
 		38899E9F2E799A7E0030F7CA /* Remotes */ = {
 			isa = PBXGroup;
 			children = (
+				38899EA52E799BD10030F7CA /* AppVersionRemoteDataSourceImpl.swift */,
+				3889A26D2E79BE970030F7CA /* AuthRemoteDataSourceImpl.swift */,
 				380F422C2E884F35009AC59E /* CardRemoteDataSourceImpl.swift */,
 				3889A2762E79C2980030F7CA /* NotificationRemoteDataSoruceImpl.swift */,
-				3889A26D2E79BE970030F7CA /* AuthRemoteDataSourceImpl.swift */,
+				38C9AF192E96696500B401C0 /* TagRemoteDataSourceImpl.swift */,
 				3889A2552E79BA0F0030F7CA /* UserRemoteDataSourceImpl.swift */,
-				38899EA52E799BD10030F7CA /* AppVersionRemoteDataSourceImpl.swift */,
 				38899EA02E799AA30030F7CA /* Interfaces */,
 			);
 			path = Remotes;
@@ -2193,11 +2225,12 @@
 		38899EA02E799AA30030F7CA /* Interfaces */ = {
 			isa = PBXGroup;
 			children = (
+				38899EA22E799B190030F7CA /* AppVersionRemoteDataSource.swift */,
+				3889A26A2E79BD410030F7CA /* AuthRemoteDataSource.swift */,
 				380F42232E884ADF009AC59E /* CardRemoteDataSource.swift */,
 				3889A2732E79C1D30030F7CA /* NotificationRemoteDataSource.swift */,
-				3889A26A2E79BD410030F7CA /* AuthRemoteDataSource.swift */,
+				38C9AF162E96692900B401C0 /* TagRemoteDataSource.swift */,
 				3889A24F2E79B3210030F7CA /* UserRemoteDataSource.swift */,
-				38899EA22E799B190030F7CA /* AppVersionRemoteDataSource.swift */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -2208,6 +2241,7 @@
 				38389B9B2CCCF98B006728AF /* AuthRequest.swift */,
 				384972A02CA4DEC00012FCA1 /* CardRequest.swift */,
 				388698612D1986B100008600 /* NotificationRequest.swift */,
+				2AFD054B2CFF76CB007C84AD /* TagRequest.swift */,
 				38899EAC2E79A0990030F7CA /* UserRequest.swift */,
 				38899EA82E799C5D0030F7CA /* VersionRequest.swift */,
 			);
@@ -2217,11 +2251,12 @@
 		3889A2402E79AD320030F7CA /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
+				3889A24C2E79AEAD0030F7CA /* AppVersionUseCaseImpl.swift */,
+				3889A2882E79D81E0030F7CA /* AuthUseCaseImpl.swift */,
 				380F42382E885057009AC59E /* CardUseCaseImpl.swift */,
 				3889A2942E79D9200030F7CA /* NotificationUseCaseImpl.swift */,
-				3889A2882E79D81E0030F7CA /* AuthUseCaseImpl.swift */,
+				38C9AF282E966A8B00B401C0 /* TagUseCaseImpl.swift */,
 				3889A2672E79BC840030F7CA /* UserUseCaseImpl.swift */,
-				3889A24C2E79AEAD0030F7CA /* AppVersionUseCaseImpl.swift */,
 				3889A2482E79AE870030F7CA /* Interfaces */,
 			);
 			path = UseCases;
@@ -2230,11 +2265,12 @@
 		3889A2412E79AD3A0030F7CA /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				3889A2422E79AD600030F7CA /* AppVersionRepository.swift */,
+				3889A2702E79C0370030F7CA /* AuthRepository.swift */,
 				380F422F2E884FB5009AC59E /* CardRepository.swift */,
 				3889A28B2E79D8650030F7CA /* NotificationRepository.swift */,
-				3889A2702E79C0370030F7CA /* AuthRepository.swift */,
+				38C9AF1F2E9669F100B401C0 /* TagRepository.swift */,
 				3889A25B2E79BB2F0030F7CA /* UserRepository.swift */,
-				3889A2422E79AD600030F7CA /* AppVersionRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -2242,11 +2278,12 @@
 		3889A2482E79AE870030F7CA /* Interfaces */ = {
 			isa = PBXGroup;
 			children = (
+				3889A2492E79AE900030F7CA /* AppVersionUseCase.swift */,
+				3889A2852E79D8060030F7CA /* AuthUseCase.swift */,
 				380F42352E88502F009AC59E /* CardUseCase.swift */,
 				3889A2912E79D8F40030F7CA /* NotificationUseCase.swift */,
-				3889A2852E79D8060030F7CA /* AuthUseCase.swift */,
+				38C9AF252E966A6100B401C0 /* TagUseCase.swift */,
 				3889A2642E79BBC00030F7CA /* UserUseCase.swift */,
-				3889A2492E79AE900030F7CA /* AppVersionUseCase.swift */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -2408,7 +2445,6 @@
 				2A5BB7E22CDCD97300E1C799 /* JoinRequest.swift */,
 				3878D04D2CFFC5F300F9522F /* ProfileRequest.swift */,
 				3803CF6B2D0156FC00FD90DB /* SettingsRequest.swift */,
-				2AFD054B2CFF76CB007C84AD /* TagRequest.swift */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -3101,6 +3137,7 @@
 				38AE77DB2E745FFF00B6FD13 /* EnterMemberTransferTextFieldView.swift in Sources */,
 				3878D0602CFFD45100F9522F /* FollowerResponse.swift in Sources */,
 				3889A2432E79AD7D0030F7CA /* AppVersionRepository.swift in Sources */,
+				38C9AF152E9665C900B401C0 /* TagInfoResponse.swift in Sources */,
 				381701722CD88374005FC220 /* CompositeInterceptor.swift in Sources */,
 				2A5BB7CA2CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
@@ -3108,6 +3145,7 @@
 				3889A24B2E79AE960030F7CA /* AppVersionUseCase.swift in Sources */,
 				2A980BA12D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */,
 				3803CF712D0159A500FD90DB /* SettingsResponse.swift in Sources */,
+				38C9AF2A2E966A8F00B401C0 /* TagUseCaseImpl.swift in Sources */,
 				2A5BB7E12CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */,
 				3803CF7E2D016DA200FD90DB /* TransferCodeResponse.swift in Sources */,
 				3834FADE2D11C5AC00C9108D /* SimpleCache.swift in Sources */,
@@ -3138,6 +3176,7 @@
 				3889A2802E79D0250030F7CA /* Token.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				2AE6B1932CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
+				38C9AF202E9669F600B401C0 /* TagRepository.swift in Sources */,
 				38F88EBF2D2C1E22002AD7A8 /* Version.swift in Sources */,
 				3887176D2E7BDBAE00C6143B /* NicknameResponse.swift in Sources */,
 				2A980B9E2D803E9D007DFA45 /* FirebaseLoggable.swift in Sources */,
@@ -3163,6 +3202,7 @@
 				2AFD055A2D008D23007C84AD /* TagDetailViewController.swift in Sources */,
 				2AE6B1552CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */,
+				38C9AF182E96693600B401C0 /* TagRemoteDataSource.swift in Sources */,
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
 				380F42252E884AE5009AC59E /* CardRemoteDataSource.swift in Sources */,
 				38405CCC2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
@@ -3171,13 +3211,14 @@
 				381A1D6B2CC398B3005FDB8E /* WriteTagTextFieldDelegate.swift in Sources */,
 				2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				38E9CE142D37711600E85A2D /* OnboardingViewReactor.swift in Sources */,
-				2AFD05672D01CB30007C84AD /* TagInfoResponse.swift in Sources */,
 				2AE6B17C2CBFE9ED00FA5C3C /* UploadCardSettingTableViewCell.swift in Sources */,
 				38F3D9312D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
 				38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
 				2AFD056D2D048C84007C84AD /* FavoriteTagTableViewCell.swift in Sources */,
 				2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
+				38C9AF272E966A6300B401C0 /* TagUseCase.swift in Sources */,
+				38C9AF0F2E96602300B401C0 /* DefaultImagesResponse.swift in Sources */,
 				38D563852D1719B1006265AA /* SOMStickyTabBarItem.swift in Sources */,
 				389EF8182D2F450000E053AE /* Log.swift in Sources */,
 				3889A26B2E79BD450030F7CA /* AuthRemoteDataSource.swift in Sources */,
@@ -3192,10 +3233,12 @@
 				38121E352CA6DA4000602499 /* Date.swift in Sources */,
 				2A34AFB62D144F08007BD7E7 /* EmptyTagDetailTableViewCell.swift in Sources */,
 				38899E6B2E793AFD0030F7CA /* CheckAvailable.swift in Sources */,
+				38C9AF242E966A1B00B401C0 /* TagRepositoryImpl.swift in Sources */,
 				3803CF752D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
 				38C2D4182CFEAACA00CEA092 /* ProfileViewFooterCell.swift in Sources */,
 				381DEA8C2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				3889A2752E79C1D80030F7CA /* NotificationRemoteDataSource.swift in Sources */,
+				38C9AF0B2E965EFB00B401C0 /* DefaultImage.swift in Sources */,
 				381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				3803CF832D017DB800FD90DB /* EnterMemberTransferViewController.swift in Sources */,
 				38F720A62CD4F15900DF32B5 /* CardSummaryResponse.swift in Sources */,
@@ -3205,6 +3248,7 @@
 				38D5637F2D17152F006265AA /* SOMStickyTabBarDelegate.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
 				38B543E92D4617EA00DDF2C5 /* NetworkManagerConfiguration.swift in Sources */,
+				38C9AF112E96656600B401C0 /* TagInfo.swift in Sources */,
 				388698592D1982DE00008600 /* NotificationViewController.swift in Sources */,
 				38389B9D2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				385E65A42CBE56D00032E120 /* Coordinate.swift in Sources */,
@@ -3228,6 +3272,7 @@
 				38D2FBCC2E81B0E5006DD739 /* SOMSwipableTabBarItem.swift in Sources */,
 				2AFD05612D009FA1007C84AD /* TagDetailViewrReactor.swift in Sources */,
 				3887D0372CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
+				38C9AF1B2E96696C00B401C0 /* TagRemoteDataSourceImpl.swift in Sources */,
 				3889A2952E79D9250030F7CA /* NotificationUseCaseImpl.swift in Sources */,
 				38B8A58C2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
 				3889A2512E79B3260030F7CA /* UserRemoteDataSource.swift in Sources */,
@@ -3456,6 +3501,7 @@
 				38AE77DC2E745FFF00B6FD13 /* EnterMemberTransferTextFieldView.swift in Sources */,
 				38389B9F2CCCFB7D006728AF /* AuthKeyChain.swift in Sources */,
 				3889A2442E79AD7D0030F7CA /* AppVersionRepository.swift in Sources */,
+				38C9AF142E9665C900B401C0 /* TagInfoResponse.swift in Sources */,
 				3878B8622D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
 				2AFD05522D007F2F007C84AD /* TagSearchViewReactor.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
@@ -3463,6 +3509,7 @@
 				3889A24A2E79AE960030F7CA /* AppVersionUseCase.swift in Sources */,
 				2A980BA02D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */,
 				38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
+				38C9AF292E966A8F00B401C0 /* TagUseCaseImpl.swift in Sources */,
 				2A5BB7C92CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				3803CF6C2D0156FC00FD90DB /* SettingsRequest.swift in Sources */,
 				2AE6B1492CBC15BF00FA5C3C /* ReportViewController.swift in Sources */,
@@ -3493,6 +3540,7 @@
 				3889A2812E79D0250030F7CA /* Token.swift in Sources */,
 				2ACBD41D2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
 				2ACBD4172CC963390057C013 /* DefaultCardImageResponse.swift in Sources */,
+				38C9AF212E9669F600B401C0 /* TagRepository.swift in Sources */,
 				38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				3887176E2E7BDBAE00C6143B /* NicknameResponse.swift in Sources */,
 				2A980B9D2D803E9D007DFA45 /* FirebaseLoggable.swift in Sources */,
@@ -3518,6 +3566,7 @@
 				2AE6B1922CC1286D00FA5C3C /* SelectMyImageTableViewCell.swift in Sources */,
 				2AE6B18F2CC121BB00FA5C3C /* BottomSheetSegmentTableViewCell.swift in Sources */,
 				38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
+				38C9AF172E96693600B401C0 /* TagRemoteDataSource.swift in Sources */,
 				385602B62D2FB18400118530 /* NotificationPlaceholderViewCell.swift in Sources */,
 				38E9CE192D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */,
 				380F42242E884AE5009AC59E /* CardRemoteDataSource.swift in Sources */,
@@ -3532,11 +3581,12 @@
 				2A5BB7CD2CDBB7D100E1C799 /* OnboardingProfileImageSettingViewController.swift in Sources */,
 				385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
+				38C9AF262E966A6300B401C0 /* TagUseCase.swift in Sources */,
 				38121E312CA6C77500602499 /* Double.swift in Sources */,
+				38C9AF0E2E96602300B401C0 /* DefaultImagesResponse.swift in Sources */,
 				3889A26C2E79BD450030F7CA /* AuthRemoteDataSource.swift in Sources */,
 				3878D0532CFFC6C100F9522F /* ProfileResponse.swift in Sources */,
 				2AE6B1752CBFD59B00FA5C3C /* ImageCollectionViewCell.swift in Sources */,
-				38601E1A2D3139BB00A465A9 /* TagInfoResponse.swift in Sources */,
 				3889A2922E79D8F80030F7CA /* NotificationUseCase.swift in Sources */,
 				2A34AFB52D144F08007BD7E7 /* EmptyTagDetailTableViewCell.swift in Sources */,
 				3803CF742D0166D700FD90DB /* CommentHistoryViewCell.swift in Sources */,
@@ -3547,10 +3597,12 @@
 				3802BDB12D0AE900001256EA /* PushManager.swift in Sources */,
 				2A5BB7E72CDCDC3600E1C799 /* NicknameValidationResponse.swift in Sources */,
 				388372012C8C8FCF004212EB /* UIColor.swift in Sources */,
+				38C9AF232E966A1B00B401C0 /* TagRepositoryImpl.swift in Sources */,
 				3803CF772D01685000FD90DB /* CommentHistroyViewReactor.swift in Sources */,
 				3889A2742E79C1D80030F7CA /* NotificationRemoteDataSource.swift in Sources */,
 				3816C05C2CCDDF3D00C8688C /* ReAuthenticationResponse.swift in Sources */,
 				3878D07D2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
+				38C9AF0C2E965EFB00B401C0 /* DefaultImage.swift in Sources */,
 				381DEA8B2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				3878D0562CFFCBDA00F9522F /* CommentHistoryResponse.swift in Sources */,
 				3878D08C2CFFF0BF00F9522F /* AnnouncementViewControler.swift in Sources */,
@@ -3560,6 +3612,7 @@
 				2A5BB7D92CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */,
 				38B543E82D4617EA00DDF2C5 /* NetworkManagerConfiguration.swift in Sources */,
 				3878D0902CFFF0E300F9522F /* AnnouncementViewCell.swift in Sources */,
+				38C9AF122E96656600B401C0 /* TagInfo.swift in Sources */,
 				2AFD054C2CFF76CB007C84AD /* TagRequest.swift in Sources */,
 				38B6AADF2CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				389681102CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
@@ -3583,6 +3636,7 @@
 				38D2FBCB2E81B0E5006DD739 /* SOMSwipableTabBarItem.swift in Sources */,
 				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				3878D06B2CFFDF1F00F9522F /* SettingsViewController.swift in Sources */,
+				38C9AF1A2E96696C00B401C0 /* TagRemoteDataSourceImpl.swift in Sources */,
 				3889A2962E79D9250030F7CA /* NotificationUseCaseImpl.swift in Sources */,
 				3878D0882CFFEF0F00F9522F /* TermsOfServiceTextCellView+Rx.swift in Sources */,
 				3889A2502E79B3260030F7CA /* UserRemoteDataSource.swift in Sources */,

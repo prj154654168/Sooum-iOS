@@ -11,6 +11,9 @@ import Alamofire
 
 enum TagRequest: BaseRequest {
     
+    // 연관 태그
+    case related(resultCnt: Int, keyword: String)
+    
     case favorite(last: String?)
     case recommend
     case search(keyword: String)
@@ -21,6 +24,9 @@ enum TagRequest: BaseRequest {
 
     var path: String {
         switch self {
+        case let .related(resultCnt, _):
+            return "/tags/related/\(resultCnt)"
+            
         case let .favorite(last):
             if let last = last {
                 return "/tags/favorites/\(last)"
@@ -63,6 +69,8 @@ enum TagRequest: BaseRequest {
     
     var parameters: Parameters {
         switch self {
+        case let .related(_, keyword):
+            return ["tag": keyword]
         case let .favorite(lastId):
             if let lastId = lastId {
                 return ["last": lastId]
@@ -79,7 +87,12 @@ enum TagRequest: BaseRequest {
     }
     
     var encoding: ParameterEncoding {
-        return URLEncoding.queryString
+        switch self {
+        case .related:
+            return JSONEncoding.default
+        default:
+            return URLEncoding.queryString
+        }
     }
     
     var authorizationType: AuthorizationType {
