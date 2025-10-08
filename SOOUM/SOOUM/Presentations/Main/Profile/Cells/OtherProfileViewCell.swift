@@ -183,7 +183,7 @@ class OtherProfileViewCell: UICollectionViewCell {
     
     func setModel(_ profile: Profile, isBlocked: Bool) {
         if let profileImg = profile.profileImg {
-            self.profileImageView.setImage(strUrl: profileImg.url)
+            self.profileImageView.setImage(strUrl: profileImg.url, with: "")
         } else {
             self.profileImageView.image = .init(.image(.defaultStyle(.sooumLogo)))
         }

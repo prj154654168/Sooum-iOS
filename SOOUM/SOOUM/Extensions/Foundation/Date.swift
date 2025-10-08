@@ -42,28 +42,36 @@ extension Date {
         let hours: Int = .init(time % (24 * 60 * 60)) / (60 * 60)
         let minutes: Int = .init(time % (60 * 60)) / 60
         
-        if days > 364 {
-            return "\(days / 365)년전".trimmingCharacters(in: .whitespaces)
+        if days > 368 {
+            return "\(days / 368)년전".trimmingCharacters(in: .whitespaces)
         }
         
-        if days > 0 && days < 365 {
-            return "\(days)일전".trimmingCharacters(in: .whitespaces)
+        if days > 29 && days < 369 {
+            return "\(days / 30)개월 전".trimmingCharacters(in: .whitespaces)
+        }
+        
+        if days > 6 && days < 30 {
+            return "\(days / 7)주 전".trimmingCharacters(in: .whitespaces)
+        }
+        
+        if days > 0 && days < 6 {
+            return "\(days)일 전".trimmingCharacters(in: .whitespaces)
         }
         
         if hours > 0 && hours < 24 {
-            return "\(hours)시간전".trimmingCharacters(in: .whitespaces)
+            return "\(hours)시간 전".trimmingCharacters(in: .whitespaces)
         }
         
-        if minutes > 9 && minutes < 60 {
-            return "\(minutes / 10)0분전".trimmingCharacters(in: .whitespaces)
+        if minutes > 10 && minutes < 60 {
+            return "\(minutes / 10)0분 전".trimmingCharacters(in: .whitespaces)
         }
         
-        if minutes > 4 && minutes < 10 {
-            return "10분전".trimmingCharacters(in: .whitespaces)
+        if minutes > 0 && minutes < 11 {
+            return "\(minutes)분 전".trimmingCharacters(in: .whitespaces)
         }
         
-        if minutes < 5 {
-            return "조금전".trimmingCharacters(in: .whitespaces)
+        if minutes < 1 {
+            return "방금 전".trimmingCharacters(in: .whitespaces)
         }
 
         return ""
@@ -96,6 +104,10 @@ extension Date {
     
     var announcementFormatted: String {
         return self.toString("yyyy. MM. dd")
+    }
+    
+    var noticeFormatted: String {
+        return self.toString("M월 d일")
     }
 }
 

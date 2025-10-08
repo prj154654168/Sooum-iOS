@@ -27,9 +27,15 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         static let updateActionTitle: String = "새로워진 숨 사용하기"
     }
     
+    
+    // MARK: Views
+    
     let imageView = UIImageView(image: .init(.logo(.v2(.logo_white)))).then {
         $0.contentMode = .scaleAspectFit
     }
+    
+    
+    // MARK: Override func
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
@@ -44,12 +50,14 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         
         self.view.addSubview(self.imageView)
         self.imageView.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.centerY.equalTo(self.view.safeAreaLayoutGuide.snp.centerY)
+            $0.center.equalToSuperview()
             $0.width.equalTo(200)
             $0.height.equalTo(33)
         }
     }
+    
+    
+    // MARK: ReactorKit - bind
     
     func bind(reactor: LaunchScreenViewReactor) {
         
@@ -100,12 +108,12 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         isRegistered
             .filter { $0 == true }
             .subscribe(with: self) { object, _ in
-                // let viewController = MainTabBarController()
-                // viewController.reactor = reactor.reactorForMainTabBar()
-                // let navigationController = UINavigationController(
-                //     rootViewController: viewController
-                // )
-                // object.view.window?.rootViewController = navigationController
+                let viewController = MainTabBarController()
+                viewController.reactor = reactor.reactorForMainTabBar()
+                let navigationController = UINavigationController(
+                    rootViewController: viewController
+                )
+                object.view.window?.rootViewController = navigationController
             }
             .disposed(by: self.disposeBag)
         // 로그인 실패 시 온보딩 화면으로 전환

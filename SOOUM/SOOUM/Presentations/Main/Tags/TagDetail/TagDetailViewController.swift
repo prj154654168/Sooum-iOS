@@ -25,8 +25,8 @@ class TagDetailViewController: BaseViewController, View {
         $0.separatorStyle = .none
         
         $0.register(
-            MainHomeViewCell.self,
-            forCellReuseIdentifier: String(describing: MainHomeViewCell.self)
+            HomeViewCell.self,
+            forCellReuseIdentifier: String(describing: HomeViewCell.self)
         )
         $0.register(
             EmptyTagDetailTableViewCell.self,
@@ -144,11 +144,11 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
         return createMainHomeViewCell(indexPath: indexPath)
     }
     
-    private func createMainHomeViewCell(indexPath: IndexPath) -> MainHomeViewCell {
-        let cell: MainHomeViewCell = tableView.dequeueReusableCell(
-            withIdentifier: String(describing: MainHomeViewCell.self),
+    private func createMainHomeViewCell(indexPath: IndexPath) -> HomeViewCell {
+        let cell: HomeViewCell = tableView.dequeueReusableCell(
+            withIdentifier: String(describing: HomeViewCell.self),
             for: indexPath
-        ) as! MainHomeViewCell
+        ) as! HomeViewCell
         
         guard let reactor = self.reactor, reactor.currentState.tagCards.indices.contains(indexPath.row) else {
             return cell

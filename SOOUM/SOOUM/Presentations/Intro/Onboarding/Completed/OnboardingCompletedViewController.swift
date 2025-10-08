@@ -81,49 +81,20 @@ class OnboardingCompletedViewController: BaseNavigationViewController, View {
         }
     }
     
+    
+    // MARK: ReactorKit - bind
+    
     func bind(reactor: OnboardingCompletedViewReactor) {
         
         // Action
         self.confirmButton.rx.throttleTap
             .subscribe(with: self) { object, _ in
-                
-                // TODO: 임시, 토큰 정보 삭제 후 계정 삭제
-                let withdrawAction = SOMDialogAction(
-                    title: "계정 삭제하기",
-                    style: .primary,
-                    action: {
-                        
-                        UIApplication.topViewController?.dismiss(animated: true) {
-                            reactor.action.onNext(.withdraw)
-                        }
-                    }
+                let viewController = MainTabBarController()
+                viewController.reactor = reactor.reactorForMainTabBar()
+                let navigationController = UINavigationController(
+                    rootViewController: viewController
                 )
-                
-                SOMDialogViewController.show(
-                    title: "온보딩/회원가입 플로우 완료",
-                    message: "생성된 계정 정보를 삭제하고 다시 스플레쉬 화면부터 시작합니다.",
-                    textAlignment: .left,
-                    actions: [withdrawAction]
-                )
-                
-                // let viewController = MainTabBarController()
-                // viewController.reactor = reactor.reactorForMainTabBar()
-                // let navigationController = UINavigationController(
-                //     rootViewController: viewController
-                // )
-                // // 제스처 뒤로가기를 위한 델리게이트 설정
-                // navigationController.interactivePopGestureRecognizer?.delegate = self
-                // object.view.window?.rootViewController = navigationController
-            }
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.isSuccess)
-            .distinctUntilChanged()
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                let viewController = LaunchScreenViewController()
-                viewController.reactor = reactor.reaactorForLaunch()
-                object.view.window?.rootViewController = viewController
+                object.view.window?.rootViewController = navigationController
             }
             .disposed(by: self.disposeBag)
     }

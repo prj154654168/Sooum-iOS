@@ -156,7 +156,7 @@ extension LaunchScreenViewReactor {
         OnboardingViewReactor(dependencies: self.dependencies)
     }
     
-    // func reactorForMainTabBar() -> MainTabBarReactor {
-    //     MainTabBarReactor(provider: self.provider, pushInfo: self.pushInfo)
-    // }
+    func reactorForMainTabBar() -> MainTabBarReactor {
+        MainTabBarReactor(dependencies: self.dependencies)
+    }
 }

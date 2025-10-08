@@ -118,7 +118,7 @@ class OtherFollowViewCell: UITableViewCell {
     func setModel(_ follow: Follow) {
         
         if let url = follow.backgroundImgURL?.url {
-            self.profileImageView.setImage(strUrl: url)
+            self.profileImageView.setImage(strUrl: url, with: "")
         } else {
             self.profileImageView.image = .init(.image(.defaultStyle(.sooumLogo)))
         }

@@ -21,21 +21,20 @@ extension Log {
 
                 let filePaths: [String] = fileLogger.logFileManager.sortedLogFilePaths
 
-                if filePaths.isEmpty {
-
+                if let latesFilePath = filePaths.last {
+                    let fileUrls: [URL] = [URL(fileURLWithPath: latesFilePath)]
+                    let viewController = UIActivityViewController(
+                        activityItems: fileUrls,
+                        applicationActivities: nil
+                    )
+                    observer(.success(viewController))
+                } else {
                     let error = NSError(
                         domain: "\(identifier):Log",
                         code: -999,
                         userInfo: [NSLocalizedDescriptionKey: "기록된 로그가 없습니다."]
                     )
                     observer(.failure(error))
-                } else {
-                    let fileUrls: [URL] = filePaths.map { .init(fileURLWithPath: $0) }
-                    let viewController = UIActivityViewController(
-                        activityItems: fileUrls,
-                        applicationActivities: nil
-                    )
-                    observer(.success(viewController))
                 }
             } else {
 

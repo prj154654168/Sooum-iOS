@@ -7,17 +7,11 @@
 
 import Foundation
 
-struct CommonNotificationInfo: Equatable {
+struct CommonNotificationInfo: Hashable, Equatable {
     
     let notificationId: String
     let notificationType: NotificationType
     let createTime: Date
-    
-    enum CodingKeys: CodingKey {
-        case notificationId
-        case notificationType
-        case createTime
-    }
 }
 
 extension CommonNotificationInfo {
@@ -47,6 +41,12 @@ extension CommonNotificationInfo {
 
 extension CommonNotificationInfo.NotificationType: Decodable { }
 extension CommonNotificationInfo: Decodable {
+    
+    enum CodingKeys: CodingKey {
+        case notificationId
+        case notificationType
+        case createTime
+    }
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

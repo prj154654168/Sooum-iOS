@@ -220,9 +220,9 @@ extension FollowViewReactor {
         ProfileViewReactor(provider: self.provider, type: type, memberId: memberId)
     }
     
-    func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(provider: self.provider)
-    }
+    // func reactorForMainTabBar() -> MainTabBarReactor {
+    //     MainTabBarReactor(provider: self.provider)
+    // }
 }
 
 extension FollowViewReactor {

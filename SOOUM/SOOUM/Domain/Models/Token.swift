@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Token: Decodable {
+struct Token: Equatable {
     
     var accessToken: String
     var refreshToken: String
@@ -17,3 +17,5 @@ extension Token {
     
     static var defaultValue: Token = Token(accessToken: "", refreshToken: "")
 }
+
+extension Token: Decodable { }

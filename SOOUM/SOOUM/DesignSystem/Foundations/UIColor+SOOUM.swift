@@ -76,7 +76,8 @@ extension V2Style where Base == UIColor {
     
     // Danger
     static let rLight = UIColor(hex: "#FFE1DF")
-    static let rMain = UIColor(hex: "#EE3A26")
+    static let rMain = UIColor(hex: "#E84B3D")
+    static let rDark = UIColor(hex: "#CC392C")
     
     // Dim
     static let dim = UIColor(r: 0, g: 0, b: 0, a: 0.6)

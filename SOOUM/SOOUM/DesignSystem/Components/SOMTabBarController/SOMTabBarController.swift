@@ -67,10 +67,8 @@ class SOMTabBarController: UIViewController {
         self.view.addSubview(self.tabBar)
         self.view.bringSubviewToFront(self.tabBar)
         self.tabBar.snp.makeConstraints {
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-4)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(SOMTabBar.height)
+            $0.bottom.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(88)
         }
     }
     
@@ -89,7 +87,7 @@ class SOMTabBarController: UIViewController {
     
     func didSelectedIndex(_ index: Int) {
         
-        self.tabBar.didSelectTab(index)
+        self.tabBar.didSelectTabBarItem(index)
     }
 }
 

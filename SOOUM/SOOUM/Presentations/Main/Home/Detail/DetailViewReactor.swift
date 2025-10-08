@@ -222,13 +222,13 @@ class DetailViewReactor: Reactor {
 
 extension DetailViewReactor {
     
-    func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(provider: self.provider)
-    }
+    // func reactorForMainTabBar() -> MainTabBarReactor {
+    //     MainTabBarReactor(provider: self.provider)
+    // }
     
-    func reactorForMainHome() -> MainHomeTabBarReactor {
-        MainHomeTabBarReactor(provider: self.provider)
-    }
+    // func reactorForMainHome() -> MainHomeTabBarReactor {
+    //     MainHomeTabBarReactor(provider: self.provider)
+    // }
     
     func reactorForPush(_ selectedId: String) -> DetailViewReactor {
         DetailViewReactor(provider: self.provider, selectedId)
@@ -258,9 +258,9 @@ extension DetailViewReactor {
         ProfileViewReactor(provider: self.provider, type: type, memberId: memberId)
     }
     
-    func reactorForNoti() -> NotificationTabBarReactor {
-        NotificationTabBarReactor(provider: self.provider)
-    }
+    // func reactorForNoti() -> NotificationTabBarReactor {
+    //     NotificationTabBarReactor(provider: self.provider)
+    // }
 }
 
 extension DetailViewReactor {

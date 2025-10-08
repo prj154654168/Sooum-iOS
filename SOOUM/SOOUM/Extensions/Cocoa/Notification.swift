@@ -14,4 +14,6 @@ extension Notification.Name {
     static let hidesBottomBarWhenPushedDidChange = Notification.Name("hidesBottomBarWhenPushedDidChange")
     /// Update location auth state
     static let changedLocationAuthorization = Notification.Name("changedLocationAuthorization")
+    /// Should scroll to top
+    static let scollingToTopWithAnimation = Notification.Name("scollingToTopWithAnimation")
 }

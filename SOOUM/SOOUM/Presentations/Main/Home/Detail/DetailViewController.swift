@@ -267,11 +267,12 @@ class DetailViewController: BaseNavigationViewController, View {
                          object.collectionView.reloadData()
                      }
                  case .push:
-                     let notificationTabBarController = NotificationTabBarController()
-                     notificationTabBarController.reactor = reactor.reactorForNoti()
-                     
-                     object.navigationPush(notificationTabBarController, animated: false)
-                     object.navigationController?.viewControllers.removeAll(where: { $0.isKind(of: DetailViewController.self) })
+                     return
+                     // let notificationTabBarController = NotificationTabBarController()
+                     // notificationTabBarController.reactor = reactor.reactorForNoti()
+                     // 
+                     // object.navigationPush(notificationTabBarController, animated: false)
+                     // object.navigationController?.viewControllers.removeAll(where: { $0.isKind(of: DetailViewController.self) })
                  }
              }
              .disposed(by: self.disposeBag)
@@ -315,12 +316,12 @@ extension DetailViewController: UICollectionViewDataSource {
             isLiked: self.detailCard.isLiked,
             isCommentWritten: self.detailCard.isCommentWritten
         )
-        let model: SOMCardModel = .init(data: card)
+        // let model: SOMCardModel = .init(data: card)
         
         let tags: [SOMTagModel] = self.detailCard.tags.map {
             SOMTagModel(id: $0.id, originalText: $0.content, isSelectable: true, isRemovable: false)
         }
-        cell.setDatas(model, tags: tags)
+        // cell.setDatas(model, tags: tags)
         cell.tags.delegate = self
         cell.isOwnCard = self.detailCard.isOwnCard
         cell.isPrevCardDelete = self.detailCard.isPreviousCardDelete

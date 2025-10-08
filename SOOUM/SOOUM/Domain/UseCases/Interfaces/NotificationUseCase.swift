@@ -11,13 +11,8 @@ import RxSwift
 
 protocol NotificationUseCase {
     
-    func unreadNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func unreadCardNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func unreadFollowNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func unreadNoticeNoticeNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func readNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func readCardNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func readFollowNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
-    func readNoticeNoticeNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]>
+    func unreadNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]>
+    func readNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]>
     func requestRead(notificationId: String) -> Observable<Bool>
+    func notices(lastId: String?) -> Observable<[NoticeInfo]>
 }

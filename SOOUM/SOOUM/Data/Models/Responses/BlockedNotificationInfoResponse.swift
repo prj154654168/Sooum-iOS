@@ -7,7 +7,7 @@
 
 import Alamofire
 
-struct BlockedNotificationInfoResponse {
+struct BlockedNotificationInfoResponse: Hashable, Equatable {
     
     let notificationInfo: CommonNotificationInfo
     let blockExpirationDateTime: Date

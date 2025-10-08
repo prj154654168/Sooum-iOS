@@ -17,48 +17,23 @@ class NotificationUseCaseImpl: NotificationUseCase {
         self.repository = repository
     }
     
-    func unreadNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]> {
+    func unreadNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]> {
         
-        return self.repository.unreadNotifications(lastId: lastId)
+        return self.repository.unreadNotifications(lastId: lastId).map { $0.notificationInfo }
     }
     
-    func unreadCardNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]> {
+    func readNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]> {
         
-        return self.repository.unreadCardNotifications(lastId: lastId)
-    }
-    
-    func unreadFollowNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]> {
-        
-        return self.repository.unreadFollowNotifications(lastId: lastId)
-    }
-    
-    func unreadNoticeNoticeNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]> {
-        
-        return self.repository.unreadNoticeNoticeNotifications(lastId: lastId)
-    }
-    
-    func readNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]> {
-        
-        return self.repository.readNotifications(lastId: lastId)
-    }
-    
-    func readCardNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]> {
-        
-        return self.repository.readCardNotifications(lastId: lastId)
-    }
-    
-    func readFollowNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]> {
-        
-        return self.repository.readFollowNotifications(lastId: lastId)
-    }
-    
-    func readNoticeNoticeNotifications(lastId: String?) -> Observable<[NotificationInfoResponse]> {
-        
-        return self.repository.readNoticeNoticeNotifications(lastId: lastId)
+        return self.repository.readNotifications(lastId: lastId).map { $0.notificationInfo }
     }
     
     func requestRead(notificationId: String) -> Observable<Bool> {
         
         return self.repository.requestRead(notificationId: notificationId).map { $0 == 200 }
+    }
+    
+    func notices(lastId: String?) -> Observable<[NoticeInfo]> {
+        
+        return self.repository.notices(lastId: lastId).map { $0.noticeInfos }
     }
 }

@@ -17,54 +17,73 @@ protocol SOMTabBarDelegate: AnyObject {
 }
 
 class SOMTabBar: UIView {
-
-    static let height: CGFloat = 58
+    
+    
+    // MARK: Views
     
     private var tabBarItemContainer = UIStackView().then {
         $0.axis = .horizontal
         $0.distribution = .equalSpacing
         $0.alignment = .center
+        $0.spacing = 12
     }
     
     private let tabBarBackgroundView = UIView().then {
-        $0.backgroundColor = .clear
-        $0.layer.cornerRadius = 58 * 0.5
+        $0.backgroundColor = .som.v2.white
+        $0.layer.cornerRadius = 20
+        $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.som.v2.gray200.cgColor
         $0.clipsToBounds = true
-    }
-    
-    private let blurView = UIVisualEffectView().then {
-        let blurEffect = UIBlurEffect(style: .regular)
-        $0.effect = blurEffect
-        $0.backgroundColor = UIColor.som.white.withAlphaComponent(0.7)
-        $0.alpha = 0.9
     }
     
     var viewControllers: [UIViewController] = [] {
         didSet {
             guard self.viewControllers.isEmpty == false else { return }
             self.setTabBarItemConstraints()
-            self.setupConstraints()
-            self.didSelectTab(0)
+            self.didSelectTabBarItem(0)
         }
     }
     
+    
+    // MARK: Delegate
+    
     weak var delegate: SOMTabBarDelegate?
     
-    private let width: CGFloat = UIScreen.main.bounds.width - 20 * 2
+    
+    // MARK: Variables
+    
+    var itemSpacing: CGFloat {
+        return (UIScreen.main.bounds.width - 16 * 2 - 77 * 4) / 3
+    }
+    
+    var itemFrames: [CGRect] {
+        var itemFrames: [CGRect] = []
+        var currentX: CGFloat = 16
+        let itemWidth: CGFloat = 77
+        for _ in 0..<self.viewControllers.count {
+            let itemFrame = CGRect(x: currentX, y: 0, width: itemWidth, height: self.bounds.height)
+            itemFrames.append(itemFrame)
+            currentX += itemWidth + self.itemSpacing
+        }
+        
+        return itemFrames
+    }
     
     private var selectedIndex: Int = -1
     private var prevSelectedIndex: Int = -1
-    
-    private var tabWidth: CGFloat {
-        self.width / CGFloat(self.numberOfItems)
-    }
     
     private var numberOfItems: Int {
         self.viewControllers.count
     }
     
+    
+    // MARK: initialize
+    
     convenience init() {
         self.init(frame: .zero)
+        
+        self.setupConstraints()
     }
     
     override init(frame: CGRect) {
@@ -75,43 +94,68 @@ class SOMTabBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: Override func
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        guard let touch = touches.first else { return }
+        
+        let location = touch.location(in: self)
+        
+        for (index, frame) in self.itemFrames.enumerated() {
+            // 현재 선택한 좌표가 아이템의 내부일 때
+            if frame.contains(location) {
+                // 홈 탭을 다시 탭하면 scrollToTop
+                if index == 0, self.selectedIndex == index {
+                    NotificationCenter.default.post(name: .scollingToTopWithAnimation, object: self)
+                }
+                // 이전에 선택된 아이템이 아닐 때
+                if self.selectedIndex != index {
+                    // 선택할 수 있는 상태일 때
+                    if self.delegate?.tabBar(self, shouldSelectTabAt: index) ?? true {
+                        self.didSelectTabBarItem(index)
+                    }
+                }
+            }
+        }
+        
+        super.touchesEnded(touches, with: event)
+    }
+    
+    
+    // MARK: Private func
+    
     private func setupConstraints() {
-        
-        self.tabBarBackgroundView.addSubview(self.blurView)
-        self.blurView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.width.equalTo(self.width)
-            $0.height.equalTo(58)
-        }
-        
-        self.tabBarBackgroundView.addSubview(self.tabBarItemContainer)
-        self.tabBarItemContainer.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(4)
-            $0.bottom.equalToSuperview().offset(-4)
-            $0.leading.equalToSuperview().offset(4)
-            $0.trailing.equalToSuperview().offset(-4)
-        }
         
         self.addSubview(self.tabBarBackgroundView)
         self.tabBarBackgroundView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+        
+        self.tabBarBackgroundView.addSubview(self.tabBarItemContainer)
+        self.tabBarItemContainer.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(8)
+            $0.bottom.equalToSuperview().offset(-34)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+        }
     }
     
     private func setTabBarItemConstraints() {
         
+        self.tabBarItemContainer.spacing = self.itemSpacing
+        
         self.viewControllers.forEach {
-            let tabBarItem = SOMTabBarItem()
-            tabBarItem.title = $0.tabBarItem.title
-            tabBarItem.image = $0.tabBarItem.image
+            let tabBarItem = SOMTabBarItem(title: $0.tabBarItem.title, image: $0.tabBarItem.image)
             self.tabBarItemContainer.addArrangedSubview(tabBarItem)
         }
     }
     
-    func didSelectTab(_ index: Int ) {
-        
-        guard index != self.selectedIndex else { return }
-        self.delegate?.tabBar(self, didSelectTabAt: index)
+    
+    // MARK: Public func
+    
+    func didSelectTabBarItem(_ index: Int) {
         
         self.tabBarItemContainer.arrangedSubviews.enumerated().forEach {
             guard let tabView = $1 as? SOMTabBarItem else { return }
@@ -120,15 +164,6 @@ class SOMTabBar: UIView {
         
         self.prevSelectedIndex = self.selectedIndex
         self.selectedIndex = index
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        
-        guard let touchArea = touches.first?.location(in: self).x else { return }
-        let index = Int(floor(touchArea / self.tabWidth))
-        if self.delegate?.tabBar(self, shouldSelectTabAt: index) ?? false {
-            self.didSelectTab(index)
-        }
+        self.delegate?.tabBar(self, didSelectTabAt: index)
     }
 }

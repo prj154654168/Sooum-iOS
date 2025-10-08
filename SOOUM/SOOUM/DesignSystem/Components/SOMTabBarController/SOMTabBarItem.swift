@@ -13,30 +13,26 @@ import Then
 
 class SOMTabBarItem: UIView {
     
-    private let titleLabel = UILabel().then {
-        $0.textAlignment = .center
-        $0.typography = .som.caption
-        $0.textColor = .som.gray600
-    }
-    var title: String? {
-        set { self.titleLabel.text = newValue }
-        get { self.titleLabel.text }
-    }
+    
+    // MARK: Views
     
     private let imageView = UIImageView().then {
-        $0.tintColor = .som.gray600
-    }
-    var image: UIImage? {
-        didSet { self.imageView.image = self.image }
+        $0.tintColor = .som.gray400
     }
     
-    private let backgroundView = UIView().then {
-        $0.backgroundColor = .clear
-        $0.layer.cornerRadius = 50 * 0.5
+    private let titleLabel = UILabel().then {
+        $0.textColor = .som.v2.gray400
+        $0.typography = .som.v2.caption2
     }
     
-    convenience init() {
+    
+    // MARK: Initialize
+    
+    convenience init(title: String?, image: UIImage?) {
         self.init(frame: .zero)
+        
+        self.titleLabel.text = title
+        self.imageView.image = image
     }
     
     override init(frame: CGRect) {
@@ -50,39 +46,33 @@ class SOMTabBarItem: UIView {
     
     private func setupConstraints() {
         
-        let container = UIStackView(arrangedSubviews: [self.imageView, self.titleLabel]).then {
-            $0.axis = .vertical
-            $0.alignment = .center
-        }
-        self.backgroundView.addSubview(container)
-        container.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.bottom.equalToSuperview().offset(-8)
-            $0.leading.equalToSuperview().offset(12)
-            $0.trailing.equalToSuperview().offset(-12)
+        self.snp.makeConstraints {
+            $0.width.equalTo(77)
+            $0.height.equalTo(46)
         }
         
+        self.addSubview(self.imageView)
         self.imageView.snp.makeConstraints {
+            $0.top.centerX.equalToSuperview()
             $0.size.equalTo(24)
         }
         
-        self.addSubview(self.backgroundView)
-        self.backgroundView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+        self.addSubview(self.titleLabel)
+        self.titleLabel.snp.makeConstraints {
+            $0.top.equalTo(self.imageView.snp.bottom).offset(4)
+            $0.bottom.centerX.equalToSuperview()
         }
     }
     
     func tabBarItemSelected() {
         
-        self.titleLabel.textColor = .som.white
-        self.imageView.tintColor = .som.white
-        self.backgroundView.backgroundColor = .som.p300
+        self.titleLabel.textColor = .som.v2.black
+        self.imageView.tintColor = .som.v2.black
     }
     
     func tabBarItemNotSelected() {
         
-        self.titleLabel.textColor = .som.gray600
-        self.imageView.tintColor = .som.gray600
-        self.backgroundView.backgroundColor = .clear
+        self.titleLabel.textColor = .som.v2.gray400
+        self.imageView.tintColor = .som.v2.gray400
     }
 }

@@ -38,10 +38,15 @@ struct NetworkManagerConfiguration: ManagerConfiguration {
             self.sessionDelegate = sessionDelegate
             self.sessionDelegateQueue = sessionDelegateQueue
             
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+            formatter.locale = .Korea
+            formatter.timeZone = .Korea
+            
             self.decoder = JSONDecoder()
-            self.decoder.dateDecodingStrategy = .iso8601
+            self.decoder.dateDecodingStrategy = .formatted(formatter)
             self.encoder = JSONEncoder()
-            self.encoder.dateEncodingStrategy = .iso8601
+            self.encoder.dateEncodingStrategy = .formatted(formatter)
         }
     }
     

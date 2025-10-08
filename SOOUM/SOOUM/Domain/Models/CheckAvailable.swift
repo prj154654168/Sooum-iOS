@@ -13,13 +13,6 @@ struct CheckAvailable: Equatable {
     let banned: Bool
     let withdrawn: Bool
     let registered: Bool
-    
-    enum CodingKeys: String, CodingKey {
-        case rejoinAvailableAt
-        case banned
-        case withdrawn
-        case registered
-    }
 }
 
 extension CheckAvailable {
@@ -33,6 +26,13 @@ extension CheckAvailable {
 }
 
 extension CheckAvailable: Decodable {
+    
+    enum CodingKeys: String, CodingKey {
+        case rejoinAvailableAt
+        case banned
+        case withdrawn
+        case registered
+    }
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
