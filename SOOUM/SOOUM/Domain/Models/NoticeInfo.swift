@@ -12,7 +12,7 @@ struct NoticeInfo {
     let id: String
     let noticeType: NoticeType
     let message: String
-    let url: String
+    let url: String?
     let createdAt: Date
 }
 
@@ -64,7 +64,7 @@ extension NoticeInfo {
         id: "",
         noticeType: .announcement,
         message: "",
-        url: "",
+        url: nil,
         createdAt: Date()
     )
 }
@@ -95,7 +95,7 @@ extension NoticeInfo: Decodable {
         self.id = String(try container.decode(Int64.self, forKey: .id))
         self.noticeType = try container.decode(NoticeType.self, forKey: .noticeType)
         self.message = try container.decode(String.self, forKey: .message)
-        self.url = try container.decode(String.self, forKey: .url)
+        self.url = try container.decodeIfPresent(String.self, forKey: .url)
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
     }
 }

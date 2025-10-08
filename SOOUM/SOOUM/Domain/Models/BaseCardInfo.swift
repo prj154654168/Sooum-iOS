@@ -72,7 +72,7 @@ extension BaseCardInfo: Decodable {
         self.cardImgName = try container.decode(String.self, forKey: .cardImgName)
         self.cardImgURL = try container.decode(String.self, forKey: .cardImgURL)
         self.cardContent = try container.decode(String.self, forKey: .cardContent)
-        self.font = try container.decode(BaseCardInfo.Font.self, forKey: .font)
+        self.font = try container.decode(Font.self, forKey: .font)
         self.distance = try container.decodeIfPresent(String.self, forKey: .distance)
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
         self.storyExpirationTime = try container.decodeIfPresent(Date.self, forKey: .storyExpirationTime)

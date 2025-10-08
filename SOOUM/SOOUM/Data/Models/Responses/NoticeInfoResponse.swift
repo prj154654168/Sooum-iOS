@@ -22,7 +22,7 @@ extension NoticeInfoResponse: EmptyResponse {
 extension NoticeInfoResponse: Decodable {
     
     enum CodingKeys: String, CodingKey {
-        case noticeInfos
+        case noticeInfos = "notices"
     }
     
     init(from decoder: any Decoder) throws {
