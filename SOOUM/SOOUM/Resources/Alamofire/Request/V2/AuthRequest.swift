@@ -66,6 +66,8 @@ enum AuthRequest: BaseRequest {
                 memberInfo = [
                     "encryptedDeviceId": encryptedDeviceId,
                     "deviceType": "IOS",
+                    "deviceModel": Info.deviceModel,
+                    "deviceOsVersion": Info.iOSVersion,
                     "isNotificationAgreed": isNotificationAgreed,
                     "nickname": nickname,
                     "profileImage": profileImageName
@@ -74,6 +76,8 @@ enum AuthRequest: BaseRequest {
                 memberInfo = [
                     "encryptedDeviceId": encryptedDeviceId,
                     "deviceType": "IOS",
+                    "deviceModel": Info.deviceModel,
+                    "deviceOsVersion": Info.iOSVersion,
                     "isNotificationAgreed": isNotificationAgreed,
                     "nickname": nickname
                 ]
@@ -87,7 +91,12 @@ enum AuthRequest: BaseRequest {
                 ] as [String: Any]
             ]
         case let .login(encryptedDeviceId):
-            return ["encryptedDeviceId": encryptedDeviceId]
+            return [
+                "encryptedDeviceId": encryptedDeviceId,
+                "deviceType": "IOS",
+                "deviceModel": Info.deviceModel,
+                "deviceOsVersion": Info.iOSVersion
+            ]
         case let .reAuthenticationWithRefreshSession(token):
             return [
                 "accessToken": token.accessToken,
