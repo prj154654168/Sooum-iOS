@@ -66,7 +66,7 @@ extension BaseCardInfo: Decodable {
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(String.self, forKey: .id)
+        self.id = String(try container.decode(Int64.self, forKey: .id))
         self.likeCnt = try container.decode(Int.self, forKey: .likeCnt)
         self.commentCnt = try container.decode(Int.self, forKey: .commentCnt)
         self.cardImgName = try container.decode(String.self, forKey: .cardImgName)
