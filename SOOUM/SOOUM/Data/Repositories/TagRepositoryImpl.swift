@@ -17,8 +17,8 @@ class TagRepositoryImpl: TagRepository {
         self.remoteDataSource = remoteDataSource
     }
     
-    func related(resultCnt: Int, keyword: String) -> Observable<TagInfoResponse> {
+    func relatedTags(keyword: String, size: Int) -> Observable<TagInfoResponse> {
         
-        return self.remoteDataSource.related(resultCnt: resultCnt, keyword: keyword)
+        return self.remoteDataSource.relatedTags(keyword: keyword, size: size)
     }
 }

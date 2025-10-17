@@ -17,8 +17,8 @@ class TagUseCaseImpl: TagUseCase {
         self.repository = repository
     }
     
-    func related(resultCnt: Int, keyword: String) -> Observable<[TagInfo]> {
+    func relatedTags(keyword: String, size: Int) -> Observable<[TagInfo]> {
         
-        return self.repository.related(resultCnt: resultCnt, keyword: keyword).map { $0.tagInfos }
+        return self.repository.relatedTags(keyword: keyword, size: size).map { $0.tagInfos }
     }
 }

@@ -52,7 +52,7 @@ class CardRepositoryImpl: CardRepository {
         imgType: String,
         imgName: String,
         isStory: Bool,
-        tags: [String]?
+        tags: [String]
     ) -> Observable<Int> {
         
         return self.remoteDataSource.writeCard(

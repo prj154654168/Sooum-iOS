@@ -50,7 +50,7 @@ enum CardRequest: BaseRequest {
         imgType: String,
         imgName: String,
         isStory: Bool,
-        tags: [String]?
+        tags: [String]
     )
     /// 답카드 추가
     case writeComment(
@@ -65,7 +65,7 @@ enum CardRequest: BaseRequest {
         commentTags: [String]
     )
     /// 글추가 - 관련 태그 조회
-    case relatedTag(keyword: String, size: Int)
+    case relatedTags(keyword: String, size: Int)
     
     var path: String {
         switch self {
@@ -103,15 +103,15 @@ enum CardRequest: BaseRequest {
             
             
         case .defaultImages:
-            return "/images/defaults"
+            return "/api/images/defaults"
         case .writeCard:
-            return "/cards"
+            return "/api/cards"
             
         case let .writeComment(id, _, _, _, _, _, _, _, _):
             return "/cards/\(id)"
             
-        case .relatedTag:
-            return "/tags/search"
+        case let .relatedTags(_, size):
+            return "/api/tags/related/\(size)"
         }
     }
 
@@ -119,7 +119,7 @@ enum CardRequest: BaseRequest {
         switch self {
         case .deleteCard:
             return .delete
-        case .writeCard, .writeComment:
+        case .writeCard, .writeComment, .relatedTags:
             return .post
         case let .updateLike(_, isLike):
             return isLike ? .post : .delete
@@ -182,16 +182,13 @@ enum CardRequest: BaseRequest {
                 "font": font,
                 "imgType": imgType,
                 "imgName": imgName,
-                "isStory": isStory
+                "isStory": isStory,
+                "tags": tags
             ]
             
             if isDistanceShared, let latitude = latitude, let longitude = longitude {
                 parameters.updateValue(latitude, forKey: "latitude")
                 parameters.updateValue(longitude, forKey: "longitude")
-            }
-            
-            if isStory == false, let tags = tags {
-                parameters.updateValue(tags, forKey: "tags")
             }
             
             return parameters
@@ -226,8 +223,8 @@ enum CardRequest: BaseRequest {
             
             return parameters
             
-        case let .relatedTag(keyword, size):
-            return ["keyword": keyword, "size": size]
+        case let .relatedTags(keyword, _):
+            return ["tag": keyword]
         
         default:
             return [:]
@@ -236,7 +233,7 @@ enum CardRequest: BaseRequest {
 
     var encoding: ParameterEncoding {
         switch self {
-        case .updateLike, .writeCard, .writeComment:
+        case .updateLike, .writeCard, .writeComment, .relatedTags:
             return JSONEncoding.default
         default:
             return URLEncoding.default

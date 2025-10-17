@@ -7,7 +7,7 @@
 
 import Alamofire
 
-struct TokenResponse: Decodable {
+struct TokenResponse {
     
     let token: Token
 }
@@ -16,5 +16,17 @@ extension TokenResponse: EmptyResponse {
     
     static func emptyValue() -> TokenResponse {
         TokenResponse(token: Token.defaultValue)
+    }
+}
+
+extension TokenResponse: Decodable {
+    
+    enum CodingKeys: CodingKey {
+        case token
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let singleContainer = try decoder.singleValueContainer()
+        self.token = try singleContainer.decode(Token.self)
     }
 }

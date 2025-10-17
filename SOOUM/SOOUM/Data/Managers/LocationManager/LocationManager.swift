@@ -20,7 +20,7 @@ enum AuthStatus {
 protocol LocationManagerDelegate: AnyObject {
     
     var coordinate: Coordinate { get }
-    var hasCoordinate: Bool { get }
+    var hasPermission: Bool { get }
     func requestLocationPermission()
     func checkLocationAuthStatus() -> AuthStatus
 }
@@ -34,8 +34,8 @@ class LocationManager: CompositeManager<LocationManagerConfigruation> {
         return coordinate
     }
     
-    var hasCoordinate: Bool {
-        return self.coordinate.latitude.isEmpty == false && self.coordinate.longitude.isEmpty == false
+    var hasPermission: Bool {
+        return self.checkLocationAuthStatus() == .authorizedAlways || self.checkLocationAuthStatus() == .authorizedWhenInUse
     }
     
     override init(provider: ManagerTypeDelegate, configure: LocationManagerConfigruation) {

@@ -56,7 +56,7 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         imgType: String,
         imgName: String,
         isStory: Bool,
-        tags: [String]?
+        tags: [String]
     ) -> Observable<Int> {
         
         let request: CardRequest = .writeCard(
@@ -70,6 +70,6 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
             isStory: isStory,
             tags: tags
         )
-        return self.provider.networkManager.perform(Int.self, request: request)
+        return self.provider.networkManager.perform(request)
     }
 }

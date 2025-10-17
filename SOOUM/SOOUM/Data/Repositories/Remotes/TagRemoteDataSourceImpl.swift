@@ -17,9 +17,9 @@ class TagRemoteDataSourceImpl: TagRemoteDataSource {
         self.provider = provider
     }
     
-    func related(resultCnt: Int, keyword: String) -> Observable<TagInfoResponse> {
+    func relatedTags(keyword: String, size: Int) -> Observable<TagInfoResponse> {
         
-        let request: TagRequest = .related(resultCnt: resultCnt, keyword: keyword)
-        return self.provider.networkManager.fetch(TagInfoResponse.self, request: request)
+        let request: CardRequest = .relatedTags(keyword: keyword, size: size)
+        return self.provider.networkManager.perform(TagInfoResponse.self, request: request)
     }
 }

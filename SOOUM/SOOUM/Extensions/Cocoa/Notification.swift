@@ -16,4 +16,6 @@ extension Notification.Name {
     static let changedLocationAuthorization = Notification.Name("changedLocationAuthorization")
     /// Should scroll to top
     static let scollingToTopWithAnimation = Notification.Name("scollingToTopWithAnimation")
+    /// Should reload
+    static let reloadData = Notification.Name("reloadData")
 }

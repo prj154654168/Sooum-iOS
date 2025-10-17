@@ -11,5 +11,5 @@ import RxSwift
 
 protocol TagRepository {
     
-    func related(resultCnt: Int, keyword: String) -> Observable<TagInfoResponse>
+    func relatedTags(keyword: String, size: Int) -> Observable<TagInfoResponse>
 }

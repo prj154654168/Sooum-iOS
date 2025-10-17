@@ -52,7 +52,7 @@ class CardUseCaseImpl: CardUseCase {
         imgType: String,
         imgName: String,
         isStory: Bool,
-        tags: [String]?
+        tags: [String]
     ) -> Observable<Bool> {
         
         return self.repository.writeCard(

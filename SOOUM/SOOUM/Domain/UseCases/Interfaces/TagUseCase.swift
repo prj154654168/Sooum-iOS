@@ -11,5 +11,5 @@ import RxSwift
 
 protocol TagUseCase {
     
-    func related(resultCnt: Int, keyword: String) -> Observable<[TagInfo]>
+    func relatedTags(keyword: String, size: Int) -> Observable<[TagInfo]>
 }
