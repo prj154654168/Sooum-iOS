@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 extension UITextView {
 
     fileprivate struct Keys {
@@ -34,8 +33,17 @@ extension UITextView {
 
         var attributes: [NSAttributedString.Key: Any] = typography.attributes
         attributes[.font] = typography.font
+        attributes[.foregroundColor] = self.textColor
         closure?(&attributes)
         self.typingAttributes = attributes
+        
+        if let text = self.text, text.isEmpty == false {
+            let selectedRange = self.selectedRange
+            
+            let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
+            self.attributedText = attributedText
+            self.selectedRange = selectedRange
+        }
     }
 
     /// When self.text == nil, must set typography when input text
