@@ -448,9 +448,9 @@ extension DetailViewController: UICollectionViewDataSource {
                 .subscribe(with: self) { object, _ in
                     guard object.isDeleted == false else { return }
                     
-                    let writeCardViewController = WriteCardViewController()
-                    writeCardViewController.reactor = reactor.reactorForWriteCard(object.detailCard.storyExpirationTime)
-                    object.navigationPush(writeCardViewController, animated: true, bottomBarHidden: true)
+                    // let writeCardViewController = WriteCardViewController()
+                    // writeCardViewController.reactor = reactor.reactorForWriteCard(object.detailCard.storyExpirationTime)
+                    // object.navigationPush(writeCardViewController, animated: true, bottomBarHidden: true)
                 }
                 .disposed(by: footer.disposeBag)
             

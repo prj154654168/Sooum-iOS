@@ -42,6 +42,7 @@ class MainTabBarReactor: Reactor {
     let pushInfo: NotificationInfo?
     
     private let dependencies: AppDIContainerable
+    
     let pushManager: PushManagerDelegate
     let locationManager: LocationManagerDelegate
     
@@ -100,9 +101,9 @@ extension MainTabBarReactor {
         HomeViewReactor(dependencies: self.dependencies)
     }
     
-    // func reactorForWriteCard() -> WriteCardViewReactor {
-    //     WriteCardViewReactor(provider: self.provider, type: .card)
-    // }
+    func reactorForWriteCard() -> WriteCardViewReactor {
+        WriteCardViewReactor(dependencies: self.dependencies, type: .card)
+    }
     
     // func reactorForTags() -> TagsViewReactor {
     //     TagsViewReactor(provider: self.provider)

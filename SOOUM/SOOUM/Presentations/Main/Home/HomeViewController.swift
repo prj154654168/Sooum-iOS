@@ -189,6 +189,13 @@ class HomeViewController: BaseNavigationViewController, View {
             name: .scollingToTopWithAnimation,
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reloadData(_:)),
+            name: .reloadData,
+            object: nil
+        )
     }
     
     override func bind() {
@@ -376,6 +383,12 @@ class HomeViewController: BaseNavigationViewController, View {
         
         let toTop = CGPoint(x: 0, y: -(self.tableView.contentInset.top))
         self.tableView.setContentOffset(toTop, animated: true)
+    }
+    
+    @objc
+    private func reloadData(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.landing)
     }
 }
 
@@ -616,7 +629,7 @@ extension HomeViewController: UITableViewDelegate {
             self.headerViewContainerTopConstraint?.update(offset: 0).update(priority: .high)
         }
 
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         }
         

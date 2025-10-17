@@ -40,10 +40,11 @@ class TagDetailViewrReactor: Reactor {
     private let tagID: String
   
     var emptyTagMode: EmptyTagDetailTableViewCell.Mode {
-      guard let cardCnt = self.currentState.tagInfo?.cardCnt else {
-        return .noCardsRegistered
-      }
-      return cardCnt == 0 ? .noCardsRegistered : .noCardsCanView
+      // guard let cardCnt = self.currentState.tagInfo?.cardCnt else {
+      //   return .noCardsRegistered
+      // }
+      // return cardCnt == 0 ? .noCardsRegistered : .noCardsCanView
+        return .noCardsCanView
     }
     
     init(provider: ManagerProviderType, tagID: String) {
@@ -119,18 +120,19 @@ class TagDetailViewrReactor: Reactor {
             return .empty()
         }
         
-        let request: TagRequest = tagInfo.isFavorite ? .deleteFavorite(tagID: tagID) : .addFavorite(tagID: tagID)
+        // let request: TagRequest = tagInfo.isFavorite ? .deleteFavorite(tagID: tagID) : .addFavorite(tagID: tagID)
 
-        return self.provider.networkManager.request(AddFavoriteTagResponse.self, request: request)
-            .map { _ in
-                let newTagInfo = TagInfoResponse(
-                    content: tagInfo.content,
-                    cardCnt: tagInfo.cardCnt,
-                    isFavorite: !tagInfo.isFavorite,
-                    status: tagInfo.status
-                )
-                return Mutation.updateFavorite(newTagInfo)
-            }
+        // return self.provider.networkManager.request(AddFavoriteTagResponse.self, request: request)
+        //     .map { _ in
+        //         let newTagInfo = TagInfoResponse(
+        //             content: tagInfo.content,
+        //             cardCnt: tagInfo.cardCnt,
+        //             isFavorite: !tagInfo.isFavorite,
+        //             status: tagInfo.status
+        //         )
+        //         return Mutation.updateFavorite(newTagInfo)
+        //     }
+        return .empty()
     }
 }
 
