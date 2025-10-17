@@ -378,19 +378,18 @@ class SOMCard: UIView {
         self.rootContainerImageView.layer.borderColor = model.isAdminCard ? UIColor.som.v2.pMain.cgColor : UIColor.som.v2.gray100.cgColor
         
         // 카드 본문
-        // TODO: 임시, 폰트 추가되면 수정
-        let typography: Typography = model.font == .pretendard ? .som.v2.body1 : .som.schoolBody1WithBold
+        let typography: Typography
+        switch model.font {
+        case .pretendard:   typography = .som.v2.body1
+        case .ridi:         typography = .som.v2.ridiCard
+        case .yoonwoo:      typography = .som.v2.yoonwooCard
+        case .kkookkkook:   typography = .som.v2.kkookkkookCard
+        }
         if self.hasScrollEnabled {
-            self.cardTextContentScrollView.attributedText = .init(
-                string: model.cardContent,
-                attributes: typography.attributes
-            )
+            self.cardTextContentScrollView.text = model.cardContent
             self.cardTextContentScrollView.typography = typography
         } else {
-            self.cardTextContentLabel.attributedText = .init(
-                string: model.cardContent,
-                attributes: typography.attributes
-            )
+            self.cardTextContentLabel.text = model.cardContent
             self.cardTextContentLabel.typography = typography
         }
         
