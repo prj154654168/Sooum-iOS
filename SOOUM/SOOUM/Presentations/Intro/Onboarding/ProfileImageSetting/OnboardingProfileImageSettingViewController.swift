@@ -7,16 +7,17 @@
 
 import UIKit
 
+import SnapKit
+import Then
+
+import Photos
+import SwiftEntryKit
+import YPImagePicker
+
 import ReactorKit
 import RxCocoa
 import RxGesture
 import RxSwift
-
-import SnapKit
-import SwiftEntryKit
-import Then
-import YPImagePicker
-
 
 class OnboardingProfileImageSettingViewController: BaseNavigationViewController, View {
     
@@ -25,14 +26,19 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         
         static let title: String = "숨에서 사용할 프로필 사진을\n등록해주세요"
         
+        static let cancelActionTitle: String = "취소"
+        static let settingActionTitle: String = "설정"
         static let completeButtonTitle: String = "완료"
         static let passButtonTitle: String = "건너뛰기"
+        
+        static let libraryDialogTitle: String = "앱 접근 권한 안내"
+        static let libraryDialogMessage: String = "사진첨부를 위해 접근 권한이 필요해요. [설정 > 앱 > 숨 > 사진]에서 사진 보관함 접근 권한을 허용해 주세요."
         
         static let inappositeDialogTitle: String = "부적절한 사진으로 보여져요"
         static let inappositeDialogMessage: String = "다른 사진으로 변경하거나 기본 이미지를 사용해 주세요."
         static let inappositeDialogConfirmButtonTitle: String = "확인"
         
-        static let selectProfileEntryName: String = "selectProfile"
+        static let selectProfileEntryName: String = "SOMBottomFloatView"
         
         static let selectProfileFirstButtonTitle: String = "앨범에서 사진 선택"
         static let selectProfileSecondButtonTitle: String = "사진 찍기"
@@ -88,7 +94,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
     
     // MARK: Variables
     
-    private var actions: [SelectProfileBottomFloatView.FloatAction] = []
+    private var actions: [SOMBottomFloatView.FloatAction] = []
     
     
     // MARK: Override func
@@ -140,11 +146,19 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
             self.cameraButton.rx.tap.asObservable()
         )
         .subscribe(with: self) { object, _ in
-            let selectProfileBottomFloatView = SelectProfileBottomFloatView(actions: object.actions)
             
-            var wrapper: SwiftEntryKitViewWrapper = selectProfileBottomFloatView.sek
-            wrapper.entryName = Text.selectProfileEntryName
-            wrapper.showBottomFloat(screenInteraction: .dismiss)
+            let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+            if status == .authorized || status == .limited {
+                
+                let selectProfileBottomFloatView = SOMBottomFloatView(actions: object.actions)
+                
+                var wrapper: SwiftEntryKitViewWrapper = selectProfileBottomFloatView.sek
+                wrapper.entryName = Text.selectProfileEntryName
+                wrapper.showBottomFloat(screenInteraction: .dismiss)
+            } else {
+                
+                object.showLibraryPermissionDialog()
+            }
         }
         .disposed(by: self.disposeBag)
 
@@ -208,7 +222,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
             .subscribe(with: self) { object, profileImage in
                 object.profileImageView.image = profileImage ?? .init(.image(.v2(.profile_large)))
                 
-                var actions: [SelectProfileBottomFloatView.FloatAction] = [
+                var actions: [SOMBottomFloatView.FloatAction] = [
                     .init(
                         title: Text.selectProfileFirstButtonTitle,
                         action: { [weak object] in
@@ -244,7 +258,41 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
     }
  }
 
+
+// MARK: Show dialog
+
 extension OnboardingProfileImageSettingViewController {
+    
+    func showLibraryPermissionDialog() {
+        
+        let cancelAction = SOMDialogAction(
+            title: Text.cancelActionTitle,
+            style: .gray,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        let settingAction = SOMDialogAction(
+            title: Text.settingActionTitle,
+            style: .primary,
+            action: {
+                let application = UIApplication.shared
+                let openSettingsURLString: String = UIApplication.openSettingsURLString
+                if let settingsURL = URL(string: openSettingsURLString),
+                   application.canOpenURL(settingsURL) {
+                    application.open(settingsURL)
+                }
+                
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.libraryDialogTitle,
+            message: Text.libraryDialogMessage,
+            actions: [cancelAction, settingAction]
+        )
+    }
     
     func showPicker(for screen: YPPickerScreen) {
         
