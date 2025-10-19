@@ -14,7 +14,6 @@ import ReactorKit
 import RxCocoa
 import RxSwift
 
-
 class NotificationViewController: BaseNavigationViewController, View {
     
     enum Text {
@@ -48,8 +47,8 @@ class NotificationViewController: BaseNavigationViewController, View {
         $0.delegate = self
     }
     
-    private lazy var tableView = UITableView().then {
-        $0.backgroundColor = .clear
+    private lazy var tableView = UITableView(frame: .zero, style: .plain).then {
+        $0.backgroundColor = .som.v2.white
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
@@ -202,7 +201,7 @@ class NotificationViewController: BaseNavigationViewController, View {
                 
                 guard let unreads = displayStats.unreads, let reads = displayStats.reads else { return }
                 
-                guard unreads.isEmpty == false, reads.isEmpty == false else {
+                if unreads.isEmpty && reads.isEmpty {
                     snapshot.appendItems([.empty], toSection: .empty)
                     break
                 }
@@ -316,7 +315,7 @@ extension NotificationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let sections = self.dataSource.snapshot().sectionIdentifiers
-        guard sections.isEmpty == false else { return nil }
+        guard sections.isEmpty == false, self.headerView.selectedIndex != 1 else { return nil }
         
         switch sections[section] {
         case .read:
@@ -352,7 +351,7 @@ extension NotificationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         let sections = self.dataSource.snapshot().sectionIdentifiers
-        guard sections.isEmpty == false else { return 0 }
+        guard sections.isEmpty == false, self.headerView.selectedIndex != 1 else { return 0 }
         
         switch sections[section] {
         case .read:
@@ -486,6 +485,8 @@ extension NotificationViewController: UITableViewDelegate {
 extension NotificationViewController: SOMSwipableTabBarDelegate {
     
     func tabBar(_ tabBar: SOMSwipableTabBar, didSelectTabAt index: Int) {
+        
+        self.tableView.reloadData()
         
         self.reactor?.action.onNext(.updateDisplayType(index == 1 ? .notice : .activity(.unread)))
     }

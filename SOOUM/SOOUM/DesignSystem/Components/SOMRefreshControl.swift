@@ -69,6 +69,7 @@ class SOMRefreshControl: UIRefreshControl {
         self.addObserver(self, forKeyPath: #keyPath(isRefreshing), options: .new, context: nil)
         
         self.tintColor = .clear
+        self.backgroundColor = .clear
         
         self.addSubview(self.animationView)
         self.animationView.snp.makeConstraints {

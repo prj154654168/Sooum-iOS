@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 import Then
 
-
 class NotificationViewCell: UITableViewCell {
     
     enum Text {
@@ -56,6 +55,7 @@ class NotificationViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.selectionStyle = .none
+        self.backgroundColor = .clear
         
         self.setupConstraints()
     }
@@ -181,17 +181,17 @@ class NotificationViewCell: UITableViewCell {
         }
         
         if let titleInfo = titleInfo {
-            self.titleLabel.attributedText = .init(string: titleInfo.text, attributes: titleInfo.typography.attributes)
+            self.titleLabel.text = titleInfo.text
             self.titleLabel.typography = titleInfo.typography
         }
         
         if let timeGapInfo = timeGapInfo {
-            self.timeGapLabel.attributedText = .init(string: timeGapInfo.text, attributes: timeGapInfo.typography.attributes)
+            self.timeGapLabel.text = timeGapInfo.text
             self.timeGapLabel.typography = timeGapInfo.typography
         }
         
         if let contentsInfo = contentsInfo {
-            self.contentLabel.attributedText = .init(string: contentsInfo.text, attributes: contentsInfo.typography.attributes)
+            self.contentLabel.text = contentsInfo.text
             self.contentLabel.typography = contentsInfo.typography
         }
     }
