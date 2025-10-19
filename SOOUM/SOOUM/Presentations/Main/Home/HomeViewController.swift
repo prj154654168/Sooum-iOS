@@ -538,7 +538,7 @@ extension HomeViewController: UITableViewDelegate {
         
         switch item {
         case .empty:
-            return tableView.bounds.height
+            return (UIScreen.main.bounds.height * 0.2) + 113 + 20 + 42
         default:
             return self.cellHeight
         }

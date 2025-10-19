@@ -65,6 +65,7 @@ class HomePlaceholderViewCell: UITableViewCell {
         self.contentView.addSubview(self.placeholderMessageLabel)
         self.placeholderMessageLabel.snp.makeConstraints {
             $0.top.equalTo(self.placeholderImageView.snp.bottom).offset(20)
+            $0.bottom.equalToSuperview()
             $0.centerX.equalToSuperview()
         }
     }
