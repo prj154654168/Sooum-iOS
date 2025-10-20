@@ -113,7 +113,9 @@ class WriteCardTags: UIView {
             let itemsToReconfigure = self.dataSource.snapshot().itemIdentifiers
             var reconfigureSnapshot = self.dataSource.snapshot()
             reconfigureSnapshot.reconfigureItems(itemsToReconfigure)
-            self.dataSource.apply(reconfigureSnapshot, animatingDifferences: false)
+            self.dataSource.apply(reconfigureSnapshot, animatingDifferences: false) { [weak self] in
+                self?.scrollToRight()
+            }
         }
     }
     

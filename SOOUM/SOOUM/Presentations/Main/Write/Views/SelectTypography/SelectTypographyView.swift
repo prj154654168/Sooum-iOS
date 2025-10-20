@@ -42,7 +42,7 @@ class SelectTypographyView: UIView {
     // MARK: Variables
     
     var selectedTypography = BehaviorRelay<BaseCardInfo.Font?>(value: nil)
-    var selectTypography: BaseCardInfo.Font = .pretendard {
+    var selectTypography: BaseCardInfo.Font? = nil {
         didSet {
             
             let items = self.container.arrangedSubviews

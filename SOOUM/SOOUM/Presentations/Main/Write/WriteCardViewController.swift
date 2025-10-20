@@ -73,6 +73,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
         
+        $0.contentInset.top = 8
         $0.contentInset.bottom = 24
         
         $0.delegate = self
@@ -310,7 +311,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         let selectedTypography = self.selectTypographyView.selectedTypography
             .filterNil()
             .distinctUntilChanged()
-            .share()
+            .share(replay: 1)
         selectedTypography
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.writeCardView) { writeCardView, selectedTypography in
@@ -403,11 +404,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
             .observe(on: MainScheduler.asyncInstance)
-            .subscribe(with: self.loadingIndicatorView) { loadingIndicatorView, isProcessing in
+            .subscribe(with: self) { object, isProcessing in
+                object.view.endEditing(true)
                 if isProcessing {
-                    loadingIndicatorView.startAnimating()
+                    object.loadingIndicatorView.startAnimating()
                 } else {
-                    loadingIndicatorView.stopAnimating()
+                    object.loadingIndicatorView.stopAnimating()
                 }
             }
             .disposed(by: self.disposeBag)
