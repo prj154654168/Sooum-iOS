@@ -19,7 +19,7 @@ class SelectTypographyView: UIView {
     typealias TypographyWithName = (name: String, typography: Typography)
     
     enum Text {
-        static let title: String = "글시체"
+        static let title: String = "글씨체"
     }
     
     

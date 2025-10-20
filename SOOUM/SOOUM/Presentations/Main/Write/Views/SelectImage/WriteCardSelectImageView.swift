@@ -22,7 +22,7 @@ class WriteCardSelectImageView: UIView {
         static let sensitivitytitle: String = "감성"
         static let foodTitle: String = "음식"
         static let abstractTitle: String = "추상"
-        static let memoTitle: String = "메오"
+        static let memoTitle: String = "메모"
     }
     
     enum Section: Int, CaseIterable {
