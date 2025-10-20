@@ -17,7 +17,7 @@ enum NotificationRequest: BaseRequest {
     /// 알림 읽음 요청
     case requestRead(notificationId: String)
     /// 공지 조회
-    case notices(lastId: String?)
+    case notices(lastId: String?, size: Int?)
     
     var path: String {
         switch self {
@@ -38,7 +38,7 @@ enum NotificationRequest: BaseRequest {
         case let .requestRead(notificationId):
             return "/api/notifications/\(notificationId)/read"
             
-        case let .notices(lastId):
+        case let .notices(lastId, _):
             if let lastId = lastId {
                 return "/api/notices/\(lastId)"
             } else {
@@ -57,7 +57,16 @@ enum NotificationRequest: BaseRequest {
     }
     
     var parameters: Parameters {
-        return [:]
+        switch self {
+        case let .notices(_, size):
+            if let size = size {
+                return ["pageSize": size]
+            } else {
+                return [:]
+            }
+        default:
+            return [:]
+        }
     }
     
     var encoding: ParameterEncoding {

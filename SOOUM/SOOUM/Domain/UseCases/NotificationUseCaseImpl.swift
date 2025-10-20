@@ -32,8 +32,8 @@ class NotificationUseCaseImpl: NotificationUseCase {
         return self.repository.requestRead(notificationId: notificationId).map { $0 == 200 }
     }
     
-    func notices(lastId: String?) -> Observable<[NoticeInfo]> {
+    func notices(lastId: String?, size: Int?) -> Observable<[NoticeInfo]> {
         
-        return self.repository.notices(lastId: lastId).map { $0.noticeInfos }
+        return self.repository.notices(lastId: lastId, size: size).map { $0.noticeInfos }
     }
 }

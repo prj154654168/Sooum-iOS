@@ -45,11 +45,11 @@ enum UserRequest: BaseRequest {
     
     var method: HTTPMethod {
         switch self {
-        case .checkAvailable, .validateNickname, .presignedURL:
+        case .checkAvailable, .validateNickname:
             return .post
         case .updateNickname, .updateImage, .updateFCMToken:
             return .patch
-        case .nickname:
+        case .nickname, .presignedURL:
             return .get
         }
     }

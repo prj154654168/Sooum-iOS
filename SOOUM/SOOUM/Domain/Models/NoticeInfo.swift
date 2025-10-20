@@ -37,18 +37,18 @@ extension NoticeInfo {
         var image: UIImage? {
             switch self {
             case .announcement:
-                return .init(.icon(.v2(.filled(.notice))))
+                return .init(.icon(.v2(.filled(.headset))))
             case .news:
                 return .init(.icon(.v2(.filled(.mail))))
             case .maintenance:
-                return .init(.icon(.v2(.filled(.tool))))
+                return .init(.icon(.v2(.filled(.notice))))
             }
         }
         
         var tintColor: UIColor {
             switch self {
             case .announcement:
-                return .som.v2.rMain
+                return .som.v2.yMain
             case .news:
                 return .som.v2.pMain
             case .maintenance:

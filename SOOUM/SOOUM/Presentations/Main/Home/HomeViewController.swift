@@ -189,6 +189,13 @@ class HomeViewController: BaseNavigationViewController, View {
             name: .scollingToTopWithAnimation,
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reloadData(_:)),
+            name: .reloadData,
+            object: nil
+        )
     }
     
     override func bind() {
@@ -295,7 +302,10 @@ class HomeViewController: BaseNavigationViewController, View {
                 let models: [SOMPageModel] = noticeInfos
                     .enumerated()
                     .map { SOMPageModel(data: $1, index: ($0, noticeInfos.count)) }
-                object.topNoticeView.frame = CGRect(origin: .zero, size: .init(width: UIScreen.main.bounds.width, height: 81))
+                object.topNoticeView.frame = CGRect(
+                    origin: .zero,
+                    size: .init(width: UIScreen.main.bounds.width - 16 * 2, height: 81)
+                )
                 object.topNoticeView.setModels(models)
                 object.tableView.tableHeaderView = noticeInfos.isEmpty ? nil : object.topNoticeView
             }
@@ -376,6 +386,12 @@ class HomeViewController: BaseNavigationViewController, View {
         
         let toTop = CGPoint(x: 0, y: -(self.tableView.contentInset.top))
         self.tableView.setContentOffset(toTop, animated: true)
+    }
+    
+    @objc
+    private func reloadData(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.landing)
     }
 }
 
@@ -525,7 +541,7 @@ extension HomeViewController: UITableViewDelegate {
         
         switch item {
         case .empty:
-            return tableView.bounds.height
+            return (UIScreen.main.bounds.height * 0.2) + 113 + 20 + 42
         default:
             return self.cellHeight
         }
@@ -616,7 +632,7 @@ extension HomeViewController: UITableViewDelegate {
             self.headerViewContainerTopConstraint?.update(offset: 0).update(priority: .high)
         }
 
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         }
         

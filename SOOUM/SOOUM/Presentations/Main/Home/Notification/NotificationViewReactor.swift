@@ -116,7 +116,7 @@ class NotificationViewReactor: Reactor {
                         ))
                     ]
                 )),
-                self.notificationUseCase.notices(lastId: nil)
+                self.notificationUseCase.notices(lastId: nil, size: 10)
                    .map(Mutation.notices)
                    .catch(self.catchClosureNotices)
             ])
@@ -138,7 +138,7 @@ class NotificationViewReactor: Reactor {
             case .notice:
                 return .concat([
                     .just(.updateIsRefreshing(true)),
-                    self.notificationUseCase.notices(lastId: nil)
+                    self.notificationUseCase.notices(lastId: nil, size: 10)
                         .map(Mutation.notices)
                         .catch(self.catchClosureNotices),
                     .just(.updateIsRefreshing(false))
@@ -153,13 +153,13 @@ class NotificationViewReactor: Reactor {
             case let .activity(activityType):
                 return .concat([
                     self.moreNotification(activityType, with: lastId)
-                        .catch(self.catchClosureNotis)
+                        .catch(self.catchClosureNotisMore)
                 ])
             case .notice:
                 return .concat([
-                    self.notificationUseCase.notices(lastId: lastId)
+                    self.notificationUseCase.notices(lastId: lastId, size: 10)
                         .map(Mutation.moreNotices)
-                        .catch(self.catchClosureNotices)
+                        .catch(self.catchClosureNoticesMore)
                 ])
             }
         case let .requestRead(selectedId):
@@ -204,10 +204,28 @@ extension NotificationViewReactor {
         }
     }
     
+    var catchClosureNotisMore: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.more(unreads: [], reads: [])),
+                .just(.updateIsRefreshing(false))
+            ])
+        }
+    }
+    
     var catchClosureNotices: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
             .concat([
                 .just(.notices([])),
+                .just(.updateIsRefreshing(false))
+            ])
+        }
+    }
+    
+    var catchClosureNoticesMore: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.moreNotices([])),
                 .just(.updateIsRefreshing(false))
             ])
         }

@@ -32,8 +32,8 @@ class NotificationRepositoryImpl: NotificationRepository {
         return self.remoteDataSource.requestRead(notificationId: notificationId)
     }
     
-    func notices(lastId: String?) -> Observable<NoticeInfoResponse> {
+    func notices(lastId: String?, size: Int?) -> Observable<NoticeInfoResponse> {
         
-        return self.remoteDataSource.notices(lastId: lastId)
+        return self.remoteDataSource.notices(lastId: lastId, size: size)
     }
 }

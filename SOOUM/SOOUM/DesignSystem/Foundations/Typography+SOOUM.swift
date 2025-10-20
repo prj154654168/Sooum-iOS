@@ -12,7 +12,9 @@ class BuiltInFont: FontConrainer {
     
     enum FontType: String {
         case pretendard = "PretendardVariable"
-        case school = "HakgyoansimChilpanjiugaeTTF"
+        case yoonwoo = "OwnglyphYoonwooChae"
+        case ridi = "RIDIBatang"
+        case kkookkkook = "MemomentKkukkukkR"
     }
     
     var type: FontType
@@ -50,20 +52,24 @@ class BuiltInFont: FontConrainer {
 fileprivate extension UIFont {
 
     static func builtInFontName(type fontType: BuiltInFont.FontType, with weight: Weight) -> String {
-        let weightName: String = {
-            switch weight {
-            case .thin: return "Thin"
-            case .ultraLight: return "ExtraLight"
-            case .light: return fontType == .pretendard ? "Light" : "L"
-            case .medium: return "Medium"
-            case .semibold: return "SemiBold"
-            case .bold: return fontType == .pretendard ? "Bold" : "B"
-            case .heavy: return "ExtraBold"
-            case .black: return "Black"
-            default: return "Regular"
-            }
-        }()
-        return "\(fontType.rawValue)-\(weightName)"
+        if case .pretendard = fontType {
+            let weightName: String = {
+                switch weight {
+                case .thin:         return "Thin"
+                case .ultraLight:   return "ExtraLight"
+                case .light:        return "Light"
+                case .medium:       return "Medium"
+                case .semibold:     return "SemiBold"
+                case .bold:         return "Bold"
+                case .heavy:        return "ExtraBold"
+                case .black:        return "Black"
+                default:            return "Regular"
+                }
+            }()
+            return "\(fontType.rawValue)-\(weightName)"
+        } else {
+            return "\(fontType.rawValue)"
+        }
     }
 
     static func builtInFont(type fontType: BuiltInFont.FontType, ofSize fontSize: CGFloat, weight: Weight) -> UIFont {
@@ -142,17 +148,17 @@ extension SOOUMStyle where Base == Typography {
     
     // shcool
     
-    static var schoolBody1WithBold: Typography = .init(
-        fontContainer: BuiltInFont(type: .school, size: 18, weight: .bold),
-        lineHeight: 25,
-        letterSpacing: -0.004
-    )
+    // static var schoolBody1WithBold: Typography = .init(
+    //     fontContainer: BuiltInFont(type: .school, size: 18, weight: .bold),
+    //     lineHeight: 25,
+    //     letterSpacing: -0.004
+    // )
     
-    static var schoolBody1WithLight: Typography = .init(
-        fontContainer: BuiltInFont(type: .school, size: 18, weight: .light),
-        lineHeight: 25,
-        letterSpacing: -0.004
-    )
+    // static var schoolBody1WithLight: Typography = .init(
+    //     fontContainer: BuiltInFont(type: .school, size: 18, weight: .light),
+    //     lineHeight: 25,
+    //     letterSpacing: -0.004
+    // )
 }
 
 extension V2Style where Base == Typography {
@@ -161,7 +167,6 @@ extension V2Style where Base == Typography {
     // MARK: v2
     
     // Pretandard
-    
     /// Size: 28, Line height: 39
     ///
     /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
@@ -264,6 +269,85 @@ extension V2Style where Base == Typography {
     static var caption3: Typography = .init(
         fontContainer: BuiltInFont(size: 10, weight: .medium),
         lineHeight: 15,
+        letterSpacing: -0.025
+    )
+    
+    
+    // RIDIBatang
+    /// Size: 15, Line height: 23
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var ridiButton: Typography = .init(
+        fontContainer: BuiltInFont(type: .ridi, size: 15, weight: .regular),
+        lineHeight: 23,
+        letterSpacing: -0.025
+    )
+    /// Size: 13, Line height: 20
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var ridiCard: Typography = .init(
+        fontContainer: BuiltInFont(type: .ridi, size: 13, weight: .regular),
+        lineHeight: 20,
+        letterSpacing: -0.025
+    )
+    /// Size: 11, Line height: 17
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var ridiTag: Typography = .init(
+        fontContainer: BuiltInFont(type: .ridi, size: 11, weight: .regular),
+        lineHeight: 17,
+        letterSpacing: -0.025
+    )
+    
+    // Yoonwoo
+    /// Size: 20, Line height: 22
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var yoonwooButton: Typography = .init(
+        fontContainer: BuiltInFont(type: .yoonwoo, size: 20, weight: .regular),
+        lineHeight: 22,
+        letterSpacing: 0
+    )
+    /// Size: 18, Line height: 20
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var yoonwooCard: Typography = .init(
+        fontContainer: BuiltInFont(type: .yoonwoo, size: 18, weight: .regular),
+        lineHeight: 20,
+        letterSpacing: 0
+    )
+    /// Size: 16, Line height: 18
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var yoonwooTag: Typography = .init(
+        fontContainer: BuiltInFont(type: .yoonwoo, size: 16, weight: .regular),
+        lineHeight: 18,
+        letterSpacing: -0.025
+    )
+    
+    // Kkukkukk
+    /// Size: 16, Line height: 22
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var kkookkkookButton: Typography = .init(
+        fontContainer: BuiltInFont(type: .kkookkkook, size: 16, weight: .regular),
+        lineHeight: 22,
+        letterSpacing: 0
+    )
+    /// Size: 14, Line height: 20
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var kkookkkookCard: Typography = .init(
+        fontContainer: BuiltInFont(type: .kkookkkook, size: 14, weight: .regular),
+        lineHeight: 20,
+        letterSpacing: 0
+    )
+    /// Size: 12, Line height: 17
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var kkookkkookTag: Typography = .init(
+        fontContainer: BuiltInFont(type: .kkookkkook, size: 12, weight: .regular),
+        lineHeight: 17,
         letterSpacing: -0.025
     )
 }

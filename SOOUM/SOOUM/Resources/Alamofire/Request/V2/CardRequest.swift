@@ -12,13 +12,19 @@ import Alamofire
 
 enum CardRequest: BaseRequest {
 
+    
+    // MARK: Home
+    
     /// 최신순
     case latestCard(lastId: String?, latitude: String?, longitude: String?)
     /// 인기순
     case popularCard(latitude: String?, longitude: String?)
     /// 거리순
     case distancCard(lastId: String?, latitude: String, longitude: String, distanceFilter: String)
-    /// 상세보기
+    
+    
+    // MARK: Detail
+    
     case detailCard(id: String, latitude: String?, longitude: String?)
     /// 상세보기 - 답카드
     case commentCard(id: String, lastId: String?, latitude: String?, longitude: String?)
@@ -28,18 +34,23 @@ enum CardRequest: BaseRequest {
     case deleteCard(id: String)
     /// 상세보기 - 좋아요 업데이트
     case updateLike(id: String, isLike: Bool)
+    
+    
+    // MARK: Write
+    
+    /// 기본 이미지 조회
+    case defaultImages
     /// 글추가
     case writeCard(
         isDistanceShared: Bool,
-        latitude: String,
-        longitude: String,
-        isPublic: Bool,
-        isStory: Bool,
+        latitude: String?,
+        longitude: String?,
         content: String,
         font: String,
         imgType: String,
         imgName: String,
-        feedTags: [String]
+        isStory: Bool,
+        tags: [String]
     )
     /// 답카드 추가
     case writeComment(
@@ -54,7 +65,7 @@ enum CardRequest: BaseRequest {
         commentTags: [String]
     )
     /// 글추가 - 관련 태그 조회
-    case relatedTag(keyword: String, size: Int)
+    case relatedTags(keyword: String, size: Int)
     
     var path: String {
         switch self {
@@ -90,14 +101,17 @@ enum CardRequest: BaseRequest {
         case let .updateLike(id, _):
             return "/cards/\(id)/like"
             
+            
+        case .defaultImages:
+            return "/api/images/defaults"
         case .writeCard:
-            return "/cards"
+            return "/api/cards"
             
         case let .writeComment(id, _, _, _, _, _, _, _, _):
             return "/cards/\(id)"
             
-        case .relatedTag:
-            return "/tags/search"
+        case let .relatedTags(_, size):
+            return "/api/tags/related/\(size)"
         }
     }
 
@@ -105,7 +119,7 @@ enum CardRequest: BaseRequest {
         switch self {
         case .deleteCard:
             return .delete
-        case .writeCard, .writeComment:
+        case .writeCard, .writeComment, .relatedTags:
             return .post
         case let .updateLike(_, isLike):
             return isLike ? .post : .delete
@@ -155,31 +169,26 @@ enum CardRequest: BaseRequest {
             isDistanceShared,
             latitude,
             longitude,
-            isPublic,
-            isStory,
             content,
             font,
             imgType,
             imgName,
-            feedTags
+            isStory,
+            tags
         ):
             var parameters: [String: Any] = [
                 "isDistanceShared": isDistanceShared,
-                "isPublic": isPublic,
-                "isStory": isStory,
                 "content": content,
                 "font": font,
                 "imgType": imgType,
                 "imgName": imgName,
+                "isStory": isStory,
+                "tags": tags
             ]
             
-            if isDistanceShared {
+            if isDistanceShared, let latitude = latitude, let longitude = longitude {
                 parameters.updateValue(latitude, forKey: "latitude")
                 parameters.updateValue(longitude, forKey: "longitude")
-            }
-            
-            if isStory == false {
-                parameters.updateValue(feedTags, forKey: "feedTags")
             }
             
             return parameters
@@ -214,8 +223,8 @@ enum CardRequest: BaseRequest {
             
             return parameters
             
-        case let .relatedTag(keyword, size):
-            return ["keyword": keyword, "size": size]
+        case let .relatedTags(keyword, _):
+            return ["tag": keyword]
         
         default:
             return [:]
@@ -224,7 +233,7 @@ enum CardRequest: BaseRequest {
 
     var encoding: ParameterEncoding {
         switch self {
-        case .updateLike, .writeCard, .writeComment:
+        case .updateLike, .writeCard, .writeComment, .relatedTags:
             return JSONEncoding.default
         default:
             return URLEncoding.default

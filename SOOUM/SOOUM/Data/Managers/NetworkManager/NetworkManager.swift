@@ -13,6 +13,7 @@ import RxSwift
 
 protocol NetworkManagerDelegate: AnyObject {
     
+    func request(request: BaseRequest) -> Observable<Int>
     func request<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T>
     func upload(
         _ data: Data,
@@ -20,6 +21,7 @@ protocol NetworkManagerDelegate: AnyObject {
     ) -> Observable<Result<Void, Error>>
     
     func fetch<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T>
+    func perform(_ request: BaseRequest) -> Observable<Int>
     func perform<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T>
 
     func registerFCMToken(with tokenSet: PushTokenSet, _ function: String)
@@ -61,6 +63,40 @@ extension NetworkManager: NetworkManagerDelegate {
     
     
     // MARK: Request network sevice
+    
+    func request(request: BaseRequest) -> Observable<Int> {
+        return Observable.create { [weak self] observer -> Disposable in
+            
+            let task = self?.session.request(request)
+                .validate(statusCode: 200..<300)
+                .response { response in
+                    let statusCode = response.response?.statusCode ?? 0
+                    
+                    switch response.result {
+                    case .success:
+                        if let nsError = self?.setupError(with: statusCode) {
+                            Log.error(nsError.localizedDescription)
+                            observer.onError(nsError)
+                        } else {
+                            observer.onNext(statusCode)
+                            observer.onCompleted()
+                        }
+                    case let .failure(error):
+                        if let nsError = self?.setupError(with: statusCode) {
+                            Log.error(nsError.localizedDescription)
+                            observer.onError(nsError)
+                        } else {
+                            Log.error("Network or response format error: with \(error.localizedDescription)")
+                            observer.onError(error)
+                        }
+                    }
+                }
+            
+            return Disposables.create {
+                task?.cancel()
+            }
+        }
+    }
     
     func request<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T> {
         return Observable.create { [weak self] observer -> Disposable in
@@ -132,6 +168,15 @@ extension NetworkManager: NetworkManagerDelegate {
         }
         
         return self.request(object, request: request)
+    }
+    
+    func perform(_ request: BaseRequest) -> Observable<Int> {
+        
+        guard request.method == .post || request.method == .patch || request.method == .delete else {
+            return Observable.error(DefinedError.invalidMethod(request.method))
+        }
+        
+        return self.request(request: request)
     }
     
     func perform<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T> {

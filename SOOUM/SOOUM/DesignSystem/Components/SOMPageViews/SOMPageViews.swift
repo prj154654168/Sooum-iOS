@@ -23,11 +23,16 @@ class SOMPageViews: UIView {
     
     // MARK: Views
     
+    private let shadowbackgroundView = UIView().then {
+        $0.backgroundColor = .som.v2.white
+        $0.layer.cornerRadius = 16
+    }
+    
     private let layout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .horizontal
         $0.minimumLineSpacing = 0
         $0.minimumInteritemSpacing = 0
-        $0.sectionInset.bottom = 10
+        $0.sectionInset = .zero
     }
     private lazy var collectionView = UICollectionView(
         frame: .zero,
@@ -85,11 +90,33 @@ class SOMPageViews: UIView {
     }
     
     
+    // MARK: Override func
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.shadowbackgroundView.setShadow(
+            radius: 6,
+            color: UIColor(hex: "#ABBED11A").withAlphaComponent(0.1),
+            blur: 16,
+            offset: .init(width: 0, height: 6)
+        )
+    }
+    
+    
     // MARK: Private func
     
     private func setupConstraints() {
         
-        self.addSubview(self.collectionView)
+        self.addSubview(self.shadowbackgroundView)
+        self.shadowbackgroundView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-10)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+        }
+        
+        self.shadowbackgroundView.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }

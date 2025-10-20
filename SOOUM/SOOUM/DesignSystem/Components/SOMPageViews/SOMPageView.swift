@@ -15,11 +15,6 @@ class SOMPageView: UICollectionViewCell {
     
     // MARK: Views
     
-    private let shadowbackgroundView = UIView().then {
-        $0.backgroundColor = .som.v2.white
-        $0.layer.cornerRadius = 16
-    }
-    
     private let indicatorContainer = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .fill
@@ -57,32 +52,11 @@ class SOMPageView: UICollectionViewCell {
     }
     
     
-    // MARK: Override func
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        self.shadowbackgroundView.setShadow(
-            radius: 6,
-            color: UIColor(hex: "#ABBED11A").withAlphaComponent(0.1),
-            blur: 16,
-            offset: .init(width: 0, height: 6)
-        )
-    }
-    
-    
     // MARK: Private func
     
     private func setupConstraints() {
         
-        self.contentView.addSubview(self.shadowbackgroundView)
-        self.shadowbackgroundView.snp.makeConstraints {
-            $0.verticalEdges.equalToSuperview()
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
-        }
-        
-        self.shadowbackgroundView.addSubview(self.indicatorContainer)
+        self.contentView.addSubview(self.indicatorContainer)
         self.indicatorContainer.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)
@@ -97,7 +71,7 @@ class SOMPageView: UICollectionViewCell {
             $0.center.equalToSuperview()
             $0.size.equalTo(20)
         }
-        self.shadowbackgroundView.addSubview(iconBackgroundView)
+        self.contentView.addSubview(iconBackgroundView)
         iconBackgroundView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(16)
@@ -107,7 +81,7 @@ class SOMPageView: UICollectionViewCell {
         let contentsContainer = UIStackView(arrangedSubviews: [self.titleLabel, self.messageLabel]).then {
             $0.axis = .vertical
         }
-        self.shadowbackgroundView.addSubview(contentsContainer)
+        self.contentView.addSubview(contentsContainer)
         contentsContainer.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalTo(iconBackgroundView.snp.trailing).offset(10)

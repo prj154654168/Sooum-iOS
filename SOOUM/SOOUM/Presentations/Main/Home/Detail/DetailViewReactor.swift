@@ -238,14 +238,14 @@ extension DetailViewReactor {
         ReportViewReactor(provider: self.provider, self.selectedCardId)
     }
     
-    func reactorForWriteCard(_ hasPungTime: Date? = nil) -> WriteCardViewReactor {
-        WriteCardViewReactor(
-            provider: self.provider,
-            type: .comment,
-            parentCardId: self.selectedCardId,
-            parentPungTime: hasPungTime
-        )
-    }
+    // func reactorForWriteCard(_ hasPungTime: Date? = nil) -> WriteCardViewReactor {
+    //     WriteCardViewReactor(
+    //         provider: self.provider,
+    //         type: .comment,
+    //         parentCardId: self.selectedCardId,
+    //         parentPungTime: hasPungTime
+    //     )
+    // }
     
     func reactorForTagDetail(_ tagID: String) -> TagDetailViewrReactor {
         TagDetailViewrReactor(provider: self.provider, tagID: tagID)

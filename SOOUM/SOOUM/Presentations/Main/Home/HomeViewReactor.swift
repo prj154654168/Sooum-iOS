@@ -75,7 +75,7 @@ class HomeViewReactor: Reactor {
             popularCards: nil,
             distanceCards: nil,
             hasUnreadNotifications: false,
-            distanceFilter: "lkm",
+            distanceFilter: "1km",
             isRefreshing: false
         )
     }
@@ -108,6 +108,7 @@ class HomeViewReactor: Reactor {
         case let .moreFind(lastId):
             
             return self.moreFind(lastId)
+                .catch(self.catchClosureForMore)
         case let .updateDisplayType(displayType):
             
             let distanceFilter = self.currentState.distanceFilter
@@ -218,11 +219,12 @@ private extension HomeViewReactor {
             return self.cardUseCase.latestCard(lastId: lastId, latitude: latitude, longitude: longitude)
                 .map(Mutation.more)
         case .distance:
+            let distanceFilter = self.currentState.distanceFilter.replacingOccurrences(of: "km", with: "")
             return self.cardUseCase.distanceCard(
                 lastId: lastId,
                 latitude: latitude,
                 longitude: longitude,
-                distanceFilter: self.currentState.distanceFilter
+                distanceFilter: distanceFilter
             )
             .map(Mutation.more)
         default:
@@ -232,7 +234,7 @@ private extension HomeViewReactor {
     
     func unreadNotifications() -> Observable<Mutation> {
         
-        return self.notificationUseCase.notices(lastId: nil)
+        return self.notificationUseCase.notices(lastId: nil, size: 3)
             .flatMapLatest { noticeInfos -> Observable<Mutation> in
                 
                 return .concat([
@@ -250,6 +252,15 @@ extension HomeViewReactor {
         return { _ in
             .concat([
                 .just(.cards([])),
+                .just(.updateIsRefreshing(false))
+            ])
+        }
+    }
+    
+    var catchClosureForMore: ((Error) throws -> Observable<Mutation> ) {
+        return { _ in
+            .concat([
+                .just(.more([])),
                 .just(.updateIsRefreshing(false))
             ])
         }

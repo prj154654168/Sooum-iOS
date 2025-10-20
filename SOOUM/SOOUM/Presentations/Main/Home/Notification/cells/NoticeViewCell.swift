@@ -22,13 +22,9 @@ class NoticeViewCell: UITableViewCell {
     
     // MARK: Views
     
-    private let iconView = UIImageView().then {
-        $0.image = .init(.icon(.v2(.filled(.notice))))
-        $0.tintColor = .som.v2.rMain
-    }
+    private let iconView = UIImageView()
     
     private let titleLabel = UILabel().then {
-        $0.text = Text.title
         $0.textColor = .som.v2.gray400
         $0.typography = .som.v2.caption2
     }
@@ -52,6 +48,7 @@ class NoticeViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.selectionStyle = .none
+        self.backgroundColor = .clear
         
         self.setupConstraints()
     }
@@ -101,11 +98,17 @@ class NoticeViewCell: UITableViewCell {
     }
     
     func bind(_ model: NoticeInfo) {
-    
-        let timeAttributes = Typography.som.v2.caption2.attributes
-        self.timeLabel.attributedText = .init(string: model.createdAt.noticeFormatted, attributes: timeAttributes)
         
-        let contentsAttributes = Typography.som.v2.subtitle1.withAlignment(.left).attributes
-        self.contentLabel.attributedText = .init(string: model.message, attributes: contentsAttributes)
+        self.iconView.image = model.noticeType.image
+        self.iconView.tintColor = model.noticeType.tintColor
+        
+        self.titleLabel.text = model.noticeType.title
+        self.titleLabel.typography = .som.v2.caption2
+    
+        self.timeLabel.text = model.createdAt.noticeFormatted
+        self.timeLabel.typography = .som.v2.caption2
+        
+        self.contentLabel.text = model.message
+        self.contentLabel.typography = .som.v2.subtitle1.withAlignment(.left)
     }
 }

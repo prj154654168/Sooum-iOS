@@ -47,9 +47,9 @@ extension UITextField {
         if let constraint = self.constraint {
             constraint.constant = typography.lineHeight
         } else {
-            self.translatesAutoresizingMaskIntoConstraints = true
+            self.translatesAutoresizingMaskIntoConstraints = false
             let heightConstraint = self.heightAnchor.constraint(equalToConstant: typography.lineHeight)
-            heightConstraint.priority = .defaultHigh
+            heightConstraint.priority = .required
             heightConstraint.isActive = true
             self.constraint = heightConstraint
         }
@@ -57,6 +57,7 @@ extension UITextField {
         var attributes: [NSAttributedString.Key: Any] = typography.attributes
         attributes.removeValue(forKey: .paragraphStyle)
         attributes[.font] = typography.font
+        attributes[.foregroundColor] = self.textColor
         closure?(&attributes)
         self.defaultTextAttributes = attributes
     }

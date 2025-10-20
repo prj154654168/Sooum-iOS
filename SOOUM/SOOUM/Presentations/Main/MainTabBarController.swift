@@ -162,17 +162,17 @@ extension MainTabBarController: SOMTabBarControllerDelegate {
         shouldSelect viewController: UIViewController
     ) -> Bool {
         
-        // if viewController.tabBarItem.tag == 1 {
-        //
-        //     let writeCardViewController = WriteCardViewController()
-        //     writeCardViewController.reactor = self.reactor?.reactorForWriteCard()
-        //     if let selectedViewController = tabBarController.selectedViewController {
-        //         selectedViewController.navigationPush(writeCardViewController, animated: true)
-        //     }
-        //     return false
-        // }
+        if viewController.tabBarItem.tag == 1 {
+            
+            let writeCardViewController = WriteCardViewController()
+            writeCardViewController.reactor = self.reactor?.reactorForWriteCard()
+            if let selectedViewController = tabBarController.selectedViewController {
+                selectedViewController.navigationPush(writeCardViewController, animated: true)
+            }
+            return false
+        }
         
-        if viewController.tabBarItem.tag == 1 || viewController.tabBarItem.tag == 2 || viewController.tabBarItem.tag == 3 {
+        if viewController.tabBarItem.tag == 2 || viewController.tabBarItem.tag == 3 {
             self.showPrepare()
             
             return false

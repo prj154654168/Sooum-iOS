@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 import Then
 
-
 protocol SOMTabBarControllerDelegate: AnyObject {
     
     func tabBarController(
@@ -82,7 +81,10 @@ class SOMTabBarController: UIViewController {
         else { return }
         
         let hidesTabBar = viewController.hidesBottomBarWhenPushed
-        self.tabBar.isHidden = hidesTabBar
+        // self.tabBar.isHidden = hidesTabBar
+        UIView.animate(withDuration: 0.25) {
+            self.tabBar.frame.origin.y = hidesTabBar ? self.view.frame.maxY : self.view.frame.maxY - 88
+        }
     }
     
     func didSelectedIndex(_ index: Int) {

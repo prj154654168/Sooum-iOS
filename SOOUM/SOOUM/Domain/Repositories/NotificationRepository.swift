@@ -14,5 +14,5 @@ protocol NotificationRepository {
     func unreadNotifications(lastId: String?) -> Observable<CompositeNotificationInfoResponse>
     func readNotifications(lastId: String?) -> Observable<CompositeNotificationInfoResponse>
     func requestRead(notificationId: String) -> Observable<Int>
-    func notices(lastId: String?) -> Observable<NoticeInfoResponse>
+    func notices(lastId: String?, size: Int?) -> Observable<NoticeInfoResponse>
 }

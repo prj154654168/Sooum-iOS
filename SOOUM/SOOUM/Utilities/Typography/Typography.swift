@@ -23,7 +23,7 @@ class Typography: NSObject, NSCopying {
         let paragraph = NSMutableParagraphStyle()
         paragraph.minimumLineHeight = self.lineHeight
         paragraph.maximumLineHeight = self.lineHeight
-        /// Set alignment == center
+        /// initial alignment == center
         paragraph.alignment = self.alignment
         return paragraph
     }

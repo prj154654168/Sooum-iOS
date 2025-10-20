@@ -226,7 +226,7 @@ extension AuthManager: AuthManagerDelegate {
         }
         
         /// AccessToken이 업데이트 됐다면, 즉시 성공 처리
-        guard token.accessToken == self.authInfo.token.accessToken else {
+        guard token == self.authInfo.token else {
             completion(.success)
             return
         }
@@ -239,50 +239,41 @@ extension AuthManager: AuthManagerDelegate {
         let request: AuthRequest = .reAuthenticationWithRefreshSession(token: token)
         provider.networkManager.perform(TokenResponse.self, request: request)
             .map(\.token)
-            .withUnretained(self)
-            .flatMapLatest { object, token -> Observable<AuthResult> in
-                
-                if token.accessToken.isEmpty || token.refreshToken.isEmpty {
-                    let error = NSError(
-                        domain: "SOOUM",
-                        code: -99,
-                        userInfo: [NSLocalizedDescriptionKey: "Session not refresh"]
-                    )
-                    return .just(.failure(error))
-                } else {
-                
-                    object.updateTokens(token)
-                    
-                    // FCM token 업데이트
-                    provider.networkManager.registerFCMToken(from: #function)
-                    
-                    return .just(.success)
-                }
-            }
-            .catch { [weak self] error -> Observable<AuthResult> in
-                
-                guard let self = self else { return .just(.failure(error))}
-                
-                let errorCode = (error as NSError).code
-                if errorCode == 403 {
-                    
-                    return self.certification()
-                        .map { isRegistered -> AuthResult in
-                            return isRegistered ? .success : .failure(error)
-                        }
-                } else {
-                    return .just(.failure(error))
-                }
-            }
             .subscribe(
                 with: self,
-                onNext: { object, result in
-                    object.excutePendingResults(result)
+                onNext: { object, token in
+                
+                    if token.accessToken.isEmpty || token.refreshToken.isEmpty {
+                        let error = NSError(
+                            domain: "SOOUM",
+                            code: -99,
+                            userInfo: [NSLocalizedDescriptionKey: "Session not refresh"]
+                        )
+                        
+                        object.excutePendingResults(.failure(error))
+                    } else {
+                        
+                        object.updateTokens(token)
+                        
+                        // FCM token 업데이트
+                        provider.networkManager.registerFCMToken(from: #function)
+                        
+                        object.excutePendingResults(.success)
+                    }
+                    
                     object.isReAuthenticating = false
                 },
                 onError: { object, error in
-                    object.excutePendingResults(.failure(error))
-                    object.isReAuthenticating = false
+                    
+                    let errorCode = (error as NSError).code
+                    if case 403 = errorCode {
+                        
+                        object.certification()
+                            .subscribe(onNext: { isRegistered in
+                                object.excutePendingResults(isRegistered ? .success : .failure(error))
+                            })
+                            .disposed(by: object.disposeBag)
+                    }
                 }
             )
             .disposed(by: self.disposeBag)
