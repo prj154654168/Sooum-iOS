@@ -302,7 +302,10 @@ class HomeViewController: BaseNavigationViewController, View {
                 let models: [SOMPageModel] = noticeInfos
                     .enumerated()
                     .map { SOMPageModel(data: $1, index: ($0, noticeInfos.count)) }
-                object.topNoticeView.frame = CGRect(origin: .zero, size: .init(width: UIScreen.main.bounds.width, height: 81))
+                object.topNoticeView.frame = CGRect(
+                    origin: .zero,
+                    size: .init(width: UIScreen.main.bounds.width - 16 * 2, height: 81)
+                )
                 object.topNoticeView.setModels(models)
                 object.tableView.tableHeaderView = noticeInfos.isEmpty ? nil : object.topNoticeView
             }

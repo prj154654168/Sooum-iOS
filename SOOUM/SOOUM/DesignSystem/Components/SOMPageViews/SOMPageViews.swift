@@ -32,7 +32,7 @@ class SOMPageViews: UIView {
         $0.scrollDirection = .horizontal
         $0.minimumLineSpacing = 0
         $0.minimumInteritemSpacing = 0
-        $0.sectionInset.bottom = 10
+        $0.sectionInset = .zero
     }
     private lazy var collectionView = UICollectionView(
         frame: .zero,
