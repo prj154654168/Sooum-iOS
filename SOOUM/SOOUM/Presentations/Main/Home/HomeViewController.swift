@@ -623,7 +623,10 @@ extension HomeViewController: UITableViewDelegate {
         if isScrollingDown {
             // 현재 constraint를 직접 비교
             let currentTopConstraint = self.headerViewContainerTopConstraint?.layoutConstraints.first?.constant ?? 0
-            let targetOffset = max(-self.headerViewHeight, currentTopConstraint - delta)
+            // 헤더 뷰 높이의 70% 만큼 스크롤될 때, 숨김
+            let targetOffset = self.headerViewHeight * 0.7 <= delta - currentTopConstraint ?
+                -self.headerViewHeight :
+                (currentTopConstraint - delta)
             self.headerViewContainerTopConstraint?.update(offset: targetOffset).update(priority: .high)
         }
         
