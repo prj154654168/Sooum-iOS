@@ -16,7 +16,10 @@ class SOMSwipableTabBarItem: UIView {
     
     // MARK: Views
     
-    private let titleLabel = UILabel()
+    private let titleLabel = UILabel().then {
+        $0.textColor = .som.v2.gray600
+        $0.typography = .som.v2.subtitle3
+    }
     
     
     // MARK: Initialize
@@ -56,12 +59,10 @@ class SOMSwipableTabBarItem: UIView {
     
     func updateState(
         color textColor: UIColor,
-        typo typography: Typography,
         backgroundColor: UIColor? = nil
     ) {
         
         self.titleLabel.textColor = textColor
-        self.titleLabel.typography = typography
         self.backgroundColor = backgroundColor ?? .clear
     }
 }

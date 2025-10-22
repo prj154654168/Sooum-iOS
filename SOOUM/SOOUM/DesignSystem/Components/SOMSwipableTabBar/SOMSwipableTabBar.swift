@@ -16,9 +16,6 @@ class SOMSwipableTabBar: UIView {
     enum Constants {
         static let height: CGFloat = 56
         
-        static let selectedTypo: Typography = Typography.som.v2.subtitle3
-        static let unSelectedTypo: Typography = Typography.som.v2.body1
-        
         static let selectedColor: UIColor = UIColor.som.v2.gray600
         static let unSelectedColor: UIColor = UIColor.som.v2.gray400
         
@@ -65,7 +62,7 @@ class SOMSwipableTabBar: UIView {
     // Set item width with text and typography
     var itemFrames: [CGRect] {
         let itemWidths: [CGFloat] = self.items.enumerated().map { index, item in
-            let typography: Typography = self.selectedIndex == index ? Constants.selectedTypo : Constants.unSelectedTypo
+            let typography: Typography = .som.v2.subtitle3
             /// 실제 텍스트 가로 길이 + 패딩
             return (item as NSString).size(withAttributes: [.font: typography.font]).width + 10 * 2
         }
@@ -173,7 +170,6 @@ class SOMSwipableTabBar: UIView {
             let item = SOMSwipableTabBarItem(title: title)
             item.updateState(
                 color: index == 0 ? Constants.selectedColor : Constants.unSelectedColor,
-                typo: index == 0 ? Constants.selectedTypo : Constants.unSelectedTypo,
                 backgroundColor: index == 0 ? Constants.selectedBackgroundColor : nil
             )
             
@@ -190,7 +186,6 @@ class SOMSwipableTabBar: UIView {
             let selectedItem = $1 as? SOMSwipableTabBarItem
             selectedItem?.updateState(
                 color: index == $0 ? Constants.selectedColor : Constants.unSelectedColor,
-                typo: index == $0 ? Constants.selectedTypo : Constants.unSelectedTypo,
                 backgroundColor: index == $0 ? Constants.selectedBackgroundColor : nil
             )
         }
