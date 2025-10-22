@@ -111,7 +111,7 @@ class CommentHistroyViewController: BaseNavigationViewController, View {
             })
             .subscribe(with: self.collectionView) { collectionView, isLoading in
                 if isLoading {
-                    collectionView.refreshControl?.beginRefreshingFromTop()
+                    // collectionView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     collectionView.refreshControl?.endRefreshing()
                 }
@@ -209,7 +209,7 @@ extension CommentHistroyViewController: UICollectionViewDelegateFlowLayout {
            let refreshControl = self.collectionView.refreshControl,
            offset <= -(refreshControl.frame.origin.y + 40) {
             
-            refreshControl.beginRefreshingFromTop()
+            // refreshControl.beginRefreshingFromTop()
         }
     }
 }

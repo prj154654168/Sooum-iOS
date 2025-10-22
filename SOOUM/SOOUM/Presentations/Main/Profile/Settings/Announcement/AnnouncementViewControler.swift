@@ -83,7 +83,7 @@ class AnnouncementViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
-                    tableView.refreshControl?.beginRefreshingFromTop()
+                    // tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()
                 }
@@ -140,7 +140,7 @@ extension AnnouncementViewController: UITableViewDelegate {
            let refreshControl = self.tableView.refreshControl,
            offset <= -(refreshControl.frame.origin.y + 40) {
             
-            refreshControl.beginRefreshingFromTop()
+            // refreshControl.beginRefreshingFromTop()
         }
     }
     

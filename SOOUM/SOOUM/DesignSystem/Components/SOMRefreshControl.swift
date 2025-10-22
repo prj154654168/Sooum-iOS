@@ -54,6 +54,7 @@ class SOMRefreshControl: UIRefreshControl {
     override func beginRefreshing() {
         super.beginRefreshing()
         self.animationView.play()
+        self.sendActions(for: .valueChanged)
     }
     
     override func endRefreshing() {

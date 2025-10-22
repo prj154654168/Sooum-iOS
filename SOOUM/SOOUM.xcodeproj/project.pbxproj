@@ -158,8 +158,6 @@
 		380F42372E885032009AC59E /* CardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F42352E88502F009AC59E /* CardUseCase.swift */; };
 		380F42392E88505B009AC59E /* CardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F42382E885057009AC59E /* CardUseCaseImpl.swift */; };
 		380F423A2E88505B009AC59E /* CardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F42382E885057009AC59E /* CardUseCaseImpl.swift */; };
-		38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
-		38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E282CA6A52400602499 /* UIRefreshControl.swift */; };
 		38121E312CA6C77500602499 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E302CA6C77500602499 /* Double.swift */; };
 		38121E322CA6C77500602499 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E302CA6C77500602499 /* Double.swift */; };
 		38121E342CA6DA4000602499 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E332CA6DA4000602499 /* Date.swift */; };
@@ -828,7 +826,6 @@
 		380F42322E884FD4009AC59E /* CardRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRepositoryImpl.swift; sourceTree = "<group>"; };
 		380F42352E88502F009AC59E /* CardUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardUseCase.swift; sourceTree = "<group>"; };
 		380F42382E885057009AC59E /* CardUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardUseCaseImpl.swift; sourceTree = "<group>"; };
-		38121E282CA6A52400602499 /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
 		38121E302CA6C77500602499 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		38121E332CA6DA4000602499 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		3816C05B2CCDDF3D00C8688C /* ReAuthenticationResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReAuthenticationResponse.swift; sourceTree = "<group>"; };
@@ -2102,7 +2099,6 @@
 				3878F4762CA3F08300AA46A2 /* UIView.swift */,
 				384972A22CA54DC10012FCA1 /* UIImgeView.swift */,
 				3802BDAB2D0AC1FB001256EA /* UIImage.swift */,
-				38121E282CA6A52400602499 /* UIRefreshControl.swift */,
 				3886939E2CF77FA7005F9EF3 /* UIApplication+Top.swift */,
 				388FCACF2CFAC2BF0012C4D6 /* Notification.swift */,
 				3830FFA52CEC6E3100ABA9FD /* Kingfisher.swift */,
@@ -3211,7 +3207,6 @@
 				3887176D2E7BDBAE00C6143B /* NicknameResponse.swift in Sources */,
 				3880EF722EA0CDA100D88608 /* RelatedTagView.swift in Sources */,
 				2A980B9E2D803E9D007DFA45 /* FirebaseLoggable.swift in Sources */,
-				38121E2A2CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				3830FFA72CEC6E3100ABA9FD /* Kingfisher.swift in Sources */,
 				3836ACBB2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				2A44A4382CAC227300DC463E /* BaseAuthResponse.swift in Sources */,
@@ -3392,7 +3387,6 @@
 				3878D04E2CFFC5F300F9522F /* ProfileRequest.swift in Sources */,
 				383EC6192E7A547900EC2D1E /* BaseAssembler.swift in Sources */,
 				3878D0722CFFDFEF00F9522F /* SettingTextCellView+Rx.swift in Sources */,
-				38121E292CA6A52400602499 /* UIRefreshControl.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
 				38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				2A5ABA352D464E0B00BF6C9B /* ConfigureRequest.swift in Sources */,

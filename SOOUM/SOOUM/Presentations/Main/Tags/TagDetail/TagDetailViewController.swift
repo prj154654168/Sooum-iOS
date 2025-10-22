@@ -112,7 +112,7 @@ class TagDetailViewController: BaseViewController, View {
         isLoading
             .subscribe(with: self.tableView) { tableView, isLoading in
                 if isLoading {
-                    tableView.refreshControl?.beginRefreshingFromTop()
+                    // tableView.refreshControl?.beginRefreshingFromTop()
                 } else {
                     tableView.refreshControl?.endRefreshing()
                 }
@@ -214,7 +214,7 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
            let refreshControl = self.tableView.refreshControl,
            offset <= -(refreshControl.frame.origin.y + 40) {
             
-            refreshControl.beginRefreshingFromTop()
+            // refreshControl.beginRefreshingFromTop()
         }
     }
 }

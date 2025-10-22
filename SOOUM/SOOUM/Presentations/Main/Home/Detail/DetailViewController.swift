@@ -187,7 +187,7 @@ class DetailViewController: BaseNavigationViewController, View {
              .distinctUntilChanged()
              .subscribe(with: self.collectionView) { collectionView, isLoading in
                  if isLoading {
-                     collectionView.refreshControl?.beginRefreshingFromTop()
+                     // collectionView.refreshControl?.beginRefreshingFromTop()
                  } else {
                      collectionView.refreshControl?.endRefreshing()
                  }
@@ -509,7 +509,7 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
            let refreshControl = self.collectionView.refreshControl,
            offset <= -(refreshControl.frame.origin.y + 40) {
             
-            refreshControl.beginRefreshingFromTop()
+            // refreshControl.beginRefreshingFromTop()
         }
     }
 }

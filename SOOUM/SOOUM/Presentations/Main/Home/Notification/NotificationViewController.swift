@@ -474,7 +474,7 @@ extension NotificationViewController: UITableViewDelegate {
     ) {
         
         if self.shouldRefreshing {
-            self.tableView.refreshControl?.beginRefreshingFromTop()
+            self.tableView.refreshControl?.beginRefreshing()
         }
     }
 }
