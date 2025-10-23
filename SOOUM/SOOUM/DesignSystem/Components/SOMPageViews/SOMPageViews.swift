@@ -23,6 +23,13 @@ class SOMPageViews: UIView {
     
     // MARK: Views
     
+    private let indicatorContainer = UIStackView().then {
+        $0.axis = .horizontal
+        $0.alignment = .fill
+        $0.distribution = .equalSpacing
+        $0.spacing = 2
+    }
+    
     private let shadowbackgroundView = UIView().then {
         $0.backgroundColor = .som.v2.white
         $0.layer.cornerRadius = 16
@@ -75,6 +82,20 @@ class SOMPageViews: UIView {
         }
     }
     
+    private var currentIndexForIndicator: Int = 0 {
+        didSet {
+            
+            guard oldValue != self.currentIndexForIndicator else { return }
+            
+            self.indicatorContainer.subviews.enumerated().forEach { index, indicator in
+                indicator.backgroundColor = index == self.currentIndexForIndicator ? .som.v2.gray600 : .som.v2.gray300
+                indicator.snp.updateConstraints {
+                    $0.width.equalTo(index == self.currentIndexForIndicator ? 8 : 4)
+                }
+            }
+        }
+    }
+    
     weak var delegate: SOMPageViewsDelegate?
     
     
@@ -116,6 +137,12 @@ class SOMPageViews: UIView {
             $0.trailing.equalToSuperview().offset(-16)
         }
         
+        self.shadowbackgroundView.addSubview(self.indicatorContainer)
+        self.indicatorContainer.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+        }
+        
         self.shadowbackgroundView.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -127,6 +154,19 @@ class SOMPageViews: UIView {
     
     func setModels(_ models: [SOMPageModel]) {
         
+        self.indicatorContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        for index in 0..<models.count {
+            let indicator = UIView().then {
+                $0.backgroundColor = index == 0 ? .som.v2.gray600 : .som.v2.gray300
+                $0.layer.cornerRadius = 4 * 0.5
+            }
+            self.indicatorContainer.addArrangedSubview(indicator)
+            indicator.snp.makeConstraints {
+                $0.width.equalTo(index == 0 ? 8 : 4)
+                $0.height.equalTo(4)
+            }
+        }
+        
         let modelsToItem = models.map { Item.main($0) }
         var snapshot = Snapshot()
         snapshot.appendSections(Section.allCases)
@@ -134,6 +174,9 @@ class SOMPageViews: UIView {
         self.dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
+
+
+// MARK: UICollectionViewDelegateFlowLayout and UIScrollViewDelegate
 
 extension SOMPageViews: UICollectionViewDelegateFlowLayout {
     
@@ -155,5 +198,15 @@ extension SOMPageViews: UICollectionViewDelegateFlowLayout {
         let height: CGFloat = 71
         
         return CGSize(width: width, height: height)
+    }
+    
+    
+    // MARK: UIScrollViewDelegate
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        let cellWidth: CGFloat = scrollView.bounds.width
+        let currentIndex: Int = Int(round(scrollView.contentOffset.x / cellWidth))
+        self.currentIndexForIndicator = currentIndex
     }
 }

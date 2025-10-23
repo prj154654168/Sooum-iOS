@@ -15,13 +15,6 @@ class SOMPageView: UICollectionViewCell {
     
     // MARK: Views
     
-    private let indicatorContainer = UIStackView().then {
-        $0.axis = .horizontal
-        $0.alignment = .fill
-        $0.distribution = .equalSpacing
-        $0.spacing = 2
-    }
-    
     private let iconView = UIImageView()
     
     private let titleLabel = UILabel().then {
@@ -55,12 +48,6 @@ class SOMPageView: UICollectionViewCell {
     // MARK: Private func
     
     private func setupConstraints() {
-        
-        self.contentView.addSubview(self.indicatorContainer)
-        self.indicatorContainer.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
-        }
         
         let iconBackgroundView = UIView().then {
             $0.backgroundColor = .som.v2.gray100
@@ -103,18 +90,5 @@ class SOMPageView: UICollectionViewCell {
         self.titleLabel.typography = .som.v2.caption2.withAlignment(.left)
         self.messageLabel.text = model.data.message
         self.messageLabel.typography = .som.v2.subtitle3.withAlignment(.left)
-        
-        self.indicatorContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        for index in 0..<model.index.total {
-            let indicator = UIView().then {
-                $0.backgroundColor = model.index.current == index ? .som.v2.gray600 : .som.v2.gray300
-                $0.layer.cornerRadius = 4 * 0.5
-            }
-            self.indicatorContainer.addArrangedSubview(indicator)
-            indicator.snp.makeConstraints {
-                $0.width.equalTo(model.index.current == index ? 8 : 4)
-                $0.height.equalTo(4)
-            }
-        }
     }
 }

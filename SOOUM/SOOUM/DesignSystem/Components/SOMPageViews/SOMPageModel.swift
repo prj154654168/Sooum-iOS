@@ -11,11 +11,9 @@ import UIKit
 class SOMPageModel {
     
     let data: NoticeInfo
-    let index: (current: Int, total: Int)
     
-    init(data: NoticeInfo, index: (current: Int, total: Int)) {
+    init(data: NoticeInfo) {
         self.data = data
-        self.index = index
     }
 }
 
