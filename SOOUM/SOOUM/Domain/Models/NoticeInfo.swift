@@ -41,7 +41,7 @@ extension NoticeInfo {
             case .news:
                 return .init(.icon(.v2(.filled(.mail))))
             case .maintenance:
-                return .init(.icon(.v2(.filled(.notice))))
+                return .init(.icon(.v2(.filled(.tool))))
             }
         }
         
