@@ -299,9 +299,7 @@ class HomeViewController: BaseNavigationViewController, View {
             .filterNil()
             .distinctUntilChanged()
             .subscribe(with: self) { object, noticeInfos in
-                let models: [SOMPageModel] = noticeInfos
-                    .enumerated()
-                    .map { SOMPageModel(data: $1, index: ($0, noticeInfos.count)) }
+                let models: [SOMPageModel] = noticeInfos.map { SOMPageModel(data: $0) }
                 object.topNoticeView.frame = CGRect(
                     origin: .zero,
                     size: .init(width: UIScreen.main.bounds.width - 16 * 2, height: 81)

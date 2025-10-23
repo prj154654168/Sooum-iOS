@@ -96,6 +96,8 @@ class SOMPageViews: UIView {
         }
     }
     
+    private(set) var models: [SOMPageModel] = []
+    
     weak var delegate: SOMPageViewsDelegate?
     
     
@@ -167,11 +169,37 @@ class SOMPageViews: UIView {
             }
         }
         
-        let modelsToItem = models.map { Item.main($0) }
+        self.models = models
+        
+        var infiniteModels: [SOMPageModel] {
+            if models.count > 1 {
+                guard let first = models.first, let last = models.last else { return models }
+                
+                let leadingModel: SOMPageModel = SOMPageModel(data: last.data)
+                let trailingModel: SOMPageModel = SOMPageModel(data: first.data)
+                
+                return [leadingModel] + models + [trailingModel]
+            } else {
+                return models
+            }
+        }
+        
+        let modelsToItem = infiniteModels.map { Item.main($0) }
         var snapshot = Snapshot()
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems(modelsToItem, toSection: .main)
-        self.dataSource.apply(snapshot, animatingDifferences: false)
+        self.dataSource.apply(snapshot, animatingDifferences: false) { [weak self] in
+            guard models.count > 1 else { return }
+            
+            DispatchQueue.main.async {
+                let initialIndexPath: IndexPath = IndexPath(item: 1, section: Section.main.rawValue)
+                self?.collectionView.scrollToItem(
+                    at: initialIndexPath,
+                    at: .centeredHorizontally,
+                    animated: false
+                )
+            }
+        }
     }
 }
 
@@ -205,8 +233,33 @@ extension SOMPageViews: UICollectionViewDelegateFlowLayout {
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
+        self.infiniteScroll(scrollView)
+    }
+    
+    private func infiniteScroll(_ scrollView: UIScrollView) {
+        
         let cellWidth: CGFloat = scrollView.bounds.width
         let currentIndex: Int = Int(round(scrollView.contentOffset.x / cellWidth))
-        self.currentIndexForIndicator = currentIndex
+        
+        var targetIndex: Int? {
+            switch currentIndex {
+            case 0:                    return self.models.count
+            case self.models.count + 1: return 1
+            default:                   return nil
+            }
+        }
+        
+        guard let targetIndex = targetIndex else {
+            self.currentIndexForIndicator = currentIndex - 1
+            return
+        }
+        
+        let targetIndexPath: IndexPath = IndexPath(item: targetIndex, section: Section.main.rawValue)
+        self.collectionView.scrollToItem(
+            at: targetIndexPath,
+            at: .centeredHorizontally,
+            animated: false
+        )
+        self.currentIndexForIndicator = targetIndex - 1
     }
 }

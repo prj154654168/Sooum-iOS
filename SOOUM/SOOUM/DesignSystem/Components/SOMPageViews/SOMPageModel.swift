@@ -10,9 +10,11 @@ import UIKit
 
 class SOMPageModel {
     
+    let id: String
     let data: NoticeInfo
     
     init(data: NoticeInfo) {
+        self.id = UUID().uuidString
         self.data = data
     }
 }
@@ -20,10 +22,10 @@ class SOMPageModel {
 extension SOMPageModel: Hashable {
     
     static func == (lhs: SOMPageModel, rhs: SOMPageModel) -> Bool {
-        return lhs.data.id == rhs.data.id
+        return lhs.id == rhs.id
     }
     
     func hash(into hasher: inout Hasher) {
-        hasher.combine(self.data.id)
+        hasher.combine(self.id)
     }
 }
