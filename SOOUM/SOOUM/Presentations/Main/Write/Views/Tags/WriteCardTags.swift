@@ -306,13 +306,13 @@ extension WriteCardTags: WriteCardTagFooterDelegate {
     func textFieldDidEndEditing(_ textField: WriteCardTagFooter) {
         self.footerText = textField.text
         self.collectionView.collectionViewLayout.invalidateLayout()
+        self.scrollToRight(animated: true)
     }
 
     func textFieldReturnKeyClicked(_ textField: WriteCardTagFooter) -> Bool {
         
         guard let text = textField.text, text.isEmpty == false else {
             self.footerResignFirstResponder()
-            self.scrollToRight(animated: true)
             return false
         }
         
