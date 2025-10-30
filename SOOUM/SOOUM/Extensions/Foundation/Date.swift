@@ -94,6 +94,18 @@ extension Date {
         return String(format: "%02d : %02d : %02d", hours, minutes, seconds)
     }
     
+    func infoReadableTimeTakenFromThisForBanEndPosting(to: Date) -> String {
+        
+        let from: TimeInterval = self.timeIntervalSince1970
+        let to: TimeInterval = to.timeIntervalSince1970
+        let gap: TimeInterval = max(0, to - from)
+
+        let time: Int = .init(gap)
+        let days: Int = time / (24 * 60 * 60)
+        
+        return "\(days)일간"
+    }
+    
     var banEndFormatted: String {
         return self.toString("yyyy년 MM월 dd일")
     }
