@@ -19,4 +19,5 @@ protocol UserUseCase {
     func uploadImage(_ data: Data, with url: URL) -> Observable<Bool>
     func updateImage(imageName: String) -> Observable<Bool>
     func updateFCMToken(fcmToken: String) -> Observable<Bool>
+    func postingPermission() -> Observable<PostingPermission>
 }

@@ -19,4 +19,5 @@ protocol UserRemoteDataSource {
     func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Void, Error>>
     func updateImage(imageName: String) -> Observable<Int>
     func updateFCMToken(fcmToken: String) -> Observable<Int>
+    func postingPermission() -> Observable<PostingPermissionResponse>
 }

@@ -680,6 +680,10 @@
 		38E9CE142D37711600E85A2D /* OnboardingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */; };
 		38E9CE192D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */; };
 		38E9CE1A2D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */; };
+		38EBA90E2EB39920008B28F4 /* PostingPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EBA90D2EB39917008B28F4 /* PostingPermission.swift */; };
+		38EBA90F2EB39920008B28F4 /* PostingPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EBA90D2EB39917008B28F4 /* PostingPermission.swift */; };
+		38EBA9112EB399A1008B28F4 /* PostingPermissionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EBA9102EB3999C008B28F4 /* PostingPermissionResponse.swift */; };
+		38EBA9122EB399A1008B28F4 /* PostingPermissionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EBA9102EB3999C008B28F4 /* PostingPermissionResponse.swift */; };
 		38F006AA2D395A7F001AC5F7 /* SuspensionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F006A92D395A7F001AC5F7 /* SuspensionResponse.swift */; };
 		38F006AB2D395A7F001AC5F7 /* SuspensionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F006A92D395A7F001AC5F7 /* SuspensionResponse.swift */; };
 		38F131882CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */; };
@@ -1099,6 +1103,8 @@
 		38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTokenSet.swift; sourceTree = "<group>"; };
 		38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = OnboardingViewReactor.swift; sourceTree = "<group>"; tabWidth = 4; };
 		38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingTokenInterceptor.swift; sourceTree = "<group>"; };
+		38EBA90D2EB39917008B28F4 /* PostingPermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingPermission.swift; sourceTree = "<group>"; };
+		38EBA9102EB3999C008B28F4 /* PostingPermissionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingPermissionResponse.swift; sourceTree = "<group>"; };
 		38F006A92D395A7F001AC5F7 /* SuspensionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspensionResponse.swift; sourceTree = "<group>"; };
 		38F131872CC7B7E0000D0475 /* RelatedTagResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedTagResponse.swift; sourceTree = "<group>"; };
 		38F3D92F2D06C2370049F575 /* SOMAnimationTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMAnimationTransitioning.swift; sourceTree = "<group>"; };
@@ -2161,6 +2167,7 @@
 		38899E632E7938CD0030F7CA /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				38EBA9102EB3999C008B28F4 /* PostingPermissionResponse.swift */,
 				38C9AF0D2E96601E00B401C0 /* DefaultImagesResponse.swift */,
 				380F42292E884E85009AC59E /* HomeCardInfoResponse.swift */,
 				38FEBE632E86629F002916A8 /* NoticeInfoResponse.swift */,
@@ -2196,6 +2203,7 @@
 		38899E692E793AEA0030F7CA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				38EBA90D2EB39917008B28F4 /* PostingPermission.swift */,
 				380F42262E884B6F009AC59E /* BaseCardInfo.swift */,
 				38899E922E79518E0030F7CA /* CommonNotificationInfo.swift */,
 				380F42202E87ECA2009AC59E /* CompositeNotificationInfo.swift */,
@@ -3067,6 +3075,7 @@
 				2AFD056A2D03264C007C84AD /* AddFavoriteTagResponse.swift in Sources */,
 				38FEBE552E865121002916A8 /* FollowNotificationInfoResponse.swift in Sources */,
 				2AFD05532D007F2F007C84AD /* TagSearchViewReactor.swift in Sources */,
+				38EBA90F2EB39920008B28F4 /* PostingPermission.swift in Sources */,
 				38899E9C2E7954D90030F7CA /* DeletedNotificationInfoResponse.swift in Sources */,
 				2A44A42B2CAC09AE00DC463E /* RSAKeyResponse.swift in Sources */,
 				38899E8C2E794E690030F7CA /* AppVersionStatusResponse.swift in Sources */,
@@ -3123,6 +3132,7 @@
 				2AFD056E2D048CAF007C84AD /* TagRequest.swift in Sources */,
 				388698602D1984D600008600 /* NotificationViewReactor.swift in Sources */,
 				38899E862E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */,
+				38EBA9112EB399A1008B28F4 /* PostingPermissionResponse.swift in Sources */,
 				38C2D4212CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */,
 				38816D9F2D004A5E00EB87D6 /* UpdateProfileViewController.swift in Sources */,
 				38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
@@ -3439,6 +3449,7 @@
 				38FEBE542E865121002916A8 /* FollowNotificationInfoResponse.swift in Sources */,
 				38899E9D2E7954D90030F7CA /* DeletedNotificationInfoResponse.swift in Sources */,
 				3878D0792CFFE1E800F9522F /* ResignViewController.swift in Sources */,
+				38EBA90E2EB39920008B28F4 /* PostingPermission.swift in Sources */,
 				38899E8D2E794E690030F7CA /* AppVersionStatusResponse.swift in Sources */,
 				38A721952E73E7140071E1D8 /* View+SwiftEntryKit.swift in Sources */,
 				38C9AF2E2E96A3E500B401C0 /* WriteCardTagModel.swift in Sources */,
@@ -3495,6 +3506,7 @@
 				2AFF955A2CF3227900CBFB12 /* TagSearchTextFieldView.swift in Sources */,
 				2A44A42D2CAC14C800DC463E /* SignInResponse.swift in Sources */,
 				381A1D772CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */,
+				38EBA9122EB399A1008B28F4 /* PostingPermissionResponse.swift in Sources */,
 				38CC49882CDE3972007A0145 /* SOMPresentationController+Show.swift in Sources */,
 				38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				381854A92E99574100424D71 /* SelectTypographyView.swift in Sources */,

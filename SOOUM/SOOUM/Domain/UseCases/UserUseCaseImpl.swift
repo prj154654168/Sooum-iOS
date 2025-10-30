@@ -58,4 +58,9 @@ class UserUseCaseImpl: UserUseCase {
         
         return self.repository.updateFCMToken(fcmToken: fcmToken).map { $0 == 200 }
     }
+    
+    func postingPermission() -> Observable<PostingPermission> {
+        
+        return self.repository.postingPermission().map { $0.postingPermission }
+    }
 }

@@ -23,6 +23,8 @@ enum UserRequest: BaseRequest {
     case updateImage(imageName: String)
     /// fcmToken 업데이트
     case updateFCMToken(fcmToken: String)
+    /// 카드추가 가능 여부 확인
+    case postingPermission
     
     var path: String {
         switch self {
@@ -40,6 +42,8 @@ enum UserRequest: BaseRequest {
             return "/api/members/profile-img"
         case .updateFCMToken:
             return "/api/members/fcm"
+        case .postingPermission:
+            return "/api/members/permissions/posting"
         }
     }
     
@@ -49,7 +53,7 @@ enum UserRequest: BaseRequest {
             return .post
         case .updateNickname, .updateImage, .updateFCMToken:
             return .patch
-        case .nickname, .presignedURL:
+        case .nickname, .presignedURL, .postingPermission:
             return .get
         }
     }
@@ -73,7 +77,7 @@ enum UserRequest: BaseRequest {
     
     var encoding: ParameterEncoding {
         switch self {
-        case .nickname:
+        case .nickname, .presignedURL, .postingPermission:
             return URLEncoding.default
         default:
             return JSONEncoding.default
@@ -82,7 +86,7 @@ enum UserRequest: BaseRequest {
     
     var authorizationType: AuthorizationType {
         switch self{
-        case .updateFCMToken:
+        case .updateFCMToken, .postingPermission:
             return .access
         default:
             return .none

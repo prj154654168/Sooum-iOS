@@ -62,4 +62,10 @@ class UserRemoteDataSourceImpl: UserRemoteDataSource {
         let request: UserRequest = .updateFCMToken(fcmToken: fcmToken)
         return self.provider.networkManager.perform(Int.self, request: request)
     }
+    
+    func postingPermission() -> Observable<PostingPermissionResponse> {
+        
+        let request: UserRequest = .postingPermission
+        return self.provider.networkManager.fetch(PostingPermissionResponse.self, request: request)
+    }
 }

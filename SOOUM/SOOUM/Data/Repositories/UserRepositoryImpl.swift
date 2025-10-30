@@ -56,4 +56,9 @@ class UserRepositoryImpl: UserRepository {
         
         return self.remoteDataSource.updateFCMToken(fcmToken: fcmToken)
     }
+    
+    func postingPermission() -> Observable<PostingPermissionResponse> {
+        
+        return self.remoteDataSource.postingPermission()
+    }
 }
