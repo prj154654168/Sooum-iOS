@@ -35,7 +35,8 @@ class LocationManager: CompositeManager<LocationManagerConfigruation> {
     }
     
     var hasPermission: Bool {
-        return self.checkLocationAuthStatus() == .authorizedAlways || self.checkLocationAuthStatus() == .authorizedWhenInUse
+        return self.checkLocationAuthStatus() == .authorizedAlways ||
+            self.checkLocationAuthStatus() == .authorizedWhenInUse
     }
     
     override init(provider: ManagerTypeDelegate, configure: LocationManagerConfigruation) {
@@ -62,6 +63,8 @@ extension LocationManager: LocationManagerDelegate {
     
     private func updateLocationAuthStatus() {
         let authStatus = self.convertLocationAuthStatus(self.locationManager.authorizationStatus)
+        
+        guard self.locationAuthStatus != authStatus else { return }
         
         self.locationAuthStatus = authStatus
         

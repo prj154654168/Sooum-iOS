@@ -196,6 +196,13 @@ class HomeViewController: BaseNavigationViewController, View {
             name: .reloadData,
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.changedLocationAuthorization(_:)),
+            name: .changedLocationAuthorization,
+            object: nil
+        )
     }
     
     override func bind() {
@@ -391,6 +398,16 @@ class HomeViewController: BaseNavigationViewController, View {
         
         self.reactor?.action.onNext(.landing)
     }
+    
+    @objc
+    private func changedLocationAuthorization(_ notification: Notification) {
+        
+        if self.stickyTabBar.selectedIndex == 2, self.reactor?.locationManager.hasPermission == false {
+            
+            self.reactor?.action.onNext(.refresh)
+            self.showLocationPermissionDialog()
+        }
+    }
 }
 
 
@@ -432,27 +449,33 @@ private extension HomeViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    let prevIdx = self.stickyTabBar.previousIndex
+                    let currInx = self.stickyTabBar.selectedIndex
+                    
+                    self.stickyTabBar.didSelectTabBarItem(prevIdx == currInx ? 0 : prevIdx)
+                }
             }
         )
         let settingAction = SOMDialogAction(
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                let application = UIApplication.shared
-                let openSettingsURLString: String = UIApplication.openSettingsURLString
-                if let settingsURL = URL(string: openSettingsURLString),
-                   application.canOpenURL(settingsURL) {
-                    application.open(settingsURL)
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    let application = UIApplication.shared
+                    let openSettingsURLString: String = UIApplication.openSettingsURLString
+                    if let settingsURL = URL(string: openSettingsURLString),
+                       application.canOpenURL(settingsURL) {
+                        application.open(settingsURL)
+                    }
                 }
-                
-                UIApplication.topViewController?.dismiss(animated: true)
             }
         )
         
         SOMDialogViewController.show(
             title: Text.dialogTitle,
             message: Text.dialogMessage,
+            textAlignment: .left,
             actions: [cancelAction, settingAction]
         )
     }
@@ -464,13 +487,7 @@ private extension HomeViewController {
 extension HomeViewController: SOMStickyTabBarDelegate {
     
     func tabBar(_ tabBar: SOMStickyTabBar, shouldSelectTabAt index: Int) -> Bool {
-        
-        if index == 2, self.reactor?.locationManager.checkLocationAuthStatus() == .denied {
-            
-            self.showLocationPermissionDialog()
-            return false
-        }
-        
+        // TODO: 주변카드 선택 시 위치권한이 없어도 탭 전환 허용
         return true
     }
     
@@ -494,6 +511,10 @@ extension HomeViewController: SOMStickyTabBarDelegate {
             }
         }
         self.reactor?.action.onNext(.updateDisplayType(displayType))
+        
+        if index == 2, self.reactor?.locationManager.hasPermission == false {
+            self.showLocationPermissionDialog()
+        }
     }
 }
 
