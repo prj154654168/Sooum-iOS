@@ -21,11 +21,6 @@ class SOMStickyTabBarItem: UIView {
         $0.typography = .som.v2.title2
     }
     
-    private let selectedIndicator = UIView().then {
-        $0.backgroundColor = .som.v2.black
-        $0.isHidden = true
-    }
-    
     
     // MARK: Initialize
     
@@ -56,20 +51,13 @@ class SOMStickyTabBarItem: UIView {
             $0.bottom.equalToSuperview().offset(-16)
             $0.horizontalEdges.equalToSuperview()
         }
-        
-        self.addSubview(self.selectedIndicator)
-        self.selectedIndicator.snp.makeConstraints {
-            $0.bottom.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(2)
-        }
     }
     
     
     // MARK: Public func
     
-    func updateState(color textColor: UIColor, hasIndicator: Bool) {
+    func updateState(color textColor: UIColor) {
         
         self.titleLabel.textColor = textColor
-        self.selectedIndicator.isHidden = hasIndicator == false
     }
 }

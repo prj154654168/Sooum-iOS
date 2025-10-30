@@ -38,6 +38,10 @@ class SOMStickyTabBar: UIView {
         $0.backgroundColor = .som.v2.gray200
     }
     
+    private let selectedIndicator = UIView().then {
+        $0.backgroundColor = .som.v2.black
+    }
+    
     
     // MARK: Variables
     
@@ -94,6 +98,9 @@ class SOMStickyTabBar: UIView {
     private var tabBarItemContainerBottomConstraint: Constraint?
     private var tabBarItemContainerLeadingConstraint: Constraint?
     private var tabBarItemContainerTrailingConstraint: Constraint?
+    
+    private var selectedIndicatorLeadingConstraint: Constraint?
+    private var selectedIndicatorWidthConstraint: Constraint?
     
     
     // MARK: Delegate
@@ -153,6 +160,14 @@ class SOMStickyTabBar: UIView {
             self.tabBarItemContainerLeadingConstraint = $0.leading.equalToSuperview().offset(self.inset.left).constraint
             self.tabBarItemContainerTrailingConstraint = $0.trailing.lessThanOrEqualToSuperview().offset(-self.inset.right).constraint
         }
+        
+        self.addSubview(self.selectedIndicator)
+        self.selectedIndicator.snp.makeConstraints {
+            $0.bottom.equalToSuperview()
+            self.selectedIndicatorLeadingConstraint = $0.leading.equalToSuperview().offset(self.inset.left).constraint
+            self.selectedIndicatorWidthConstraint = $0.width.equalTo(0).constraint
+            $0.height.equalTo(2)
+        }
     }
     
     private func refreshConstraints() {
@@ -176,13 +191,12 @@ class SOMStickyTabBar: UIView {
         items.enumerated().forEach { index, title in
             
             let item = SOMStickyTabBarItem(title: title)
-            item.updateState(
-                color: index == 0 ? Constants.selectedColor : Constants.unSelectedColor,
-                hasIndicator: index == 0
-            )
+            item.updateState(color: index == 0 ? Constants.selectedColor : Constants.unSelectedColor)
             
             self.tabBarItemContainer.addArrangedSubview(item)
         }
+        
+        self.selectedIndicatorWidthConstraint?.update(offset: self.itemWidths.first ?? 0)
     }
     
     
@@ -192,10 +206,16 @@ class SOMStickyTabBar: UIView {
         
         self.tabBarItemContainer.arrangedSubviews.enumerated().forEach {
             let selectedItem = $1 as? SOMStickyTabBarItem
-            selectedItem?.updateState(
-                color: $0 == index ? Constants.selectedColor : Constants.unSelectedColor,
-                hasIndicator: $0 == index
-            )
+            selectedItem?.updateState(color: $0 == index ? Constants.selectedColor : Constants.unSelectedColor)
+            
+            /// leading inset + spacing + item widths
+            let prevItemWidths: CGFloat = (index > 0) ? self.itemWidths[0..<index].reduce(0, +) : 0
+            let leadingOffset: CGFloat = self.inset.left + (self.spacing * CGFloat(index)) + prevItemWidths
+            self.selectedIndicatorLeadingConstraint?.update(offset: leadingOffset)
+            
+            UIView.animate(withDuration: 0.25) {
+                self.layoutIfNeeded()
+            }
         }
         
         self.previousIndex = self.selectedIndex
