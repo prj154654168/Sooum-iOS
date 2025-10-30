@@ -19,6 +19,11 @@ class WriteCardDefaultImageCell: UICollectionViewCell {
     
     private let imageView = UIImageView()
     
+    private let checkBackgroundDimView = UIView().then {
+        $0.backgroundColor = .som.v2.black.withAlphaComponent(0.3)
+        $0.isHidden = true
+    }
+    
     private let checkBackgroundView = UIView().then {
         $0.backgroundColor = .som.v2.white
         $0.layer.borderColor = UIColor.som.v2.pMain.cgColor
@@ -40,6 +45,7 @@ class WriteCardDefaultImageCell: UICollectionViewCell {
     
     override var isSelected: Bool {
         didSet {
+            self.checkBackgroundDimView.isHidden = self.isSelected == false
             self.checkBackgroundView.isHidden = self.isSelected == false
         }
     }
@@ -63,6 +69,11 @@ class WriteCardDefaultImageCell: UICollectionViewCell {
         
         self.contentView.addSubview(self.imageView)
         self.imageView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        self.contentView.addSubview(self.checkBackgroundDimView)
+        self.checkBackgroundDimView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         
