@@ -104,6 +104,19 @@ class WriteCardTags: UIView {
         return max(36, 8 + 14 + 2 + ceil(textWidth) + 8)
     }
     
+    var updateFooterText: String? {
+        didSet {
+            guard let indexPath = self.dataSource.indexPath(for: .footer),
+                let footer: WriteCardTagFooter = self.collectionView.cellForItem(
+                    at: indexPath
+                ) as? WriteCardTagFooter
+            else { return }
+            
+            footer.text = self.updateFooterText
+            footer.sendActionsToTextField(for: .editingChanged)
+        }
+    }
+    
     var typography: Typography = .som.v2.caption2 {
         didSet {
             let current = self.models

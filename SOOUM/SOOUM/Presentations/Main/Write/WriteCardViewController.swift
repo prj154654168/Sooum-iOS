@@ -245,8 +245,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .bind(to: self.writeCardView.writeCardTags.rx.models())
             .disposed(by: self.disposeBag)
         
-        self.relatedTagsView.selectedRelatedTag
-            .filterNil()
+        let selectedRelatedTag = self.relatedTagsView.selectedRelatedTag.filterNil().share()
+        selectedRelatedTag
+            .subscribe(with: self) { object, _ in
+                object.writeCardView.writeCardTags.updateFooterText = nil
+            }
+            .disposed(by: self.disposeBag)
+        
+        selectedRelatedTag
             .withUnretained(self)
             .map { object, selectedRelatedTag in
                 var current = object.writeCardView.writeCardTags.models
@@ -315,16 +321,25 @@ class WriteCardViewController: BaseNavigationViewController, View {
         selectedTypography
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.writeCardView) { writeCardView, selectedTypography in
-                let typograhpyToUse: Typography
-                switch selectedTypography {
-                case .pretendard:    typograhpyToUse = .som.v2.body1
-                case .yoonwoo:       typograhpyToUse = .som.v2.yoonwooCard
-                case .ridi:          typograhpyToUse = .som.v2.ridiCard
-                case .kkookkkook:    typograhpyToUse = .som.v2.kkookkkookCard
+                var typograhpyToTextView: Typography {
+                    switch selectedTypography {
+                    case .pretendard:   return .som.v2.body1
+                    case .ridi:         return .som.v2.ridiCard
+                    case .yoonwoo:      return .som.v2.yoonwooCard
+                    case .kkookkkook:   return .som.v2.kkookkkookCard
+                    }
+                }
+                var typograhpyToTags: Typography {
+                    switch selectedTypography {
+                    case .pretendard:   return .som.v2.caption2
+                    case .ridi:         return .som.v2.ridiTag
+                    case .yoonwoo:      return .som.v2.yoonwooTag
+                    case .kkookkkook:   return .som.v2.kkookkkookTag
+                    }
                 }
                     
-                writeCardView.writeCardTextView.typography = typograhpyToUse
-                writeCardView.writeCardTags.typography = typograhpyToUse
+                writeCardView.writeCardTextView.typography = typograhpyToTextView
+                writeCardView.writeCardTags.typography = typograhpyToTags
             }
             .disposed(by: self.disposeBag)
         

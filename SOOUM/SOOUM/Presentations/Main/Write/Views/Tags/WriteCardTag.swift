@@ -33,7 +33,7 @@ class WriteCardTag: UICollectionViewCell {
     
     private lazy var removeButton = SOMButton().then {
         $0.image = .init(.icon(.v2(.outlined(.delete))))
-        $0.foregroundColor = .som.v2.gray400
+        $0.foregroundColor = .som.v2.gray300
         
         $0.addTarget(self, action: #selector(self.remove), for: .touchUpInside)
     }
