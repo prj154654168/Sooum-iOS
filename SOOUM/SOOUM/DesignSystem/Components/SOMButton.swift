@@ -95,24 +95,15 @@ private extension SOMButton {
             updatedConfig?.background.backgroundColor = self.backgroundColor
             updatedConfig?.background.backgroundColorTransformer = UIConfigurationColorTransformer { _ in
                 // 비활성화 상태일 때, backgroundColor
-                if button.isEnabled == false {
-                    return .som.v2.gray200
-                }
+                if button.isEnabled == false { return .som.v2.gray200 }
                 // 하이라이트 상태일 때, backgroundColor
                 if button.isHighlighted {
-                    var highlightedColor: UIColor {
-                        if self.backgroundColor == .som.v2.black {
-                            return .som.v2.gray600
-                        }
-                        if self.backgroundColor == .som.v2.gray100 {
-                            return .som.v2.gray200
-                        }
-                        if self.backgroundColor == .clear || self.backgroundColor == .som.v2.white {
-                            return .som.v2.gray100
-                        }
-                        return self.backgroundColor ?? .clear
+                    switch self.backgroundColor {
+                    case .som.v2.black:     return .som.v2.gray600
+                    case .som.v2.gray100:   return .som.v2.gray200
+                    case .som.v2.white:     return .som.v2.gray100
+                    default:               return .clear
                     }
-                    return highlightedColor
                 }
                 // 기본 상태일 때, backgroundColor
                 return self.backgroundColor ?? .clear
