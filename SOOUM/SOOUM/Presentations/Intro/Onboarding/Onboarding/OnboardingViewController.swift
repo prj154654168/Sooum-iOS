@@ -122,7 +122,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
         
         self.view.addSubview(self.onboardingImageView)
         self.onboardingImageView.snp.makeConstraints {
-            $0.top.equalTo(self.guideSubTitleLabel.snp.bottom).offset(80)
+            $0.top.equalTo(self.guideSubTitleLabel.snp.bottom).offset(60)
             $0.centerX.equalToSuperview()
         }
         
