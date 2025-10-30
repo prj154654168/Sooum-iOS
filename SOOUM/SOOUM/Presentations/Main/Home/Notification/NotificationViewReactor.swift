@@ -79,46 +79,15 @@ class NotificationViewReactor: Reactor {
         case .landing:
             
             return .concat([
-                 // Observable.zip(
-                 //     self.notificationUseCase.unreadNotifications(lastId: nil),
-                 //     self.notificationUseCase.readNotifications(lastId: nil)
-                 // )
-                 // .map(Mutation.notifications)
-                 // .catch(self.catchClosure),
-                .just(.notifications(
-                    unreads: [
-                        CompositeNotificationInfo.default(.init(
-                            notificationInfo: .init(notificationId: "1", notificationType: .commentWrite, createTime: Date()),
-                            targetCardId: "1",
-                            nickName: "아무개"
-                        )),
-                        CompositeNotificationInfo.default(.init(
-                            notificationInfo: .init(notificationId: "2", notificationType: .feedLike, createTime: Date().addingTimeInterval(-3600)),
-                            targetCardId: "2",
-                            nickName: "아무개"
-                        )),
-                        CompositeNotificationInfo.default(.init(
-                            notificationInfo: .init(notificationId: "3", notificationType: .commentLike, createTime: Date().addingTimeInterval(-3600)),
-                            targetCardId: "3",
-                            nickName: "아무개"
-                        ))
-                    ],
-                    reads: [
-                        CompositeNotificationInfo.follow(.init(
-                            notificationInfo: .init(notificationId: "4", notificationType: .follow, createTime: Date().addingTimeInterval(-86400)),
-                            nickname: "아무개",
-                            userId: "4"
-                        )),
-                        CompositeNotificationInfo.default(.init(
-                            notificationInfo: .init(notificationId: "5", notificationType: .feedLike, createTime: Date().addingTimeInterval(-2678400)),
-                            targetCardId: "5",
-                            nickName: "아무개"
-                        ))
-                    ]
-                )),
+                Observable.zip(
+                    self.notificationUseCase.unreadNotifications(lastId: nil),
+                    self.notificationUseCase.readNotifications(lastId: nil)
+                )
+                    .map(Mutation.notifications)
+                    .catch(self.catchClosureNotis),
                 self.notificationUseCase.notices(lastId: nil, size: 10)
-                   .map(Mutation.notices)
-                   .catch(self.catchClosureNotices)
+                    .map(Mutation.notices)
+                    .catch(self.catchClosureNotices)
             ])
         case .refresh:
             

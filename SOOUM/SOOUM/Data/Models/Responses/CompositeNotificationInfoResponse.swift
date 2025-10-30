@@ -7,7 +7,7 @@
 
 import Alamofire
 
-struct CompositeNotificationInfoResponse: Decodable {
+struct CompositeNotificationInfoResponse {
     
     let notificationInfo: [CompositeNotificationInfo]
 }
@@ -16,5 +16,17 @@ extension CompositeNotificationInfoResponse: EmptyResponse {
     
     static func emptyValue() -> CompositeNotificationInfoResponse {
         CompositeNotificationInfoResponse(notificationInfo: [])
+    }
+}
+
+extension CompositeNotificationInfoResponse: Decodable {
+    
+    enum CodingKeys: CodingKey {
+        case notificationInfo
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let singleContainer = try decoder.singleValueContainer()
+        self.notificationInfo = try singleContainer.decode([CompositeNotificationInfo].self)
     }
 }
