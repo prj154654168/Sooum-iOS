@@ -20,7 +20,7 @@ class WriteCardSelectImageView: UIView {
         static let colorTitle: String = "컬러"
         static let natureTitle: String = "자연"
         static let sensitivitytitle: String = "감성"
-        static let foodTitle: String = "음식"
+        static let foodTitle: String = "푸드"
         static let abstractTitle: String = "추상"
         static let memoTitle: String = "메모"
     }
