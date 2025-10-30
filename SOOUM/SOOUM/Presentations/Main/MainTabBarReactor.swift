@@ -21,17 +21,19 @@ class MainTabBarReactor: Reactor {
 
     enum Action: Equatable {
         case judgeEntrance
-        case updateNotificationStatus(Bool)
+        case postingPermission
+        case reset
     }
     
     enum Mutation {
         case updateEntrance
-        case updateNotificationStatus(Bool)
+        case updatePostingPermission(PostingPermission?)
+        case reset
     }
     
     struct State {
-        var entranceType: EntranceType
-        var notificationStatus: Bool
+        fileprivate(set) var entranceType: EntranceType
+        fileprivate(set) var couldPosting: PostingPermission?
     }
     
     private let disposeBag = DisposeBag()
@@ -42,12 +44,14 @@ class MainTabBarReactor: Reactor {
     let pushInfo: NotificationInfo?
     
     private let dependencies: AppDIContainerable
+    private let userUseCase: UserUseCase
     
     let pushManager: PushManagerDelegate
     let locationManager: LocationManagerDelegate
     
     init(dependencies: AppDIContainerable, pushInfo: NotificationInfo? = nil) {
         self.dependencies = dependencies
+        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
         self.pushManager = dependencies.rootContainer.resolve(ManagerProviderType.self).pushManager
         self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
         
@@ -66,32 +70,40 @@ class MainTabBarReactor: Reactor {
         
         self.initialState = .init(
             entranceType: .none,
-            notificationStatus: self.pushManager.notificationStatus
+            couldPosting: nil
         )
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .judgeEntrance:
+            
             return .concat([
                 .just(.updateEntrance),
                 self.pushManager.switchNotification(on: true)
                     .flatMapLatest { error -> Observable<Mutation> in .empty() }
             ])
-        case let .updateNotificationStatus(status):
-            return .just(.updateNotificationStatus(status))
+        case .postingPermission:
+            
+            return self.userUseCase.postingPermission()
+                .map(Mutation.updatePostingPermission)
+        case .reset:
+            
+            return .just(.reset)
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        var state = state
+        var newState = state
         switch mutation {
         case .updateEntrance:
-            state.entranceType = self.willNavigate
-        case let .updateNotificationStatus(status):
-            state.notificationStatus = status
+            newState.entranceType = self.willNavigate
+        case let .updatePostingPermission(couldPosting):
+            newState.couldPosting = couldPosting
+        case .reset:
+            newState.couldPosting = nil
         }
-        return state
+        return newState
     }
 }
 
