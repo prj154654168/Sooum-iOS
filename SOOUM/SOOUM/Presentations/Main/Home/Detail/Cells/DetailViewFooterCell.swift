@@ -10,10 +10,17 @@ import UIKit
 import SnapKit
 import Then
 
-
 class DetailViewFooterCell: UICollectionViewCell {
     
-    let cardView = SOMCard()
+    static let cellIdentifier = String(reflecting: DetailViewFooterCell.self)
+    
+    
+    // MARK: Views
+    
+    private let cardView = SOMCard()
+    
+    
+    // MARK: Initialize
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,10 +31,17 @@ class DetailViewFooterCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: Override func
+    
     override func prepareForReuse() {
         super.prepareForReuse()
+        
         self.cardView.prepareForReuse()
     }
+    
+    
+    // MARK: Private func
     
     private func setupConstraints() {
         
@@ -37,7 +51,10 @@ class DetailViewFooterCell: UICollectionViewCell {
         }
     }
     
-    func setModel(_ model: BaseCardInfo) {
+    
+    // MARK: Public func
+    
+    func bind(_ model: BaseCardInfo) {
         self.cardView.setModel(model: model)
     }
 }

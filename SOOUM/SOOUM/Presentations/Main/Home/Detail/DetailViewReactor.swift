@@ -15,62 +15,69 @@ class DetailViewReactor: Reactor {
         case navi
     }
     
+    enum DetailType {
+        case feed
+        case comment
+    }
+    
     enum Action: Equatable {
         case landing
         case refresh
         case moreFindForComment(lastId: String)
         case delete
-        case block
+        case block(isBlocked: Bool)
         case updateLike(Bool)
     }
     
     enum Mutation {
-        case detailCard(DetailCard, PrevCard?)
-        case commentCards([Card])
-        case moreComment([Card])
-        case cardSummary(CardSummary)
-        case updateIsDeleted(Bool)
+        case detailCard(DetailCardInfo?)
+        case commentCards([BaseCardInfo])
+        case moreComment([BaseCardInfo])
+        case updateIsRefreshing(Bool)
         case updateIsBlocked(Bool)
-        case updateIsLoading(Bool)
-        case updateIsProcessing(Bool)
-        case updateError(Bool?)
+        case updateIsDeleted(Bool?)
+        case updateErrors(Int?)
     }
     
     struct State {
-        var detailCard: DetailCard
-        var prevCard: PrevCard?
-        var commentCards: [Card]
-        var cardSummary: CardSummary
-        var isDeleted: Bool?
+        var detailCard: DetailCardInfo?
+        var commentCards: [BaseCardInfo]
+        var isRefreshing: Bool
         var isBlocked: Bool
-        var isLoading: Bool
-        var isProcessing: Bool
-        var isErrorOccur: Bool?
+        var isDeleted: Bool?
+        var hasErrors: Int?
     }
     
     var initialState: State = .init(
-        detailCard: .init(),
-        prevCard: nil,
+        detailCard: nil,
         commentCards: [],
-        cardSummary: .init(),
-        isDeleted: nil,
+        isRefreshing: false,
         isBlocked: false,
-        isLoading: false,
-        isProcessing: false,
-        isErrorOccur: nil
+        isDeleted: nil,
+        hasErrors: nil
     )
     
-    let provider: ManagerProviderType
+    private let dependencies: AppDIContainerable
+    private let cardUseCase: CardUseCase
     
+    private let locationManager: LocationManagerDelegate
+    
+    let detailType: DetailType
     let entranceType: EntranceType
     let selectedCardId: String
     
     init(
-        provider: ManagerProviderType,
+        dependencies: AppDIContainerable,
+        _ detailType: DetailType,
         type entranceType: EntranceType = .navi,
-        _ selectedCardId: String
+        with selectedCardId: String
     ) {
-        self.provider = provider
+        self.dependencies = dependencies
+        self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
+        
+        self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
+        
+        self.detailType = detailType
         self.entranceType = entranceType
         self.selectedCardId = selectedCardId
     }
@@ -79,184 +86,130 @@ class DetailViewReactor: Reactor {
         switch action {
         case .landing:
             
-            let combined = Observable.concat([
-                self.fetchDetailCard(),
-                self.fetchCommentCards(),
-                self.fetchCardSummary()
-            ])
-                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            
             return .concat([
-                .just(.updateIsProcessing(true)),
-                combined,
-                .just(.updateIsProcessing(false))
+                self.detailCard(),
+                self.commentCards()
             ])
         case .refresh:
             
-            let combined = Observable.concat([
-                self.fetchDetailCard(),
-                self.fetchCommentCards(),
-                self.fetchCardSummary()
-            ])
-                .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            
             return .concat([
-                .just(.updateIsLoading(true)),
-                combined,
-                .just(.updateIsLoading(false))
+                .just(.updateIsRefreshing(true)),
+                self.detailCard(),
+                self.commentCards(),
+                .just(.updateIsRefreshing(false))
             ])
         case let .moreFindForComment(lastId):
-            return .concat([
-                .just(.updateIsProcessing(true)),
-                self.fetchMoreCommentCards(lastId)
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                .just(.updateIsProcessing(false))
-            ])
+            
+            return self.fetchMoreCommentCards(lastId)
         case .delete:
-            let request: CardRequest = .deleteCard(id: self.selectedCardId)
-            return self.provider.networkManager.request(Status.self, request: request)
-                .map { _ in .updateIsDeleted(true) }
-        case .block:
-            let request: ReportRequest = .blockMember(id: self.currentState.detailCard.member.id)
-            return self.provider.networkManager.request(Status.self, request: request)
-                .map { .updateIsBlocked($0.httpCode == 201) }
+            
+            return self.cardUseCase.deleteCard(id: self.selectedCardId)
+                .map(Mutation.updateIsDeleted)
+        case let .block(isBlocked):
+            
+            guard let memberId = self.currentState.detailCard?.memberId else { return .empty() }
+            
+            return self.cardUseCase.updateBlocked(id: memberId, isBlocked: isBlocked)
+                .map(Mutation.updateIsBlocked)
         case let .updateLike(isLike):
-            let request: CardRequest = .updateLike(id: self.selectedCardId, isLike: isLike)
-            return .concat([
-                self.provider.networkManager.request(Status.self, request: request)
-                    .filter { $0.httpCode != 400 }
-                    .withUnretained(self)
-                    .flatMapLatest { object, _ in object.fetchCardSummary() }
-            ])
+            
+            return self.cardUseCase.updateLike(id: self.selectedCardId, isLike: isLike)
+                .filter { $0 }
+                .withUnretained(self)
+                .flatMapLatest { object, _ in object.detailCard() }
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        var state = state
+        var newState = state
         switch mutation {
-        case let .detailCard(detailCard, prevCard):
-            state.detailCard = detailCard
-            state.prevCard = prevCard
+        case let .detailCard(detailCard):
+            newState.detailCard = detailCard
         case let .commentCards(commentCards):
-            state.commentCards = commentCards
+            newState.commentCards = commentCards
         case let .moreComment(commentCards):
-            state.commentCards += commentCards
-        case let .cardSummary(cardSummary):
-            state.cardSummary = cardSummary
-        case let .updateIsDeleted(isDeleted):
-            state.isDeleted = isDeleted
+            newState.commentCards += commentCards
+        case let .updateIsRefreshing(isRefreshing):
+            newState.isRefreshing = isRefreshing
         case let .updateIsBlocked(isBlocked):
-            state.isBlocked = isBlocked
-        case let .updateIsLoading(isLoading):
-            state.isLoading = isLoading
-        case let .updateIsProcessing(isProcessing):
-            state.isProcessing = isProcessing
-        case let .updateError(isErrorOccur):
-            state.isErrorOccur = isErrorOccur
+            newState.isBlocked = isBlocked
+        case let .updateIsDeleted(isDeleted):
+            newState.isDeleted = isDeleted
+        case let .updateErrors(hasErrors):
+            newState.hasErrors = hasErrors
         }
-        return state
+        return newState
     }
     
-    func fetchDetailCard() -> Observable<Mutation> {
-        guard (self.currentState.isErrorOccur ?? false) == false else { return .empty() }
+    func detailCard() -> Observable<Mutation> {
         
-        let latitude = self.provider.locationManager.coordinate.latitude
-        let longitude = self.provider.locationManager.coordinate.longitude
+        let latitude = self.locationManager.coordinate.latitude
+        let longitude = self.locationManager.coordinate.longitude
         
-        let requset: CardRequest = .detailCard(
+        return self.cardUseCase.detailCard(
             id: self.selectedCardId,
             latitude: latitude,
             longitude: longitude
         )
-        
-        return self.provider.networkManager.request(DetailCardResponse.self, request: requset)
-            .flatMapLatest { response -> Observable<Mutation> in
-                let detailCard = response.detailCard
-                let prevCard = response.prevCard
-                
-                return .just(.detailCard(detailCard, prevCard))
-            }
-            .catch(self.catchClosure)
+        .map(Mutation.detailCard)
     }
     
-    func fetchCommentCards() -> Observable<Mutation> {
-        let latitude = self.provider.locationManager.coordinate.latitude
-        let longitude = self.provider.locationManager.coordinate.longitude
+    func commentCards() -> Observable<Mutation> {
         
-        let requset: CardRequest = .commentCard(
+        let latitude = self.locationManager.coordinate.latitude
+        let longitude = self.locationManager.coordinate.longitude
+        
+        return self.cardUseCase.commentCard(
             id: self.selectedCardId,
             lastId: nil,
             latitude: latitude,
             longitude: longitude
         )
-        return self.provider.networkManager.request(CommentCardResponse.self, request: requset)
-            .map(\.embedded.commentCards)
-            .map(Mutation.commentCards)
-            .catch(self.catchClosure)
+        .map(Mutation.commentCards)
     }
     
     func fetchMoreCommentCards(_ lastId: String) -> Observable<Mutation> {
-        let latitude = self.provider.locationManager.coordinate.latitude
-        let longitude = self.provider.locationManager.coordinate.longitude
+        let latitude = self.locationManager.coordinate.latitude
+        let longitude = self.locationManager.coordinate.longitude
         
-        let request: CardRequest = .commentCard(
+        return self.cardUseCase.commentCard(
             id: self.selectedCardId,
             lastId: lastId,
             latitude: latitude,
             longitude: longitude
         )
-        return self.provider.networkManager.request(CommentCardResponse.self, request: request)
-            .map(\.embedded.commentCards)
-            .map(Mutation.moreComment)
-            .catch(self.catchClosure)
-    }
-    
-    func fetchCardSummary() -> Observable<Mutation> {
-        let requset: CardRequest = .cardSummary(id: self.selectedCardId)
-        return self.provider.networkManager.request(CardSummaryResponse.self, request: requset)
-            .map(\.cardSummary)
-            .map(Mutation.cardSummary)
-            .catch(self.catchClosure)
+        .map(Mutation.moreComment)
     }
 }
 
 extension DetailViewReactor {
     
-    // func reactorForMainTabBar() -> MainTabBarReactor {
-    //     MainTabBarReactor(provider: self.provider)
-    // }
-    
-    // func reactorForMainHome() -> MainHomeTabBarReactor {
-    //     MainHomeTabBarReactor(provider: self.provider)
-    // }
-    
     func reactorForPush(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(provider: self.provider, selectedId)
+        DetailViewReactor(dependencies: self.dependencies, .comment, type: .push, with: selectedId)
     }
     
     func reactorForReport() -> ReportViewReactor {
-        ReportViewReactor(provider: self.provider, self.selectedCardId)
+        ReportViewReactor(dependencies: self.dependencies, with: self.selectedCardId)
     }
     
-    // func reactorForWriteCard(_ hasPungTime: Date? = nil) -> WriteCardViewReactor {
-    //     WriteCardViewReactor(
-    //         provider: self.provider,
-    //         type: .comment,
-    //         parentCardId: self.selectedCardId,
-    //         parentPungTime: hasPungTime
-    //     )
+    func reactorForWriteCard() -> WriteCardViewReactor {
+        WriteCardViewReactor(
+            dependencies: self.dependencies,
+            type: .comment,
+            parentCardId: self.currentState.detailCard?.id
+        )
+    }
+    
+    // func reactorForTagDetail(_ tagID: String) -> TagDetailViewrReactor {
+    //     TagDetailViewrReactor(provider: self.provider, tagID: tagID)
     // }
     
-    func reactorForTagDetail(_ tagID: String) -> TagDetailViewrReactor {
-        TagDetailViewrReactor(provider: self.provider, tagID: tagID)
-    }
-    
-    func reactorForProfile(
-        type: ProfileViewReactor.EntranceType,
-        _ memberId: String
-    ) -> ProfileViewReactor {
-        ProfileViewReactor(provider: self.provider, type: type, memberId: memberId)
-    }
+    // func reactorForProfile(
+    //     type: ProfileViewReactor.EntranceType,
+    //     _ memberId: String
+    // ) -> ProfileViewReactor {
+    //     ProfileViewReactor(provider: self.provider, type: type, memberId: memberId)
+    // }
     
     // func reactorForNoti() -> NotificationTabBarReactor {
     //     NotificationTabBarReactor(provider: self.provider)
@@ -269,19 +222,12 @@ extension DetailViewReactor {
         return { error in
             
             let nsError = error as NSError
-            let endProcessing = Observable<Mutation>.concat([
-                .just(.updateIsProcessing(false)),
-                .just(.updateIsLoading(false))
+            return .concat([
+                .just(.updateIsBlocked(false)),
+                .just(.updateIsDeleted(false)),
+                .just(.updateIsRefreshing(false)),
+                .just(.updateErrors(nsError.code))
             ])
-            
-            if nsError.code == 400 {
-                return .concat([
-                    .just(.updateError(true)),
-                    endProcessing
-                ])
-            } else {
-                return endProcessing
-            }
         }
     }
 }

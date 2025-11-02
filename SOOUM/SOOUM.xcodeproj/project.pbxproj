@@ -64,10 +64,6 @@
 		2AE6B14A2CBC15BF00FA5C3C /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1482CBC15BF00FA5C3C /* ReportViewController.swift */; };
 		2AE6B14C2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B14B2CBC160C00FA5C3C /* ReportViewReactor.swift */; };
 		2AE6B14D2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B14B2CBC160C00FA5C3C /* ReportViewReactor.swift */; };
-		2AE6B1502CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B14F2CBCC2F600FA5C3C /* ReportTableViewCell.swift */; };
-		2AE6B1512CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B14F2CBCC2F600FA5C3C /* ReportTableViewCell.swift */; };
-		2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1532CBCC34B00FA5C3C /* ReportReasonView.swift */; };
-		2AE6B1552CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1532CBCC34B00FA5C3C /* ReportReasonView.swift */; };
 		2AE6B15A2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1592CBEAEC000FA5C3C /* ReportRequest.swift */; };
 		2AE6B15B2CBEAEC000FA5C3C /* ReportRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1592CBEAEC000FA5C3C /* ReportRequest.swift */; };
 		2AFD05462CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFD05452CFF75DD007C84AD /* FavoriteTagsResponse.swift */; };
@@ -182,8 +178,6 @@
 		3818549D2E992F7D00424D71 /* WriteCardDefaultImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3818549B2E992F7400424D71 /* WriteCardDefaultImageCell.swift */; };
 		3818549F2E99340600424D71 /* WriteCardUserImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3818549E2E9933FF00424D71 /* WriteCardUserImageCell.swift */; };
 		381854A02E99340600424D71 /* WriteCardUserImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3818549E2E9933FF00424D71 /* WriteCardUserImageCell.swift */; };
-		381854A62E99551800424D71 /* SelectTypographyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381854A52E99550500424D71 /* SelectTypographyItem.swift */; };
-		381854A72E99551800424D71 /* SelectTypographyItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381854A52E99550500424D71 /* SelectTypographyItem.swift */; };
 		381854A92E99574100424D71 /* SelectTypographyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381854A82E99573700424D71 /* SelectTypographyView.swift */; };
 		381854AA2E99574100424D71 /* SelectTypographyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381854A82E99573700424D71 /* SelectTypographyView.swift */; };
 		381A1D742CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */; };
@@ -540,8 +534,6 @@
 		38A7219A2E73EA6F0071E1D8 /* SOMBottomFloatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A721982E73EA610071E1D8 /* SOMBottomFloatView.swift */; };
 		38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
 		38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
-		38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
-		38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */; };
 		38AE565C2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
 		38AE565D2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
 		38AE77D42E74580000B6FD13 /* OnboardingCompletedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77D32E7457F400B6FD13 /* OnboardingCompletedViewController.swift */; };
@@ -674,6 +666,28 @@
 		38DA12BB2D4E872000AB9468 /* PushManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DA12BA2D4E872000AB9468 /* PushManagerTests.swift */; };
 		38E7FBEF2D3CF6BB00A359CD /* SOMDialogAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */; };
 		38E7FBF02D3CF6BC00A359CD /* SOMDialogAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */; };
+		38E928B62EB711E200B3F00B /* DetailCardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928B52EB711DE00B3F00B /* DetailCardInfo.swift */; };
+		38E928B72EB711E200B3F00B /* DetailCardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928B52EB711DE00B3F00B /* DetailCardInfo.swift */; };
+		38E928B92EB715C900B3F00B /* ReortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928B82EB715C300B3F00B /* ReortType.swift */; };
+		38E928BA2EB715C900B3F00B /* ReortType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928B82EB715C300B3F00B /* ReortType.swift */; };
+		38E928BF2EB72D3D00B3F00B /* DetailCardInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928BE2EB72D3600B3F00B /* DetailCardInfoResponse.swift */; };
+		38E928C02EB72D3D00B3F00B /* DetailCardInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928BE2EB72D3600B3F00B /* DetailCardInfoResponse.swift */; };
+		38E928C22EB73D6B00B3F00B /* MemberInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928C12EB73D4B00B3F00B /* MemberInfoView.swift */; };
+		38E928C32EB73D6B00B3F00B /* MemberInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928C12EB73D4B00B3F00B /* MemberInfoView.swift */; };
+		38E928C72EB73FF800B3F00B /* WrittenTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928C62EB73FF300B3F00B /* WrittenTagModel.swift */; };
+		38E928C82EB73FF800B3F00B /* WrittenTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928C62EB73FF300B3F00B /* WrittenTagModel.swift */; };
+		38E928CA2EB7402200B3F00B /* WrittenTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928C92EB7401F00B3F00B /* WrittenTag.swift */; };
+		38E928CB2EB7402200B3F00B /* WrittenTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928C92EB7401F00B3F00B /* WrittenTag.swift */; };
+		38E928CD2EB7409100B3F00B /* WrittenTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928CC2EB7408E00B3F00B /* WrittenTags.swift */; };
+		38E928CE2EB7409100B3F00B /* WrittenTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928CC2EB7408E00B3F00B /* WrittenTags.swift */; };
+		38E928D02EB75FA300B3F00B /* PungView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928CF2EB75F9900B3F00B /* PungView.swift */; };
+		38E928D12EB75FA300B3F00B /* PungView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928CF2EB75F9900B3F00B /* PungView.swift */; };
+		38E928D32EB7624300B3F00B /* FloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D22EB7623A00B3F00B /* FloatingButton.swift */; };
+		38E928D42EB7624300B3F00B /* FloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D22EB7623A00B3F00B /* FloatingButton.swift */; };
+		38E928D62EB76CD500B3F00B /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D52EB76CD100B3F00B /* UIRefreshControl.swift */; };
+		38E928D72EB76CD500B3F00B /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D52EB76CD100B3F00B /* UIRefreshControl.swift */; };
+		38E928D92EB7727400B3F00B /* SOMBottomToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D82EB7726E00B3F00B /* SOMBottomToastView.swift */; };
+		38E928DA2EB7727400B3F00B /* SOMBottomToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D82EB7726E00B3F00B /* SOMBottomToastView.swift */; };
 		38E9CE102D376E0E00E85A2D /* PushTokenSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */; };
 		38E9CE112D376E0E00E85A2D /* PushTokenSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */; };
 		38E9CE132D37711600E85A2D /* OnboardingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */; };
@@ -781,8 +795,6 @@
 		2ACBD41C2CCAB3490057C013 /* PresignedStorageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresignedStorageResponse.swift; sourceTree = "<group>"; };
 		2AE6B1482CBC15BF00FA5C3C /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
 		2AE6B14B2CBC160C00FA5C3C /* ReportViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewReactor.swift; sourceTree = "<group>"; };
-		2AE6B14F2CBCC2F600FA5C3C /* ReportTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportTableViewCell.swift; sourceTree = "<group>"; };
-		2AE6B1532CBCC34B00FA5C3C /* ReportReasonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportReasonView.swift; sourceTree = "<group>"; };
 		2AE6B1592CBEAEC000FA5C3C /* ReportRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportRequest.swift; sourceTree = "<group>"; };
 		2AFD05452CFF75DD007C84AD /* FavoriteTagsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagsResponse.swift; sourceTree = "<group>"; };
 		2AFD05482CFF7687007C84AD /* RecommendTagsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendTagsResponse.swift; sourceTree = "<group>"; };
@@ -842,7 +854,6 @@
 		381854972E992E8900424D71 /* WriteCardSelectImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardSelectImageView.swift; sourceTree = "<group>"; };
 		3818549B2E992F7400424D71 /* WriteCardDefaultImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardDefaultImageCell.swift; sourceTree = "<group>"; };
 		3818549E2E9933FF00424D71 /* WriteCardUserImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardUserImageCell.swift; sourceTree = "<group>"; };
-		381854A52E99550500424D71 /* SelectTypographyItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTypographyItem.swift; sourceTree = "<group>"; };
 		381854A82E99573700424D71 /* SelectTypographyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTypographyView.swift; sourceTree = "<group>"; };
 		381A1D732CC3D799005FDB8E /* SOMTagsDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsDelegate.swift; sourceTree = "<group>"; };
 		381A1D762CC3DA99005FDB8E /* SOMTagsLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayout.swift; sourceTree = "<group>"; };
@@ -1029,7 +1040,6 @@
 		38A721942E73E7010071E1D8 /* View+SwiftEntryKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+SwiftEntryKit.swift"; sourceTree = "<group>"; };
 		38A721982E73EA610071E1D8 /* SOMBottomFloatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMBottomFloatView.swift; sourceTree = "<group>"; };
 		38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndCommentView.swift; sourceTree = "<group>"; };
-		38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreBottomSheetViewController.swift; sourceTree = "<group>"; };
 		38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogAction.swift; sourceTree = "<group>"; };
 		38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMDialogViewController+Show.swift"; sourceTree = "<group>"; };
 		38AE77D32E7457F400B6FD13 /* OnboardingCompletedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingCompletedViewController.swift; sourceTree = "<group>"; };
@@ -1100,6 +1110,17 @@
 		38DA12B52D4E642C00AB9468 /* AuthManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManagerTests.swift; sourceTree = "<group>"; };
 		38DA12B82D4E847100AB9468 /* MockPushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPushManager.swift; sourceTree = "<group>"; };
 		38DA12BA2D4E872000AB9468 /* PushManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManagerTests.swift; sourceTree = "<group>"; };
+		38E928B52EB711DE00B3F00B /* DetailCardInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCardInfo.swift; sourceTree = "<group>"; };
+		38E928B82EB715C300B3F00B /* ReortType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReortType.swift; sourceTree = "<group>"; };
+		38E928BE2EB72D3600B3F00B /* DetailCardInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCardInfoResponse.swift; sourceTree = "<group>"; };
+		38E928C12EB73D4B00B3F00B /* MemberInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberInfoView.swift; sourceTree = "<group>"; };
+		38E928C62EB73FF300B3F00B /* WrittenTagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrittenTagModel.swift; sourceTree = "<group>"; };
+		38E928C92EB7401F00B3F00B /* WrittenTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrittenTag.swift; sourceTree = "<group>"; };
+		38E928CC2EB7408E00B3F00B /* WrittenTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrittenTags.swift; sourceTree = "<group>"; };
+		38E928CF2EB75F9900B3F00B /* PungView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PungView.swift; sourceTree = "<group>"; };
+		38E928D22EB7623A00B3F00B /* FloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingButton.swift; sourceTree = "<group>"; };
+		38E928D52EB76CD100B3F00B /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
+		38E928D82EB7726E00B3F00B /* SOMBottomToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMBottomToastView.swift; sourceTree = "<group>"; };
 		38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTokenSet.swift; sourceTree = "<group>"; };
 		38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = OnboardingViewReactor.swift; sourceTree = "<group>"; tabWidth = 4; };
 		38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingTokenInterceptor.swift; sourceTree = "<group>"; };
@@ -1290,26 +1311,8 @@
 			children = (
 				2AE6B1482CBC15BF00FA5C3C /* ReportViewController.swift */,
 				2AE6B14B2CBC160C00FA5C3C /* ReportViewReactor.swift */,
-				2AE6B1522CBCC32100FA5C3C /* Views */,
-				2AE6B14E2CBCC2C700FA5C3C /* Cells */,
 			);
 			path = Report;
-			sourceTree = "<group>";
-		};
-		2AE6B14E2CBCC2C700FA5C3C /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				2AE6B14F2CBCC2F600FA5C3C /* ReportTableViewCell.swift */,
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
-		2AE6B1522CBCC32100FA5C3C /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				2AE6B1532CBCC34B00FA5C3C /* ReportReasonView.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		2AFD05442CFF75CA007C84AD /* Tags */ = {
@@ -1545,7 +1548,6 @@
 		381854A42E9954DF00424D71 /* SelectTypography */ = {
 			isa = PBXGroup;
 			children = (
-				381854A52E99550500424D71 /* SelectTypographyItem.swift */,
 				381854A82E99573700424D71 /* SelectTypographyView.swift */,
 			);
 			path = SelectTypography;
@@ -2096,6 +2098,7 @@
 		388371FF2C8C8FC2004212EB /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
+				38E928D52EB76CD100B3F00B /* UIRefreshControl.swift */,
 				38FCF41B2EA00623003AC3D8 /* UITtextView.swift */,
 				386712C32E97734800541389 /* UITextField.swift */,
 				388372002C8C8FCF004212EB /* UIColor.swift */,
@@ -2167,6 +2170,7 @@
 		38899E632E7938CD0030F7CA /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				38E928BE2EB72D3600B3F00B /* DetailCardInfoResponse.swift */,
 				38EBA9102EB3999C008B28F4 /* PostingPermissionResponse.swift */,
 				38C9AF0D2E96601E00B401C0 /* DefaultImagesResponse.swift */,
 				380F42292E884E85009AC59E /* HomeCardInfoResponse.swift */,
@@ -2203,6 +2207,8 @@
 		38899E692E793AEA0030F7CA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				38E928B82EB715C300B3F00B /* ReortType.swift */,
+				38E928B52EB711DE00B3F00B /* DetailCardInfo.swift */,
 				38EBA90D2EB39917008B28F4 /* PostingPermission.swift */,
 				380F42262E884B6F009AC59E /* BaseCardInfo.swift */,
 				38899E922E79518E0030F7CA /* CommonNotificationInfo.swift */,
@@ -2338,18 +2344,13 @@
 		38AA00002CAD1BB2002C5F1E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				38AA00042CAD96A6002C5F1E /* MoreBottomSheet */,
+				38E928C52EB73FE500B3F00B /* WrittenTags */,
+				38E928C12EB73D4B00B3F00B /* MemberInfoView.swift */,
 				38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */,
+				38E928CF2EB75F9900B3F00B /* PungView.swift */,
+				38E928D22EB7623A00B3F00B /* FloatingButton.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		38AA00042CAD96A6002C5F1E /* MoreBottomSheet */ = {
-			isa = PBXGroup;
-			children = (
-				38AA00052CAD96E3002C5F1E /* MoreBottomSheetViewController.swift */,
-			);
-			path = MoreBottomSheet;
 			sourceTree = "<group>";
 		};
 		38AA66202D3AA5EA00B3F6B2 /* Intro */ = {
@@ -2540,6 +2541,7 @@
 				38D055C22CD862FE00E75590 /* SOMActivityIndicatorView.swift */,
 				38D522672E742F550044911B /* SOMLoadingIndicatorView.swift */,
 				38A721982E73EA610071E1D8 /* SOMBottomFloatView.swift */,
+				38E928D82EB7726E00B3F00B /* SOMBottomToastView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -2647,6 +2649,16 @@
 				385C01B62E8EA1EB003C7894 /* SOMPageViews.swift */,
 			);
 			path = SOMPageViews;
+			sourceTree = "<group>";
+		};
+		38E928C52EB73FE500B3F00B /* WrittenTags */ = {
+			isa = PBXGroup;
+			children = (
+				38E928C62EB73FF300B3F00B /* WrittenTagModel.swift */,
+				38E928C92EB7401F00B3F00B /* WrittenTag.swift */,
+				38E928CC2EB7408E00B3F00B /* WrittenTags.swift */,
+			);
+			path = WrittenTags;
 			sourceTree = "<group>";
 		};
 		38F131862CC7B7AB000D0475 /* WriteCard */ = {
@@ -3015,6 +3027,7 @@
 				385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				3817016F2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
 				38AE565D2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */,
+				38E928CB2EB7402200B3F00B /* WrittenTag.swift in Sources */,
 				3889A2682E79BC880030F7CA /* UserUseCaseImpl.swift in Sources */,
 				38C9AF3C2E96ACEB00B401C0 /* WriteCardTagFooterDelegate.swift in Sources */,
 				3878D0762CFFE01500F9522F /* SettingScrollViewHeader.swift in Sources */,
@@ -3024,6 +3037,7 @@
 				383EC61A2E7A547900EC2D1E /* BaseAssembler.swift in Sources */,
 				38CC49832CDE3854007A0145 /* SOMPresentationController.swift in Sources */,
 				3836ACB52C8F045300A3C566 /* Typography.swift in Sources */,
+				38E928CD2EB7409100B3F00B /* WrittenTags.swift in Sources */,
 				38389BA02CCCFB7D006728AF /* AuthKeyChain.swift in Sources */,
 				2A5ABA342D464E0B00BF6C9B /* ConfigureRequest.swift in Sources */,
 				38899E902E7951200030F7CA /* KeyInfoResponse.swift in Sources */,
@@ -3049,7 +3063,6 @@
 				388FCAD12CFAC2BF0012C4D6 /* Notification.swift in Sources */,
 				3802BDB62D0AF16A001256EA /* PushManager.swift in Sources */,
 				38B6AADC2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
-				38AA00072CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				38C2D4122CFE9EF300CEA092 /* OtherProfileViewCell.swift in Sources */,
 				38B543E02D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */,
 				3887D0342CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */,
@@ -3073,6 +3086,7 @@
 				38F720AE2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */,
 				3889A2772E79C29F0030F7CA /* NotificationRemoteDataSoruceImpl.swift in Sources */,
 				2AFD056A2D03264C007C84AD /* AddFavoriteTagResponse.swift in Sources */,
+				38E928D32EB7624300B3F00B /* FloatingButton.swift in Sources */,
 				38FEBE552E865121002916A8 /* FollowNotificationInfoResponse.swift in Sources */,
 				2AFD05532D007F2F007C84AD /* TagSearchViewReactor.swift in Sources */,
 				38EBA90F2EB39920008B28F4 /* PostingPermission.swift in Sources */,
@@ -3086,6 +3100,7 @@
 				382E15402D15AF4F0097B09C /* CommentHistoryInNotiResponse.swift in Sources */,
 				388698632D1986B100008600 /* NotificationRequest.swift in Sources */,
 				2A980BA52D803EEA007DFA45 /* SOMEvent.swift in Sources */,
+				38E928DA2EB7727400B3F00B /* SOMBottomToastView.swift in Sources */,
 				38B65E7C2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */,
 				38C2D4152CFEA9CC00CEA092 /* MyProfileViewCell.swift in Sources */,
 				38F720B22CD4F15900DF32B5 /* distanceCardResponse.swift in Sources */,
@@ -3130,6 +3145,8 @@
 				38899E942E79518F0030F7CA /* CommonNotificationInfo.swift in Sources */,
 				38F131892CC7B7E0000D0475 /* RelatedTagResponse.swift in Sources */,
 				2AFD056E2D048CAF007C84AD /* TagRequest.swift in Sources */,
+				38E928D02EB75FA300B3F00B /* PungView.swift in Sources */,
+				38E928C82EB73FF800B3F00B /* WrittenTagModel.swift in Sources */,
 				388698602D1984D600008600 /* NotificationViewReactor.swift in Sources */,
 				38899E862E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */,
 				38EBA9112EB399A1008B28F4 /* PostingPermissionResponse.swift in Sources */,
@@ -3140,7 +3157,6 @@
 				38572CDF2D2254E800B07C69 /* HomePlaceholderViewCell.swift in Sources */,
 				38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */,
 				381854AA2E99574100424D71 /* SelectTypographyView.swift in Sources */,
-				2AE6B1512CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
 				388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */,
 				3878D0732CFFDFEF00F9522F /* SettingTextCellView+Rx.swift in Sources */,
 				3878D0912CFFF0E300F9522F /* AnnouncementViewCell.swift in Sources */,
@@ -3195,6 +3211,7 @@
 				2A980BA92D803F04007DFA45 /* GAManager.swift in Sources */,
 				3880EF782EA0CF2F00D88608 /* RelatedTagsViewLayout.swift in Sources */,
 				2AFF95752CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */,
+				38E928D62EB76CD500B3F00B /* UIRefreshControl.swift in Sources */,
 				38FEBE642E8662A3002916A8 /* NoticeInfoResponse.swift in Sources */,
 				38899E722E79402C0030F7CA /* ImageUrlInfo.swift in Sources */,
 				2AFD05472CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */,
@@ -3213,6 +3230,7 @@
 				3889A2802E79D0250030F7CA /* Token.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38C9AF202E9669F600B401C0 /* TagRepository.swift in Sources */,
+				38E928C22EB73D6B00B3F00B /* MemberInfoView.swift in Sources */,
 				38F88EBF2D2C1E22002AD7A8 /* Version.swift in Sources */,
 				3887176D2E7BDBAE00C6143B /* NicknameResponse.swift in Sources */,
 				3880EF722EA0CDA100D88608 /* RelatedTagView.swift in Sources */,
@@ -3236,7 +3254,6 @@
 				38899E962E7953310030F7CA /* NotificationInfoResponse.swift in Sources */,
 				38FEBE5F2E86612C002916A8 /* NoticeViewCell.swift in Sources */,
 				2AFD055A2D008D23007C84AD /* TagDetailViewController.swift in Sources */,
-				2AE6B1552CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */,
 				38C9AF182E96693600B401C0 /* TagRemoteDataSource.swift in Sources */,
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
@@ -3244,9 +3261,9 @@
 				38405CCC2CC611FD00612D1E /* BaseEmptyAndHeader.swift in Sources */,
 				38E9CE1A2D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */,
 				38F88EBB2D2C1CB8002AD7A8 /* Info.swift in Sources */,
-				381854A62E99551800424D71 /* SelectTypographyItem.swift in Sources */,
 				2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				38E9CE142D37711600E85A2D /* OnboardingViewReactor.swift in Sources */,
+				38E928B92EB715C900B3F00B /* ReortType.swift in Sources */,
 				38F3D9312D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
 				38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
 				2AFD056D2D048C84007C84AD /* FavoriteTagTableViewCell.swift in Sources */,
@@ -3288,11 +3305,13 @@
 				388698592D1982DE00008600 /* NotificationViewController.swift in Sources */,
 				38389B9D2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				385E65A42CBE56D00032E120 /* Coordinate.swift in Sources */,
+				38E928B62EB711E200B3F00B /* DetailCardInfo.swift in Sources */,
 				388009952CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				3878F4752CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				3878D0862CFFED7800F9522F /* TermsOfServiceTextCellView.swift in Sources */,
 				38899E832E794C360030F7CA /* LoginResponse.swift in Sources */,
 				2ACBD41B2CCA03790057C013 /* ImageURLWithName.swift in Sources */,
+				38E928C02EB72D3D00B3F00B /* DetailCardInfoResponse.swift in Sources */,
 				38B6AAE02CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				2ACBD41E2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
 				2A5BB7DA2CDCBA8400E1C799 /* OnboardingNicknameTextFieldView.swift in Sources */,
@@ -3389,6 +3408,7 @@
 				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
 				2AFD05632D00A1E1007C84AD /* TagDetailCardResponse.swift in Sources */,
 				38AE565C2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */,
+				38E928CA2EB7402200B3F00B /* WrittenTag.swift in Sources */,
 				385E65A32CBE56D00032E120 /* Coordinate.swift in Sources */,
 				3889A2692E79BC880030F7CA /* UserUseCaseImpl.swift in Sources */,
 				38C9AF3D2E96ACEB00B401C0 /* WriteCardTagFooterDelegate.swift in Sources */,
@@ -3398,6 +3418,7 @@
 				383EC6192E7A547900EC2D1E /* BaseAssembler.swift in Sources */,
 				3878D0722CFFDFEF00F9522F /* SettingTextCellView+Rx.swift in Sources */,
 				388371F92C8C8EB1004212EB /* SooumStyle.swift in Sources */,
+				38E928CE2EB7409100B3F00B /* WrittenTags.swift in Sources */,
 				38389B9C2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				2A5ABA352D464E0B00BF6C9B /* ConfigureRequest.swift in Sources */,
 				38D6F17C2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
@@ -3438,7 +3459,6 @@
 				38C2D4172CFEAACA00CEA092 /* ProfileViewFooterCell.swift in Sources */,
 				38E7FBEF2D3CF6BB00A359CD /* SOMDialogAction.swift in Sources */,
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
-				2AE6B1542CBCC34B00FA5C3C /* ReportReasonView.swift in Sources */,
 				38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				38E9CE102D376E0E00E85A2D /* PushTokenSet.swift in Sources */,
 				386867A52E9E378200171A5E /* Array.swift in Sources */,
@@ -3447,6 +3467,7 @@
 				38899E6E2E79400C0030F7CA /* ImageUrlInfoResponse.swift in Sources */,
 				3889A2782E79C29F0030F7CA /* NotificationRemoteDataSoruceImpl.swift in Sources */,
 				38FEBE542E865121002916A8 /* FollowNotificationInfoResponse.swift in Sources */,
+				38E928D42EB7624300B3F00B /* FloatingButton.swift in Sources */,
 				38899E9D2E7954D90030F7CA /* DeletedNotificationInfoResponse.swift in Sources */,
 				3878D0792CFFE1E800F9522F /* ResignViewController.swift in Sources */,
 				38EBA90E2EB39920008B28F4 /* PostingPermission.swift in Sources */,
@@ -3460,6 +3481,7 @@
 				2A980BA42D803EEA007DFA45 /* SOMEvent.swift in Sources */,
 				38B65E7D2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */,
 				2AFD05492CFF7687007C84AD /* RecommendTagsResponse.swift in Sources */,
+				38E928D92EB7727400B3F00B /* SOMBottomToastView.swift in Sources */,
 				38D2FBCF2E81B52F006DD739 /* SOMSwipableTabBar.swift in Sources */,
 				38601E1B2D3139D000A465A9 /* RecommendTagView.swift in Sources */,
 				380F42362E885032009AC59E /* CardUseCase.swift in Sources */,
@@ -3504,6 +3526,8 @@
 				38899E872E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */,
 				3803CF7D2D016DA200FD90DB /* TransferCodeResponse.swift in Sources */,
 				2AFF955A2CF3227900CBFB12 /* TagSearchTextFieldView.swift in Sources */,
+				38E928D12EB75FA300B3F00B /* PungView.swift in Sources */,
+				38E928C72EB73FF800B3F00B /* WrittenTagModel.swift in Sources */,
 				2A44A42D2CAC14C800DC463E /* SignInResponse.swift in Sources */,
 				381A1D772CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */,
 				38EBA9122EB399A1008B28F4 /* PostingPermissionResponse.swift in Sources */,
@@ -3568,6 +3592,7 @@
 				2AFD055D2D009513007C84AD /* TagDetailNavigationBarView.swift in Sources */,
 				3880EF772EA0CF2F00D88608 /* RelatedTagsViewLayout.swift in Sources */,
 				3889A25D2E79BB340030F7CA /* UserRepository.swift in Sources */,
+				38E928D72EB76CD500B3F00B /* UIRefreshControl.swift in Sources */,
 				385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				38899E7D2E794B420030F7CA /* SignUpResponse.swift in Sources */,
 				3803CF692D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */,
@@ -3585,8 +3610,8 @@
 				2ACBD41D2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
 				2ACBD4172CC963390057C013 /* DefaultCardImageResponse.swift in Sources */,
 				38C9AF212E9669F600B401C0 /* TagRepository.swift in Sources */,
-				38AA00062CAD96E3002C5F1E /* MoreBottomSheetViewController.swift in Sources */,
 				3887176E2E7BDBAE00C6143B /* NicknameResponse.swift in Sources */,
+				38E928C32EB73D6B00B3F00B /* MemberInfoView.swift in Sources */,
 				2A980B9D2D803E9D007DFA45 /* FirebaseLoggable.swift in Sources */,
 				3880EF712EA0CDA100D88608 /* RelatedTagView.swift in Sources */,
 				382E153A2D15A67A0097B09C /* NotificationViewCell.swift in Sources */,
@@ -3602,7 +3627,6 @@
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38F720AD2CD4F15900DF32B5 /* DetailCardResponse.swift in Sources */,
 				38B543E52D4617CB00DDF2C5 /* PushManagerConfiguration.swift in Sources */,
-				2AE6B1502CBCC2F600FA5C3C /* ReportTableViewCell.swift in Sources */,
 				3889A2472E79ADCE0030F7CA /* AppVersionRepositoryImpl.swift in Sources */,
 				388D8ADF2E73E6190044BA79 /* SwiftEntryKit.swift in Sources */,
 				38899E972E7953310030F7CA /* NotificationInfoResponse.swift in Sources */,
@@ -3617,10 +3641,10 @@
 				3878D05C2CFFD10D00F9522F /* FollowingResponse.swift in Sources */,
 				38E9CE132D37711600E85A2D /* OnboardingViewReactor.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
-				381854A72E99551800424D71 /* SelectTypographyItem.swift in Sources */,
 				38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */,
 				388A2D332D00D7BF00E2F2F0 /* UpdateProfileViewReactor.swift in Sources */,
 				38C2D41A2CFEAAED00CEA092 /* ProfileViewFooter.swift in Sources */,
+				38E928BA2EB715C900B3F00B /* ReortType.swift in Sources */,
 				3887D0362CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
 				2A5BB7CD2CDBB7D100E1C799 /* OnboardingProfileImageSettingViewController.swift in Sources */,
 				385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
@@ -3662,11 +3686,13 @@
 				2AFD054C2CFF76CB007C84AD /* TagRequest.swift in Sources */,
 				38B6AADF2CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				389681102CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
+				38E928B72EB711E200B3F00B /* DetailCardInfo.swift in Sources */,
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				38C2D4112CFE9EF300CEA092 /* OtherProfileViewCell.swift in Sources */,
 				2AFF955D2CF328DE00CBFB12 /* FavoriteTagTableViewCell.swift in Sources */,
 				38899E842E794C360030F7CA /* LoginResponse.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
+				38E928BF2EB72D3D00B3F00B /* DetailCardInfoResponse.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
 				38601E182D31399400A465A9 /* CardRequest.swift in Sources */,
 				38899EA32E799B260030F7CA /* AppVersionRemoteDataSource.swift in Sources */,
