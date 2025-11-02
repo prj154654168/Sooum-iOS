@@ -174,6 +174,7 @@ extension UIImage.SOOUMType {
             case camera
             case check
             case danger
+            case delete_full
             case delete
             case down
             case error
