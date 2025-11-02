@@ -12,12 +12,15 @@ class SOMDialogAction {
     
     enum Style {
         case primary
+        case red
         case gray
         
         var backgroundColor: UIColor {
             switch self {
             case .primary:
                 return .som.v2.black
+            case .red:
+                return .som.v2.rDark
             case .gray:
                 return .som.v2.gray100
             }
@@ -25,7 +28,7 @@ class SOMDialogAction {
         
         var foregroundColor: UIColor {
             switch self {
-            case .primary:
+            case .primary, .red:
                 return .som.v2.white
             case .gray:
                 return .som.v2.gray600

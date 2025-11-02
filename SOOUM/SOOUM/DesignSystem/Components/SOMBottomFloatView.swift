@@ -81,9 +81,11 @@ private extension SOMBottomFloatView {
         actions.forEach { action in
             
             let button = SOMButton().then {
+                $0.image = action.image
+                
                 $0.title = action.title
                 $0.typography = .som.v2.subtitle1
-                $0.foregroundColor = .som.v2.gray500
+                $0.foregroundColor = action.foregroundColor
                 $0.backgroundColor = .som.v2.white
                 $0.inset = .init(top: 12, left: 16, bottom: 12, right: 16)
                 
@@ -112,12 +114,21 @@ extension SOMBottomFloatView {
     
     struct FloatAction {
         let tag: Int
+        let image: UIImage?
+        let foregroundColor: UIColor
         let title: String
         let action: (() -> Void)
         
-        init(title: String, action: @escaping (() -> Void)) {
+        init(
+            title: String,
+            image: UIImage? = nil,
+            foregroundColor: UIColor = .som.v2.gray500,
+            action: @escaping (() -> Void)
+        ) {
             self.tag = UUID().hashValue
             self.title = title
+            self.image = image
+            self.foregroundColor = foregroundColor
             self.action = action
         }
     }

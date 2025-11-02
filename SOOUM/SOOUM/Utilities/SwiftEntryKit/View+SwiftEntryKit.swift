@@ -90,4 +90,36 @@ extension SwiftEntryKitViewWrapper where Base == UIView {
 
         self.show(with: attributes)
     }
+    
+    func showBottomToast(
+        verticalOffset: CGFloat,
+        useSafeArea: Bool = true,
+        workAtWillAppear: (() -> Void)? = nil,
+        completion: (() -> Void)? = nil
+    ) {
+        var attributes: EKAttributes = .bottomToast
+        
+        if useSafeArea {
+            attributes.positionConstraints.safeArea = .overridden
+        }
+
+        attributes.screenBackground = .clear
+        attributes.scroll = .edgeCrossingDisabled(swipeable: true)
+
+        attributes.roundCorners = .all(radius: 6)
+        attributes.positionConstraints.verticalOffset = verticalOffset
+        
+        attributes.entryBackground = .color(color: .init(.som.v2.gray500))
+        
+        attributes.displayDuration = 7
+        attributes.entranceAnimation = .init(translate: .init(duration: 0.25))
+        attributes.exitAnimation = .init(translate: .init(duration: 0.25))
+        
+        attributes.entryInteraction = .forward
+        
+        attributes.lifecycleEvents.willAppear = workAtWillAppear
+        attributes.lifecycleEvents.willDisappear = completion
+
+        self.show(with: attributes)
+    }
 }

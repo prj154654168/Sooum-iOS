@@ -296,18 +296,19 @@ class SOMCard: UIView {
             $0.size.equalTo(2)
         }
         
-        self.cardInfoLeadingStackView.addArrangedSubview(self.cardPungTimeStackView)
-        self.cardInfoLeadingStackView.addArrangedSubview(self.secondDot)
-        self.secondDot.snp.makeConstraints {
-            $0.size.equalTo(2)
-        }
-        
         self.cardInfoLeadingStackView.addArrangedSubview(self.distanceInfoStackView)
         self.cardInfoLeadingStackView.addArrangedSubview(self.thirdDot)
         self.thirdDot.snp.makeConstraints {
             $0.size.equalTo(2)
         }
+        
         self.cardInfoLeadingStackView.addArrangedSubview(self.timeLabel)
+        self.cardInfoLeadingStackView.addArrangedSubview(self.secondDot)
+        self.secondDot.snp.makeConstraints {
+            $0.size.equalTo(2)
+        }
+        
+        self.cardInfoLeadingStackView.addArrangedSubview(self.cardPungTimeStackView)
         
         // 우측
         self.cardInfoContainer.addSubview(self.cardInfoTrailingStackView)
