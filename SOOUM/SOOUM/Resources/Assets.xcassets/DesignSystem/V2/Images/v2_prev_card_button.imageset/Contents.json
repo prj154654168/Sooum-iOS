@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "v2_more_outlined.svg",
+      "filename" : "v2_prev_card_button.svg",
       "idiom" : "universal"
     }
   ],
@@ -11,6 +11,6 @@
   },
   "properties" : {
     "preserves-vector-representation" : true,
-    "template-rendering-intent" : "template"
+    "template-rendering-intent" : "original"
   }
 }

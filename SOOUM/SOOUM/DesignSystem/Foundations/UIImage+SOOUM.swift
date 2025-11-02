@@ -177,8 +177,10 @@ extension UIImage.SOOUMType {
             case delete
             case down
             case error
+            case flag
             case hash
             case heart
+            case hide
             case home
             case image
             case left
@@ -214,9 +216,12 @@ extension UIImage.SOOUMType {
         case onboarding
         case onboarding_finish
         case check_square_light
+        case detail_delete_card
         case placeholder_home
         case placeholder_notification
+        case prev_card_button
         case profile_large
+        case profile_small
     }
     
     enum V2LogoStyle: String {
