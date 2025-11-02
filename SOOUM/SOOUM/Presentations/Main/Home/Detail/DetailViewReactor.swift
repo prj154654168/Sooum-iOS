@@ -34,24 +34,27 @@ class DetailViewReactor: Reactor {
         case commentCards([BaseCardInfo])
         case moreComment([BaseCardInfo])
         case updateIsRefreshing(Bool)
+        case updateIsLiked(Bool)
         case updateIsBlocked(Bool)
         case updateIsDeleted(Bool?)
         case updateErrors(Int?)
     }
     
     struct State {
-        var detailCard: DetailCardInfo?
-        var commentCards: [BaseCardInfo]
-        var isRefreshing: Bool
-        var isBlocked: Bool
-        var isDeleted: Bool?
-        var hasErrors: Int?
+        fileprivate(set) var detailCard: DetailCardInfo?
+        fileprivate(set) var commentCards: [BaseCardInfo]
+        fileprivate(set) var isRefreshing: Bool
+        fileprivate(set) var isLiked: Bool
+        fileprivate(set) var isBlocked: Bool
+        fileprivate(set) var isDeleted: Bool?
+        fileprivate(set) var hasErrors: Int?
     }
     
     var initialState: State = .init(
         detailCard: nil,
         commentCards: [],
         isRefreshing: false,
+        isLiked: false,
         isBlocked: false,
         isDeleted: nil,
         hasErrors: nil
@@ -113,10 +116,18 @@ class DetailViewReactor: Reactor {
                 .map(Mutation.updateIsBlocked)
         case let .updateLike(isLike):
             
-            return self.cardUseCase.updateLike(id: self.selectedCardId, isLike: isLike)
-                .filter { $0 }
-                .withUnretained(self)
-                .flatMapLatest { object, _ in object.detailCard() }
+            return .concat([
+                .just(.updateIsLiked(false)),
+                self.cardUseCase.updateLike(id: self.selectedCardId, isLike: isLike)
+                    .filter { $0 }
+                    .withUnretained(self)
+                    .flatMapLatest { object, _ -> Observable<Mutation> in
+                        return .concat([
+                            object.detailCard(),
+                            .just(.updateIsLiked(true))
+                        ])
+                    }
+            ])
         }
     }
     
@@ -131,6 +142,8 @@ class DetailViewReactor: Reactor {
             newState.commentCards += commentCards
         case let .updateIsRefreshing(isRefreshing):
             newState.isRefreshing = isRefreshing
+        case let .updateIsLiked(isLiked):
+            newState.isLiked = isLiked
         case let .updateIsBlocked(isBlocked):
             newState.isBlocked = isBlocked
         case let .updateIsDeleted(isDeleted):

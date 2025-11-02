@@ -118,7 +118,7 @@ class NotificationViewController: BaseNavigationViewController, View {
     
     // MARK: Variables + Rx
     
-    let willPushCardId = PublishRelay<String>()
+    private let willPushTypeAndCardId = PublishRelay<(detailType: DetailViewReactor.DetailType, id: String)?>()
     
     
     // MARK: Override func
@@ -149,6 +149,19 @@ class NotificationViewController: BaseNavigationViewController, View {
     // MARK: ReactorKit - bind
     
     func bind(reactor: NotificationViewReactor) {
+        
+        self.willPushTypeAndCardId
+            .filterNil()
+            .distinctUntilChanged({ $0.detailType == $1.detailType && $0.id == $1.id })
+            .subscribe(with: self) { object, detailInfo in
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(
+                    detailType: detailInfo.detailType,
+                    with: detailInfo.id
+                )
+                object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+            }
+            .disposed(by: self.disposeBag)
         
         // Action
         self.rx.viewDidLoad
@@ -278,20 +291,6 @@ extension NotificationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        // TODO: 상세보기 or 공지사항 화면 전환 필요
-        // switch Section.allCases[indexPath.section] {
-        // case .withoutRead:
-        //     let selectedId = self.notificationsWithoutRead[indexPath.row].id
-        //
-        //     self.reactor?.action.onNext(.requestRead("\(selectedId)"))
-        //     let targetCardId = self.notificationsWithoutRead[indexPath.row].targetCardId
-        //     self.willPushCardId.accept("\(targetCardId ?? 0)")
-        // case .read:
-        //     let targetCardId = self.notifications[indexPath.row].targetCardId
-        //     self.willPushCardId.accept("\(targetCardId ?? 0)")
-        // case .empty:
-        //     break
-        // }
         guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return }
         
         switch item {
@@ -322,12 +321,7 @@ extension NotificationViewController: UITableViewDelegate {
             }
             guard let detailInfo = detailInfo else { return }
             
-            let detailViewController = DetailViewController()
-            detailViewController.reactor = self.reactor?.reactorForDetail(
-                detailType: detailInfo.detailType,
-                with: detailInfo.id
-            )
-            self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+            self.willPushTypeAndCardId.accept(detailInfo)
         case let .read(notification):
             
             var detailInfo: (detailType: DetailViewReactor.DetailType, id: String)? {
@@ -349,12 +343,7 @@ extension NotificationViewController: UITableViewDelegate {
             }
             guard let detailInfo = detailInfo else { return }
             
-            let detailViewController = DetailViewController()
-            detailViewController.reactor = self.reactor?.reactorForDetail(
-                detailType: detailInfo.detailType,
-                with: detailInfo.id
-            )
-            self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+            self.willPushTypeAndCardId.accept(detailInfo)
         default:
             return
         }

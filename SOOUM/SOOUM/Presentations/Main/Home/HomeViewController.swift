@@ -172,7 +172,7 @@ class HomeViewController: BaseNavigationViewController, View {
     
     // MARK: Variables + Rx
     
-    let willPushCardId = PublishRelay<String>()
+    private let willPushCardId = PublishRelay<String>()
     
     
     // MARK: Override func

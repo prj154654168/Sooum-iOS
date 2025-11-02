@@ -153,6 +153,8 @@ class LikeAndCommentView: UIView {
     
     func updateViewsWhenDeleted() {
         self.likeContainer.removeFromSuperview()
+        self.likeBackgroundButton.removeFromSuperview()
+        self.commentContainer.removeFromSuperview()
         self.commentBackgroundButton.removeFromSuperview()
         self.visitedLabel.removeFromSuperview()
     }

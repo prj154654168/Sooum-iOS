@@ -60,7 +60,7 @@ class DetailViewController: BaseNavigationViewController, View {
     }
     
     private let rightDeleteButton = SOMButton().then {
-        $0.image = .init(.icon(.v2(.outlined(.delete))))
+        $0.image = .init(.icon(.v2(.outlined(.delete_full))))
         $0.foregroundColor = .som.black
     }
     
@@ -177,7 +177,7 @@ class DetailViewController: BaseNavigationViewController, View {
                  
                  var actions: [SOMBottomFloatView.FloatAction] {
                      
-                     if self.detailCard.isOwnCard {
+                     if object.detailCard.isOwnCard {
                          
                          return [
                             .init(
@@ -310,21 +310,11 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: disposeBag)
          
-         reactor.state.map(\.isDeleted)
-             .filterNil()
+         reactor.state.map(\.isLiked)
              .distinctUntilChanged()
              .filter { $0 }
              .subscribe(with: self) { object, _ in
-                 object.navigationBar.title = Text.deletedNavigationTitle
-                 object.navigationBar.setRightButtons([object.rightDeleteButton])
-                 
-                 object.floatingButton.removeFromSuperview()
-                 
-                 object.isDeleted = true
-                 
-                 UIView.performWithoutAnimation {
-                     object.collectionView.reloadData()
-                 }
+                 NotificationCenter.default.post(name: .reloadData, object: object)
              }
              .disposed(by: self.disposeBag)
          
@@ -346,6 +336,24 @@ class DetailViewController: BaseNavigationViewController, View {
                  var wrapper: SwiftEntryKitViewWrapper = bottomToastView.sek
                  wrapper.entryName = Text.bottomToastEntryName
                  wrapper.showBottomToast(verticalOffset: 34 + 56 + 8)
+             }
+             .disposed(by: self.disposeBag)
+         
+         reactor.state.map(\.isDeleted)
+             .filterNil()
+             .distinctUntilChanged()
+             .filter { $0 }
+             .subscribe(with: self) { object, _ in
+                 object.navigationBar.title = Text.deletedNavigationTitle
+                 object.navigationBar.setRightButtons([object.rightDeleteButton])
+                 
+                 object.floatingButton.removeFromSuperview()
+                 
+                 object.isDeleted = true
+                 
+                 UIView.performWithoutAnimation {
+                     object.collectionView.reloadData()
+                 }
              }
              .disposed(by: self.disposeBag)
          
@@ -427,16 +435,16 @@ extension DetailViewController: UICollectionViewDataSource {
         
         cell.prevCardBackgroundButton.rx.throttleTap
             .subscribe(with: self) { object, _ in
-                /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop, 아니면 naviPush
+                /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop
                 if let naviStackCount = object.navigationController?.viewControllers.count,
                    let prevViewController = object.navigationController?.viewControllers[naviStackCount - 2] as? DetailViewController,
                    prevViewController.reactor?.selectedCardId == object.detailCard.prevCardId {
                     
                     object.navigationPop()
                 } else {
-                    
+                    /// 없다면 새로운 viewController로 naviPush
                     let detailViewController = DetailViewController()
-                    detailViewController.reactor = object.reactor?.reactorForPush(object.detailCard.id)
+                    detailViewController.reactor = reactor.reactorForPush(object.detailCard.id)
                     object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
                 }
             }
@@ -521,7 +529,7 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
         let width: CGFloat = UIScreen.main.bounds.width
         let cellHeight: CGFloat = 52 + (width - 16 * 2) + 44
-        let height: CGFloat = collectionView.bounds.height - cellHeight - 10 * 2
+        let height: CGFloat = collectionView.bounds.height - cellHeight
         return CGSize(width: width, height: height)
     }
     
@@ -570,6 +578,8 @@ private extension DetailViewController {
     
     func showBlockedUserDialog() {
         
+        guard let reactor = self.reactor else { return }
+        
         let cancelAction = SOMDialogAction(
             title: Text.cancelActionTitle,
             style: .gray,
@@ -583,20 +593,22 @@ private extension DetailViewController {
             action: {
                 UIApplication.topViewController?.dismiss(animated: true) {
                     
-                    self.reactor?.action.onNext(.block(isBlocked: true))
+                    reactor.action.onNext(.block(isBlocked: true))
                 }
             }
          )
 
          SOMDialogViewController.show(
             title: Text.blockDialogTitle,
-            message: (self.reactor?.currentState.detailCard?.nickname ?? "") + Text.blockDialogMessage,
+            message: (reactor.currentState.detailCard?.nickname ?? "") + Text.blockDialogMessage,
             textAlignment: .left,
             actions: [cancelAction, blockAction]
          )
     }
     
     func showDeleteCardDialog() {
+        
+        guard let reactor = self.reactor else { return }
         
         let cancelAction = SOMDialogAction(
             title: Text.cancelActionTitle,
@@ -611,7 +623,7 @@ private extension DetailViewController {
             action: {
                 UIApplication.topViewController?.dismiss(animated: true) {
                     
-                    self.reactor?.action.onNext(.delete)
+                    reactor.action.onNext(.delete)
                 }
             }
          )

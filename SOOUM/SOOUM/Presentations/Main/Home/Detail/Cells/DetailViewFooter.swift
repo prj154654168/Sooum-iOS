@@ -161,43 +161,43 @@ extension DetailViewFooter: UICollectionViewDataSource {
 
 extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
     
-    // TODO: 답카드가 1개일 때, 중앙 정렬
-    // func collectionView(
-    //     _ collectionView: UICollectionView,
-    //     willDisplay cell: UICollectionViewCell,
-    //     forItemAt indexPath: IndexPath
-    // ) {
-    //     if self.commentCards.count > 1 {
-    //         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-    //         layout.sectionInset.left = 19
-    //         layout.sectionInset.right = 19
-    //     } else {
-    //         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-    //         let cellWidthWithSpacing = cell.bounds.width + layout.minimumLineSpacing
-    //         layout.sectionInset.left = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
-    //         layout.sectionInset.right = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
-    //     }
-    //
-    //     guard self.commentCards.isEmpty == false else { return }
-    //
-    //     let lastSectionIndex = collectionView.numberOfSections - 1
-    //     let lastRowIndex = collectionView.numberOfItems(inSection: lastSectionIndex) - 1
-    //
-    //     if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.item == lastRowIndex {
-    //
-    //         self.isLoadingMore = false
-    //
-    //         let lastId = self.commentCards[indexPath.item].id
-    //         self.moreDisplay.accept(lastId)
-    //     }
-    // }
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        // TODO: 답카드가 1개일 때, 중앙 정렬
+        // if self.commentCards.count > 1 {
+        //     let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        //     layout.sectionInset.left = 19
+        //     layout.sectionInset.right = 19
+        // } else {
+        //     let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        //     let cellWidthWithSpacing = cell.bounds.width + layout.minimumLineSpacing
+        //     layout.sectionInset.left = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
+        //     layout.sectionInset.right = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
+        // }
+    
+        guard self.commentCards.isEmpty == false else { return }
+    
+        let lastSectionIndex = collectionView.numberOfSections - 1
+        let lastRowIndex = collectionView.numberOfItems(inSection: lastSectionIndex) - 1
+    
+        if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.item == lastRowIndex {
+    
+            self.isLoadingMore = false
+    
+            let lastId = self.commentCards[indexPath.item].id
+            self.moreDisplay.accept(lastId)
+        }
+    }
     
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let height: CGFloat = collectionView.bounds.height - 10 * 2
+        let height: CGFloat = collectionView.bounds.height - 10 * 2 - 34
         return CGSize(width: height, height: height)
     }
     
@@ -205,7 +205,6 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
         
         let offset = scrollView.contentOffset.x
         
-        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
         self.isLoadingMore = offset > self.currentOffset
         self.currentOffset = offset
     }
