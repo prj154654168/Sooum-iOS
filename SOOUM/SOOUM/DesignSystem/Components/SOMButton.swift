@@ -96,6 +96,8 @@ private extension SOMButton {
             updatedConfig?.background.backgroundColorTransformer = UIConfigurationColorTransformer { _ in
                 // 비활성화 상태일 때, backgroundColor
                 if button.isEnabled == false { return .som.v2.gray200 }
+                // 선택된 상태일 때, backgroundColor
+                if button.isSelected { return .som.v2.pLight1 }
                 // 하이라이트 상태일 때, backgroundColor
                 if button.isHighlighted {
                     switch self.backgroundColor {
@@ -108,6 +110,28 @@ private extension SOMButton {
                 // 기본 상태일 때, backgroundColor
                 return self.backgroundColor ?? .clear
             }
+            
+            updatedConfig?.background.strokeWidth = 1
+            updatedConfig?.background.strokeColor = self.backgroundColor ?? .clear
+            updatedConfig?.background.strokeColorTransformer = UIConfigurationColorTransformer { _ in
+                // 비활성화 상태일 때, backgroundColor
+                if button.isEnabled == false { return .som.v2.gray200 }
+                // 선택된 상태일 때, backgroundColor
+                if button.isSelected { return .som.v2.pMain }
+                // 하이라이트 상태일 때, backgroundColor
+                if button.isHighlighted {
+                    switch self.backgroundColor {
+                    case .som.v2.black:     return .som.v2.gray600
+                    case .som.v2.gray100:   return .som.v2.gray200
+                    case .som.v2.white:     return .som.v2.gray100
+                    default:               return .clear
+                    }
+                }
+                // 기본 상태일 때, backgroundColor
+                return self.backgroundColor ?? .clear
+            }
+            
+            updatedConfig?.background.cornerRadius = 10
             
             self.applyConfiguration(to: &updatedConfig)
             button.configuration = updatedConfig
