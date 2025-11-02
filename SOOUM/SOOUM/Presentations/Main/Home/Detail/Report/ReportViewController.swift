@@ -18,145 +18,180 @@ import Then
 class ReportViewController: BaseNavigationViewController, View {
     
     enum Text {
-        static let title: String = "신고하기"
-        static let tableViewTitle: String = "신고 사유 선택"
+        static let navigationTitle: String = "신고하기"
+        static let guideMessage: String = "신고하는 이유를 선택해주세요"
         
         static let successDialogTitle: String = "신고가 접수 되었어요"
-        static let successDialogMessage: String = "신고 내용을 확인한 후 조치할 예정이에요"
+        static let successDialogMessage: String = "신고 내용을 확인한 후 조치하도록 하겠습니다. 감사합니다."
         
         static let failedDialogTitle: String = "이미 신고를 한 카드에요"
         static let failedDialogMessage: String = "이전 신고가 접수되어 처리 중이에요"
         
-        static let confirmActionTitle: String = "확인"
+        static let confirmButtonTitle: String = "확인"
+        static let completeButtonTitle: String = "완료"
     }
         
-    let tableViewTitleLabel = UILabel().then {
-        $0.typography = .som.body1WithBold
-        $0.textColor = .som.gray800
-        $0.text = Text.tableViewTitle
-    }
-        
-    lazy var reportTableView = UITableView().then {
-        $0.backgroundColor = .clear
-        $0.indicatorStyle = .black
-        $0.separatorStyle = .none
-        
-        $0.register(ReportTableViewCell.self, forCellReuseIdentifier: String(describing: ReportTableViewCell.self))
-        
-        $0.dataSource = self
-        $0.delegate = self
+    
+    // MARK: Views
+    
+    private let guideMessageLabel = UILabel().then {
+        $0.text = Text.guideMessage
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.head2
     }
     
-    let uploadReportButtonLabel = UILabel().then {
-        $0.typography = .som.body1WithBold
-        $0.text = Text.title
-        $0.textColor = .som.white
-        $0.isUserInteractionEnabled = false
-        $0.textAlignment = .center
-        $0.backgroundColor = .som.p300
-        $0.layer.cornerRadius = 10
-        $0.clipsToBounds = true
+    private let container = UIStackView().then {
+        $0.axis = .vertical
+        $0.alignment = .fill
+        $0.distribution = .equalSpacing
+        $0.spacing = 10
     }
     
-    var selectedReason: ReportViewReactor.ReportType?
-    
-    override var navigationBarHeight: CGFloat {
-        53
+    private let completeButton = SOMButton().then {
+        $0.title = Text.completeButtonTitle
+        $0.typography = .som.v2.title1
+        $0.foregroundColor = .som.v2.white
+        $0.backgroundColor = .som.v2.black
+        
+        $0.isEnabled = false
     }
+    
+    
+    // MARK: Override func
 
-    override func setupConstraints() {
-        self.view.addSubview(tableViewTitleLabel)
-        tableViewTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(28)
-            $0.leading.equalToSuperview().offset(20)
-            $0.height.equalTo(22)
-        }
-        
-        self.view.addSubview(reportTableView)
-        reportTableView.snp.makeConstraints {
-            $0.top.equalTo(tableViewTitleLabel.snp.bottom).offset(22)
-            $0.leading.trailing.equalToSuperview()
-        }
-        
-        self.view.addSubview(uploadReportButtonLabel)
-        uploadReportButtonLabel.snp.makeConstraints {
-            $0.top.equalTo(reportTableView.snp.bottom)
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-20)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(50)
-        }
-    }
-    
     override func setupNaviBar() {
         super.setupNaviBar()
         
-        self.navigationBar.title = Text.title
-        self.hidesNavigationBarBottomSeperator = false
+        self.navigationBar.title = Text.navigationTitle
     }
     
+    override func setupConstraints() {
+        super.setupConstraints()
+        
+        self.view.addSubview(self.guideMessageLabel)
+        self.guideMessageLabel.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(16)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-16)
+        }
+        
+        self.view.addSubview(self.container)
+        self.container.snp.makeConstraints {
+            $0.top.equalTo(self.guideMessageLabel.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+        }
+        
+        self.view.addSubview(self.completeButton)
+        self.completeButton.snp.makeConstraints {
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(56)
+        }
+    }
+    
+    override func bind() {
+        super.bind()
+        
+        self.setupReportButtons()
+    }
+    
+    
+    // MARK: ReactorKit - bind
+    
     func bind(reactor: ReportViewReactor) {
-        bindAction(reactor: reactor)
-        bindState(reactor: reactor)
+        self.bindAction(reactor: reactor)
+        self.bindState(reactor: reactor)
     }
     
     private func bindAction(reactor: ReportViewReactor) {
-        uploadReportButtonLabel.rx
-            .tapGesture()
-            .when(.recognized)
-            .withUnretained(self)
-            .compactMap { object, _ in object.selectedReason }
-            .map(Reactor.Action.report)
+        
+        self.completeButton.rx.throttleTap
+            .map { _ in Reactor.Action.report }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
     }
     
     private func bindState(reactor: ReportViewReactor) {
         
-        reactor.state.map(\.isDialogPresented)
+        reactor.state.map(\.reportReason)
             .filterNil()
-            .subscribe(with: self) { object, isDialogPresented in
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, reportReason in
                 
-                let confirmAction = SOMDialogAction(
-                    title: Text.confirmActionTitle,
-                    style: .primary,
-                    action: {
-                        UIApplication.topViewController?.dismiss(animated: true) {
-                            object.navigationPop()
-                        }
-                    }
-                )
+                let items = object.container.arrangedSubviews
+                    .compactMap { $0 as? SOMButton }
                 
-                SOMDialogViewController.show(
-                    title: isDialogPresented ? Text.successDialogTitle : Text.failedDialogTitle,
-                    message: isDialogPresented ? Text.successDialogMessage : Text.failedDialogMessage,
-                    actions: [confirmAction]
-                )
+                items.forEach { item in
+                    item.isSelected = reportReason.identifier == item.tag
+                }
+                
+                object.completeButton.isEnabled = true
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isReported)
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                object.showSuccessReportedDialog()
             }
             .disposed(by: self.disposeBag)
     }
 }
 
-// MARK: - UITableView
-extension ReportViewController: UITableViewDataSource, UITableViewDelegate {
+
+// MARK: setup buttons and show dialog
+
+private extension ReportViewController {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ReportViewReactor.ReportType.allCases.count
+    func setupReportButtons() {
+        
+        guard let reactor = self.reactor else { return }
+        
+        ReportType.allCases.forEach { reportType in
+            
+            let item = SOMButton().then {
+                
+                $0.title = reportType.message
+                $0.typography = .som.v2.subtitle1
+                $0.foregroundColor = .som.v2.gray600
+                $0.backgroundColor = .som.v2.gray100
+                
+                $0.inset = .init(top: 0, left: 16, bottom: 0, right: 0)
+                $0.contentHorizontalAlignment = .left
+                
+                $0.tag = reportType.identifier
+            }
+            item.snp.makeConstraints {
+                $0.height.equalTo(48)
+            }
+            item.rx.throttleTap
+                .map { _ in Reactor.Action.updateReportReason(reportType) }
+                .bind(to: reactor.action)
+                .disposed(by: self.disposeBag)
+            
+            self.container.addArrangedSubview(item)
+        }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = reportTableView.dequeueReusableCell(
-            withIdentifier: String(describing: ReportTableViewCell.self),
-            for: indexPath
-        ) as! ReportTableViewCell
-        cell.setData(
-            reason: ReportViewReactor.ReportType.allCases[indexPath.item],
-            isSelected: selectedReason == ReportViewReactor.ReportType.allCases[indexPath.item]
+    func showSuccessReportedDialog() {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmButtonTitle,
+            style: .primary,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    self.navigationPop()
+                }
+            }
         )
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.selectedReason = ReportViewReactor.ReportType.allCases[indexPath.item]
+
+        SOMDialogViewController.show(
+            title: Text.successDialogTitle,
+            message: Text.successDialogMessage,
+            textAlignment: .left,
+            actions: [confirmAction]
+        )
     }
 }
