@@ -124,6 +124,7 @@ class CardUseCaseImpl: CardUseCase {
             imgType: imgType,
             imgName: imgName,
             tags: tags
-        ).map { $0 == 200 }
+        )
+        .map { $0 == 200 }
     }
 }
