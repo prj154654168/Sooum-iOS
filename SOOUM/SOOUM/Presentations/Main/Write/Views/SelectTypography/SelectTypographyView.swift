@@ -42,13 +42,13 @@ class SelectTypographyView: UIView {
     // MARK: Variables
     
     var selectedTypography = BehaviorRelay<BaseCardInfo.Font?>(value: nil)
-    var selectTypography: BaseCardInfo.Font? = nil {
+    var selectTypography: BaseCardInfo.Font = .pretendard {
         didSet {
             
             let items = self.container.arrangedSubviews
                 .compactMap { $0 as? UIStackView }
                 .flatMap { $0.arrangedSubviews }
-                .compactMap { $0 as? SelectTypographyItem }
+                .compactMap { $0 as? SOMButton }
             
             items.enumerated().forEach { index, item in
                 var font: BaseCardInfo.Font? {
@@ -127,10 +127,14 @@ class SelectTypographyView: UIView {
         
         items.enumerated().forEach { index, value in
             
-            let item = SelectTypographyItem(title: value.name, typography: value.typography)
+            let item = SOMButton().then {
+                $0.title = value.name
+                $0.typography = value.typography
+                $0.foregroundColor = .som.v2.gray600
+                $0.backgroundColor = .som.v2.gray100
+            }
             item.isSelected = index == 0
-            item.rx.tapGesture()
-                .when(.recognized)
+            item.rx.throttleTap
                 .subscribe(with: self) { object, _ in
                     var font: BaseCardInfo.Font? {
                         switch index {
