@@ -138,7 +138,7 @@ class TagDetailViewrReactor: Reactor {
 
 extension TagDetailViewrReactor {
     
-    func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(provider: self.provider, selectedId)
-    }
+    // func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
+    //     DetailViewReactor(provider: self.provider, selectedId)
+    // }
 }

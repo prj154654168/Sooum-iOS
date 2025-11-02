@@ -148,9 +148,9 @@ extension CommentHistroyViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selectedId = self.commentHistroies[indexPath.row].id
         
-        let detailViewController = DetailViewController()
-        detailViewController.reactor = self.reactor?.reactorForDetail(selectedId)
-        self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+        // let detailViewController = DetailViewController()
+        // detailViewController.reactor = self.reactor?.reactorForDetail(selectedId)
+        // self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
     }
 }
 

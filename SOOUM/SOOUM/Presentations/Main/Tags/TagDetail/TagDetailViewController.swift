@@ -158,11 +158,11 @@ extension TagDetailViewController: UITableViewDataSource, UITableViewDelegate {
         cell.contentView.rx.tapGesture()
             .when(.recognized)
             .subscribe(with: self) { object, _ in
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(
-                    reactor.currentState.tagCards[indexPath.row].id
-                )
-                object.navigationPush(detailViewController, animated: true)
+                // let detailViewController = DetailViewController()
+                // detailViewController.reactor = reactor.reactorForDetail(
+                //     reactor.currentState.tagCards[indexPath.row].id
+                // )
+                // object.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: cell.cardView.disposeBag)
         return cell

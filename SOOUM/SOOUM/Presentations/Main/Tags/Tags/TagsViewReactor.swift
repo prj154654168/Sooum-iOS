@@ -156,9 +156,9 @@ class TagsViewReactor: Reactor {
 
 extension TagsViewReactor {
     
-    func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(provider: self.provider, selectedId)
-    }
+    // func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
+    //     DetailViewReactor(provider: self.provider, selectedId)
+    // }
     
     func reactorForSearch() -> TagSearchViewReactor {
         TagSearchViewReactor(provider: self.provider)

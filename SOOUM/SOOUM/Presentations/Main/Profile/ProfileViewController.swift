@@ -376,9 +376,9 @@ extension ProfileViewController: UICollectionViewDataSource {
             
             footer.didTap
                 .subscribe(with: self) { object, selectedId in
-                    let detailViewController = DetailViewController()
-                    detailViewController.reactor = object.reactor?.ractorForDetail(selectedId)
-                    object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                    // let detailViewController = DetailViewController()
+                    // detailViewController.reactor = object.reactor?.ractorForDetail(selectedId)
+                    // object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
                 }
                 .disposed(by: footer.disposeBag)
             

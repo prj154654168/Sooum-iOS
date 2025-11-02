@@ -209,9 +209,9 @@ extension TagsViewController: UITableViewDataSource, UITableViewDelegate {
                         click_position: SOMEvent.Tag.ClickPositionKey.favorite_preview
                     )
                 )
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(previewCardID)
-                object.navigationPush(detailViewController, animated: true)
+                // let detailViewController = DetailViewController()
+                // detailViewController.reactor = reactor.reactorForDetail(previewCardID)
+                // object.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: cell.disposeBag)
         

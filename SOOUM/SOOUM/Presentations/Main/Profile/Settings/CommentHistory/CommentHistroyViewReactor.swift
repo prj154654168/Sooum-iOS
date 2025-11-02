@@ -116,7 +116,7 @@ extension CommentHistroyViewReactor {
 
 extension CommentHistroyViewReactor {
     
-    func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(provider: self.provider, selectedId)
-    }
+    // func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
+    //     DetailViewReactor(provider: self.provider, selectedId)
+    // }
 }

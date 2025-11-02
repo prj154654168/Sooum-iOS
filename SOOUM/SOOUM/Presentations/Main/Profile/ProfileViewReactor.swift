@@ -248,9 +248,9 @@ extension ProfileViewReactor {
         UpdateProfileViewReactor(provider: self.provider, self.currentState.profile)
     }
     
-    func ractorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(provider: self.provider, selectedId)
-    }
+    // func ractorForDetail(_ selectedId: String) -> DetailViewReactor {
+    //     DetailViewReactor(provider: self.provider, selectedId)
+    // }
     
     func reactorForFollow(type entranceType: FollowViewReactor.EntranceType) -> FollowViewReactor {
         FollowViewReactor(
