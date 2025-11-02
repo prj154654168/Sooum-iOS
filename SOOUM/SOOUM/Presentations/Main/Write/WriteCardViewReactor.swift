@@ -77,15 +77,15 @@ class WriteCardViewReactor: Reactor {
     
     let locationManager: LocationManagerDelegate
     
-    private let requestType: RequestType
+    let requestType: RequestType
     
-    // let parentCardId: String?
+    private let parentCardId: String?
     // let parentPungTime: Date?
     
     init(
         dependencies: AppDIContainerable,
-        type requestType: RequestType
-        // parentCardId: String? = nil,
+        type requestType: RequestType,
+        parentCardId: String? = nil
         // parentPungTime: Date? = nil
     ) {
         self.dependencies = dependencies
@@ -94,6 +94,7 @@ class WriteCardViewReactor: Reactor {
         self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
         self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
         self.requestType = requestType
+        self.parentCardId = parentCardId
         // self.parentCardId = parentCardId
         // self.parentPungTime = parentPungTime
     }
@@ -226,18 +227,35 @@ private extension WriteCardViewReactor {
         
         if case .default = imageType, let imageName = imageName {
             
-            return self.cardUseCase.writeCard(
-                isDistanceShared: isDistanceShared,
-                latitude: coordinate.latitude,
-                longitude: coordinate.longitude,
-                content: trimedContent,
-                font: font.rawValue,
-                imgType: BaseCardInfo.ImageType.default.rawValue,
-                imgName: imageName,
-                isStory: isStory,
-                tags: tags
-            )
-            .map(Mutation.writeCard)
+            if self.requestType == .card {
+                
+                return self.cardUseCase.writeCard(
+                    isDistanceShared: isDistanceShared,
+                    latitude: coordinate.latitude,
+                    longitude: coordinate.longitude,
+                    content: trimedContent,
+                    font: font.rawValue,
+                    imgType: BaseCardInfo.ImageType.default.rawValue,
+                    imgName: imageName,
+                    isStory: isStory,
+                    tags: tags
+                )
+                .map(Mutation.writeCard)
+            } else {
+                
+                return self.cardUseCase.writeComment(
+                    id: self.parentCardId ?? "",
+                    isDistanceShared: isDistanceShared,
+                    latitude: coordinate.latitude,
+                    longitude: coordinate.longitude,
+                    content: trimedContent,
+                    font: font.rawValue,
+                    imgType: BaseCardInfo.ImageType.default.rawValue,
+                    imgName: imageName,
+                    tags: tags
+                )
+                .map(Mutation.writeCard)
+            }
         }
         
         if case .user = imageType, let image = self.currentState.userImage {
@@ -247,18 +265,35 @@ private extension WriteCardViewReactor {
                 .flatMapLatest { object, imageName -> Observable<Mutation> in
                     guard let imageName = imageName else { return .just(.writeCard(false)) }
                     
-                    return object.cardUseCase.writeCard(
-                        isDistanceShared: isDistanceShared,
-                        latitude: coordinate.latitude,
-                        longitude: coordinate.longitude,
-                        content: trimedContent,
-                        font: font.rawValue,
-                        imgType: BaseCardInfo.ImageType.user.rawValue,
-                        imgName: imageName,
-                        isStory: isStory,
-                        tags: tags
-                    )
-                    .map(Mutation.writeCard)
+                    if self.requestType == .card {
+                        
+                        return object.cardUseCase.writeCard(
+                            isDistanceShared: isDistanceShared,
+                            latitude: coordinate.latitude,
+                            longitude: coordinate.longitude,
+                            content: trimedContent,
+                            font: font.rawValue,
+                            imgType: BaseCardInfo.ImageType.user.rawValue,
+                            imgName: imageName,
+                            isStory: isStory,
+                            tags: tags
+                        )
+                        .map(Mutation.writeCard)
+                    } else {
+                        
+                        return object.cardUseCase.writeComment(
+                            id: object.parentCardId ?? "",
+                            isDistanceShared: isDistanceShared,
+                            latitude: coordinate.latitude,
+                            longitude: coordinate.longitude,
+                            content: trimedContent,
+                            font: font.rawValue,
+                            imgType: BaseCardInfo.ImageType.user.rawValue,
+                            imgName: imageName,
+                            tags: tags
+                        )
+                        .map(Mutation.writeCard)
+                    }
                 }
         }
         

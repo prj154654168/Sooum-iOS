@@ -23,6 +23,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     enum Text {
         static let navigationTitle: String = "새로운 카드"
+        static let commentNavigationTitle: String = "댓글카드"
         static let navigationWriteButtonTitle: String = "완료"
         
         static let pretendardTitle: String = "프리텐다드"
@@ -92,9 +93,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         ]
     }
     
-    private let selectOptionsView = SelectOptionsView().then {
-        $0.items = [.distanceShare, .story]
-    }
+    private let selectOptionsView = SelectOptionsView()
     
     private let relatedTagsView = RelatedTagsView().then {
         $0.isHidden = true
@@ -125,7 +124,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     override func setupNaviBar() {
         super.setupNaviBar()
         
-        self.navigationBar.title = Text.navigationTitle
+        self.navigationBar.title = self.reactor?.requestType == .card ? Text.navigationTitle : Text.commentNavigationTitle
         self.navigationBar.setRightButtons([self.writeButton])
     }
     
@@ -181,6 +180,15 @@ class WriteCardViewController: BaseNavigationViewController, View {
     // MARK: ReactorKit - bind
     
     func bind(reactor: WriteCardViewReactor) {
+        
+        var options: [SelectOptionItem.OptionType] {
+            if reactor.requestType == .card {
+                return [.distanceShare, .story]
+            } else {
+                return [.distanceShare]
+            }
+        }
+        self.selectOptionsView.items = options
         
         self.writeCardView.textViewDidBeginEditing
             .observe(on: MainScheduler.asyncInstance)
