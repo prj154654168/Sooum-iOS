@@ -12,7 +12,7 @@ import Alamofire
 
 enum ReportRequest: BaseRequest {
 
-    case reportCard(id: String, reportType: ReportViewReactor.ReportType)
+    case reportCard(id: String, reportType: ReportType)
     case blockMember(id: String)
     case cancelBlockMember(id: String)
     

@@ -1,5 +1,5 @@
 //
-//  HomeCardInfoResponse.swift
+//  BaseCardInfoResponse.swift
 //  SOOUM
 //
 //  Created by 오현식 on 9/28/25.
@@ -7,19 +7,19 @@
 
 import Alamofire
 
-struct HomeCardInfoResponse {
+struct BaseCardInfoResponse {
     
     let cardInfos: [BaseCardInfo]
 }
 
-extension HomeCardInfoResponse: EmptyResponse {
+extension BaseCardInfoResponse: EmptyResponse {
     
-    static func emptyValue() -> HomeCardInfoResponse {
-        HomeCardInfoResponse(cardInfos: [])
+    static func emptyValue() -> BaseCardInfoResponse {
+        BaseCardInfoResponse(cardInfos: [])
     }
 }
 
-extension HomeCardInfoResponse: Decodable {
+extension BaseCardInfoResponse: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case cardInfos

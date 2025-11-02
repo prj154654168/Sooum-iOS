@@ -19,10 +19,19 @@ protocol CardUseCase {
     func distanceCard(lastId: String?, latitude: String, longitude: String, distanceFilter: String) -> Observable<[BaseCardInfo]>
     
     
+    // MARK: Detail
+    
+    func detailCard(id: String, latitude: String?, longitude: String?) -> Observable<DetailCardInfo>
+    func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<[BaseCardInfo]>
+    func deleteCard(id: String) -> Observable<Bool>
+    func updateLike(id: String, isLike: Bool) -> Observable<Bool>
+    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Bool>
+    func reportCard(id: String, reportType: String) -> Observable<Bool>
+    
+    
     // MARK: Write
     
     func defaultImages() -> Observable<DefaultImages>
-    
     func writeCard(
         isDistanceShared: Bool,
         latitude: String?,
@@ -32,6 +41,17 @@ protocol CardUseCase {
         imgType: String,
         imgName: String,
         isStory: Bool,
+        tags: [String]
+    ) -> Observable<Bool>
+    func writeComment(
+        id: String,
+        isDistanceShared: Bool,
+        latitude: String?,
+        longitude: String?,
+        content: String,
+        font: String,
+        imgType: String,
+        imgName: String,
         tags: [String]
     ) -> Observable<Bool>
 }

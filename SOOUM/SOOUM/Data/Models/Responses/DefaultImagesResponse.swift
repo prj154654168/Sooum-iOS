@@ -8,6 +8,7 @@
 import Alamofire
 
 struct DefaultImagesResponse: Decodable {
+    
     let defaultImages: DefaultImages
 }
 

@@ -28,13 +28,14 @@ enum CardRequest: BaseRequest {
     case detailCard(id: String, latitude: String?, longitude: String?)
     /// 상세보기 - 답카드
     case commentCard(id: String, lastId: String?, latitude: String?, longitude: String?)
-    /// 상세보기 - 답카드 좋아요 정보
-    case cardSummary(id: String)
     /// 상세보기 - 카드 삭제
     case deleteCard(id: String)
     /// 상세보기 - 좋아요 업데이트
     case updateLike(id: String, isLike: Bool)
-    
+    /// 상세보기 - 차단
+    case updateBlocked(id: String, isBlocked: Bool)
+    /// 상세보기 - 신고
+    case reportCard(id: String, reportType: String)
     
     // MARK: Write
     
@@ -56,13 +57,13 @@ enum CardRequest: BaseRequest {
     case writeComment(
         id: String,
         isDistanceShared: Bool,
-        latitude: String,
-        longitude: String,
+        latitude: String?,
+        longitude: String?,
         content: String,
         font: String,
         imgType: String,
         imgName: String,
-        commentTags: [String]
+        tags: [String]
     )
     /// 글추가 - 관련 태그 조회
     case relatedTags(keyword: String, size: Int)
@@ -70,47 +71,56 @@ enum CardRequest: BaseRequest {
     var path: String {
         switch self {
         case let .latestCard(lastId, _, _):
+            
             if let lastId = lastId {
                 return "/api/cards/feeds/latest/\(lastId)"
             } else {
                 return "/api/cards/feeds/latest"
             }
-            
         case .popularCard:
-            return "/api/cards/feeds/popular"
             
+            return "/api/cards/feeds/popular"
         case let .distancCard(lastId, _, _, _):
+            
             if let lastId = lastId{
                 return "/api/cards/feeds/distance/\(lastId)"
             } else {
                 return "/api/cards/feeds/distance"
             }
-            
+        
         case let .detailCard(id, _, _):
-            return "/cards/\(id)/detail"
+            return "/api/cards/\(id)"
             
-        case let .commentCard(id, _, _, _):
-            return "/comments/current/\(id)"
+        case let .commentCard(id, lastId, _, _):
             
-        case let .cardSummary(id):
-            return "/cards/current/\(id)/summary"
-            
+            if let lastId = lastId {
+                return "/api/cards/\(id)/comments/\(lastId)"
+            } else {
+                return "/api/cards/\(id)/comments"
+            }
         case let .deleteCard(id):
-            return "/cards/\(id)"
             
+            return "/api/cards/\(id)"
         case let .updateLike(id, _):
-            return "/cards/\(id)/like"
             
+            return "/api/cards/\(id)/like"
+        case let .updateBlocked(id, _):
+            
+            return "/api/blocks/\(id)"
+        case let .reportCard(id, _):
+            return "/api/reports/cards/\(id)"
             
         case .defaultImages:
+            
             return "/api/images/defaults"
         case .writeCard:
+            
             return "/api/cards"
-            
         case let .writeComment(id, _, _, _, _, _, _, _, _):
-            return "/cards/\(id)"
             
+            return "/api/cards/\(id)"
         case let .relatedTags(_, size):
+            
             return "/api/tags/related/\(size)"
         }
     }
@@ -119,10 +129,12 @@ enum CardRequest: BaseRequest {
         switch self {
         case .deleteCard:
             return .delete
-        case .writeCard, .writeComment, .relatedTags:
+        case .reportCard, .writeCard, .writeComment, .relatedTags:
             return .post
         case let .updateLike(_, isLike):
             return isLike ? .post : .delete
+        case let .updateBlocked(_, isBlocked):
+            return isBlocked ? .post : .delete
         default:
             return .get
         }
@@ -131,39 +143,40 @@ enum CardRequest: BaseRequest {
     var parameters: Parameters {
         switch self {
         case let .latestCard(_, latitude, longitude):
+            
             if let latitude = latitude, let longitude = longitude {
                 return ["latitude": latitude, "longitude": longitude]
             } else {
                 return [:]
             }
-            
         case let .popularCard(latitude, longitude):
+            
             if let latitude = latitude, let longitude = longitude {
                 return ["latitude": latitude, "longitude": longitude]
             } else {
                 return [:]
             }
-            
         case let .distancCard(_, latitude, longitude, distanceFilter):
+            
             return ["latitude": latitude, "longitude": longitude, "distance": distanceFilter]
             
         case let .detailCard(_, latitude, longitude):
+            
             if let latitude = latitude, let longitude = longitude {
                 return ["latitude": latitude, "longitude": longitude]
             } else {
                 return [:]
             }
-        
-        case let .commentCard(_, lastId, latitude, longitude):
-            var params: Parameters = [:]
-            if let lastId = lastId {
-                params.updateValue(lastId, forKey: "lastId")
-            }
+        case let .commentCard(_, _, latitude, longitude):
+            
             if let latitude = latitude, let longitude = longitude {
-                params.updateValue(latitude, forKey: "latitude")
-                params.updateValue(longitude, forKey: "longitude")
+                return ["latitude": latitude, "longitude": longitude]
+            } else {
+                return [:]
             }
-            return params
+        case let .reportCard(_, reportType):
+            
+            return ["reportType": reportType]
             
         case let .writeCard(
             isDistanceShared,
@@ -176,6 +189,7 @@ enum CardRequest: BaseRequest {
             isStory,
             tags
         ):
+            
             var parameters: [String: Any] = [
                 "isDistanceShared": isDistanceShared,
                 "content": content,
@@ -192,7 +206,6 @@ enum CardRequest: BaseRequest {
             }
             
             return parameters
-            
         case let .writeComment(
             _,
             isDistanceShared,
@@ -202,28 +215,26 @@ enum CardRequest: BaseRequest {
             font,
             imgType,
             imgName,
-            commentTags
+            tags
         ):
+            
             var parameters: [String: Any] = [
                 "isDistanceShared": isDistanceShared,
                 "content": content,
                 "font": font,
                 "imgType": imgType,
                 "imgName": imgName,
+                "tags": tags
             ]
             
-            if isDistanceShared {
+            if isDistanceShared, let latitude = latitude, let longitude = longitude {
                 parameters.updateValue(latitude, forKey: "latitude")
                 parameters.updateValue(longitude, forKey: "longitude")
             }
             
-            if commentTags.isEmpty == false {
-                parameters.updateValue(commentTags, forKey: "commentTags")
-            }
-            
             return parameters
-            
         case let .relatedTags(keyword, _):
+            
             return ["tag": keyword]
         
         default:
@@ -233,7 +244,7 @@ enum CardRequest: BaseRequest {
 
     var encoding: ParameterEncoding {
         switch self {
-        case .updateLike, .writeCard, .writeComment, .relatedTags:
+        case .reportCard, .writeCard, .writeComment, .relatedTags:
             return JSONEncoding.default
         default:
             return URLEncoding.default
