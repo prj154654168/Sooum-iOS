@@ -302,11 +302,59 @@ extension NotificationViewController: UITableViewDelegate {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         case let .unread(notification):
-            // TODO: 상세보기 화면 전환
-            return
+            
+            var detailInfo: (detailType: DetailViewReactor.DetailType, id: String)? {
+                switch notification {
+                case let .default(notification):
+                    if case .feedLike = notification.notificationInfo.notificationType {
+                        return (.feed, notification.targetCardId)
+                    }
+                    if case .commentLike = notification.notificationInfo.notificationType {
+                        return (.comment, notification.targetCardId)
+                    }
+                    if case .commentWrite = notification.notificationInfo.notificationType {
+                        return (.comment, notification.targetCardId)
+                    }
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            guard let detailInfo = detailInfo else { return }
+            
+            let detailViewController = DetailViewController()
+            detailViewController.reactor = self.reactor?.reactorForDetail(
+                detailType: detailInfo.detailType,
+                with: detailInfo.id
+            )
+            self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
         case let .read(notification):
-            // TODO: 상세보기 화면 전환
-            return
+            
+            var detailInfo: (detailType: DetailViewReactor.DetailType, id: String)? {
+                switch notification {
+                case let .default(notification):
+                    if case .feedLike = notification.notificationInfo.notificationType {
+                        return (.feed, notification.targetCardId)
+                    }
+                    if case .commentLike = notification.notificationInfo.notificationType {
+                        return (.comment, notification.targetCardId)
+                    }
+                    if case .commentWrite = notification.notificationInfo.notificationType {
+                        return (.comment, notification.targetCardId)
+                    }
+                    return nil
+                default:
+                    return nil
+                }
+            }
+            guard let detailInfo = detailInfo else { return }
+            
+            let detailViewController = DetailViewController()
+            detailViewController.reactor = self.reactor?.reactorForDetail(
+                detailType: detailInfo.detailType,
+                with: detailInfo.id
+            )
+            self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
         default:
             return
         }

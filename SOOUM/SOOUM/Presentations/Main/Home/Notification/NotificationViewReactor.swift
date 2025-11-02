@@ -162,6 +162,24 @@ class NotificationViewReactor: Reactor {
     }
 }
 
+private extension NotificationViewReactor {
+    
+    func moreNotification(
+        _ activityType: DisplayType.ActivityType,
+        with lastId: String
+    ) -> Observable<Mutation> {
+        
+        switch activityType {
+        case .unread:
+            return self.notificationUseCase.unreadNotifications(lastId: lastId)
+                .map { .more(unreads: $0, reads: []) }
+        case .read:
+            return self.notificationUseCase.readNotifications(lastId: lastId)
+                .map { .more(unreads: [], reads: $0) }
+        }
+    }
+}
+
 extension NotificationViewReactor {
     
     var catchClosureNotis: ((Error) throws -> Observable<Mutation> ) {
@@ -211,20 +229,9 @@ extension NotificationViewReactor {
     }
 }
 
-private extension NotificationViewReactor {
+extension NotificationViewReactor {
     
-    func moreNotification(
-        _ activityType: DisplayType.ActivityType,
-        with lastId: String
-    ) -> Observable<Mutation> {
-        
-        switch activityType {
-        case .unread:
-            return self.notificationUseCase.unreadNotifications(lastId: lastId)
-                .map { .more(unreads: $0, reads: []) }
-        case .read:
-            return self.notificationUseCase.readNotifications(lastId: lastId)
-                .map { .more(unreads: [], reads: $0) }
-        }
+    func reactorForDetail(detailType: DetailViewReactor.DetailType, with id: String) -> DetailViewReactor {
+        DetailViewReactor(dependencies: self.dependencies, detailType, type: .navi, with: id)
     }
 }

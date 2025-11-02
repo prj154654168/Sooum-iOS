@@ -293,4 +293,8 @@ extension HomeViewReactor {
     func reactorForNotification(with displayType: NotificationViewReactor.DisplayType = .activity(.unread)) -> NotificationViewReactor {
         NotificationViewReactor(dependencies: self.dependencies, displayType: displayType)
     }
+    
+    func reactorForDetail(with id: String) -> DetailViewReactor {
+        DetailViewReactor(dependencies: self.dependencies, .feed, with: id)
+    }
 }

@@ -549,7 +549,27 @@ extension HomeViewController: SOMPageViewsDelegate {
 extension HomeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // TODO: 상세보기 화면 전환 필요
+        
+        guard let item = self.dataSource.itemIdentifier(for: indexPath),
+              let reactor = self.reactor
+        else { return }
+        
+        var selectedId: String {
+            switch item {
+            case let .latest(selectedCard):
+                return selectedCard.id
+            case let .popular(selectedCard):
+                return selectedCard.id
+            case let .distance(selectedCard):
+                return selectedCard.id
+            case .empty:
+                return ""
+            }
+        }
+        
+        let detailViewController = DetailViewController()
+        detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
+        self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
