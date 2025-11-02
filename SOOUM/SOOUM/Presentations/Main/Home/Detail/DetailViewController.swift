@@ -278,7 +278,7 @@ class DetailViewController: BaseNavigationViewController, View {
              .observe(on: MainScheduler.asyncInstance)
              .filter { $0 == false }
              .subscribe(with: self.collectionView) { collectionView, _ in
-                 collectionView.refreshControl?.endRefreshing()
+                 collectionView.refreshControl?.endRefreshingWithOffset()
              }
              .disposed(by: self.disposeBag)
          
@@ -559,7 +559,9 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
     ) {
         
         if self.shouldRefreshing {
-            self.collectionView.refreshControl?.beginRefreshing()
+            self.collectionView.refreshControl?.beginRefreshingWithOffset(
+                self.detailCard.storyExpirationTime == nil ? 0 : 30
+            )
         }
     }
 }

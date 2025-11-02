@@ -684,10 +684,10 @@
 		38E928D12EB75FA300B3F00B /* PungView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928CF2EB75F9900B3F00B /* PungView.swift */; };
 		38E928D32EB7624300B3F00B /* FloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D22EB7623A00B3F00B /* FloatingButton.swift */; };
 		38E928D42EB7624300B3F00B /* FloatingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D22EB7623A00B3F00B /* FloatingButton.swift */; };
-		38E928D62EB76CD500B3F00B /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D52EB76CD100B3F00B /* UIRefreshControl.swift */; };
-		38E928D72EB76CD500B3F00B /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D52EB76CD100B3F00B /* UIRefreshControl.swift */; };
 		38E928D92EB7727400B3F00B /* SOMBottomToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D82EB7726E00B3F00B /* SOMBottomToastView.swift */; };
 		38E928DA2EB7727400B3F00B /* SOMBottomToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928D82EB7726E00B3F00B /* SOMBottomToastView.swift */; };
+		38E928DC2EB7921200B3F00B /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928DB2EB7920C00B3F00B /* UIRefreshControl.swift */; };
+		38E928DD2EB7921200B3F00B /* UIRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928DB2EB7920C00B3F00B /* UIRefreshControl.swift */; };
 		38E9CE102D376E0E00E85A2D /* PushTokenSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */; };
 		38E9CE112D376E0E00E85A2D /* PushTokenSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */; };
 		38E9CE132D37711600E85A2D /* OnboardingViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */; };
@@ -1119,8 +1119,8 @@
 		38E928CC2EB7408E00B3F00B /* WrittenTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrittenTags.swift; sourceTree = "<group>"; };
 		38E928CF2EB75F9900B3F00B /* PungView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PungView.swift; sourceTree = "<group>"; };
 		38E928D22EB7623A00B3F00B /* FloatingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingButton.swift; sourceTree = "<group>"; };
-		38E928D52EB76CD100B3F00B /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
 		38E928D82EB7726E00B3F00B /* SOMBottomToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMBottomToastView.swift; sourceTree = "<group>"; };
+		38E928DB2EB7920C00B3F00B /* UIRefreshControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIRefreshControl.swift; sourceTree = "<group>"; };
 		38E9CE0F2D376E0E00E85A2D /* PushTokenSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushTokenSet.swift; sourceTree = "<group>"; };
 		38E9CE122D37711600E85A2D /* OnboardingViewReactor.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = OnboardingViewReactor.swift; sourceTree = "<group>"; tabWidth = 4; };
 		38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingTokenInterceptor.swift; sourceTree = "<group>"; };
@@ -2098,7 +2098,7 @@
 		388371FF2C8C8FC2004212EB /* Cocoa */ = {
 			isa = PBXGroup;
 			children = (
-				38E928D52EB76CD100B3F00B /* UIRefreshControl.swift */,
+				38E928DB2EB7920C00B3F00B /* UIRefreshControl.swift */,
 				38FCF41B2EA00623003AC3D8 /* UITtextView.swift */,
 				386712C32E97734800541389 /* UITextField.swift */,
 				388372002C8C8FCF004212EB /* UIColor.swift */,
@@ -3206,12 +3206,12 @@
 				3803CF7E2D016DA200FD90DB /* TransferCodeResponse.swift in Sources */,
 				3834FADE2D11C5AC00C9108D /* SimpleCache.swift in Sources */,
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
+				38E928DC2EB7921200B3F00B /* UIRefreshControl.swift in Sources */,
 				38899EAA2E799C630030F7CA /* VersionRequest.swift in Sources */,
 				38FEBE5B2E8652DE002916A8 /* CompositeNotificationInfoResponse.swift in Sources */,
 				2A980BA92D803F04007DFA45 /* GAManager.swift in Sources */,
 				3880EF782EA0CF2F00D88608 /* RelatedTagsViewLayout.swift in Sources */,
 				2AFF95752CF5F08700CBFB12 /* TagPreviewCardCollectionViewCell.swift in Sources */,
-				38E928D62EB76CD500B3F00B /* UIRefreshControl.swift in Sources */,
 				38FEBE642E8662A3002916A8 /* NoticeInfoResponse.swift in Sources */,
 				38899E722E79402C0030F7CA /* ImageUrlInfo.swift in Sources */,
 				2AFD05472CFF75DD007C84AD /* FavoriteTagsResponse.swift in Sources */,
@@ -3587,12 +3587,12 @@
 				38899EA92E799C630030F7CA /* VersionRequest.swift in Sources */,
 				38FEBE5C2E8652DE002916A8 /* CompositeNotificationInfoResponse.swift in Sources */,
 				2A980BA82D803F04007DFA45 /* GAManager.swift in Sources */,
+				38E928DD2EB7921200B3F00B /* UIRefreshControl.swift in Sources */,
 				38FEBE652E8662A3002916A8 /* NoticeInfoResponse.swift in Sources */,
 				38899E712E79402C0030F7CA /* ImageUrlInfo.swift in Sources */,
 				2AFD055D2D009513007C84AD /* TagDetailNavigationBarView.swift in Sources */,
 				3880EF772EA0CF2F00D88608 /* RelatedTagsViewLayout.swift in Sources */,
 				3889A25D2E79BB340030F7CA /* UserRepository.swift in Sources */,
-				38E928D72EB76CD500B3F00B /* UIRefreshControl.swift in Sources */,
 				385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				38899E7D2E794B420030F7CA /* SignUpResponse.swift in Sources */,
 				3803CF692D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */,
