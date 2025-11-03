@@ -36,17 +36,17 @@ class DetailViewReactor: Reactor {
         case updateIsRefreshing(Bool)
         case updateIsLiked(Bool)
         case updateIsBlocked(Bool)
-        case updateIsDeleted(Bool?)
+        case updateIsDeleted(Bool)
         case updateErrors(Int?)
     }
     
     struct State {
         fileprivate(set) var detailCard: DetailCardInfo?
         fileprivate(set) var commentCards: [BaseCardInfo]
-        fileprivate(set) var isRefreshing: Bool
-        fileprivate(set) var isLiked: Bool
-        fileprivate(set) var isBlocked: Bool
-        fileprivate(set) var isDeleted: Bool?
+        @Pulse fileprivate(set) var isRefreshing: Bool
+        @Pulse fileprivate(set) var isLiked: Bool
+        @Pulse fileprivate(set) var isBlocked: Bool
+        @Pulse fileprivate(set) var isDeleted: Bool
         fileprivate(set) var hasErrors: Int?
     }
     
@@ -56,7 +56,7 @@ class DetailViewReactor: Reactor {
         isRefreshing: false,
         isLiked: false,
         isBlocked: false,
-        isDeleted: nil,
+        isDeleted: false,
         hasErrors: nil
     )
     

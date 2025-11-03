@@ -264,7 +264,7 @@ class DetailViewController: BaseNavigationViewController, View {
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
-         let isRefreshing = reactor.state.map(\.isRefreshing).distinctUntilChanged().share()
+         let isRefreshing = reactor.state.map(\.isRefreshing).share()
          self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
              .withLatestFrom(isRefreshing)
              .filter { $0 == false }
@@ -311,7 +311,6 @@ class DetailViewController: BaseNavigationViewController, View {
              .disposed(by: disposeBag)
          
          reactor.state.map(\.isLiked)
-             .distinctUntilChanged()
              .filter { $0 }
              .subscribe(with: self) { object, _ in
                  NotificationCenter.default.post(name: .reloadData, object: object)
@@ -319,7 +318,6 @@ class DetailViewController: BaseNavigationViewController, View {
              .disposed(by: self.disposeBag)
          
          reactor.state.map(\.isBlocked)
-             .distinctUntilChanged()
              .filter { $0 }
              .subscribe(with: self) { object, _ in
                  
@@ -340,8 +338,6 @@ class DetailViewController: BaseNavigationViewController, View {
              .disposed(by: self.disposeBag)
          
          reactor.state.map(\.isDeleted)
-             .filterNil()
-             .distinctUntilChanged()
              .filter { $0 }
              .subscribe(with: self) { object, _ in
                  object.navigationBar.title = Text.deletedNavigationTitle
