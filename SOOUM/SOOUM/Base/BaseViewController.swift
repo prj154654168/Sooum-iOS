@@ -38,13 +38,9 @@ class BaseViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    /// Show deinit class name
+    /// show deinit class name and remove all observer
     deinit {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: .hidesBottomBarWhenPushedDidChange,
-            object: nil
-        )
+        NotificationCenter.default.removeObserver(self)
         Log.debug("Deinit: ", type(of: self).description().components(separatedBy: ".").last ?? "")
     }
 

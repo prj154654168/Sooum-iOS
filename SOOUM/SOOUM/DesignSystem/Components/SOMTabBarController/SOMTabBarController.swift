@@ -10,6 +10,9 @@ import UIKit
 import SnapKit
 import Then
 
+
+// MARK: SOMTabBarControllerDelegate
+
 protocol SOMTabBarControllerDelegate: AnyObject {
     
     func tabBarController(
@@ -26,6 +29,9 @@ protocol SOMTabBarControllerDelegate: AnyObject {
 
 class SOMTabBarController: UIViewController {
     
+    
+    // MARK: Views
+    
     private lazy var tabBar = SOMTabBar().then {
         $0.delegate = self
     }
@@ -33,6 +39,9 @@ class SOMTabBarController: UIViewController {
     private lazy var container = UIView().then {
         $0.backgroundColor = .som.white
     }
+    
+    
+    // MARK: Variables
     
     var viewControllers: [UIViewController] = [] {
         didSet { self.tabBar.viewControllers = self.viewControllers }
@@ -42,6 +51,20 @@ class SOMTabBarController: UIViewController {
     var selectedViewController: UIViewController?
     
     weak var delegate: SOMTabBarControllerDelegate?
+    
+    
+    // MARK: Deinitialize
+    
+    deinit {
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .hidesBottomBarWhenPushedDidChange,
+            object: nil
+        )
+    }
+    
+    
+    // MARK: Override func
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +78,9 @@ class SOMTabBarController: UIViewController {
         
         self.setupConstraints()
     }
+    
+    
+    // MARK: Private func
     
     private func setupConstraints() {
         
@@ -70,6 +96,9 @@ class SOMTabBarController: UIViewController {
             $0.height.equalTo(88)
         }
     }
+    
+    
+    // MARK: Objc func
     
     @objc
     private func hidesBottomBarWhenPushed(_ notification: Notification) {
@@ -87,11 +116,17 @@ class SOMTabBarController: UIViewController {
         }
     }
     
+    
+    // MARK: Public func
+    
     func didSelectedIndex(_ index: Int) {
         
         self.tabBar.didSelectTabBarItem(index)
     }
 }
+
+
+// MARK: SOMTabBarDelegate
 
 extension SOMTabBarController: SOMTabBarDelegate {
     
