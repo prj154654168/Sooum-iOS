@@ -14,7 +14,6 @@ extension UIRefreshControl {
             scrollView.contentInset.top = offset
         }
         self.beginRefreshing()
-        self.sendActions(for: .valueChanged)
     }
     
     func endRefreshingWithOffset() {
