@@ -312,13 +312,6 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: disposeBag)
          
-         reactor.state.map(\.isLiked)
-             .filter { $0 }
-             .subscribe(with: self) { object, _ in
-                 NotificationCenter.default.post(name: .reloadData, object: object)
-             }
-             .disposed(by: self.disposeBag)
-         
          reactor.state.map(\.isBlocked)
              .filter { $0 }
              .subscribe(with: self) { object, _ in
