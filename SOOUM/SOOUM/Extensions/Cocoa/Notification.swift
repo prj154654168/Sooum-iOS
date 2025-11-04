@@ -18,4 +18,6 @@ extension Notification.Name {
     static let scollingToTopWithAnimation = Notification.Name("scollingToTopWithAnimation")
     /// Should reload
     static let reloadData = Notification.Name("reloadData")
+    /// Updated report state
+    static let updatedReportState = Notification.Name("updatedReportState")
 }

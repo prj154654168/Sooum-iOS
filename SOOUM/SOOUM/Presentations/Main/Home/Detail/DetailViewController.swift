@@ -34,6 +34,7 @@ class DetailViewController: BaseNavigationViewController, View {
          static let bottomToastEntryName: String = "bottomToastEntryName"
          
          static let blockButtonFloatActionTitle: String = "차단하기"
+         static let unblockButtonFloatActionTitle: String = "차단해제"
          static let reportButtonFloatActionTitle: String = "신고하기"
          static let deleteButtonFloatActionTitle: String = "삭제"
          
@@ -112,6 +113,8 @@ class DetailViewController: BaseNavigationViewController, View {
     private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
     private var shouldRefreshing: Bool = false
+    
+    private var actions: [SOMBottomFloatView.FloatAction] = []
      
      
      // MARK: Override func
@@ -123,6 +126,13 @@ class DetailViewController: BaseNavigationViewController, View {
             self,
             selector: #selector(self.reloadData(_:)),
             name: .reloadData,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.updatedReportState(_:)),
+            name: .updatedReportState,
             object: nil
         )
     }
@@ -173,76 +183,6 @@ class DetailViewController: BaseNavigationViewController, View {
                  }
              }
              .disposed(by: self.disposeBag)
-         
-         self.rightMoreButton.rx.throttleTap
-             .subscribe(with: self) { object, _ in
-                 
-                 var actions: [SOMBottomFloatView.FloatAction] {
-                     
-                     if object.detailCard.isOwnCard {
-                         
-                         return [
-                            .init(
-                                title: Text.deleteButtonFloatActionTitle,
-                                image: .init(.icon(.v2(.outlined(.trash)))),
-                                foregroundColor: .som.v2.rMain,
-                                action: { [weak object] in
-                                    SwiftEntryKit.dismiss(.specific(entryName: Text.bottomFloatEntryName)) {
-                                        
-                                        object?.showDeleteCardDialog()
-                                    }
-                                }
-                            )
-                         ]
-                     } else {
-                         
-                         return [
-                            .init(
-                                title: Text.blockButtonFloatActionTitle,
-                                image: .init(.icon(.v2(.outlined(.hide)))),
-                                action: { [weak object] in
-                                    SwiftEntryKit.dismiss(.specific(entryName: Text.bottomFloatEntryName)) {
-                                        
-                                        object?.showBlockedUserDialog()
-                                    }
-                                }
-                            ),
-                            .init(
-                                title: Text.reportButtonFloatActionTitle,
-                                image: .init(.icon(.v2(.outlined(.flag)))),
-                                foregroundColor: .som.v2.rMain,
-                                action: { [weak object] in
-                                    guard let object = object, let reactor = object.reactor else { return }
-                                    
-                                    SwiftEntryKit.dismiss(.specific(entryName: Text.bottomFloatEntryName)) {
-                                        
-                                        let reportViewController = ReportViewController()
-                                        reportViewController.reactor = reactor.reactorForReport()
-                                        object.navigationPush(reportViewController, animated: true, bottomBarHidden: true)
-                                    }
-                                }
-                            )
-                         ]
-                     }
-                 }
-                 
-                 let bottomFloatView = SOMBottomFloatView(actions: actions)
-                 
-                 var wrapper: SwiftEntryKitViewWrapper = bottomFloatView.sek
-                 wrapper.entryName = Text.bottomFloatEntryName
-                 wrapper.showBottomFloat(screenInteraction: .dismiss)
-             }
-             .disposed(by: self.disposeBag)
-         
-         self.rightDeleteButton.rx.throttleTap
-             .subscribe(with: self) { object, _ in
-                 if let navigationController = object.navigationController {
-                     navigationController.popToRootViewController(animated: false)
-                 } else {
-                     object.navigationPop(animated: false)
-                 }
-             }
-             .disposed(by: self.disposeBag)
      }
      
      
@@ -256,6 +196,97 @@ class DetailViewController: BaseNavigationViewController, View {
                  let writeCardViewController = WriteCardViewController()
                  writeCardViewController.reactor = reactor.reactorForWriteCard()
                  object.navigationPush(writeCardViewController, animated: true, bottomBarHidden: true)
+             }
+             .disposed(by: self.disposeBag)
+         
+         let detailCard = reactor.state.map(\.detailCard).filterNil().distinctUntilChanged()
+         let isBlocked = reactor.state.map(\.isBlocked).distinctUntilChanged()
+         let isReported = reactor.state.map(\.isReported).distinctUntilChanged()
+         
+         let rightMoreButtonDidTap = self.rightMoreButton.rx.throttleTap.share()
+         // 더보기 버튼 액션
+         rightMoreButtonDidTap
+             .withLatestFrom(detailCard)
+             .filter { $0.isOwnCard }
+             .subscribe(with: self) { object, _ in
+                 
+                 object.actions = [
+                    .init(
+                        title: Text.deleteButtonFloatActionTitle,
+                        image: .init(.icon(.v2(.outlined(.trash)))),
+                        foregroundColor: .som.v2.rMain,
+                        action: { [weak object] in
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.bottomFloatEntryName)) {
+                                
+                                object?.showDeleteCardDialog()
+                            }
+                        }
+                    )
+                 ]
+                 
+                 let bottomFloatView = SOMBottomFloatView(actions: object.actions)
+                 
+                 var wrapper: SwiftEntryKitViewWrapper = bottomFloatView.sek
+                 wrapper.entryName = Text.bottomFloatEntryName
+                 wrapper.showBottomFloat(screenInteraction: .dismiss)
+             }
+             .disposed(by: self.disposeBag)
+         
+         rightMoreButtonDidTap
+             .withLatestFrom(Observable.combineLatest(detailCard, isBlocked, isReported))
+             .filter { $0.0.isOwnCard == false }
+             .map { ($0.1, $0.2) }
+             .subscribe(with: self) { object, combined in
+                 
+                 let (isBlocked, isReported) = combined
+                 
+                 object.actions = [
+                    .init(
+                        title: isBlocked ? Text.blockButtonFloatActionTitle : Text.unblockButtonFloatActionTitle,
+                        image: .init(.icon(.v2(.outlined(isBlocked ? .hide : .eye)))),
+                        action: { [weak object] in
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.bottomFloatEntryName)) {
+                                if isBlocked {
+                                    object?.showBlockedUserDialog()
+                                } else {
+                                    reactor.action.onNext(.block(isBlocked: false))
+                                }
+                            }
+                        }
+                    ),
+                    .init(
+                        title: Text.reportButtonFloatActionTitle,
+                        image: .init(.icon(.v2(.outlined(.flag)))),
+                        foregroundColor: .som.v2.rMain,
+                        isEnabled: isReported == false,
+                        action: { [weak object] in
+                            
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.bottomFloatEntryName)) {
+                                
+                                let reportViewController = ReportViewController()
+                                reportViewController.reactor = reactor.reactorForReport()
+                                object?.navigationPush(reportViewController, animated: true, bottomBarHidden: true)
+                            }
+                        }
+                    )
+                 ]
+                 
+                 let bottomFloatView = SOMBottomFloatView(actions: object.actions)
+                 
+                 var wrapper: SwiftEntryKitViewWrapper = bottomFloatView.sek
+                 wrapper.entryName = Text.bottomFloatEntryName
+                 wrapper.showBottomFloat(screenInteraction: .dismiss)
+             }
+             .disposed(by: self.disposeBag)
+         
+         // 카드 삭제 후 X 버튼 액션
+         self.rightDeleteButton.rx.throttleTap
+             .subscribe(with: self) { object, _ in
+                 if let navigationController = object.navigationController {
+                     navigationController.popToRootViewController(animated: false)
+                 } else {
+                     object.navigationPop(animated: false)
+                 }
              }
              .disposed(by: self.disposeBag)
          
@@ -284,9 +315,7 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: self.disposeBag)
          
-         reactor.state.map(\.detailCard)
-             .filterNil()
-             .distinctUntilChanged()
+         detailCard
              .observe(on: MainScheduler.asyncInstance)
              .subscribe(with: self) { object, detailCard in
                  object.detailCard = detailCard
@@ -337,9 +366,8 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: self.disposeBag)
          
-         reactor.state.map(\.isBlocked)
-             .distinctUntilChanged()
-             .filter { $0 }
+         isBlocked
+             .filter { $0 == false }
              .observe(on: MainScheduler.asyncInstance)
              .subscribe(with: self) { object, _ in
                  
@@ -377,28 +405,28 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: self.disposeBag)
          
-         reactor.state.map(\.hasErrors)
-             .filterNil()
-             .distinctUntilChanged()
-             .subscribe(with: self) { object, hasErrors in
-                 
-                 switch reactor.entranceType {
-                 case .navi:
-                     object.isDeleted = true
-                     
-                     UIView.performWithoutAnimation {
-                         object.collectionView.reloadData()
-                     }
-                 case .push:
-                     return
-                     // let notificationTabBarController = NotificationTabBarController()
-                     // notificationTabBarController.reactor = reactor.reactorForNoti()
-                     // 
-                     // object.navigationPush(notificationTabBarController, animated: false)
-                     // object.navigationController?.viewControllers.removeAll(where: { $0.isKind(of: DetailViewController.self) })
-                 }
-             }
-             .disposed(by: self.disposeBag)
+         // reactor.state.map(\.hasErrors)
+         //     .filterNil()
+         //     .distinctUntilChanged()
+         //     .subscribe(with: self) { object, hasErrors in
+         //
+         //         switch reactor.entranceType {
+         //         case .navi:
+         //             object.isDeleted = true
+         //
+         //             UIView.performWithoutAnimation {
+         //                 object.collectionView.reloadData()
+         //             }
+         //         case .push:
+         //             return
+         //             let notificationTabBarController = NotificationTabBarController()
+         //             notificationTabBarController.reactor = reactor.reactorForNoti()
+         //
+         //             object.navigationPush(notificationTabBarController, animated: false)
+         //             object.navigationController?.viewControllers.removeAll(where: { $0.isKind(of: DetailViewController.self) })
+         //         }
+         //     }
+         //     .disposed(by: self.disposeBag)
      }
     
     
@@ -408,6 +436,12 @@ class DetailViewController: BaseNavigationViewController, View {
     private func reloadData(_ notification: Notification) {
         
         self.reactor?.action.onNext(.landing)
+    }
+    
+    @objc
+    private func updatedReportState(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.updateReport(true))
     }
  }
 
@@ -463,8 +497,9 @@ extension DetailViewController: UICollectionViewDataSource {
                     object.navigationPop()
                 } else {
                     /// 없다면 새로운 viewController로 naviPush
+                    guard let prevCardId = object.detailCard.prevCardId else { return }
                     let detailViewController = DetailViewController()
-                    detailViewController.reactor = reactor.reactorForPush(object.detailCard.id)
+                    detailViewController.reactor = reactor.reactorForPush(prevCardId)
                     object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
                 }
             }

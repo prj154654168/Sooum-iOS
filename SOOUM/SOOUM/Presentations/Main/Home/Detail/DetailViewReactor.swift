@@ -27,6 +27,7 @@ class DetailViewReactor: Reactor {
         case delete
         case block(isBlocked: Bool)
         case updateLike(Bool)
+        case updateReport(Bool)
     }
     
     enum Mutation {
@@ -35,8 +36,9 @@ class DetailViewReactor: Reactor {
         case moreComment([BaseCardInfo])
         case updateIsRefreshing(Bool)
         case updateIsLiked(Bool)
-        case updateIsBlocked(Bool)
         case updateIsDeleted(Bool)
+        case updateReported(Bool)
+        case updateIsBlocked(Bool)
         case updateErrors(Int?)
     }
     
@@ -45,8 +47,9 @@ class DetailViewReactor: Reactor {
         fileprivate(set) var commentCards: [BaseCardInfo]
         fileprivate(set) var isRefreshing: Bool
         fileprivate(set) var isLiked: Bool
-        fileprivate(set) var isBlocked: Bool
         fileprivate(set) var isDeleted: Bool
+        fileprivate(set) var isReported: Bool
+        fileprivate(set) var isBlocked: Bool
         fileprivate(set) var hasErrors: Int?
     }
     
@@ -55,8 +58,9 @@ class DetailViewReactor: Reactor {
         commentCards: [],
         isRefreshing: false,
         isLiked: false,
-        isBlocked: false,
         isDeleted: false,
+        isReported: false,
+        isBlocked: true,
         hasErrors: nil
     )
     
@@ -113,7 +117,11 @@ class DetailViewReactor: Reactor {
             guard let memberId = self.currentState.detailCard?.memberId else { return .empty() }
             
             return self.cardUseCase.updateBlocked(id: memberId, isBlocked: isBlocked)
-                .map(Mutation.updateIsBlocked)
+                .flatMapLatest { isBlockedSuccess -> Observable<Mutation> in
+                    /// isBlocked == true 일 때, 차단 요청
+                    return isBlockedSuccess ? .just(.updateIsBlocked(isBlocked == false)) : .empty()
+                }
+                .catch(self.catchClosure)
         case let .updateLike(isLike):
             
             return .concat([
@@ -124,7 +132,11 @@ class DetailViewReactor: Reactor {
                     .flatMapLatest { object, _ -> Observable<Mutation> in
                         return .just(.updateIsLiked(true))
                     }
+                    .catch(self.catchClosure)
             ])
+        case let .updateReport(isReported):
+            
+            return .just(.updateReported(isReported))
         }
     }
     
@@ -141,10 +153,12 @@ class DetailViewReactor: Reactor {
             newState.isRefreshing = isRefreshing
         case let .updateIsLiked(isLiked):
             newState.isLiked = isLiked
-        case let .updateIsBlocked(isBlocked):
-            newState.isBlocked = isBlocked
         case let .updateIsDeleted(isDeleted):
             newState.isDeleted = isDeleted
+        case let .updateReported(isReported):
+            newState.isReported = isReported
+        case let .updateIsBlocked(isBlocked):
+            newState.isBlocked = isBlocked
         case let .updateErrors(hasErrors):
             newState.hasErrors = hasErrors
         }
@@ -232,12 +246,22 @@ extension DetailViewReactor {
         return { error in
             
             let nsError = error as NSError
-            return .concat([
-                .just(.updateIsBlocked(false)),
-                .just(.updateIsDeleted(false)),
-                .just(.updateIsRefreshing(false)),
-                .just(.updateErrors(nsError.code))
-            ])
+            // errorCode == 409 일 때, 해당 사용자 중복 차단
+            if case 409 = nsError.code {
+                return .concat([
+                    .just(.updateIsRefreshing(false)),
+                    .just(.updateIsBlocked(false))
+                ])
+            }
+            
+            if case 410 = nsError.code {
+                return .concat([
+                    .just(.updateIsRefreshing(false)),
+                    .just(.updateIsDeleted(true))
+                ])
+            }
+            
+            return .empty()
         }
     }
 }
