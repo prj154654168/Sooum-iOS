@@ -97,7 +97,7 @@ class LikeAndCommentView: UIView {
         
         self.addSubview(self.likeContainer)
         self.likeContainer.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
+            $0.verticalEdges.equalToSuperview()
             $0.leading.equalToSuperview().offset(16)
             $0.width.equalTo(60)
         }
@@ -119,7 +119,7 @@ class LikeAndCommentView: UIView {
         
         self.addSubview(self.commentContainer)
         self.commentContainer.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
+            $0.verticalEdges.equalToSuperview()
             $0.leading.equalTo(self.likeContainer.snp.trailing)
             $0.width.equalTo(60)
         }

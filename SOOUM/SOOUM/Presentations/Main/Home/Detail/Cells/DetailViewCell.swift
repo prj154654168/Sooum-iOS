@@ -141,13 +141,12 @@ class DetailViewCell: UICollectionViewCell {
         
         self.contentView.addSubview(self.memberInfoView)
         self.memberInfoView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.horizontalEdges.equalToSuperview()
+            $0.top.horizontalEdges.equalToSuperview()
         }
         
         self.contentView.addSubview(self.backgroundImageView)
         self.backgroundImageView.snp.makeConstraints {
-            $0.top.equalTo(self.memberInfoView.snp.bottom).offset(8)
+            $0.top.equalTo(self.memberInfoView.snp.bottom)
             $0.centerX.equalToSuperview()
             let size: CGFloat = UIScreen.main.bounds.width - 16 * 2
             $0.size.equalTo(size)
@@ -188,7 +187,7 @@ class DetailViewCell: UICollectionViewCell {
         
         self.contentView.addSubview(self.tags)
         self.tags.snp.makeConstraints {
-            $0.bottom.equalTo(backgroundImageView.snp.bottom).offset(-16)
+            $0.bottom.equalTo(self.backgroundImageView.snp.bottom).offset(-16)
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)
             $0.height.equalTo(28)
@@ -196,13 +195,13 @@ class DetailViewCell: UICollectionViewCell {
         
         self.contentView.addSubview(self.likeAndCommentView)
         self.likeAndCommentView.snp.makeConstraints {
-            $0.top.equalTo(self.backgroundImageView.snp.bottom).offset(12)
+            $0.top.equalTo(self.backgroundImageView.snp.bottom)
             $0.bottom.horizontalEdges.equalToSuperview()
         }
         
         self.contentView.addSubview(self.deletedCardInDetailBackgroundView)
         self.deletedCardInDetailBackgroundView.snp.makeConstraints {
-            $0.top.equalTo(self.memberInfoView.snp.bottom).offset(8)
+            $0.top.equalTo(self.memberInfoView.snp.bottom)
             $0.leading.equalToSuperview().offset(16)
             $0.bottom.trailing.equalToSuperview().offset(-16)
         }
