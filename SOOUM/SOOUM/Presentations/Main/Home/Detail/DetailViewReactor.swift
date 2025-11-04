@@ -43,10 +43,10 @@ class DetailViewReactor: Reactor {
     struct State {
         fileprivate(set) var detailCard: DetailCardInfo?
         fileprivate(set) var commentCards: [BaseCardInfo]
-        @Pulse fileprivate(set) var isRefreshing: Bool
-        @Pulse fileprivate(set) var isLiked: Bool
-        @Pulse fileprivate(set) var isBlocked: Bool
-        @Pulse fileprivate(set) var isDeleted: Bool
+        fileprivate(set) var isRefreshing: Bool
+        fileprivate(set) var isLiked: Bool
+        fileprivate(set) var isBlocked: Bool
+        fileprivate(set) var isDeleted: Bool
         fileprivate(set) var hasErrors: Int?
     }
     
@@ -122,10 +122,7 @@ class DetailViewReactor: Reactor {
                     .filter { $0 }
                     .withUnretained(self)
                     .flatMapLatest { object, _ -> Observable<Mutation> in
-                        return .concat([
-                            object.detailCard(),
-                            .just(.updateIsLiked(true))
-                        ])
+                        return .just(.updateIsLiked(true))
                     }
             ])
         }

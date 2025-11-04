@@ -34,6 +34,37 @@ struct DetailCardInfo: Hashable {
 }
 
 extension DetailCardInfo {
+    
+    func updateLikeCnt(_ likeCnt: Int, with isLike: Bool) -> DetailCardInfo {
+        
+        return DetailCardInfo(
+            id: self.id,
+            likeCnt: likeCnt,
+            commentCnt: self.commentCnt,
+            cardImgName: self.cardImgName,
+            cardImgURL: self.cardImgURL,
+            cardContent: self.cardContent,
+            font: self.font,
+            distance: self.distance,
+            createdAt: self.createdAt,
+            storyExpirationTime: self.storyExpirationTime,
+            isAdminCard: self.isAdminCard,
+            memberId: self.memberId,
+            nickname: self.nickname,
+            profileImgURL: self.profileImgURL,
+            isLike: isLike,
+            isCommentWritten: self.isCommentWritten,
+            tags: self.tags,
+            isOwnCard: self.isOwnCard,
+            visitedCnt: self.visitedCnt,
+            prevCardId: self.prevCardId,
+            isPrevCardDeleted: self.isPrevCardDeleted,
+            prevCardImgURL: self.prevCardImgURL
+        )
+    }
+}
+
+extension DetailCardInfo {
     /// 작성된 태그
     struct Tag: Hashable {
         let id: String

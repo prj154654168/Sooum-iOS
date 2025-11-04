@@ -310,10 +310,37 @@ class DetailViewController: BaseNavigationViewController, View {
                      object.collectionView.reloadData()
                  }
              }
-             .disposed(by: disposeBag)
+             .disposed(by: self.disposeBag)
+         
+         reactor.state.map(\.isLiked)
+             .distinctUntilChanged()
+             .filter { $0 }
+             .observe(on: MainScheduler.asyncInstance)
+             .subscribe(with: self) { object, _ in
+                 
+                 let updated: DetailCardInfo
+                 if object.detailCard.isLike {
+                     
+                     let updatedLikeCnt = object.detailCard.likeCnt - 1
+                     updated = object.detailCard.updateLikeCnt(updatedLikeCnt, with: false)
+                 } else {
+                     
+                     let updatedLikeCnt = object.detailCard.likeCnt + 1
+                     updated = object.detailCard.updateLikeCnt(updatedLikeCnt, with: true)
+                 }
+                 
+                 object.detailCard = updated
+                 
+                 UIView.performWithoutAnimation {
+                     object.collectionView.reloadData()
+                 }
+             }
+             .disposed(by: self.disposeBag)
          
          reactor.state.map(\.isBlocked)
+             .distinctUntilChanged()
              .filter { $0 }
+             .observe(on: MainScheduler.asyncInstance)
              .subscribe(with: self) { object, _ in
                  
                  let title = Text.blockToastLeadingTitle + object.detailCard.nickname + Text.blockToastTrailingTitle
@@ -333,7 +360,9 @@ class DetailViewController: BaseNavigationViewController, View {
              .disposed(by: self.disposeBag)
          
          reactor.state.map(\.isDeleted)
+             .distinctUntilChanged()
              .filter { $0 }
+             .observe(on: MainScheduler.asyncInstance)
              .subscribe(with: self) { object, _ in
                  object.navigationBar.title = Text.deletedNavigationTitle
                  object.navigationBar.setRightButtons([object.rightDeleteButton])
