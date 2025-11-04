@@ -22,6 +22,9 @@ class MemberInfoView: UIView {
     /// 상세보기, 멤버 이미지
     // let memberBackgroundButton = UIButton()
     private let memberImageView = UIImageView().then {
+        $0.backgroundColor = .som.v2.gray300
+        $0.layer.borderColor = UIColor.som.v2.gray300.cgColor
+        $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 36 * 0.5
         $0.clipsToBounds = true
     }
