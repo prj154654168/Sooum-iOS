@@ -178,6 +178,7 @@ extension UIImage.SOOUMType {
             case delete
             case down
             case error
+            case eye
             case flag
             case hash
             case heart

@@ -95,7 +95,14 @@ private extension SOMButton {
             updatedConfig?.background.backgroundColor = self.backgroundColor
             updatedConfig?.background.backgroundColorTransformer = UIConfigurationColorTransformer { _ in
                 // 비활성화 상태일 때, backgroundColor
-                if button.isEnabled == false { return .som.v2.gray200 }
+                if button.isEnabled == false {
+                    switch self.backgroundColor {
+                    case .som.v2.black:     return .som.v2.gray200
+                    case .som.v2.gray100:   return .som.v2.gray200
+                    case .som.v2.white:     return .som.v2.white
+                    default:               return .clear
+                    }
+                }
                 // 선택된 상태일 때, backgroundColor
                 if button.isSelected { return .som.v2.pLight1 }
                 // 하이라이트 상태일 때, backgroundColor
@@ -115,7 +122,14 @@ private extension SOMButton {
             updatedConfig?.background.strokeColor = self.backgroundColor ?? .clear
             updatedConfig?.background.strokeColorTransformer = UIConfigurationColorTransformer { _ in
                 // 비활성화 상태일 때, backgroundColor
-                if button.isEnabled == false { return .som.v2.gray200 }
+                if button.isEnabled == false {
+                    switch self.backgroundColor {
+                    case .som.v2.black:     return .som.v2.gray200
+                    case .som.v2.gray100:   return .som.v2.gray200
+                    case .som.v2.white:     return .som.v2.white
+                    default:               return .clear
+                    }
+                }
                 // 선택된 상태일 때, backgroundColor
                 if button.isSelected { return .som.v2.pMain }
                 // 하이라이트 상태일 때, backgroundColor
@@ -141,7 +155,16 @@ private extension SOMButton {
     func applyConfiguration(to configuration: inout UIButton.Configuration?) {
         
         var foregroundColor: UIColor {
-            return self.isEnabled ? (self.foregroundColor ?? .som.v2.white) : .som.v2.gray400
+            if self.isEnabled == false {
+                switch self.foregroundColor {
+                case .som.v2.white:     return .som.v2.gray400
+                case .som.v2.gray600:   return .som.v2.gray400
+                case .som.v2.gray500:   return .som.v2.gray300
+                default:               return .som.v2.gray300
+                }
+            }
+            
+            return self.foregroundColor ?? .som.v2.white
         }
         
         if let image = self.image {

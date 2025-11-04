@@ -91,6 +91,8 @@ private extension SOMBottomFloatView {
                 
                 $0.contentHorizontalAlignment = .left
                 
+                $0.isEnabled = action.isEnabled
+                
                 $0.tag = action.tag
                 $0.addTarget(self, action: #selector(self.tap(_:)), for: .touchUpInside)
             }
@@ -116,6 +118,7 @@ extension SOMBottomFloatView {
         let tag: Int
         let image: UIImage?
         let foregroundColor: UIColor
+        let isEnabled: Bool
         let title: String
         let action: (() -> Void)
         
@@ -123,12 +126,14 @@ extension SOMBottomFloatView {
             title: String,
             image: UIImage? = nil,
             foregroundColor: UIColor = .som.v2.gray500,
+            isEnabled: Bool = true,
             action: @escaping (() -> Void)
         ) {
             self.tag = UUID().hashValue
             self.title = title
             self.image = image
             self.foregroundColor = foregroundColor
+            self.isEnabled = isEnabled
             self.action = action
         }
     }
