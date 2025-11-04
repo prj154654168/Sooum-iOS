@@ -351,9 +351,6 @@ extension NotificationViewController: UITableViewDelegate {
                         targetCardId: nil,
                         shouldRead: true
                     )
-                default:
-                    
-                    return nil
                 }
             }
             guard let pushOrRequestReadInfo = pushOrRequestReadInfo else { return }
@@ -370,7 +367,7 @@ extension NotificationViewController: UITableViewDelegate {
                             detailType: .feed,
                             notificationId: notification.notificationInfo.notificationId,
                             targetCardId: notification.targetCardId,
-                            shouldRead: true
+                            shouldRead: false
                         )
                     }
                     if case .commentLike = notification.notificationInfo.notificationType {
@@ -378,7 +375,7 @@ extension NotificationViewController: UITableViewDelegate {
                             detailType: .comment,
                             notificationId: notification.notificationInfo.notificationId,
                             targetCardId: notification.targetCardId,
-                            shouldRead: true
+                            shouldRead: false
                         )
                     }
                     if case .commentWrite = notification.notificationInfo.notificationType {
@@ -386,7 +383,7 @@ extension NotificationViewController: UITableViewDelegate {
                             detailType: .comment,
                             notificationId: notification.notificationInfo.notificationId,
                             targetCardId: notification.targetCardId,
-                            shouldRead: true
+                            shouldRead: false
                         )
                     }
                     return nil
