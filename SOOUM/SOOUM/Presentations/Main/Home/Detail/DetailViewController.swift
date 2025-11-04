@@ -266,7 +266,7 @@ class DetailViewController: BaseNavigationViewController, View {
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
-         let isRefreshing = reactor.state.map(\.isRefreshing).share()
+         let isRefreshing = reactor.state.map(\.isRefreshing).distinctUntilChanged().share()
          self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
              .withLatestFrom(isRefreshing)
              .filter { $0 == false }
@@ -280,7 +280,7 @@ class DetailViewController: BaseNavigationViewController, View {
              .observe(on: MainScheduler.asyncInstance)
              .filter { $0 == false }
              .subscribe(with: self.collectionView) { collectionView, _ in
-                 collectionView.refreshControl?.endRefreshingWithOffset()
+                 collectionView.refreshControl?.endRefreshing()
              }
              .disposed(by: self.disposeBag)
          
@@ -409,7 +409,7 @@ extension DetailViewController: UICollectionViewDataSource {
         
         guard let reactor = self.reactor else { return cell }
         
-        cell.likeAndCommentView.likeBackgroundButton.rx.throttleTap
+        cell.likeAndCommentView.likeBackgroundButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(reactor.state.compactMap(\.detailCard).map(\.isLike))
             .subscribe(onNext: { isLike in
                 reactor.action.onNext(.updateLike(isLike == false))
@@ -559,7 +559,7 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         
         if self.shouldRefreshing {
             self.collectionView.refreshControl?.beginRefreshingWithOffset(
-                self.detailCard.storyExpirationTime == nil ? 0 : 30
+                self.detailCard.storyExpirationTime == nil ? 0 : 23
             )
         }
     }
