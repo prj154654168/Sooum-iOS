@@ -24,13 +24,13 @@ class HomePlaceholderViewCell: UITableViewCell {
     
     private let placeholderImageView = UIImageView().then {
         $0.image = .init(.image(.v2(.placeholder_home)))
+        $0.contentMode = .scaleAspectFit
     }
     
     private let placeholderMessageLabel = UILabel().then {
         $0.text = Text.message
         $0.textColor = .som.v2.gray400
         $0.typography = .som.v2.body1
-        $0.textAlignment = .center
     }
     
     
@@ -57,15 +57,15 @@ class HomePlaceholderViewCell: UITableViewCell {
         
         self.contentView.addSubview(self.placeholderImageView)
         self.placeholderImageView.snp.makeConstraints {
-            let offset = UIScreen.main.bounds.height * 0.2
+            let offset = UIScreen.main.bounds.height * 0.1
             $0.top.equalToSuperview().offset(offset)
             $0.centerX.equalToSuperview()
+            $0.height.equalTo(113)
         }
         
         self.contentView.addSubview(self.placeholderMessageLabel)
         self.placeholderMessageLabel.snp.makeConstraints {
             $0.top.equalTo(self.placeholderImageView.snp.bottom).offset(20)
-            $0.bottom.equalToSuperview()
             $0.centerX.equalToSuperview()
         }
     }
