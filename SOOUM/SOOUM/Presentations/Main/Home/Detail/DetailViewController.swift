@@ -77,7 +77,7 @@ class DetailViewController: BaseNavigationViewController, View {
         frame: .zero,
         collectionViewLayout: self.flowLayout
      ).then {
-         $0.backgroundColor = .som.v2.white
+         $0.backgroundColor = .som.v2.gray100
          
          $0.alwaysBounceVertical = true
          $0.showsVerticalScrollIndicator = false

@@ -91,6 +91,8 @@ class LikeAndCommentView: UIView {
     
     private func setupConstraints() {
         
+        self.backgroundColor = .som.v2.white
+        
         self.snp.makeConstraints {
             $0.height.equalTo(44)
         }

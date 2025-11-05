@@ -139,6 +139,8 @@ class DetailViewCell: UICollectionViewCell {
     
     private func setupConstraints() {
         
+        self.backgroundColor = .som.v2.white
+        
         self.contentView.addSubview(self.memberInfoView)
         self.memberInfoView.snp.makeConstraints {
             $0.top.horizontalEdges.equalToSuperview()
