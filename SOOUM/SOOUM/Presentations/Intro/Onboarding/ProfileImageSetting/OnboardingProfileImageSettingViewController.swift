@@ -134,6 +134,12 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         }
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
+    }
+    
     
     // MARK: ReactorKit - bind
      

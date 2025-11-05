@@ -167,6 +167,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
         }
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
+    }
+    
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
         super.updatedKeyboard(withoutBottomSafeInset: height)
         
