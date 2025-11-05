@@ -300,6 +300,7 @@ class DetailViewCell: UICollectionViewCell {
         self.memberInfoView.updateViewsWhenDeleted()
         self.likeAndCommentView.updateViewsWhenDeleted()
         self.backgroundImageView.removeFromSuperview()
+        self.tags.removeFromSuperview()
         
         self.deletedCardInDetailBackgroundView.isHidden = false
     }

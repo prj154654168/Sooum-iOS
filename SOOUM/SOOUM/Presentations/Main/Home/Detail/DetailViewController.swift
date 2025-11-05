@@ -385,6 +385,9 @@ class DetailViewController: BaseNavigationViewController, View {
              .observe(on: MainScheduler.asyncInstance)
              .subscribe(with: self) { object, _ in
                  NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
+                 if reactor.entranceCardType == .comment {
+                     NotificationCenter.default.post(name: .reloadCommentsData, object: nil, userInfo: nil)
+                 }
                  
                  object.navigationBar.title = Text.deletedNavigationTitle
                  object.navigationBar.setRightButtons([object.rightDeleteButton])
