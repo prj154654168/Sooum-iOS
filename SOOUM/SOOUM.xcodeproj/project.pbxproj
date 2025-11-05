@@ -638,6 +638,10 @@
 		38D2FBCF2E81B52F006DD739 /* SOMSwipableTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D2FBCD2E81B529006DD739 /* SOMSwipableTabBar.swift */; };
 		38D2FBD12E81B9B7006DD739 /* SOMSwipableTabBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D2FBD02E81B9B0006DD739 /* SOMSwipableTabBarDelegate.swift */; };
 		38D2FBD22E81B9B7006DD739 /* SOMSwipableTabBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D2FBD02E81B9B0006DD739 /* SOMSwipableTabBarDelegate.swift */; };
+		38D478072EBBAA0B0041FF6C /* WriteCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D478062EBBAA080041FF6C /* WriteCardResponse.swift */; };
+		38D478082EBBAA0B0041FF6C /* WriteCardResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D478062EBBAA080041FF6C /* WriteCardResponse.swift */; };
+		38D4780A2EBBABF60041FF6C /* EntranceCardType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D478092EBBABE40041FF6C /* EntranceCardType.swift */; };
+		38D4780B2EBBABF60041FF6C /* EntranceCardType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D478092EBBABE40041FF6C /* EntranceCardType.swift */; };
 		38D488CA2D0C557300F2D38D /* SOMButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D488C92D0C557300F2D38D /* SOMButton.swift */; };
 		38D488CB2D0C557300F2D38D /* SOMButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D488C92D0C557300F2D38D /* SOMButton.swift */; };
 		38D522682E742F610044911B /* SOMLoadingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D522672E742F550044911B /* SOMLoadingIndicatorView.swift */; };
@@ -1095,6 +1099,8 @@
 		38D2FBCA2E81B0DE006DD739 /* SOMSwipableTabBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMSwipableTabBarItem.swift; sourceTree = "<group>"; };
 		38D2FBCD2E81B529006DD739 /* SOMSwipableTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMSwipableTabBar.swift; sourceTree = "<group>"; };
 		38D2FBD02E81B9B0006DD739 /* SOMSwipableTabBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMSwipableTabBarDelegate.swift; sourceTree = "<group>"; };
+		38D478062EBBAA080041FF6C /* WriteCardResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardResponse.swift; sourceTree = "<group>"; };
+		38D478092EBBABE40041FF6C /* EntranceCardType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntranceCardType.swift; sourceTree = "<group>"; };
 		38D488C92D0C557300F2D38D /* SOMButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMButton.swift; sourceTree = "<group>"; };
 		38D522672E742F550044911B /* SOMLoadingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMLoadingIndicatorView.swift; sourceTree = "<group>"; };
 		38D5637A2D16D72D006265AA /* SOMStickyTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMStickyTabBar.swift; sourceTree = "<group>"; };
@@ -2170,6 +2176,7 @@
 		38899E632E7938CD0030F7CA /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				38D478062EBBAA080041FF6C /* WriteCardResponse.swift */,
 				38E928BE2EB72D3600B3F00B /* DetailCardInfoResponse.swift */,
 				38EBA9102EB3999C008B28F4 /* PostingPermissionResponse.swift */,
 				38C9AF0D2E96601E00B401C0 /* DefaultImagesResponse.swift */,
@@ -2207,6 +2214,7 @@
 		38899E692E793AEA0030F7CA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				38D478092EBBABE40041FF6C /* EntranceCardType.swift */,
 				38E928B82EB715C300B3F00B /* ReortType.swift */,
 				38E928B52EB711DE00B3F00B /* DetailCardInfo.swift */,
 				38EBA90D2EB39917008B28F4 /* PostingPermission.swift */,
@@ -3253,6 +3261,7 @@
 				388D8AE02E73E6190044BA79 /* SwiftEntryKit.swift in Sources */,
 				38899E962E7953310030F7CA /* NotificationInfoResponse.swift in Sources */,
 				38FEBE5F2E86612C002916A8 /* NoticeViewCell.swift in Sources */,
+				38D4780A2EBBABF60041FF6C /* EntranceCardType.swift in Sources */,
 				2AFD055A2D008D23007C84AD /* TagDetailViewController.swift in Sources */,
 				2AFF95562CF3222400CBFB12 /* TagsViewController.swift in Sources */,
 				38C9AF182E96693600B401C0 /* TagRemoteDataSource.swift in Sources */,
@@ -3311,6 +3320,7 @@
 				3878D0862CFFED7800F9522F /* TermsOfServiceTextCellView.swift in Sources */,
 				38899E832E794C360030F7CA /* LoginResponse.swift in Sources */,
 				2ACBD41B2CCA03790057C013 /* ImageURLWithName.swift in Sources */,
+				38D478072EBBAA0B0041FF6C /* WriteCardResponse.swift in Sources */,
 				38E928C02EB72D3D00B3F00B /* DetailCardInfoResponse.swift in Sources */,
 				38B6AAE02CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				2ACBD41E2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
@@ -3634,6 +3644,7 @@
 				38FEBE5E2E86612C002916A8 /* NoticeViewCell.swift in Sources */,
 				38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
 				38C9AF172E96693600B401C0 /* TagRemoteDataSource.swift in Sources */,
+				38D4780B2EBBABF60041FF6C /* EntranceCardType.swift in Sources */,
 				385602B62D2FB18400118530 /* NotificationPlaceholderViewCell.swift in Sources */,
 				38E9CE192D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */,
 				380F42242E884AE5009AC59E /* CardRemoteDataSource.swift in Sources */,
@@ -3692,6 +3703,7 @@
 				2AFF955D2CF328DE00CBFB12 /* FavoriteTagTableViewCell.swift in Sources */,
 				38899E842E794C360030F7CA /* LoginResponse.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
+				38D478082EBBAA0B0041FF6C /* WriteCardResponse.swift in Sources */,
 				38E928BF2EB72D3D00B3F00B /* DetailCardInfoResponse.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
 				38601E182D31399400A465A9 /* CardRequest.swift in Sources */,

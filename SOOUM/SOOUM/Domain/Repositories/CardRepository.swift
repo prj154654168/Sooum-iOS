@@ -42,7 +42,7 @@ protocol CardRepository {
         imgName: String,
         isStory: Bool,
         tags: [String]
-    ) -> Observable<Int>
+    ) -> Observable<WriteCardResponse>
     func writeComment(
         id: String,
         isDistanceShared: Bool,
@@ -53,5 +53,5 @@ protocol CardRepository {
         imgType: String,
         imgName: String,
         tags: [String]
-    ) -> Observable<Int>
+    ) -> Observable<WriteCardResponse>
 }

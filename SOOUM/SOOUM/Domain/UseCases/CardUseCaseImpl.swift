@@ -86,7 +86,7 @@ class CardUseCaseImpl: CardUseCase {
         imgName: String,
         isStory: Bool,
         tags: [String]
-    ) -> Observable<Bool> {
+    ) -> Observable<String> {
         
         return self.repository.writeCard(
             isDistanceShared: isDistanceShared,
@@ -99,7 +99,7 @@ class CardUseCaseImpl: CardUseCase {
             isStory: isStory,
             tags: tags
         )
-        .map { $0 == 200 }
+        .map { $0.cardId }
     }
     
     func writeComment(
@@ -112,7 +112,7 @@ class CardUseCaseImpl: CardUseCase {
         imgType: String,
         imgName: String,
         tags: [String]
-    ) -> Observable<Bool> {
+    ) -> Observable<String> {
         
         return self.repository.writeComment(
             id: id,
@@ -125,6 +125,6 @@ class CardUseCaseImpl: CardUseCase {
             imgName: imgName,
             tags: tags
         )
-        .map { $0 == 200 }
+        .map { $0.cardId }
     }
 }

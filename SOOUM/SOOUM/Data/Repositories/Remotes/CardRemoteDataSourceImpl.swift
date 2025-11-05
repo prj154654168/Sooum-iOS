@@ -96,7 +96,7 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         imgName: String,
         isStory: Bool,
         tags: [String]
-    ) -> Observable<Int> {
+    ) -> Observable<WriteCardResponse> {
         
         let request: CardRequest = .writeCard(
             isDistanceShared: isDistanceShared,
@@ -109,7 +109,7 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
             isStory: isStory,
             tags: tags
         )
-        return self.provider.networkManager.perform(request)
+        return self.provider.networkManager.perform(WriteCardResponse.self, request: request)
     }
     
     func writeComment(
@@ -122,7 +122,7 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         imgType: String,
         imgName: String,
         tags: [String]
-    ) -> Observable<Int> {
+    ) -> Observable<WriteCardResponse> {
         
         let request: CardRequest = .writeComment(
             id: id,
@@ -135,6 +135,6 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
             imgName: imgName,
             tags: tags
         )
-        return self.provider.networkManager.perform(request)
+        return self.provider.networkManager.perform(WriteCardResponse.self, request: request)
     }
 }

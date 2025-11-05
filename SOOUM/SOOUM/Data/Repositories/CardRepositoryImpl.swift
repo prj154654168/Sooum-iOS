@@ -86,7 +86,7 @@ class CardRepositoryImpl: CardRepository {
         imgName: String,
         isStory: Bool,
         tags: [String]
-    ) -> Observable<Int> {
+    ) -> Observable<WriteCardResponse> {
         
         return self.remoteDataSource.writeCard(
             isDistanceShared: isDistanceShared,
@@ -111,7 +111,7 @@ class CardRepositoryImpl: CardRepository {
         imgType: String,
         imgName: String,
         tags: [String]
-    ) -> Observable<Int> {
+    ) -> Observable<WriteCardResponse> {
         
         return self.remoteDataSource.writeComment(
             id: id,

@@ -42,7 +42,7 @@ protocol CardUseCase {
         imgName: String,
         isStory: Bool,
         tags: [String]
-    ) -> Observable<Bool>
+    ) -> Observable<String>
     func writeComment(
         id: String,
         isDistanceShared: Bool,
@@ -53,5 +53,5 @@ protocol CardUseCase {
         imgType: String,
         imgName: String,
         tags: [String]
-    ) -> Observable<Bool>
+    ) -> Observable<String>
 }
