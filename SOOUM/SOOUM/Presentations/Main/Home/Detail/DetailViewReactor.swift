@@ -15,13 +15,9 @@ class DetailViewReactor: Reactor {
         case navi
     }
     
-    enum DetailType {
-        case feed
-        case comment
-    }
-    
     enum Action: Equatable {
         case landing
+        case refreshForComment
         case refresh
         case moreFindForComment(lastId: String)
         case delete
@@ -69,13 +65,13 @@ class DetailViewReactor: Reactor {
     
     private let locationManager: LocationManagerDelegate
     
-    let detailType: DetailType
+    let entranceCardType: EntranceCardType
     let entranceType: EntranceType
     let selectedCardId: String
     
     init(
         dependencies: AppDIContainerable,
-        _ detailType: DetailType,
+        _ entranceCardType: EntranceCardType,
         type entranceType: EntranceType = .navi,
         with selectedCardId: String
     ) {
@@ -84,7 +80,7 @@ class DetailViewReactor: Reactor {
         
         self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
         
-        self.detailType = detailType
+        self.entranceCardType = entranceCardType
         self.entranceType = entranceType
         self.selectedCardId = selectedCardId
     }
@@ -94,14 +90,19 @@ class DetailViewReactor: Reactor {
         case .landing:
             
             return .concat([
-                self.detailCard(),
+                self.detailCard()
+                    .catch(self.catchClosure),
                 self.commentCards()
             ])
+        case .refreshForComment:
+            
+            return self.commentCards()
         case .refresh:
             
             return .concat([
                 .just(.updateIsRefreshing(true)),
-                self.detailCard(),
+                self.detailCard()
+                    .catch(self.catchClosure),
                 self.commentCards(),
                 .just(.updateIsRefreshing(false))
             ])

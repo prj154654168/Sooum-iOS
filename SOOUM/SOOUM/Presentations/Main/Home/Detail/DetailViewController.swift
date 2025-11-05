@@ -124,8 +124,8 @@ class DetailViewController: BaseNavigationViewController, View {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(self.reloadData(_:)),
-            name: .reloadData,
+            selector: #selector(self.reloadCommentsData(_:)),
+            name: .reloadCommentsData,
             object: nil
         )
         
@@ -140,9 +140,13 @@ class DetailViewController: BaseNavigationViewController, View {
      override func setupNaviBar() {
          super.setupNaviBar()
          
-         self.navigationBar.title = self.reactor?.detailType == .feed ? Text.feedDetailNavigationTitle : Text.commentDetailNavigationTitle
+         guard let reactor = self.reactor else { return }
          
-         if self.reactor?.detailType == .comment {
+         self.navigationBar.title = reactor.entranceCardType == .feed ?
+            Text.feedDetailNavigationTitle :
+            Text.commentDetailNavigationTitle
+         
+         if reactor.entranceCardType == .comment {
              self.navigationBar.setLeftButtons([self.leftHomeButton])
          }
          self.navigationBar.setRightButtons([self.rightMoreButton])
@@ -168,21 +172,6 @@ class DetailViewController: BaseNavigationViewController, View {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
             $0.trailing.equalToSuperview().offset(-16)
         }
-     }
-     
-     override func bind() {
-         super.bind()
-         
-         // Navigation pop to root
-         self.leftHomeButton.rx.throttleTap
-             .subscribe(with: self) { object, _ in
-                 if let navigationController = object.navigationController {
-                     navigationController.popToRootViewController(animated: false)
-                 } else {
-                     object.navigationPop(animated: false)
-                 }
-             }
-             .disposed(by: self.disposeBag)
      }
      
      
@@ -282,11 +271,14 @@ class DetailViewController: BaseNavigationViewController, View {
          // 카드 삭제 후 X 버튼 액션
          self.rightDeleteButton.rx.throttleTap
              .subscribe(with: self) { object, _ in
-                 if let navigationController = object.navigationController {
-                     navigationController.popToRootViewController(animated: false)
-                 } else {
-                     object.navigationPop(animated: false)
-                 }
+                 object.navigationPop(to: HomeViewController.self, animated: false)
+             }
+             .disposed(by: self.disposeBag)
+         
+         // 답카드 홈 버튼 액션
+         self.leftHomeButton.rx.throttleTap
+             .subscribe(with: self) { object, _ in
+                 object.navigationPop(to: HomeViewController.self, animated: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -392,6 +384,8 @@ class DetailViewController: BaseNavigationViewController, View {
              .filter { $0 }
              .observe(on: MainScheduler.asyncInstance)
              .subscribe(with: self) { object, _ in
+                 NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
+                 
                  object.navigationBar.title = Text.deletedNavigationTitle
                  object.navigationBar.setRightButtons([object.rightDeleteButton])
                  
@@ -433,9 +427,9 @@ class DetailViewController: BaseNavigationViewController, View {
     // MARK: Objc func
     
     @objc
-    private func reloadData(_ notification: Notification) {
+    private func reloadCommentsData(_ notification: Notification) {
         
-        self.reactor?.action.onNext(.landing)
+        self.reactor?.action.onNext(.refreshForComment)
     }
     
     @objc
