@@ -17,7 +17,7 @@ class SOMTabBarItem: UIView {
     // MARK: Views
     
     private let imageView = UIImageView().then {
-        $0.tintColor = .som.gray300
+        $0.tintColor = .som.v2.gray300
     }
     
     private let titleLabel = UILabel().then {
