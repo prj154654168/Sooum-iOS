@@ -9,40 +9,15 @@ import UIKit
 
 extension UITextField {
     
-    fileprivate struct Keys {
-        static var UITextFieldTypography: String = "UITextFieldTypography"
-        static var kUITextFieldConstraint: String = "kUITextFieldConstraint"
-        
-        static func setObjctForTypo(_ typography: Typography) {
-            withUnsafePointer(to: Self.UITextFieldTypography) {
-                objc_setAssociatedObject(self, $0, typography, .OBJC_ASSOCIATION_RETAIN)
-            }
-        }
-        static func getObjectForTypo() -> Typography? {
-            withUnsafePointer(to: Self.UITextFieldTypography) {
-                objc_getAssociatedObject(self, $0) as? Typography
-            }
-        }
-        
-        static func setObjectForConstraint(_ constraint: NSLayoutConstraint?) {
-            withUnsafePointer(to: Self.kUITextFieldConstraint) {
-                objc_setAssociatedObject(self, $0, constraint, .OBJC_ASSOCIATION_RETAIN)
-            }
-        }
-        
-        static func getObjectForConstraint() -> NSLayoutConstraint? {
-            withUnsafePointer(to: Self.kUITextFieldConstraint) {
-                objc_getAssociatedObject(self, $0) as? NSLayoutConstraint
-            }
-        }
-    }
+    private static var KUITextFieldTypography: UInt8 = 0
+    private static var kUITextFieldConstraint: UInt8 = 0
 
     func setTypography(
         _ typography: Typography,
         with closure: ((inout [NSAttributedString.Key: Any]) -> Void)? = nil
     ) {
 
-        Keys.setObjctForTypo(typography)
+        objc_setAssociatedObject(self, &Self.KUITextFieldTypography, typography, .OBJC_ASSOCIATION_RETAIN)
 
         if let constraint = self.constraint {
             constraint.constant = typography.lineHeight
@@ -70,21 +45,16 @@ extension UITextField {
             }
         }
         get {
-            return Keys.getObjectForTypo()
+            return objc_getAssociatedObject(self, &Self.KUITextFieldTypography) as? Typography
         }
     }
-}
-
-extension UITextField {
-
-    static var kUITextFieldConstraint: String = "kUITextFieldConstraint"
-
-    fileprivate var constraint: NSLayoutConstraint? {
-        get {
-            return Keys.getObjectForConstraint()
-        }
+    
+    private var constraint: NSLayoutConstraint? {
         set {
-            Keys.setObjectForConstraint(newValue)
+            objc_setAssociatedObject(self, &Self.kUITextFieldConstraint, newValue, .OBJC_ASSOCIATION_RETAIN)
+        }
+        get {
+            return objc_getAssociatedObject(self, &Self.kUITextFieldConstraint) as? NSLayoutConstraint
         }
     }
 }

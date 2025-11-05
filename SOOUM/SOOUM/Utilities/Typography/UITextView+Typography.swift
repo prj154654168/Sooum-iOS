@@ -8,28 +8,15 @@
 import UIKit
 
 extension UITextView {
-
-    fileprivate struct Keys {
-        static var kUITextViewTypography: String = "kUITextViewTypography"
-        
-        static func setObjctForTypo(_ typography: Typography) {
-            withUnsafePointer(to: Self.kUITextViewTypography) {
-                objc_setAssociatedObject(self, $0, typography, .OBJC_ASSOCIATION_RETAIN)
-            }
-        }
-        static func getObjectForTypo() -> Typography? {
-            withUnsafePointer(to: Self.kUITextViewTypography) {
-                objc_getAssociatedObject(self, $0) as? Typography
-            }
-        }
-    }
+    
+    private static var kUITextViewTypography: UInt8 = 0
 
     func setTypography(
         _ typography: Typography,
         with closure: ((inout [NSAttributedString.Key: Any]) -> Void)? = nil
     ) {
 
-        Keys.setObjctForTypo(typography)
+        objc_setAssociatedObject(self, &Self.kUITextViewTypography, typography, .OBJC_ASSOCIATION_RETAIN)
 
         var attributes: [NSAttributedString.Key: Any] = typography.attributes
         attributes[.font] = typography.font
@@ -54,7 +41,7 @@ extension UITextView {
             }
         }
         get {
-            return Keys.getObjectForTypo()
+            return objc_getAssociatedObject(self, &Self.kUITextViewTypography) as? Typography
         }
     }
 }
