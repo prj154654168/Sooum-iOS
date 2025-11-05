@@ -148,14 +148,13 @@ extension WriteCardTagFooter {
 extension WriteCardTagFooter: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.textField.text = textField.text == self.placeholder ? nil : textField.text
+        self.textField.text = nil
         self.imageView.image = .init(.icon(.v2(.outlined(.hash))))
         self.imageView.tintColor = .som.v2.gray300
         self.delegate?.textFieldDidBeginEditing(self)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        self.textField.text = (textField.text ?? "").isEmpty ? self.placeholder : textField.text
         self.imageView.image = .init(.icon(.v2(.outlined(.plus))))
         self.imageView.tintColor = .som.v2.white
         self.delegate?.textFieldDidEndEditing(self)

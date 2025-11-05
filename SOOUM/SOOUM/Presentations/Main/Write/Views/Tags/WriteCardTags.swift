@@ -317,7 +317,14 @@ extension WriteCardTags: WriteCardTagFooterDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: WriteCardTagFooter) {
-        self.footerText = textField.text
+        if let text = textField.text, text.isEmpty == false {
+            let addedTag: WriteCardTagModel = .init(originalText: text, typography: self.typography)
+            var new = self.models
+            new.append(addedTag)
+            self.updateWrittenTags.accept(new)
+        }
+        textField.text = Text.tagPlaceholder
+        self.footerText = Text.tagPlaceholder
         self.collectionView.collectionViewLayout.invalidateLayout()
         self.scrollToRight(animated: true)
     }
