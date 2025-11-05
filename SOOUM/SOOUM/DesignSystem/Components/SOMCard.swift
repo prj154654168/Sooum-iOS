@@ -19,16 +19,21 @@ class SOMCard: UIView {
         static let pungedCardText: String = "카드가 삭제되었어요"
     }
     
+    enum CardType {
+        case feed
+        case comment
+    }
+    
     
     // MARK: Views
     
-    let shadowbackgroundView = UIView().then {
+    private let shadowbackgroundView = UIView().then {
         $0.backgroundColor = .som.v2.white
         $0.layer.cornerRadius = 16
     }
     
     /// 배경 이미지
-    let rootContainerImageView = UIImageView().then {
+    private let rootContainerImageView = UIImageView().then {
         $0.layer.cornerRadius = 16
         $0.layer.borderWidth = 1
         $0.contentMode = .scaleAspectFill
@@ -36,160 +41,139 @@ class SOMCard: UIView {
     }
     
     // 본문 dim 배경
-    let cardTextBackgroundBlurView = UIView().then {
+    private let cardTextBackgroundBlurView = UIView().then {
         $0.backgroundColor = .som.v2.dim
         $0.layer.cornerRadius = 12
         $0.clipsToBounds = true
     }
     
     /// 본문 표시 라벨 (스크롤 X)
-    let cardTextContentLabel = UILabel().then {
+    private let cardTextContentLabel = UILabel().then {
         $0.textColor = .som.v2.white
         $0.typography = .som.v2.body1
         $0.textAlignment = .center
-        $0.numberOfLines = 3
+        $0.numberOfLines = 4
         $0.lineBreakMode = .byTruncatingTail
         $0.lineBreakStrategy = .hangulWordPriority
     }
-    /// 본문 스크롤 텍스트 뷰 (스크롤 O)
-    let cardTextContentScrollView = UITextView().then {
-        $0.textColor = .som.v2.white
-        $0.typography = .som.v2.body1
-        
-        $0.backgroundColor = .clear
-        $0.tintColor = .clear
-        
-        $0.textAlignment = .center
-        $0.textContainerInset = .init(top: 0, left: 16, bottom: 0, right: 16)
-        $0.textContainer.lineFragmentPadding = 0
-        
-        $0.indicatorStyle = .white
-        $0.scrollIndicatorInsets = .init(top: 14, left: 0, bottom: 14, right: 0)
-        
-        $0.isScrollEnabled = false
-        $0.showsVerticalScrollIndicator = true
-        $0.showsHorizontalScrollIndicator = false
-        
-        $0.isEditable = false
-    }
     
     /// 펑 시간, 거리, 시간, 좋아요 수, 답글 수 정보를 담는 뷰
-    let cardInfoContainer = UIView().then {
+    private let cardInfoContainer = UIView().then {
         $0.backgroundColor = .som.v2.white
         $0.layer.borderColor = UIColor.som.v2.white.cgColor
         $0.layer.borderWidth = 1
     }
     /// 펑 시간, 거리, 시간을 담는 스택 뷰
-    let cardInfoLeadingStackView = UIStackView().then {
+    private let cardInfoLeadingStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 4
         $0.alignment = .center
     }
     /// 좋아요 수, 답글 수를 담는 스택 뷰
-    let cardInfoTrailingStackView = UIStackView().then {
+    private let cardInfoTrailingStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 4
         $0.alignment = .center
     }
     
     /// 어드민 정보 표시 스택뷰
-    let adminStackView = UIStackView().then {
+    private let adminStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 2
         $0.alignment = .center
     }
     /// 어드민 정보 아이콘
-    let adminImageView = UIImageView().then {
+    private let adminImageView = UIImageView().then {
         $0.image = .init(.icon(.v2(.filled(.official))))
         $0.tintColor = .som.v2.black
     }
     /// 어드민 정보 라벨
-    let adminLabel = UILabel().then {
+    private let adminLabel = UILabel().then {
         $0.text = Text.adminTitle
         $0.textColor = .som.v2.black
         $0.typography = .som.v2.caption2
     }
     /// 어드민 닷
-    let firstDot = UIView().then {
+    private let firstDot = UIView().then {
         $0.backgroundColor = .som.v2.gray500
         $0.layer.cornerRadius = 1
     }
     /// 펑 남은시간 표시 스택뷰
-    let cardPungTimeStackView = UIStackView().then {
+    private let cardPungTimeStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 2
         $0.alignment = .center
     }
     /// 펑 남은시간 표시 아이콘
-    let cardPungTimeImageView = UIImageView().then {
+    private let cardPungTimeImageView = UIImageView().then {
         $0.image = .init(.icon(.v2(.filled(.bomb))))
         $0.tintColor = .som.v2.pMain
     }
     /// 펑 남은시간 표시 라벨
-    let cardPungTimeLabel = UILabel().then {
+    private let cardPungTimeLabel = UILabel().then {
         $0.textColor = .som.v2.pDark
         $0.typography = .som.v2.caption2
     }
     /// 펑 남은시간 닷
-    let secondDot = UIView().then {
+    private let secondDot = UIView().then {
         $0.backgroundColor = .som.v2.gray500
         $0.layer.cornerRadius = 1
     }
     /// 거리 정보 표시 스택뷰
-    let distanceInfoStackView = UIStackView().then {
+    private let distanceInfoStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 2
         $0.alignment = .center
     }
     /// 거리 정보 아이콘
-    let distanceImageView = UIImageView().then {
+    private let distanceImageView = UIImageView().then {
         $0.image = .init(.icon(.v2(.outlined(.location))))
         $0.tintColor = .som.v2.gray500
     }
     /// 거리 정보 라벨
-    let distanceLabel = UILabel().then {
+    private let distanceLabel = UILabel().then {
         $0.textColor = .som.v2.gray500
         $0.typography = .som.v2.caption2
     }
     /// 거리 정보 닷
-    let thirdDot = UIView().then {
+    private let thirdDot = UIView().then {
         $0.backgroundColor = .som.v2.gray500
         $0.layer.cornerRadius = 1
     }
     /// 시간 정보 표시 라벨
-    let timeLabel = UILabel().then {
+    private let timeLabel = UILabel().then {
         $0.textColor = .som.v2.gray500
         $0.typography = .som.v2.caption2
     }
     /// 좋아요 정보 표시 스택뷰
-    let likeInfoStackView = UIStackView().then {
+    private let likeInfoStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 2
         $0.alignment = .center
     }
     /// 좋아요 정보 표시 아이콘
-    let likeImageView = UIImageView().then {
+    private let likeImageView = UIImageView().then {
         $0.image = .init(.icon(.v2(.outlined(.heart))))
         $0.tintColor = .som.v2.gray500
     }
     /// 좋아요 정보 표시 라벨
-    let likeLabel = UILabel().then {
+    private let likeLabel = UILabel().then {
         $0.textColor = .som.v2.gray500
         $0.typography = .som.v2.caption2
     }
     /// 답카드 정보 표시 스택뷰
-    let commentInfoStackView = UIStackView().then {
+    private let commentInfoStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 2
         $0.alignment = .center
     }
     /// 답카드 정보 표시 아이콘
-    let commentImageView = UIImageView().then {
+    private let commentImageView = UIImageView().then {
         $0.image = .init(.icon(.v2(.outlined(.message_circle))))
         $0.tintColor = .som.v2.gray500
     }
     /// 답카드 정보 표시 라벨
-    let commentLabel = UILabel().then {
+    private let commentLabel = UILabel().then {
         $0.textColor = .som.v2.gray500
         $0.typography = .som.v2.caption2
     }
@@ -197,16 +181,14 @@ class SOMCard: UIView {
     
     // MARK: Variables
     
-    var model: BaseCardInfo?
-    
-    private var hasScrollEnabled: Bool
+    private(set) var model: BaseCardInfo = .defaultValue
+    private(set) var cardType: CardType
     
     
     // MARK: Constraints
     
-    // TODO: 카드 본문 배경 블러 뷰 높이 계산 Constraint, 헌재 사용 X
+    // TODO: 카드 본문 높이 계산 Constraint
     private var contentHeightConstraint: Constraint?
-    private var scrollContentHieghtConstraint: Constraint?
     
     /// 펑 이벤트 처리 위해 추가
     var serialTimer: Disposable?
@@ -215,8 +197,8 @@ class SOMCard: UIView {
     
     // MARK: Initialize
     
-    init(hasScrollEnabled: Bool = false) {
-        self.hasScrollEnabled = hasScrollEnabled
+    init(type cardType: CardType = .feed) {
+        self.cardType = cardType
         super.init(frame: .zero)
         
         self.setupConstraints()
@@ -342,22 +324,14 @@ class SOMCard: UIView {
             $0.trailing.equalToSuperview().offset(-32)
         }
         
-        if self.hasScrollEnabled {
-            self.cardTextBackgroundBlurView.addSubview(self.cardTextContentScrollView)
-            self.cardTextContentScrollView.snp.makeConstraints {
-                $0.top.equalToSuperview().offset(20)
-                $0.bottom.equalToSuperview().offset(-20)
-                $0.leading.equalToSuperview().offset(24)
-                $0.trailing.equalToSuperview().offset(-24)
-            }
-        } else {
-            self.cardTextBackgroundBlurView.addSubview(self.cardTextContentLabel)
-            self.cardTextContentLabel.snp.makeConstraints {
-                $0.top.equalToSuperview().offset(20)
-                $0.bottom.equalToSuperview().offset(-20)
-                $0.leading.equalToSuperview().offset(24)
-                $0.trailing.equalToSuperview().offset(-24)
-            }
+        self.cardTextBackgroundBlurView.addSubview(self.cardTextContentLabel)
+        self.cardTextContentLabel.snp.makeConstraints {
+            let verticalOffset: CGFloat = self.cardType == .feed ? 20 : 16
+            $0.top.equalToSuperview().offset(verticalOffset)
+            $0.bottom.equalToSuperview().offset(-verticalOffset)
+            $0.leading.equalToSuperview().offset(24)
+            $0.trailing.equalToSuperview().offset(-24)
+            self.contentHeightConstraint = $0.height.equalTo(Typography.som.v2.body1.lineHeight).constraint
         }
     }
     
@@ -368,6 +342,13 @@ class SOMCard: UIView {
     func prepareForReuse() {
         self.serialTimer?.dispose()
         self.disposeBag = DisposeBag()
+        
+        self.adminLabel.text = nil
+        self.cardPungTimeLabel.text = nil
+        self.distanceLabel.text = nil
+        self.timeLabel.text = nil
+        self.likeLabel.text = nil
+        self.commentLabel.text = nil
     }
     
     /// 홈피드 모델 초기화
@@ -386,13 +367,9 @@ class SOMCard: UIView {
         case .yoonwoo:      typography = .som.v2.yoonwooCard
         case .kkookkkook:   typography = .som.v2.kkookkkookCard
         }
-        if self.hasScrollEnabled {
-            self.cardTextContentScrollView.text = model.cardContent
-            self.cardTextContentScrollView.typography = typography
-        } else {
-            self.cardTextContentLabel.text = model.cardContent
-            self.cardTextContentLabel.typography = typography
-        }
+        self.cardTextContentLabel.text = model.cardContent
+        self.cardTextContentLabel.typography = typography
+        self.updateContentHeight(model.cardContent, with: typography)
         
         // 하단 정보
         // 어드민, 펑 시간, 거리, 시간
@@ -461,39 +438,35 @@ class SOMCard: UIView {
     }
     
     // TODO: 카드 본문 배경 블러 뷰 높이 계산 함수, 헌재 사용 X
-    private func updateContentHeight(_ text: String) {
+    private func updateContentHeight(_ text: String, with typography: Typography) {
         
-        self.layoutIfNeeded()
-        // TODO: 임시, 폰트 가변임
-        let typography = Typography.som.v2.body1
+        UIView.performWithoutAnimation {
+            self.layoutIfNeeded()
+        }
+
         var attributes = typography.attributes
         attributes.updateValue(typography.font, forKey: .font)
         let attributedText = NSAttributedString(
             string: text,
             attributes: attributes
         )
-        
-        let availableWidth = UIScreen.main.bounds.width - 16 * 2 - 32 * 2 - 24 * 2
+        /// screen width - SOMCard horizontal padding - text background dim view horizontal padding - text horizontal inset
+        let availableWidth = self.cardTextContentLabel.bounds.width
         let size: CGSize = .init(width: availableWidth, height: .greatestFiniteMagnitude)
-        let boundingRect = attributedText.boundingRect(
+        let boundingHeight = attributedText.boundingRect(
             with: size,
             options: [.usesLineFragmentOrigin],
             context: nil
-        )
-        let boundingHeight = boundingRect.height + 20 * 2 /// top, bottom inset
-        let backgroundHeight = rootContainerImageView.bounds.height
+        ).height
+        let backgroundHeight = self.rootContainerImageView.bounds.height
         
-        let height = min(boundingHeight, (backgroundHeight - 34) * 0.8)
+        let maxHeight = self.cardType == .feed ? typography.lineHeight * 3 : typography.lineHeight * 4
+        let height = min(boundingHeight, maxHeight)
         
         self.contentHeightConstraint?.update(offset: height)
         
-        if self.hasScrollEnabled {
-            self.cardTextContentScrollView.isScrollEnabled = boundingHeight > backgroundHeight * 0.5
-            self.cardTextContentScrollView.isUserInteractionEnabled = true
-            self.cardTextContentScrollView.contentSize = .init(
-                width: cardTextContentScrollView.bounds.width,
-                height: boundingHeight
-            )
+        UIView.performWithoutAnimation {
+            self.layoutIfNeeded()
         }
     }
     
@@ -536,10 +509,6 @@ class SOMCard: UIView {
             .filter { $0 != self.cardPungTimeStackView }
             .forEach { $0.removeFromSuperview() }
         
-        if self.hasScrollEnabled {
-            self.cardTextContentScrollView.text = Text.pungedCardText
-        } else {
-            self.cardTextContentLabel.text = Text.pungedCardText
-        }
+        self.cardTextContentLabel.text = Text.pungedCardText
     }
 }
