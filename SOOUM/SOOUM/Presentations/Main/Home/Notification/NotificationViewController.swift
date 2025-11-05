@@ -47,7 +47,7 @@ class NotificationViewController: BaseNavigationViewController, View {
         $0.delegate = self
     }
     
-    private lazy var tableView = UITableView(frame: .zero, style: .plain).then {
+    private lazy var tableView = UITableView(frame: .zero, style: .grouped).then {
         $0.backgroundColor = .som.v2.white
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
@@ -183,7 +183,7 @@ class NotificationViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, pushInfo in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(
-                    detailType: pushInfo.detailType,
+                    entranceType: pushInfo.entranceType,
                     with: pushInfo.id
                 )
                 object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
@@ -237,6 +237,15 @@ class NotificationViewController: BaseNavigationViewController, View {
             object.tableView.isHidden = false
         }
         .disposed(by: self.disposeBag)
+    }
+    
+    
+    // MARK: Objc func
+    
+    @objc
+    private func reloadData(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.landing)
     }
 }
 
@@ -303,7 +312,7 @@ extension NotificationViewController: UITableViewDelegate {
                     
                     if case .feedLike = notification.notificationInfo.notificationType {
                         return .init(
-                            detailType: .feed,
+                            entranceType: .feed,
                             notificationId: notification.notificationInfo.notificationId,
                             targetCardId: notification.targetCardId,
                             shouldRead: true
@@ -311,7 +320,7 @@ extension NotificationViewController: UITableViewDelegate {
                     }
                     if case .commentLike = notification.notificationInfo.notificationType {
                         return .init(
-                            detailType: .comment,
+                            entranceType: .comment,
                             notificationId: notification.notificationInfo.notificationId,
                             targetCardId: notification.targetCardId,
                             shouldRead: true
@@ -319,18 +328,18 @@ extension NotificationViewController: UITableViewDelegate {
                     }
                     if case .commentWrite = notification.notificationInfo.notificationType {
                         return .init(
-                            detailType: .comment,
+                            entranceType: .comment,
                             notificationId: notification.notificationInfo.notificationId,
                             targetCardId: notification.targetCardId,
                             shouldRead: true
                         )
                     }
                     return nil
-                /// follow, deleted, blocked 는 읽기 API만 호출
+                    /// follow, deleted, blocked 는 읽기 API만 호출
                 case let .follow(notification):
                     
                     return .init(
-                        detailType: .feed,
+                        entranceType: .feed,
                         notificationId: notification.notificationInfo.notificationId,
                         targetCardId: nil,
                         shouldRead: true
@@ -338,7 +347,7 @@ extension NotificationViewController: UITableViewDelegate {
                 case let .deleted(notification):
                     
                     return .init(
-                        detailType: .feed,
+                        entranceType: .feed,
                         notificationId: notification.notificationInfo.notificationId,
                         targetCardId: nil,
                         shouldRead: true
@@ -346,7 +355,7 @@ extension NotificationViewController: UITableViewDelegate {
                 case let .blocked(notification):
                     
                     return .init(
-                        detailType: .feed,
+                        entranceType: .feed,
                         notificationId: notification.notificationInfo.notificationId,
                         targetCardId: nil,
                         shouldRead: true
@@ -364,7 +373,7 @@ extension NotificationViewController: UITableViewDelegate {
                     
                     if case .feedLike = notification.notificationInfo.notificationType {
                         return .init(
-                            detailType: .feed,
+                            entranceType: .feed,
                             notificationId: notification.notificationInfo.notificationId,
                             targetCardId: notification.targetCardId,
                             shouldRead: false
@@ -372,7 +381,7 @@ extension NotificationViewController: UITableViewDelegate {
                     }
                     if case .commentLike = notification.notificationInfo.notificationType {
                         return .init(
-                            detailType: .comment,
+                            entranceType: .comment,
                             notificationId: notification.notificationInfo.notificationId,
                             targetCardId: notification.targetCardId,
                             shouldRead: false
@@ -380,7 +389,7 @@ extension NotificationViewController: UITableViewDelegate {
                     }
                     if case .commentWrite = notification.notificationInfo.notificationType {
                         return .init(
-                            detailType: .comment,
+                            entranceType: .comment,
                             notificationId: notification.notificationInfo.notificationId,
                             targetCardId: notification.targetCardId,
                             shouldRead: false
@@ -451,6 +460,15 @@ extension NotificationViewController: UITableViewDelegate {
             
             return 0
         }
+    }
+    
+    // group style이기 때문에 footer 제거
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0
     }
     
     func tableView(

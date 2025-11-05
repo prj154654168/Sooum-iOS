@@ -37,7 +37,7 @@ extension CompositeNotificationInfo: Decodable {
         case .feedLike, .commentLike, .commentWrite:
             let notification = try NotificationInfoResponse(from: decoder)
             self = .default(notification)
-        // TODO: NOTICE, TRANSFER_SUCCESS 는 아직 정해지지 않음
+        // TODO: TRANSFER_SUCCESS, TAG_USAGE 는 아직 정해지지 않음
         default:
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
