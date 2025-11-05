@@ -311,7 +311,7 @@ extension WriteCardTags: WriteCardTagDelegate {
 extension WriteCardTags: WriteCardTagFooterDelegate {
     
     func textFieldDidBeginEditing(_ textField: WriteCardTagFooter) {
-        self.footerText = nil
+        self.footerText = textField.text
         self.collectionView.collectionViewLayout.invalidateLayout()
         self.delegate?.textFieldDidBeginEditing(textField)
     }
