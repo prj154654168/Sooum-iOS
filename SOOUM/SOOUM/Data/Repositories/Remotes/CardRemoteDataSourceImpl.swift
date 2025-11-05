@@ -86,6 +86,17 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         return self.provider.networkManager.fetch(DefaultImagesResponse.self, request: request)
     }
     
+    func presignedURL() -> Observable<ImageUrlInfoResponse> {
+        
+        let request: CardRequest = .presignedURL
+        return self.provider.networkManager.fetch(ImageUrlInfoResponse.self, request: request)
+    }
+    
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Void, Error>> {
+        
+        return self.provider.networkManager.upload(data, to: url)
+    }
+    
     func writeCard(
         isDistanceShared: Bool,
         latitude: String?,

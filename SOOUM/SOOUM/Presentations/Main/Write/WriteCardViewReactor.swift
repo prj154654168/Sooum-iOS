@@ -60,7 +60,6 @@ class WriteCardViewReactor: Reactor {
     private let dependencies: AppDIContainerable
     private let cardUseCase: CardUseCase
     private let tagUseCase: TagUseCase
-    private let userUseCase: UserUseCase
     
     let locationManager: LocationManagerDelegate
     
@@ -76,7 +75,6 @@ class WriteCardViewReactor: Reactor {
         self.dependencies = dependencies
         self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
         self.tagUseCase = dependencies.rootContainer.resolve(TagUseCase.self)
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
         self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
         self.entranceType = entranceType
         self.parentCardId = parentCardId
@@ -151,13 +149,13 @@ private extension WriteCardViewReactor {
     
     func uploadImage(_ image: UIImage) -> Observable<String?> {
         
-        return self.userUseCase.presignedURL()
+        return self.cardUseCase.presignedURL()
             .withUnretained(self)
             .flatMapLatest { object, presignedInfo -> Observable<String?> in
                 if let imageData = image.jpegData(compressionQuality: 0.5),
                    let url = URL(string: presignedInfo.imgUrl) {
                     
-                    return object.userUseCase.uploadImage(imageData, with: url)
+                    return object.cardUseCase.uploadImage(imageData, with: url)
                         .flatMapLatest { isSuccess -> Observable<String?> in
                             
                             let imageName = isSuccess ? presignedInfo.imgName : nil

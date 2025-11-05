@@ -32,6 +32,8 @@ protocol CardUseCase {
     // MARK: Write
     
     func defaultImages() -> Observable<DefaultImages>
+    func presignedURL() -> Observable<ImageUrlInfo>
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Bool>
     func writeCard(
         isDistanceShared: Bool,
         latitude: String?,

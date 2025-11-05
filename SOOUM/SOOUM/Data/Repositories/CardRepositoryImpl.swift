@@ -76,6 +76,16 @@ class CardRepositoryImpl: CardRepository {
         return self.remoteDataSource.defaultImages()
     }
     
+    func presignedURL() -> Observable<ImageUrlInfoResponse> {
+        
+        return self.remoteDataSource.presignedURL()
+    }
+    
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Void, Error>> {
+        
+        return self.remoteDataSource.uploadImage(data, with: url)
+    }
+    
     func writeCard(
         isDistanceShared: Bool,
         latitude: String?,
