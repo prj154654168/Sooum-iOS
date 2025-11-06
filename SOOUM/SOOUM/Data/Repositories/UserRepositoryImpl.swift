@@ -62,9 +62,9 @@ class UserRepositoryImpl: UserRepository {
         return self.remoteDataSource.postingPermission()
     }
     
-    func myProfile() -> Observable<ProfileInfoResponse> {
+    func profile(userId: String?) -> Observable<ProfileInfoResponse> {
         
-        return self.remoteDataSource.myProfile()
+        return self.remoteDataSource.profile(userId: userId)
     }
     
     func updateMyProfile(nickname: String, imageName: String) -> Observable<Int> {

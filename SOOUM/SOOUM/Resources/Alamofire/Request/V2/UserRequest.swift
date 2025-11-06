@@ -25,8 +25,8 @@ enum UserRequest: BaseRequest {
     case updateFCMToken(fcmToken: String)
     /// 카드추가 가능 여부 확인
     case postingPermission
-    /// 나의 프로필 조회
-    case myProfile
+    /// 프로필 조회
+    case profile(userId: String?)
     /// 나의 프로필 업데이트
     case updateMyProfile(nickname: String, imageName: String)
     /// 나의 피드 카드 조회
@@ -43,46 +43,65 @@ enum UserRequest: BaseRequest {
     var path: String {
         switch self {
         case .checkAvailable:
+            
             return "/api/members/check-available"
         case .nickname:
+            
             return "/api/members/generate-nickname"
         case .validateNickname:
+            
             return "/api/members/validate-nickname"
         case .updateNickname:
+            
             return "/api/members/nickname"
         case .presignedURL:
+            
             return "/api/images/profile"
         case .updateImage:
+            
             return "/api/members/profile-img"
         case .updateFCMToken:
+            
             return "/api/members/fcm"
         case .postingPermission:
+            
             return "/api/members/permissions/posting"
-        case .myProfile:
-            return "/api/members/profile/info/me"
+        case let .profile(userId):
+            
+            if let userId = userId {
+                return "/api/members/profile/info/\(userId)"
+            } else {
+                return "/api/members/profile/info/me"
+            }
         case .updateMyProfile:
+            
             return "/api/members/profile/info/me"
         case let .feedCards(userId, lastId):
+            
             if let lastId = lastId {
                 return "/api/members/\(userId)/cards/feed\(lastId)"
             } else {
                 return "/api/members/\(userId)/cards/feed"
             }
         case .myCommentCards:
+            
             return "/api/members/me/cards/comment"
         case let .followers(userId, lastId):
+            
             if let lastId = lastId {
                 return "/api/members/\(userId)/followers/\(lastId)"
             } else {
                 return "/api/members/\(userId)/followers"
             }
         case let .followings(userId, lastId):
+            
             if let lastId = lastId {
                 return "/api/members/\(userId)/following/\(lastId)"
             } else {
                 return "/api/members/\(userId)/following"
             }
         case let .updateFollowing(userId, isFollow):
+            
             if isFollow {
                 return "/api/members/follow"
             } else {

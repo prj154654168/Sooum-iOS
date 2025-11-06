@@ -64,9 +64,9 @@ class UserUseCaseImpl: UserUseCase {
         return self.repository.postingPermission().map { $0.postingPermission }
     }
     
-    func myProfile() -> Observable<ProfileInfo> {
+    func profile(userId: String?) -> Observable<ProfileInfo> {
         
-        return self.repository.myProfile().map { $0.profileInfo }
+        return self.repository.profile(userId: userId).map { $0.profileInfo }
     }
     
     func updateMyProfile(nickname: String, imageName: String) -> Observable<Bool> {

@@ -69,9 +69,9 @@ class UserRemoteDataSourceImpl: UserRemoteDataSource {
         return self.provider.networkManager.fetch(PostingPermissionResponse.self, request: request)
     }
     
-    func myProfile() -> Observable<ProfileInfoResponse> {
+    func profile(userId: String?) -> Observable<ProfileInfoResponse> {
         
-        let request: UserRequest = .myProfile
+        let request: UserRequest = .profile(userId: userId)
         return self.provider.networkManager.fetch(ProfileInfoResponse.self, request: request)
     }
     

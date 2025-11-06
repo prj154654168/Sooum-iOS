@@ -110,8 +110,8 @@ enum CardRequest: BaseRequest {
             
             return "/api/blocks/\(id)"
         case let .reportCard(id, _):
-            return "/api/reports/cards/\(id)"
             
+            return "/api/reports/cards/\(id)"
         case .defaultImages:
             
             return "/api/images/defaults"

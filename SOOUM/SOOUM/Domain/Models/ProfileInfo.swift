@@ -18,6 +18,25 @@ struct ProfileInfo: Equatable {
     let cardCnt: String
     let followingCnt: String
     let followerCnt: String
+    
+    var contents: [(content: Content, count: String)] {
+        var contents: [(content: Content, count: String)] = []
+        
+        contents.append((.card, self.cardCnt))
+        contents.append((.follower, self.followerCnt))
+        contents.append((.following, self.followingCnt))
+        
+        return contents
+    }
+}
+
+extension ProfileInfo {
+    
+    enum Content: String {
+        case card       = "카드"
+        case follower   = "팔로워"
+        case following  = "팔로잉"
+    }
 }
 
 extension ProfileInfo {
