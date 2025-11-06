@@ -25,6 +25,20 @@ enum UserRequest: BaseRequest {
     case updateFCMToken(fcmToken: String)
     /// 카드추가 가능 여부 확인
     case postingPermission
+    /// 나의 프로필 조회
+    case myProfile
+    /// 나의 프로필 업데이트
+    case updateMyProfile(nickname: String, imageName: String)
+    /// 나의 피드 카드 조회
+    case feedCards(userId: String, lastId: String?)
+    /// 나의 답카드 조회
+    case myCommentCards(lastId: String?)
+    /// 팔로워 조회
+    case followers(userId: String, lastId: String?)
+    /// 팔로우 조회
+    case followings(userId: String, lastId: String?)
+    /// 팔로우 요청 및 취소
+    case updateFollowing(userId: String, isFollow: Bool)
     
     var path: String {
         switch self {
@@ -44,6 +58,36 @@ enum UserRequest: BaseRequest {
             return "/api/members/fcm"
         case .postingPermission:
             return "/api/members/permissions/posting"
+        case .myProfile:
+            return "/api/members/profile/info/me"
+        case .updateMyProfile:
+            return "/api/members/profile/info/me"
+        case let .feedCards(userId, lastId):
+            if let lastId = lastId {
+                return "/api/members/\(userId)/cards/feed\(lastId)"
+            } else {
+                return "/api/members/\(userId)/cards/feed"
+            }
+        case .myCommentCards:
+            return "/api/members/me/cards/comment"
+        case let .followers(userId, lastId):
+            if let lastId = lastId {
+                return "/api/members/\(userId)/followers/\(lastId)"
+            } else {
+                return "/api/members/\(userId)/followers"
+            }
+        case let .followings(userId, lastId):
+            if let lastId = lastId {
+                return "/api/members/\(userId)/following/\(lastId)"
+            } else {
+                return "/api/members/\(userId)/following"
+            }
+        case let .updateFollowing(userId, isFollow):
+            if isFollow {
+                return "/api/members/follow"
+            } else {
+                return "/api/members/\(userId)/unfollow"
+            }
         }
     }
     
@@ -51,9 +95,11 @@ enum UserRequest: BaseRequest {
         switch self {
         case .checkAvailable, .validateNickname:
             return .post
-        case .updateNickname, .updateImage, .updateFCMToken:
+        case .updateNickname, .updateImage, .updateFCMToken, .updateMyProfile:
             return .patch
-        case .nickname, .presignedURL, .postingPermission:
+        case let .updateFollowing(_, isFollow):
+            return isFollow ? .post : .delete
+        default:
             return .get
         }
     }
@@ -70,6 +116,10 @@ enum UserRequest: BaseRequest {
             return ["name": imageName]
         case let .updateFCMToken(fcmToken):
             return ["fcmToken": fcmToken]
+        case let .updateMyProfile(nickname, imageName):
+            return ["nickname": nickname, "profileImgName": imageName]
+        case let .updateFollowing(userId, isFollow):
+            return isFollow ? ["userId": userId] : [:]
         default:
             return [:]
         }
@@ -85,12 +135,7 @@ enum UserRequest: BaseRequest {
     }
     
     var authorizationType: AuthorizationType {
-        switch self{
-        case .updateFCMToken, .postingPermission:
-            return .access
-        default:
-            return .none
-        }
+        return .access
     }
     
     func asURLRequest() throws -> URLRequest {

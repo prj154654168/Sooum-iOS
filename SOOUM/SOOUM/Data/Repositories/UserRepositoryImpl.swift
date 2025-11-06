@@ -61,4 +61,39 @@ class UserRepositoryImpl: UserRepository {
         
         return self.remoteDataSource.postingPermission()
     }
+    
+    func myProfile() -> Observable<ProfileInfoResponse> {
+        
+        return self.remoteDataSource.myProfile()
+    }
+    
+    func updateMyProfile(nickname: String, imageName: String) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateMyProfile(nickname: nickname, imageName: imageName)
+    }
+    
+    func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        return self.remoteDataSource.feedCards(userId: userId, lastId: lastId)
+    }
+    
+    func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        return self.remoteDataSource.myCommentCards(lastId: lastId)
+    }
+    
+    func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse> {
+        
+        return self.remoteDataSource.followers(userId: userId, lastId: lastId)
+    }
+    
+    func followings(userId: String, lastId: String?) -> Observable<FollowInfoResponse> {
+        
+        return self.remoteDataSource.followings(userId: userId, lastId: lastId)
+    }
+    
+    func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateFollowing(userId: userId, isFollow: isFollow)
+    }
 }

@@ -63,4 +63,39 @@ class UserUseCaseImpl: UserUseCase {
         
         return self.repository.postingPermission().map { $0.postingPermission }
     }
+    
+    func myProfile() -> Observable<ProfileInfo> {
+        
+        return self.repository.myProfile().map { $0.profileInfo }
+    }
+    
+    func updateMyProfile(nickname: String, imageName: String) -> Observable<Bool> {
+        
+        return self.repository.updateMyProfile(nickname: nickname, imageName: imageName).map { $0 == 200 }
+    }
+    
+    func feedCards(userId: String, lastId: String?) -> Observable<[ProfileCardInfo]> {
+        
+        return self.repository.feedCards(userId: userId, lastId: lastId).map { $0.cardInfos }
+    }
+    
+    func myCommentCards(lastId: String?) -> Observable<[ProfileCardInfo]> {
+        
+        return self.repository.myCommentCards(lastId: lastId).map { $0.cardInfos }
+    }
+    
+    func followers(userId: String, lastId: String?) -> Observable<[FollowInfo]> {
+        
+        return self.repository.followers(userId: userId, lastId: lastId).map { $0.followInfos }
+    }
+    
+    func followings(userId: String, lastId: String?) -> Observable<[FollowInfo]> {
+        
+        return self.repository.followings(userId: userId, lastId: lastId).map { $0.followInfos }
+    }
+    
+    func updateFollowing(userId: String, isFollow: Bool) -> Observable<Bool> {
+        
+        return self.repository.updateFollowing(userId: userId, isFollow: isFollow).map { $0 == 200 }
+    }
 }

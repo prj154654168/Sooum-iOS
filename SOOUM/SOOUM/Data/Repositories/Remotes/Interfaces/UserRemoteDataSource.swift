@@ -20,4 +20,11 @@ protocol UserRemoteDataSource {
     func updateImage(imageName: String) -> Observable<Int>
     func updateFCMToken(fcmToken: String) -> Observable<Int>
     func postingPermission() -> Observable<PostingPermissionResponse>
+    func myProfile() -> Observable<ProfileInfoResponse>
+    func updateMyProfile(nickname: String, imageName: String) -> Observable<Int>
+    func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse>
+    func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse>
+    func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
+    func followings(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
+    func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int>
 }

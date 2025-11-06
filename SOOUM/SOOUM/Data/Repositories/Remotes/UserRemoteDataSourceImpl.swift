@@ -37,7 +37,7 @@ class UserRemoteDataSourceImpl: UserRemoteDataSource {
     func updateNickname(nickname: String) -> Observable<Int> {
         
         let request: UserRequest = .updateNickname(nickname: nickname)
-        return self.provider.networkManager.perform(Int.self, request: request)
+        return self.provider.networkManager.perform(request)
     }
     
     func presignedURL() -> Observable<ImageUrlInfoResponse> {
@@ -54,18 +54,60 @@ class UserRemoteDataSourceImpl: UserRemoteDataSource {
     func updateImage(imageName: String) -> Observable<Int> {
         
         let request: UserRequest = .updateImage(imageName: imageName)
-        return self.provider.networkManager.perform(Int.self, request: request)
+        return self.provider.networkManager.perform(request)
     }
     
     func updateFCMToken(fcmToken: String) -> Observable<Int> {
         
         let request: UserRequest = .updateFCMToken(fcmToken: fcmToken)
-        return self.provider.networkManager.perform(Int.self, request: request)
+        return self.provider.networkManager.perform(request)
     }
     
     func postingPermission() -> Observable<PostingPermissionResponse> {
         
         let request: UserRequest = .postingPermission
         return self.provider.networkManager.fetch(PostingPermissionResponse.self, request: request)
+    }
+    
+    func myProfile() -> Observable<ProfileInfoResponse> {
+        
+        let request: UserRequest = .myProfile
+        return self.provider.networkManager.fetch(ProfileInfoResponse.self, request: request)
+    }
+    
+    func updateMyProfile(nickname: String, imageName: String) -> Observable<Int> {
+        
+        let request: UserRequest = .updateMyProfile(nickname: nickname, imageName: imageName)
+        return self.provider.networkManager.perform(request)
+    }
+    
+    func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        let request: UserRequest = .feedCards(userId: userId, lastId: lastId)
+        return self.provider.networkManager.fetch(ProfileCardInfoResponse.self, request: request)
+    }
+    
+    func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        let request: UserRequest = .myCommentCards(lastId: lastId)
+        return self.provider.networkManager.fetch(ProfileCardInfoResponse.self, request: request)
+    }
+    
+    func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse> {
+        
+        let request: UserRequest = .followers(userId: userId, lastId: lastId)
+        return self.provider.networkManager.fetch(FollowInfoResponse.self, request: request)
+    }
+    
+    func followings(userId: String, lastId: String?) -> Observable<FollowInfoResponse> {
+        
+        let request: UserRequest = .followings(userId: userId, lastId: lastId)
+        return self.provider.networkManager.fetch(FollowInfoResponse.self, request: request)
+    }
+    
+    func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int> {
+        
+        let request: UserRequest = .updateFollowing(userId: userId, isFollow: isFollow)
+        return self.provider.networkManager.perform(request)
     }
 }

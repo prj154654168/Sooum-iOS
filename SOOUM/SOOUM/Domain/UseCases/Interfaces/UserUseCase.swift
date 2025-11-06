@@ -20,4 +20,11 @@ protocol UserUseCase {
     func updateImage(imageName: String) -> Observable<Bool>
     func updateFCMToken(fcmToken: String) -> Observable<Bool>
     func postingPermission() -> Observable<PostingPermission>
+    func myProfile() -> Observable<ProfileInfoResponse>
+    func updateMyProfile(nickname: String, imageName: String) -> Observable<Bool>
+    func feedCards(userId: String, lastId: String?) -> Observable<[ProfileCardInfo]>
+    func myCommentCards(lastId: String?) -> Observable<[ProfileCardInfo]>
+    func followers(userId: String, lastId: String?) -> Observable<[FollowInfo]>
+    func followings(userId: String, lastId: String?) -> Observable<[FollowInfo]>
+    func updateFollowing(userId: String, isFollow: Bool) -> Observable<Bool>
 }
