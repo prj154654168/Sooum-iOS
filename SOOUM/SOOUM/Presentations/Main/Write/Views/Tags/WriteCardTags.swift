@@ -311,13 +311,20 @@ extension WriteCardTags: WriteCardTagDelegate {
 extension WriteCardTags: WriteCardTagFooterDelegate {
     
     func textFieldDidBeginEditing(_ textField: WriteCardTagFooter) {
-        self.footerText = nil
+        self.footerText = textField.text
         self.collectionView.collectionViewLayout.invalidateLayout()
         self.delegate?.textFieldDidBeginEditing(textField)
     }
     
     func textFieldDidEndEditing(_ textField: WriteCardTagFooter) {
-        self.footerText = textField.text
+        if let text = textField.text, text.isEmpty == false {
+            let addedTag: WriteCardTagModel = .init(originalText: text, typography: self.typography)
+            var new = self.models
+            new.append(addedTag)
+            self.updateWrittenTags.accept(new)
+        }
+        textField.text = Text.tagPlaceholder
+        self.footerText = Text.tagPlaceholder
         self.collectionView.collectionViewLayout.invalidateLayout()
         self.scrollToRight(animated: true)
     }

@@ -76,6 +76,18 @@ class CardUseCaseImpl: CardUseCase {
         return self.repository.defaultImages().map { $0.defaultImages }
     }
     
+    func presignedURL() -> Observable<ImageUrlInfo> {
+        
+        return self.repository.presignedURL().map { $0.imageUrlInfo }
+    }
+    
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Bool> {
+        
+        return self.repository.uploadImage(data, with: url)
+            .map { _ in true }
+            .catchAndReturn(false)
+    }
+    
     func writeCard(
         isDistanceShared: Bool,
         latitude: String?,
@@ -86,7 +98,7 @@ class CardUseCaseImpl: CardUseCase {
         imgName: String,
         isStory: Bool,
         tags: [String]
-    ) -> Observable<Bool> {
+    ) -> Observable<String> {
         
         return self.repository.writeCard(
             isDistanceShared: isDistanceShared,
@@ -99,7 +111,7 @@ class CardUseCaseImpl: CardUseCase {
             isStory: isStory,
             tags: tags
         )
-        .map { $0 == 200 }
+        .map { $0.cardId }
     }
     
     func writeComment(
@@ -112,7 +124,7 @@ class CardUseCaseImpl: CardUseCase {
         imgType: String,
         imgName: String,
         tags: [String]
-    ) -> Observable<Bool> {
+    ) -> Observable<String> {
         
         return self.repository.writeComment(
             id: id,
@@ -125,6 +137,6 @@ class CardUseCaseImpl: CardUseCase {
             imgName: imgName,
             tags: tags
         )
-        .map { $0 == 200 }
+        .map { $0.cardId }
     }
 }

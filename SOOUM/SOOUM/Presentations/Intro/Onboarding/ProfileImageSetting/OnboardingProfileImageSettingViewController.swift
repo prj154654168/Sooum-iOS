@@ -60,7 +60,6 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
     
     private let profileImageView = UIImageView().then {
         $0.image = .init(.image(.v2(.profile_large)))
-        // TODO: 임시, backgroundColor 넣어서 이미지 빈 곳 채움
         $0.backgroundColor = .som.v2.gray300
         $0.layer.cornerRadius = 120 * 0.5
         $0.layer.borderWidth = 1
@@ -133,6 +132,12 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
             $0.trailing.equalToSuperview().offset(-16)
             $0.height.equalTo(56)
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
     }
     
     

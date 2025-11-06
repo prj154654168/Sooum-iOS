@@ -30,7 +30,7 @@ class WrittenTags: UIView {
         collectionViewLayout: UICollectionViewFlowLayout().then {
             $0.scrollDirection = .horizontal
             $0.minimumInteritemSpacing = 6
-            $0.minimumLineSpacing = 0
+            $0.minimumLineSpacing = 6
         }
     ).then {
         $0.backgroundColor = .clear

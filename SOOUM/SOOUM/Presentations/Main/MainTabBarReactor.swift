@@ -114,7 +114,7 @@ extension MainTabBarReactor {
     }
     
     func reactorForWriteCard() -> WriteCardViewReactor {
-        WriteCardViewReactor(dependencies: self.dependencies, type: .card)
+        WriteCardViewReactor(dependencies: self.dependencies)
     }
     
     // func reactorForTags() -> TagsViewReactor {

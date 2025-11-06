@@ -34,7 +34,7 @@ extension CommonNotificationInfo {
         case deleted = "DELETED"
         case transferSuccess = "TRANSFER_SUCCESS"
         case follow = "FOLLOW"
-        case notice = "NOTICE"
+        case tagUsage = "TAG_USAGE"
         case none = "NONE"
     }
 }

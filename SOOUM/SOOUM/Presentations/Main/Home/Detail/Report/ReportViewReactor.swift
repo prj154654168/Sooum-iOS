@@ -18,11 +18,13 @@ class ReportViewReactor: Reactor {
         case updateReportReason(ReportType?)
         /// 업로드 완료 여부 변경
         case updateisReported(Bool)
+        case updateHasErrors(Bool)
     }
     
     struct State {
         fileprivate(set) var reportReason: ReportType?
         fileprivate(set) var isReported: Bool
+        fileprivate(set) var hasErrors: Bool
     }
     
     var initialState: State
@@ -37,7 +39,7 @@ class ReportViewReactor: Reactor {
         self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
         self.id = id
         
-        self.initialState = State(reportReason: nil, isReported: false)
+        self.initialState = State(reportReason: nil, isReported: false, hasErrors: false)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -51,6 +53,7 @@ class ReportViewReactor: Reactor {
             
             return self.cardUseCase.reportCard(id: self.id, reportType: reportReason.rawValue)
                 .map(Mutation.updateisReported)
+                .catch(self.catchClosure)
         }
     }
     
@@ -61,7 +64,23 @@ class ReportViewReactor: Reactor {
             newState.reportReason = reportReason
         case let .updateisReported(isReported):
             newState.isReported = isReported
+        case let .updateHasErrors(hasErrors):
+            newState.hasErrors = hasErrors
         }
         return newState
+    }
+}
+
+extension ReportViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { error in
+            
+            let nsError = error as NSError
+            switch nsError.code {
+            case 409, 410:  return .just(.updateHasErrors(true))
+            default:        return .empty()
+            }
+        }
     }
 }

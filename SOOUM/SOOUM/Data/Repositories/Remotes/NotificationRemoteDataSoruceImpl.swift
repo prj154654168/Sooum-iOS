@@ -32,7 +32,7 @@ class NotificationRemoteDataSoruceImpl: NotificationRemoteDataSource {
     func requestRead(notificationId: String) -> Observable<Int> {
         
         let request: NotificationRequest = .requestRead(notificationId: notificationId)
-        return self.provider.networkManager.perform(Int.self, request: request)
+        return self.provider.networkManager.perform(request)
     }
     
     func notices(lastId: String?, size: Int?) -> Observable<NoticeInfoResponse> {

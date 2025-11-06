@@ -137,6 +137,15 @@ class ReportViewController: BaseNavigationViewController, View {
                 object.showSuccessReportedDialog()
             }
             .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.hasErrors)
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                object.navigationPop {
+                    NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
+                }
+            }
+            .disposed(by: self.disposeBag)
     }
 }
 
@@ -182,7 +191,9 @@ private extension ReportViewController {
             style: .primary,
             action: {
                 UIApplication.topViewController?.dismiss(animated: true) {
-                    self.navigationPop()
+                    self.navigationPop {
+                        NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
+                    }
                 }
             }
         )

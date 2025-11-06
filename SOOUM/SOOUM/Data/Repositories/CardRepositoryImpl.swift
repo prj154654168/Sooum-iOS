@@ -76,6 +76,16 @@ class CardRepositoryImpl: CardRepository {
         return self.remoteDataSource.defaultImages()
     }
     
+    func presignedURL() -> Observable<ImageUrlInfoResponse> {
+        
+        return self.remoteDataSource.presignedURL()
+    }
+    
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Void, Error>> {
+        
+        return self.remoteDataSource.uploadImage(data, with: url)
+    }
+    
     func writeCard(
         isDistanceShared: Bool,
         latitude: String?,
@@ -86,7 +96,7 @@ class CardRepositoryImpl: CardRepository {
         imgName: String,
         isStory: Bool,
         tags: [String]
-    ) -> Observable<Int> {
+    ) -> Observable<WriteCardResponse> {
         
         return self.remoteDataSource.writeCard(
             isDistanceShared: isDistanceShared,
@@ -111,7 +121,7 @@ class CardRepositoryImpl: CardRepository {
         imgType: String,
         imgName: String,
         tags: [String]
-    ) -> Observable<Int> {
+    ) -> Observable<WriteCardResponse> {
         
         return self.remoteDataSource.writeComment(
             id: id,

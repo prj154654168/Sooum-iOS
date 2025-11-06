@@ -50,7 +50,7 @@ class WriteCardTextView: UIView {
         $0.textContainerInset = .init(top: 20, left: 24, bottom: 20, right: 24)
         $0.textContainer.lineFragmentPadding = 0
         
-        $0.scrollIndicatorInsets = .init(top: 4, left: 0, bottom: 4, right: 0)
+        $0.scrollIndicatorInsets = .init(top: 20, left: 0, bottom: 20, right: 0)
         $0.indicatorStyle = .white
         $0.isScrollEnabled = false
         
@@ -188,13 +188,14 @@ class WriteCardTextView: UIView {
             attributes: attributes
         )
         
-        let size: CGSize = .init(width: textView.bounds.width, height: .greatestFiniteMagnitude)
-        let textSize: CGSize = textView.sizeThatFits(size)
+        /// width 계산 시 textContainerInset 고려
+        let textSize: CGSize = .init(width: textView.bounds.width - 24 * 2, height: .greatestFiniteMagnitude)
         var boundingHeight = attributedText.boundingRect(
             with: textSize,
             options: [.usesLineFragmentOrigin, .usesFontLeading],
             context: nil
         ).height
+        /// 자연스러운 줄바꿈을 위해 offset 추가
         boundingHeight += 1.0
         
         let lines: CGFloat = boundingHeight / self.typography.lineHeight

@@ -47,7 +47,7 @@ class NotificationViewController: BaseNavigationViewController, View {
         $0.delegate = self
     }
     
-    private lazy var tableView = UITableView(frame: .zero, style: .plain).then {
+    private lazy var tableView = UITableView(frame: .zero, style: .grouped).then {
         $0.backgroundColor = .som.v2.white
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
@@ -116,11 +116,6 @@ class NotificationViewController: BaseNavigationViewController, View {
     private var shouldRefreshing: Bool = false
     
     
-    // MARK: Variables + Rx
-    
-    private let willPushTypeAndCardId = PublishRelay<(detailType: DetailViewReactor.DetailType, id: String)?>()
-    
-    
     // MARK: Override func
     
     override func setupNaviBar() {
@@ -149,19 +144,6 @@ class NotificationViewController: BaseNavigationViewController, View {
     // MARK: ReactorKit - bind
     
     func bind(reactor: NotificationViewReactor) {
-        
-        self.willPushTypeAndCardId
-            .filterNil()
-            .distinctUntilChanged({ $0.detailType == $1.detailType && $0.id == $1.id })
-            .subscribe(with: self) { object, detailInfo in
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(
-                    detailType: detailInfo.detailType,
-                    with: detailInfo.id
-                )
-                object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
-            }
-            .disposed(by: self.disposeBag)
         
         // Action
         self.rx.viewDidLoad
@@ -192,6 +174,19 @@ class NotificationViewController: BaseNavigationViewController, View {
             .take(1)
             .subscribe(with: self.headerView) { headerView, _ in
                 headerView.didSelectTabBarItem(1, onlyUpdateApperance: true)
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.pushInfo)
+            .filterNil()
+            .distinctUntilChanged(reactor.canUpdatePushInfos)
+            .subscribe(with: self) { object, pushInfo in
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(
+                    entranceType: pushInfo.entranceType,
+                    with: pushInfo.id
+                )
+                object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -242,6 +237,15 @@ class NotificationViewController: BaseNavigationViewController, View {
             object.tableView.isHidden = false
         }
         .disposed(by: self.disposeBag)
+    }
+    
+    
+    // MARK: Objc func
+    
+    @objc
+    private func reloadData(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.landing)
     }
 }
 
@@ -302,49 +306,107 @@ extension NotificationViewController: UITableViewDelegate {
             }
         case let .unread(notification):
             
-            var detailInfo: (detailType: DetailViewReactor.DetailType, id: String)? {
+            var pushOrRequestReadInfo: NotificationViewReactor.PushOrRequestReadInfo? {
                 switch notification {
                 case let .default(notification):
+                    
                     if case .feedLike = notification.notificationInfo.notificationType {
-                        return (.feed, notification.targetCardId)
+                        return .init(
+                            entranceType: .feed,
+                            notificationId: notification.notificationInfo.notificationId,
+                            targetCardId: notification.targetCardId,
+                            shouldRead: true
+                        )
                     }
                     if case .commentLike = notification.notificationInfo.notificationType {
-                        return (.comment, notification.targetCardId)
+                        return .init(
+                            entranceType: .comment,
+                            notificationId: notification.notificationInfo.notificationId,
+                            targetCardId: notification.targetCardId,
+                            shouldRead: true
+                        )
                     }
                     if case .commentWrite = notification.notificationInfo.notificationType {
-                        return (.comment, notification.targetCardId)
+                        return .init(
+                            entranceType: .comment,
+                            notificationId: notification.notificationInfo.notificationId,
+                            targetCardId: notification.targetCardId,
+                            shouldRead: true
+                        )
                     }
                     return nil
-                default:
-                    return nil
+                    /// follow, deleted, blocked 는 읽기 API만 호출
+                case let .follow(notification):
+                    
+                    return .init(
+                        entranceType: .feed,
+                        notificationId: notification.notificationInfo.notificationId,
+                        targetCardId: nil,
+                        shouldRead: true
+                    )
+                case let .deleted(notification):
+                    
+                    return .init(
+                        entranceType: .feed,
+                        notificationId: notification.notificationInfo.notificationId,
+                        targetCardId: nil,
+                        shouldRead: true
+                    )
+                case let .blocked(notification):
+                    
+                    return .init(
+                        entranceType: .feed,
+                        notificationId: notification.notificationInfo.notificationId,
+                        targetCardId: nil,
+                        shouldRead: true
+                    )
                 }
             }
-            guard let detailInfo = detailInfo else { return }
+            guard let pushOrRequestReadInfo = pushOrRequestReadInfo else { return }
             
-            self.willPushTypeAndCardId.accept(detailInfo)
+            self.reactor?.action.onNext(.updatePushOrRequestReadInfo(pushOrRequestReadInfo))
         case let .read(notification):
             
-            var detailInfo: (detailType: DetailViewReactor.DetailType, id: String)? {
+            var pushOrRequestReadInfo: NotificationViewReactor.PushOrRequestReadInfo? {
                 switch notification {
                 case let .default(notification):
+                    
                     if case .feedLike = notification.notificationInfo.notificationType {
-                        return (.feed, notification.targetCardId)
+                        return .init(
+                            entranceType: .feed,
+                            notificationId: notification.notificationInfo.notificationId,
+                            targetCardId: notification.targetCardId,
+                            shouldRead: false
+                        )
                     }
                     if case .commentLike = notification.notificationInfo.notificationType {
-                        return (.comment, notification.targetCardId)
+                        return .init(
+                            entranceType: .comment,
+                            notificationId: notification.notificationInfo.notificationId,
+                            targetCardId: notification.targetCardId,
+                            shouldRead: false
+                        )
                     }
                     if case .commentWrite = notification.notificationInfo.notificationType {
-                        return (.comment, notification.targetCardId)
+                        return .init(
+                            entranceType: .comment,
+                            notificationId: notification.notificationInfo.notificationId,
+                            targetCardId: notification.targetCardId,
+                            shouldRead: false
+                        )
                     }
                     return nil
                 default:
+                    
                     return nil
                 }
             }
-            guard let detailInfo = detailInfo else { return }
+            guard let pushOrRequestReadInfo = pushOrRequestReadInfo else { return }
             
-            self.willPushTypeAndCardId.accept(detailInfo)
+            self.reactor?.action.onNext(.updatePushOrRequestReadInfo(pushOrRequestReadInfo))
+            
         default:
+            
             return
         }
     }
@@ -398,6 +460,15 @@ extension NotificationViewController: UITableViewDelegate {
             
             return 0
         }
+    }
+    
+    // group style이기 때문에 footer 제거
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0
     }
     
     func tableView(

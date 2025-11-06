@@ -41,6 +41,8 @@ enum CardRequest: BaseRequest {
     
     /// 기본 이미지 조회
     case defaultImages
+    /// 프로필 이미지 업로드할 공간 조회
+    case presignedURL
     /// 글추가
     case writeCard(
         isDistanceShared: Bool,
@@ -113,6 +115,9 @@ enum CardRequest: BaseRequest {
         case .defaultImages:
             
             return "/api/images/defaults"
+        case .presignedURL:
+            
+            return "/api/images/card-img"
         case .writeCard:
             
             return "/api/cards"

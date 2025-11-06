@@ -17,7 +17,7 @@ enum UserRequest: BaseRequest {
     case validateNickname(nickname: String)
     /// 닉네임 업데이트
     case updateNickname(nickname: String)
-    /// 이미지 업로드할 공간 확보
+    /// 프로필 이미지 업로드할 공간 조회
     case presignedURL
     /// 이미지 업데이트
     case updateImage(imageName: String)

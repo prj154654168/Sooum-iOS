@@ -17,7 +17,7 @@ class DetailViewFooterCell: UICollectionViewCell {
     
     // MARK: Views
     
-    private let cardView = SOMCard()
+    private let cardView = SOMCard(type: .comment)
     
     
     // MARK: Initialize

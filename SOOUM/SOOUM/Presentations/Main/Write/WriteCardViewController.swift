@@ -124,7 +124,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     override func setupNaviBar() {
         super.setupNaviBar()
         
-        self.navigationBar.title = self.reactor?.requestType == .card ? Text.navigationTitle : Text.commentNavigationTitle
+        self.navigationBar.title = self.reactor?.entranceType == .feed ? Text.navigationTitle : Text.commentNavigationTitle
         self.navigationBar.setRightButtons([self.writeButton])
     }
     
@@ -167,6 +167,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
         }
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
+    }
+    
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
         super.updatedKeyboard(withoutBottomSafeInset: height)
         
@@ -182,7 +188,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     func bind(reactor: WriteCardViewReactor) {
         
         var options: [SelectOptionItem.OptionType] {
-            if reactor.requestType == .card {
+            if reactor.entranceType == .feed {
                 return [.distanceShare, .story]
             } else {
                 return [.distanceShare]
@@ -429,6 +435,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isProcessing in
                 object.view.endEditing(true)
+                
                 if isProcessing {
                     object.loadingIndicatorView.startAnimating()
                 } else {
@@ -437,14 +444,31 @@ class WriteCardViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isWritten)
+        reactor.state.map(\.writtenCardId)
             .filterNil()
             .distinctUntilChanged()
-            .filter { $0 }
             .observe(on: MainScheduler.asyncInstance)
-            .subscribe(with: self) { object, _ in
-                object.navigationPop {
-                    NotificationCenter.default.post(name: .reloadData, object: object)
+            .subscribe(with: self) { object, writtenCardId in
+                NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
+                if reactor.entranceType == .comment {
+                    NotificationCenter.default.post(name: .reloadCommentsData, object: nil, userInfo: nil)
+                }
+                
+                if let navigationController = object.navigationController {
+                    
+                    let detailViewController = DetailViewController()
+                    detailViewController.reactor = reactor.reactorForDetail(with: writtenCardId)
+                    
+                    var viewControllers = navigationController.viewControllers
+                    if (viewControllers.popLast() as? Self) != nil {
+                        
+                        viewControllers.append(detailViewController)
+                        navigationController.setViewControllers(viewControllers, animated: true)
+                    } else {
+                        object.navigationPop()
+                    }
+                } else {
+                    object.navigationPop()
                 }
             }
             .disposed(by: self.disposeBag)

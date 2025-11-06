@@ -43,7 +43,7 @@ class UserRemoteDataSourceImpl: UserRemoteDataSource {
     func presignedURL() -> Observable<ImageUrlInfoResponse> {
         
         let request: UserRequest = .presignedURL
-        return self.provider.networkManager.perform(ImageUrlInfoResponse.self, request: request)
+        return self.provider.networkManager.fetch(ImageUrlInfoResponse.self, request: request)
     }
     
     func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Void, Error>> {

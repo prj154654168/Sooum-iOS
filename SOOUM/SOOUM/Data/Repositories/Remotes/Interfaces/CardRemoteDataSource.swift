@@ -32,6 +32,8 @@ protocol CardRemoteDataSource {
     // MARK: Write
     
     func defaultImages() -> Observable<DefaultImagesResponse>
+    func presignedURL() -> Observable<ImageUrlInfoResponse>
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Void, Error>>
     func writeCard(
         isDistanceShared: Bool,
         latitude: String?,
@@ -42,7 +44,7 @@ protocol CardRemoteDataSource {
         imgName: String,
         isStory: Bool,
         tags: [String]
-    ) -> Observable<Int>
+    ) -> Observable<WriteCardResponse>
     func writeComment(
         id: String,
         isDistanceShared: Bool,
@@ -53,5 +55,5 @@ protocol CardRemoteDataSource {
         imgType: String,
         imgName: String,
         tags: [String]
-    ) -> Observable<Int>
+    ) -> Observable<WriteCardResponse>
 }

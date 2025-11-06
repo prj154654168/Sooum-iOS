@@ -20,35 +20,25 @@ class LikeAndCommentView: UIView {
     // MARK: Views
     
     let likeBackgroundButton = UIButton()
-    private let likeContainer = UIStackView().then {
-        $0.axis = .horizontal
-        $0.alignment = .center
-        $0.distribution = .equalSpacing
-        $0.spacing = 4
-    }
+    private let likeContainer = UIView()
     private let likeImageView = UIImageView().then {
         $0.image = .init(.icon(.v2(.outlined(.heart))))
         $0.tintColor = .som.v2.gray500
     }
     private let likeCountLabel = UILabel().then {
         $0.textColor = .som.v2.gray500
-        $0.typography = .som.v2.caption1
+        $0.typography = .som.v2.caption1.withAlignment(.left)
     }
     
     let commentBackgroundButton = UIButton()
-    private let commentContainer = UIStackView().then {
-        $0.axis = .horizontal
-        $0.alignment = .center
-        $0.distribution = .equalSpacing
-        $0.spacing = 4
-    }
+    private let commentContainer = UIView()
     private let commentImageView = UIImageView().then {
         $0.image = .init(.icon(.v2(.outlined(.message_circle))))
         $0.tintColor = .som.v2.gray500
     }
     private let commentCountLabel = UILabel().then {
         $0.textColor = .som.v2.gray500
-        $0.typography = .som.v2.caption1
+        $0.typography = .som.v2.caption1.withAlignment(.left)
     }
     
     private let visitedLabel = UILabel().then {
@@ -101,47 +91,60 @@ class LikeAndCommentView: UIView {
     
     private func setupConstraints() {
         
+        self.backgroundColor = .som.v2.white
+        
         self.snp.makeConstraints {
             $0.height.equalTo(44)
         }
         
-        let container = UIStackView(arrangedSubviews: [
-            self.likeContainer,
-            self.commentContainer
-        ]).then {
-            $0.axis = .horizontal
-            $0.alignment = .center
-            $0.distribution = .equalSpacing
-            $0.spacing = 15
-        }
-        self.addSubview(container)
-        container.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
+        self.addSubview(self.likeContainer)
+        self.likeContainer.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
             $0.leading.equalToSuperview().offset(16)
+            $0.width.equalTo(60)
         }
-        
-        self.likeContainer.addArrangedSubviews(self.likeImageView, self.likeCountLabel)
+        self.likeContainer.addSubview(self.likeImageView)
         self.likeImageView.snp.makeConstraints {
+            $0.centerY.leading.equalToSuperview()
             $0.size.equalTo(20)
         }
+        self.likeContainer.addSubview(self.likeCountLabel)
+        self.likeCountLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalTo(self.likeImageView.snp.trailing).offset(4)
+        }
+        
         self.addSubview(self.likeBackgroundButton)
         self.likeBackgroundButton.snp.makeConstraints {
-            $0.edges.equalTo(self.likeContainer)
+            $0.edges.equalTo(self.likeImageView)
         }
         
-        self.commentContainer.addArrangedSubviews(self.commentImageView, self.commentCountLabel)
+        self.addSubview(self.commentContainer)
+        self.commentContainer.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalTo(self.likeContainer.snp.trailing)
+            $0.width.equalTo(60)
+        }
+        self.commentContainer.addSubview(self.commentImageView)
         self.commentImageView.snp.makeConstraints {
+            $0.centerY.leading.equalToSuperview()
             $0.size.equalTo(20)
         }
+        self.commentContainer.addSubview(self.commentCountLabel)
+        self.commentCountLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalTo(self.commentImageView.snp.trailing).offset(4)
+        }
+        
         self.addSubview(self.commentBackgroundButton)
         self.commentBackgroundButton.snp.makeConstraints {
-            $0.edges.equalTo(self.commentContainer)
+            $0.edges.equalTo(self.commentImageView)
         }
         
         self.addSubview(self.visitedLabel)
         self.visitedLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.greaterThanOrEqualTo(container.snp.trailing).offset(20)
+            $0.leading.greaterThanOrEqualTo(self.commentContainer.snp.trailing).offset(20)
             $0.trailing.equalToSuperview().offset(-20)
         }
     }
