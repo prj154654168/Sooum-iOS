@@ -45,6 +45,8 @@ class SOMStickyTabBar: UIView {
     
     // MARK: Variables
     
+    private let itemAlignment: NSTextAlignment
+    
     var inset: UIEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 16) {
         didSet {
             self.refreshConstraints()
@@ -67,13 +69,19 @@ class SOMStickyTabBar: UIView {
     
     // Set item width with text and typography
     var itemWidths: [CGFloat] {
-        let itemWidths: [CGFloat] = self.items.enumerated().map { index, item in
-            let typography: Typography = .som.v2.title2
-            /// 실제 텍스트 가로 길이
-            return (item as NSString).size(withAttributes: [.font: typography.font]).width
+        if self.itemAlignment == .left {
+            return self.items.enumerated().map { index, item in
+                let typography: Typography = .som.v2.title2
+                /// 실제 텍스트 가로 길이
+                return (item as NSString).size(withAttributes: [.font: typography.font]).width
+            }
+        } else {
+            let horizontalInset = self.inset.left + self.inset.right
+            let totalSpacing = self.spacing * CGFloat(self.items.count - 1)
+            // 항상 화면의 가로 크기를 꽉 채운다고 가정
+            let itemWidth = (UIScreen.main.bounds.width - horizontalInset - totalSpacing) / CGFloat(self.items.count)
+            return Array(repeating: itemWidth, count: self.items.count)
         }
-        
-        return itemWidths
     }
     
     var itemFrames: [CGRect] {
@@ -110,7 +118,8 @@ class SOMStickyTabBar: UIView {
     
     // MARK: Initialize
     
-    init() {
+    init(alignment: NSTextAlignment = .left) {
+        self.itemAlignment = alignment
         super.init(frame: .zero)
         
         self.setupConstraints()
@@ -188,10 +197,15 @@ class SOMStickyTabBar: UIView {
     
     private func setTabBarItems(_ items: [String]) {
         
+        self.tabBarItemContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
         items.enumerated().forEach { index, title in
             
             let item = SOMStickyTabBarItem(title: title)
             item.updateState(color: index == 0 ? Constants.selectedColor : Constants.unSelectedColor)
+            item.snp.makeConstraints {
+                $0.width.equalTo(self.itemWidths[index])
+            }
             
             self.tabBarItemContainer.addArrangedSubview(item)
         }
