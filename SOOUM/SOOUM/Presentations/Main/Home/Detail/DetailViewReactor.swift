@@ -62,6 +62,7 @@ class DetailViewReactor: Reactor {
     
     private let dependencies: AppDIContainerable
     private let cardUseCase: CardUseCase
+    private let userUseCase: UserUseCase
     
     private let locationManager: LocationManagerDelegate
     
@@ -77,6 +78,7 @@ class DetailViewReactor: Reactor {
     ) {
         self.dependencies = dependencies
         self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
+        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
         
         self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
         
@@ -117,7 +119,7 @@ class DetailViewReactor: Reactor {
             
             guard let memberId = self.currentState.detailCard?.memberId else { return .empty() }
             
-            return self.cardUseCase.updateBlocked(id: memberId, isBlocked: isBlocked)
+            return self.userUseCase.updateBlocked(id: memberId, isBlocked: isBlocked)
                 .flatMapLatest { isBlockedSuccess -> Observable<Mutation> in
                     /// isBlocked == true 일 때, 차단 요청
                     return isBlockedSuccess ? .just(.updateIsBlocked(isBlocked == false)) : .empty()
@@ -229,12 +231,12 @@ extension DetailViewReactor {
     //     TagDetailViewrReactor(provider: self.provider, tagID: tagID)
     // }
     
-    // func reactorForProfile(
-    //     type: ProfileViewReactor.EntranceType,
-    //     _ memberId: String
-    // ) -> ProfileViewReactor {
-    //     ProfileViewReactor(provider: self.provider, type: type, memberId: memberId)
-    // }
+    func reactorForProfile(
+        type: ProfileViewReactor.EntranceType,
+        _ userId: String
+    ) -> ProfileViewReactor {
+        ProfileViewReactor(dependencies: self.dependencies, type: type, with: userId)
+    }
     
     // func reactorForNoti() -> NotificationTabBarReactor {
     //     NotificationTabBarReactor(provider: self.provider)
@@ -243,7 +245,7 @@ extension DetailViewReactor {
 
 extension DetailViewReactor {
     
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+    var catchClosure: ((Error) throws -> Observable<Mutation>) {
         return { error in
             
             let nsError = error as NSError
@@ -254,7 +256,7 @@ extension DetailViewReactor {
                     .just(.updateIsBlocked(false))
                 ])
             }
-            
+            // errorCode == 410 일 때, 이미 삭제된 카드
             if case 410 = nsError.code {
                 return .concat([
                     .just(.updateIsRefreshing(false)),
@@ -262,7 +264,7 @@ extension DetailViewReactor {
                 ])
             }
             
-            return .empty()
+            return .just(.updateIsRefreshing(false))
         }
     }
 }

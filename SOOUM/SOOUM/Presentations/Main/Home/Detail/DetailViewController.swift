@@ -271,14 +271,14 @@ class DetailViewController: BaseNavigationViewController, View {
          // 카드 삭제 후 X 버튼 액션
          self.rightDeleteButton.rx.throttleTap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: HomeViewController.self, animated: false)
+                 object.navigationPop(to: HomeViewController.self, animated: false, bottomBarHidden: false)
              }
              .disposed(by: self.disposeBag)
          
          // 답카드 홈 버튼 액션
          self.leftHomeButton.rx.throttleTap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: HomeViewController.self, animated: false)
+                 object.navigationPop(to: HomeViewController.self, animated: false, bottomBarHidden: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -468,6 +468,27 @@ extension DetailViewController: UICollectionViewDataSource {
         cell.setModels(self.detailCard)
         
         guard let reactor = self.reactor else { return cell }
+        
+        cell.memberInfoView.memberBackgroundButton.rx.throttleTap(.seconds(3))
+            .subscribe(with: self) { object, _ in
+                /// 내 프로필일 경우 탭 이동
+                if object.detailCard.isOwnCard {
+                    guard let navigationController = object.navigationController,
+                        let tabBarController = navigationController.parent as? SOMTabBarController
+                    else { return }
+                    
+                    tabBarController.didSelectedIndex(3)
+                    navigationController.viewControllers.removeAll(where: { $0.isKind(of: HomeViewController.self) == false })
+                } else {
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = reactor.reactorForProfile(
+                        type: .other,
+                        object.detailCard.memberId
+                    )
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                }
+            }
+            .disposed(by: cell.disposeBag)
         
         cell.likeAndCommentView.likeBackgroundButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(reactor.state.compactMap(\.detailCard).map(\.isLike))

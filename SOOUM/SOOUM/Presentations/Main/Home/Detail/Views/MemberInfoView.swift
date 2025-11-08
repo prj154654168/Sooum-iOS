@@ -20,7 +20,7 @@ class MemberInfoView: UIView {
     // MARK: Views
     
     /// 상세보기, 멤버 이미지
-    // let memberBackgroundButton = UIButton()
+    let memberBackgroundButton = UIButton()
     private let memberImageView = UIImageView().then {
         $0.backgroundColor = .som.v2.gray300
         $0.layer.borderColor = UIColor.som.v2.gray300.cgColor
@@ -159,6 +159,13 @@ class MemberInfoView: UIView {
             $0.centerY.equalToSuperview()
             $0.leading.greaterThanOrEqualTo(container.snp.trailing).offset(10)
             $0.trailing.equalToSuperview().offset(-20)
+        }
+        
+        self.addSubview(self.memberBackgroundButton)
+        self.memberBackgroundButton.snp.makeConstraints {
+            $0.verticalEdges.equalTo(container.snp.verticalEdges)
+            $0.leading.equalTo(container.snp.leading)
+            $0.trailing.equalTo(self.memberLabel.snp.trailing)
         }
     }
     
