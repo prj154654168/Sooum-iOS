@@ -1,5 +1,5 @@
 //
-//  MyFollowingViewCell.swift
+//  FollowerViewCell.swift
 //  SOOUM
 //
 //  Created by 오현식 on 12/7/24.
@@ -12,14 +12,14 @@ import Then
 
 import RxSwift
 
-
-class MyFollowingViewCell: UITableViewCell {
+class FollowerViewCell: UITableViewCell {
     
     enum Text {
-        static let followingButtonTitle: String = "팔로잉"
+        static let willFollowButton: String = "팔로우"
+        static let didFollowButton: String = "팔로잉"
     }
     
-    static let cellIdentifier = String(reflecting: MyFollowingViewCell.self)
+    static let cellIdentifier = String(reflecting: FollowerViewCell.self)
     
     
     // MARK: Views
@@ -39,12 +39,12 @@ class MyFollowingViewCell: UITableViewCell {
         $0.typography = .som.v2.subtitle2
     }
     
-    let cancelFollowButton = SOMButton().then {
-        $0.title = Text.followingButtonTitle
+    let followButton = SOMButton().then {
+        $0.title = Text.willFollowButton
         $0.typography = .som.v2.body1
-        $0.foregroundColor = .som.v2.gray600
+        $0.foregroundColor = .som.v2.white
         
-        $0.backgroundColor = .som.v2.gray100
+        $0.backgroundColor = .som.v2.black
         $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
     }
@@ -60,7 +60,7 @@ class MyFollowingViewCell: UITableViewCell {
     var disposeBag = DisposeBag()
     
     
-    // MARK: Initialization
+    // MARK: Initalization
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -80,8 +80,10 @@ class MyFollowingViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
+        // UI 초기화
         self.profileImageView.image = nil
         self.nicknameLabel.text = nil
+        self.updateButton(false)
         
         self.disposeBag = DisposeBag()
     }
@@ -112,8 +114,8 @@ class MyFollowingViewCell: UITableViewCell {
             $0.trailing.equalTo(self.nicknameLabel.snp.trailing)
         }
         
-        self.contentView.addSubview(self.cancelFollowButton)
-        self.cancelFollowButton.snp.makeConstraints {
+        self.contentView.addSubview(self.followButton)
+        self.followButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.greaterThanOrEqualTo(self.nicknameLabel.snp.trailing).offset(10)
             $0.trailing.equalToSuperview().offset(-16)
@@ -127,15 +129,23 @@ class MyFollowingViewCell: UITableViewCell {
     
     func setModel(_ model: FollowInfo) {
         
-        self.model = model
-        
         if let profileImageUrl = model.profileImageUrl {
             self.profileImageView.setImage(strUrl: profileImageUrl)
         } else {
             self.profileImageView.image = .init(.image(.v2(.profile_small)))
         }
-        
         self.nicknameLabel.text = model.nickname
         self.nicknameLabel.typography = .som.v2.subtitle2
+        
+        self.followButton.isHidden = model.isRequester
+        
+        self.updateButton(model.isFollowing)
+    }
+    
+    func updateButton(_ isFollowing: Bool) {
+        
+        self.followButton.title = isFollowing ? Text.didFollowButton : Text.willFollowButton
+        self.followButton.foregroundColor = isFollowing ? .som.v2.gray600 : .som.v2.white
+        self.followButton.backgroundColor = isFollowing ? .som.v2.gray100 : .som.v2.black
     }
 }

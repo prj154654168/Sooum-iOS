@@ -20,6 +20,30 @@ class FollowViewController: BaseNavigationViewController, View {
     enum Text {
         static let followerTitle: String = "팔로워"
         static let followingTitle: String = "팔로잉"
+        
+        static let followerPlaceholderMessage: String = "팔로우하는 사람이 없어요"
+        static let followingPlaceholderMessage: String = "팔로우하고 있는 사람이 없어요"
+    }
+    
+    enum Section: Int, CaseIterable {
+        case follower
+        case following
+        case empty
+    }
+    
+    enum Item: Hashable {
+        case follower(FollowInfo)
+        case following(FollowInfo)
+        case empty
+    }
+    
+    
+    // MARK: Views
+    
+    private lazy var stickyTabBar = SOMStickyTabBar(alignment: .center).then {
+        $0.items = [Text.followerTitle, Text.followingTitle]
+        $0.spacing = 24
+        $0.delegate = self
     }
     
     private lazy var tableView = UITableView().then {
@@ -27,27 +51,106 @@ class FollowViewController: BaseNavigationViewController, View {
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
-        $0.decelerationRate = .fast
+        $0.contentInsetAdjustmentBehavior = .never
         
+        $0.alwaysBounceVertical = true
+        $0.showsVerticalScrollIndicator = false
+        $0.showsHorizontalScrollIndicator = false
+        
+        $0.register(FollowerViewCell.self, forCellReuseIdentifier: FollowerViewCell.cellIdentifier)
         $0.register(MyFollowingViewCell.self, forCellReuseIdentifier: MyFollowingViewCell.cellIdentifier)
-        $0.register(MyFollowerViewCell.self, forCellReuseIdentifier: MyFollowerViewCell.cellIdentifier)
-        $0.register(OtherFollowViewCell.self, forCellReuseIdentifier: OtherFollowViewCell.cellIdentifier)
+        $0.register(FollowPlaceholderViewCell.self, forCellReuseIdentifier: FollowPlaceholderViewCell.cellIdentifier)
         
         $0.refreshControl = SOMRefreshControl()
         
-        $0.dataSource = self
         $0.delegate = self
     }
     
-    override var navigationBarHeight: CGFloat {
-        46
+    
+    // MARK: Variables
+    
+    typealias DataSource = UITableViewDiffableDataSource<Section, Item>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+    
+    private lazy var dataSource = DataSource(tableView: self.tableView) { [weak self] tableView, indexPath, item -> UITableViewCell? in
+        
+        guard let self = self, let reactor = self.reactor else { return nil }
+        
+        switch item {
+        case let .follower(follower):
+            
+            let cell: FollowerViewCell = tableView.dequeueReusableCell(
+                withIdentifier: FollowerViewCell.cellIdentifier,
+                for: indexPath
+            ) as! FollowerViewCell
+            
+            cell.setModel(follower)
+            
+            cell.followButton.rx.throttleTap
+                .subscribe(onNext: { _ in
+                    reactor.action.onNext(.updateFollow(follower.memberId, !follower.isFollowing))
+                })
+                .disposed(by: cell.disposeBag)
+            
+            return cell
+        case let .following(following):
+            
+            switch reactor.viewType {
+            case .my:
+                
+                let cell: MyFollowingViewCell = tableView.dequeueReusableCell(
+                    withIdentifier: MyFollowingViewCell.cellIdentifier,
+                    for: indexPath
+                ) as! MyFollowingViewCell
+                
+                cell.setModel(following)
+                
+                cell.cancelFollowButton.rx.throttleTap
+                    .subscribe(onNext: { _ in
+                        reactor.action.onNext(.updateFollow(following.memberId, false))
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+                return cell
+            case .other:
+                
+                let cell: FollowerViewCell = tableView.dequeueReusableCell(
+                    withIdentifier: FollowerViewCell.cellIdentifier,
+                    for: indexPath
+                ) as! FollowerViewCell
+                
+                cell.setModel(following)
+                
+                cell.followButton.rx.throttleTap
+                    .subscribe(onNext: { _ in
+                        reactor.action.onNext(.updateFollow(following.memberId, !following.isFollowing))
+                    })
+                    .disposed(by: cell.disposeBag)
+                
+                return cell
+            }
+        case .empty:
+            
+            let placeholder: FollowPlaceholderViewCell = tableView.dequeueReusableCell(
+                withIdentifier: FollowPlaceholderViewCell.cellIdentifier,
+                for: indexPath
+            ) as! FollowPlaceholderViewCell
+            
+            placeholder.placeholderText = reactor.entranceType == .follower ?
+                Text.followerPlaceholderMessage :
+                Text.followingPlaceholderMessage
+            
+            return placeholder
+        }
     }
     
-    private(set) var follows = [Follow]()
+    private(set) var followers: [FollowInfo] = []
+    private(set) var followings: [FollowInfo] = []
     
+    private var initialOffset: CGFloat = 0
     private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
-    private var isLoadingMore: Bool = false
+    private var shouldRefreshing: Bool = false
     
     
     // MARK: Override func
@@ -55,18 +158,37 @@ class FollowViewController: BaseNavigationViewController, View {
     override func setupNaviBar() {
         super.setupNaviBar()
         
-        let title = self.reactor?.entranceType == .following ? Text.followingTitle : Text.followerTitle
-        self.navigationBar.title = title + " (0)"
+        guard let reactor = self.reactor else { return }
+        
+        self.navigationBar.title = reactor.nickname
     }
     
     override func setupConstraints() {
         super.setupConstraints()
         
+        self.view.addSubview(self.stickyTabBar)
+        self.stickyTabBar.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            $0.horizontalEdges.equalToSuperview()
+        }
+        
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-            $0.bottom.leading.trailing.equalToSuperview()
+            $0.top.equalTo(self.stickyTabBar.snp.bottom)
+            $0.bottom.horizontalEdges.equalToSuperview()
         }
+    }
+    
+    override func bind() {
+        // 뒤로가기 시 상대 팔로우 화면이면 하단 네비바 숨김
+        self.navigationBar.backButton.rx.throttleTap
+            .subscribe(with: self) { object, _ in
+                object.navigationPop(
+                    animated: true,
+                    bottomBarHidden: object.reactor?.viewType == .other
+                )
+            }
+            .disposed(by: self.disposeBag)
     }
     
     
@@ -74,104 +196,113 @@ class FollowViewController: BaseNavigationViewController, View {
     
     func bind(reactor: FollowViewReactor) {
         
+        // 팔로우 == 0, 팔로잉 == 1
+        self.stickyTabBar.didSelectTabBarItem(reactor.entranceType == .follower ? 0 : 1)
+        
         // Action
         self.rx.viewDidLoad
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        let isLoading = reactor.state.map(\.isLoading).distinctUntilChanged().share()
+        let isRefreshing = reactor.state.map(\.isRefreshing).distinctUntilChanged().share()
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
-            .withLatestFrom(isLoading)
+            .withLatestFrom(isRefreshing)
             .filter { $0 == false }
+            .delay(.milliseconds(1000), scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        isLoading
-            .do(onNext: { [weak self] isLoading in
-                if isLoading { self?.isLoadingMore = false }
-            })
-            .subscribe(with: self.tableView) { tableView, isLoading in
-                if isLoading {
-                    // tableView.refreshControl?.beginRefreshingFromTop()
-                } else {
-                    tableView.refreshControl?.endRefreshing()
+        isRefreshing
+            .filter { $0 == false }
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self.tableView) { tableView, _ in
+                tableView.refreshControl?.endRefreshing()
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map {
+            FollowViewReactor.DisplayStates(
+                followType: $0.followType,
+                followers: $0.followers,
+                followings: $0.followings
+            )
+        }
+        .observe(on: MainScheduler.asyncInstance)
+        .subscribe(with: self) { object, displayStates in
+            
+            var followerTabItem: String {
+                if displayStates.followers.isEmpty == false {
+                    return Text.followerTitle + " \(displayStates.followers.count)"
                 }
+                return Text.followerTitle
             }
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.isProcessing)
-            .distinctUntilChanged()
-            .do(onNext: { [weak self] isProcessing in
-                if isProcessing { self?.isLoadingMore = false }
-            })
-            .bind(to: self.activityIndicatorView.rx.isAnimating)
-            .disposed(by: self.disposeBag)
-        
-        let follows = reactor.state.map(\.follows).distinctUntilChanged().share()
-        follows
-            .map {
-                let title = reactor.entranceType == .following ? Text.followingTitle : Text.followerTitle
-                return title + "(\($0.count))"
+            var followingTabItem: String {
+                if displayStates.followings.isEmpty == false {
+                    return Text.followingTitle + " \(displayStates.followings.count)"
+                }
+                return Text.followingTitle
             }
-            .bind(to: self.navigationBar.rx.title)
-            .disposed(by: self.disposeBag)
-        follows
-            .subscribe(with: self) { object, follows in
-                object.follows = follows
-                object.tableView.reloadData()
+            
+            object.stickyTabBar.items = [followerTabItem, followingTabItem]
+            
+            var snapshot = Snapshot()
+            snapshot.appendSections(Section.allCases)
+            
+            switch displayStates.followType {
+            case .follower:
+                
+                guard displayStates.followers.isEmpty == false else {
+                    snapshot.appendItems([.empty], toSection: .empty)
+                    break
+                }
+                
+                let new = displayStates.followers.map { Item.follower($0) }
+                snapshot.appendItems(new, toSection: .follower)
+            case .following:
+                
+                guard displayStates.followings.isEmpty == false else {
+                    snapshot.appendItems([.empty], toSection: .empty)
+                    break
+                }
+                
+                let new = displayStates.followings.map { Item.following($0) }
+                snapshot.appendItems(new, toSection: .following)
             }
-            .disposed(by: self.disposeBag)
+            
+            object.dataSource.apply(snapshot, animatingDifferences: false)
+        }
+        .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isRequest)
+        reactor.state.map(\.isUpdated)
+            .filterNil()
             .distinctUntilChanged()
             .filter { $0 }
-            .map { _ in Reactor.Action.landing }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.isCancel)
-            .distinctUntilChanged()
-            .filter { $0 }
-            .map { _ in Reactor.Action.landing }
-            .bind(to: reactor.action)
+            .subscribe(with: self) { object, _ in
+                reactor.action.onNext(.landing)
+                NotificationCenter.default.post(name: .reloadProfileData, object: nil, userInfo: nil)
+            }
             .disposed(by: self.disposeBag)
     }
 }
 
-extension FollowViewController: UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.follows.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let reactor = self.reactor else { return .init(frame: .zero) }
-        
-        switch reactor.viewType {
-        case .my:
-            switch reactor.entranceType {
-            case .following:
-                
-                return self.cellForMyFollowing(indexPath, reactor: reactor)
-            case .follower:
-                
-                return self.cellForMyFollower(indexPath, reactor: reactor)
-            }
-        case .other:
-            
-            return self.cellForOtherFollow(indexPath, reactor: reactor)
-        }
-    }
-}
+
+// MARK: UITableViewDelegate
 
 extension FollowViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 74
+        
+        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return 0 }
+        
+        switch item {
+        case .empty:
+            return tableView.bounds.height
+        default:
+            return 60
+        }
     }
     
     func tableView(
@@ -179,170 +310,79 @@ extension FollowViewController: UITableViewDelegate {
         willDisplay cell: UITableViewCell,
         forRowAt indexPath: IndexPath
     ) {
-        guard self.follows.isEmpty == false else { return }
         
-        let lastSectionIndex = tableView.numberOfSections - 1
-        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        guard let reactor = self.reactor else { return }
         
-        if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.row == lastRowIndex {
-            let lastId = self.follows[indexPath.row].id
-            self.reactor?.action.onNext(.moreFind(lastId: lastId))
+        switch reactor.currentState.followType {
+        case .follower:
+            
+            let lastItemIndexPath = tableView.numberOfRows(inSection: Section.follower.rawValue) - 1
+            if self.followers.isEmpty == false,
+               indexPath.section == Section.follower.rawValue,
+               indexPath.row == lastItemIndexPath,
+               let lastId = self.followers.last?.memberId {
+                
+                reactor.action.onNext(.moreFind(type: .follower, lastId: lastId))
+            }
+        case .following:
+            
+            let lastItemIndexPath = tableView.numberOfRows(inSection: Section.following.rawValue) - 1
+            if self.followings.isEmpty == false,
+               indexPath.section == Section.following.rawValue,
+               indexPath.item == lastItemIndexPath,
+               let lastId = self.followings.last?.memberId {
+                
+                reactor.action.onNext(.moreFind(type: .following, lastId: lastId))
+            }
         }
     }
+    
+    
+    // MARK: UIScrollViewDelegate
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
         let offset = scrollView.contentOffset.y
         
-        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
-        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
+        // currentOffset <= 0 && isRefreshing == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (offset <= 0) && (self.reactor?.currentState.isRefreshing == false)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let offset = scrollView.contentOffset.y
         
-        // 당겨서 새로고침 상황일 때
-        guard offset > 0 else { return }
+        // 당겨서 새로고침
+        if self.isRefreshEnabled, offset < self.initialOffset {
+            guard let refreshControl = self.tableView.refreshControl else {
+                self.currentOffset = offset
+                return
+            }
+            
+            let pulledOffset = self.initialOffset - offset
+            let refreshingOffset = refreshControl.frame.origin.y + refreshControl.frame.height
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset + 10
+        }
         
-        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
-        self.isLoadingMore = offset > self.currentOffset
         self.currentOffset = offset
     }
     
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    func scrollViewWillEndDragging(
+        _ scrollView: UIScrollView,
+        withVelocity velocity: CGPoint,
+        targetContentOffset: UnsafeMutablePointer<CGPoint>
+    ) {
         
-        let offset = scrollView.contentOffset.y
-        
-        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
-        if self.isRefreshEnabled,
-           let refreshControl = self.tableView.refreshControl,
-           offset <= -(refreshControl.frame.origin.y + 40) {
-            
-            // refreshControl.beginRefreshingFromTop()
+        if self.shouldRefreshing {
+            self.tableView.refreshControl?.beginRefreshing()
         }
     }
 }
 
-extension FollowViewController {
+extension FollowViewController: SOMStickyTabBarDelegate {
     
-    private func cellForMyFollowing(_ indexPath: IndexPath, reactor: FollowViewReactor) -> MyFollowingViewCell {
+    func tabBar(_ tabBar: SOMStickyTabBar, didSelectTabAt index: Int) {
         
-        let model = self.follows[indexPath.row]
-        
-        let cell: MyFollowingViewCell = self.tableView.dequeueReusableCell(
-            withIdentifier: MyFollowingViewCell.cellIdentifier,
-            for: indexPath
-        ) as! MyFollowingViewCell
-        cell.selectionStyle = .none
-        cell.setModel(model)
-        cell.updateButton(model.isFollowing)
-        
-        cell.profilBackgroundButton.rx.tap
-            .subscribe(with: self) { object, _ in
-                
-                if model.isRequester {
-                    
-                    let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(type: .myWithNavi, model.id)
-                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
-                } else {
-                    
-                    let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(type: .other, model.id)
-                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
-                }
-            }
-            .disposed(by: cell.disposeBag)
-        
-        cell.cancelFollowButton.rx.throttleTap(.seconds(1))
-            .subscribe(onNext: { _ in
-                reactor.action.onNext(.cancel(model.id))
-            })
-            .disposed(by: cell.disposeBag)
-        
-        cell.followButton.rx.throttleTap(.seconds(1))
-            .subscribe(onNext: { _ in
-                reactor.action.onNext(.request(model.id))
-            })
-            .disposed(by: cell.disposeBag)
-        
-        return cell
-    }
-    
-    private func cellForMyFollower(_ indexPath: IndexPath, reactor: FollowViewReactor) -> MyFollowerViewCell {
-        
-        let model = self.follows[indexPath.row]
-        
-        let cell: MyFollowerViewCell = self.tableView.dequeueReusableCell(
-            withIdentifier: MyFollowerViewCell.cellIdentifier,
-            for: indexPath
-        ) as! MyFollowerViewCell
-        cell.selectionStyle = .none
-        cell.setModel(model)
-        cell.updateButton(model.isFollowing)
-        
-        cell.profilBackgroundButton.rx.tap
-            .subscribe(with: self) { object, _ in
-                
-                if model.isRequester {
-                    
-                    let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(type: .myWithNavi, model.id)
-                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
-                } else {
-                    
-                    let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(type: .other, model.id)
-                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
-                }
-            }
-            .disposed(by: cell.disposeBag)
-        
-        cell.followButton.rx.throttleTap(.seconds(1))
-            .subscribe(onNext: { _ in
-                reactor.action.onNext(model.isFollowing ? .cancel(model.id) : .request(model.id))
-            })
-            .disposed(by: cell.disposeBag)
-        
-        return cell
-    }
-    
-    private func cellForOtherFollow(_ indexPath: IndexPath, reactor: FollowViewReactor) -> OtherFollowViewCell {
-        
-        let model = self.follows[indexPath.row]
-        
-        let cell: OtherFollowViewCell = self.tableView.dequeueReusableCell(
-            withIdentifier: OtherFollowViewCell.cellIdentifier,
-            for: indexPath
-        ) as! OtherFollowViewCell
-        cell.selectionStyle = .none
-        cell.setModel(model)
-        cell.updateButton(model.isFollowing)
-        
-        cell.profilBackgroundButton.rx.tap
-            .subscribe(with: self) { object, _ in
-                
-                if model.isRequester {
-                    
-                    let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(type: .myWithNavi, model.id)
-                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
-                } else {
-                    
-                    let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(type: .other, model.id)
-                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
-                }
-            }
-            .disposed(by: cell.disposeBag)
-        
-        cell.followButton.rx.throttleTap(.seconds(1))
-            .subscribe(with: self) { object, _ in
-                reactor.action.onNext(model.isFollowing ? .cancel(model.id) : .request(model.id))
-            }
-            .disposed(by: cell.disposeBag)
-        
-        return cell
+        self.reactor?.action.onNext(.updateFollowType(index == 0 ? .follower : .following))
     }
 }
