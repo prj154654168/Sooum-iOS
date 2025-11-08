@@ -223,6 +223,7 @@ extension UIImage.SOOUMType {
         case placeholder_notification
         case prev_card_button
         case profile_large
+        case profile_medium
         case profile_small
     }
     

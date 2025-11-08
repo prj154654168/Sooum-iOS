@@ -29,7 +29,7 @@ extension UIViewController {
     func navigationPop(
         to: UIViewController.Type? = nil,
         animated: Bool = true,
-        bottomBarHidden: Bool = false,
+        bottomBarHidden: Bool = true,
         completion: (() -> Void)? = nil
     ) {
         CATransaction.begin()
@@ -43,9 +43,7 @@ extension UIViewController {
             destination.hidesBottomBarWhenPushed = bottomBarHidden
             self.navigationController?.popToViewController(destination, animated: animated)
         } else {
-            self.navigationController?
-                .viewControllers.dropLast().last?
-                .hidesBottomBarWhenPushed = bottomBarHidden
+            self.hidesBottomBarWhenPushed = bottomBarHidden
             self.navigationController?.popViewController(animated: animated)
         }
 

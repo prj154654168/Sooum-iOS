@@ -271,6 +271,14 @@ extension V2Style where Base == Typography {
         lineHeight: 15,
         letterSpacing: -0.025
     )
+    /// Size: 5, Line height: 8
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var caption4: Typography = .init(
+        fontContainer: BuiltInFont(size: 5, weight: .medium),
+        lineHeight: 8,
+        letterSpacing: -0.025
+    )
     
     
     // RIDIBatang
@@ -296,6 +304,14 @@ extension V2Style where Base == Typography {
     static var ridiTag: Typography = .init(
         fontContainer: BuiltInFont(type: .ridi, size: 11, weight: .regular),
         lineHeight: 17,
+        letterSpacing: -0.025
+    )
+    /// Size: 5, Line height: 8
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var ridiProfile: Typography = .init(
+        fontContainer: BuiltInFont(type: .ridi, size: 5, weight: .regular),
+        lineHeight: 8,
         letterSpacing: -0.025
     )
     
@@ -324,6 +340,14 @@ extension V2Style where Base == Typography {
         lineHeight: 18,
         letterSpacing: -0.025
     )
+    /// Size: 7, Line height: 8
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var yoonwooProfile: Typography = .init(
+        fontContainer: BuiltInFont(type: .yoonwoo, size: 7, weight: .regular),
+        lineHeight: 8,
+        letterSpacing: -0.025
+    )
     
     // Kkukkukk
     /// Size: 16, Line height: 22
@@ -348,6 +372,14 @@ extension V2Style where Base == Typography {
     static var kkookkkookTag: Typography = .init(
         fontContainer: BuiltInFont(type: .kkookkkook, size: 12, weight: .regular),
         lineHeight: 17,
+        letterSpacing: -0.025
+    )
+    /// Size: 5, Line height: 7
+    ///
+    /// Weight: [Thin: 100, UltraLight: 200, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700, Heavy: 800, Black: 900]
+    static var kkookkkookProfile: Typography = .init(
+        fontContainer: BuiltInFont(type: .kkookkkook, size: 5, weight: .regular),
+        lineHeight: 7,
         letterSpacing: -0.025
     )
 }

@@ -41,7 +41,7 @@ extension SOMDialogViewController {
     @discardableResult
     static func show(
         title: String,
-        messageView: UIView,
+        messageView: UIView?,
         textAlignment: NSTextAlignment = .center,
         actions: [SOMDialogAction],
         dismissesWhenBackgroundTouched: Bool = false,

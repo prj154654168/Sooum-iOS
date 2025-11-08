@@ -47,7 +47,7 @@ class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = .som.v2.white
         self.setupConstraints()
         
         self.activityIndicatorView.color = .black
