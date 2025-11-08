@@ -31,7 +31,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
 
     private let guideMessageView = OnboardingGuideMessageView(title: Text.title, currentNumber: 2)
     
-    private let nicknameTextField = OnboardingNicknameTextFieldView()
+    private let nicknameTextField = SOMNicknameTextField()
     
     private let nextButton = SOMButton().then {
         $0.title = Text.nextButtonTitle

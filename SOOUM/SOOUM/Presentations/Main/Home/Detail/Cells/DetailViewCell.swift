@@ -22,7 +22,7 @@ class DetailViewCell: UICollectionViewCell {
     
     // MARK: Views
     
-    private let memberInfoView = MemberInfoView()
+    let memberInfoView = MemberInfoView()
     
     /// 상세보기, 전글 배경
     private let prevCardBackgroundImageView = UIImageView().then {
