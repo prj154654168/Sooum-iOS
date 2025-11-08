@@ -7,12 +7,13 @@
 
 import Foundation
 
-struct ProfileCardInfo: Equatable {
+struct ProfileCardInfo: Hashable {
     
     let id: String
     let imgName: String
     let imgURL: String
     let content: String
+    let font: BaseCardInfo.Font
 }
 
 extension ProfileCardInfo {
@@ -21,7 +22,8 @@ extension ProfileCardInfo {
         id: "",
         imgName: "",
         imgURL: "",
-        content: ""
+        content: "",
+        font: .pretendard
     )
 }
 
@@ -32,6 +34,7 @@ extension ProfileCardInfo: Decodable {
         case imgName = "cardImgName"
         case imgURL = "cardImgUrl"
         case content = "cardContent"
+        case font
     }
     
     init(from decoder: any Decoder) throws {
@@ -40,5 +43,6 @@ extension ProfileCardInfo: Decodable {
         self.imgName = try container.decode(String.self, forKey: .imgName)
         self.imgURL = try container.decode(String.self, forKey: .imgURL)
         self.content = try container.decode(String.self, forKey: .content)
+        self.font = try container.decode(BaseCardInfo.Font.self, forKey: .font)
     }
 }

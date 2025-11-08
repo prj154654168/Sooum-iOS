@@ -26,7 +26,7 @@ extension ProfileCardInfoResponse: Decodable {
     }
     
     init(from decoder: any Decoder) throws {
-        let singleContainer = try decoder.singleValueContainer()
-        self.cardInfos = try singleContainer.decode([ProfileCardInfo].self)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.cardInfos = try container.decode([ProfileCardInfo].self, forKey: .cardInfos)
     }
 }

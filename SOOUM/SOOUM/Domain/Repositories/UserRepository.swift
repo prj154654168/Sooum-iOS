@@ -21,10 +21,11 @@ protocol UserRepository {
     func updateFCMToken(fcmToken: String) -> Observable<Int>
     func postingPermission() -> Observable<PostingPermissionResponse>
     func profile(userId: String?) -> Observable<ProfileInfoResponse>
-    func updateMyProfile(nickname: String, imageName: String) -> Observable<Int>
+    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int>
     func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse>
     func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse>
     func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
     func followings(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
     func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int>
+    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int>
 }

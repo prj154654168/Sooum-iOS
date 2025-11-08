@@ -67,7 +67,7 @@ class UserRepositoryImpl: UserRepository {
         return self.remoteDataSource.profile(userId: userId)
     }
     
-    func updateMyProfile(nickname: String, imageName: String) -> Observable<Int> {
+    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int> {
         
         return self.remoteDataSource.updateMyProfile(nickname: nickname, imageName: imageName)
     }
@@ -95,5 +95,10 @@ class UserRepositoryImpl: UserRepository {
     func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int> {
         
         return self.remoteDataSource.updateFollowing(userId: userId, isFollow: isFollow)
+    }
+    
+    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateBlocked(id: id, isBlocked: isBlocked)
     }
 }

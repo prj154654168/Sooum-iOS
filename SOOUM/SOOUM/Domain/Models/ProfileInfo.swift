@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProfileInfo: Equatable {
+struct ProfileInfo: Hashable {
     
     let userId: String
     let nickname: String
@@ -18,16 +18,8 @@ struct ProfileInfo: Equatable {
     let cardCnt: String
     let followingCnt: String
     let followerCnt: String
-    
-    var contents: [(content: Content, count: String)] {
-        var contents: [(content: Content, count: String)] = []
-        
-        contents.append((.card, self.cardCnt))
-        contents.append((.follower, self.followerCnt))
-        contents.append((.following, self.followingCnt))
-        
-        return contents
-    }
+    // 상대방 프로필 조회
+    let isAlreadyFollowing: Bool?
 }
 
 extension ProfileInfo {
@@ -48,9 +40,10 @@ extension ProfileInfo {
         profileImageUrl: nil,
         totalVisitCnt: "",
         todayVisitCnt: "",
-        cardCnt: "",
-        followingCnt: "",
-        followerCnt: ""
+        cardCnt: "0",
+        followingCnt: "0",
+        followerCnt: "0",
+        isAlreadyFollowing: nil
     )
 }
 
@@ -66,6 +59,7 @@ extension ProfileInfo: Decodable {
         case cardCnt
         case followingCnt
         case followerCnt
+        case isAlreadyFollowing
     }
     
     init(from decoder: any Decoder) throws {
@@ -79,5 +73,6 @@ extension ProfileInfo: Decodable {
         self.cardCnt = String(try container.decode(Int64.self, forKey: .cardCnt))
         self.followingCnt = String(try container.decode(Int64.self, forKey: .followingCnt))
         self.followerCnt = String(try container.decode(Int64.self, forKey: .followerCnt))
+        self.isAlreadyFollowing = try container.decodeIfPresent(Bool.self, forKey: .isAlreadyFollowing)
     }
 }

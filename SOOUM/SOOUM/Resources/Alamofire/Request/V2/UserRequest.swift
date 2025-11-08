@@ -28,7 +28,7 @@ enum UserRequest: BaseRequest {
     /// 프로필 조회
     case profile(userId: String?)
     /// 나의 프로필 업데이트
-    case updateMyProfile(nickname: String, imageName: String)
+    case updateMyProfile(nickname: String?, imageName: String?)
     /// 나의 피드 카드 조회
     case feedCards(userId: String, lastId: String?)
     /// 나의 답카드 조회
@@ -39,6 +39,8 @@ enum UserRequest: BaseRequest {
     case followings(userId: String, lastId: String?)
     /// 팔로우 요청 및 취소
     case updateFollowing(userId: String, isFollow: Bool)
+    /// 상대방 차단
+    case updateBlocked(id: String, isBlocked: Bool)
     
     var path: String {
         switch self {
@@ -107,6 +109,9 @@ enum UserRequest: BaseRequest {
             } else {
                 return "/api/members/\(userId)/unfollow"
             }
+        case let .updateBlocked(id, _):
+            
+            return "/api/blocks/\(id)"
         }
     }
     
@@ -118,6 +123,8 @@ enum UserRequest: BaseRequest {
             return .patch
         case let .updateFollowing(_, isFollow):
             return isFollow ? .post : .delete
+        case let .updateBlocked(_, isBlocked):
+            return isBlocked ? .post : .delete
         default:
             return .get
         }
@@ -136,7 +143,14 @@ enum UserRequest: BaseRequest {
         case let .updateFCMToken(fcmToken):
             return ["fcmToken": fcmToken]
         case let .updateMyProfile(nickname, imageName):
-            return ["nickname": nickname, "profileImgName": imageName]
+            var dictionary: [String: Any] = [:]
+            if let nickname = nickname {
+                dictionary["nickname"] = nickname
+            }
+            if let imageName = imageName {
+                dictionary["profileImgName"] = imageName
+            }
+            return dictionary
         case let .updateFollowing(userId, isFollow):
             return isFollow ? ["userId": userId] : [:]
         default:
@@ -146,10 +160,17 @@ enum UserRequest: BaseRequest {
     
     var encoding: ParameterEncoding {
         switch self {
-        case .nickname, .presignedURL, .postingPermission:
-            return URLEncoding.default
-        default:
+        case .checkAvailable,
+            .updateNickname,
+            .validateNickname,
+            .updateImage,
+            .updateFCMToken,
+            .updateMyProfile:
             return JSONEncoding.default
+        case .updateFollowing:
+            return URLEncoding.queryString
+        default:
+            return URLEncoding.default
         }
     }
     

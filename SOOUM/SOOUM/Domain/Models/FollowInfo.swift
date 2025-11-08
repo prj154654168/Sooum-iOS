@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FollowInfo: Equatable {
+struct FollowInfo: Hashable {
     
     let memberId: String
     let nickname: String

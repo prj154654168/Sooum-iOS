@@ -58,11 +58,6 @@ class CardRepositoryImpl: CardRepository {
         return self.remoteDataSource.updateLike(id: id, isLike: isLike)
     }
     
-    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int> {
-        
-        return self.remoteDataSource.updateBlocked(id: id, isBlocked: isBlocked)
-    }
-    
     func reportCard(id: String, reportType: String) -> Observable<Int> {
         
         return self.remoteDataSource.reportCard(id: id, reportType: reportType)

@@ -25,7 +25,6 @@ protocol CardRepository {
     func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<BaseCardInfoResponse>
     func deleteCard(id: String) -> Observable<Int>
     func updateLike(id: String, isLike: Bool) -> Observable<Int>
-    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int>
     func reportCard(id: String, reportType: String) -> Observable<Int>
     
     

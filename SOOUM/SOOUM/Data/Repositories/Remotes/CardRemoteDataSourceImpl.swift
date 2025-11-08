@@ -65,12 +65,6 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         return self.provider.networkManager.perform(request)
     }
     
-    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int> {
-        
-        let request: CardRequest = .updateBlocked(id: id, isBlocked: isBlocked)
-        return self.provider.networkManager.perform(request)
-    }
-    
     func reportCard(id: String, reportType: String) -> Observable<Int> {
         
         let request: CardRequest = .reportCard(id: id, reportType: reportType)

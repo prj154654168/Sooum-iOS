@@ -75,7 +75,7 @@ class UserRemoteDataSourceImpl: UserRemoteDataSource {
         return self.provider.networkManager.fetch(ProfileInfoResponse.self, request: request)
     }
     
-    func updateMyProfile(nickname: String, imageName: String) -> Observable<Int> {
+    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int> {
         
         let request: UserRequest = .updateMyProfile(nickname: nickname, imageName: imageName)
         return self.provider.networkManager.perform(request)
@@ -108,6 +108,12 @@ class UserRemoteDataSourceImpl: UserRemoteDataSource {
     func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int> {
         
         let request: UserRequest = .updateFollowing(userId: userId, isFollow: isFollow)
+        return self.provider.networkManager.perform(request)
+    }
+    
+    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int> {
+        
+        let request: UserRequest = .updateBlocked(id: id, isBlocked: isBlocked)
         return self.provider.networkManager.perform(request)
     }
 }

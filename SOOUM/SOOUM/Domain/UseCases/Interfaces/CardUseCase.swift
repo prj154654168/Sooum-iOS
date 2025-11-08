@@ -25,7 +25,6 @@ protocol CardUseCase {
     func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<[BaseCardInfo]>
     func deleteCard(id: String) -> Observable<Bool>
     func updateLike(id: String, isLike: Bool) -> Observable<Bool>
-    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Bool>
     func reportCard(id: String, reportType: String) -> Observable<Bool>
     
     

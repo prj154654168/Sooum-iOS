@@ -58,11 +58,6 @@ class CardUseCaseImpl: CardUseCase {
         return self.repository.updateLike(id: id, isLike: isLike).map { $0 == 200 }
     }
     
-    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Bool> {
-        
-        return self.repository.updateBlocked(id: id, isBlocked: isBlocked).map { $0 == 200 }
-    }
-    
     func reportCard(id: String, reportType: String) -> Observable<Bool> {
         
         return self.repository.reportCard(id: id, reportType: reportType).map { $0 == 200 }

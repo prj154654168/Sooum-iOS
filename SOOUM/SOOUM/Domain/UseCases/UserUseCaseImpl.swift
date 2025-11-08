@@ -69,7 +69,7 @@ class UserUseCaseImpl: UserUseCase {
         return self.repository.profile(userId: userId).map { $0.profileInfo }
     }
     
-    func updateMyProfile(nickname: String, imageName: String) -> Observable<Bool> {
+    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Bool> {
         
         return self.repository.updateMyProfile(nickname: nickname, imageName: imageName).map { $0 == 200 }
     }
@@ -97,5 +97,10 @@ class UserUseCaseImpl: UserUseCase {
     func updateFollowing(userId: String, isFollow: Bool) -> Observable<Bool> {
         
         return self.repository.updateFollowing(userId: userId, isFollow: isFollow).map { $0 == 200 }
+    }
+    
+    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Bool> {
+        
+        return self.repository.updateBlocked(id: id, isBlocked: isBlocked).map { $0 == 200 }
     }
 }
