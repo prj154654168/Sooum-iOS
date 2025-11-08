@@ -21,4 +21,6 @@ extension Notification.Name {
     static let reloadCommentsData = Notification.Name("reloadCommentsData")
     /// Updated report state
     static let updatedReportState = Notification.Name("updatedReportState")
+    /// Should reload progile
+    static let reloadProfileData = Notification.Name("reloadProfileData")
 }
