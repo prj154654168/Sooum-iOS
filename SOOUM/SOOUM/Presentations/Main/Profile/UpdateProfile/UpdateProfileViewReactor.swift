@@ -18,131 +18,165 @@ class UpdateProfileViewReactor: Reactor {
     }
     
     enum Action: Equatable {
-        case updateImage(UIImage)
+        case uploadImage(UIImage)
+        case setDefaultImage
         case checkValidate(String)
         case updateProfile(String)
     }
     
     enum Mutation {
-        case updateImage(UIImage)
+        case updateImageInfo(UIImage?, String?)
         case updateIsValid(Bool)
         case updateIsSuccess(Bool)
         case updateIsProcessing(Bool)
+        case updateErrors(Bool?)
         case updateErrorMessage(String?)
     }
     
     struct State {
         var profileImage: UIImage?
+        var profileImageName: String?
         var isValid: Bool
-        var isSuccess: Bool
+        var isUpdatedSuccess: Bool
         var isProcessing: Bool
+        var hasErrors: Bool?
         var errorMessage: String?
     }
     
     var initialState: State = .init(
         profileImage: nil,
         isValid: false,
-        isSuccess: false,
+        isUpdatedSuccess: false,
         isProcessing: false,
+        hasErrors: nil,
         errorMessage: nil
     )
     
     private var imageName: String?
     
-    let provider: ManagerProviderType
-    var profile: Profile
+    private let dependencies: AppDIContainerable
+    private let userUseCase: UserUseCase
     
-    init(provider: ManagerProviderType, _ profile: Profile) {
-        self.provider = provider
-        self.profile = profile
+    let profileInfo: ProfileInfo
+    
+    init(
+        dependencies: AppDIContainerable,
+        with profileInfo: ProfileInfo
+    ) {
+        self.dependencies = dependencies
+        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.profileInfo = profileInfo
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case let .uploadImage(image):
+            
+            return .concat([
+                .just(.updateErrors(nil)),
+                self.uploadImage(image)
+                    .catch(self.catchClosure)
+            ])
+        case .setDefaultImage:
+            
+            return .just(.updateImageInfo(nil, nil))
         case let .checkValidate(nickname):
+            
             if nickname.isEmpty {
                 return .concat([
                     .just(.updateIsValid(false)),
                     .just(.updateErrorMessage(ErrorMessages.isEmpty.rawValue))
                 ])
             }
-            let request: JoinRequest = .validateNickname(nickname: nickname)
             
             return .concat([
                 .just(.updateErrorMessage(nil)),
-                self.provider.networkManager.request(NicknameValidationResponse.self, request: request)
-                    .flatMapLatest { response -> Observable<Mutation> in
-                        let isAvailable = response.isAvailable
-                        let errorMessage = isAvailable ? nil : ErrorMessages.inValid.rawValue
+                self.userUseCase.isNicknameValid(nickname: nickname)
+                    .withUnretained(self)
+                    .flatMapLatest { object, isValid -> Observable<Mutation> in
+                        
+                        let errorMessage = isValid ? nil : ErrorMessages.inValid.rawValue
                         return .concat([
-                            .just(.updateIsValid(isAvailable)),
+                            .just(.updateIsValid(isValid)),
                             .just(.updateErrorMessage(errorMessage))
                         ])
                     }
             ])
-        case let .updateImage(image):
-            return self.updateImage(image)
         case let .updateProfile(nickname):
-            let trimedNickname = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
-            let request: ProfileRequest = .updateProfile(nickname: trimedNickname, profileImg: self.imageName)
             
-            return .concat([
-                .just(.updateIsProcessing(true)),
-                
-                self.provider.networkManager.request(Empty.self, request: request)
-                    .flatMapLatest { _ -> Observable<Mutation> in
-                        return .just(.updateIsSuccess(true))
-                    },
-                
-                .just(.updateIsProcessing(false))
-            ])
+            let trimedNickname = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
+            let updatedNickname = trimedNickname == self.profileInfo.nickname ? nil : trimedNickname
+            return self.userUseCase.updateMyProfile(
+                nickname: updatedNickname,
+                imageName: self.currentState.profileImageName
+            )
+                .map(Mutation.updateIsSuccess)
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        var state = state
+        var newState: State = state
         switch mutation {
+        case let .updateImageInfo(profileImage, profileImageName):
+            newState.profileImage = profileImage
+            newState.profileImageName = profileImageName
         case let .updateIsValid(isValid):
-            state.isValid = isValid
-        case let .updateImage(profileImage):
-            state.profileImage = profileImage
-        case let .updateIsSuccess(isSuccess):
-            state.isSuccess = isSuccess
+            newState.isValid = isValid
+        case let .updateIsSuccess(isUpdatedSuccess):
+            newState.isUpdatedSuccess = isUpdatedSuccess
         case let .updateIsProcessing(isProcessing):
-            state.isProcessing = isProcessing
+            newState.isProcessing = isProcessing
+        case let .updateErrors(hasErrors):
+            newState.hasErrors = hasErrors
         case let .updateErrorMessage(errorMessage):
-            state.errorMessage = errorMessage
+            newState.errorMessage = errorMessage
         }
-        return state
+        return newState
     }
 }
 
 extension UpdateProfileViewReactor {
     
-    private func updateImage(_ image: UIImage) -> Observable<Mutation> {
+    private func uploadImage(_ image: UIImage) -> Observable<Mutation> {
+        
         return self.presignedURL()
             .withUnretained(self)
-            .flatMapLatest { object, presignedResponse -> Observable<Mutation> in
+            .flatMapLatest { object, presignedInfo -> Observable<Mutation> in
                 if let imageData = image.jpegData(compressionQuality: 0.5),
-                   let url = URL(string: presignedResponse.strUrl) {
-                    return object.provider.networkManager.upload(imageData, to: url)
-                        .flatMapLatest { _ -> Observable<Mutation> in
-                            return .empty()
+                   let url = URL(string: presignedInfo.imgUrl) {
+                    
+                    return object.userUseCase.uploadImage(imageData, with: url)
+                        .flatMapLatest { isSuccess -> Observable<Mutation> in
+                            
+                            let image = isSuccess ? image : nil
+                            let imageName = isSuccess ? presignedInfo.imgName : nil
+                            
+                            return .just(.updateImageInfo(image, imageName))
                         }
+                } else {
+                    return .empty()
                 }
-                return .empty()
             }
+            .delay(.milliseconds(1000), scheduler: MainScheduler.instance)
     }
     
-    private func presignedURL() -> Observable<(strUrl: String, imageName: String)> {
-        let request: JoinRequest = .profileImagePresignedURL
+    private func presignedURL() -> Observable<ImageUrlInfo> {
         
-        return self.provider.networkManager.request(PresignedStorageResponse.self, request: request)
-            .withUnretained(self)
-            .flatMapLatest { object, response -> Observable<(strUrl: String, imageName: String)> in
-                object.imageName = response.imgName
-                let result = (response.url.url, response.imgName)
-                return .just(result)
-            }
+        return self.userUseCase.presignedURL()
+    }
+    
+    private var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { error in
+            
+            let nsError = error as NSError
+            let endProcessing = Observable<Mutation>.concat([
+                .just(.updateImageInfo(nil, nil)),
+                .just(.updateIsProcessing(false)),
+                // 부적절한 이미지 업로드 에러 코드 == 422
+                .just(.updateErrors(nsError.code == 422))
+            ])
+            
+            return endProcessing
+        }
     }
 }
