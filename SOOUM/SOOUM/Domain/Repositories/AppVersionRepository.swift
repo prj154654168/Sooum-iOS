@@ -12,5 +12,4 @@ import RxSwift
 protocol AppVersionRepository {
     
     func version() -> Observable<AppVersionStatusResponse>
-    func oldVersion() -> Observable<String>
 }

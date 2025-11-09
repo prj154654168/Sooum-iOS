@@ -108,21 +108,6 @@ extension LaunchScreenViewReactor {
     }
     
     private func check() -> Observable<Mutation> {
-        
-        #if PRODUCTION
-        return self.versionUseCase.oldVersion()
-            .withUnretained(self)
-            .flatMapLatest { object, version -> Observable<Mutation> in
-                
-                UserDefaults.standard.set(version.shouldHideTransfer, forKey: "AppFlag")
-                
-                if version.mustUpdate {
-                    return .just(.check(true))
-                } else {
-                    return object.authUseCase.hasToken() ? .just(.updateIsRegistered(true)) : object.login()
-                }
-            }
-        #elseif DEVELOP
         return self.versionUseCase.version()
             .withUnretained(self)
             .flatMapLatest { object, version -> Observable<Mutation> in
@@ -135,7 +120,6 @@ extension LaunchScreenViewReactor {
                     return object.authUseCase.hasToken() ? .just(.updateIsRegistered(true)) : object.login()
                 }
             }
-        #endif
     }
 }
 

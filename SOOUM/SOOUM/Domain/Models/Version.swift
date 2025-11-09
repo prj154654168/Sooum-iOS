@@ -10,15 +10,17 @@ import Foundation
 struct Version: Equatable {
     
     let currentVersionStatus: Status
+    let latestVersion: String
 }
 
 extension Version {
     
-    init(status: String) {
+    init(status: String, latest: String) {
         self.currentVersionStatus = Status(rawValue: status) ?? .NONE
+        self.latestVersion = latest
     }
     
-    static var defaultValue: Version = Version(status: "NONE")
+    static var defaultValue: Version = Version(status: "NONE", latest: "1.0.0")
 }
 
 extension Version {
@@ -54,5 +56,6 @@ extension Version: Decodable {
     
     enum CodingKeys: String, CodingKey {
         case currentVersionStatus = "status"
+        case latestVersion
     }
 }
