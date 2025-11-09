@@ -66,6 +66,7 @@ class FollowerViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.backgroundColor = .clear
+        self.selectionStyle = .none
         
         self.setupConstraints()
     }

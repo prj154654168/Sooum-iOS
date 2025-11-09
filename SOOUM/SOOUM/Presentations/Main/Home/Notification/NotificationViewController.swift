@@ -569,7 +569,7 @@ extension NotificationViewController: UITableViewDelegate {
             
             let pulledOffset = self.initialOffset - offset
             let refreshingOffset = refreshControl.frame.origin.y + refreshControl.frame.height
-            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset + 10
         }
         
         self.currentOffset = offset

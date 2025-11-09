@@ -12,7 +12,6 @@ import Then
 
 import RxSwift
 
-
 class MyFollowingViewCell: UITableViewCell {
     
     enum Text {
@@ -66,6 +65,7 @@ class MyFollowingViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.backgroundColor = .clear
+        self.selectionStyle = .none
         
         self.setupConstraints()
     }

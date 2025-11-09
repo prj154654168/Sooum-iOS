@@ -59,7 +59,7 @@ class OnboardingViewReactor: Reactor {
         case let .check(checkAvailable):
             newState.checkAvailable = checkAvailable
         }
-        return state
+        return newState
     }
 }
 
@@ -82,6 +82,6 @@ extension OnboardingViewReactor {
     }
     
     func reactorForEnterTransfer() -> EnterMemberTransferViewReactor {
-        EnterMemberTransferViewReactor(dependencies: self.dependencies, entranceType: .onboarding)
+        EnterMemberTransferViewReactor(dependencies: self.dependencies)
     }
 }
