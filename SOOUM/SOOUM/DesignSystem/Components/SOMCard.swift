@@ -437,7 +437,6 @@ class SOMCard: UIView {
 //        cardPungTimeBackgroundView.isHidden = true
     }
     
-    // TODO: 카드 본문 배경 블러 뷰 높이 계산 함수, 헌재 사용 X
     private func updateContentHeight(_ text: String, with typography: Typography) {
         
         UIView.performWithoutAnimation {
@@ -510,5 +509,6 @@ class SOMCard: UIView {
             .forEach { $0.removeFromSuperview() }
         
         self.cardTextContentLabel.text = Text.pungedCardText
+        self.updateContentHeight(Text.pungedCardText, with: .som.v2.body1)
     }
 }

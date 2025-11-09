@@ -148,6 +148,7 @@ extension UIImage.SOOUMType {
             case danger
             case headset
             case heart
+            case hide
             case home
             case image
             case info

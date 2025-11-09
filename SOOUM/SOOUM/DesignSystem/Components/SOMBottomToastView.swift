@@ -32,7 +32,7 @@ class SOMBottomToastView: UIView {
     
     // MARK: Initalization
     
-    convenience init(title: String, actions: [ToastAction]) {
+    convenience init(title: String, actions: [ToastAction]?) {
         self.init(frame: .zero)
         
         self.actions = actions
@@ -61,13 +61,12 @@ private extension SOMBottomToastView {
         
         self.addSubview(self.container)
         self.container.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
+            $0.centerY.trailing.equalToSuperview()
             $0.leading.equalToSuperview().offset(12)
-            $0.trailing.equalToSuperview()
         }
     }
     
-    func setupActions(title: String, _ actions: [ToastAction]) {
+    func setupActions(title: String, _ actions: [ToastAction]?) {
         
         self.container.subviews.forEach { $0.removeFromSuperview() }
         
@@ -78,6 +77,8 @@ private extension SOMBottomToastView {
         self.titleLabel.snp.makeConstraints {
             $0.centerY.leading.equalToSuperview()
         }
+        
+        guard let actions = actions else { return }
         
         actions.forEach { action in
             

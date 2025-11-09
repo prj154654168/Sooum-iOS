@@ -49,4 +49,18 @@ extension UIViewController {
 
         CATransaction.commit()
     }
+    
+    func navigationPopToRoot(
+        animated: Bool = true,
+        bottomBarHidden: Bool = true,
+        completion: (() -> Void)? = nil
+    ) {
+        CATransaction.begin()
+        CATransaction.setCompletionBlock(completion)
+        
+        self.hidesBottomBarWhenPushed = bottomBarHidden
+        self.navigationController?.popToRootViewController(animated: animated)
+        
+        CATransaction.commit()
+    }
 }

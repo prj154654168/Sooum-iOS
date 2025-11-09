@@ -94,6 +94,22 @@ extension Date {
         return String(format: "%02d : %02d : %02d", hours, minutes, seconds)
     }
     
+    func infoReadableTimeTakenFromThisForPungToHoursAndMinutes(to: Date) -> String {
+        
+        let from: TimeInterval = self.timeIntervalSince1970
+        let to: TimeInterval = to.timeIntervalSince1970
+        let gap: TimeInterval = max(0, to - from)
+
+        let time: Int = .init(gap)
+        let minutes: Int = .init(time % (60 * 60)) / 60
+        let seconds: Int = .init(time % 60)
+        
+        if minutes <= 0 && seconds <= 0 {
+            return "00:00"
+        }
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
     func infoReadableTimeTakenFromThisForBanEndPosting(to: Date) -> String {
         
         let from: TimeInterval = self.timeIntervalSince1970
@@ -115,7 +131,7 @@ extension Date {
     }
     
     var announcementFormatted: String {
-        return self.toString("yyyy. MM. dd")
+        return self.toString("yyyy.MM.dd")
     }
     
     var noticeFormatted: String {
