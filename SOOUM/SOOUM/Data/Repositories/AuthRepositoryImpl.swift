@@ -43,4 +43,9 @@ class AuthRepositoryImpl: AuthRepository {
         
         self.localDataSource.tokens()
     }
+    
+    func withdraw(reaseon: String) -> Observable<Int> {
+        
+        self.remoteDataSource.withdraw(reaseon: reaseon)
+    }
 }

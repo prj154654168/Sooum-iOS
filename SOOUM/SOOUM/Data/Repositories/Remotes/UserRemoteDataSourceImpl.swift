@@ -116,4 +116,10 @@ class UserRemoteDataSourceImpl: UserRemoteDataSource {
         let request: UserRequest = .updateBlocked(id: id, isBlocked: isBlocked)
         return self.provider.networkManager.perform(request)
     }
+    
+    func updateNotify(isAllowNotify: Bool) -> Observable<Int> {
+        
+        let request: UserRequest = .updateNotify(isAllowNotify: isAllowNotify)
+        return self.provider.networkManager.perform(request)
+    }
 }

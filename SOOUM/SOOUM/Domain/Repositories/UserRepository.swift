@@ -28,4 +28,5 @@ protocol UserRepository {
     func followings(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
     func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int>
     func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int>
+    func updateNotify(isAllowNotify: Bool) -> Observable<Int>
 }

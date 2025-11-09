@@ -23,10 +23,8 @@ enum AuthRequest: BaseRequest {
     case login(encryptedDeviceId: String)
     /// 재인증
     case reAuthenticationWithRefreshSession(token: Token)
-    #if DEVELOP
-    /// 테스트 용 계정 삭제
-    case withdraw(token: Token)
-    #endif
+    /// 회원탈퇴
+    case withdraw(token: Token, reason: String)
     
     var path: String {
         switch self {
@@ -38,10 +36,8 @@ enum AuthRequest: BaseRequest {
             return "/api/auth/login"
         case .reAuthenticationWithRefreshSession:
             return "/api/auth/token/reissue"
-        #if DEVELOP
         case .withdraw:
             return "/api/auth/withdrawal"
-        #endif
         }
     }
     
@@ -51,10 +47,8 @@ enum AuthRequest: BaseRequest {
             return .get
         case .login, .signUp, .reAuthenticationWithRefreshSession:
             return .post
-        #if DEVELOP
         case .withdraw:
             return .delete
-        #endif
         }
     }
     
@@ -102,13 +96,12 @@ enum AuthRequest: BaseRequest {
                 "accessToken": token.accessToken,
                 "refreshToken": token.refreshToken
             ]
-            #if DEVELOP
-            case let .withdraw(token):
+            case let .withdraw(token, reaseon):
                 return [
                     "accessToken": token.accessToken,
-                    "refreshToken": token.refreshToken
+                    "refreshToken": token.refreshToken,
+                    "reason": reaseon
                 ]
-            #endif
         default:
             return [:]
         }
@@ -125,10 +118,8 @@ enum AuthRequest: BaseRequest {
     
     var authorizationType: AuthorizationType {
         switch self {
-        #if DEVELOP
         case .withdraw:
             return .access
-        #endif
         default:
             return .none
         }

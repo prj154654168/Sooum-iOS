@@ -41,4 +41,9 @@ class AuthUseCaseImpl: AuthUseCase {
         
         return self.repository.tokens()
     }
+    
+    func withdraw(reaseon: String) -> Observable<Bool> {
+        
+        return self.repository.withdraw(reaseon: reaseon).map { $0 == 200 }
+    }
 }

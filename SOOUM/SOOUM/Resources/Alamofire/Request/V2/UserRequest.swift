@@ -41,6 +41,8 @@ enum UserRequest: BaseRequest {
     case updateFollowing(userId: String, isFollow: Bool)
     /// 상대방 차단
     case updateBlocked(id: String, isBlocked: Bool)
+    /// 푸시 알림 여부 요청
+    case updateNotify(isAllowNotify: Bool)
     
     var path: String {
         switch self {
@@ -81,7 +83,7 @@ enum UserRequest: BaseRequest {
         case let .feedCards(userId, lastId):
             
             if let lastId = lastId {
-                return "/api/members/\(userId)/cards/feed\(lastId)"
+                return "/api/members/\(userId)/cards/feed/\(lastId)"
             } else {
                 return "/api/members/\(userId)/cards/feed"
             }
@@ -112,6 +114,9 @@ enum UserRequest: BaseRequest {
         case let .updateBlocked(id, _):
             
             return "/api/blocks/\(id)"
+        case .updateNotify:
+            
+            return "/api/members/notify"
         }
     }
     
@@ -119,7 +124,7 @@ enum UserRequest: BaseRequest {
         switch self {
         case .checkAvailable, .validateNickname:
             return .post
-        case .updateNickname, .updateImage, .updateFCMToken, .updateMyProfile:
+        case .updateNickname, .updateImage, .updateFCMToken, .updateMyProfile, .updateNotify:
             return .patch
         case let .updateFollowing(_, isFollow):
             return isFollow ? .post : .delete
@@ -153,6 +158,8 @@ enum UserRequest: BaseRequest {
             return dictionary
         case let .updateFollowing(userId, isFollow):
             return isFollow ? ["userId": userId] : [:]
+        case let .updateNotify(isAllowNotify):
+            return ["isAllowNotify": isAllowNotify]
         default:
             return [:]
         }
@@ -165,7 +172,8 @@ enum UserRequest: BaseRequest {
             .validateNickname,
             .updateImage,
             .updateFCMToken,
-            .updateMyProfile:
+            .updateMyProfile,
+            .updateNotify:
             return JSONEncoding.default
         case .updateFollowing:
             return URLEncoding.queryString

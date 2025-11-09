@@ -17,4 +17,5 @@ protocol AuthUseCase {
     func initializeAuthInfo()
     func hasToken() -> Bool
     func tokens() -> Token
+    func withdraw(reaseon: String) -> Observable<Bool>
 }

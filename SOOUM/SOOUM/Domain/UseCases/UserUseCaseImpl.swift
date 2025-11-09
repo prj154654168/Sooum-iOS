@@ -103,4 +103,9 @@ class UserUseCaseImpl: UserUseCase {
         
         return self.repository.updateBlocked(id: id, isBlocked: isBlocked).map { $0 == 200 }
     }
+    
+    func updateNotify(isAllowNotify: Bool) -> Observable<Bool> {
+        
+        return self.repository.updateNotify(isAllowNotify: isAllowNotify).map { $0 == 200 }
+    }
 }

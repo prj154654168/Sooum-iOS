@@ -28,4 +28,5 @@ protocol UserUseCase {
     func followings(userId: String, lastId: String?) -> Observable<[FollowInfo]>
     func updateFollowing(userId: String, isFollow: Bool) -> Observable<Bool>
     func updateBlocked(id: String, isBlocked: Bool) -> Observable<Bool>
+    func updateNotify(isAllowNotify: Bool) -> Observable<Bool>
 }

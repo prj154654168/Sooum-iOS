@@ -20,6 +20,7 @@ struct ProfileInfo: Hashable {
     let followerCnt: String
     // 상대방 프로필 조회
     let isAlreadyFollowing: Bool?
+    let isBlocked: Bool?
 }
 
 extension ProfileInfo {
@@ -43,7 +44,8 @@ extension ProfileInfo {
         cardCnt: "0",
         followingCnt: "0",
         followerCnt: "0",
-        isAlreadyFollowing: nil
+        isAlreadyFollowing: nil,
+        isBlocked: nil
     )
 }
 
@@ -60,6 +62,7 @@ extension ProfileInfo: Decodable {
         case followingCnt
         case followerCnt
         case isAlreadyFollowing
+        case isBlocked
     }
     
     init(from decoder: any Decoder) throws {
@@ -74,5 +77,6 @@ extension ProfileInfo: Decodable {
         self.followingCnt = String(try container.decode(Int64.self, forKey: .followingCnt))
         self.followerCnt = String(try container.decode(Int64.self, forKey: .followerCnt))
         self.isAlreadyFollowing = try container.decodeIfPresent(Bool.self, forKey: .isAlreadyFollowing)
+        self.isBlocked = try container.decodeIfPresent(Bool.self, forKey: .isBlocked)
     }
 }

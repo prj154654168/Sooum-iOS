@@ -101,4 +101,9 @@ class UserRepositoryImpl: UserRepository {
         
         return self.remoteDataSource.updateBlocked(id: id, isBlocked: isBlocked)
     }
+    
+    func updateNotify(isAllowNotify: Bool) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateNotify(isAllowNotify: isAllowNotify)
+    }
 }
