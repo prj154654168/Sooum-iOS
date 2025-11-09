@@ -87,7 +87,8 @@ class ProfileViewReactor: Reactor {
                         return .concat([
                             .just(.profile(profileInfo)),
                             object.userUseCase.feedCards(userId: profileInfo.userId, lastId: nil)
-                                .map(Mutation.feedCardInfos)
+                                .map(Mutation.feedCardInfos),
+                            .just(.updateIsBlocked(!(profileInfo.isBlocked ?? false)))
                         ])
                     } else {
                         
@@ -153,8 +154,12 @@ class ProfileViewReactor: Reactor {
             
             if self.entranceType == .other, let userId = self.currentState.profileInfo?.userId {
                 
-                return self.userUseCase.feedCards(userId: userId, lastId: nil)
-                        .map(Mutation.feedCardInfos)
+                return .concat([
+                    self.userUseCase.profile(userId: userId)
+                        .map(Mutation.profile),
+                    self.userUseCase.feedCards(userId: userId, lastId: nil)
+                            .map(Mutation.feedCardInfos)
+                ])
             }
             
             return .empty()
@@ -230,9 +235,9 @@ extension ProfileViewReactor {
 
 extension ProfileViewReactor {
     
-    // func reactorForSettings() -> SettingsViewReactor {
-    //     SettingsViewReactor(provider: self.provider)
-    // }
+    func reactorForSettings() -> SettingsViewReactor {
+        SettingsViewReactor(dependencies: self.dependencies)
+    }
     
     func reactorForUpdate(with profileInfo: ProfileInfo) -> UpdateProfileViewReactor {
         UpdateProfileViewReactor(dependencies: self.dependencies, with: profileInfo)

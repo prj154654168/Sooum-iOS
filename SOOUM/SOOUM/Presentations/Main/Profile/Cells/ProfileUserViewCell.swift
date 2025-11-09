@@ -24,6 +24,7 @@ class ProfileUserViewCell: UICollectionViewCell {
         static let updateProfileButtonTitle: String = "프로필 편집"
         static let followButtonTitle: String = "팔로우"
         static let followingButtonTitle: String = "팔로잉"
+        static let unBlockButtonTitle: String = "차단 해제"
     }
     
     static let cellIdentifier = String(reflecting: ProfileUserViewCell.self)
@@ -96,6 +97,15 @@ class ProfileUserViewCell: UICollectionViewCell {
     
     let followButton = SOMButton().then {
         $0.title = Text.followButtonTitle
+        $0.typography = .som.v2.subtitle1
+        $0.foregroundColor = .som.v2.white
+        $0.backgroundColor = .som.v2.black
+        
+        $0.isHidden = true
+    }
+    
+    let unBlockButton = SOMButton().then {
+        $0.title = Text.unBlockButtonTitle
         $0.typography = .som.v2.subtitle1
         $0.foregroundColor = .som.v2.white
         $0.backgroundColor = .som.v2.black
@@ -217,6 +227,15 @@ class ProfileUserViewCell: UICollectionViewCell {
             $0.trailing.equalToSuperview().offset(-16)
             $0.height.equalTo(48)
         }
+        
+        self.addSubview(self.unBlockButton)
+        self.unBlockButton.snp.makeConstraints {
+            $0.top.equalTo(self.bottomContainer.snp.bottom)
+            $0.bottom.equalToSuperview().offset(-16)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(48)
+        }
     }
     
     
@@ -253,8 +272,10 @@ class ProfileUserViewCell: UICollectionViewCell {
         self.setupItems(contents)
         
         self.updateProfileButton.isHidden = model.isAlreadyFollowing != nil
-        self.followButton.isHidden = model.isAlreadyFollowing == nil
-        if let isAlreadyFollowing = model.isAlreadyFollowing {
+        if let isAlreadyFollowing = model.isAlreadyFollowing, let isBlocked = model.isBlocked {
+            
+            self.followButton.isHidden = isBlocked
+            self.unBlockButton.isHidden = isBlocked == false
             
             self.updateButton(isAlreadyFollowing)
         }

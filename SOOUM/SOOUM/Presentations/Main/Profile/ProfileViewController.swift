@@ -24,10 +24,14 @@ class ProfileViewController: BaseNavigationViewController, View {
         static let blockDialogTitle: String = "차단하시겠어요?"
         static let blockDialogMessage: String = "님의 모든 카드를 볼 수 없어요."
         
+        static let unBlockUserDialogTitle: String = "차단 해제하시겠어요?"
+        static let unBlockUserDialogMessage: String = "님을 팔로우하고, 카드를 볼 수 있어요."
+        
         static let deleteFollowingDialogTitle: String = "님을 팔로워에서 삭제하시겠어요??"
         
         static let cancelActionTitle: String = "취소"
         static let blockActionTitle: String = "차단하기"
+        static let unBlockActionTitle: String = "차단 해제"
         static let deleteActionTitle: String = "삭제하기"
     }
     
@@ -163,6 +167,12 @@ class ProfileViewController: BaseNavigationViewController, View {
                     }
                     .disposed(by: cell.disposeBag)
                 
+                cell.unBlockButton.rx.throttleTap
+                    .subscribe(with: self) { object, _ in
+                        object.showUnblockDialog(nickname: profileInfo.nickname, with: profileInfo.userId)
+                    }
+                    .disposed(by: cell.disposeBag)
+                
                 return cell
             case let .card(type, feeds, comments):
                 
@@ -255,6 +265,9 @@ class ProfileViewController: BaseNavigationViewController, View {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 제스처 뒤로가기를 위한 델리게이트 설정
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.reloadProfileData(_:)),
@@ -271,9 +284,9 @@ class ProfileViewController: BaseNavigationViewController, View {
         // 설정 화면 전환
         self.rightSettingButton.rx.throttleTap
             .subscribe(with: self) { object, _ in
-                // let settingsViewController = SettingsViewController()
-                // settingsViewController.reactor = object.reactor?.reactorForSettings()
-                // object.navigationPush(settingsViewController, animated: true, bottomBarHidden: true)
+                let settingsViewController = SettingsViewController()
+                settingsViewController.reactor = reactor.reactorForSettings()
+                object.navigationPush(settingsViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -303,6 +316,13 @@ class ProfileViewController: BaseNavigationViewController, View {
                     message: Text.blockDialogMessage,
                     actions: [cancelAction, confirmAction]
                 )
+            }
+            .disposed(by: self.disposeBag)
+        
+        // tabBar 표시
+        self.rx.viewDidAppear
+            .subscribe(with: self) { object, _ in
+                object.hidesBottomBarWhenPushed = reactor.entranceType == .other
             }
             .disposed(by: self.disposeBag)
         
@@ -346,6 +366,10 @@ class ProfileViewController: BaseNavigationViewController, View {
             
             guard let profileInfo = displayStates.profileInfo else { return }
             
+            if reactor.entranceType == .other {
+                object.rightBlockButton.isHidden = profileInfo.isBlocked == true
+            }
+            
             let profileItem = Item.user(profileInfo)
             snapshot.appendItems([profileItem], toSection: .user)
             
@@ -364,7 +388,6 @@ class ProfileViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isBlocked in
-                object.rightBlockButton.isHidden = isBlocked
                 
                 reactor.action.onNext(.updateCards)
             }
@@ -434,6 +457,34 @@ private extension ProfileViewController {
             messageView: nil,
             textAlignment: .left,
             actions: [cancelAction, deleteAction]
+        )
+    }
+    
+    func showUnblockDialog(nickname: String, with userId: String) {
+        
+        let cancelAction = SOMDialogAction(
+            title: Text.cancelActionTitle,
+            style: .gray,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        let unBlockAction = SOMDialogAction(
+            title: Text.unBlockActionTitle,
+            style: .red,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    self.reactor?.action.onNext(.block)
+                }
+            }
+        )
+
+        SOMDialogViewController.show(
+            title: Text.unBlockUserDialogTitle,
+            message: nickname + Text.unBlockUserDialogMessage,
+            textAlignment: .left,
+            actions: [cancelAction, unBlockAction]
         )
     }
 }
