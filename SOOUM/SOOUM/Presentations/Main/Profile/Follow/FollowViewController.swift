@@ -14,7 +14,6 @@ import ReactorKit
 import RxCocoa
 import RxSwift
 
-
 class FollowViewController: BaseNavigationViewController, View {
     
     enum Text {
@@ -86,6 +85,29 @@ class FollowViewController: BaseNavigationViewController, View {
             
             cell.setModel(follower)
             
+            cell.profileBackgroundButton.rx.throttleTap
+                .subscribe(with: self) { object, _ in
+                    if follower.isRequester {
+                        guard let navigationController = object.navigationController,
+                            let tabBarController = navigationController.parent as? SOMTabBarController
+                        else { return }
+                        
+                        if navigationController.viewControllers.first?.isKind(of: ProfileViewController.self) == true {
+                            
+                            object.navigationPopToRoot(animated: false, bottomBarHidden: false)
+                        } else {
+                            
+                            tabBarController.didSelectedIndex(3)
+                            navigationController.viewControllers.removeAll(where: { $0.isKind(of: HomeViewController.self) == false })
+                        }
+                    } else {
+                        let profileViewController = ProfileViewController()
+                        profileViewController.reactor = reactor.reactorForProfile(follower.memberId)
+                        object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                    }
+                }
+                .disposed(by: cell.disposeBag)
+            
             cell.followButton.rx.throttleTap
                 .subscribe(onNext: { _ in
                     reactor.action.onNext(.updateFollow(follower.memberId, !follower.isFollowing))
@@ -105,6 +127,14 @@ class FollowViewController: BaseNavigationViewController, View {
                 
                 cell.setModel(following)
                 
+                cell.profileBackgroundButton.rx.throttleTap
+                    .subscribe(with: self) { object, _ in
+                        let profileViewController = ProfileViewController()
+                        profileViewController.reactor = reactor.reactorForProfile(following.memberId)
+                        object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                    }
+                    .disposed(by: cell.disposeBag)
+                
                 cell.cancelFollowButton.rx.throttleTap
                     .subscribe(onNext: { _ in
                         reactor.action.onNext(.updateFollow(following.memberId, false))
@@ -120,6 +150,29 @@ class FollowViewController: BaseNavigationViewController, View {
                 ) as! FollowerViewCell
                 
                 cell.setModel(following)
+                
+                cell.profileBackgroundButton.rx.throttleTap
+                    .subscribe(with: self) { object, _ in
+                        if following.isRequester {
+                            guard let navigationController = object.navigationController,
+                                let tabBarController = navigationController.parent as? SOMTabBarController
+                            else { return }
+                            
+                            if navigationController.viewControllers.first?.isKind(of: ProfileViewController.self) == true {
+                                
+                                object.navigationPopToRoot(animated: false, bottomBarHidden: false)
+                            } else {
+                                
+                                tabBarController.didSelectedIndex(3)
+                                navigationController.viewControllers.removeAll(where: { $0.isKind(of: HomeViewController.self) == false })
+                            }
+                        } else {
+                            let profileViewController = ProfileViewController()
+                            profileViewController.reactor = reactor.reactorForProfile(following.memberId)
+                            object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                        }
+                    }
+                    .disposed(by: cell.disposeBag)
                 
                 cell.followButton.rx.throttleTap
                     .subscribe(onNext: { _ in

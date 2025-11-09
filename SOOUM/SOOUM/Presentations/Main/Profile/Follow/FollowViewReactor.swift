@@ -9,7 +9,6 @@ import ReactorKit
 
 import Alamofire
 
-
 class FollowViewReactor: Reactor {
     
     struct DisplayStates {
@@ -164,13 +163,9 @@ private extension FollowViewReactor {
 
 extension FollowViewReactor {
     
-    // func reactorForProfile(type: ProfileViewReactor.EntranceType, _ memberId: String) -> ProfileViewReactor {
-    //     ProfileViewReactor(provider: self.provider, type: type, memberId: memberId)
-    // }
-    
-    // func reactorForMainTabBar() -> MainTabBarReactor {
-    //     MainTabBarReactor(provider: self.provider)
-    // }
+    func reactorForProfile( _ userId: String) -> ProfileViewReactor {
+        ProfileViewReactor(dependencies: self.dependencies, type: .other, with: userId)
+    }
 }
 
 extension FollowViewReactor {
