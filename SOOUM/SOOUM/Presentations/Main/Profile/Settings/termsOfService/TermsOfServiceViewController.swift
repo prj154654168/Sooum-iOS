@@ -17,7 +17,7 @@ import RxSwift
 class TermsOfServiceViewController: BaseNavigationViewController {
     
     enum Text {
-        static let navigationTitle: String = "이용약관 및 개인정보 처리 방침"
+        static let navigationTitle: String = "약관 및 개인정보 처리 동의"
         static let privacyPolicyTitle: String = "개인정보처리방침"
         static let termsOfServiceTitle: String = "서비스 이용약관"
         static let termsOfLocationInfoTitle: String = "위치정보 이용약관"
@@ -33,10 +33,6 @@ class TermsOfServiceViewController: BaseNavigationViewController {
     private let privacyPolicyCellView = TermsOfServiceTextCellView(title: Text.privacyPolicyTitle)
     private let termsOfServiceCellView = TermsOfServiceTextCellView(title: Text.termsOfServiceTitle)
     private let termsOfLocationInfoCellView = TermsOfServiceTextCellView(title: Text.termsOfLocationInfoTitle)
-    
-    override var navigationBarHeight: CGFloat {
-        46
-    }
     
     
     // MARK: Override func

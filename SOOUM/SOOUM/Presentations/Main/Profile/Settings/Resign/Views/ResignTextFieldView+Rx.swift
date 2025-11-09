@@ -1,8 +1,8 @@
 //
-//  EnterMemberTransferTextFieldView+Rx.swift
+//  ResignTextFieldView+Rx.swift
 //  SOOUM
 //
-//  Created by 오현식 on 9/12/25.
+//  Created by 오현식 on 11/9/25.
 //
 
 import UIKit
@@ -10,7 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-extension Reactive where Base: EnterMemberTransferTextFieldView {
+extension Reactive where Base: ResignTextFieldView {
     
     var text: ControlProperty<String?> {
         self.base.textField.rx.text

@@ -26,6 +26,8 @@ class AnnouncementViewController: BaseNavigationViewController, View {
         $0.indicatorStyle = .black
         $0.separatorStyle = .none
         
+        $0.rowHeight = UITableView.automaticDimension
+        
         $0.register(AnnouncementViewCell.self, forCellReuseIdentifier: "cell")
         
         $0.refreshControl = SOMRefreshControl()
@@ -34,7 +36,7 @@ class AnnouncementViewController: BaseNavigationViewController, View {
         $0.delegate = self
     }
     
-    private(set) var announcements = [Announcement]()
+    private(set) var announcements = [NoticeInfo]()
     
     
     // MARK: Override func
@@ -58,7 +60,10 @@ class AnnouncementViewController: BaseNavigationViewController, View {
     
     // MARK: Variables
     
+    private var initialOffset: CGFloat = 0
+    private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
+    private var shouldRefreshing: Bool = false
     
     
     // MARK: ReactorKit - bind
@@ -71,22 +76,21 @@ class AnnouncementViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        let isRefreshing = reactor.state.map(\.isRefreshing).distinctUntilChanged().share()
         self.tableView.refreshControl?.rx.controlEvent(.valueChanged)
-            .withLatestFrom(reactor.state.map(\.isLoading))
+            .withLatestFrom(isRefreshing)
             .filter { $0 == false }
+            .delay(.milliseconds(1000), scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        reactor.state.map(\.isLoading)
-            .distinctUntilChanged()
-            .subscribe(with: self.tableView) { tableView, isLoading in
-                if isLoading {
-                    // tableView.refreshControl?.beginRefreshingFromTop()
-                } else {
-                    tableView.refreshControl?.endRefreshing()
-                }
+        isRefreshing
+            .filter { $0 == false }
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self.tableView) { tableView, _ in
+                tableView.refreshControl?.endRefreshing()
             }
             .disposed(by: self.disposeBag)
         
@@ -94,6 +98,7 @@ class AnnouncementViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .subscribe(with: self) { object, announcements in
                 object.announcements = announcements
+                
                 object.tableView.reloadData()
             }
             .disposed(by: self.disposeBag)
@@ -114,6 +119,7 @@ extension AnnouncementViewController: UITableViewDataSource {
             withIdentifier: "cell",
             for: indexPath
         ) as! AnnouncementViewCell
+        
         cell.selectionStyle = .none
         cell.setModel(announcement)
         
@@ -123,38 +129,56 @@ extension AnnouncementViewController: UITableViewDataSource {
 
 extension AnnouncementViewController: UITableViewDelegate {
     
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        
-        let offset = scrollView.contentOffset.y
-        
-        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
-        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        
-        let offset = scrollView.contentOffset.y
-        
-        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
-        if self.isRefreshEnabled,
-           let refreshControl = self.tableView.refreshControl,
-           offset <= -(refreshControl.frame.origin.y + 40) {
-            
-            // refreshControl.beginRefreshingFromTop()
-        }
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let link = self.announcements[indexPath.row].link
-        if let url = URL(string: link) {
+        
+        if let strUrl = self.announcements[indexPath.row].url, let url = URL(string: strUrl) {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
             }
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 73
+    
+    // MARK: UIScrollViewDelegate
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // currentOffset <= 0 && isLoading == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (offset <= 0) && (self.reactor?.currentState.isRefreshing == false)
+        self.shouldRefreshing = false
+        self.initialOffset = offset
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 당겨서 새로고침
+        if self.isRefreshEnabled, offset < self.initialOffset {
+            guard let refreshControl = self.tableView.refreshControl else {
+                self.currentOffset = offset
+                return
+            }
+            
+            let pulledOffset = self.initialOffset - offset
+            let refreshingOffset = refreshControl.frame.origin.y + refreshControl.frame.height
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset + 10
+        }
+        
+        self.currentOffset = offset
+    }
+    
+    func scrollViewWillEndDragging(
+        _ scrollView: UIScrollView,
+        withVelocity velocity: CGPoint,
+        targetContentOffset: UnsafeMutablePointer<CGPoint>
+    ) {
+        
+        if self.shouldRefreshing {
+            self.tableView.refreshControl?.beginRefreshing()
+        }
     }
 }

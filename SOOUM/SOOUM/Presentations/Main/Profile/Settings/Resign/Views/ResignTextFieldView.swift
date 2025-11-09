@@ -1,8 +1,8 @@
 //
-//  EnterMemberTransferTextFieldView.swift
+//  ResignTextFieldView.swift
 //  SOOUM
 //
-//  Created by 오현식 on 9/12/25.
+//  Created by 오현식 on 11/9/25.
 //
 
 import UIKit
@@ -10,7 +10,11 @@ import UIKit
 import SnapKit
 import Then
 
-class EnterMemberTransferTextFieldView: UIView {
+class ResignTextFieldView: UIView {
+    
+    enum Constants {
+        static let maxCharacters: Int = 8
+    }
     
     
     // MARK: Views
@@ -44,11 +48,6 @@ class EnterMemberTransferTextFieldView: UIView {
         $0.setContentCompressionResistancePriority(.defaultHigh + 1, for: .vertical)
         
         $0.delegate = self
-    }
-    
-    private let guideMessageLabel = UILabel().then {
-        $0.textColor = .som.v2.gray500
-        $0.typography = .som.v2.caption2
     }
     
     
@@ -134,29 +133,32 @@ class EnterMemberTransferTextFieldView: UIView {
         
         self.addSubview(self.textFieldBackgroundView)
         self.textFieldBackgroundView.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
+            $0.top.horizontalEdges.equalToSuperview()
             $0.height.equalTo(54)
         }
         self.textFieldBackgroundView.addSubview(self.textField)
         self.textField.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(24)
-            $0.trailing.equalToSuperview().offset(-20)
-        }
-        
-        self.addSubview(self.guideMessageLabel)
-        self.guideMessageLabel.snp.makeConstraints {
-            $0.top.equalTo(self.textFieldBackgroundView.snp.bottom).offset(8)
-            $0.bottom.equalToSuperview()
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.lessThanOrEqualToSuperview().offset(-16)
+            $0.trailing.equalToSuperview().offset(-24)
         }
     }
 }
 
-extension EnterMemberTransferTextFieldView: UITextFieldDelegate {
+extension ResignTextFieldView: UITextFieldDelegate {
+    
+    func textField(
+        _ textField: UITextField,
+        shouldChangeCharactersIn range: NSRange,
+        replacementString string: String
+    ) -> Bool {
+        
+        return textField.shouldChangeCharactersIn(
+            in: range,
+            replacementString: string,
+            maxCharacters: Constants.maxCharacters
+        )
+    }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()

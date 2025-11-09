@@ -14,84 +14,56 @@ import ReactorKit
 import RxCocoa
 import RxSwift
 
-
 class ResignViewController: BaseNavigationViewController, View {
 
     enum Text {
-        static let navigationTitle: String = "계정 탈퇴"
-        static let firstResignTitle: String = "탈퇴하기 전"
-        static let secondResignTitle: String = "몇가지 안내가 있어요"
-        static let dot: String = "•"
-        static let firstResignGuide: String = "지금까지 작성한 카드와 정보들이 모두 삭제될 예정이에요"
-        static let secondResignGuide: String = "재가입은 탈퇴 일자를 기준으로 일주일이후 가능해요"
-        static let secondResignGuideWithBanFrom: String = "계정이 정지 상태 이므로, 정지 해지 날짜인"
-        static let secondResignGuideWithBanTo: String = "까지 재가입이 불가능해요"
-        static let checkResignGuide: String = "위 안내사항을 모두 확인했습니다"
+        static let navigationTitle: String = "탈퇴하기"
+        
+        static let placeholderText: String = "계정을 삭제하려는 이유를 알려주세요"
+        
+        static let resignGuideMessage: String = "탈퇴하려는 이유가 무엇인가요?"
         static let resignButtonTitle: String = "탈퇴하기"
         
-        static let dialogTitle: String = "계정이 이전된 기기입니다"
-        static let dialogMessge: String = "탈퇴 요청은 계정 이관코드를 입력한 기기에서 진행해주세요"
+        static let successDialogTitle: String = "탈퇴 완료"
+        static let successDialogMessage: String = "탈퇴 처리가 성공적으로 완료되었습니다."
         static let confirmActionTitle: String = "확인"
     }
     
-    private let firstResignTitleLabel = UILabel().then {
-        $0.text = Text.firstResignTitle
-        $0.textColor = .som.gray800
-        $0.typography = .som.head2WithBold
+    
+    // MARK: Views
+    
+    private let scrollView = UIScrollView().then {
+        $0.isScrollEnabled = true
+        $0.alwaysBounceVertical = true
+        $0.showsVerticalScrollIndicator = false
+        $0.showsHorizontalScrollIndicator = false
     }
     
-    private let secondResignTitleLabel = UILabel().then {
-        $0.text = Text.secondResignTitle
-        $0.textColor = .som.gray800
-        $0.typography = .som.head2WithBold
+    private let resignGuideMessage = UILabel().then {
+        $0.text = Text.resignGuideMessage
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.head2.withAlignment(.left)
     }
     
-    private let firstDotLabel = UILabel().then {
-        $0.text = Text.dot
-        $0.textColor = .som.gray600
-        $0.typography = .som.body2WithRegular
-    }
-    private let firstResignGuideLabel = UILabel().then {
-        $0.text = Text.firstResignGuide
-        $0.textColor = .som.gray600
-        $0.typography = .som.body2WithRegular.withAlignment(.left)
-        $0.lineBreakMode = .byWordWrapping
-        $0.lineBreakStrategy = .hangulWordPriority
-        $0.numberOfLines = 0
+    private let container = UIStackView().then {
+        $0.axis = .vertical
+        $0.alignment = .fill
+        $0.distribution = .equalSpacing
+        $0.spacing = 10
     }
     
-    private let secondDotLabel = UILabel().then {
-        $0.text = Text.dot
-        $0.textColor = .som.gray600
-        $0.typography = .som.body2WithRegular
-    }
-    private let secondResignGuideLabel = UILabel().then {
-        $0.text = Text.secondResignGuide
-        $0.textColor = .som.gray600
-        $0.typography = .som.body2WithRegular.withAlignment(.left)
-        $0.lineBreakMode = .byWordWrapping
-        $0.lineBreakStrategy = .hangulWordPriority
-        $0.numberOfLines = 0
-    }
-    
-    private let checkBoxButton = UIButton()
-    private let checkBox = UIImageView().then {
-        $0.image = .init(.icon(.outlined(.checkBox)))
-        $0.tintColor = .som.gray500
-    }
-    private let checkResignGuideLabel = UILabel().then {
-        $0.text = Text.checkResignGuide
-        $0.textColor = .som.gray600
-        $0.typography = .som.body1WithRegular
+    private let resignTextField = ResignTextFieldView().then {
+        $0.placeholder = Text.placeholderText
+        $0.isHidden = true
     }
     
     private let resignButton = SOMButton().then {
         $0.title = Text.resignButtonTitle
-        $0.typography = .som.body1WithBold
-        $0.foregroundColor = .som.gray600
+        $0.typography = .som.v2.title1
+        $0.foregroundColor = .som.v2.white
         
-        $0.backgroundColor = .som.gray300
-        $0.layer.cornerRadius = 12
+        $0.backgroundColor = .som.v2.black
+        $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
         
         $0.isEnabled = false
@@ -109,80 +81,52 @@ class ResignViewController: BaseNavigationViewController, View {
     override func setupConstraints() {
         super.setupConstraints()
         
-        self.view.addSubview(self.firstResignTitleLabel)
-        self.firstResignTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(137)
-            $0.centerX.equalToSuperview()
-        }
-        self.view.addSubview(self.secondResignTitleLabel)
-        self.secondResignTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(self.firstResignTitleLabel.snp.bottom)
-            $0.centerX.equalToSuperview()
-        }
-        
-        let resignGuideBackgroundView = UIView().then {
-            $0.backgroundColor = .som.gray50
-            $0.layer.cornerRadius = 13
-            $0.clipsToBounds = true
-        }
-        self.view.addSubview(resignGuideBackgroundView)
-        resignGuideBackgroundView.snp.makeConstraints {
-            $0.top.equalTo(self.secondResignTitleLabel.snp.bottom).offset(24)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-        }
-        
-        resignGuideBackgroundView.addSubview(self.firstDotLabel)
-        self.firstDotLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
-            $0.leading.equalToSuperview().offset(19)
-        }
-        resignGuideBackgroundView.addSubview(self.firstResignGuideLabel)
-        self.firstResignGuideLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(20)
-            $0.leading.equalTo(self.firstDotLabel.snp.trailing).offset(4)
-            $0.trailing.equalToSuperview().offset(-19)
-        }
-        
-        resignGuideBackgroundView.addSubview(self.secondDotLabel)
-        self.secondDotLabel.snp.makeConstraints {
-            $0.top.equalTo(self.firstResignGuideLabel.snp.bottom)
-            $0.leading.equalToSuperview().offset(19)
-        }
-        resignGuideBackgroundView.addSubview(self.secondResignGuideLabel)
-        self.secondResignGuideLabel.snp.makeConstraints {
-            $0.top.equalTo(self.firstResignGuideLabel.snp.bottom)
-            $0.bottom.equalToSuperview().offset(-20)
-            $0.leading.equalTo(self.secondDotLabel.snp.trailing).offset(4)
-            $0.trailing.equalToSuperview().offset(-19)
-        }
-        
-        self.view.addSubview(self.checkBox)
-        self.checkBox.snp.makeConstraints {
-            $0.top.equalTo(resignGuideBackgroundView.snp.bottom).offset(28)
-            $0.leading.equalToSuperview().offset(24)
-            $0.size.equalTo(24)
-        }
-        self.view.addSubview(self.checkResignGuideLabel)
-        self.checkResignGuideLabel.snp.makeConstraints {
-            $0.top.equalTo(resignGuideBackgroundView.snp.bottom).offset(28)
-            $0.leading.equalTo(self.checkBox.snp.trailing).offset(11)
-            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
-        }
-        self.view.addSubview(self.checkBoxButton)
-        self.checkBoxButton.snp.makeConstraints {
-            $0.top.equalTo(self.checkBox.snp.top)
-            $0.leading.equalTo(self.checkBox.snp.leading)
-            $0.trailing.equalTo(self.checkResignGuideLabel.snp.trailing)
-            $0.height.equalTo(24)
-        }
-        
         self.view.addSubview(self.resignButton)
         self.resignButton.snp.makeConstraints {
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-12)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
             $0.height.equalTo(48)
+        }
+        
+        self.view.addSubview(self.scrollView)
+        self.scrollView.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            $0.bottom.equalTo(self.resignButton.snp.top).offset(-16)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+        }
+        
+        let guideContainer = UIView()
+        guideContainer.addSubview(self.resignGuideMessage)
+        self.resignGuideMessage.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(16)
+            $0.bottom.trailing.equalToSuperview().offset(-16)
+            $0.leading.equalToSuperview()
+        }
+        
+        self.container.addArrangedSubview(guideContainer)
+        self.container.setCustomSpacing(16, after: guideContainer)
+        
+        self.setupReportButtons()
+        
+        self.scrollView.addSubview(self.container)
+        self.container.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+    }
+    
+    override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
+        super.updatedKeyboard(withoutBottomSafeInset: height)
+        
+        let height = height == 0 ? 0 : height + 12
+        self.resignButton.snp.updateConstraints {
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-height)
+        }
+        
+        let newHeight = height == 0 ? 0 : 48
+        self.container.snp.updateConstraints {
+            $0.bottom.equalToSuperview().offset(-newHeight)
         }
     }
     
@@ -191,15 +135,16 @@ class ResignViewController: BaseNavigationViewController, View {
     
     func bind(reactor: ResignViewReactor) {
         
-        if let banEndAt = reactor.banEndAt {
-            self.secondResignGuideLabel.text = "\(Text.secondResignGuideWithBanFrom) \(banEndAt.banEndFormatted)\(Text.secondResignGuideWithBanTo)"
-        }
-        
         // Action
-        self.checkBoxButton.rx.throttleTap(.seconds(1))
-            .withLatestFrom(reactor.state.map(\.isCheck))
-            .map(Reactor.Action.check)
+        let reason = self.resignTextField.rx.text.orEmpty.distinctUntilChanged()
+        reason
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .map(Reactor.Action.updateOtherReason)
             .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        reason
+            .map { $0.isEmpty == false }
+            .bind(to: self.resignButton.rx.isEnabled)
             .disposed(by: self.disposeBag)
         
         self.resignButton.rx.throttleTap(.seconds(3))
@@ -208,54 +153,108 @@ class ResignViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // State
-        reactor.state.map(\.isCheck)
-            .distinctUntilChanged()
-            .subscribe(with: self) { object, isCheck in
-                object.checkBox.image = isCheck ? .init(.icon(.filled(.checkBox))) : .init(.icon(.outlined(.checkBox)))
-                
-                object.resignButton.isEnabled = isCheck
-                object.resignButton.foregroundColor = isCheck ? .som.white : .som.gray600
-                object.resignButton.backgroundColor = isCheck ? .som.p300 : .som.gray300
-            }
-            .disposed(by: self.disposeBag)
-        
         reactor.state.map(\.isSuccess)
+            .filterNil()
             .distinctUntilChanged()
             .filter { $0 }
             .subscribe(with: self) { object, _ in
                 guard let window = object.view.window else { return }
                 
-                // let onboardingViewController = OnboardingViewController()
-                // onboardingViewController.reactor = reactor.reactorForOnboarding()
-                // onboardingViewController.modalTransitionStyle = .crossDissolve
-                
-                // let navigationViewController = UINavigationController(rootViewController: onboardingViewController)
-                // window.rootViewController = navigationViewController
-                
-                object.navigationController?.viewControllers = []
+                object.showSuccessReportedDialog {
+                    
+                    let onboardingViewController = OnboardingViewController()
+                    onboardingViewController.reactor = reactor.reactorForOnboarding()
+                    onboardingViewController.modalTransitionStyle = .crossDissolve
+                    
+                    let navigationViewController = UINavigationController(rootViewController: onboardingViewController)
+                    window.rootViewController = navigationViewController
+                }
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isError)
+        reactor.state.map(\.reason)
+            .filterNil()
             .distinctUntilChanged()
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                let confirmAction = SOMDialogAction(
-                    title: Text.confirmActionTitle,
-                    style: .primary,
-                    action: {
-                        UIApplication.topViewController?.dismiss(animated: true) {
-                            object.navigationPop()
-                        }
-                    }
-                )
+            .subscribe(with: self) { object, reason in
                 
-                SOMDialogViewController.show(
-                    title: Text.dialogTitle,
-                    message: Text.dialogMessge,
-                    actions: [confirmAction]
-                )
+                let items = object.container.arrangedSubviews.compactMap { $0 as? SOMButton }
+                
+                items.forEach { item in
+                    item.isSelected = reason.identifier == item.tag
+                }
+                
+                if reason != .other {
+                    object.resignButton.isEnabled = true
+                }
             }
             .disposed(by: self.disposeBag)
+    }
+}
+
+
+// MARK: setup buttons and show dialog
+
+private extension ResignViewController {
+    
+    func setupReportButtons() {
+        
+        guard let reactor = self.reactor else { return }
+        
+        WithdrawType.allCases.forEach { withdrawType in
+            
+            let item = SOMButton().then {
+                
+                $0.title = withdrawType.message
+                $0.typography = .som.v2.subtitle1
+                $0.foregroundColor = .som.v2.gray600
+                $0.backgroundColor = .som.v2.gray100
+                
+                $0.inset = .init(top: 0, left: 16, bottom: 0, right: 0)
+                $0.contentHorizontalAlignment = .left
+                
+                $0.tag = withdrawType.identifier
+            }
+            item.snp.makeConstraints {
+                $0.width.equalTo(UIScreen.main.bounds.width - 16 * 2)
+                $0.height.equalTo(48)
+            }
+            item.rx.throttleTap
+                .subscribe(with: self) { object, _ in
+                    
+                    object.resignTextField.isHidden = withdrawType != .other
+                    if withdrawType == .other {
+                        object.resignTextField.becomeFirstResponder()
+                    } else {
+                        object.resignTextField.resignFirstResponder()
+                    }
+                    reactor.action.onNext(.updateReason(withdrawType))
+                }
+                .disposed(by: self.disposeBag)
+            
+            self.container.addArrangedSubview(item)
+        }
+        
+        self.container.addArrangedSubview(self.resignTextField)
+        self.resignTextField.snp.makeConstraints {
+            $0.bottom.lessThanOrEqualToSuperview().offset(-16)
+        }
+    }
+    
+    func showSuccessReportedDialog(completion: @escaping (() -> Void)) {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true) { completion() }
+            }
+        )
+
+        SOMDialogViewController.show(
+            title: Text.successDialogTitle,
+            message: Text.successDialogMessage,
+            textAlignment: .left,
+            actions: [confirmAction]
+        )
     }
 }
