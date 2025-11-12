@@ -17,7 +17,7 @@ class ProfileViewHeader: UICollectionReusableView {
     
     enum Text {
         static let tabFeedTitle: String = "카드"
-        static let tabCommentTitle: String = "답카드"
+        static let tabCommentTitle: String = "댓글카드"
     }
     
     static let cellIdentifier = String(reflecting: ProfileViewHeader.self)

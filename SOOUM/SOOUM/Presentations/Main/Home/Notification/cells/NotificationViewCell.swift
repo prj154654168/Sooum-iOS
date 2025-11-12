@@ -15,8 +15,8 @@ class NotificationViewCell: UITableViewCell {
     enum Text {
         static let cardTitle: String = "카드"
         static let feedLikeContents: String = "님이 회원님의 카드에 좋아요를 남겼어요."
-        static let commentLikeContents: String = "님이 회원님의 답카드에 좋아요를 남겼어요."
-        static let commentWriteContents: String = "님이 답카드를 남겼어요. 알림을 눌러 대화를 이어가 보세요."
+        static let commentLikeContents: String = "님이 회원님의 댓글카드에 좋아요를 남겼어요."
+        static let commentWriteContents: String = "님이 댓글카드를 남겼어요. 알림을 눌러 대화를 이어가 보세요."
         
         static let followTitle: String = "팔로우"
         static let followContents: String = "님이 회원님을 팔로우하기 시작했어요."
