@@ -115,7 +115,15 @@ class DetailViewController: BaseNavigationViewController, View {
     private var shouldRefreshing: Bool = false
     
     private var actions: [SOMBottomFloatView.FloatAction] = []
-     
+    
+    
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + floating button height + padding
+        return 34 + 56 + 8
+    }
+    
      
      // MARK: Override func
     

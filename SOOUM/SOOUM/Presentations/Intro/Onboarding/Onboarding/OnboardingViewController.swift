@@ -82,6 +82,14 @@ class OnboardingViewController: BaseNavigationViewController, View {
     }
     
     
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + old button height + start button height + padding
+        return 34 + 6 + 21 + 6 + 8 + 56 + 8
+    }
+    
+    
     // MARK: Override func
     
     override func viewDidLoad() {

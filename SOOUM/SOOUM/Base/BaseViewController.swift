@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Network
+
 import RxKeyboard
 import RxSwift
 
@@ -15,15 +17,24 @@ import Then
 
 import Lottie
 
-
 class BaseViewController: UIViewController {
+    
+    enum Text {
+        static let bottomToastEntryName: String = "bottomToastEntryName"
+        static let instabilityNetworkToastTitle: String = "네트워크 연결이 원활하지 않습니다. 네트워크 확인 후 재접속해주세요"
+    }
 
     var disposeBag = DisposeBag()
+    
+    private let monitor = NWPathMonitor()
+    
+    private let instabilityNetworkToastView = SOMBottomToastView(title: Text.instabilityNetworkToastTitle, actions: nil)
     
     let activityIndicatorView = SOMActivityIndicatorView()
     let loadingIndicatorView = SOMLoadingIndicatorView()
 
     private(set) var isEndEditingWhenWillDisappear: Bool = true
+    private(set) var bottomToastMessageOffset: CGFloat = 88
     
     override var hidesBottomBarWhenPushed: Bool {
         didSet {
@@ -72,6 +83,19 @@ class BaseViewController: UIViewController {
                 let safeAreaInsetBottom: CGFloat = sceneDelegate?.window?.safeAreaInsets.bottom ?? 0
                 let withoutBottomSafeInset: CGFloat = max(0, height - safeAreaInsetBottom)
                 object.updatedKeyboard(withoutBottomSafeInset: withoutBottomSafeInset)
+            }
+            .disposed(by: self.disposeBag)
+        
+        SimpleReachability.shared.isConnected
+            .skip(1)
+            .filter { $0 == false }
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, _ in
+                guard object.isViewLoaded, object.view.window != nil else { return }
+                
+                var wrapper: SwiftEntryKitViewWrapper = self.instabilityNetworkToastView.sek
+                wrapper.entryName = Text.bottomToastEntryName
+                wrapper.showBottomToast(verticalOffset: self.bottomToastMessageOffset, displayDuration: 4)
             }
             .disposed(by: self.disposeBag)
     }

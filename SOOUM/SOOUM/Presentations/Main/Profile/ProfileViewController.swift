@@ -236,6 +236,14 @@ class ProfileViewController: BaseNavigationViewController, View {
     private var shouldRefreshing: Bool = false
     
     
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + floating button height + padding
+        return self.reactor?.entranceType == .other ? 34 + 8 : 88
+    }
+    
+    
     // MARK: Override func
     
     override func setupNaviBar() {

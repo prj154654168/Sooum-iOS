@@ -21,6 +21,9 @@ class AnnouncementViewController: BaseNavigationViewController, View {
         static let navigationTitle: String = "공지사항"
     }
     
+    
+    // MARK: Views
+    
     private lazy var tableView = UITableView().then {
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
@@ -36,7 +39,18 @@ class AnnouncementViewController: BaseNavigationViewController, View {
         $0.delegate = self
     }
     
+    
+    // MARK: Variables
+    
     private(set) var announcements = [NoticeInfo]()
+    
+    
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + padding
+        return 34 + 8
+    }
     
     
     // MARK: Override func

@@ -120,6 +120,14 @@ class SettingsViewController: BaseNavigationViewController, View {
     }
     
     
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + padding
+        return 34 + 8
+    }
+    
+    
     // MARK: Override func
     
     override func setupNaviBar() {

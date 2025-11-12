@@ -117,6 +117,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
     private var relatedTagsViewBottomConstraint: Constraint?
     
     
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + padding
+        return 34 + 8
+    }
+    
+    
     // MARK: Override func
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { }

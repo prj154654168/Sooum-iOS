@@ -69,6 +69,14 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
     private var serialTimer: Disposable?
     
     
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + update transfer button height + padding
+        return 34 + 56 + 8
+    }
+    
+    
     // MARK: Override func
     
     override func setupNaviBar() {
