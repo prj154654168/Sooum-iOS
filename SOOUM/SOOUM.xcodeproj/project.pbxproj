@@ -702,6 +702,8 @@
 		38D869642CF821F900BF87DA /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D869622CF821F900BF87DA /* UserDefaults.swift */; };
 		38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
 		38D8E2922CCD232B00CE2E0A /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8E2902CCD232B00CE2E0A /* AuthManager.swift */; };
+		38D8F5582EC4D89D00DED428 /* TagNofificationInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8F5572EC4D89400DED428 /* TagNofificationInfoResponse.swift */; };
+		38D8F5592EC4D89D00DED428 /* TagNofificationInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8F5572EC4D89400DED428 /* TagNofificationInfoResponse.swift */; };
 		38D8FE8D2EBE36F800F32D02 /* ProfileCardsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8FE8C2EBE36F200F32D02 /* ProfileCardsViewCell.swift */; };
 		38D8FE8E2EBE36F800F32D02 /* ProfileCardsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8FE8C2EBE36F200F32D02 /* ProfileCardsViewCell.swift */; };
 		38D8FE902EBE664C00F32D02 /* SOMNicknameTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38D8FE8F2EBE663E00F32D02 /* SOMNicknameTextField.swift */; };
@@ -1173,6 +1175,7 @@
 		38D6F1822CC243DB00E11530 /* UITextView+Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Typography.swift"; sourceTree = "<group>"; };
 		38D869622CF821F900BF87DA /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		38D8E2902CCD232B00CE2E0A /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		38D8F5572EC4D89400DED428 /* TagNofificationInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagNofificationInfoResponse.swift; sourceTree = "<group>"; };
 		38D8FE8C2EBE36F200F32D02 /* ProfileCardsViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCardsViewCell.swift; sourceTree = "<group>"; };
 		38D8FE8F2EBE663E00F32D02 /* SOMNicknameTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMNicknameTextField.swift; sourceTree = "<group>"; };
 		38DA12B32D4E54EB00AB9468 /* MockAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthManager.swift; sourceTree = "<group>"; };
@@ -2225,6 +2228,7 @@
 				38FEBE532E865119002916A8 /* FollowNotificationInfoResponse.swift */,
 				38899E9B2E7954D70030F7CA /* DeletedNotificationInfoResponse.swift */,
 				38899E982E7954670030F7CA /* BlockedNotificationInfoResponse.swift */,
+				38D8F5572EC4D89400DED428 /* TagNofificationInfoResponse.swift */,
 				38899E8E2E79511F0030F7CA /* KeyInfoResponse.swift */,
 				38899E8B2E794E680030F7CA /* AppVersionStatusResponse.swift */,
 				38899E822E794C330030F7CA /* LoginResponse.swift */,
@@ -3453,6 +3457,7 @@
 				385602B72D2FB18400118530 /* NotificationPlaceholderViewCell.swift in Sources */,
 				383EC6152E7A50EB00EC2D1E /* AuthLocalDataSourceImpl.swift in Sources */,
 				3878D0542CFFC6C100F9522F /* ProfileResponse.swift in Sources */,
+				38D8F5592EC4D89D00DED428 /* TagNofificationInfoResponse.swift in Sources */,
 				38C9AF302E96A49F00B401C0 /* WriteCardTag.swift in Sources */,
 				3889A27D2E79C56E0030F7CA /* ToeknResponse.swift in Sources */,
 				3878D06C2CFFDF1F00F9522F /* SettingsViewController.swift in Sources */,
@@ -3857,6 +3862,7 @@
 				388A2D2D2D00A45800E2F2F0 /* writtenCardResponse.swift in Sources */,
 				383EC6162E7A50EB00EC2D1E /* AuthLocalDataSourceImpl.swift in Sources */,
 				3878D0852CFFED7800F9522F /* TermsOfServiceTextCellView.swift in Sources */,
+				38D8F5582EC4D89D00DED428 /* TagNofificationInfoResponse.swift in Sources */,
 				38C9AF312E96A49F00B401C0 /* WriteCardTag.swift in Sources */,
 				3889A27E2E79C56E0030F7CA /* ToeknResponse.swift in Sources */,
 				3878D0812CFFEC6900F9522F /* TermsOfServiceViewController.swift in Sources */,

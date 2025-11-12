@@ -25,6 +25,9 @@ class NotificationViewCell: UITableViewCell {
         static let deletedContents: String = "운영정책 위반으로 인해 작성된 카드가 삭제 처리되었습니다."
         static let blockedLeadingContents: String = "운영정책 위반으로 인해 "
         static let blockedTrailingContents: String = "까지 카드추가가 제한됩니다."
+        
+        static let tagTitle: String = "태그"
+        static let tagContents: String = "태그가 포함된 카드가 올라왔어요."
     }
     
     static let cellIdentifier = String(reflecting: NotificationViewCell.self)
@@ -62,6 +65,14 @@ class NotificationViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.titleLabel.text = nil
+        self.timeGapLabel.text = nil
+        self.contentLabel.text = nil
     }
     
     
@@ -116,6 +127,8 @@ class NotificationViewCell: UITableViewCell {
                 return (.init(.icon(.v2(.filled(.users)))), .som.v2.pMain)
             case .deleted, .blocked:
                 return (.init(.icon(.v2(.filled(.danger)))), .som.v2.yMain)
+            case .tag:
+                return (.init(.icon(.v2(.filled(.tag)))), .som.v2.pMain)
             }
         }
         
@@ -130,6 +143,8 @@ class NotificationViewCell: UITableViewCell {
                 return (Text.deletedAndBlockedTitle, typography)
             case .blocked:
                 return (Text.deletedAndBlockedTitle, typography)
+            case .tag:
+                return (Text.tagTitle, typography)
             }
         }
         
@@ -146,6 +161,9 @@ class NotificationViewCell: UITableViewCell {
                 let timeGapText = notification.notificationInfo.createTime.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
                 return (timeGapText, typography)
             case let .blocked(notification):
+                let timeGapText = notification.notificationInfo.createTime.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
+                return (timeGapText, typography)
+            case let .tag(notification):
                 let timeGapText = notification.notificationInfo.createTime.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
                 return (timeGapText, typography)
             }
@@ -172,6 +190,8 @@ class NotificationViewCell: UITableViewCell {
             case let .blocked(notification):
                 let text = "\(Text.blockedLeadingContents)\(notification.blockExpirationDateTime.banEndFormatted)\(Text.blockedTrailingContents)"
                 return (text, typography)
+            case let .tag(notification):
+                return ("‘\(notification.tagContent)’ \(Text.tagContents)", typography)
             }
         }
         
