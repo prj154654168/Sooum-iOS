@@ -51,7 +51,7 @@ extension CommonNotificationInfo: Decodable {
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.notificationId = String(try container.decode(Int64.self, forKey: .notificationId))
-        self.notificationType = try container.decode(CommonNotificationInfo.NotificationType.self, forKey: .notificationType)
+        self.notificationType = try container.decode(NotificationType.self, forKey: .notificationType)
         self.createTime = try container.decode(Date.self, forKey: .createTime)
     }
 }

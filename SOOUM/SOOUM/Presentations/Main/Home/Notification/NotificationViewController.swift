@@ -185,19 +185,6 @@ class NotificationViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.pushInfo)
-            .filterNil()
-            .distinctUntilChanged(reactor.canUpdatePushInfos)
-            .subscribe(with: self) { object, pushInfo in
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(
-                    entranceType: pushInfo.entranceType,
-                    with: pushInfo.id
-                )
-                object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
-            }
-            .disposed(by: self.disposeBag)
-        
         reactor.state.map {
             NotificationViewReactor.DisplayStates(
                 displayType: $0.displayType,
@@ -303,7 +290,9 @@ extension NotificationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        guard let item = self.dataSource.itemIdentifier(for: indexPath),
+              let reactor = self.reactor
+        else { return }
         
         switch item {
         case let .notice(notice):
@@ -314,107 +303,53 @@ extension NotificationViewController: UITableViewDelegate {
             }
         case let .unread(notification):
             
-            var pushOrRequestReadInfo: NotificationViewReactor.PushOrRequestReadInfo? {
-                switch notification {
-                case let .default(notification):
+            switch notification {
+            case let .default(notification):
+                
+                reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
+                
+                switch notification.notificationInfo.notificationType {
+                case .feedLike, .commentLike, .commentWrite:
                     
-                    if case .feedLike = notification.notificationInfo.notificationType {
-                        return .init(
-                            entranceType: .feed,
-                            notificationId: notification.notificationInfo.notificationId,
-                            targetCardId: notification.targetCardId,
-                            shouldRead: true
-                        )
-                    }
-                    if case .commentLike = notification.notificationInfo.notificationType {
-                        return .init(
-                            entranceType: .comment,
-                            notificationId: notification.notificationInfo.notificationId,
-                            targetCardId: notification.targetCardId,
-                            shouldRead: true
-                        )
-                    }
-                    if case .commentWrite = notification.notificationInfo.notificationType {
-                        return .init(
-                            entranceType: .comment,
-                            notificationId: notification.notificationInfo.notificationId,
-                            targetCardId: notification.targetCardId,
-                            shouldRead: true
-                        )
-                    }
-                    return nil
-                    /// follow, deleted, blocked 는 읽기 API만 호출
-                case let .follow(notification):
-                    
-                    return .init(
+                    let detailViewController = DetailViewController()
+                    detailViewController.reactor = reactor.reactorForDetail(
                         entranceType: .feed,
-                        notificationId: notification.notificationInfo.notificationId,
-                        targetCardId: nil,
-                        shouldRead: true
+                        with: notification.targetCardId
                     )
-                case let .deleted(notification):
-                    
-                    return .init(
-                        entranceType: .feed,
-                        notificationId: notification.notificationInfo.notificationId,
-                        targetCardId: nil,
-                        shouldRead: true
-                    )
-                case let .blocked(notification):
-                    
-                    return .init(
-                        entranceType: .feed,
-                        notificationId: notification.notificationInfo.notificationId,
-                        targetCardId: nil,
-                        shouldRead: true
-                    )
+                    self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                default:
+                    return
                 }
+            case let .follow(notification):
+                
+                reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
+                
+                let profileViewController = ProfileViewController()
+                profileViewController.reactor = reactor.reactorForProfile(with: notification.userId)
+                self.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+            default:
+                return
             }
-            guard let pushOrRequestReadInfo = pushOrRequestReadInfo else { return }
-            
-            self.reactor?.action.onNext(.updatePushOrRequestReadInfo(pushOrRequestReadInfo))
         case let .read(notification):
             
-            var pushOrRequestReadInfo: NotificationViewReactor.PushOrRequestReadInfo? {
-                switch notification {
-                case let .default(notification):
-                    
-                    if case .feedLike = notification.notificationInfo.notificationType {
-                        return .init(
-                            entranceType: .feed,
-                            notificationId: notification.notificationInfo.notificationId,
-                            targetCardId: notification.targetCardId,
-                            shouldRead: false
-                        )
-                    }
-                    if case .commentLike = notification.notificationInfo.notificationType {
-                        return .init(
-                            entranceType: .comment,
-                            notificationId: notification.notificationInfo.notificationId,
-                            targetCardId: notification.targetCardId,
-                            shouldRead: false
-                        )
-                    }
-                    if case .commentWrite = notification.notificationInfo.notificationType {
-                        return .init(
-                            entranceType: .comment,
-                            notificationId: notification.notificationInfo.notificationId,
-                            targetCardId: notification.targetCardId,
-                            shouldRead: false
-                        )
-                    }
-                    return nil
-                default:
-                    
-                    return nil
-                }
+            switch notification {
+            case let .default(notification):
+                
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(
+                    entranceType: .feed,
+                    with: notification.targetCardId
+                )
+                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+            case let .follow(notification):
+                
+                let profileViewController = ProfileViewController()
+                profileViewController.reactor = reactor.reactorForProfile(with: notification.userId)
+                self.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+            default:
+                return
             }
-            guard let pushOrRequestReadInfo = pushOrRequestReadInfo else { return }
-            
-            self.reactor?.action.onNext(.updatePushOrRequestReadInfo(pushOrRequestReadInfo))
-            
         default:
-            
             return
         }
     }

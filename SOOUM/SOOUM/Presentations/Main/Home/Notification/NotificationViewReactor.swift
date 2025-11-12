@@ -17,7 +17,6 @@ class NotificationViewReactor: Reactor {
         case updateDisplayType(DisplayType)
         case moreFind(lastId: String, displayType: DisplayType)
         case requestRead(String)
-        case updatePushOrRequestReadInfo(PushOrRequestReadInfo)
     }
     
     enum Mutation {
@@ -26,7 +25,6 @@ class NotificationViewReactor: Reactor {
         case notices([NoticeInfo])
         case moreNotices([NoticeInfo])
         case updateDisplayType(DisplayType)
-        case updatePushOrRequestReadInfo((entranceType: EntranceCardType, id: String)?)
         case updateIsRefreshing(Bool)
         case updateIsReadSuccess(Bool)
     }
@@ -36,7 +34,6 @@ class NotificationViewReactor: Reactor {
         fileprivate(set) var notificationsForUnread: [CompositeNotificationInfo]?
         fileprivate(set) var notifications: [CompositeNotificationInfo]?
         fileprivate(set) var notices: [NoticeInfo]?
-        fileprivate(set) var pushInfo: (entranceType: EntranceCardType, id: String)?
         fileprivate(set) var isRefreshing: Bool
         fileprivate(set) var isReadSuccess: Bool
     }
@@ -55,7 +52,6 @@ class NotificationViewReactor: Reactor {
           notificationsForUnread: nil,
           notifications: nil,
           notices: nil,
-          pushInfo: nil,
           isRefreshing: false,
           isReadSuccess: false
         )
@@ -121,49 +117,21 @@ class NotificationViewReactor: Reactor {
         case let .requestRead(selectedId):
             
             return self.notificationUseCase.requestRead(notificationId: selectedId)
-                .map(Mutation.updateIsReadSuccess)
-            
-        case let .updatePushOrRequestReadInfo(pushOrRequestReadInfo):
-            
-            /// 읽은 알림 여부 확인
-            if pushOrRequestReadInfo.shouldRead {
-                /// 읽어야 하는 알림일 경우, 읽음 API 호출
-                return self.notificationUseCase.requestRead(notificationId: pushOrRequestReadInfo.notificationId)
-                    .withUnretained(self)
-                    .flatMapLatest { object, _ -> Observable<Mutation> in
-                        /// 알림 화면 리로드
-                        return Observable.zip(
-                            object.notificationUseCase.unreadNotifications(lastId: nil),
-                            object.notificationUseCase.readNotifications(lastId: nil)
-                        )
-                        .flatMapLatest { unreads, reads -> Observable<Mutation> in
-                            
-                            if let targetCardId = pushOrRequestReadInfo.targetCardId {
-                               
-                                return .concat([
-                                    .just(.notifications(unreads: unreads, reads: reads)),
-                                    .just(.updatePushOrRequestReadInfo(nil)),
-                                    .just(.updatePushOrRequestReadInfo((pushOrRequestReadInfo.entranceType, targetCardId)))
-                                ])
-                            } else {
-                                return .concat([
-                                    .just(.notifications(unreads: unreads, reads: reads)),
-                                    .just(.updatePushOrRequestReadInfo(nil))
-                                ])
-                            }
-                        }
+                .flatMapLatest { isReadSuccess -> Observable<Mutation> in
+                    if isReadSuccess {
+                        return .concat([
+                            Observable.zip(
+                                self.notificationUseCase.unreadNotifications(lastId: nil),
+                                self.notificationUseCase.readNotifications(lastId: nil)
+                            )
+                                .map(Mutation.notifications)
+                                .catch(self.catchClosureNotis),
+                            .just(.updateIsReadSuccess(true))
+                        ])
+                    } else {
+                        return .just(.updateIsReadSuccess(false))
                     }
-            } else {
-                
-                if let targetCardId = pushOrRequestReadInfo.targetCardId {
-                    return .concat([
-                        .just(.updatePushOrRequestReadInfo(nil)),
-                        .just(.updatePushOrRequestReadInfo((pushOrRequestReadInfo.entranceType, targetCardId)))
-                    ])
-                } else {
-                    return .just(.updatePushOrRequestReadInfo(nil))
                 }
-            }
         }
     }
     
@@ -182,8 +150,6 @@ class NotificationViewReactor: Reactor {
             newState.notices? += notices
         case let .updateDisplayType(displayType):
             newState.displayType = displayType
-        case let .updatePushOrRequestReadInfo(pushInfo):
-            newState.pushInfo = pushInfo
         case let .updateIsRefreshing(isRefreshing):
             newState.isRefreshing = isRefreshing
         case let .updateIsReadSuccess(isReadSuccess):
@@ -299,5 +265,9 @@ extension NotificationViewReactor {
     
     func reactorForDetail(entranceType: EntranceCardType, with id: String) -> DetailViewReactor {
         DetailViewReactor(dependencies: self.dependencies, entranceType, type: .navi, with: id)
+    }
+    
+    func reactorForProfile(with userId: String) -> ProfileViewReactor {
+        ProfileViewReactor(dependencies: self.dependencies, type: .other, with: userId)
     }
 }
