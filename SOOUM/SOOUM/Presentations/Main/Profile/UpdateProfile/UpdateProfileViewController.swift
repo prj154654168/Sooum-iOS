@@ -154,12 +154,45 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
     
     func bind(reactor: UpdateProfileViewReactor) {
         
-        if let imageUrl = reactor.profileInfo.profileImageUrl,
-           let imageName = reactor.profileInfo.profileImgName {
-            
-            self.profileImageView.setImage(strUrl: imageUrl, with: imageName)
-        }
-        self.nicknameTextField.text = reactor.profileInfo.nickname
+        self.rx.viewDidLoad
+            .subscribe(with: self) { object, _ in
+                
+                var actions: [SOMBottomFloatView.FloatAction] = [
+                    .init(
+                        title: Text.selectProfileFirstButtonTitle,
+                        action: { [weak object] in
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                object?.showPicker(for: .library)
+                            }
+                        }
+                    ),
+                    .init(
+                        title: Text.selectProfileSecondButtonTitle,
+                        action: { [weak object] in
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                object?.showPicker(for: .photo)
+                            }
+                        }
+                    )
+                ]
+                
+                if let imageUrl = reactor.profileInfo.profileImageUrl,
+                   let imageName = reactor.profileInfo.profileImgName {
+                    
+                    object.profileImageView.setImage(strUrl: imageUrl, with: imageName)
+                    
+                    actions.append(.init(
+                        title: Text.selectProfileThirdButtonTitle,
+                        action: {
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                reactor.action.onNext(.setDefaultImage)
+                            }
+                        }
+                    ))
+                }
+                object.nicknameTextField.text = reactor.profileInfo.nickname
+            }
+            .disposed(by: self.disposeBag)
         
         // Action
         Observable.merge(
