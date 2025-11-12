@@ -14,6 +14,7 @@ class MemberInfoView: UIView {
     
     enum Text {
         static let visitedPrefix: String = "조회 "
+        static let deletedUserNickname: String = "알 수 없는 사용자"
     }
     
     
@@ -170,6 +171,8 @@ class MemberInfoView: UIView {
     }
     
     func updateViewsWhenDeleted() {
+        self.memberImageView.image = .init(.image(.v2(.profile_small)))
+        self.memberLabel.text = Text.deletedUserNickname
         self.distanceBackgroundView.removeFromSuperview()
         self.timeGapLabel.removeFromSuperview()
     }
