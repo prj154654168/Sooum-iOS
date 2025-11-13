@@ -93,9 +93,9 @@ class BaseViewController: UIViewController {
             .subscribe(with: self) { object, _ in
                 guard object.isViewLoaded, object.view.window != nil else { return }
                 
-                var wrapper: SwiftEntryKitViewWrapper = self.instabilityNetworkToastView.sek
+                var wrapper: SwiftEntryKitViewWrapper = object.instabilityNetworkToastView.sek
                 wrapper.entryName = Text.bottomToastEntryName
-                wrapper.showBottomToast(verticalOffset: self.bottomToastMessageOffset, displayDuration: 4)
+                wrapper.showBottomToast(verticalOffset: object.bottomToastMessageOffset, displayDuration: 4)
             }
             .disposed(by: self.disposeBag)
     }
