@@ -15,12 +15,14 @@ class SettingsViewReactor: Reactor {
     enum Action: Equatable {
         case landing
         case updateNotificationStatus(Bool)
+        case rejoinableDate
     }
     
     enum Mutation {
         case updateBanEndAt(Date?)
         case updateVersion(Version?)
         case updateNotificationStatus(Bool)
+        case rejoinableDate(RejoinableDateInfo?)
     }
     
     struct State {
@@ -28,6 +30,7 @@ class SettingsViewReactor: Reactor {
         fileprivate(set) var version: Version?
         fileprivate(set) var notificationStatus: Bool
         fileprivate(set) var shouldHideTransfer: Bool
+        fileprivate(set) var rejoinableDate: RejoinableDateInfo?
     }
     
     var initialState: State
@@ -35,6 +38,7 @@ class SettingsViewReactor: Reactor {
     private let dependencies: AppDIContainerable
     private let appVersionUseCase: AppVersionUseCase
     private let userUseCase: UserUseCase
+    private let settingsUseCase: SettingsUserCase
     private let pushManager: PushManagerDelegate
     
     let authManager: AuthManagerDelegate
@@ -43,6 +47,7 @@ class SettingsViewReactor: Reactor {
         self.dependencies = dependencies
         self.appVersionUseCase = dependencies.rootContainer.resolve(AppVersionUseCase.self)
         self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUserCase.self)
         self.pushManager = dependencies.rootContainer.resolve(ManagerProviderType.self).pushManager
         self.authManager = dependencies.rootContainer.resolve(ManagerProviderType.self).authManager
         
@@ -72,6 +77,10 @@ class SettingsViewReactor: Reactor {
             return self.userUseCase.updateNotify(isAllowNotify: state)
                 .map { _ in state }
                 .map(Mutation.updateNotificationStatus)
+        case .rejoinableDate:
+            
+            return self.settingsUseCase.rejoinableDate()
+                .map(Mutation.rejoinableDate)
         }
     }
     
@@ -84,6 +93,8 @@ class SettingsViewReactor: Reactor {
             newState.version = version
         case let .updateNotificationStatus(notificationStatus):
             newState.notificationStatus = notificationStatus
+        case let .rejoinableDate(rejoinableDate):
+            newState.rejoinableDate = rejoinableDate
         }
         return newState
     }

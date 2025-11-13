@@ -302,22 +302,26 @@ class SettingsViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let banEndAt = reactor.state.map(\.banEndAt).distinctUntilChanged().share()
-        
         self.resignCellView.rx.didSelect
-            .withLatestFrom(banEndAt)
-            .subscribe(with: self) { object, banEndAt in
-                object.showResignDialog(with: banEndAt)
-            }
+            .map { _ in Reactor.Action.rejoinableDate }
+            .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        banEndAt
+        reactor.state.map(\.banEndAt)
+            .distinctUntilChanged()
             .subscribe(with: self) { object, banEndAt in
                 object.postingBlockedBackgroundView.isHidden = (banEndAt == nil)
                 object.postingBlockedMessageLabel.text = Text.postingBlockedLeadingGuideMessage +
                     (banEndAt?.banEndDetailFormatted ?? "") +
                     Text.postingBlockedTrailingGuideMessage
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.rejoinableDate)
+            .filterNil()
+            .subscribe(with: self) { object, rejoinableDate in
+                object.showResignDialog(rejoinableDate: rejoinableDate)
             }
             .disposed(by: self.disposeBag)
         
@@ -347,7 +351,7 @@ class SettingsViewController: BaseNavigationViewController, View {
 
 extension SettingsViewController {
     
-    func showResignDialog(with banEndAt: Date?) {
+    func showResignDialog(rejoinableDate: RejoinableDateInfo) {
         
         let cancelAction = SOMDialogAction(
             title: Text.cancelActionButtonTitle,
@@ -370,14 +374,14 @@ extension SettingsViewController {
                 }
             }
         )
-        
-        let confirmAction: SOMDialogAction
 
         var message: String {
-            if let banEndAt = banEndAt {
-                return Text.resignDialogBannedLeadingMessage + banEndAt.banEndFormatted + Text.resignDialogBannedTrailingMessage
-            } else {
+            if rejoinableDate.isActivityRestricted == false {
                 return Text.resignDialogMessage
+            } else {
+                return Text.resignDialogBannedLeadingMessage +
+                    rejoinableDate.rejoinableDate.banEndFormatted +
+                    Text.resignDialogBannedTrailingMessage
             }
         }
         
