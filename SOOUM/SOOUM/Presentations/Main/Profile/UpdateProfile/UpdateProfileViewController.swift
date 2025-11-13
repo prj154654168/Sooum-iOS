@@ -190,15 +190,19 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
                     
                     object.profileImageView.setImage(strUrl: imageUrl, with: imageName)
                     
-                    actions.append(.init(
-                        title: Text.selectProfileThirdButtonTitle,
-                        action: {
-                            SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
-                                reactor.action.onNext(.setDefaultImage)
+                    actions.append(
+                        .init(
+                            title: Text.selectProfileThirdButtonTitle,
+                            action: {
+                                SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                    reactor.action.onNext(.setDefaultImage)
+                                }
                             }
-                        }
-                    ))
+                        )
+                    )
                 }
+                
+                object.actions = actions
                 object.nicknameTextField.text = reactor.profileInfo.nickname
             }
             .disposed(by: self.disposeBag)
