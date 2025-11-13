@@ -26,6 +26,7 @@ class MyFollowingViewCell: UITableViewCell {
     let profileBackgroundButton = UIButton()
     private let profileImageView = UIImageView().then {
         $0.image = .init(.image(.v2(.profile_small)))
+        $0.contentMode = .scaleAspectFill
         $0.backgroundColor = .som.v2.gray300
         $0.layer.cornerRadius = 36 * 0.5
         $0.layer.borderWidth = 1

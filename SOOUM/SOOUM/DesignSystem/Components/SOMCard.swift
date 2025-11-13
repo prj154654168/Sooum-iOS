@@ -34,9 +34,9 @@ class SOMCard: UIView {
     
     /// 배경 이미지
     private let rootContainerImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 16
         $0.layer.borderWidth = 1
-        $0.contentMode = .scaleAspectFill
         $0.layer.masksToBounds = true
     }
     

@@ -381,7 +381,7 @@ extension FollowViewController: UITableViewDelegate {
             if self.followers.isEmpty == false,
                indexPath.section == Section.follower.rawValue,
                indexPath.row == lastItemIndexPath,
-               let lastId = self.followers.last?.memberId {
+               let lastId = self.followers.last?.id {
                 
                 reactor.action.onNext(.moreFind(type: .follower, lastId: lastId))
             }
@@ -391,7 +391,7 @@ extension FollowViewController: UITableViewDelegate {
             if self.followings.isEmpty == false,
                indexPath.section == Section.following.rawValue,
                indexPath.item == lastItemIndexPath,
-               let lastId = self.followings.last?.memberId {
+               let lastId = self.followings.last?.id {
                 
                 reactor.action.onNext(.moreFind(type: .following, lastId: lastId))
             }

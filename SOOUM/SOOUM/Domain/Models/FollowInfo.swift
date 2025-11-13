@@ -9,6 +9,7 @@ import Foundation
 
 struct FollowInfo: Hashable {
     
+    let id: String
     let memberId: String
     let nickname: String
     let profileImageUrl: String?
@@ -19,6 +20,7 @@ struct FollowInfo: Hashable {
 extension FollowInfo {
     
     static var defaultValue: FollowInfo = FollowInfo(
+        id: "",
         memberId: "",
         nickname: "",
         profileImageUrl: nil,
@@ -29,7 +31,8 @@ extension FollowInfo {
 
 extension FollowInfo: Decodable {
     
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: String, CodingKey {
+        case id = "followId"
         case memberId
         case nickname
         case profileImageUrl
@@ -39,6 +42,7 @@ extension FollowInfo: Decodable {
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = String(try container.decode(Int64.self, forKey: .id))
         self.memberId = String(try container.decode(Int64.self, forKey: .memberId))
         self.nickname = try container.decode(String.self, forKey: .nickname)
         self.profileImageUrl = try container.decodeIfPresent(String.self, forKey: .profileImageUrl)

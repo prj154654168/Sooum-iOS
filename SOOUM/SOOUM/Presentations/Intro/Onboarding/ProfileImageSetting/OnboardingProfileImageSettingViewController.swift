@@ -60,6 +60,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
     
     private let profileImageView = UIImageView().then {
         $0.image = .init(.image(.v2(.profile_large)))
+        $0.contentMode = .scaleAspectFill
         $0.backgroundColor = .som.v2.gray300
         $0.layer.cornerRadius = 120 * 0.5
         $0.layer.borderWidth = 1
