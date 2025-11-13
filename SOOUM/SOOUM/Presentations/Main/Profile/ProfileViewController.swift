@@ -187,11 +187,11 @@ class ProfileViewController: BaseNavigationViewController, View {
                     cell.setModels(type: type, feed: feeds, comment: comments ?? [])
                 }
                 
-                cell.cardDidTap
-                    .subscribe(with: self) { object, selectedId in
-                        // TODO: 상세화면 이동
-                    }
-                    .disposed(by: cell.disposeBag)
+                // cell.cardDidTap
+                //     .subscribe(with: self) { object, selectedId in
+                //         // TODO: 상세화면 이동
+                //     }
+                //     .disposed(by: cell.disposeBag)
                 
                 cell.moreFindCards
                     .subscribe(with: self) { object, moreInfo in
@@ -368,6 +368,7 @@ class ProfileViewController: BaseNavigationViewController, View {
                 commCardInfos: $0.commentCardInfos
             )
         }
+        .distinctUntilChanged(reactor.canUpdateCells)
         .observe(on: MainScheduler.asyncInstance)
         .subscribe(with: self) { object, displayStates in
             
@@ -376,8 +377,8 @@ class ProfileViewController: BaseNavigationViewController, View {
             
             guard let profileInfo = displayStates.profileInfo else { return }
             
-            if reactor.entranceType == .other {
-                object.rightBlockButton.isHidden = profileInfo.isBlocked == true
+            if reactor.entranceType == .other, let isBlocked = profileInfo.isBlocked {
+                object.rightBlockButton.isHidden = isBlocked
             }
             
             let profileItem = Item.user(profileInfo)
@@ -394,20 +395,20 @@ class ProfileViewController: BaseNavigationViewController, View {
         }
         .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isBlocked)
-            .distinctUntilChanged()
+        reactor.pulse(\.$isBlocked)
+            .filterNil()
+            .filter { $0 }
             .observe(on: MainScheduler.asyncInstance)
-            .subscribe(with: self) { object, isBlocked in
-                
+            .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.updateCards)
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isFollowing)
+        reactor.pulse(\.$isFollowing)
             .filterNil()
-            .distinctUntilChanged()
+            .filter { $0 }
             .observe(on: MainScheduler.asyncInstance)
-            .subscribe(with: self) { object, isFollowing in
+            .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.updateProfile)
             }
             .disposed(by: self.disposeBag)

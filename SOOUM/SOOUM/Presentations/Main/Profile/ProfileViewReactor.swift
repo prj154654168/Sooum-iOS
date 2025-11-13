@@ -36,8 +36,8 @@ class ProfileViewReactor: Reactor {
         case commentCardInfos([ProfileCardInfo])
         case moreCommentCardInfos([ProfileCardInfo])
         case updateCardType(EntranceCardType)
-        case updateIsBlocked(Bool)
-        case updateIsFollowing(Bool)
+        case updateIsBlocked(Bool?)
+        case updateIsFollowing(Bool?)
         case updateIsRefreshing(Bool)
     }
     
@@ -46,8 +46,8 @@ class ProfileViewReactor: Reactor {
         fileprivate(set) var feedCardInfos: [ProfileCardInfo]
         fileprivate(set) var commentCardInfos: [ProfileCardInfo]
         fileprivate(set) var cardType: EntranceCardType
-        fileprivate(set) var isBlocked: Bool
-        fileprivate(set) var isFollowing: Bool?
+        @Pulse fileprivate(set) var isBlocked: Bool?
+        @Pulse fileprivate(set) var isFollowing: Bool?
         fileprivate(set) var isRefreshing: Bool
     }
     
@@ -56,7 +56,7 @@ class ProfileViewReactor: Reactor {
         feedCardInfos: [],
         commentCardInfos: [],
         cardType: .feed,
-        isBlocked: true,
+        isBlocked: nil,
         isFollowing: nil,
         isRefreshing: false
     )
@@ -87,8 +87,7 @@ class ProfileViewReactor: Reactor {
                         return .concat([
                             .just(.profile(profileInfo)),
                             object.userUseCase.feedCards(userId: profileInfo.userId, lastId: nil)
-                                .map(Mutation.feedCardInfos),
-                            .just(.updateIsBlocked(!(profileInfo.isBlocked ?? false)))
+                                .map(Mutation.feedCardInfos)
                         ])
                     } else {
                         
@@ -168,25 +167,26 @@ class ProfileViewReactor: Reactor {
             return .just(.updateCardType(cardType))
         case .block:
             
-            guard let userId = self.currentState.profileInfo?.userId else { return .empty() }
+            guard let userId = self.currentState.profileInfo?.userId,
+                  let isBlocked = self.currentState.profileInfo?.isBlocked
+            else { return .empty() }
             
-            return self.userUseCase.updateBlocked(id: userId, isBlocked: self.currentState.isBlocked)
-                .flatMapLatest { isBlockedSuccess -> Observable<Mutation> in
-                    /// isBlocked == true 일 때, 차단 요청
-                    return isBlockedSuccess ? .just(.updateIsBlocked(self.currentState.isBlocked == false)) : .empty()
-                }
-            
+            return .concat([
+                .just(.updateIsBlocked(nil)),
+                self.userUseCase.updateBlocked(id: userId, isBlocked: !isBlocked)
+                    .map(Mutation.updateIsBlocked)
+            ])
         case .follow:
             
             guard let userId = self.currentState.profileInfo?.userId,
                   let isFollowing = self.currentState.profileInfo?.isAlreadyFollowing
             else { return .empty() }
             
-            return self.userUseCase.updateFollowing(userId: userId, isFollow: !isFollowing)
-                .flatMapLatest { isUpdatedSuccess -> Observable<Mutation> in
-                    /// isFollow == true 일 때, 팔로우 취소 요청
-                    return isUpdatedSuccess ? .just(.updateIsFollowing(!isFollowing)) : .empty()
-                }
+            return .concat([
+                .just(.updateIsFollowing(nil)),
+                self.userUseCase.updateFollowing(userId: userId, isFollow: !isFollowing)
+                    .map(Mutation.updateIsFollowing)
+            ])
         }
     }
     

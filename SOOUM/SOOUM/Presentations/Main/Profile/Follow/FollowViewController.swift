@@ -337,9 +337,8 @@ class FollowViewController: BaseNavigationViewController, View {
         }
         .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isUpdated)
+        reactor.pulse(\.$isUpdated)
             .filterNil()
-            .distinctUntilChanged()
             .filter { $0 }
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.landing)

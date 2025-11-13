@@ -39,7 +39,7 @@ class FollowViewReactor: Reactor {
         fileprivate(set) var followers: [FollowInfo]
         fileprivate(set) var followings: [FollowInfo]
         fileprivate(set) var followType: EntranceType
-        fileprivate(set) var isUpdated: Bool?
+        @Pulse fileprivate(set) var isUpdated: Bool?
         fileprivate(set) var isRefreshing: Bool
     }
     
