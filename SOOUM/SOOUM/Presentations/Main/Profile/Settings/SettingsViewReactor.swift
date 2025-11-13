@@ -16,6 +16,7 @@ class SettingsViewReactor: Reactor {
         case landing
         case updateNotificationStatus(Bool)
         case rejoinableDate
+        case resetState
     }
     
     enum Mutation {
@@ -23,6 +24,7 @@ class SettingsViewReactor: Reactor {
         case updateVersion(Version?)
         case updateNotificationStatus(Bool)
         case rejoinableDate(RejoinableDateInfo?)
+        case resetState
     }
     
     struct State {
@@ -81,6 +83,9 @@ class SettingsViewReactor: Reactor {
             
             return self.settingsUseCase.rejoinableDate()
                 .map(Mutation.rejoinableDate)
+        case .resetState:
+            
+            return .just(.resetState)
         }
     }
     
@@ -95,6 +100,8 @@ class SettingsViewReactor: Reactor {
             newState.notificationStatus = notificationStatus
         case let .rejoinableDate(rejoinableDate):
             newState.rejoinableDate = rejoinableDate
+        case .resetState:
+            newState.rejoinableDate = nil
         }
         return newState
     }

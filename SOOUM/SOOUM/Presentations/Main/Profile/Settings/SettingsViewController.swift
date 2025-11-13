@@ -353,11 +353,15 @@ extension SettingsViewController {
     
     func showResignDialog(rejoinableDate: RejoinableDateInfo) {
         
+        guard let reactor = self.reactor else { return }
+        
         let cancelAction = SOMDialogAction(
             title: Text.cancelActionButtonTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    reactor.action.onNext(.resetState)
+                }
             }
         )
         
@@ -366,11 +370,15 @@ extension SettingsViewController {
             style: .red,
             action: {
                 UIApplication.topViewController?.dismiss(animated: true) {
-                    guard let reactor = self.reactor else { return }
-                    
                     let resignViewController = ResignViewController()
                     resignViewController.reactor = reactor.reactorForResign()
-                    self.navigationPush(resignViewController, animated: true, bottomBarHidden: true)
+                    self.navigationPush(
+                        resignViewController,
+                        animated: true,
+                        bottomBarHidden: true
+                    ) { _ in
+                        reactor.action.onNext(.resetState)
+                    }
                 }
             }
         )
