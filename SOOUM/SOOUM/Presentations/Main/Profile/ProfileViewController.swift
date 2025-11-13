@@ -187,9 +187,10 @@ class ProfileViewController: BaseNavigationViewController, View {
                     cell.setModels(type: type, feed: feeds, comment: comments ?? [])
                 }
                 
+                // TODO: 상세화면 이동
                 // cell.cardDidTap
                 //     .subscribe(with: self) { object, selectedId in
-                //         // TODO: 상세화면 이동
+                //
                 //     }
                 //     .disposed(by: cell.disposeBag)
                 
