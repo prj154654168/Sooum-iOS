@@ -24,6 +24,7 @@ class WriteCardViewReactor: Reactor {
         )
         case relatedTags(keyword: String)
         case updateRelatedTags
+        case postingPermission
     }
     
     enum Mutation {
@@ -31,6 +32,7 @@ class WriteCardViewReactor: Reactor {
         case updateUserImage(UIImage?, Bool)
         case writeCard(String?)
         case relatedTags([TagInfo])
+        case updatePostingPermission(PostingPermission?)
         case updateIsProcessing(Bool)
         case updateErrors(Int?)
     }
@@ -40,6 +42,7 @@ class WriteCardViewReactor: Reactor {
         fileprivate(set) var defaultImages: DefaultImages?
         fileprivate(set) var userImage: UIImage?
         fileprivate(set) var relatedTags: [TagInfo]?
+        fileprivate(set) var couldPosting: PostingPermission?
         fileprivate(set) var writtenCardId: String?
         fileprivate(set) var isDownloaded: Bool?
         fileprivate(set) var isProcessing: Bool
@@ -51,6 +54,7 @@ class WriteCardViewReactor: Reactor {
         defaultImages: nil,
         userImage: nil,
         relatedTags: nil,
+        couldPosting: nil,
         writtenCardId: nil,
         isDownloaded: nil,
         isProcessing: false,
@@ -60,6 +64,7 @@ class WriteCardViewReactor: Reactor {
     private let dependencies: AppDIContainerable
     private let cardUseCase: CardUseCase
     private let tagUseCase: TagUseCase
+    private let userUseCase: UserUseCase
     
     let locationManager: LocationManagerDelegate
     
@@ -75,6 +80,7 @@ class WriteCardViewReactor: Reactor {
         self.dependencies = dependencies
         self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
         self.tagUseCase = dependencies.rootContainer.resolve(TagUseCase.self)
+        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
         self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
         self.entranceType = entranceType
         self.parentCardId = parentCardId
@@ -121,6 +127,10 @@ class WriteCardViewReactor: Reactor {
         case .updateRelatedTags:
             
             return .just(.relatedTags([]))
+        case .postingPermission:
+            
+            return self.userUseCase.postingPermission()
+                .map(Mutation.updatePostingPermission)
         }
     }
     
@@ -136,6 +146,8 @@ class WriteCardViewReactor: Reactor {
             newState.writtenCardId = writtenCardId
         case let .relatedTags(relatedTags):
             newState.relatedTags = relatedTags
+        case let .updatePostingPermission(couldPosting):
+            newState.couldPosting = couldPosting
         case let .updateIsProcessing(isProcessing):
             newState.isProcessing = isProcessing
         case let .updateErrors(hasErrors):
@@ -259,6 +271,15 @@ private extension WriteCardViewReactor {
         return { error in
             
             let nsError = error as NSError
+            if case 400 = nsError.code {
+                return .concat([
+                    .just(.writeCard(nil)),
+                    .just(.updateIsProcessing(false)),
+                    self.userUseCase.postingPermission()
+                        .map(Mutation.updatePostingPermission)
+                ])
+            }
+            
             return .concat([
                 .just(.writeCard(nil)),
                 .just(.updateIsProcessing(false)),
