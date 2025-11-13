@@ -34,7 +34,7 @@ class BaseViewController: UIViewController {
     let loadingIndicatorView = SOMLoadingIndicatorView()
 
     private(set) var isEndEditingWhenWillDisappear: Bool = true
-    private(set) var bottomToastMessageOffset: CGFloat = 88
+    private(set) var bottomToastMessageOffset: CGFloat = 88 + 8
     
     override var hidesBottomBarWhenPushed: Bool {
         didSet {
