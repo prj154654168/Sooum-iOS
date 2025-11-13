@@ -10,6 +10,8 @@ import UIKit
 
 extension SOMDialogViewController {
     
+    private static weak var displayedDialogViewController: SOMDialogViewController?
+    
     @discardableResult
     static func show(
         title: String,
@@ -28,6 +30,10 @@ extension SOMDialogViewController {
                 textAlignment: textAlignment,
                 completion: { alertController in
                     window.windowScene = nil
+                    /// Dismiss 된 alertController와 표시되었던 dialog가 같다면 제거
+                    if alertController == Self.displayedDialogViewController {
+                        Self.displayedDialogViewController = nil
+                    }
                     completion?(alertController)
                 }
             )
@@ -56,6 +62,10 @@ extension SOMDialogViewController {
                 textAlignment: textAlignment,
                 completion: { alertController in
                     window.windowScene = nil
+                    /// Dismiss 된 alertController와 표시되었던 dialog가 같다면 제거
+                    if alertController == Self.displayedDialogViewController {
+                        Self.displayedDialogViewController = nil
+                    }
                     completion?(alertController)
                 }
             )
@@ -80,6 +90,12 @@ extension SOMDialogViewController {
             }
         }()
         
+        /// 현재 표시된 dialog가 있다면 dismiss
+        if let displayedDialogViewController = Self.displayedDialogViewController {
+            displayedDialogViewController.dismiss(animated: false, completion: nil)
+            Self.displayedDialogViewController = nil
+        }
+        
         window.windowLevel = .alert
         window.backgroundColor = .clear
         window.rootViewController = rootViewController
@@ -91,6 +107,11 @@ extension SOMDialogViewController {
         dialogViewController.modalPresentationStyle = .overFullScreen
         
         rootViewController.present(dialogViewController, animated: true, completion: nil)
+        
+        /// 표시될 dialog 저장
+        if let willDisplayDialogViewController = dialogViewController as? SOMDialogViewController {
+            self.displayedDialogViewController = willDisplayDialogViewController
+        }
         
         return dialogViewController
     }
