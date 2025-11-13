@@ -5,12 +5,15 @@
 //  Created by 오현식 on 10/27/24.
 //
 
-import Foundation
-
 import Alamofire
 
-
 class ErrorInterceptor: RequestInterceptor {
+    
+    enum Text {
+        static let networkErrorDialogTitle: String = "네트워크 상태가 불안정해요"
+        static let networkErrorDialogMessage: String = "네트워크 연결상태를 확인 후 다시 시도해 주세요."
+        static let confirmActionTitle: String = "확인"
+    }
     
     private let lock = NSLock()
     
@@ -25,11 +28,29 @@ class ErrorInterceptor: RequestInterceptor {
     func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
         self.lock.lock(); defer { self.lock.unlock() }
         
+        /// API 호출 중 네트워크 오류 발생
+        if let afError = error.asAFError,
+           case let .sessionTaskFailed(underlyingError) = afError,
+           let urlError = underlyingError as? URLError {
+            
+            let networkErrors = [
+                URLError.timedOut,
+                URLError.notConnectedToInternet,
+                URLError.networkConnectionLost,
+                URLError.cannotConnectToHost
+            ]
+            if networkErrors.contains(urlError.code) {
+                self.showNetworkErrorDialog()
+                completion(.doNotRetryWithError(error))
+                return
+            }
+        }
+        
         guard let response = request.task?.response as? HTTPURLResponse else {
             completion(.doNotRetryWithError(error))
             return
         }
-        
+        /// AccessToken 재인증
         if response.statusCode == 401 {
             // 재인증 과정은 1번만 진행한다.
             guard request.retryCount < retryLimit else {
@@ -49,9 +70,9 @@ class ErrorInterceptor: RequestInterceptor {
                 }
             }
         }
-        
+        /// RefrehsToken 블랙리스트 (계정 이관 혹은 차단/신고 당한 계정)
         if response.statusCode == 403 {
-            // 온보딩 화면으로 전환
+            
             self.goToOnboarding()
         }
         
@@ -70,6 +91,26 @@ class ErrorInterceptor: RequestInterceptor {
                 onboardingViewController.reactor = OnboardingViewReactor(dependencies: appDelegate.appDIContainer)
                 window.rootViewController = UINavigationController(rootViewController: onboardingViewController)
             }
+        }
+    }
+    
+    func showNetworkErrorDialog() {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        DispatchQueue.main.async {
+            SOMDialogViewController.show(
+                title: Text.networkErrorDialogTitle,
+                message: Text.networkErrorDialogMessage,
+                textAlignment: .left,
+                actions: [confirmAction]
+            )
         }
     }
 }
