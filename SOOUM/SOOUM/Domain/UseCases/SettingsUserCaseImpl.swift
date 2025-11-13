@@ -17,6 +17,11 @@ class SettingsUserCaseImpl: SettingsUserCase {
         self.repository = repository
     }
     
+    func rejoinableDate() -> Observable<RejoinableDateInfo> {
+        
+        return self.repository.rejoinableDate().map(\.rejoinableDate)
+    }
+    
     func issue() -> Observable<TransferCodeInfo> {
         
         return self.repository.issue().map(\.transferInfo)

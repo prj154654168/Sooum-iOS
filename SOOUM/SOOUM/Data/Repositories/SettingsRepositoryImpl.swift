@@ -17,6 +17,11 @@ class SettingsRepositoryImpl: SettingsRepository {
         self.remoteDataSource = remoteDataSource
     }
     
+    func rejoinableDate() -> Observable<RejoinableDateInfoResponse> {
+        
+        return self.remoteDataSource.rejoinableDate()
+    }
+    
     func issue() -> Observable<TransferCodeInfoResponse> {
         
         return self.remoteDataSource.issue()

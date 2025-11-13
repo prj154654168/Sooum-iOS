@@ -17,6 +17,12 @@ class SettingsRemoteDataSourceImpl: SettingsRemoteDataSource {
         self.provider = provider
     }
     
+    func rejoinableDate() -> Observable<RejoinableDateInfoResponse> {
+        
+        let request: SettingsRequest = .rejoinableDate
+        return self.provider.networkManager.fetch(RejoinableDateInfoResponse.self, request: request)
+    }
+    
     func issue() -> Observable<TransferCodeInfoResponse> {
         
         let request: SettingsRequest = .transferIssue

@@ -348,6 +348,10 @@
 		3878F4772CA3F08300AA46A2 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4762CA3F08300AA46A2 /* UIView.swift */; };
 		3878F4782CA3F08300AA46A2 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878F4762CA3F08300AA46A2 /* UIView.swift */; };
 		3878FE0D2D0365C800D8955C /* SOMNavigationBar+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878FE0C2D0365C800D8955C /* SOMNavigationBar+Rx.swift */; };
+		3879B4B52EC5AD5E0070846B /* RejoinableDateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3879B4B42EC5AD580070846B /* RejoinableDateInfo.swift */; };
+		3879B4B62EC5AD5E0070846B /* RejoinableDateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3879B4B42EC5AD580070846B /* RejoinableDateInfo.swift */; };
+		3879B4B82EC5ADC50070846B /* RejoinableDateInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3879B4B72EC5ADBF0070846B /* RejoinableDateInfoResponse.swift */; };
+		3879B4B92EC5ADC50070846B /* RejoinableDateInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3879B4B72EC5ADBF0070846B /* RejoinableDateInfoResponse.swift */; };
 		387FA11D2E88DDC1004DF7CE /* HomeViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FA11C2E88DDBD004DF7CE /* HomeViewReactor.swift */; };
 		387FA11E2E88DDC1004DF7CE /* HomeViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FA11C2E88DDBD004DF7CE /* HomeViewReactor.swift */; };
 		387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAEF2C8702C100A5E139 /* AppDelegate.swift */; };
@@ -992,6 +996,8 @@
 		3878F4732CA3F06C00AA46A2 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		3878F4762CA3F08300AA46A2 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		3878FE0C2D0365C800D8955C /* SOMNavigationBar+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMNavigationBar+Rx.swift"; sourceTree = "<group>"; };
+		3879B4B42EC5AD580070846B /* RejoinableDateInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RejoinableDateInfo.swift; sourceTree = "<group>"; };
+		3879B4B72EC5ADBF0070846B /* RejoinableDateInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RejoinableDateInfoResponse.swift; sourceTree = "<group>"; };
 		387FA11C2E88DDBD004DF7CE /* HomeViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewReactor.swift; sourceTree = "<group>"; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEF2C8702C100A5E139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -2213,6 +2219,7 @@
 		38899E632E7938CD0030F7CA /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				3879B4B72EC5ADBF0070846B /* RejoinableDateInfoResponse.swift */,
 				38C2A7F82EC090AC00B941A2 /* BlockUsersInfoResponse.swift */,
 				38C2A7E32EC070E700B941A2 /* TransferCodeInfoResponse.swift */,
 				381B83EA2EBC769500C84015 /* ProfileCardInfoResponse.swift */,
@@ -2257,6 +2264,7 @@
 		38899E692E793AEA0030F7CA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3879B4B42EC5AD580070846B /* RejoinableDateInfo.swift */,
 				38C2A7FB2EC0925700B941A2 /* WithdrawType.swift */,
 				38C2A7F52EC08FEF00B941A2 /* BlockUserInfo.swift */,
 				38C2A7E02EC0707700B941A2 /* TransferCodeInfo.swift */,
@@ -3243,6 +3251,7 @@
 				2AFD056E2D048CAF007C84AD /* TagRequest.swift in Sources */,
 				38CA91F42EBDCFF2002C261A /* ProfileCardsPlaceholderViewCell.swift in Sources */,
 				38E928D02EB75FA300B3F00B /* PungView.swift in Sources */,
+				3879B4B82EC5ADC50070846B /* RejoinableDateInfoResponse.swift in Sources */,
 				38E928C82EB73FF800B3F00B /* WrittenTagModel.swift in Sources */,
 				388698602D1984D600008600 /* NotificationViewReactor.swift in Sources */,
 				38899E862E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */,
@@ -3338,6 +3347,7 @@
 				3880097C2CABEE3D002A9209 /* DetailViewController.swift in Sources */,
 				2A45B3702CE4C5510071026A /* RegisterUserResponse.swift in Sources */,
 				3889A2802E79D0250030F7CA /* Token.swift in Sources */,
+				3879B4B52EC5AD5E0070846B /* RejoinableDateInfo.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38C9AF202E9669F600B401C0 /* TagRepository.swift in Sources */,
 				38E928C22EB73D6B00B3F00B /* MemberInfoView.swift in Sources */,
@@ -3649,6 +3659,7 @@
 				38899E872E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */,
 				3803CF7D2D016DA200FD90DB /* TransferCodeResponse.swift in Sources */,
 				2AFF955A2CF3227900CBFB12 /* TagSearchTextFieldView.swift in Sources */,
+				3879B4B92EC5ADC50070846B /* RejoinableDateInfoResponse.swift in Sources */,
 				38CA91F32EBDCFF2002C261A /* ProfileCardsPlaceholderViewCell.swift in Sources */,
 				38E928D12EB75FA300B3F00B /* PungView.swift in Sources */,
 				38E928C72EB73FF800B3F00B /* WrittenTagModel.swift in Sources */,
@@ -3744,6 +3755,7 @@
 				38FD4DB12D034C1700BF5FF1 /* MyFollowingViewCell.swift in Sources */,
 				3889A2812E79D0250030F7CA /* Token.swift in Sources */,
 				2ACBD41D2CCAB3490057C013 /* PresignedStorageResponse.swift in Sources */,
+				3879B4B62EC5AD5E0070846B /* RejoinableDateInfo.swift in Sources */,
 				2ACBD4172CC963390057C013 /* DefaultCardImageResponse.swift in Sources */,
 				38C9AF212E9669F600B401C0 /* TagRepository.swift in Sources */,
 				3887176E2E7BDBAE00C6143B /* NicknameResponse.swift in Sources */,

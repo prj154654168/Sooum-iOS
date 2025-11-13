@@ -9,6 +9,7 @@ import Alamofire
 
 enum SettingsRequest: BaseRequest {
     
+    case rejoinableDate
     case transferIssue
     case transferEnter(code: String, encryptedDeviceId: String)
     case transferUpdate
@@ -16,6 +17,8 @@ enum SettingsRequest: BaseRequest {
     
     var path: String {
         switch self {
+        case .rejoinableDate:
+            return "/api/members/rejoinable-date"
         case .transferIssue:
             return "/api/members/account/transfer-code"
         case .transferEnter:
@@ -33,7 +36,7 @@ enum SettingsRequest: BaseRequest {
     
     var method: HTTPMethod {
         switch self {
-        case .transferIssue, .blockUsers:
+        case .rejoinableDate, .transferIssue, .blockUsers:
             return .get
         case .transferEnter:
             return .post

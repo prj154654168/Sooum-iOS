@@ -11,6 +11,7 @@ import RxSwift
 
 protocol SettingsRepository {
     
+    func rejoinableDate() -> Observable<RejoinableDateInfoResponse>
     func issue() -> Observable<TransferCodeInfoResponse>
     func enter(code: String, encryptedDeviceId: String) -> Observable<Int>
     func update() -> Observable<TransferCodeInfoResponse>
