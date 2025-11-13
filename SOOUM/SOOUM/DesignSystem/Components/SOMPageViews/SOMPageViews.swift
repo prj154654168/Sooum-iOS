@@ -99,6 +99,7 @@ class SOMPageViews: UIView {
     private(set) var models: [SOMPageModel] = []
     
     private var scrollTimer: Timer?
+    private var hasLayoutsubviews: Bool = false
     
     weak var delegate: SOMPageViewsDelegate?
     
@@ -130,6 +131,8 @@ class SOMPageViews: UIView {
             blur: 16,
             offset: .init(width: 0, height: 6)
         )
+        
+        self.hasLayoutsubviews = true
     }
     
     override func didMoveToWindow() {
@@ -137,7 +140,9 @@ class SOMPageViews: UIView {
         /// 화면에서 사라졌을 때, 타이머 중지
         if self.window == nil {
             self.stopAutoScroll()
-        } else {
+        }
+        
+        if self.window != nil, self.hasLayoutsubviews {
             self.startAutoScroll()
         }
     }
