@@ -54,7 +54,7 @@ extension Date {
             return "\(days / 7)주 전".trimmingCharacters(in: .whitespaces)
         }
         
-        if days > 0 && days < 6 {
+        if days > 0 && days < 7 {
             return "\(days)일 전".trimmingCharacters(in: .whitespaces)
         }
         
