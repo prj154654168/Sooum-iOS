@@ -76,6 +76,8 @@ class ErrorInterceptor: RequestInterceptor {
         if response.statusCode == 403 {
             
             self.goToOnboarding()
+            completion(.doNotRetryWithError(error))
+            return
         }
         
         completion(.doNotRetryWithError(error))
