@@ -177,7 +177,7 @@ class MainTabBarController: SOMTabBarController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let couldPosting = reactor.state.map(\.couldPosting).filterNil()
+        let couldPosting = reactor.state.map(\.couldPosting).distinctUntilChanged().filterNil()
         
         couldPosting
             .filter { $0.isBaned == false }
