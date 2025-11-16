@@ -68,7 +68,7 @@ class NotificationViewReactor: Reactor {
                 )
                     .map(Mutation.notifications)
                     .catch(self.catchClosureNotis),
-                self.notificationUseCase.notices(lastId: nil, size: 10)
+                self.notificationUseCase.notices(lastId: nil, size: 10, requestType: .notification)
                     .map(Mutation.notices)
                     .catch(self.catchClosureNotices)
             ])
@@ -90,7 +90,7 @@ class NotificationViewReactor: Reactor {
             case .notice:
                 return .concat([
                     .just(.updateIsRefreshing(true)),
-                    self.notificationUseCase.notices(lastId: nil, size: 10)
+                    self.notificationUseCase.notices(lastId: nil, size: 10, requestType: .notification)
                         .map(Mutation.notices)
                         .catch(self.catchClosureNotices),
                     .just(.updateIsRefreshing(false))
@@ -109,7 +109,7 @@ class NotificationViewReactor: Reactor {
                 ])
             case .notice:
                 return .concat([
-                    self.notificationUseCase.notices(lastId: lastId, size: 10)
+                    self.notificationUseCase.notices(lastId: lastId, size: 10, requestType: .notification)
                         .map(Mutation.moreNotices)
                         .catch(self.catchClosureNoticesMore)
                 ])

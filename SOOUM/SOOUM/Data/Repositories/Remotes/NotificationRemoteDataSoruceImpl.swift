@@ -35,9 +35,9 @@ class NotificationRemoteDataSoruceImpl: NotificationRemoteDataSource {
         return self.provider.networkManager.perform(request)
     }
     
-    func notices(lastId: String?, size: Int?) -> Observable<NoticeInfoResponse> {
+    func notices(lastId: String?, size: Int?, requestType: NotificationRequest.RequestType) -> Observable<NoticeInfoResponse> {
         
-        let request: NotificationRequest = .notices(lastId: lastId, size: size)
+        let request: NotificationRequest = .notices(lastId: lastId, size: size, requestType: requestType)
         return self.provider.networkManager.fetch(NoticeInfoResponse.self, request: request)
     }
 }

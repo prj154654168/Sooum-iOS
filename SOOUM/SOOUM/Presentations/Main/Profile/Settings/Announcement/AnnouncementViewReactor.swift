@@ -43,20 +43,20 @@ class AnnouncementViewReactor: Reactor {
         switch action {
         case .landing:
             
-            return self.notificationUseCase.notices(lastId: nil, size: 10)
+            return self.notificationUseCase.notices(lastId: nil, size: 10, requestType: .settings)
                 .map(Mutation.announcements)
         case .refresh:
             
             return .concat([
                 .just(.updateIsRefreshing(true)),
-                self.notificationUseCase.notices(lastId: nil, size: 10)
+                self.notificationUseCase.notices(lastId: nil, size: 10, requestType: .settings)
                     .map(Mutation.announcements)
                     .catch { _ in .just(.updateIsRefreshing(false)) },
                 .just(.updateIsRefreshing(false))
             ])
         case let .more(lastId):
             
-            return self.notificationUseCase.notices(lastId: lastId, size: 10)
+            return self.notificationUseCase.notices(lastId: lastId, size: 10, requestType: .settings)
                 .map(Mutation.more)
         }
     }
