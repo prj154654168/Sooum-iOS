@@ -13,6 +13,21 @@ class ErrorInterceptor: RequestInterceptor {
         static let networkErrorDialogTitle: String = "네트워크 상태가 불안정해요"
         static let networkErrorDialogMessage: String = "네트워크 연결상태를 확인 후 다시 시도해 주세요."
         static let confirmActionTitle: String = "확인"
+        
+        static let unknownErrorDialogTitle: String = "일시적인 오류가 발생했어요"
+        static let unknownErrorDialogMessage: String = "같은 문제가 반복된다면 ‘문의하기'를 눌러 숨 팀에 알려주세요."
+        static let closeActionButtonTitle: String = "닫기"
+        static let inquiryActionTitle: String = "문의하기"
+        
+        static let adminMailStrUrl: String = "sooum1004@gmail.com"
+        static let identificationInfo: String = "식별 정보: "
+        static let inquiryMailTitle: String = "[문의하기]"
+        static let inquiryMailGuideMessage: String = """
+            \n
+            문의 내용: 식별 정보 삭제에 주의하여 주시고, 이곳에 자유롭게 문의하실 내용을 적어주세요.
+            단, 본 양식에 비방, 욕설, 허위 사실 유포 등의 부적절한 내용이 포함될 경우,
+            관련 법령에 따라 민·형사상 법적 조치가 이루어질 수 있음을 알려드립니다.
+        """
     }
     
     private let lock = NSLock()
@@ -41,7 +56,7 @@ class ErrorInterceptor: RequestInterceptor {
             ]
             if networkErrors.contains(urlError.code) {
                 self.showNetworkErrorDialog()
-                completion(.doNotRetryWithError(error))
+                completion(.doNotRetry)
                 return
             }
         }
@@ -50,11 +65,20 @@ class ErrorInterceptor: RequestInterceptor {
             completion(.doNotRetryWithError(error))
             return
         }
+        
+        switch response.statusCode {
         /// AccessToken 재인증
-        if response.statusCode == 401 {
+        case 401:
             // 재인증 과정은 1번만 진행한다.
-            guard request.retryCount < retryLimit else {
-                completion(.doNotRetryWithError(error))
+            guard request.retryCount < self.retryLimit else {
+                let retryError = NSError(
+                    domain: "SOOUM",
+                    code: -99,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "Retry error: ReAuthenticate process is performed only once."
+                    ]
+                )
+                completion(.doNotRetryWithError(retryError))
                 return
             }
             
@@ -64,24 +88,29 @@ class ErrorInterceptor: RequestInterceptor {
                 switch result {
                 case .success:
                     completion(.retry)
-                    return
                 case let .failure(error):
                     Log.error("ReAuthenticate failed. \(error.localizedDescription)")
                     completion(.doNotRetry)
-                    return
                 }
             }
-        }
-        /// RefrehsToken 블랙리스트 (계정 이관 혹은 차단/신고 당한 계정)
-        if response.statusCode == 403 {
-            
-            self.goToOnboarding()
-            completion(.doNotRetryWithError(error))
             return
+        case 403:
+            self.goToOnboarding()
+            completion(.doNotRetry)
+            return
+        case 500:
+            self.showUnknownErrorDialog()
+            completion(.doNotRetry)
+            return
+        default:
+            break
         }
         
         completion(.doNotRetryWithError(error))
     }
+    
+    
+    // MARK: Error handling
     
     func goToOnboarding() {
         
@@ -114,6 +143,49 @@ class ErrorInterceptor: RequestInterceptor {
                 message: Text.networkErrorDialogMessage,
                 textAlignment: .left,
                 actions: [confirmAction]
+            )
+        }
+    }
+    
+    func showUnknownErrorDialog() {
+        
+        let closeAction = SOMDialogAction(
+            title: Text.closeActionButtonTitle,
+            style: .gray,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        let inquireAction = SOMDialogAction(
+            title: Text.inquiryActionTitle,
+            style: .primary,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    let subject = Text.inquiryMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                    let guideMessage = """
+                        \(Text.identificationInfo)
+                        \(self.provider.authManager.authInfo.token.refreshToken)\n
+                        \(Text.inquiryMailGuideMessage)
+                    """
+                    let body = guideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                    let mailToString = "mailto:\(Text.adminMailStrUrl)?subject=\(subject)&body=\(body)"
+
+                    if let mailtoUrl = URL(string: mailToString),
+                       UIApplication.shared.canOpenURL(mailtoUrl) {
+
+                        UIApplication.shared.open(mailtoUrl, options: [:], completionHandler: nil)
+                    }
+                }
+            }
+        )
+        
+        DispatchQueue.main.async {
+            SOMDialogViewController.show(
+                title: Text.unknownErrorDialogTitle,
+                message: Text.unknownErrorDialogMessage,
+                textAlignment: .left,
+                actions: [closeAction, inquireAction]
             )
         }
     }
