@@ -113,7 +113,9 @@ class AnnouncementViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, announcements in
                 object.announcements = announcements
                 
-                object.tableView.reloadData()
+                UIView.performWithoutAnimation {
+                    object.tableView.reloadData()
+                }
             }
             .disposed(by: self.disposeBag)
     }
