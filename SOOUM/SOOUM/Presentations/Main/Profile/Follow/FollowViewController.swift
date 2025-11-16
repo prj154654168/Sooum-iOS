@@ -22,6 +22,11 @@ class FollowViewController: BaseNavigationViewController, View {
         
         static let followerPlaceholderMessage: String = "팔로우하는 사람이 없어요"
         static let followingPlaceholderMessage: String = "팔로우하고 있는 사람이 없어요"
+        
+        static let deleteFollowingDialogTitle: String = "님을 팔로워에서 삭제하시겠어요?"
+        
+        static let cancelActionTitle: String = "취소"
+        static let deleteActionTitle: String = "삭제하기"
     }
     
     enum Section: Int, CaseIterable {
@@ -109,9 +114,16 @@ class FollowViewController: BaseNavigationViewController, View {
                 .disposed(by: cell.disposeBag)
             
             cell.followButton.rx.throttleTap
-                .subscribe(onNext: { _ in
-                    reactor.action.onNext(.updateFollow(follower.memberId, !follower.isFollowing))
-                })
+                .subscribe(with: self) { object, _ in
+                    if follower.isFollowing {
+                        object.showdeleteFollowingDialog(
+                            nickname: follower.nickname,
+                            with: follower.memberId
+                        )
+                    } else {
+                        reactor.action.onNext(.updateFollow(follower.memberId, true))
+                    }
+                }
                 .disposed(by: cell.disposeBag)
             
             return cell
@@ -136,9 +148,12 @@ class FollowViewController: BaseNavigationViewController, View {
                     .disposed(by: cell.disposeBag)
                 
                 cell.cancelFollowButton.rx.throttleTap
-                    .subscribe(onNext: { _ in
-                        reactor.action.onNext(.updateFollow(following.memberId, false))
-                    })
+                    .subscribe(with: self) { object, _ in
+                        object.showdeleteFollowingDialog(
+                            nickname: following.nickname,
+                            with: following.memberId
+                        )
+                    }
                     .disposed(by: cell.disposeBag)
                 
                 return cell
@@ -175,9 +190,16 @@ class FollowViewController: BaseNavigationViewController, View {
                     .disposed(by: cell.disposeBag)
                 
                 cell.followButton.rx.throttleTap
-                    .subscribe(onNext: { _ in
-                        reactor.action.onNext(.updateFollow(following.memberId, !following.isFollowing))
-                    })
+                    .subscribe(with: self) { object, _ in
+                        if following.isFollowing {
+                            object.showdeleteFollowingDialog(
+                                nickname: following.nickname,
+                                with: following.memberId
+                            )
+                        } else {
+                            reactor.action.onNext(.updateFollow(following.memberId, true))
+                        }
+                    }
                     .disposed(by: cell.disposeBag)
                 
                 return cell
@@ -350,6 +372,40 @@ class FollowViewController: BaseNavigationViewController, View {
                 NotificationCenter.default.post(name: .reloadProfileData, object: nil, userInfo: nil)
             }
             .disposed(by: self.disposeBag)
+    }
+}
+
+
+
+// MARK: show Dialog
+
+private extension FollowViewController {
+    
+    func showdeleteFollowingDialog(nickname: String, with userId: String) {
+        
+        let cancelAction = SOMDialogAction(
+            title: Text.cancelActionTitle,
+            style: .gray,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        let deleteAction = SOMDialogAction(
+            title: Text.deleteActionTitle,
+            style: .red,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    self.reactor?.action.onNext(.updateFollow(userId, false))
+                }
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: nickname + Text.deleteFollowingDialogTitle,
+            messageView: nil,
+            textAlignment: .left,
+            actions: [cancelAction, deleteAction]
+        )
     }
 }
 

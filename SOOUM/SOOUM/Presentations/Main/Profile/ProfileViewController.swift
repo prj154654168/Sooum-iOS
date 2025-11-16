@@ -29,7 +29,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         static let unBlockUserDialogTitle: String = "차단 해제하시겠어요?"
         static let unBlockUserDialogMessage: String = "님을 팔로우하고, 카드를 볼 수 있어요."
         
-        static let deleteFollowingDialogTitle: String = "님을 팔로워에서 삭제하시겠어요??"
+        static let deleteFollowingDialogTitle: String = "님을 팔로워에서 삭제하시겠어요?"
         
         static let cancelActionTitle: String = "취소"
         static let blockActionTitle: String = "차단하기"
@@ -451,6 +451,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         self.reactor?.action.onNext(.updateProfile)
     }
 }
+
 
 // MARK: show Dialog
 
