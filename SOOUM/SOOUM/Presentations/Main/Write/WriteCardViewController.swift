@@ -260,7 +260,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         let writeCardtext = self.writeCardView.writeCardTextView.rx.text.orEmpty.distinctUntilChanged().share()
         let selectedImageInfo = self.selectImageView.selectedImageInfo.share()
         writeCardtext
-            .map { $0.isEmpty == false }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false }
             .withLatestFrom(selectedImageInfo, resultSelector: { $0 && $1 != nil })
             .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.writeButton.rx.isEnabled)
