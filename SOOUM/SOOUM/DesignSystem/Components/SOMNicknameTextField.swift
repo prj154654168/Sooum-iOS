@@ -68,7 +68,7 @@ class SOMNicknameTextField: UIView {
     }
     
     private lazy var clearButton = SOMButton().then {
-        $0.image = .init(.icon(.v2(.outlined(.delete))))
+        $0.image = .init(.icon(.v2(.outlined(.delete_full))))
         $0.foregroundColor = .som.v2.gray500
         
         let gestureRecognizer = UITapGestureRecognizer(
