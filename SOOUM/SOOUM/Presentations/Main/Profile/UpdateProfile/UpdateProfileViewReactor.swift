@@ -85,6 +85,13 @@ class UpdateProfileViewReactor: Reactor {
             return .just(.updateImageInfo(nil, nil))
         case let .checkValidate(nickname):
             
+            guard nickname != self.nickname else {
+                return .concat([
+                    .just(.updateIsValid(false)),
+                    .just(.updateErrorMessage(nil))
+                ])
+            }
+            
             if nickname.isEmpty {
                 return .concat([
                     .just(.updateIsValid(false)),

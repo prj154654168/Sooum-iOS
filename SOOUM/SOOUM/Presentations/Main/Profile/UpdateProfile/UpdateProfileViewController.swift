@@ -19,7 +19,6 @@ import RxCocoa
 import RxGesture
 import RxSwift
 
-
 class UpdateProfileViewController: BaseNavigationViewController, View {
     
     enum Text {
@@ -88,6 +87,8 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         $0.backgroundColor = .som.v2.black
         $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
+        
+        $0.isEnabled = false
     }
     
     
@@ -136,10 +137,10 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         
         self.view.addSubview(self.saveButton)
         self.saveButton.snp.makeConstraints {
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-12)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(48)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(56)
         }
     }
     
@@ -152,7 +153,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
         super.updatedKeyboard(withoutBottomSafeInset: height)
         
-        let margin: CGFloat = height + 12
+        let margin: CGFloat = height == 0 ? 0 : height + 12
         self.saveButton.snp.updateConstraints {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-margin)
         }
@@ -185,10 +186,9 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
                     )
                 ]
                 
-                if let imageUrl = reactor.profileInfo.profileImageUrl,
-                   let imageName = reactor.profileInfo.profileImgName {
+                if let profileImage = reactor.initialState.profileImage {
                     
-                    object.profileImageView.setImage(strUrl: imageUrl, with: imageName)
+                    object.profileImageView.image = profileImage
                     
                     actions.append(
                         .init(
@@ -203,7 +203,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
                 }
                 
                 object.actions = actions
-                object.nicknameTextField.text = reactor.profileInfo.nickname
+                object.nicknameTextField.text = reactor.nickname
             }
             .disposed(by: self.disposeBag)
         
@@ -212,6 +212,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
             self.profileImageView.rx.tapGesture().when(.ended).map { _ in },
             self.cameraButton.rx.tap.asObservable()
         )
+        .observe(on: MainScheduler.asyncInstance)
         .subscribe(with: self) { object, _ in
             
             let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
@@ -237,39 +238,16 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.saveButton.rx.tap
+        self.saveButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(nickname)
             .map(Reactor.Action.updateProfile)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
 
         // State
-        reactor.state.map(\.hasErrors)
-            .filterNil()
-            .filter { $0 }
-            .subscribe(onNext: { _ in
-                
-                let actions: [SOMDialogAction] = [
-                    .init(
-                        title: Text.inappositeDialogConfirmButtonTitle,
-                        style: .primary,
-                        action: {
-                            UIApplication.topViewController?.dismiss(animated: true)
-                        }
-                    )
-                ]
-                
-                SOMDialogViewController.show(
-                    title: Text.inappositeDialogTitle,
-                    message: Text.inappositeDialogMessage,
-                    textAlignment: .left,
-                    actions: actions
-                )
-            })
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.profileImage)
-            .distinctUntilChanged()
+        let profileImage = reactor.state.map(\.profileImage).distinctUntilChanged().share()
+        profileImage
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, profileImage in
                 object.profileImageView.image = profileImage ?? .init(.image(.v2(.profile_large)))
                 
@@ -321,16 +299,17 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         Observable.combineLatest(
             reactor.state.map(\.isValid)
                 .distinctUntilChanged(),
-            reactor.state.map(\.profileImage)
-                .distinctUntilChanged(),
-            resultSelector: { $0 || $1 != nil }
+            profileImage,
+            resultSelector: { $0 || $1 != reactor.initialState.profileImage }
         )
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.saveButton.rx.isEnabled)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.hasErrors)
             .filterNil()
             .filter { $0 }
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { _ in
                 
                 let actions: [SOMDialogAction] = [
@@ -354,6 +333,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.errorMessage)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, errorMessage in
                 object.nicknameTextField.guideMessage = errorMessage == nil ? Text.guideMessage : errorMessage
                 object.nicknameTextField.hasError = errorMessage != nil

@@ -86,7 +86,7 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         return self.provider.networkManager.fetch(ImageUrlInfoResponse.self, request: request)
     }
     
-    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Void, Error>> {
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Int, Error>> {
         
         return self.provider.networkManager.upload(data, to: url)
     }

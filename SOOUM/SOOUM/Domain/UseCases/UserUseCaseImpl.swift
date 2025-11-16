@@ -45,8 +45,7 @@ class UserUseCaseImpl: UserUseCase {
     func uploadImage(_ data: Data, with url: URL) -> Observable<Bool> {
         
         return self.repository.uploadImage(data, with: url)
-            .map { _ in true }
-            .catchAndReturn(false)
+            .map { (try? $0.get()) == 200 }
     }
     
     func updateImage(imageName: String) -> Observable<Bool> {

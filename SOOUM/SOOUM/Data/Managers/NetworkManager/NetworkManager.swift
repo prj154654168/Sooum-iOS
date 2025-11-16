@@ -18,7 +18,7 @@ protocol NetworkManagerDelegate: AnyObject {
     func upload(
         _ data: Data,
         to url: URLConvertible
-    ) -> Observable<Result<Void, Error>>
+    ) -> Observable<Result<Int, Error>>
     
     func fetch<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T>
     func perform(_ request: BaseRequest) -> Observable<Int>
@@ -139,16 +139,23 @@ extension NetworkManager: NetworkManagerDelegate {
     func upload(
         _ data: Data,
         to url: URLConvertible
-    ) -> Observable<Result<Void, Error>> {
+    ) -> Observable<Result<Int, Error>> {
         return Observable.create { [weak self] observer -> Disposable in
             
             let task = self?.session.upload(data, to: url, method: .put)
                 .validate(statusCode: 200..<500)
                 .response { response in
+                    let statusCode = response.response?.statusCode ?? 0
+                    
                     switch response.result {
                     case .success:
-                        observer.onNext(.success(()))
-                        observer.onCompleted()
+                        if let nsError = self?.setupError(with: statusCode) {
+                            Log.error(nsError.localizedDescription)
+                            observer.onError(nsError)
+                        } else {
+                            observer.onNext(.success(statusCode))
+                            observer.onCompleted()
+                        }
                     case let .failure(error):
                         Log.error("Network or response format error: \(error)")
                         observer.onError(error)

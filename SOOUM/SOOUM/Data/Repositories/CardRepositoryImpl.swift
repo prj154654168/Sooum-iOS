@@ -76,7 +76,7 @@ class CardRepositoryImpl: CardRepository {
         return self.remoteDataSource.presignedURL()
     }
     
-    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Void, Error>> {
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Int, Error>> {
         
         return self.remoteDataSource.uploadImage(data, with: url)
     }

@@ -84,6 +84,7 @@ class SOMNicknameTextField: UIView {
     var text: String? {
         set {
             self.textField.text = newValue
+            self.textField.sendActions(for: .valueChanged)
         }
         get {
             return self.textField.text
