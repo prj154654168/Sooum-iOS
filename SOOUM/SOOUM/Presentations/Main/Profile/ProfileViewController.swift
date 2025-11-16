@@ -335,6 +335,7 @@ class ProfileViewController: BaseNavigationViewController, View {
                 SOMDialogViewController.show(
                     title: Text.blockDialogTitle,
                     message: Text.blockDialogMessage,
+                    textAlignment: .left,
                     actions: [cancelAction, confirmAction]
                 )
             }

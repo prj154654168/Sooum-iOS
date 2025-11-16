@@ -111,6 +111,7 @@ private extension SOMButton {
                     case .som.v2.black:     return .som.v2.gray600
                     case .som.v2.gray100:   return .som.v2.gray200
                     case .som.v2.white:     return .som.v2.gray100
+                    case .som.v2.rMain:     return .som.v2.rDark
                     default:               return .clear
                     }
                 }
@@ -138,6 +139,7 @@ private extension SOMButton {
                     case .som.v2.black:     return .som.v2.gray600
                     case .som.v2.gray100:   return .som.v2.gray200
                     case .som.v2.white:     return .som.v2.gray100
+                    case .som.v2.rMain:     return .som.v2.rDark
                     default:               return .clear
                     }
                 }
