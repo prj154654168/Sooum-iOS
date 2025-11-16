@@ -2822,6 +2822,7 @@
 				385441932C870544004E2BB0 /* Frameworks */,
 				385441942C870544004E2BB0 /* Resources */,
 				63E8EF9638A3441082507A5C /* [CP] Embed Pods Frameworks */,
+				384164332EC9D47A00114AF4 /* Run Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -3053,6 +3054,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n${PODS_ROOT}/SwiftLint/swiftlint lint\n";
+		};
+		384164332EC9D47A00114AF4 /* Run Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Run Crashlytics";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# 프로젝트의 dSYM 파일을 처리하고 파일을 Crashlytics에 업로드\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 		63E8EF9638A3441082507A5C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
