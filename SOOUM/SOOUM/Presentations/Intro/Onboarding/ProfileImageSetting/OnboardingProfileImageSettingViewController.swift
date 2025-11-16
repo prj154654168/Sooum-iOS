@@ -217,7 +217,9 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
                         title: Text.inappositeDialogConfirmButtonTitle,
                         style: .primary,
                         action: {
-                            UIApplication.topViewController?.dismiss(animated: true)
+                            UIApplication.topViewController?.dismiss(animated: true) {
+                                reactor.action.onNext(.setDefaultImage)
+                            }
                         }
                     )
                 ]
