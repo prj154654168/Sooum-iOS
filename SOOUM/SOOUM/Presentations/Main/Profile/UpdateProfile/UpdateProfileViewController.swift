@@ -195,7 +195,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
                             title: Text.selectProfileThirdButtonTitle,
                             action: {
                                 SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
-                                    reactor.action.onNext(.setDefaultImage)
+                                    reactor.action.onNext(.setInitialImage)
                                 }
                             }
                         )
@@ -275,7 +275,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
                         title: Text.selectProfileThirdButtonTitle,
                         action: {
                             SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
-                                reactor.action.onNext(.setDefaultImage)
+                                reactor.action.onNext(.setInitialImage)
                             }
                         }
                     ))

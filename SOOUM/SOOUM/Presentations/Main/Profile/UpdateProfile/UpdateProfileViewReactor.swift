@@ -20,6 +20,7 @@ class UpdateProfileViewReactor: Reactor {
     enum Action: Equatable {
         case uploadImage(UIImage)
         case setDefaultImage
+        case setInitialImage
         case checkValidate(String)
         case updateProfile(String)
     }
@@ -83,6 +84,9 @@ class UpdateProfileViewReactor: Reactor {
         case .setDefaultImage:
             
             return .just(.updateImageInfo(self.initialState.profileImage, nil))
+        case .setInitialImage:
+            
+            return .just(.updateImageInfo(nil, nil))
         case let .checkValidate(nickname):
             
             guard nickname != self.nickname else {
