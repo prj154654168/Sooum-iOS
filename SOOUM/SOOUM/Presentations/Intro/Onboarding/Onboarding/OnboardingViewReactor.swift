@@ -45,8 +45,7 @@ class OnboardingViewReactor: Reactor {
         case .landing:
             
             return .concat([
-                self.check()
-                    .compactMap(Mutation.check),
+                self.check(),
                 self.pushManager.switchNotification(on: true)
                     .flatMapLatest { _ -> Observable<Mutation> in .empty() }
             ])
@@ -65,13 +64,10 @@ class OnboardingViewReactor: Reactor {
 
 extension OnboardingViewReactor {
     
-    private func check() -> Observable<CheckAvailable?> {
+    private func check() -> Observable<Mutation> {
         
         return self.userUseCase.isAvailableCheck()
-            .flatMapLatest { checkAvailable -> Observable<CheckAvailable?> in
-                
-                return checkAvailable == .defaultValue ? .just(nil) : .just(checkAvailable)
-            }
+            .map(Mutation.check)
     }
 }
 
