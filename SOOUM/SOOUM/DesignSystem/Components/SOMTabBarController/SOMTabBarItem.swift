@@ -73,6 +73,6 @@ class SOMTabBarItem: UIView {
     func tabBarItemNotSelected() {
         
         self.titleLabel.textColor = .som.v2.gray400
-        self.imageView.tintColor = .som.v2.gray400
+        self.imageView.tintColor = .som.v2.gray300
     }
 }
