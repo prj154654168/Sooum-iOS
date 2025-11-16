@@ -149,7 +149,7 @@ class SOMNicknameTextField: UIView {
     
     @objc
     private func touch(sender: UIGestureRecognizer) {
-        if !self.textField.isFirstResponder {
+        if self.textField.isFirstResponder == false {
             self.textField.becomeFirstResponder()
         }
     }
@@ -158,7 +158,10 @@ class SOMNicknameTextField: UIView {
     private func clear() {
         self.clearButton.isHidden = true
         self.text = nil
-        self.textField.sendActions(for: .editingChanged)
+        self.textField.sendActions(for: .valueChanged)
+        if self.textField.isFirstResponder == false {
+            self.textField.becomeFirstResponder()
+        }
     }
     
     
@@ -218,6 +221,8 @@ extension SOMNicknameTextField: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
+        
+        self.clearButton.isHidden = self.isTextEmpty
         
         return textField.shouldChangeCharactersIn(
             in: range,
