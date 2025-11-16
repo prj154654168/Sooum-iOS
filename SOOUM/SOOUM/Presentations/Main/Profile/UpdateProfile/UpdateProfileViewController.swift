@@ -297,9 +297,8 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         Observable.combineLatest(
-            reactor.state.map(\.isValid)
-                .distinctUntilChanged(),
-            profileImage,
+            reactor.state.map(\.isValid).distinctUntilChanged(),
+            profileImage.startWith(reactor.initialState.profileImage),
             resultSelector: { $0 || $1 != reactor.initialState.profileImage }
         )
             .observe(on: MainScheduler.asyncInstance)
