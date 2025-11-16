@@ -788,6 +788,8 @@
 		38FD4DB22D034C1700BF5FF1 /* MyFollowingViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FD4DB02D034C1700BF5FF1 /* MyFollowingViewCell.swift */; };
 		38FD4DB42D034F6600BF5FF1 /* FollowerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FD4DB32D034F6600BF5FF1 /* FollowerViewCell.swift */; };
 		38FD4DB52D034F6600BF5FF1 /* FollowerViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FD4DB32D034F6600BF5FF1 /* FollowerViewCell.swift */; };
+		38FD56242EC9FAA400EC6106 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FD56232EC9FAA000EC6106 /* String.swift */; };
+		38FD56252EC9FAA400EC6106 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FD56232EC9FAA000EC6106 /* String.swift */; };
 		38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */; };
 		38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */; };
 		38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */; };
@@ -1225,6 +1227,7 @@
 		38FD4DAD2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementViewReactor.swift; sourceTree = "<group>"; };
 		38FD4DB02D034C1700BF5FF1 /* MyFollowingViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFollowingViewCell.swift; sourceTree = "<group>"; };
 		38FD4DB32D034F6600BF5FF1 /* FollowerViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowerViewCell.swift; sourceTree = "<group>"; };
+		38FD56232EC9FAA000EC6106 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		38FDC2B52C9E746B00C094C2 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationViewController.swift; sourceTree = "<group>"; };
 		38FEBE532E865119002916A8 /* FollowNotificationInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowNotificationInfoResponse.swift; sourceTree = "<group>"; };
@@ -1574,6 +1577,7 @@
 				386867A32E9E378000171A5E /* Array.swift */,
 				38121E302CA6C77500602499 /* Double.swift */,
 				38121E332CA6DA4000602499 /* Date.swift */,
+				38FD56232EC9FAA000EC6106 /* String.swift */,
 				38D869622CF821F900BF87DA /* UserDefaults.swift */,
 			);
 			path = Foundation;
@@ -3236,6 +3240,7 @@
 				388009922CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				2AFD05502CFF79D8007C84AD /* TagsViewReactor.swift in Sources */,
 				3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
+				38FD56252EC9FAA400EC6106 /* String.swift in Sources */,
 				2AFF95712CF5E8DE00CBFB12 /* TagSearchViewController.swift in Sources */,
 				2AFD05642D00A1E1007C84AD /* TagDetailCardResponse.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
@@ -3644,6 +3649,7 @@
 				3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				38F720B52CD4F15900DF32B5 /* PopularCardResponse.swift in Sources */,
 				38D6F1832CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
+				38FD56242EC9FAA400EC6106 /* String.swift in Sources */,
 				382D5CF62CFE9B8600BFA23E /* ProfileViewController.swift in Sources */,
 				38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */,
 				3817016E2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
