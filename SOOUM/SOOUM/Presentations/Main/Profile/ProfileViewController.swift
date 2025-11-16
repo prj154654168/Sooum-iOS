@@ -10,6 +10,8 @@ import UIKit
 import SnapKit
 import Then
 
+import Kingfisher
+
 import ReactorKit
 import RxCocoa
 import RxSwift
@@ -151,9 +153,17 @@ class ProfileViewController: BaseNavigationViewController, View {
                 
                 cell.updateProfileButton.rx.throttleTap
                     .subscribe(with: self) { object, _ in
-                        let updateProfileViewController = UpdateProfileViewController()
-                        updateProfileViewController.reactor = reactor.reactorForUpdate(with: profileInfo)
-                        object.navigationPush(updateProfileViewController, animated: true, bottomBarHidden: true)
+                        KingfisherManager.shared.download(
+                            strUrl: profileInfo.profileImageUrl,
+                            with: profileInfo.profileImgName
+                        ) { [weak object] profileImage in
+                            let updateProfileViewController = UpdateProfileViewController()
+                            updateProfileViewController.reactor = reactor.reactorForUpdate(
+                                nickname: profileInfo.nickname,
+                                image: profileImage
+                            )
+                            object?.navigationPush(updateProfileViewController, animated: true, bottomBarHidden: true)
+                        }
                     }
                     .disposed(by: cell.disposeBag)
                 

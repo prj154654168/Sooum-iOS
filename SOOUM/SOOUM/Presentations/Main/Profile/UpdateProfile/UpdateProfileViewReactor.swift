@@ -7,7 +7,7 @@
 
 import ReactorKit
 
-import Alamofire
+import Kingfisher
 
 
 class UpdateProfileViewReactor: Reactor {
@@ -43,29 +43,32 @@ class UpdateProfileViewReactor: Reactor {
         var errorMessage: String?
     }
     
-    var initialState: State = .init(
-        profileImage: nil,
-        isValid: false,
-        isUpdatedSuccess: false,
-        isProcessing: false,
-        hasErrors: nil,
-        errorMessage: nil
-    )
+    var initialState: State
     
     private var imageName: String?
     
     private let dependencies: AppDIContainerable
     private let userUseCase: UserUseCase
     
-    let profileInfo: ProfileInfo
+    let nickname: String
     
     init(
         dependencies: AppDIContainerable,
-        with profileInfo: ProfileInfo
+        nickname: String,
+        image profileImage: UIImage?
     ) {
         self.dependencies = dependencies
         self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        self.profileInfo = profileInfo
+        self.nickname = nickname
+        
+        self.initialState = .init(
+            profileImage: profileImage,
+            isValid: false,
+            isUpdatedSuccess: false,
+            isProcessing: false,
+            hasErrors: nil,
+            errorMessage: nil
+        )
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -105,7 +108,7 @@ class UpdateProfileViewReactor: Reactor {
         case let .updateProfile(nickname):
             
             let trimedNickname = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
-            let updatedNickname = trimedNickname == self.profileInfo.nickname ? nil : trimedNickname
+            let updatedNickname = trimedNickname == self.nickname ? nil : trimedNickname
             return self.userUseCase.updateMyProfile(
                 nickname: updatedNickname,
                 imageName: self.currentState.profileImageName
