@@ -258,10 +258,15 @@ class FollowViewController: BaseNavigationViewController, View {
     func bind(reactor: FollowViewReactor) {
         
         // 팔로우 == 0, 팔로잉 == 1
-        self.stickyTabBar.didSelectTabBarItem(reactor.entranceType == .follower ? 0 : 1)
+        let viewDidLoad = self.rx.viewDidLoad.share()
+        viewDidLoad
+            .subscribe(with: self.stickyTabBar) { stickyTabBar, _ in
+                stickyTabBar.didSelectTabBarItem(reactor.entranceType == .follower ? 0 : 1)
+            }
+            .disposed(by: self.disposeBag)
         
         // Action
-        self.rx.viewDidLoad
+        viewDidLoad
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)

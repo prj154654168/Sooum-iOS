@@ -202,7 +202,7 @@ class SOMStickyTabBar: UIView {
         items.enumerated().forEach { index, title in
             
             let item = SOMStickyTabBarItem(title: title)
-            item.updateState(color: index == 0 ? Constants.selectedColor : Constants.unSelectedColor)
+            item.updateState(color: index == self.selectedIndex ? Constants.selectedColor : Constants.unSelectedColor)
             item.snp.makeConstraints {
                 $0.width.equalTo(self.itemWidths[index])
             }
