@@ -138,13 +138,8 @@ class SOMPageViews: UIView {
     override func didMoveToWindow() {
         super.didMoveToWindow()
         /// 화면에서 사라졌을 때, 타이머 중지
-        if self.window == nil {
-            self.stopAutoScroll()
-        }
-        
-        if self.window != nil, self.hasLayoutsubviews {
-            self.startAutoScroll()
-        }
+        if self.window == nil { self.stopAutoScroll() }
+        if self.window != nil { self.startAutoScroll() }
     }
     
     
@@ -174,7 +169,7 @@ class SOMPageViews: UIView {
     
     func startAutoScroll() {
         
-        guard self.models.count > 1 else { return }
+        guard self.models.count > 1, self.hasLayoutsubviews else { return }
         
         self.stopAutoScroll()
         
