@@ -5,11 +5,13 @@
 //  Created by 오현식 on 10/8/25.
 //
 
-import Foundation
-
 import RxSwift
 
 protocol TagRemoteDataSource {
     
-    func relatedTags(keyword: String, size: Int) -> Observable<TagInfoResponse>
+    func related(keyword: String, size: Int) -> Observable<TagInfoResponse>
+    func favorites() -> Observable<FavoriteTagInfoResponse>
+    func updateFavorite(tagId: String, isFavorite: Bool) -> Observable<Int>
+    func ranked() -> Observable<TagInfoResponse>
+    func tagCards(tagId: String, lastId: String?) -> Observable<TagCardInfoResponse>
 }

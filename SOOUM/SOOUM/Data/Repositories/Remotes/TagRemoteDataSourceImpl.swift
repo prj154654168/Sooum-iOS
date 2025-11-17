@@ -17,9 +17,33 @@ class TagRemoteDataSourceImpl: TagRemoteDataSource {
         self.provider = provider
     }
     
-    func relatedTags(keyword: String, size: Int) -> Observable<TagInfoResponse> {
+    func related(keyword: String, size: Int) -> Observable<TagInfoResponse> {
         
-        let request: CardRequest = .relatedTags(keyword: keyword, size: size)
+        let request: TagRequest = .related(keyword: keyword, size: size)
         return self.provider.networkManager.perform(TagInfoResponse.self, request: request)
+    }
+    
+    func favorites() -> Observable<FavoriteTagInfoResponse> {
+        
+        let request: TagRequest = .favorites
+        return self.provider.networkManager.fetch(FavoriteTagInfoResponse.self, request: request)
+    }
+    
+    func updateFavorite(tagId: String, isFavorite: Bool) -> Observable<Int> {
+        
+        let request: TagRequest = .updateFavorite(tagId: tagId, isFavorite: isFavorite)
+        return self.provider.networkManager.perform(request)
+    }
+    
+    func ranked() -> Observable<TagInfoResponse> {
+        
+        let request: TagRequest = .ranked
+        return self.provider.networkManager.fetch(TagInfoResponse.self, request: request)
+    }
+    
+    func tagCards(tagId: String, lastId: String?) -> Observable<TagCardInfoResponse> {
+        
+        let requset: TagRequest = .tagCards(tagId: tagId, lastId: lastId)
+        return self.provider.networkManager.fetch(TagCardInfoResponse.self, request: requset)
     }
 }

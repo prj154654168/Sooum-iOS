@@ -12,56 +12,43 @@ import Alamofire
 enum TagRequest: BaseRequest {
     
     // 연관 태그
-    case related(resultCnt: Int, keyword: String)
+    case related(keyword: String, size: Int)
     
-    case favorite(last: String?)
-    case recommend
-    case search(keyword: String)
-    case tagInfo(tagID: String)
-    case tagCard(tagID: String)
-    case addFavorite(tagID: String)
-    case deleteFavorite(tagID: String)
+    case favorites
+    case updateFavorite(tagId: String, isFavorite: Bool)
+    case ranked
+    case tagCards(tagId: String, lastId: String?)
 
     var path: String {
         switch self {
-        case let .related(resultCnt, _):
-            return "/tags/related/\(resultCnt)"
+        case let .related(_, size):
+            return "/api/tags/related/\(size)"
             
-        case let .favorite(last):
-            if let last = last {
-                return "/tags/favorites/\(last)"
+        case .favorites:
+            
+            return "/api/tags/favorite"
+        case let .updateFavorite(tagId, _):
+            
+            return "/api/tags/\(tagId)/favorite"
+        case .ranked:
+            
+            return "/api/tags/rank"
+        case let .tagCards(tagId, lastId):
+            
+            if let lastId = lastId {
+                return "/api/tags/\(tagId)/cards/\(lastId)"
             } else {
-                return "/tags/favorites"
+                return "/api/tags/\(tagId)/cards"
             }
-            
-        case .recommend:
-            return "/tags/recommendation"
-            
-        case .search:
-            return "/tags/search"
-            
-        case let .tagInfo(tagID):
-            return "/tags/\(tagID)/summary"
-            
-        case let .tagCard(tagID):
-            return "/cards/tags/\(tagID)"
-            
-        case let .addFavorite(tagID):
-            return "/tags/\(tagID)/favorite"
-
-        case let .deleteFavorite(tagID):
-            return "/tags/\(tagID)/favorite"
         }
     }
         
     var method: HTTPMethod {
         switch self {
-        case .addFavorite(_):
+        case .related:
             return .post
-            
-        case .deleteFavorite(_):
-            return .delete
-            
+        case let .updateFavorite(_, isFavorite):
+            return isFavorite ? .post : .delete
         default:
             return .get
         }
@@ -69,18 +56,8 @@ enum TagRequest: BaseRequest {
     
     var parameters: Parameters {
         switch self {
-        case let .related(_, keyword):
+        case let .related(keyword, _):
             return ["tag": keyword]
-        case let .favorite(lastId):
-            if let lastId = lastId {
-                return ["last": lastId]
-            } else {
-                return [:]
-            }
-            
-        case let .search(keyword):
-            return ["keyword": keyword, "size": 20]
-            
         default:
             return [:]
         }
@@ -91,7 +68,7 @@ enum TagRequest: BaseRequest {
         case .related:
             return JSONEncoding.default
         default:
-            return URLEncoding.queryString
+            return URLEncoding.default
         }
     }
     

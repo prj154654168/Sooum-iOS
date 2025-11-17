@@ -17,8 +17,28 @@ class TagRepositoryImpl: TagRepository {
         self.remoteDataSource = remoteDataSource
     }
     
-    func relatedTags(keyword: String, size: Int) -> Observable<TagInfoResponse> {
+    func related(keyword: String, size: Int) -> Observable<TagInfoResponse> {
         
-        return self.remoteDataSource.relatedTags(keyword: keyword, size: size)
+        return self.remoteDataSource.related(keyword: keyword, size: size)
+    }
+    
+    func favorites() -> Observable<FavoriteTagInfoResponse> {
+        
+        return self.remoteDataSource.favorites()
+    }
+    
+    func updateFavorite(tagId: String, isFavorite: Bool) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateFavorite(tagId: tagId, isFavorite: isFavorite)
+    }
+    
+    func ranked() -> Observable<TagInfoResponse> {
+        
+        return self.remoteDataSource.ranked()
+    }
+    
+    func tagCards(tagId: String, lastId: String?) -> Observable<TagCardInfoResponse> {
+        
+        return self.remoteDataSource.tagCards(tagId: tagId, lastId: lastId)
     }
 }
