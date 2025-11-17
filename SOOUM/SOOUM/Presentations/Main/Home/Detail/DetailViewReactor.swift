@@ -63,8 +63,7 @@ class DetailViewReactor: Reactor {
     private let dependencies: AppDIContainerable
     private let cardUseCase: CardUseCase
     private let userUseCase: UserUseCase
-    
-    private let locationManager: LocationManagerDelegate
+    private let settingsUseCase: SettingsUseCase
     
     let entranceCardType: EntranceCardType
     let entranceType: EntranceType
@@ -79,8 +78,7 @@ class DetailViewReactor: Reactor {
         self.dependencies = dependencies
         self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
         self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        
-        self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
         
         self.entranceCardType = entranceCardType
         self.entranceType = entranceType
@@ -170,8 +168,9 @@ class DetailViewReactor: Reactor {
     
     func detailCard() -> Observable<Mutation> {
         
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let coordinate = self.settingsUseCase.coordinate()
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         return self.cardUseCase.detailCard(
             id: self.selectedCardId,
@@ -183,8 +182,9 @@ class DetailViewReactor: Reactor {
     
     func commentCards() -> Observable<Mutation> {
         
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let coordinate = self.settingsUseCase.coordinate()
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         return self.cardUseCase.commentCard(
             id: self.selectedCardId,
@@ -196,8 +196,10 @@ class DetailViewReactor: Reactor {
     }
     
     func fetchMoreCommentCards(_ lastId: String) -> Observable<Mutation> {
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        
+        let coordinate = self.settingsUseCase.coordinate()
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         return self.cardUseCase.commentCard(
             id: self.selectedCardId,

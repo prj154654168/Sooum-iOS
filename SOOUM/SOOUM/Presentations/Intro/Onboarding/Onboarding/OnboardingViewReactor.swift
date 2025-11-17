@@ -31,13 +31,12 @@ class OnboardingViewReactor: Reactor {
     
     private let dependencies: AppDIContainerable
     private let userUseCase: UserUseCase
-    private let pushManager: PushManagerDelegate
+    private let settingsUseCase: SettingsUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
         self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        let provider = dependencies.rootContainer.resolve(ManagerProviderType.self)
-        self.pushManager = provider.pushManager
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -46,7 +45,7 @@ class OnboardingViewReactor: Reactor {
             
             return .concat([
                 self.check(),
-                self.pushManager.switchNotification(on: true)
+                self.settingsUseCase.switchNotification(on: true)
                     .flatMapLatest { _ -> Observable<Mutation> in .empty() }
             ])
         }

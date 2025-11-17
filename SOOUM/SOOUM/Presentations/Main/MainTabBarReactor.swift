@@ -20,6 +20,7 @@ class MainTabBarReactor: Reactor {
     }
 
     enum Action: Equatable {
+        case requestLocationPermission
         case judgeEntrance
         case postingPermission
         case reset
@@ -45,15 +46,12 @@ class MainTabBarReactor: Reactor {
     
     private let dependencies: AppDIContainerable
     private let userUseCase: UserUseCase
-    
-    let pushManager: PushManagerDelegate
-    let locationManager: LocationManagerDelegate
+    private let settingsUseCase: SettingsUseCase
     
     init(dependencies: AppDIContainerable, pushInfo: NotificationInfo? = nil) {
         self.dependencies = dependencies
         self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        self.pushManager = dependencies.rootContainer.resolve(ManagerProviderType.self).pushManager
-        self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
         
         var willNavigate: EntranceType {
             switch pushInfo?.notificationType {
@@ -76,12 +74,19 @@ class MainTabBarReactor: Reactor {
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .requestLocationPermission:
+            
+            if self.settingsUseCase.checkLocationAuthStatus() == .notDetermined {
+                self.settingsUseCase.requestLocationPermission()
+            }
+            
+            return .empty()
         case .judgeEntrance:
             
             return .concat([
                 .just(.updateEntrance),
-                self.pushManager.switchNotification(on: true)
-                    .flatMapLatest { error -> Observable<Mutation> in .empty() }
+                self.settingsUseCase.switchNotification(on: true)
+                    .flatMapLatest { _ -> Observable<Mutation> in .empty() }
             ])
         case .postingPermission:
             

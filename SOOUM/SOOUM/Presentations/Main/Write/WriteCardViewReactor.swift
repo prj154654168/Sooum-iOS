@@ -38,6 +38,7 @@ class WriteCardViewReactor: Reactor {
     }
     
     struct State {
+        fileprivate(set) var hasPermission: Bool
         fileprivate(set) var shouldUseCoordinates: Bool
         fileprivate(set) var defaultImages: DefaultImages?
         fileprivate(set) var userImage: UIImage?
@@ -49,24 +50,13 @@ class WriteCardViewReactor: Reactor {
         fileprivate(set) var hasErrors: Int?
     }
     
-    var initialState: State = .init(
-        shouldUseCoordinates: false,
-        defaultImages: nil,
-        userImage: nil,
-        relatedTags: nil,
-        couldPosting: nil,
-        writtenCardId: nil,
-        isDownloaded: nil,
-        isProcessing: false,
-        hasErrors: nil
-    )
+    var initialState: State
     
     private let dependencies: AppDIContainerable
     private let cardUseCase: CardUseCase
     private let tagUseCase: TagUseCase
     private let userUseCase: UserUseCase
-    
-    let locationManager: LocationManagerDelegate
+    private let settingsUseCase: SettingsUseCase
     
     let entranceType: EntranceCardType
     
@@ -81,9 +71,22 @@ class WriteCardViewReactor: Reactor {
         self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
         self.tagUseCase = dependencies.rootContainer.resolve(TagUseCase.self)
         self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
         self.entranceType = entranceType
         self.parentCardId = parentCardId
+        
+        self.initialState = State(
+            hasPermission: self.settingsUseCase.hasPermission(),
+            shouldUseCoordinates: false,
+            defaultImages: nil,
+            userImage: nil,
+            relatedTags: nil,
+            couldPosting: nil,
+            writtenCardId: nil,
+            isDownloaded: nil,
+            isProcessing: false,
+            hasErrors: nil
+        )
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -189,7 +192,7 @@ private extension WriteCardViewReactor {
         tags: [String]
     ) -> Observable<Mutation> {
         
-        let coordinate = self.locationManager.coordinate
+        let coordinate = self.settingsUseCase.coordinate()
         let trimedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if case .default = imageType, let imageName = imageName {

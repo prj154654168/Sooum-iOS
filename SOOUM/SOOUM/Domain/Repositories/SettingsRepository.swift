@@ -16,4 +16,12 @@ protocol SettingsRepository {
     func enter(code: String, encryptedDeviceId: String) -> Observable<Int>
     func update() -> Observable<TransferCodeInfoResponse>
     func blockUsers(lastId: String?) -> Observable<BlockUsersInfoResponse>
+    
+    func notificationStatus() -> Bool
+    func switchNotification(on: Bool) -> Observable<Error?>
+    
+    func coordinate() -> Coordinate
+    func hasPermission() -> Bool
+    func requestLocationPermission()
+    func checkLocationAuthStatus() -> AuthStatus
 }

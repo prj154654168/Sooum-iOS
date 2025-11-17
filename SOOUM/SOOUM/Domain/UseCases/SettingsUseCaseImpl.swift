@@ -1,5 +1,5 @@
 //
-//  SettingsUserCaseImpl.swift
+//  SettingsUseCaseImpl.swift
 //  SOOUM
 //
 //  Created by 오현식 on 11/9/25.
@@ -9,7 +9,7 @@ import Foundation
 
 import RxSwift
 
-class SettingsUserCaseImpl: SettingsUserCase {
+class SettingsUseCaseImpl: SettingsUseCase {
     
     private let repository: SettingsRepository
     
@@ -40,5 +40,35 @@ class SettingsUserCaseImpl: SettingsUserCase {
     func blockUsers(lastId: String?) -> Observable<[BlockUserInfo]> {
         
         return self.repository.blockUsers(lastId: lastId).map(\.blockUsers)
+    }
+    
+    func notificationStatus() -> Bool {
+        
+        return self.repository.notificationStatus()
+    }
+    
+    func switchNotification(on: Bool) -> Observable<Void> {
+        
+        return self.repository.switchNotification(on: on).map { _ in () }
+    }
+    
+    func coordinate() -> Coordinate {
+        
+        return self.repository.coordinate()
+    }
+    
+    func hasPermission() -> Bool {
+        
+        return self.repository.hasPermission()
+    }
+    
+    func requestLocationPermission() {
+        
+        self.repository.requestLocationPermission()
+    }
+    
+    func checkLocationAuthStatus() -> AuthStatus {
+        
+        return self.repository.checkLocationAuthStatus()
     }
 }

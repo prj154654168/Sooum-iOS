@@ -380,7 +380,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, options in
                 // 선택된 옵션 중 `거리공유` 옵션이 존재하고, 위치 권한이 허용되지 않았을 때
-                guard reactor.locationManager.hasPermission == false else { return }
+                guard reactor.initialState.hasPermission == false else { return }
                 
                 object.selectOptionsView.selectOptions = options.filter { $0 != .distanceShare }
                 object.showLocationPermissionDialog()
@@ -405,7 +405,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         viewDidLoad
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.selectOptionsView) { selectOptionsView, _ in
-                selectOptionsView.selectOptions = reactor.locationManager.hasPermission ? [.distanceShare] : []
+                selectOptionsView.selectOptions = reactor.initialState.hasPermission ? [.distanceShare] : []
             }
             .disposed(by: self.disposeBag)
         

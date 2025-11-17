@@ -405,7 +405,7 @@ class HomeViewController: BaseNavigationViewController, View {
     @objc
     private func changedLocationAuthorization(_ notification: Notification) {
         
-        if self.stickyTabBar.selectedIndex == 2, self.reactor?.locationManager.hasPermission == false {
+        if self.stickyTabBar.selectedIndex == 2, self.reactor?.initialState.hasPermission == false {
             
             self.reactor?.action.onNext(.refresh)
             self.showLocationPermissionDialog()
@@ -533,7 +533,7 @@ extension HomeViewController: SOMStickyTabBarDelegate {
         }
         self.reactor?.action.onNext(.updateDisplayType(displayType))
         
-        if index == 2, self.reactor?.locationManager.hasPermission == false {
+        if index == 2, self.reactor?.initialState.hasPermission == false {
             self.showLocationPermissionDialog()
         }
     }

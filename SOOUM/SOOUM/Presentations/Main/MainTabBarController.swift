@@ -117,16 +117,12 @@ class MainTabBarController: SOMTabBarController, View {
             profileNavigationController
         ]
         
-        self.rx.viewDidLoad
-            .subscribe(with: self) { object, _ in
-                // 위치 권한 요청
-                if reactor.locationManager.checkLocationAuthStatus() == .notDetermined {
-                    reactor.locationManager.requestLocationPermission()
-                }
-            }
-            .disposed(by: self.disposeBag)
-        
         // Action
+        /// 위치 권한 요청
+        self.rx.viewDidLoad
+            .map { _ in Reactor.Action.requestLocationPermission }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
         
         self.rx.viewWillAppear
             .map { _ in Reactor.Action.judgeEntrance }

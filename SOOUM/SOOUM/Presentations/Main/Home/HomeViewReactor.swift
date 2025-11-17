@@ -43,6 +43,7 @@ class HomeViewReactor: Reactor {
     }
     
     struct State {
+        fileprivate(set) var hasPermission: Bool
         fileprivate(set) var displayType: DisplayType
         fileprivate(set) var noticeInfos: [NoticeInfo]?
         fileprivate(set) var latestCards: [BaseCardInfo]?
@@ -58,17 +59,16 @@ class HomeViewReactor: Reactor {
     private let dependencies: AppDIContainerable
     private let cardUseCase: CardUseCase
     private let notificationUseCase: NotificationUseCase
-    
-    let locationManager: LocationManagerDelegate
+    private let settingsUseCase: SettingsUseCase
     
     init(dependencies: AppDIContainerable, displayType: DisplayType = .latest) {
         self.dependencies = dependencies
         self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
         self.notificationUseCase = dependencies.rootContainer.resolve(NotificationUseCase.self)
-        
-        self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
         
         self.initialState = State(
+            hasPermission: self.settingsUseCase.hasPermission(),
             displayType: displayType,
             noticeInfos: nil,
             latestCards: nil,
@@ -187,8 +187,9 @@ private extension HomeViewReactor {
     
     func refresh(_ displayType: DisplayType, _ distanceFilter: String) -> Observable<Mutation> {
 
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let coordinate = self.settingsUseCase.coordinate()
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         switch displayType {
         case .latest:
@@ -211,8 +212,9 @@ private extension HomeViewReactor {
     
     func moreFind(_ lastId: String) -> Observable<Mutation> {
         
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let coordinate = self.settingsUseCase.coordinate()
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         switch self.currentState.displayType {
         case .latest:

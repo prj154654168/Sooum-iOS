@@ -31,11 +31,11 @@ class IssueMemberTransferViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let settingsUseCase: SettingsUserCase
+    private let settingsUseCase: SettingsUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUserCase.self)
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {

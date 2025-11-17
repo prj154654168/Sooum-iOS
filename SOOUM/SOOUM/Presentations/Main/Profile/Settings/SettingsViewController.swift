@@ -252,7 +252,7 @@ class SettingsViewController: BaseNavigationViewController, View {
                 let subject = Text.inquiryMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                 let guideMessage = """
                     \(Text.identificationInfo)
-                    \(reactor.authManager.authInfo.token.refreshToken)\n
+                    \(reactor.initialState.tokens.refreshToken)\n
                     \(Text.inquiryMailGuideMessage)
                 """
                 let body = guideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
