@@ -13,7 +13,7 @@ import Then
 class ResignTextFieldView: UIView {
     
     enum Constants {
-        static let maxCharacters: Int = 8
+        static let maxCharacters: Int = 250
     }
     
     
