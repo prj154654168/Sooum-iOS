@@ -367,7 +367,7 @@ extension SettingsViewController {
         
         let resignAction = SOMDialogAction(
             title: Text.resignTitle,
-            style: .red,
+            style: .primary,
             action: {
                 UIApplication.topViewController?.dismiss(animated: true) {
                     let resignViewController = ResignViewController()
