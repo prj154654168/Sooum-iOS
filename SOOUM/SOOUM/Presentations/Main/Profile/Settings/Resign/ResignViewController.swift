@@ -48,7 +48,7 @@ class ResignViewController: BaseNavigationViewController, View {
     private let container = UIStackView().then {
         $0.axis = .vertical
         $0.alignment = .fill
-        $0.distribution = .equalSpacing
+        $0.distribution = .fillProportionally
         $0.spacing = 10
     }
     
@@ -109,19 +109,21 @@ class ResignViewController: BaseNavigationViewController, View {
         guideContainer.addSubview(self.resignGuideMessage)
         self.resignGuideMessage.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)
-            $0.bottom.trailing.equalToSuperview().offset(-16)
-            $0.leading.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-16)
+            $0.horizontalEdges.equalToSuperview()
         }
-        
-        self.container.addArrangedSubview(guideContainer)
-        self.container.setCustomSpacing(16, after: guideContainer)
-        
-        self.setupReportButtons()
+        self.scrollView.addSubview(guideContainer)
+        guideContainer.snp.makeConstraints {
+            $0.top.horizontalEdges.equalToSuperview()
+        }
         
         self.scrollView.addSubview(self.container)
         self.container.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.equalTo(guideContainer.snp.bottom).offset(16)
+            $0.bottom.horizontalEdges.equalToSuperview()
         }
+        
+        self.setupReportButtons()
     }
     
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
