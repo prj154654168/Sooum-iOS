@@ -81,14 +81,7 @@ class AnnouncementViewCell: UITableViewCell {
     
     func setModel(_ model: NoticeInfo) {
         
-        var leadingTitle: String {
-            switch model.noticeType {
-            case .news: return ""
-            default:    return "[공지] "
-            }
-        }
-        
-        self.titleLabel.text = leadingTitle + model.message
+        self.titleLabel.text = model.message
         self.dateLabel.text = model.createdAt.announcementFormatted
     }
 }
