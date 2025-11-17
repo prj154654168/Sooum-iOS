@@ -68,15 +68,15 @@ class LaunchScreenViewReactor: Reactor {
         switch action {
         case .launch:
             // 계정 이관에 성공했을 때, 온보딩 화면으로 전환
-            let isTransfered = self.pushInfo?.isTransfered ?? false
-            if isTransfered {
-                self.authUseCase.initializeAuthInfo()
-                return .just(.updateIsRegistered(false))
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            } else {
+            // let isTransfered = self.pushInfo?.isTransfered ?? false
+            // if isTransfered {
+            //     self.authUseCase.initializeAuthInfo()
+            //     return .just(.updateIsRegistered(false))
+            //         .delay(.milliseconds(500), scheduler: MainScheduler.instance)
+            // } else {
                 return self.check()
                     .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            }
+            // }
         }
     }
     

@@ -54,14 +54,15 @@ class MainTabBarReactor: Reactor {
         self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
         
         var willNavigate: EntranceType {
-            switch pushInfo?.notificationType {
-            case .feedLike, .commentLike, .commentWrite:
-                return .pushForDetail
-            case .blocked, .delete:
-                return .pushForNoti
-            default:
-                return .none
-            }
+            // switch pushInfo?.notificationType {
+            // case .feedLike, .commentLike, .commentWrite:
+            //     return .pushForDetail
+            // case .blocked, .delete:
+            //     return .pushForNoti
+            // default:
+            //     return .none
+            // }
+            return .none
         }
         self.willNavigate = willNavigate
         self.pushInfo = pushInfo

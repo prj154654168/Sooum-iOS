@@ -393,50 +393,6 @@ class SOMCard: UIView {
         self.subscribePungTime(model.storyExpirationTime)
     }
     
-    func setData(tagCard: TagDetailCardResponse.TagFeedCard) {
-        
-        // 카드 배경 이미지
-//        rootContainerImageView.setImage(strUrl: tagCard.backgroundImgURL.href)
-//        // 카드 본문
-//        updateContentHeight(tagCard.content)
-//        let typography: Typography = tagCard.font == .pretendard ? .som.body1WithBold : .som.schoolBody1WithBold
-//        if hasScrollEnabled {
-//            var attributes = typography.attributes
-//            attributes.updateValue(typography.font, forKey: .font)
-//            attributes.updateValue(UIColor.som.white, forKey: .foregroundColor)
-//            cardTextContentScrollView.attributedText = .init(
-//                string: tagCard.content,
-//                attributes: attributes
-//            )
-//            cardTextContentScrollView.textAlignment = .center
-//        } else {
-//            cardTextContentLabel.typography = typography
-//            cardTextContentLabel.text = tagCard.content
-//            cardTextContentLabel.textAlignment = .center
-//            cardTextContentLabel.lineBreakMode = .byTruncatingTail
-//        }
-//        // 하단 정보
-//        likeImageView.image = tagCard.isLiked ?
-//            .init(.icon(.filled(.heart))) :
-//            .init(.icon(.outlined(.heart)))
-//        likeImageView.tintColor = tagCard.isLiked ? .som.p300 : .som.white
-//
-//        commentImageView.image = tagCard.isCommentWritten ?
-//            .init(.icon(.filled(.comment))) :
-//            .init(.icon(.outlined(.comment)))
-//        commentImageView.tintColor = tagCard.isCommentWritten ? .som.p300 : .som.white
-//        
-//        timeLabel.text = tagCard.createdAt.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
-//        distanceInfoStackView.isHidden = tagCard.distance == nil
-//        distanceLabel.text = (tagCard.distance ?? 0).infoReadableDistanceRangeFromThis()
-//        likeLabel.text = "\(tagCard.likeCnt)"
-//        likeLabel.textColor = tagCard.isLiked ? .som.p300 : .som.white
-//        commentLabel.text = "\(tagCard.commentCnt)"
-//        commentLabel.textColor = tagCard.isCommentWritten ? .som.p300 : .som.white
-//
-//        cardPungTimeBackgroundView.isHidden = true
-    }
-    
     private func updateContentHeight(_ text: String, with typography: Typography) {
         
         UIView.performWithoutAnimation {
@@ -457,7 +413,6 @@ class SOMCard: UIView {
             options: [.usesLineFragmentOrigin],
             context: nil
         ).height
-        let backgroundHeight = self.rootContainerImageView.bounds.height
         
         let maxHeight = self.cardType == .feed ? typography.lineHeight * 3 : typography.lineHeight * 4
         let height = min(boundingHeight, maxHeight)

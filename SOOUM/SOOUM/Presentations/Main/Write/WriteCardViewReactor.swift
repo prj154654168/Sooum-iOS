@@ -125,7 +125,7 @@ class WriteCardViewReactor: Reactor {
             ])
         case let .relatedTags(keyword):
             
-            return self.tagUseCase.relatedTags(keyword: keyword, size: 8)
+            return self.tagUseCase.related(keyword: keyword, size: 8)
                 .map(Mutation.relatedTags)
         case .updateRelatedTags:
             
