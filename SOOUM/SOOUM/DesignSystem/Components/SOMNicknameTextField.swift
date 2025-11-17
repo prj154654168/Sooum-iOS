@@ -209,7 +209,7 @@ class SOMNicknameTextField: UIView {
 extension SOMNicknameTextField: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.clearButton.isHidden = self.isTextEmpty
+        self.clearButton.isHidden = false
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -221,8 +221,6 @@ extension SOMNicknameTextField: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
-        
-        self.clearButton.isHidden = self.isTextEmpty
         
         return textField.shouldChangeCharactersIn(
             in: range,
