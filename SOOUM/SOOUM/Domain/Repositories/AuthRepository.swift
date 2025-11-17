@@ -13,9 +13,10 @@ protocol AuthRepository {
     
     func signUp(nickname: String, profileImageName: String?) -> Observable<Bool>
     func login() -> Observable<Bool>
+    func withdraw(reaseon: String) -> Observable<Int>
     
     func initializeAuthInfo()
     func hasToken() -> Bool
     func tokens() -> Token
-    func withdraw(reaseon: String) -> Observable<Int>
+    func encryptedDeviceId() -> Observable<String?>
 }

@@ -5,8 +5,6 @@
 //  Created by 오현식 on 9/17/25.
 //
 
-import Foundation
-
 import RxSwift
 
 class AuthLocalDataSourceImpl: AuthLocalDataSource {
@@ -31,5 +29,21 @@ class AuthLocalDataSourceImpl: AuthLocalDataSource {
     func tokens() -> Token {
         
         return self.provider.authManager.authInfo.token
+    }
+    
+    func encryptedDeviceId() -> Observable<String?> {
+        
+        return self.provider.authManager.publicKey()
+            .withUnretained(self)
+            .flatMapLatest { object, publicKey -> Observable<String?> in
+                if let publicKey = publicKey,
+                   let secKey = object.provider.authManager.convertPEMToSecKey(pemString: publicKey) {
+                    
+                    let encryptedDeviceId = object.provider.authManager.encryptUUIDWithPublicKey(publicKey: secKey)
+                    return .just(encryptedDeviceId)
+                } else {
+                    return .just(nil)
+                }
+            }
     }
 }

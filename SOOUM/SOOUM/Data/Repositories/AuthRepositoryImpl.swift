@@ -29,6 +29,11 @@ class AuthRepositoryImpl: AuthRepository {
         self.remoteDataSource.login()
     }
     
+    func withdraw(reaseon: String) -> Observable<Int> {
+        
+        self.remoteDataSource.withdraw(reaseon: reaseon)
+    }
+    
     func initializeAuthInfo() {
         
         self.localDataSource.initializeAuthInfo()
@@ -44,8 +49,8 @@ class AuthRepositoryImpl: AuthRepository {
         self.localDataSource.tokens()
     }
     
-    func withdraw(reaseon: String) -> Observable<Int> {
+    func encryptedDeviceId() -> Observable<String?> {
         
-        self.remoteDataSource.withdraw(reaseon: reaseon)
+        self.localDataSource.encryptedDeviceId()
     }
 }

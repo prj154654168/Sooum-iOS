@@ -13,9 +13,10 @@ protocol AuthUseCase {
     
     func signUp(nickname: String, profileImageName: String?) -> Observable<Bool>
     func login() -> Observable<Bool>
+    func withdraw(reaseon: String) -> Observable<Bool>
     
     func initializeAuthInfo()
     func hasToken() -> Bool
     func tokens() -> Token
-    func withdraw(reaseon: String) -> Observable<Bool>
+    func encryptedDeviceId() -> Observable<String?>
 }

@@ -27,9 +27,14 @@ class AuthUseCaseImpl: AuthUseCase {
         return self.repository.login()
     }
     
+    func withdraw(reaseon: String) -> Observable<Bool> {
+        
+        return self.repository.withdraw(reaseon: reaseon).map { $0 == 200 }
+    }
+    
     func initializeAuthInfo() {
         
-        self.repository.initializeAuthInfo()
+        return self.repository.initializeAuthInfo()
     }
     
     func hasToken() -> Bool {
@@ -42,8 +47,8 @@ class AuthUseCaseImpl: AuthUseCase {
         return self.repository.tokens()
     }
     
-    func withdraw(reaseon: String) -> Observable<Bool> {
+    func encryptedDeviceId() -> Observable<String?> {
         
-        return self.repository.withdraw(reaseon: reaseon).map { $0 == 200 }
+        return self.repository.encryptedDeviceId()
     }
 }
