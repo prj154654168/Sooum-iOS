@@ -21,9 +21,4 @@ class AppVersionUseCaseImpl: AppVersionUseCase {
         
         return self.repository.version().map { $0.version }
     }
-    
-    func oldVersion() -> Observable<Version> {
-        
-        return self.repository.oldVersion().map { Version(status: $0) }
-    }
 }

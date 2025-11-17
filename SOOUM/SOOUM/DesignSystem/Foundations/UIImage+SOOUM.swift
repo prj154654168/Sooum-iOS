@@ -148,6 +148,7 @@ extension UIImage.SOOUMType {
             case danger
             case headset
             case heart
+            case hide
             case home
             case image
             case info
@@ -223,6 +224,7 @@ extension UIImage.SOOUMType {
         case placeholder_notification
         case prev_card_button
         case profile_large
+        case profile_medium
         case profile_small
     }
     

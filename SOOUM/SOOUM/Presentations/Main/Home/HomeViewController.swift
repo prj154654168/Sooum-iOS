@@ -30,8 +30,11 @@ class HomeViewController: BaseNavigationViewController, View {
         static let dialogTitle: String = "위치 정보 사용 설정"
         static let dialogMessage: String = "내 위치 확인을 위해 ‘설정 > 앱 > 숨 > 위치’에서 위치 정보 사용을 허용해 주세요."
         
+        static let pungedCardDialogTitle: String = "삭제된 카드예요"
+        
         static let cancelActionTitle: String = "취소"
         static let settingActionTitle: String = "설정"
+        static let confirmActionTitle: String = "확인"
     }
     
     enum Section: Int, CaseIterable {
@@ -479,6 +482,24 @@ private extension HomeViewController {
             actions: [cancelAction, settingAction]
         )
     }
+    
+    func showPungedCardDialog() {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.pungedCardDialogTitle,
+            messageView: nil,
+            textAlignment: .left,
+            actions: [confirmAction]
+        )
+    }
 }
 
 
@@ -553,6 +574,27 @@ extension HomeViewController: UITableViewDelegate {
         guard let item = self.dataSource.itemIdentifier(for: indexPath),
               let reactor = self.reactor
         else { return }
+        
+        var isPunged: Bool {
+            switch item {
+            case let .latest(selectedCard):
+                guard let expireAt = selectedCard.storyExpirationTime else { return false }
+                return expireAt < Date()
+            case let .popular(selectedCard):
+                guard let expireAt = selectedCard.storyExpirationTime else { return false }
+                return expireAt < Date()
+            case let .distance(selectedCard):
+                guard let expireAt = selectedCard.storyExpirationTime else { return false }
+                return expireAt < Date()
+            case .empty:
+                return false
+            }
+        }
+        
+        guard isPunged == false else {
+            self.showPungedCardDialog()
+            return
+        }
         
         var selectedId: String {
             switch item {
@@ -647,7 +689,7 @@ extension HomeViewController: UITableViewDelegate {
             
             let pulledOffset = self.initialOffset - offset
             let refreshingOffset = refreshControl.frame.origin.y + refreshControl.frame.height + 16
-            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset + 10
         }
         
         // 당겨서 새로고침 시 무시

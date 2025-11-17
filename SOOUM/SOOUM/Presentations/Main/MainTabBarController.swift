@@ -23,7 +23,7 @@ class MainTabBarController: SOMTabBarController, View {
             static let homeTitle: String = "홈"
             static let writeTitle: String = "카드추가"
             static let tagTitle: String = "태그"
-            static let userTitle: String = "마이"
+            static let profileTitle: String = "마이"
             
             static let banUserDialogTitle: String = "이용 제한 안내"
             static let banUserDialogFirstLeadingMessage: String = "신고된 카드로 인해 "
@@ -99,9 +99,13 @@ class MainTabBarController: SOMTabBarController, View {
             tag: 2
         )
         
-        let userViewController = UIViewController()
-        userViewController.tabBarItem = .init(
-            title: Constants.Text.userTitle,
+        let profileViewController = ProfileViewController()
+        profileViewController.reactor = reactor.reactorForProfile()
+        let profileNavigationController = UINavigationController(
+            rootViewController: profileViewController
+        )
+        profileNavigationController.tabBarItem = .init(
+            title: Constants.Text.profileTitle,
             image: .init(.icon(.v2(.filled(.user)))),
             tag: 3
         )
@@ -110,7 +114,7 @@ class MainTabBarController: SOMTabBarController, View {
             mainHomeNavigationController,
             writeCardViewController,
             tagViewController,
-            userViewController
+            profileNavigationController
         ]
         
         self.rx.viewDidLoad
@@ -173,7 +177,7 @@ class MainTabBarController: SOMTabBarController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let couldPosting = reactor.state.map(\.couldPosting).filterNil()
+        let couldPosting = reactor.state.map(\.couldPosting).distinctUntilChanged().filterNil()
         
         couldPosting
             .filter { $0.isBaned == false }
@@ -221,7 +225,7 @@ extension MainTabBarController: SOMTabBarControllerDelegate {
             return false
         }
         
-        if viewController.tabBarItem.tag == 2 || viewController.tabBarItem.tag == 3 {
+        if viewController.tabBarItem.tag == 2 {
             self.showPrepare()
             
             return false

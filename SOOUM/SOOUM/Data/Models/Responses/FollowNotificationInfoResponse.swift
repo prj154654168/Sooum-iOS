@@ -27,9 +27,9 @@ extension FollowNotificationInfoResponse: EmptyResponse {
 
 extension FollowNotificationInfoResponse: Decodable {
     
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: String, CodingKey {
         case notificationInfo
-        case nickname
+        case nickname = "nickName"
         case userId
     }
     

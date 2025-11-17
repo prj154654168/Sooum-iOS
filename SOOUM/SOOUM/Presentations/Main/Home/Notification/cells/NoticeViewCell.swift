@@ -57,6 +57,14 @@ class NoticeViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.titleLabel.text = nil
+        self.timeLabel.text = nil
+        self.contentLabel.text = nil
+    }
+    
     
     // MARK: Private func
     

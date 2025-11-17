@@ -12,12 +12,12 @@ import Kingfisher
 
 extension KingfisherManager {
     
-    func download(strUrl: String?, completion: @escaping (UIImage?) -> Void) {
+    func download(strUrl: String?, with key: String? = nil, completion: @escaping (UIImage?) -> Void) {
         
         if let strUrl = strUrl, let url = URL(string: strUrl) {
             // 캐시 만료 기간 하루로 설정
-            let resource = Kingfisher.KF.ImageResource(downloadURL: url, cacheKey: url.absoluteString)
-            self.retrieveImage(with: resource, options: [.memoryCacheExpiration(.days(1))]) { result in
+            let resource = KF.ImageResource(downloadURL: url, cacheKey: key ?? strUrl)
+            self.retrieveImage(with: resource) { result in
                 switch result {
                 case let .success(result):
                     completion(result.image)
@@ -32,12 +32,12 @@ extension KingfisherManager {
         }
     }
     
-    func cancel(strUrl: String?) {
+    func cancel(strUrl: String?, with key: String? = nil) {
         
         if let strUrl = strUrl, let url = URL(string: strUrl) {
             
             self.downloader.cancel(url: url)
-            self.cache.removeImage(forKey: url.absoluteString)
+            self.cache.removeImage(forKey: key ?? strUrl)
         }
     }
 }

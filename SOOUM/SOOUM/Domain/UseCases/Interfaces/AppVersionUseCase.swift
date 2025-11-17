@@ -12,5 +12,4 @@ import RxSwift
 protocol AppVersionUseCase {
     
     func version() -> Observable<Version>
-    func oldVersion() -> Observable<Version>
 }

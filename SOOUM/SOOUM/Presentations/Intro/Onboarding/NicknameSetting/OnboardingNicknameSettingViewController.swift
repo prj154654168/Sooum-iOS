@@ -31,13 +31,21 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
 
     private let guideMessageView = OnboardingGuideMessageView(title: Text.title, currentNumber: 2)
     
-    private let nicknameTextField = OnboardingNicknameTextFieldView()
+    private let nicknameTextField = SOMNicknameTextField()
     
     private let nextButton = SOMButton().then {
         $0.title = Text.nextButtonTitle
         $0.typography = .som.v2.title1
         $0.foregroundColor = .som.v2.white
         $0.backgroundColor = .som.v2.black
+    }
+    
+    
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + next button height + padding
+        return 34 + 56 + 8
     }
     
     
@@ -77,7 +85,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
         super.updatedKeyboard(withoutBottomSafeInset: height)
         
-        let height = height + 12
+        let height = height == 0 ? 0 : height + 12
         self.nextButton.snp.updateConstraints {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-height)
         }

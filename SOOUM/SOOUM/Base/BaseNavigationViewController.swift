@@ -33,7 +33,7 @@ class BaseNavigationViewController: BaseViewController {
         $0.isHidden = true
     }
 
-    private(set) var navigationPopWithBottomBarHidden: Bool = false
+    private(set) var navigationPopWithBottomBarHidden: Bool = true
     private(set) var navigationPopGestureEnabled: Bool = true
     private(set) var navigationBarHeight: CGFloat = SOMNavigationBar.height
 

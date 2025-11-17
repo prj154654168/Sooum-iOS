@@ -133,7 +133,8 @@ extension OnboardingProfileImageSettingViewReactor {
             
             let nsError = error as NSError
             let endProcessing = Observable<Mutation>.concat([
-                .just(.updateImageInfo(nil, nil)),
+                // TODO: 부적절한 사진일 때, `확인` 버튼 탭 시 이미지 변경
+                // .just(.updateImageInfo(nil, nil)),
                 .just(.updateIsSignUp(false)),
                 .just(.updateIsLoading(false)),
                 // 부적절한 이미지 업로드 에러 코드 == 422

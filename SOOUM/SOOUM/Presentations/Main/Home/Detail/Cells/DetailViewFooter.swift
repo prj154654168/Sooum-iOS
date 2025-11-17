@@ -123,7 +123,9 @@ class DetailViewFooter: UICollectionReusableView {
         self.collectionView.isHidden = models.isEmpty
         self.noContentLabel.isHidden = models.isEmpty == false
         
-        self.collectionView.reloadData()
+        UIView.performWithoutAnimation {
+            self.collectionView.reloadData()
+        }
     }
 }
 

@@ -121,9 +121,9 @@ extension MainTabBarReactor {
     //     TagsViewReactor(provider: self.provider)
     // }
     
-    // func reactorForProfile() -> ProfileViewReactor {
-    //     ProfileViewReactor(provider: self.provider, type: .my, memberId: nil)
-    // }
+    func reactorForProfile() -> ProfileViewReactor {
+        ProfileViewReactor(dependencies: self.dependencies, type: .myWithNavi)
+    }
     
     func reactorForNoti() -> NotificationViewReactor {
         NotificationViewReactor(dependencies: self.dependencies)

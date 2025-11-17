@@ -13,4 +13,5 @@ protocol AuthRemoteDataSource {
     
     func signUp(nickname: String, profileImageName: String?) -> Observable<Bool>
     func login() -> Observable<Bool>
+    func withdraw(reaseon: String) -> Observable<Int>
 }

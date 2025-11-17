@@ -24,6 +24,7 @@ class NotificationPlaceholderViewCell: UITableViewCell {
     
     private let placeholderImage = UIImageView().then {
         $0.image = .init(.image(.v2(.placeholder_notification)))
+        $0.contentMode = .scaleAspectFit
     }
     
     private let placeholderLabel = UILabel().then {

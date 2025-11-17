@@ -45,8 +45,7 @@ class UserUseCaseImpl: UserUseCase {
     func uploadImage(_ data: Data, with url: URL) -> Observable<Bool> {
         
         return self.repository.uploadImage(data, with: url)
-            .map { _ in true }
-            .catchAndReturn(false)
+            .map { (try? $0.get()) == 200 }
     }
     
     func updateImage(imageName: String) -> Observable<Bool> {
@@ -62,5 +61,50 @@ class UserUseCaseImpl: UserUseCase {
     func postingPermission() -> Observable<PostingPermission> {
         
         return self.repository.postingPermission().map { $0.postingPermission }
+    }
+    
+    func profile(userId: String?) -> Observable<ProfileInfo> {
+        
+        return self.repository.profile(userId: userId).map { $0.profileInfo }
+    }
+    
+    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Bool> {
+        
+        return self.repository.updateMyProfile(nickname: nickname, imageName: imageName).map { $0 == 200 }
+    }
+    
+    func feedCards(userId: String, lastId: String?) -> Observable<[ProfileCardInfo]> {
+        
+        return self.repository.feedCards(userId: userId, lastId: lastId).map { $0.cardInfos }
+    }
+    
+    func myCommentCards(lastId: String?) -> Observable<[ProfileCardInfo]> {
+        
+        return self.repository.myCommentCards(lastId: lastId).map { $0.cardInfos }
+    }
+    
+    func followers(userId: String, lastId: String?) -> Observable<[FollowInfo]> {
+        
+        return self.repository.followers(userId: userId, lastId: lastId).map { $0.followInfos }
+    }
+    
+    func followings(userId: String, lastId: String?) -> Observable<[FollowInfo]> {
+        
+        return self.repository.followings(userId: userId, lastId: lastId).map { $0.followInfos }
+    }
+    
+    func updateFollowing(userId: String, isFollow: Bool) -> Observable<Bool> {
+        
+        return self.repository.updateFollowing(userId: userId, isFollow: isFollow).map { $0 == 200 }
+    }
+    
+    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Bool> {
+        
+        return self.repository.updateBlocked(id: id, isBlocked: isBlocked).map { $0 == 200 }
+    }
+    
+    func updateNotify(isAllowNotify: Bool) -> Observable<Bool> {
+        
+        return self.repository.updateNotify(isAllowNotify: isAllowNotify).map { $0 == 200 }
     }
 }

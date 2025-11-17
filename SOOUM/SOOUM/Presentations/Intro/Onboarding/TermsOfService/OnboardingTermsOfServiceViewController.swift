@@ -82,6 +82,14 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
     }
     
     
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + next button height + padding
+        return 34 + 56 + 8
+    }
+    
+    
     // MARK: Override func
     
     override func setupNaviBar() {

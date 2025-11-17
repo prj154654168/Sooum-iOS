@@ -12,12 +12,7 @@ enum VersionRequest: BaseRequest {
     case version
     
     var path: String {
-        #if PRODUCTION
-        /// 구버전 업데이트를 위한 API
-        return "app/version/ios/v2"
-        #elseif DEVELOP
         return "/api/version/IOS"
-        #endif
     }
     
     var method: HTTPMethod {

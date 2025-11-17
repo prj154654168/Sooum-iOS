@@ -7,42 +7,101 @@
 
 import UIKit
 
-import Kingfisher
 import SnapKit
 import Then
+
+import Photos
+import SwiftEntryKit
 import YPImagePicker
 
 import ReactorKit
 import RxCocoa
+import RxGesture
 import RxSwift
-
 
 class UpdateProfileViewController: BaseNavigationViewController, View {
     
     enum Text {
-        static let navigationTitle: String = "프로필 수정"
-        static let textFieldPlaceholder: String = "8글자 이내 닉네임을 입력해주세요"
-        static let completeButtonTitle: String = "완료"
-    }
-    
-    private let updateProfileView = UpdateProfileView().then {
-        $0.placeholder = Text.textFieldPlaceholder
-    }
-    
-    private let completeButton = SOMButton().then {
-        $0.title = Text.completeButtonTitle
-        $0.typography = .som.body2WithBold
-        $0.foregroundColor = .som.white
+        static let navigationTitle: String = "프로필 편집"
+        static let guideMessage: String = "최대 8자까지 입력할 수 있어요"
+        static let saveButtonTitle: String = "저장"
         
-        $0.backgroundColor = .som.p300
-        $0.layer.cornerRadius = 12
+        static let cancelActionTitle: String = "취소"
+        static let settingActionTitle: String = "설정"
+        static let completeButtonTitle: String = "완료"
+        static let passButtonTitle: String = "건너뛰기"
+        
+        static let libraryDialogTitle: String = "앱 접근 권한 안내"
+        static let libraryDialogMessage: String = "사진첨부를 위해 접근 권한이 필요해요. [설정 > 앱 > 숨 > 사진]에서 사진 보관함 접근 권한을 허용해 주세요."
+        
+        static let inappositeDialogTitle: String = "부적절한 사진으로 보여져요"
+        static let inappositeDialogMessage: String = "다른 사진으로 변경하거나 기본 이미지를 사용해 주세요."
+        static let inappositeDialogConfirmButtonTitle: String = "확인"
+        
+        static let selectProfileEntryName: String = "SOMBottomFloatView"
+        
+        static let selectProfileFirstButtonTitle: String = "앨범에서 사진 선택"
+        static let selectProfileSecondButtonTitle: String = "사진 찍기"
+        static let selectProfileThirdButtonTitle: String = "기본 이미지 적용"
+        
+        static let selectPhotoFullScreenNextTitle: String = "다음"
+        static let selectPhotoFullScreenCancelTitle: String = "취소"
+        static let selectPhotoFullScreenSaveTitle: String = "저장"
+        static let selectPhotoFullScreenAlbumsTitle: String = "앨범"
+        static let selectPhotoFullScreenCameraTitle: String = "카메라"
+        static let selectPhotoFullScreenLibraryTitle: String = "갤러리"
+        static let selectPhotoFullScreenCropTitle: String = "자르기"
+    }
+    
+    
+    // MARK: Views
+    
+    private let profileImageView = UIImageView().then {
+        $0.image = .init(.image(.v2(.profile_large)))
+        $0.contentMode = .scaleAspectFill
+        $0.backgroundColor = .som.v2.gray300
+        $0.layer.cornerRadius = 120 * 0.5
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.som.v2.gray300.cgColor
+        $0.clipsToBounds = true
+    }
+    private let cameraButton = SOMButton().then {
+        $0.image = .init(.icon(.v2(.filled(.camera))))
+        $0.foregroundColor = .som.v2.gray400
+        
+        $0.backgroundColor = .som.v2.white
+        $0.layer.borderColor = UIColor.som.v2.gray200.cgColor
+        $0.layer.borderWidth = 1
+        $0.layer.cornerRadius = 32 * 0.5
+    }
+    
+    private let nicknameTextField = SOMNicknameTextField().then {
+        $0.guideMessage = Text.guideMessage
+    }
+    
+    private let saveButton = SOMButton().then {
+        $0.title = Text.saveButtonTitle
+        $0.typography = .som.v2.title1
+        $0.foregroundColor = .som.v2.white
+        
+        $0.backgroundColor = .som.v2.black
+        $0.layer.cornerRadius = 10
         $0.clipsToBounds = true
         
         $0.isEnabled = false
     }
     
-    override var navigationBarHeight: CGFloat {
-        46
+    
+    // MARK: Variables
+    
+    private var actions: [SOMBottomFloatView.FloatAction] = []
+    
+    
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + save button height + padding
+        return 34 + 56 + 8
     }
     
     
@@ -54,35 +113,48 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         self.navigationBar.title = Text.navigationTitle
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.updateProfileView.becomeFirstResponder()
-    }
-    
     override func setupConstraints() {
         super.setupConstraints()
         
-        self.view.addSubview(self.updateProfileView)
-        self.updateProfileView.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-            $0.leading.trailing.equalToSuperview()
+        self.view.addSubview(self.profileImageView)
+        self.profileImageView.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(24)
+            $0.centerX.equalToSuperview()
+            $0.size.equalTo(120)
+        }
+        self.view.addSubview(self.cameraButton)
+        self.cameraButton.snp.makeConstraints {
+            $0.bottom.equalTo(self.profileImageView.snp.bottom)
+            $0.trailing.equalTo(self.profileImageView.snp.trailing)
+            $0.size.equalTo(32)
         }
         
-        self.view.addSubview(self.completeButton)
-        self.completeButton.snp.makeConstraints {
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-12)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(48)
+        self.view.addSubview(self.nicknameTextField)
+        self.nicknameTextField.snp.makeConstraints {
+            $0.top.equalTo(self.profileImageView.snp.bottom).offset(40)
+            $0.horizontalEdges.equalToSuperview()
         }
+        
+        self.view.addSubview(self.saveButton)
+        self.saveButton.snp.makeConstraints {
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(56)
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
     }
     
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
         super.updatedKeyboard(withoutBottomSafeInset: height)
         
-        let margin: CGFloat = height + 24
-        self.completeButton.snp.updateConstraints {
+        let margin: CGFloat = height == 0 ? 0 : height + 12
+        self.saveButton.snp.updateConstraints {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-margin)
         }
     }
@@ -92,109 +164,258 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
     
     func bind(reactor: UpdateProfileViewReactor) {
         
-        KingfisherManager.shared.download(strUrl: reactor.profile.profileImg?.url) { [weak self] image in
-            self?.updateProfileView.image = image ?? .init(.image(.defaultStyle(.sooumLogo)))
-        }
-        self.updateProfileView.text = reactor.profile.nickname
-        
-        // Action
-        self.updateProfileView.changeProfileButton.rx.throttleTap(.seconds(3))
+        self.rx.viewDidLoad
             .subscribe(with: self) { object, _ in
-                object.showPicker(reactor)
+                
+                var actions: [SOMBottomFloatView.FloatAction] = [
+                    .init(
+                        title: Text.selectProfileFirstButtonTitle,
+                        action: { [weak object] in
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                object?.showPicker(for: .library)
+                            }
+                        }
+                    ),
+                    .init(
+                        title: Text.selectProfileSecondButtonTitle,
+                        action: { [weak object] in
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                object?.showPicker(for: .photo)
+                            }
+                        }
+                    )
+                ]
+                
+                if let profileImage = reactor.initialState.profileImage {
+                    
+                    object.profileImageView.image = profileImage
+                    
+                    actions.append(
+                        .init(
+                            title: Text.selectProfileThirdButtonTitle,
+                            action: {
+                                SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                    reactor.action.onNext(.setInitialImage)
+                                }
+                            }
+                        )
+                    )
+                }
+                
+                object.actions = actions
+                object.nicknameTextField.text = reactor.nickname
             }
             .disposed(by: self.disposeBag)
         
-        let nickname = self.updateProfileView.textField.rx.text.orEmpty.distinctUntilChanged()
+        // Action
+        Observable.merge(
+            self.profileImageView.rx.tapGesture().when(.ended).map { _ in },
+            self.cameraButton.rx.tap.asObservable()
+        )
+        .observe(on: MainScheduler.asyncInstance)
+        .subscribe(with: self) { object, _ in
+            
+            let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
+            if status == .authorized || status == .limited {
+                
+                let selectProfileBottomFloatView = SOMBottomFloatView(actions: object.actions)
+                
+                var wrapper: SwiftEntryKitViewWrapper = selectProfileBottomFloatView.sek
+                wrapper.entryName = Text.selectProfileEntryName
+                wrapper.showBottomFloat(screenInteraction: .dismiss)
+            } else {
+                
+                object.showLibraryPermissionDialog()
+            }
+        }
+        .disposed(by: self.disposeBag)
+        
+        let nickname = self.nicknameTextField.textField.rx.text.orEmpty.distinctUntilChanged().share()
         nickname
-            .debounce(.seconds(1), scheduler: MainScheduler.instance)
+            .skip(1)
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .map(Reactor.Action.checkValidate)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.completeButton.rx.throttleTap(.seconds(3))
+        self.saveButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(nickname)
             .map(Reactor.Action.updateProfile)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
-        
+
         // State
+        let profileImage = reactor.state.map(\.profileImage).distinctUntilChanged().share()
+        profileImage
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, profileImage in
+                object.profileImageView.image = profileImage ?? .init(.image(.v2(.profile_large)))
+                
+                var actions: [SOMBottomFloatView.FloatAction] = [
+                    .init(
+                        title: Text.selectProfileFirstButtonTitle,
+                        action: { [weak object] in
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                object?.showPicker(for: .library)
+                            }
+                        }
+                    ),
+                    .init(
+                        title: Text.selectProfileSecondButtonTitle,
+                        action: { [weak object] in
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                object?.showPicker(for: .photo)
+                            }
+                        }
+                    )
+                ]
+                
+                if profileImage != nil {
+                    actions.append(.init(
+                        title: Text.selectProfileThirdButtonTitle,
+                        action: {
+                            SwiftEntryKit.dismiss(.specific(entryName: Text.selectProfileEntryName)) {
+                                reactor.action.onNext(.setInitialImage)
+                            }
+                        }
+                    ))
+                }
+                
+                object.actions = actions
+            }
+            .disposed(by: self.disposeBag)
+
+        // State
+        reactor.state.map(\.isUpdatedSuccess)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                object.navigationPop(bottomBarHidden: false) {
+                    NotificationCenter.default.post(name: .reloadProfileData, object: nil, userInfo: nil)
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        Observable.combineLatest(
+            reactor.state.map(\.isValid).distinctUntilChanged(),
+            profileImage.startWith(reactor.initialState.profileImage),
+            resultSelector: { $0 || $1 != reactor.initialState.profileImage }
+        )
+            .observe(on: MainScheduler.asyncInstance)
+            .bind(to: self.saveButton.rx.isEnabled)
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.hasErrors)
+            .filterNil()
+            .filter { $0 }
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: { _ in
+                
+                let actions: [SOMDialogAction] = [
+                    .init(
+                        title: Text.inappositeDialogConfirmButtonTitle,
+                        style: .primary,
+                        action: {
+                            UIApplication.topViewController?.dismiss(animated: true) {
+                                reactor.action.onNext(.setDefaultImage)
+                            }
+                        }
+                    )
+                ]
+                
+                SOMDialogViewController.show(
+                    title: Text.inappositeDialogTitle,
+                    message: Text.inappositeDialogMessage,
+                    textAlignment: .left,
+                    actions: actions
+                )
+            })
+            .disposed(by: self.disposeBag)
+        
         reactor.state.map(\.errorMessage)
             .distinctUntilChanged()
-            .bind(to: self.updateProfileView.rx.errorMessage)
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.isValid)
-            .distinctUntilChanged()
-            .subscribe(with: self) { object, isValid in
-                object.completeButton.foregroundColor = isValid ? .som.white : .som.gray600
-                object.completeButton.backgroundColor = isValid ? .som.p300 : .som.gray300
-                object.completeButton.isEnabled = isValid
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, errorMessage in
+                object.nicknameTextField.guideMessage = errorMessage == nil ? Text.guideMessage : errorMessage
+                object.nicknameTextField.hasError = errorMessage != nil
             }
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.isSuccess)
-            .distinctUntilChanged()
-            .subscribe(with: self) { object, _ in
-                object.navigationPop()
-            }
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.isProcessing)
-            .distinctUntilChanged()
-            .bind(to: self.activityIndicatorView.rx.isAnimating)
             .disposed(by: self.disposeBag)
     }
 }
 
-extension UpdateProfileViewController {
+private extension UpdateProfileViewController {
     
-    private func showPicker(_ reactor: UpdateProfileViewReactor) {
+    func showLibraryPermissionDialog() {
+        
+        let cancelAction = SOMDialogAction(
+            title: Text.cancelActionTitle,
+            style: .gray,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        let settingAction = SOMDialogAction(
+            title: Text.settingActionTitle,
+            style: .primary,
+            action: {
+                let application = UIApplication.shared
+                let openSettingsURLString: String = UIApplication.openSettingsURLString
+                if let settingsURL = URL(string: openSettingsURLString),
+                   application.canOpenURL(settingsURL) {
+                    application.open(settingsURL)
+                }
+                
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.libraryDialogTitle,
+            message: Text.libraryDialogMessage,
+            actions: [cancelAction, settingAction]
+        )
+    }
+    
+    func showPicker(for screen: YPPickerScreen) {
         
         var config = YPImagePickerConfiguration()
+        
         config.library.options = nil
-        config.library.onlySquare = false
-        config.library.isSquareByDefault = true
         config.library.minWidthForItem = nil
-        config.library.mediaType = YPlibraryMediaType.photo
-        config.library.defaultMultipleSelection = false
-        config.library.maxNumberOfItems = 1
-        config.library.minNumberOfItems = 1
-        config.library.numberOfItemsInRow = 4
-        config.library.spacingBetweenItems = 1.0
-        config.showsCrop = .rectangle(ratio: 1)
+        config.showsCrop = .rectangle(ratio: 1.0)
         config.showsPhotoFilters = false
-        config.library.skipSelectionsGallery = false
         config.library.preselectedItems = nil
-        config.library.preSelectItemOnMultipleSelection = true
-        config.startOnScreen = .library
+        config.screens = [screen]
+        config.startOnScreen = screen
         config.shouldSaveNewPicturesToAlbum = false
         
-        config.wordings.next = "다음"
-        config.wordings.cancel = "취소"
-        config.wordings.save = "저장"
-        config.wordings.albumsTitle = "앨범"
-        config.wordings.cameraTitle = "카메라"
-        config.wordings.libraryTitle = "갤러리"
-        config.wordings.crop = "자르기"
+        config.wordings.next = Text.selectPhotoFullScreenNextTitle
+        config.wordings.cancel = Text.selectPhotoFullScreenCancelTitle
+        config.wordings.save = Text.selectPhotoFullScreenSaveTitle
+        config.wordings.albumsTitle = Text.selectPhotoFullScreenAlbumsTitle
+        config.wordings.cameraTitle = Text.selectPhotoFullScreenCameraTitle
+        config.wordings.libraryTitle = Text.selectPhotoFullScreenLibraryTitle
+        config.wordings.crop = Text.selectPhotoFullScreenCropTitle
         
         let picker = YPImagePicker(configuration: config)
-        picker.didFinishPicking { [weak self] items, cancelled in
-            
-            guard let self = self, let reactor = self.reactor else { return }
+        picker.didFinishPicking { [weak self, weak picker] items, cancelled in
             
             if cancelled {
-                Log.error("Picker was canceled")
-                picker.dismiss(animated: true, completion: nil)
+                Log.debug("Picker was canceled")
+                picker?.dismiss(animated: true, completion: nil)
                 return
             }
             
-            if let image = items.singlePhoto?.image {
-                self.updateProfileView.image = image
-                reactor.action.onNext(.updateImage(image))
+            if let image = items.singlePhoto?.image, let reactor = self?.reactor {
+                reactor.action.onNext(.uploadImage(image))
+            } else {
+                Log.error("Error occured while picking an image")
             }
-            picker.dismiss(animated: true, completion: nil)
+            picker?.dismiss(animated: true, completion: nil)
         }
         
-        self.present(picker, animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            self.present(picker, animated: true, completion: nil)
+        }
     }
 }

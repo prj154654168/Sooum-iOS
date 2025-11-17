@@ -14,5 +14,5 @@ protocol NotificationUseCase {
     func unreadNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]>
     func readNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]>
     func requestRead(notificationId: String) -> Observable<Bool>
-    func notices(lastId: String?, size: Int?) -> Observable<[NoticeInfo]>
+    func notices(lastId: String?, size: Int?, requestType: NotificationRequest.RequestType) -> Observable<[NoticeInfo]>
 }

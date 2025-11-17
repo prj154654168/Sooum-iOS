@@ -234,7 +234,7 @@ private extension HomeViewReactor {
     
     func unreadNotifications() -> Observable<Mutation> {
         
-        return self.notificationUseCase.notices(lastId: nil, size: 3)
+        return self.notificationUseCase.notices(lastId: nil, size: 3, requestType: .notification)
             .flatMapLatest { noticeInfos -> Observable<Mutation> in
                 
                 return .concat([

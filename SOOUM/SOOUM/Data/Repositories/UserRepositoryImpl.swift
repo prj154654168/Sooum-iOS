@@ -42,7 +42,7 @@ class UserRepositoryImpl: UserRepository {
         return self.remoteDataSource.presignedURL()
     }
     
-    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Void, Error>> {
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Int, Error>> {
         
         return self.remoteDataSource.uploadImage(data, with: url)
     }
@@ -60,5 +60,50 @@ class UserRepositoryImpl: UserRepository {
     func postingPermission() -> Observable<PostingPermissionResponse> {
         
         return self.remoteDataSource.postingPermission()
+    }
+    
+    func profile(userId: String?) -> Observable<ProfileInfoResponse> {
+        
+        return self.remoteDataSource.profile(userId: userId)
+    }
+    
+    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateMyProfile(nickname: nickname, imageName: imageName)
+    }
+    
+    func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        return self.remoteDataSource.feedCards(userId: userId, lastId: lastId)
+    }
+    
+    func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        return self.remoteDataSource.myCommentCards(lastId: lastId)
+    }
+    
+    func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse> {
+        
+        return self.remoteDataSource.followers(userId: userId, lastId: lastId)
+    }
+    
+    func followings(userId: String, lastId: String?) -> Observable<FollowInfoResponse> {
+        
+        return self.remoteDataSource.followings(userId: userId, lastId: lastId)
+    }
+    
+    func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateFollowing(userId: userId, isFollow: isFollow)
+    }
+    
+    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateBlocked(id: id, isBlocked: isBlocked)
+    }
+    
+    func updateNotify(isAllowNotify: Bool) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateNotify(isAllowNotify: isAllowNotify)
     }
 }

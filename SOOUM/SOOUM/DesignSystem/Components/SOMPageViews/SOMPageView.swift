@@ -45,6 +45,17 @@ class SOMPageView: UICollectionViewCell {
     }
     
     
+    // MARK: Override func
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.iconView.image = nil
+        self.titleLabel.text = nil
+        self.messageLabel.text = nil
+    }
+    
+    
     // MARK: Private func
     
     private func setupConstraints() {

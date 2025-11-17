@@ -26,4 +26,11 @@ class AuthRemoteDataSourceImpl: AuthRemoteDataSource {
         
         return self.provider.authManager.certification()
     }
+    
+    func withdraw(reaseon: String) -> Observable<Int> {
+        
+        let token = self.provider.authManager.authInfo.token
+        let request: AuthRequest = .withdraw(token: token, reason: reaseon)
+        return self.provider.networkManager.perform(request)
+    }
 }

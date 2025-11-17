@@ -14,14 +14,16 @@ class MemberInfoView: UIView {
     
     enum Text {
         static let visitedPrefix: String = "조회 "
+        static let deletedUserNickname: String = "알 수 없는 사용자"
     }
     
     
     // MARK: Views
     
     /// 상세보기, 멤버 이미지
-    // let memberBackgroundButton = UIButton()
+    let memberBackgroundButton = UIButton()
     private let memberImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
         $0.backgroundColor = .som.v2.gray300
         $0.layer.borderColor = UIColor.som.v2.gray300.cgColor
         $0.layer.borderWidth = 1
@@ -160,9 +162,18 @@ class MemberInfoView: UIView {
             $0.leading.greaterThanOrEqualTo(container.snp.trailing).offset(10)
             $0.trailing.equalToSuperview().offset(-20)
         }
+        
+        self.addSubview(self.memberBackgroundButton)
+        self.memberBackgroundButton.snp.makeConstraints {
+            $0.verticalEdges.equalTo(container.snp.verticalEdges)
+            $0.leading.equalTo(container.snp.leading)
+            $0.trailing.equalTo(self.memberLabel.snp.trailing)
+        }
     }
     
     func updateViewsWhenDeleted() {
+        self.memberImageView.image = .init(.image(.v2(.profile_small)))
+        self.memberLabel.text = Text.deletedUserNickname
         self.distanceBackgroundView.removeFromSuperview()
         self.timeGapLabel.removeFromSuperview()
     }

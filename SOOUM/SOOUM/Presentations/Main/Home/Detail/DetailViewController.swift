@@ -30,6 +30,8 @@ class DetailViewController: BaseNavigationViewController, View {
          static let deletePungDialogTitle: String = "시간 제한 카드를 삭제할까요?"
          static let deletePungDialogMessage: String = "카드를 삭제하면,\n답카드가 자동으로 삭제되지 않아요"
          
+         static let deletedCardDialogTitle: String = "삭제된 카드예요"
+         
          static let bottomFloatEntryName: String = "bottomFloatEntryName"
          static let bottomToastEntryName: String = "bottomToastEntryName"
          
@@ -44,6 +46,7 @@ class DetailViewController: BaseNavigationViewController, View {
          static let blockDialogTitle: String = "차단하시겠어요?"
          static let blockDialogMessage: String = "의 모든 카드를 볼 수 없어요."
          
+         static let confirmActionTitle: String = "확인"
          static let cancelActionTitle: String = "취소"
      }
     
@@ -115,7 +118,15 @@ class DetailViewController: BaseNavigationViewController, View {
     private var shouldRefreshing: Bool = false
     
     private var actions: [SOMBottomFloatView.FloatAction] = []
-     
+    
+    
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + floating button height + padding
+        return 34 + 56 + 8
+    }
+    
      
      // MARK: Override func
     
@@ -271,14 +282,14 @@ class DetailViewController: BaseNavigationViewController, View {
          // 카드 삭제 후 X 버튼 액션
          self.rightDeleteButton.rx.throttleTap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: HomeViewController.self, animated: false)
+                 object.navigationPop(to: HomeViewController.self, animated: false, bottomBarHidden: false)
              }
              .disposed(by: self.disposeBag)
          
          // 답카드 홈 버튼 액션
          self.leftHomeButton.rx.throttleTap
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: HomeViewController.self, animated: false)
+                 object.navigationPop(to: HomeViewController.self, animated: false, bottomBarHidden: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -399,31 +410,10 @@ class DetailViewController: BaseNavigationViewController, View {
                  UIView.performWithoutAnimation {
                      object.collectionView.reloadData()
                  }
+                 
+                 object.showDeletedCardDialog()
              }
              .disposed(by: self.disposeBag)
-         
-         // reactor.state.map(\.hasErrors)
-         //     .filterNil()
-         //     .distinctUntilChanged()
-         //     .subscribe(with: self) { object, hasErrors in
-         //
-         //         switch reactor.entranceType {
-         //         case .navi:
-         //             object.isDeleted = true
-         //
-         //             UIView.performWithoutAnimation {
-         //                 object.collectionView.reloadData()
-         //             }
-         //         case .push:
-         //             return
-         //             let notificationTabBarController = NotificationTabBarController()
-         //             notificationTabBarController.reactor = reactor.reactorForNoti()
-         //
-         //             object.navigationPush(notificationTabBarController, animated: false)
-         //             object.navigationController?.viewControllers.removeAll(where: { $0.isKind(of: DetailViewController.self) })
-         //         }
-         //     }
-         //     .disposed(by: self.disposeBag)
      }
     
     
@@ -469,6 +459,27 @@ extension DetailViewController: UICollectionViewDataSource {
         
         guard let reactor = self.reactor else { return cell }
         
+        cell.memberInfoView.memberBackgroundButton.rx.throttleTap(.seconds(3))
+            .subscribe(with: self) { object, _ in
+                /// 내 프로필일 경우 탭 이동
+                if object.detailCard.isOwnCard {
+                    guard let navigationController = object.navigationController,
+                        let tabBarController = navigationController.parent as? SOMTabBarController
+                    else { return }
+                    
+                    tabBarController.didSelectedIndex(3)
+                    navigationController.viewControllers.removeAll(where: { $0.isKind(of: HomeViewController.self) == false })
+                } else {
+                    let profileViewController = ProfileViewController()
+                    profileViewController.reactor = reactor.reactorForProfile(
+                        type: .other,
+                        object.detailCard.memberId
+                    )
+                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                }
+            }
+            .disposed(by: cell.disposeBag)
+        
         cell.likeAndCommentView.likeBackgroundButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(reactor.state.compactMap(\.detailCard).map(\.isLike))
             .subscribe(onNext: { isLike in
@@ -501,24 +512,6 @@ extension DetailViewController: UICollectionViewDataSource {
                 }
             }
             .disposed(by: cell.disposeBag)
-        
-        // cell.memberBackgroundButton.rx.tap
-        //     .subscribe(with: self) { object, _ in
-        //         if object.detailCard.isOwnCard {
-        //
-        //             let memberId = object.detailCard.member.id
-        //             let profileViewController = ProfileViewController()
-        //             profileViewController.reactor = object.reactor?.reactorForProfile(type: .myWithNavi, memberId)
-        //             object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
-        //         } else {
-        //
-        //             let memberId = object.detailCard.member.id
-        //             let profileViewController = ProfileViewController()
-        //             profileViewController.reactor = object.reactor?.reactorForProfile(type: .other, memberId)
-        //             object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
-        //         }
-        //     }
-        //     .disposed(by: cell.disposeBag)
         
         return cell
     }
@@ -606,7 +599,7 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
             
             let pulledOffset = self.initialOffset - offset
             let refreshingOffset = refreshControl.frame.origin.y + refreshControl.frame.height
-            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset + 10
         }
         
         self.currentOffset = offset
@@ -686,6 +679,24 @@ private extension DetailViewController {
             textAlignment: .left,
             actions: [cancelAction, deleteAction]
          )
+    }
+    
+    func showDeletedCardDialog() {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.deletedCardDialogTitle,
+            messageView: nil,
+            textAlignment: .left,
+            actions: [confirmAction]
+        )
     }
 }
 

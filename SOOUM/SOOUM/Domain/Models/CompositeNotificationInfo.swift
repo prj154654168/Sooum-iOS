@@ -12,6 +12,7 @@ enum CompositeNotificationInfo: Hashable, Equatable {
     case follow(FollowNotificationInfoResponse)
     case deleted(DeletedNotificationInfoResponse)
     case blocked(BlockedNotificationInfoResponse)
+    case tag(TagNofificationInfoResponse)
 }
 
 extension CompositeNotificationInfo: Decodable {
@@ -34,10 +35,13 @@ extension CompositeNotificationInfo: Decodable {
         case .blocked:
             let notification = try BlockedNotificationInfoResponse(from: decoder)
             self = .blocked(notification)
+        case .tagUsage:
+            let notification = try TagNofificationInfoResponse(from: decoder)
+            self = .tag(notification)
         case .feedLike, .commentLike, .commentWrite:
             let notification = try NotificationInfoResponse(from: decoder)
             self = .default(notification)
-        // TODO: TRANSFER_SUCCESS, TAG_USAGE 는 아직 정해지지 않음
+        // TODO: TRANSFER_SUCCESS 는 아직 정해지지 않음
         default:
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(

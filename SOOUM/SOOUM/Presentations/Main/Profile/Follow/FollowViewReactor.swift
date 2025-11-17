@@ -9,230 +9,174 @@ import ReactorKit
 
 import Alamofire
 
-
 class FollowViewReactor: Reactor {
     
-    enum EntranceType {
-        case following
-        case follower
-    }
-    
-    enum ViewType {
-        case my
-        case other
+    struct DisplayStates {
+        let followType: EntranceType
+        let followers: [FollowInfo]
+        let followings: [FollowInfo]
     }
     
     enum Action: Equatable {
         case landing
         case refresh
-        case moreFind(lastId: String)
-        case request(String)
-        case cancel(String)
+        case moreFind(type: EntranceType, lastId: String)
+        case updateFollowType(EntranceType)
+        case updateFollow(String, Bool)
     }
     
     enum Mutation {
-        case follows([Follow])
-        case more([Follow])
-        case updateIsRequest(Bool)
-        case updateIsCancel(Bool)
-        case updateIsProcessing(Bool)
-        case updateIsLoading(Bool)
+        case followers([FollowInfo])
+        case followings([FollowInfo])
+        case moreFollowers([FollowInfo])
+        case moreFollowings([FollowInfo])
+        case updateFollowType(EntranceType)
+        case updateIsUpdated(Bool?)
+        case updateIsRefreshing(Bool)
     }
     
     struct State {
-        var follows: [Follow]
-        var isRequest: Bool
-        var isCancel: Bool
-        var isProcessing: Bool
-        var isLoading: Bool
+        fileprivate(set) var followers: [FollowInfo]
+        fileprivate(set) var followings: [FollowInfo]
+        fileprivate(set) var followType: EntranceType
+        @Pulse fileprivate(set) var isUpdated: Bool?
+        fileprivate(set) var isRefreshing: Bool
     }
     
     var initialState: State = .init(
-        follows: [],
-        isRequest: false,
-        isCancel: false,
-        isProcessing: false,
-        isLoading: false
+        followers: [],
+        followings: [],
+        followType: .follower,
+        isUpdated: nil,
+        isRefreshing: false
     )
     
-    let provider: ManagerProviderType
+    private let dependencies: AppDIContainerable
+    private let userUseCase: UserUseCase
+    
     let entranceType: EntranceType
     let viewType: ViewType
-    let memberId: String?
+    let nickname: String
+    private let userId: String
     
     init(
-        provider: ManagerProviderType,
+        dependencies: AppDIContainerable,
         type entranceType: EntranceType,
         view viewType: ViewType,
-        memberId: String? = nil
+        nickname: String,
+        with userId: String
     ) {
-        self.provider = provider
+        self.dependencies = dependencies
+        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
         self.entranceType = entranceType
         self.viewType = viewType
-        self.memberId = memberId
+        self.nickname = nickname
+        self.userId = userId
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
-            return .concat([
-                .just(.updateIsProcessing(true)),
-                self.refresh()
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                .just(.updateIsProcessing(false))
-            ])
+            
+            return self.refresh()
         case .refresh:
+            
+            let emit = self.currentState.followType == .follower ?
+                self.userUseCase.followers(userId: self.userId, lastId: nil)
+                    .map(Mutation.followers)
+                    .catch { _ in
+                        return .concat([
+                            .just(.updateIsRefreshing(false)),
+                            .just(.followers([]))
+                        ])
+                    } :
+                self.userUseCase.followings(userId: self.userId, lastId: nil)
+                    .map(Mutation.followings)
+                    .catch { _ in
+                        return .concat([
+                            .just(.updateIsRefreshing(false)),
+                            .just(.followings([]))
+                        ])
+                    }
+
             return .concat([
-                .just(.updateIsLoading(true)),
-                self.refresh()
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                .just(.updateIsLoading(false))
+                .just(.updateIsRefreshing(true)),
+                emit,
+                .just(.updateIsRefreshing(false))
             ])
-        case let .moreFind(lastId):
+        case let .moreFind(type, lastId):
+            
+            let emit = type == .follower ?
+                self.userUseCase.followers(userId: self.userId, lastId: lastId)
+                    .map(Mutation.moreFollowers) :
+                self.userUseCase.followings(userId: self.userId, lastId: lastId)
+                    .map(Mutation.moreFollowings)
+            
+            return emit
+        case let .updateFollowType(followType):
+            
+            return .just(.updateFollowType(followType))
+        case let .updateFollow(userId, isFollow):
+            
             return .concat([
-                .just(.updateIsProcessing(true)),
-                self.more(lastId: lastId)
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance),
-                .just(.updateIsProcessing(false))
+                .just(.updateIsUpdated(nil)),
+                self.userUseCase.updateFollowing(userId: userId, isFollow: isFollow)
+                    .map(Mutation.updateIsUpdated)
             ])
-        case let .request(memberId):
-            let request: ProfileRequest = .requestFollow(memberId: memberId)
-            
-            return self.provider.networkManager.request(Empty.self, request: request)
-                .flatMapLatest { _ -> Observable<Mutation> in
-                    return .just(.updateIsRequest(true))
-                }
-            
-        case let .cancel(memberId):
-            let request: ProfileRequest = .cancelFollow(memberId: memberId)
-            
-            return self.provider.networkManager.request(Empty.self, request: request)
-                .flatMapLatest { _ -> Observable<Mutation> in
-                    return .just(.updateIsCancel(true))
-                }
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        var state: State = state
+        var newState: State = state
         switch mutation {
-        case let .follows(follows):
-            state.follows = follows
-            state.isRequest = false
-            state.isCancel = false
-        case let .more(follows):
-            state.follows += follows
-            state.isRequest = false
-            state.isCancel = false
-        case let .updateIsRequest(isRequest):
-            state.isRequest = isRequest
-        case let .updateIsCancel(isCancel):
-            state.isCancel = isCancel
-        case let .updateIsProcessing(isProcessing):
-            state.isProcessing = isProcessing
-        case let .updateIsLoading(isLoading):
-            state.isLoading = isLoading
+        case let .followers(followers):
+            newState.followers = followers
+        case let .followings(followings):
+            newState.followings = followings
+        case let .moreFollowers(followers):
+            newState.followers += followers
+        case let .moreFollowings(followings):
+            newState.followings += followings
+        case let .updateFollowType(followType):
+            newState.followType = followType
+        case let .updateIsUpdated(isUpdated):
+            newState.isUpdated = isUpdated
+        case let .updateIsRefreshing(isRefreshing):
+            newState.isRefreshing = isRefreshing
         }
-        return state
+        return newState
+    }
+}
+
+private extension FollowViewReactor {
+    
+    func refresh() -> Observable<Mutation> {
+        
+        return .concat([
+            self.userUseCase.followers(userId: self.userId, lastId: nil)
+                .map(Mutation.followers),
+            self.userUseCase.followings(userId: self.userId, lastId: nil)
+                .map(Mutation.followings)
+        ])
     }
 }
 
 extension FollowViewReactor {
     
-    private func refresh() -> Observable<Mutation> {
-        
-        var request: ProfileRequest {
-            switch self.entranceType {
-            case .following:
-                switch self.viewType {
-                case .my:
-                    return .myFollowing(lastId: nil)
-                case .other:
-                    return .otherFollowing(memberId: self.memberId ?? "", lastId: nil)
-                }
-            case .follower:
-                switch self.viewType {
-                case .my:
-                    return .myFollower(lastId: nil)
-                case .other:
-                    return .otherFollower(memberId: self.memberId ?? "", lastId: nil)
-                }
-            }
-        }
-        
-        switch self.entranceType {
-        case .following:
-            return self.provider.networkManager.request(FollowingResponse.self, request: request)
-                .flatMapLatest { response -> Observable<Mutation> in
-                    return .just(.follows(response.embedded.followings))
-                }
-                .catch(self.catchClosure)
-        case .follower:
-            return self.provider.networkManager.request(FollowerResponse.self, request: request)
-                .flatMapLatest { response -> Observable<Mutation> in
-                    return .just(.follows(response.embedded.followers))
-                }
-                .catch(self.catchClosure)
-        }
-    }
-    
-    private func more(lastId: String) -> Observable<Mutation> {
-        
-        var request: ProfileRequest {
-            switch self.entranceType {
-            case .following:
-                switch self.viewType {
-                case .my:
-                    return .myFollowing(lastId: lastId)
-                case .other:
-                    return .otherFollowing(memberId: self.memberId ?? "", lastId: lastId)
-                }
-            case .follower:
-                switch self.viewType {
-                case .my:
-                    return .myFollower(lastId: lastId)
-                case .other:
-                    return .otherFollower(memberId: self.memberId ?? "", lastId: lastId)
-                }
-            }
-        }
-        
-        switch self.entranceType {
-        case .following:
-            return self.provider.networkManager.request(FollowingResponse.self, request: request)
-                .flatMapLatest { response -> Observable<Mutation> in
-                    return .just(.more(response.embedded.followings))
-                }
-                .catch(self.catchClosure)
-        case .follower:
-            return self.provider.networkManager.request(FollowerResponse.self, request: request)
-                .flatMapLatest { response -> Observable<Mutation> in
-                    return .just(.more(response.embedded.followers))
-                }
-                .catch(self.catchClosure)
-        }
+    func reactorForProfile( _ userId: String) -> ProfileViewReactor {
+        ProfileViewReactor(dependencies: self.dependencies, type: .other, with: userId)
     }
 }
 
 extension FollowViewReactor {
     
-    func reactorForProfile(type: ProfileViewReactor.EntranceType, _ memberId: String) -> ProfileViewReactor {
-        ProfileViewReactor(provider: self.provider, type: type, memberId: memberId)
+    enum EntranceType {
+        case follower
+        case following
     }
     
-    // func reactorForMainTabBar() -> MainTabBarReactor {
-    //     MainTabBarReactor(provider: self.provider)
-    // }
-}
-
-extension FollowViewReactor {
-    
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { _ in
-            .concat([
-                .just(.updateIsProcessing(false)),
-                .just(.updateIsLoading(false))
-            ])
-        }
+    enum ViewType {
+        case my
+        case other
     }
 }

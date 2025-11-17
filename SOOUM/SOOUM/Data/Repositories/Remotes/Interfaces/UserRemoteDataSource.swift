@@ -16,8 +16,17 @@ protocol UserRemoteDataSource {
     func validateNickname(nickname: String) -> Observable<NicknameValidateResponse>
     func updateNickname(nickname: String) -> Observable<Int>
     func presignedURL() -> Observable<ImageUrlInfoResponse>
-    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Void, Error>>
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Int, Error>>
     func updateImage(imageName: String) -> Observable<Int>
     func updateFCMToken(fcmToken: String) -> Observable<Int>
     func postingPermission() -> Observable<PostingPermissionResponse>
+    func profile(userId: String?) -> Observable<ProfileInfoResponse>
+    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int>
+    func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse>
+    func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse>
+    func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
+    func followings(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
+    func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int>
+    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int>
+    func updateNotify(isAllowNotify: Bool) -> Observable<Int>
 }

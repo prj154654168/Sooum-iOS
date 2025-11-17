@@ -60,6 +60,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
     
     private let profileImageView = UIImageView().then {
         $0.image = .init(.image(.v2(.profile_large)))
+        $0.contentMode = .scaleAspectFill
         $0.backgroundColor = .som.v2.gray300
         $0.layer.cornerRadius = 120 * 0.5
         $0.layer.borderWidth = 1
@@ -95,6 +96,14 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
     
     private var actions: [SOMBottomFloatView.FloatAction] = []
     
+    
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + next button height + padding
+        return 34 + 56 + 8
+    }
+
     
     // MARK: Override func
     
@@ -208,7 +217,9 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
                         title: Text.inappositeDialogConfirmButtonTitle,
                         style: .primary,
                         action: {
-                            UIApplication.topViewController?.dismiss(animated: true)
+                            UIApplication.topViewController?.dismiss(animated: true) {
+                                reactor.action.onNext(.setDefaultImage)
+                            }
                         }
                     )
                 ]

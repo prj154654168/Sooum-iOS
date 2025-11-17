@@ -10,20 +10,25 @@ import UIKit
 import SnapKit
 import Then
 
-
 class TermsOfServiceTextCellView: UIView {
     
+    
+    // MARK: Views
+    
     private let titleLabel = UILabel().then {
-        $0.textColor = .som.gray500
-        $0.typography = .som.body2WithBold
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.body1
     }
     
     private let arrowImageView = UIImageView().then {
-        $0.image = .init(.icon(.outlined(.next)))
-        $0.tintColor = .som.gray400
+        $0.image = .init(.icon(.v2(.outlined(.right))))
+        $0.tintColor = .som.v2.gray300
     }
     
     let backgroundButton = UIButton()
+    
+    
+    // MARK: Initialize
     
     convenience init(title: String) {
         self.init(frame: .zero)
@@ -41,24 +46,27 @@ class TermsOfServiceTextCellView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: Private func
+    
     private func setupConstraints() {
         
         self.snp.makeConstraints {
             $0.width.equalTo(UIScreen.main.bounds.width)
-            $0.height.equalTo(46)
+            $0.height.equalTo(48)
         }
         
         self.addSubview(self.titleLabel)
         self.titleLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
+            $0.leading.equalToSuperview().offset(16)
         }
         
         self.addSubview(self.arrowImageView)
         self.arrowImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.size.equalTo(24)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.size.equalTo(16)
         }
         
         self.addSubview(self.backgroundButton)

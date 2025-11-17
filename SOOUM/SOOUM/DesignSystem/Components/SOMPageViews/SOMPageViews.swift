@@ -98,6 +98,9 @@ class SOMPageViews: UIView {
     
     private(set) var models: [SOMPageModel] = []
     
+    private var scrollTimer: Timer?
+    private var hasLayoutsubviews: Bool = false
+    
     weak var delegate: SOMPageViewsDelegate?
     
     
@@ -112,6 +115,10 @@ class SOMPageViews: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        self.stopAutoScroll()
+    }
+    
     
     // MARK: Override func
     
@@ -124,6 +131,20 @@ class SOMPageViews: UIView {
             blur: 16,
             offset: .init(width: 0, height: 6)
         )
+        
+        self.hasLayoutsubviews = true
+    }
+    
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        /// 화면에서 사라졌을 때, 타이머 중지
+        if self.window == nil {
+            self.stopAutoScroll()
+        }
+        
+        if self.window != nil, self.hasLayoutsubviews {
+            self.startAutoScroll()
+        }
     }
     
     
@@ -151,6 +172,27 @@ class SOMPageViews: UIView {
         }
     }
     
+    func startAutoScroll() {
+        
+        guard self.models.count > 1 else { return }
+        
+        self.stopAutoScroll()
+        
+        self.scrollTimer = Timer.scheduledTimer(
+            timeInterval: 5.0,
+            target: self,
+            selector: #selector(self.handelAutoScroll),
+            userInfo: nil,
+            repeats: true
+        )
+    }
+    
+    func stopAutoScroll() {
+        
+        self.scrollTimer?.invalidate()
+        self.scrollTimer = nil
+    }
+    
     
     // MARK: Public func
     
@@ -168,6 +210,8 @@ class SOMPageViews: UIView {
                 $0.height.equalTo(4)
             }
         }
+        
+        self.stopAutoScroll()
         
         self.models = models
         
@@ -199,7 +243,31 @@ class SOMPageViews: UIView {
                     animated: false
                 )
             }
+            
+            self?.startAutoScroll()
         }
+    }
+    
+    
+    // MARK: Objc func
+    
+    @objc
+    private func handelAutoScroll() {
+        
+        let cellWidth = self.collectionView.bounds.width
+        let currentIndex = Int(round( self.collectionView.contentOffset.x / cellWidth))
+        
+        // 다음 인덱스 (무한 스크롤 배열을 기준으로)
+        let nextIndex = currentIndex + 1
+        
+        let nextIndexPath = IndexPath(item: nextIndex, section: Section.main.rawValue)
+        
+        // 애니메이션과 함께 다음 아이템으로 스크롤
+        self.collectionView.scrollToItem(
+            at: nextIndexPath,
+            at: .centeredHorizontally,
+            animated: true
+        )
     }
 }
 
@@ -230,8 +298,19 @@ extension SOMPageViews: UICollectionViewDelegateFlowLayout {
     
     
     // MARK: UIScrollViewDelegate
-    
+    /// 사용자 인터랙션 시 타이머 중지
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        self.stopAutoScroll()
+    }
+    /// 사용자 인터랙션이 끝났을 때, 타이머 재시작
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        
+        self.infiniteScroll(scrollView)
+        self.startAutoScroll()
+    }
+    /// 자동 스크롤이 끝났을 때, 무한 스크롤 로직 수행
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         
         self.infiniteScroll(scrollView)
     }

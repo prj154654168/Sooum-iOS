@@ -21,9 +21,4 @@ class AppVersionRepositoryImpl: AppVersionRepository {
         
         return self.remoteDataSource.version()
     }
-    
-    func oldVersion() -> Observable<String> {
-        
-        return self.remoteDataSource.oldVersion()
-    }
 }

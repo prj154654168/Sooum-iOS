@@ -10,7 +10,6 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-
 extension Reactive where Base: EnterMemberTransferTextFieldView {
     
     var text: ControlProperty<String?> {

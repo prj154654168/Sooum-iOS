@@ -21,9 +21,4 @@ class AppVersionRemoteDataSourceImpl: AppVersionRemoteDataSource {
         
         return self.provider.networkManager.updateCheck()
     }
-    
-    func oldVersion() -> Observable<String> {
-        
-        return self.provider.networkManager.fetch(String.self, request: VersionRequest.version)
-    }
 }

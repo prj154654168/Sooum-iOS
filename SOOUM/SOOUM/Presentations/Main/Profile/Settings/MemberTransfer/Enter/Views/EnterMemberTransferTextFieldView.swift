@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 import Then
 
-
 class EnterMemberTransferTextFieldView: UIView {
     
     
@@ -81,15 +80,6 @@ class EnterMemberTransferTextFieldView: UIView {
         
         get {
             return self.textField.attributedPlaceholder?.string
-        }
-    }
-    
-    var guideMessage: String? {
-        set {
-            self.guideMessageLabel.text = newValue
-        }
-        get {
-            return self.guideMessageLabel.text
         }
     }
     

@@ -8,7 +8,6 @@
 import RxCocoa
 import RxSwift
 
-
 extension Reactive where Base: SettingTextCellView {
     
     var isOn: ControlProperty<Bool> {

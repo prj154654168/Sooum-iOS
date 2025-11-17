@@ -20,7 +20,7 @@ class SOMDialogAction {
             case .primary:
                 return .som.v2.black
             case .red:
-                return .som.v2.rDark
+                return .som.v2.rMain
             case .gray:
                 return .som.v2.gray100
             }

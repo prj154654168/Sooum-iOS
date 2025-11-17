@@ -10,6 +10,11 @@ import Alamofire
 
 enum NotificationRequest: BaseRequest {
     
+    enum RequestType: String {
+        case notification = "NOTIFICATION"
+        case settings = "SETTINGS"
+    }
+    
     /// 읽지 않은 알림 전체 조회
     case unreadNotifications(lastId: String?)
     /// 읽은 알림 전체 조회
@@ -17,7 +22,7 @@ enum NotificationRequest: BaseRequest {
     /// 알림 읽음 요청
     case requestRead(notificationId: String)
     /// 공지 조회
-    case notices(lastId: String?, size: Int?)
+    case notices(lastId: String?, size: Int?, requestType: RequestType)
     
     var path: String {
         switch self {
@@ -38,7 +43,7 @@ enum NotificationRequest: BaseRequest {
         case let .requestRead(notificationId):
             return "/api/notifications/\(notificationId)/read"
             
-        case let .notices(lastId, _):
+        case let .notices(lastId, _, _):
             if let lastId = lastId {
                 return "/api/notices/\(lastId)"
             } else {
@@ -58,11 +63,14 @@ enum NotificationRequest: BaseRequest {
     
     var parameters: Parameters {
         switch self {
-        case let .notices(_, size):
+        case let .notices(_, size, requestType):
             if let size = size {
-                return ["pageSize": size]
+                return [
+                    "pageSize": size,
+                    "source": requestType.rawValue
+                ]
             } else {
-                return [:]
+                return ["source": requestType.rawValue]
             }
         default:
             return [:]

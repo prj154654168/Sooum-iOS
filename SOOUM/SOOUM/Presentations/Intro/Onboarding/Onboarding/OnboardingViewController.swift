@@ -82,6 +82,14 @@ class OnboardingViewController: BaseNavigationViewController, View {
     }
     
     
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + old button height + start button height + padding
+        return 34 + 6 + 21 + 6 + 8 + 56 + 8
+    }
+    
+    
     // MARK: Override func
     
     override func viewDidLoad() {
@@ -165,7 +173,8 @@ class OnboardingViewController: BaseNavigationViewController, View {
         
         startButtonTapped
             .withLatestFrom(checkAvailable)
-            .filter { $0 == nil }
+            .filterNil()
+            .filter { $0.banned == false }
             .subscribe(with: self) { object, _ in
                 let termsOfServiceViewController = OnboardingTermsOfServiceViewController()
                 termsOfServiceViewController.reactor = reactor.reactorForTermsOfService()
@@ -176,6 +185,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
         startButtonTapped
             .withLatestFrom(checkAvailable)
             .filterNil()
+            .filter { $0.banned == true && $0.rejoinAvailableAt != nil }
             .subscribe(with: self) { object, checkAvailable in
                 
                 if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
@@ -196,6 +206,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
         checkAvailable
             .filterNil()
             .take(1)
+            .filter { $0.banned == true && $0.rejoinAvailableAt != nil }
             .subscribe(with: self) { object, checkAvailable in
                 
                 if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {

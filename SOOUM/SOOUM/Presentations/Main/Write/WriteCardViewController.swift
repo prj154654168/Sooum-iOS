@@ -40,6 +40,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let inappositeDialogTitle: String = "부적절한 사진으로 보여져요"
         static let inappositeDialogMessage: String = "다른 사진으로 변경하거나 기본 이미지를 사용해 주세요."
         
+        static let banUserDialogTitle: String = "이용 제한 안내"
+        static let banUserDialogFirstLeadingMessage: String = "신고된 카드로 인해 "
+        static let banUserDialogFirstTrailingMessage: String = " 카드 추가가 제한됩니다."
+        static let banUserDialogSecondLeadingMessage: String = " 카드 추가는 "
+        static let banUserDialogSecondTrailingMessage: String = "부터 가능합니다."
+        
         static let cancelActionTitle: String = "취소"
         static let settingActionTitle: String = "설정"
         static let confirmActionTitle: String = "확인"
@@ -115,6 +121,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
     // MARK: Constraint
     
     private var relatedTagsViewBottomConstraint: Constraint?
+    
+    
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + padding
+        return 34 + 8
+    }
     
     
     // MARK: Override func
@@ -246,7 +260,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         let writeCardtext = self.writeCardView.writeCardTextView.rx.text.orEmpty.distinctUntilChanged().share()
         let selectedImageInfo = self.selectImageView.selectedImageInfo.share()
         writeCardtext
-            .map { $0.isEmpty == false }
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false }
             .withLatestFrom(selectedImageInfo, resultSelector: { $0 && $1 != nil })
             .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.writeButton.rx.isEnabled)
@@ -478,10 +492,21 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, hasErrors in
-                if hasErrors == 422 {
-                    
+                if case 422 = hasErrors {
                     object.showInappositeDialog()
                 }
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.couldPosting)
+            .filterNil()
+            .filter { $0.isBaned }
+            .subscribe(with: self) { object, postingPermission in
+                
+                let banEndGapToDays = postingPermission.expiredAt?.infoReadableTimeTakenFromThisForBanEndPosting(to: Date().toKorea())
+                let banEndToString = postingPermission.expiredAt?.banEndDetailFormatted
+                
+                object.showWriteCardPermissionDialog(gapDays: banEndGapToDays ?? "", banEndFormatted: banEndToString ?? "")
             }
             .disposed(by: self.disposeBag)
         
@@ -606,6 +631,33 @@ extension WriteCardViewController {
             message: Text.inappositeDialogMessage,
             textAlignment: .left,
             actions: actions
+        )
+    }
+    
+    func showWriteCardPermissionDialog(gapDays: String, banEndFormatted: String) {
+        
+        let dialogFirstMessage = Text.banUserDialogFirstLeadingMessage +
+            gapDays +
+            Text.banUserDialogFirstTrailingMessage
+        let dialogSecondMessage = Text.banUserDialogSecondLeadingMessage +
+            banEndFormatted +
+            Text.banUserDialogSecondTrailingMessage
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    self.navigationPop()
+                }
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.banUserDialogTitle,
+            message: dialogFirstMessage + dialogSecondMessage,
+            textAlignment: .left,
+            actions: [confirmAction]
         )
     }
 }

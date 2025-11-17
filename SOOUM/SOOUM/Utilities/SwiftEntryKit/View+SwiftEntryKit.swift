@@ -93,6 +93,7 @@ extension SwiftEntryKitViewWrapper where Base == UIView {
     
     func showBottomToast(
         verticalOffset: CGFloat,
+        displayDuration: CGFloat = 7,
         useSafeArea: Bool = true,
         workAtWillAppear: (() -> Void)? = nil,
         completion: (() -> Void)? = nil
@@ -111,7 +112,7 @@ extension SwiftEntryKitViewWrapper where Base == UIView {
         
         attributes.entryBackground = .color(color: .init(.som.v2.gray500))
         
-        attributes.displayDuration = 7
+        attributes.displayDuration = displayDuration
         attributes.entranceAnimation = .init(translate: .init(duration: 0.25))
         attributes.exitAnimation = .init(translate: .init(duration: 0.25))
         
