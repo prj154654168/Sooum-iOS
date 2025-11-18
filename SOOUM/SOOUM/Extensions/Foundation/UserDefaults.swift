@@ -10,17 +10,30 @@ import Foundation
 
 extension UserDefaults {
     
+    enum Keys {
+        static let hasBeenLaunchedBefore: String = "hasBeenLaunchedBefore"
+        static let userNickname: String = "userNickname"
+    }
+    
     // Keychain 삭제를 위한 flag
     static var isFirstLaunch: Bool {
         
-        let hasBeenLaunchedBefore = "hasBeenLaunchedBefore"
-        let isFirstLaunch = !UserDefaults.standard.bool(forKey: hasBeenLaunchedBefore)
+        let isFirstLaunch = !UserDefaults.standard.bool(forKey: Keys.hasBeenLaunchedBefore)
         
         if isFirstLaunch {
-            UserDefaults.standard.set(true, forKey: hasBeenLaunchedBefore)
-            UserDefaults.standard.synchronize()
+            UserDefaults.standard.set(true, forKey: Keys.hasBeenLaunchedBefore)
         }
         
         return isFirstLaunch
+    }
+    
+    // Nickname의 전역 사용을 위한 확장
+    var nickname: String? {
+        get {
+            return UserDefaults.standard.string(forKey: Keys.userNickname)
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Keys.userNickname)
+        }
     }
 }

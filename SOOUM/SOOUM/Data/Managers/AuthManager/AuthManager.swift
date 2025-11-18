@@ -157,6 +157,9 @@ extension AuthManager: AuthManagerDelegate {
                         .map(\.token)
                         .flatMapLatest { token -> Observable<Bool> in
                             
+                            // 사용자 닉네임 업데이트
+                            UserDefaults.standard.nickname = nickname
+                            
                             // session token 업데이트
                             object.authInfo.updateToken(token)
                             

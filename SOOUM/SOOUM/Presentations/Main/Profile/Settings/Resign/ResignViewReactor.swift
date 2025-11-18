@@ -51,11 +51,17 @@ class ResignViewReactor: Reactor {
             guard let reason = self.currentState.reason else { return .empty() }
             
             return self.authUseCase.withdraw(
-                    reaseon: reason == .other ?
+                reaseon: reason == .other ?
                     (self.currentState.otherReason ?? reason.message) :
                     reason.message
             )
-                .map(Mutation.updateIsSuccess)
+            .map { isSuccess in
+                // 사용자 닉네임 제거
+                UserDefaults.standard.nickname = nil
+                
+                return isSuccess
+            }
+            .map(Mutation.updateIsSuccess)
         case let .updateReason(reason):
             
             return .just(.updateReason(reason))
