@@ -94,10 +94,6 @@ class ErrorInterceptor: RequestInterceptor {
                 }
             }
             return
-        case 403:
-            self.goToOnboarding()
-            completion(.doNotRetry)
-            return
         case 500:
             self.showUnknownErrorDialog()
             completion(.doNotRetry)
@@ -111,21 +107,6 @@ class ErrorInterceptor: RequestInterceptor {
     
     
     // MARK: Error handling
-    
-    func goToOnboarding() {
-        
-        self.provider.authManager.initializeAuthInfo()
-
-        DispatchQueue.main.async {
-            if let window: UIWindow = UIApplication.currentWindow,
-               let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                
-                let onboardingViewController = OnboardingViewController()
-                onboardingViewController.reactor = OnboardingViewReactor(dependencies: appDelegate.appDIContainer)
-                window.rootViewController = UINavigationController(rootViewController: onboardingViewController)
-            }
-        }
-    }
     
     func showNetworkErrorDialog() {
         

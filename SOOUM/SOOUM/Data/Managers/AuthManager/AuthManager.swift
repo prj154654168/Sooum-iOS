@@ -269,7 +269,7 @@ extension AuthManager: AuthManagerDelegate {
                     object.isReAuthenticating = false
                 },
                 onError: { object, error in
-                    
+                    /// 재인증 과정이 실패하면 항상 재로그인 시도
                     object.certification()
                         .subscribe(onNext: { isRegistered in
                             object.excutePendingResults(isRegistered ? .success : .failure(error))
