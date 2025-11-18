@@ -273,6 +273,8 @@ extension AuthManager: AuthManagerDelegate {
                     object.certification()
                         .subscribe(onNext: { isRegistered in
                             object.excutePendingResults(isRegistered ? .success : .failure(error))
+                            
+                            object.isReAuthenticating = false
                         })
                         .disposed(by: object.disposeBag)
                 }
