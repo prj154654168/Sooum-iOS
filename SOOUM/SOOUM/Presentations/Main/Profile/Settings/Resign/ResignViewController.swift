@@ -48,7 +48,7 @@ class ResignViewController: BaseNavigationViewController, View {
     private let container = UIStackView().then {
         $0.axis = .vertical
         $0.alignment = .fill
-        $0.distribution = .fillProportionally
+        $0.distribution = .equalSpacing
         $0.spacing = 10
     }
     
@@ -130,13 +130,21 @@ class ResignViewController: BaseNavigationViewController, View {
         super.updatedKeyboard(withoutBottomSafeInset: height)
         
         let height = height == 0 ? 0 : height + 12
+        
         self.resignButton.snp.updateConstraints {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-height)
         }
         
-        let newHeight = height == 0 ? 0 : 48
-        self.container.snp.updateConstraints {
-            $0.bottom.equalToSuperview().offset(-newHeight)
+        UIView.performWithoutAnimation {
+            self.view.layoutIfNeeded()
+            
+            let contentHeight = self.scrollView.contentSize.height
+            let boundsHeight = self.scrollView.bounds.height
+            let bottomOffset = CGPoint(x: 0, y: contentHeight - boundsHeight)
+            // 스크롤이 필요할 때만 적용
+            if bottomOffset.y > 0 {
+                self.scrollView.setContentOffset(bottomOffset, animated: true)
+            }
         }
     }
     
@@ -245,9 +253,6 @@ private extension ResignViewController {
         }
         
         self.container.addArrangedSubview(self.resignTextField)
-        self.resignTextField.snp.makeConstraints {
-            $0.bottom.lessThanOrEqualToSuperview().offset(-16)
-        }
     }
     
     func showSuccessReportedDialog(completion: @escaping (() -> Void)) {
