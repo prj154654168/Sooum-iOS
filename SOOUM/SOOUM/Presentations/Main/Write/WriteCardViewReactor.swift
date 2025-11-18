@@ -120,6 +120,7 @@ class WriteCardViewReactor: Reactor {
                     isStory: isStory,
                     tags: tags
                 )
+                .catch(self.catchClosure)
                 .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
@@ -270,7 +271,7 @@ private extension WriteCardViewReactor {
         return .just(.writeCard(nil))
     }
     
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+    var catchClosure: ((Error) throws -> Observable<Mutation>) {
         return { error in
             
             let nsError = error as NSError

@@ -60,7 +60,8 @@ class OnboardingProfileImageSettingViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsLoading(true)),
-                self.uploadImage(image),
+                self.uploadImage(image)
+                    .catch(self.catchClosure),
                 .just(.updateIsLoading(false))
             ])
         case .setDefaultImage:
