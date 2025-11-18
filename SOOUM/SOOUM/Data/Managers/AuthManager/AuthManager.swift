@@ -270,16 +270,6 @@ extension AuthManager: AuthManagerDelegate {
                 },
                 onError: { object, error in
                     
-                    // TODO: 임시, 리프레쉬 토큰 만료 에러코드가 정의되지 않음
-                    // let errorCode = (error as NSError).code
-                    // if case 403 = errorCode {
-                    //
-                    //     object.certification()
-                    //         .subscribe(onNext: { isRegistered in
-                    //             object.excutePendingResults(isRegistered ? .success : .failure(error))
-                    //         })
-                    //         .disposed(by: object.disposeBag)
-                    // }
                     object.certification()
                         .subscribe(onNext: { isRegistered in
                             object.excutePendingResults(isRegistered ? .success : .failure(error))
