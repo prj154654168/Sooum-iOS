@@ -135,15 +135,18 @@ class ResignViewController: BaseNavigationViewController, View {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-height)
         }
         
-        UIView.performWithoutAnimation {
+        guard height > 0 else { return }
+        
+        let contentHeight = self.scrollView.contentSize.height
+        let boundsHeight = self.scrollView.bounds.height
+        let bottomOffset = CGPoint(x: 0, y: contentHeight - boundsHeight)
+        // 키보드 및 스크롤 애니메이션 동기화를 위해 `UIView.animate` 사용
+        UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
             
-            let contentHeight = self.scrollView.contentSize.height
-            let boundsHeight = self.scrollView.bounds.height
-            let bottomOffset = CGPoint(x: 0, y: contentHeight - boundsHeight)
             // 스크롤이 필요할 때만 적용
             if bottomOffset.y > 0 {
-                self.scrollView.setContentOffset(bottomOffset, animated: true)
+                self.scrollView.setContentOffset(bottomOffset, animated: false)
             }
         }
     }
