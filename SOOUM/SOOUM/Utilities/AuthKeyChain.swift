@@ -56,10 +56,25 @@ class AuthKeyChain {
         ]
         
         var result: AnyObject?
-        let status = SecItemCopyMatching(query as CFDictionary, &result) == errSecSuccess
-        
-        if status, let data = result as? Data { return data }
-        return nil
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        if status == errSecSuccess {
+            if let data = result as? Data {
+                return data
+            } else {
+                Log.error("Keychain Load Success, but Data Casting Failed for: \(tokenType.rawValue). Result type: \(type(of: result))")
+                return nil
+            }
+        } else {
+            let errorDescription = SecCopyErrorMessageString(status, nil) as String? ?? "Unknown error"
+            Log.error("""
+                Keychain Load Failed!
+                TokenType: \(tokenType.rawValue)
+                Status Code (OSStatus): \(status)
+                Error Description: \(errorDescription)
+                Query Service: \(self.service)
+                """)
+            return nil
+        }
     }
     
     /// 키체인에서 특정 토큰을 삭제
