@@ -192,7 +192,7 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
     func bind(reactor: EnterMemberTransferViewReactor) {
         
         // Action
-        let transferCode = self.transferTextField.rx.text.orEmpty.distinctUntilChanged()
+        let transferCode = self.transferTextField.rx.text.orEmpty.distinctUntilChanged().share()
         transferCode
             .map { $0.isEmpty == false }
             .bind(to: self.confirmButton.rx.isEnabled)
