@@ -57,6 +57,7 @@ class SearchTextFieldView: UIView {
     private lazy var clearButton = SOMButton().then {
         $0.image = .init(.icon(.v2(.outlined(.delete_full))))
         $0.foregroundColor = .som.v2.gray500
+        $0.isHidden = true
         
         let gestureRecognizer = UITapGestureRecognizer(
             target: self,
@@ -99,7 +100,7 @@ class SearchTextFieldView: UIView {
     }
     
     var isTextEmpty: Bool {
-        return self.text?.isEmpty ?? false
+        return self.text?.isEmpty ?? true
     }
     
     let textFieldDidReturn = PublishRelay<String?>()

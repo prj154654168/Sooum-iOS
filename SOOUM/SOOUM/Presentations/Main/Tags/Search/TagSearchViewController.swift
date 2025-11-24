@@ -62,16 +62,16 @@ class TagSearchViewController: BaseNavigationViewController, View {
     /// 기본 뒤로가기 기능 제거
     override func bind() { }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.searchTextFieldView.becomeFirstResponder()
-    }
-    
     
     // MARK: ReactorKit - bind
     
     func bind(reactor: TagSearchViewReactor) {
+        
+        self.rx.viewDidAppear
+            .subscribe(with: self) { object, _ in
+                object.searchTextFieldView.becomeFirstResponder()
+            }
+            .disposed(by: self.disposeBag)
         
         let searchTerms = reactor.state.map(\.searchTerms).share()
         /// 뒤로가기로 시 TagViewController를 표시할 때, 관심 태그만 리로드 및 검색 초기화
@@ -99,9 +99,10 @@ class TagSearchViewController: BaseNavigationViewController, View {
         
         // 태그 카드 모아보기 화면 전환
         self.searchTermsView.backgroundDidTap
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, model in
                 object.searchTextFieldView.text = nil
-                object.searchTermsView.isHidden = true
+                reactor.action.onNext(.reset)
                 
                 let tagSearchCollectViewController = TagSearchCollectViewController()
                 tagSearchCollectViewController.reactor = reactor.reactorForSearchCollect(
