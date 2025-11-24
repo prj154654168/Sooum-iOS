@@ -94,8 +94,6 @@ class FavoriteTagsView: UIView {
                           let index = new.firstIndex(where: { $0 == model })
                     else { return }
                     
-                    // let updatedFavorite = !new[index].isFavorite
-                    // new[index].isFavorite = updatedFavorite
                     new[index].isFavorite.toggle()
                     
                     object.setModels(new)
