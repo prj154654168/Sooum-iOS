@@ -480,6 +480,17 @@ extension DetailViewController: UICollectionViewDataSource {
             }
             .disposed(by: cell.disposeBag)
         
+        cell.tags.tagDidTap
+            .subscribe(with: self) { object, tagInfo in
+                let tagCollectViewController = TagCollectViewController()
+                tagCollectViewController.reactor = reactor.reactorForTagCollect(
+                    with: tagInfo.id,
+                    title: tagInfo.text
+                )
+                object.navigationPush(tagCollectViewController, animated: true, bottomBarHidden: true)
+            }
+            .disposed(by: cell.disposeBag)
+        
         cell.likeAndCommentView.likeBackgroundButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(reactor.state.compactMap(\.detailCard).map(\.isLike))
             .subscribe(onNext: { isLike in

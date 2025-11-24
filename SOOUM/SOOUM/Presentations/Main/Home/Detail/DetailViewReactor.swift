@@ -229,9 +229,9 @@ extension DetailViewReactor {
         )
     }
     
-    // func reactorForTagDetail(_ tagID: String) -> TagDetailViewrReactor {
-    //     TagDetailViewrReactor(provider: self.provider, tagID: tagID)
-    // }
+    func reactorForTagCollect(with id: String, title: String) -> TagCollectViewReactor {
+        TagCollectViewReactor(dependencies: self.dependencies, with: id, title: title, isFavorite: false)
+    }
     
     func reactorForProfile(
         type: ProfileViewReactor.EntranceType,
