@@ -433,7 +433,7 @@ extension NotificationViewController: UITableViewDelegate {
                    indexPath.section == Section.unread.rawValue,
                    indexPath.row == lastRowIndexPath {
                     
-                    var lastId: String {
+                    var lastId: String? {
                         switch reactor.currentState.notificationsForUnread?.last {
                         case let .default(notification):
                             return notification.notificationInfo.notificationId
@@ -443,10 +443,15 @@ extension NotificationViewController: UITableViewDelegate {
                             return notification.notificationInfo.notificationId
                         case let .blocked(notification):
                             return notification.notificationInfo.notificationId
+                        case let .tag(notification):
+                            return notification.notificationInfo.notificationId
                         default:
-                            return ""
+                            return nil
                         }
                     }
+                    
+                    guard let lastId = lastId else { return }
+                    
                     reactor.action.onNext(.moreFind(lastId: lastId, displayType: .activity(.unread)))
                 }
             case .read:
@@ -456,7 +461,7 @@ extension NotificationViewController: UITableViewDelegate {
                    indexPath.section == Section.read.rawValue,
                    indexPath.row == lastRowIndexPath {
                     
-                    var lastId: String {
+                    var lastId: String? {
                         switch reactor.currentState.notificationsForUnread?.last {
                         case let .default(notification):
                             return notification.notificationInfo.notificationId
@@ -466,10 +471,15 @@ extension NotificationViewController: UITableViewDelegate {
                             return notification.notificationInfo.notificationId
                         case let .blocked(notification):
                             return notification.notificationInfo.notificationId
+                        case let .tag(notification):
+                            return notification.notificationInfo.notificationId
                         default:
-                            return ""
+                            return nil
                         }
                     }
+                    
+                    guard let lastId = lastId else { return }
+                    
                     reactor.action.onNext(.moreFind(lastId: lastId, displayType: .activity(.read)))
                 }
             }
