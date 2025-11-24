@@ -13,6 +13,6 @@ import RxSwift
 extension Reactive where Base: SearchViewButton {
     
     var didTap: Observable<Void> {
-        self.base.backgroundButton.rx.throttleTap
+        self.base.backgroundButton.rx.throttleTap(.seconds(3))
     }
 }

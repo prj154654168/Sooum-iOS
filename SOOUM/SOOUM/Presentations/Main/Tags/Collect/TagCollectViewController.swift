@@ -94,6 +94,7 @@ class TagCollectViewController: BaseNavigationViewController, View {
         
         // 상세화면 전환
         self.tagCollectCardsView.cardDidTapped
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, model in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(model.id)

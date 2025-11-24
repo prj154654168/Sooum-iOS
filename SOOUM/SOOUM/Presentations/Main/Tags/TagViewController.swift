@@ -170,6 +170,7 @@ class TagViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.popularTagsView.backgroundDidTap
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, model in
                 let tagCollectViewController = TagCollectViewController()
                 tagCollectViewController.reactor = reactor.reactorForCollect(
