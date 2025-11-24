@@ -94,6 +94,10 @@ class ErrorInterceptor: RequestInterceptor {
                 }
             }
             return
+        case 418:
+            self.goToOnboarding()
+            completion(.doNotRetry)
+            return
         case 500:
             self.showUnknownErrorDialog()
             completion(.doNotRetry)
@@ -168,6 +172,25 @@ class ErrorInterceptor: RequestInterceptor {
                 textAlignment: .left,
                 actions: [closeAction, inquireAction]
             )
+        }
+    }
+    
+    
+    // MARK: go to onboarding
+    
+    func goToOnboarding() {
+        
+        self.provider.authManager.initializeAuthInfo()
+        
+        DispatchQueue.main.async {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
+            else { return }
+            
+            let onBoardingViewController = OnboardingViewController()
+            onBoardingViewController.reactor = OnboardingViewReactor(dependencies: appDelegate.appDIContainer)
+            window.rootViewController = UINavigationController(rootViewController: onBoardingViewController)
         }
     }
 }
