@@ -92,8 +92,12 @@ class MainTabBarController: SOMTabBarController, View {
             tag: 1
         )
         
-        let tagViewController = UIViewController()
-        tagViewController.tabBarItem = .init(
+        let tagViewController = TagViewController()
+        tagViewController.reactor = reactor.reactorForTags()
+        let tagNavigationController = UINavigationController(
+            rootViewController: tagViewController
+        )
+        tagNavigationController.tabBarItem = .init(
             title: Constants.Text.tagTitle,
             image: .init(.icon(.v2(.filled(.tag)))),
             tag: 2
@@ -113,7 +117,7 @@ class MainTabBarController: SOMTabBarController, View {
         self.viewControllers = [
             mainHomeNavigationController,
             writeCardViewController,
-            tagViewController,
+            tagNavigationController,
             profileNavigationController
         ]
         
@@ -218,12 +222,6 @@ extension MainTabBarController: SOMTabBarControllerDelegate {
         if viewController.tabBarItem.tag == 1 {
             
             self.willPushWriteCard.accept(())
-            return false
-        }
-        
-        if viewController.tabBarItem.tag == 2 {
-            self.showPrepare()
-            
             return false
         }
         

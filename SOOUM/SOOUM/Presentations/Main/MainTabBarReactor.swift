@@ -123,9 +123,9 @@ extension MainTabBarReactor {
         WriteCardViewReactor(dependencies: self.dependencies)
     }
     
-    // func reactorForTags() -> TagsViewReactor {
-    //     TagsViewReactor(provider: self.provider)
-    // }
+    func reactorForTags() -> TagViewReactor {
+        TagViewReactor(dependencies: self.dependencies)
+    }
     
     func reactorForProfile() -> ProfileViewReactor {
         ProfileViewReactor(dependencies: self.dependencies, type: .myWithNavi)
