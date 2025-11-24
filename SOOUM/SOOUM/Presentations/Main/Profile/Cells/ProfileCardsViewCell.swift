@@ -101,7 +101,7 @@ class ProfileCardsViewCell: UICollectionViewCell {
     
     var disposeBag = DisposeBag()
     
-    // let cardDidTap = PublishRelay<String>()
+    let cardDidTap = PublishRelay<String>()
     let moreFindCards = PublishRelay<(type: EntranceCardType, lastId: String)>()
     
     
@@ -212,23 +212,23 @@ extension ProfileCardsViewCell {
 extension ProfileCardsViewCell: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // TODO: 추후 개발 예정
-        // guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return }
-        //
-        // var selectedId: String? {
-        //     switch item {
-        //     case let .feed(selectedCard):
-        //         return selectedCard.id
-        //     case let .comment(selectedCard):
-        //         return selectedCard.id
-        //     case .empty:
-        //         return nil
-        //     }
-        // }
-        //
-        // guard let selectedId = selectedId else { return }
-        //
-        // self.cardDidTap.accept(selectedId)
+        
+        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return }
+
+        var selectedId: String? {
+            switch item {
+            case let .feed(selectedCard):
+                return selectedCard.id
+            case let .comment(selectedCard):
+                return selectedCard.id
+            case .empty:
+                return nil
+            }
+        }
+
+        guard let selectedId = selectedId else { return }
+
+        self.cardDidTap.accept(selectedId)
     }
     
     func collectionView(
