@@ -34,7 +34,7 @@ class AuthUseCaseImpl: AuthUseCase {
     
     func initializeAuthInfo() {
         
-        return self.repository.initializeAuthInfo()
+        self.repository.initializeAuthInfo()
     }
     
     func hasToken() -> Bool {

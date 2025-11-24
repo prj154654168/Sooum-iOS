@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FavoriteTagInfo: Equatable {
+struct FavoriteTagInfo: Hashable {
     
     let id: String
     let title: String

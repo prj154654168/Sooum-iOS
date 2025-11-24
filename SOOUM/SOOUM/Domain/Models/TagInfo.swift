@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TagInfo: Equatable {
+struct TagInfo {
     let id: String
     let name: String
     let usageCnt: Int
@@ -16,6 +16,17 @@ struct TagInfo: Equatable {
 extension TagInfo {
     
     static var defaultValue: TagInfo = TagInfo(id: "", name: "", usageCnt: 0)
+}
+
+extension TagInfo: Hashable {
+    
+    static func == (lhs: TagInfo, rhs: TagInfo) -> Bool {
+        return lhs.name == rhs.name
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.name)
+    }
 }
 
 extension TagInfo: Decodable {
