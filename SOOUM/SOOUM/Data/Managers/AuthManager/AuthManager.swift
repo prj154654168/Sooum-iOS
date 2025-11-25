@@ -188,7 +188,8 @@ extension AuthManager: AuthManagerDelegate {
                     let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
                     return provider.networkManager.perform(LoginResponse.self, request: request)
                         .map(\.token)
-                        .flatMapLatest { token -> Observable<Bool> in
+                        .withUnretained(self)
+                        .flatMapLatest { object, token -> Observable<Bool> in
                             
                             // session token 업데이트
                             object.authInfo.updateToken(token)
@@ -197,7 +198,28 @@ extension AuthManager: AuthManagerDelegate {
                             provider.networkManager.registerFCMToken(from: #function)
                             return .just(true)
                         }
-                        .catchAndReturn(false)
+                        .catch { error in
+                            
+                            let errorCode = (error as NSError).code
+                            if case 404 = errorCode {
+                                
+                                // session token 삭제
+                                object.authInfo.initAuthInfo()
+                                
+                                // onboarding screen 전환
+                                DispatchQueue.main.async {
+                                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                                        let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                        let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
+                                    else { return }
+                                    
+                                    let onBoardingViewController = OnboardingViewController()
+                                    onBoardingViewController.reactor = OnboardingViewReactor(dependencies: appDelegate.appDIContainer)
+                                    window.rootViewController = UINavigationController(rootViewController: onBoardingViewController)
+                                }
+                            }
+                            return .just(false)
+                        }
                 } else {
                     return .just(false)
                 }

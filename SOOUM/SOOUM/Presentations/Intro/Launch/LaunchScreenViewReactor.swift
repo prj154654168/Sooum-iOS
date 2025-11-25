@@ -104,7 +104,7 @@ extension LaunchScreenViewReactor {
     private func login() -> Observable<Mutation> {
         return self.authUseCase.login()
             .map { .updateIsRegistered($0) }
-            .catch(self.catchClosure)
+            .catchAndReturn(.updateIsRegistered(false))
     }
     
     private func check() -> Observable<Mutation> {
@@ -120,17 +120,6 @@ extension LaunchScreenViewReactor {
                     return object.authUseCase.hasToken() ? .just(.updateIsRegistered(true)) : object.login()
                 }
             }
-    }
-}
-
-private extension LaunchScreenViewReactor {
-    
-    private var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { error in
-            
-            let nsError = error as NSError
-            return nsError.code == 404 ? .just(.updateIsRegistered(false)) : .empty()
-        }
     }
 }
 
