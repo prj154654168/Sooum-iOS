@@ -53,7 +53,11 @@ class EnterMemberTransferViewReactor: Reactor {
                         
                         if let encryptedDeviceId = encryptedDeviceId {
                             return object.settingsUseCase.enter(code: transferCode, encryptedDeviceId: encryptedDeviceId)
-                                .map(Mutation.enterTransferCode)
+                                .flatMapLatest { isSuccess -> Observable<Mutation> in
+                                    if isSuccess { object.authUseCase.initializeAuthInfo() }
+                                    
+                                    return .just(.enterTransferCode(isSuccess))
+                                }
                         } else {
                             return .just(.enterTransferCode(false))
                         }
