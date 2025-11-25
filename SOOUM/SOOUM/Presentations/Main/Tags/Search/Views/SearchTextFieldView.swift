@@ -173,18 +173,18 @@ class SearchTextFieldView: UIView {
             $0.size.equalTo(18)
         }
         
+        self.textFieldBackgroundView.addSubview(self.clearButton)
+        self.clearButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.trailing.equalToSuperview().offset(-20)
+            $0.size.equalTo(24)
+        }
+        
         self.textFieldBackgroundView.addSubview(self.textField)
         self.textField.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalTo(self.iconView.snp.trailing).offset(10)
-        }
-        
-        self.textFieldBackgroundView.addSubview(self.clearButton)
-        self.clearButton.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.lessThanOrEqualTo(self.textField.snp.trailing).offset(-18)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.size.equalTo(24)
+            $0.trailing.lessThanOrEqualTo(self.clearButton.snp.leading).offset(-14)
         }
     }
 }
