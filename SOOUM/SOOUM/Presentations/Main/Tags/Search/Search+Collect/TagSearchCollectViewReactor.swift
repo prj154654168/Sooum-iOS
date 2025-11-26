@@ -57,7 +57,21 @@ class TagSearchCollectViewReactor: Reactor {
         case .landing:
             
             return self.tagUseCase.tagCards(tagId: self.tagId, lastId: nil)
-                .flatMapLatest { tagCardsInfo -> Observable<Mutation> in
+                .withUnretained(self)
+                .flatMapLatest { object, tagCardsInfo -> Observable<Mutation> in
+                    
+                    if tagCardsInfo.cardInfos.isEmpty {
+                        return object.tagUseCase.favorites()
+                            .flatMapLatest { favoriteTagInfo -> Observable<Mutation> in
+                                let isFavorite = favoriteTagInfo.contains(
+                                    FavoriteTagInfo(id: object.tagId, title: object.title)
+                                )
+                                return .concat([
+                                    .just(.tagCardInfos(tagCardsInfo.cardInfos)),
+                                    .just(.updateIsFavorite(isFavorite))
+                                ])
+                            }
+                    }
                     
                     return .concat([
                         .just(.tagCardInfos(tagCardsInfo.cardInfos)),
