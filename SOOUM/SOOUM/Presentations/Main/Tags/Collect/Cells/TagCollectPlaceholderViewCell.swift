@@ -54,7 +54,7 @@ class TagCollectPlaceholderViewCell: UICollectionViewCell {
         
         self.contentView.addSubview(self.placeholderImageView)
         self.placeholderImageView.snp.makeConstraints {
-            let offset = (20 + 21) * 0.5
+            let offset = 20 + 21
             $0.centerY.equalToSuperview().offset(-offset)
             $0.centerX.equalToSuperview()
         }
