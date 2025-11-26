@@ -77,7 +77,7 @@ class UpdateProfileViewReactor: Reactor {
         case let .uploadImage(image):
             
             return .concat([
-                .just(.updateErrors(nil)),
+                .just(.updateErrors(false)),
                 self.uploadImage(image)
                     .catch(self.catchClosure)
             ])
@@ -120,11 +120,15 @@ class UpdateProfileViewReactor: Reactor {
             
             let trimedNickname = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
             let updatedNickname = trimedNickname == self.nickname ? nil : trimedNickname
-            return self.userUseCase.updateMyProfile(
-                nickname: updatedNickname,
-                imageName: self.currentState.profileImageName
-            )
-                .map(Mutation.updateIsSuccess)
+            return .concat([
+                .just(.updateErrors(false)),
+                self.userUseCase.updateMyProfile(
+                    nickname: updatedNickname,
+                    imageName: self.currentState.profileImageName
+                )
+                    .map(Mutation.updateIsSuccess)
+                    .catch(self.catchClosure)
+            ])
         }
     }
     
@@ -185,7 +189,6 @@ extension UpdateProfileViewReactor {
             let nsError = error as NSError
             let endProcessing = Observable<Mutation>.concat([
                 // TODO: 부적절한 사진일 때, `확인` 버튼 탭 시 이미지 변경
-                // .just(.updateImageInfo(nil, nil)),
                 .just(.updateIsProcessing(false)),
                 // 부적절한 이미지 업로드 에러 코드 == 422
                 .just(.updateErrors(nsError.code == 422))

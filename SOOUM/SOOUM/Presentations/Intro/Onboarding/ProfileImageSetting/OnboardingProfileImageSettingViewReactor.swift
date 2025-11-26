@@ -60,6 +60,7 @@ class OnboardingProfileImageSettingViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsLoading(true)),
+                .just(.updateErrors(false)),
                 self.uploadImage(image)
                     .catch(self.catchClosure),
                 .just(.updateIsLoading(false))
@@ -69,7 +70,11 @@ class OnboardingProfileImageSettingViewReactor: Reactor {
             return .just(.updateImageInfo(nil, nil))
         case .signUp:
             
-            return self.signUp()
+            return .concat([
+                .just(.updateErrors(false)),
+                self.signUp()
+                    .catch(self.catchClosure)
+            ])
         }
     }
     
@@ -135,10 +140,8 @@ extension OnboardingProfileImageSettingViewReactor {
             let nsError = error as NSError
             let endProcessing = Observable<Mutation>.concat([
                 // TODO: 부적절한 사진일 때, `확인` 버튼 탭 시 이미지 변경
-                // .just(.updateImageInfo(nil, nil)),
                 .just(.updateIsSignUp(false)),
                 .just(.updateIsLoading(false)),
-                // 부적절한 이미지 업로드 에러 코드 == 422
                 .just(.updateErrors(nsError.code == 422))
             ])
             

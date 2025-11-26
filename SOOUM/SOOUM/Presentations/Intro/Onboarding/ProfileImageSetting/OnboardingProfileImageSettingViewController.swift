@@ -209,6 +209,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.hasErrors)
+            .distinctUntilChanged()
             .filter { $0 }
             .subscribe(onNext: { _ in
                 
