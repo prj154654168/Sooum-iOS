@@ -320,6 +320,16 @@ extension NotificationViewController: UITableViewDelegate {
                 default:
                     return
                 }
+            case let .tag(notification):
+                
+                reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
+                
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(
+                    entranceType: .feed,
+                    with: notification.targetCardId
+                )
+                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
             case let .follow(notification):
                 
                 reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
@@ -334,6 +344,14 @@ extension NotificationViewController: UITableViewDelegate {
             
             switch notification {
             case let .default(notification):
+                
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(
+                    entranceType: .feed,
+                    with: notification.targetCardId
+                )
+                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+            case let .tag(notification):
                 
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(
