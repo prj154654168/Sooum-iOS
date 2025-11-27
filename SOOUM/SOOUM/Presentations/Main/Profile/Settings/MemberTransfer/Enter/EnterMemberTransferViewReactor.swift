@@ -78,7 +78,7 @@ class EnterMemberTransferViewReactor: Reactor {
 
 extension EnterMemberTransferViewReactor {
     
-    func reactorForLaunch() -> LaunchScreenViewReactor {
-        LaunchScreenViewReactor(dependencies: self.dependencies, pushInfo: nil)
+    func reactorForOnborading() -> OnboardingViewReactor {
+        OnboardingViewReactor(dependencies: self.dependencies)
     }
 }
