@@ -32,20 +32,19 @@ class DetailViewFooter: UICollectionReusableView {
     
     private let flowLayout = UICollectionViewFlowLayout().then {
         $0.minimumLineSpacing = 10
+        $0.minimumInteritemSpacing = 0
         $0.scrollDirection = .horizontal
-        $0.sectionInset = .init(top: 0, left: 16, bottom: 0, right: 16)
+        $0.sectionInset = .init(top: -17, left: 16, bottom: 0, right: 16)
     }
     
     private lazy var collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: self.flowLayout
     ).then {
-        $0.alwaysBounceHorizontal = true
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
         
-        $0.decelerationRate = .fast
-        
+        $0.alwaysBounceHorizontal = true
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
         
