@@ -160,6 +160,8 @@ class MainTabBarController: SOMTabBarController, View {
                           let homeViewController = navigationController.viewControllers.first as? HomeViewController
                     else { return }
                     
+                    object.didSelectedIndex(0)
+                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                         object.setupDetailViewController(
                             homeViewController,
@@ -172,6 +174,8 @@ class MainTabBarController: SOMTabBarController, View {
                           let homeViewController = navigationController.viewControllers.first as? HomeViewController
                     else { return }
                     
+                    object.didSelectedIndex(0)
+                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                         object.setupDetailViewController(
                             homeViewController,
@@ -183,6 +187,8 @@ class MainTabBarController: SOMTabBarController, View {
                     guard let navigationController = object.viewControllers[0] as? UINavigationController,
                           let homeViewController = navigationController.viewControllers.first as? HomeViewController
                     else { return }
+                    
+                    object.didSelectedIndex(0)
                     
                     object.setupNotificationViewController(
                         homeViewController,
