@@ -139,41 +139,103 @@ class MainTabBarController: SOMTabBarController, View {
             .disposed(by: self.disposeBag)
         
         // State
-        
-        reactor.state.map(\.entranceType)
-            .distinctUntilChanged()
-            .subscribe(with: self) { object, entranceType in
+        Observable.combineLatest(
+            reactor.state.map(\.entranceType),
+            reactor.state.map(\.profileInfo).filterNil()
+        )
+            .subscribe(with: self) { object, entranceInfo in
                 
-//                guard let navigationController = object.viewControllers[0] as? UINavigationController,
-//                      let mainHomeTabBarController = navigationController.viewControllers.first as? MainHomeTabBarController,
-//                      let targetCardId = reactor.pushInfo?.targetCardId,
-//                      let notificationId = reactor.pushInfo?.notificationId
-//                else { return }
-//                
-//                mainHomeTabBarController.reactor?.action.onNext(.requestRead(notificationId))
-//                
-//                switch entranceType {
-//                case .pushForNoti:
-//                    
-//                    let notificationTabBarController = NotificationTabBarController()
-//                    notificationTabBarController.reactor = reactor.reactorForNoti()
-//                    mainHomeTabBarController.navigationPush(
-//                        notificationTabBarController,
-//                        animated: false,
-//                        bottomBarHidden: true
-//                    )
-//                case .pushForDetail:
-//                    
-//                    let detailViewController = DetailViewController()
-//                    detailViewController.reactor = reactor.reactorForDetail(targetCardId)
-//                    mainHomeTabBarController.navigationPush(
-//                        detailViewController,
-//                        animated: false,
-//                        bottomBarHidden: true
-//                    )
-//                case .none:
-//                    break
-//                }
+                let (entranceType, profileInfo) = entranceInfo
+                
+                guard let notificationId = reactor.pushInfo?.notificationId,
+                      let targetCardId = reactor.pushInfo?.targetCardId
+                else { return }
+                
+                reactor.action.onNext(.requestRead(notificationId))
+                
+                switch entranceType {
+                case .pushToFeedDetail:
+                    
+                    guard let navigationController = object.viewControllers[0] as? UINavigationController,
+                          let homeViewController = navigationController.viewControllers.first as? HomeViewController
+                    else { return }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        object.setupDetailViewController(
+                            homeViewController,
+                            with: reactor.reactorForDetail(targetCardId, type: .feed)
+                        )
+                    }
+                case .pushToCommentDetail:
+                    
+                    guard let navigationController = object.viewControllers[0] as? UINavigationController,
+                          let homeViewController = navigationController.viewControllers.first as? HomeViewController
+                    else { return }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        object.setupDetailViewController(
+                            homeViewController,
+                            with: reactor.reactorForDetail(targetCardId, type: .comment)
+                        )
+                    }
+                case .pushToNotification:
+                    
+                    guard let navigationController = object.viewControllers[0] as? UINavigationController,
+                          let homeViewController = navigationController.viewControllers.first as? HomeViewController
+                    else { return }
+                    
+                    object.setupNotificationViewController(
+                        homeViewController,
+                        with: reactor.reactorForNoti()
+                    )
+                case .pushToTagDetail:
+                    
+                    object.didSelectedIndex(2)
+                    
+                    guard let navigationController = object.viewControllers[2] as? UINavigationController,
+                          let tagViewController = navigationController.viewControllers.first as? TagViewController
+                    else { return }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        object.setupTagDetailViewController(
+                            tagViewController,
+                            with: reactor.reactorForDetail(targetCardId, type: .feed)
+                        )
+                    }
+                case .pushToFollow:
+                    
+                    object.didSelectedIndex(3)
+                    
+                    guard let navigationController = object.viewControllers[3] as? UINavigationController,
+                          let profileViewController = navigationController.viewControllers.first as? ProfileViewController
+                    else { return }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        object.setupFollowViewController(
+                            profileViewController,
+                            with: reactor.reactorForFollow(
+                                nickname: profileInfo.nickname,
+                                with: profileInfo.userId
+                            )
+                        )
+                    }
+                case .pushToLaunchScreen:
+                    
+                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                        let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                        let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
+                    else { return }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        object.setupLaunchScreenViewController(
+                            window,
+                            with: reactor.reactorForLaunchScreen()
+                        )
+                    }
+                case .none:
+                    
+                    return
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -278,5 +340,58 @@ private extension MainTabBarController {
             message: "추후 개발 완료되면 사용가능합니다.",
             actions: [confirmAction]
         )
+    }
+}
+
+
+// MARK: Setup ViewController
+
+private extension MainTabBarController {
+    
+    func setupDetailViewController(
+        _ homeViewController: HomeViewController,
+        with reactor: DetailViewReactor
+    ) {
+        
+        let detailViewController = DetailViewController()
+        detailViewController.reactor = reactor
+        homeViewController.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+    }
+    
+    func setupNotificationViewController(
+        _ homeViewController: HomeViewController,
+        with reactor: NotificationViewReactor
+    ) {
+        
+        let notificationViewController = NotificationViewController()
+        notificationViewController.reactor = reactor
+        homeViewController.navigationPush(notificationViewController, animated: true, bottomBarHidden: true)
+    }
+    
+    func setupTagDetailViewController(
+        _ tagViewController: TagViewController,
+        with reactor: DetailViewReactor
+    ) {
+        
+        let detailViewController = DetailViewController()
+        detailViewController.reactor = reactor
+        tagViewController.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+    }
+    
+    func setupFollowViewController(
+        _ profileViewController: ProfileViewController,
+        with reactor: FollowViewReactor
+    ) {
+        
+        let followViewController = FollowViewController()
+        followViewController.reactor = reactor
+        profileViewController.navigationPush(followViewController, animated: true, bottomBarHidden: true)
+    }
+    
+    func setupLaunchScreenViewController(_ window: UIWindow, with reactor: LaunchScreenViewReactor) {
+        
+        let launchScreenViewController = LaunchScreenViewController()
+        launchScreenViewController.reactor = reactor
+        window.rootViewController = UINavigationController(rootViewController: launchScreenViewController)
     }
 }

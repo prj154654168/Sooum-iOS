@@ -25,7 +25,6 @@ import ReactorKit
  */
 class LaunchScreenViewReactor: Reactor {
     
-    // MARK: - Action
     enum Action: Equatable {
         /// 앱이 시작되었을 때, 로그인 및 회원가입 처리 흐름을 시작
         case launch
@@ -54,9 +53,9 @@ class LaunchScreenViewReactor: Reactor {
     private let authUseCase: AuthUseCase
     private let versionUseCase: AppVersionUseCase
     
-    private let pushInfo: NotificationInfo?
+    private let pushInfo: PushNotificationInfo?
     
-    init(dependencies: AppDIContainerable, pushInfo: NotificationInfo? = nil) {
+    init(dependencies: AppDIContainerable, pushInfo: PushNotificationInfo? = nil) {
         self.dependencies = dependencies
         self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
         self.versionUseCase = dependencies.rootContainer.resolve(AppVersionUseCase.self)
@@ -68,15 +67,13 @@ class LaunchScreenViewReactor: Reactor {
         switch action {
         case .launch:
             // 계정 이관에 성공했을 때, 온보딩 화면으로 전환
-            // let isTransfered = self.pushInfo?.isTransfered ?? false
-            // if isTransfered {
-            //     self.authUseCase.initializeAuthInfo()
-            //     return .just(.updateIsRegistered(false))
-            //         .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            // } else {
-                return self.check()
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            // }
+            let isTransfered = self.pushInfo?.isTransfered ?? false
+            if isTransfered {
+                // session token 삭제
+                self.authUseCase.initializeAuthInfo()
+            }
+            
+            return self.check()
         }
     }
     
@@ -130,6 +127,6 @@ extension LaunchScreenViewReactor {
     }
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(dependencies: self.dependencies)
+        MainTabBarReactor(dependencies: self.dependencies, pushInfo: self.pushInfo)
     }
 }

@@ -35,13 +35,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         /// 앱이 완전히 종료되었을 때 push notification에 대한 응답을 했을 때 실행할 코드 작성
         if let response: UNNotificationResponse = connectionOptions.notificationResponse {
-            // let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
-
-            // if let infoDic: [String: Any] = userInfo as? [String: Any] {
-            //
-            //     let info = NotificationInfo(infoDic)
-            //     appDelegate.provider.pushManager.setupRootViewController(info, terminated: true)
-            // }
+            let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
+            if let infoDic = userInfo as? [String: Any] {
+                let info = PushNotificationInfo(infoDic)
+                appDelegate.setupLaunchScreen(info)
+            }
         }
     }
 

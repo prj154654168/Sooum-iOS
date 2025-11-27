@@ -536,8 +536,8 @@
 		38B8A58C2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A58A2CAEA79A000AFE83 /* DetailViewFooter.swift */; };
 		38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */; };
 		38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */; };
-		38B8BE472D1ECBDA0084569C /* NotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8BE462D1ECBDA0084569C /* NotificationInfo.swift */; };
-		38B8BE482D1ECBDA0084569C /* NotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8BE462D1ECBDA0084569C /* NotificationInfo.swift */; };
+		38B8BE472D1ECBDA0084569C /* PushNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8BE462D1ECBDA0084569C /* PushNotificationInfo.swift */; };
+		38B8BE482D1ECBDA0084569C /* PushNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8BE462D1ECBDA0084569C /* PushNotificationInfo.swift */; };
 		38C2A7D82EC054C500B941A2 /* SettingVersionCellView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7D72EC054BE00B941A2 /* SettingVersionCellView+Rx.swift */; };
 		38C2A7D92EC054C500B941A2 /* SettingVersionCellView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7D72EC054BE00B941A2 /* SettingVersionCellView+Rx.swift */; };
 		38C2A7DB2EC06ECE00B941A2 /* SettingsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7DA2EC06EC800B941A2 /* SettingsRequest.swift */; };
@@ -1048,7 +1048,7 @@
 		38B8A5872CAEA5F9000AFE83 /* DetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewCell.swift; sourceTree = "<group>"; };
 		38B8A58A2CAEA79A000AFE83 /* DetailViewFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooter.swift; sourceTree = "<group>"; };
 		38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooterCell.swift; sourceTree = "<group>"; };
-		38B8BE462D1ECBDA0084569C /* NotificationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationInfo.swift; sourceTree = "<group>"; };
+		38B8BE462D1ECBDA0084569C /* PushNotificationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationInfo.swift; sourceTree = "<group>"; };
 		38B9E4692CE72CC1008A24C8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		38BCF2302D32BB22004F653A /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		38C2A7D72EC054BE00B941A2 /* SettingVersionCellView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingVersionCellView+Rx.swift"; sourceTree = "<group>"; };
@@ -2361,7 +2361,7 @@
 		38B8BE452D1ECBBF0084569C /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				38B8BE462D1ECBDA0084569C /* NotificationInfo.swift */,
+				38B8BE462D1ECBDA0084569C /* PushNotificationInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -3218,7 +3218,7 @@
 				3874B5642ECB2613004CC22A /* SettingsLocalDataSourceImpl.swift in Sources */,
 				3803CF832D017DB800FD90DB /* EnterMemberTransferViewController.swift in Sources */,
 				388693A02CF77FA7005F9EF3 /* UIApplication+Top.swift in Sources */,
-				38B8BE482D1ECBDA0084569C /* NotificationInfo.swift in Sources */,
+				38B8BE482D1ECBDA0084569C /* PushNotificationInfo.swift in Sources */,
 				38D5637F2D17152F006265AA /* SOMStickyTabBarDelegate.swift in Sources */,
 				38C2A80E2EC0BC8900B941A2 /* BlockUserPlaceholderViewCell.swift in Sources */,
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
@@ -3601,7 +3601,7 @@
 				381DEA8B2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				3878D08C2CFFF0BF00F9522F /* AnnouncementViewControler.swift in Sources */,
 				3874B5632ECB2613004CC22A /* SettingsLocalDataSourceImpl.swift in Sources */,
-				38B8BE472D1ECBDA0084569C /* NotificationInfo.swift in Sources */,
+				38B8BE472D1ECBDA0084569C /* PushNotificationInfo.swift in Sources */,
 				3878F4742CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
 				38B543E82D4617EA00DDF2C5 /* NetworkManagerConfiguration.swift in Sources */,
 				3878D0902CFFF0E300F9522F /* AnnouncementViewCell.swift in Sources */,
