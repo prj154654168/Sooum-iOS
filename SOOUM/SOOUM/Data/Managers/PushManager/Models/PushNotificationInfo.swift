@@ -22,5 +22,14 @@ class PushNotificationInfo {
         self.notificationType = CommonNotificationInfo.NotificationType(rawValue: notificationType) ?? .none
         self.notificationId = info["notificationId"] as? String
         self.targetCardId = info["targetCardId"] as? String
+        
+        Log.info(
+            """
+            PushNotificationInfo:
+                notificationType: \(self.notificationType)
+                notificationId: \(self.notificationId ?? "")
+                targetCardId: \(self.targetCardId ?? "")
+            """
+        )
     }
 }

@@ -30,27 +30,27 @@ class MainTabBarReactor: Reactor {
     enum Action: Equatable {
         case requestLocationPermission
         case judgeEntrance
-        case requestRead(String)
         case postingPermission
-        case reset
+        case resetCouldPosting
+        case resetEntrance
     }
     
     enum Mutation {
         case updateEntrance(ProfileInfo)
         case updatePostingPermission(PostingPermission?)
-        case reset
+        case resetCouldPosting
+        case resetEntrance
     }
     
     struct State {
         fileprivate(set) var entranceType: EntranceType
-        fileprivate(set) var profileInfo: ProfileInfo?
         fileprivate(set) var couldPosting: PostingPermission?
+        @Pulse fileprivate(set) var profileInfo: ProfileInfo?
     }
     
     var initialState: State
     
-    private let willNavigate: EntranceType
-    let pushInfo: PushNotificationInfo?
+    var pushInfo: PushNotificationInfo?
     
     private let dependencies: AppDIContainerable
     private let userUseCase: UserUseCase
@@ -74,13 +74,12 @@ class MainTabBarReactor: Reactor {
             default:                          return .none
             }
         }
-        self.willNavigate = willNavigate
         self.pushInfo = pushInfo
         
         self.initialState = .init(
-            entranceType: .none,
-            profileInfo: nil,
-            couldPosting: nil
+            entranceType: willNavigate,
+            couldPosting: nil,
+            profileInfo: nil
         )
     }
     
@@ -95,23 +94,35 @@ class MainTabBarReactor: Reactor {
             return .empty()
         case .judgeEntrance:
             
-            return .concat([
-                self.userUseCase.profile(userId: nil)
-                    .map(Mutation.updateEntrance),
-                self.settingsUseCase.switchNotification(on: true)
+            if let pushInfo = self.pushInfo {
+                
+                return .concat([
+                    self.userUseCase.profile(userId: nil)
+                        .flatMapLatest { profileInfo -> Observable<Mutation> in
+                            
+                            return self.notificationUseCase.requestRead(
+                                notificationId: pushInfo.notificationId ?? ""
+                            )
+                                .map { _ in .updateEntrance(profileInfo) }
+                        },
+                    self.settingsUseCase.switchNotification(on: true)
+                        .flatMapLatest { _ -> Observable<Mutation> in .empty() }
+                ])
+            } else {
+                
+                return self.settingsUseCase.switchNotification(on: true)
                     .flatMapLatest { _ -> Observable<Mutation> in .empty() }
-            ])
-        case let .requestRead(notificationId):
-            
-            _ = self.notificationUseCase.requestRead(notificationId: notificationId)
-            return .empty()
+            }
         case .postingPermission:
             
             return self.userUseCase.postingPermission()
                 .map(Mutation.updatePostingPermission)
-        case .reset:
+        case .resetCouldPosting:
             
-            return .just(.reset)
+            return .just(.resetCouldPosting)
+        case .resetEntrance:
+            
+            return .just(.resetEntrance)
         }
     }
     
@@ -120,11 +131,14 @@ class MainTabBarReactor: Reactor {
         switch mutation {
         case let .updateEntrance(profileInfo):
             newState.profileInfo = profileInfo
-            newState.entranceType = self.willNavigate
         case let .updatePostingPermission(couldPosting):
             newState.couldPosting = couldPosting
-        case .reset:
+        case .resetCouldPosting:
             newState.couldPosting = nil
+        case .resetEntrance:
+            newState.entranceType = .none
+            newState.profileInfo = nil
+            self.pushInfo = nil
         }
         return newState
     }
