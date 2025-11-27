@@ -167,7 +167,6 @@ extension AuthManager: AuthManagerDelegate {
                             provider.networkManager.registerFCMToken(from: #function)
                             return .just(true)
                         }
-                        .catchAndReturn(false)
                 } else {
                     return .just(false)
                 }
@@ -215,6 +214,7 @@ extension AuthManager: AuthManagerDelegate {
                                     
                                     let onBoardingViewController = OnboardingViewController()
                                     onBoardingViewController.reactor = OnboardingViewReactor(dependencies: appDelegate.appDIContainer)
+                                    onBoardingViewController.modalTransitionStyle = .crossDissolve
                                     window.rootViewController = UINavigationController(rootViewController: onBoardingViewController)
                                 }
                             }

@@ -190,6 +190,7 @@ class ErrorInterceptor: RequestInterceptor {
             
             let onBoardingViewController = OnboardingViewController()
             onBoardingViewController.reactor = OnboardingViewReactor(dependencies: appDelegate.appDIContainer)
+            onBoardingViewController.modalTransitionStyle = .crossDissolve
             window.rootViewController = UINavigationController(rootViewController: onBoardingViewController)
         }
     }
