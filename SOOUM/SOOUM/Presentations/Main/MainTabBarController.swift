@@ -227,8 +227,7 @@ class MainTabBarController: SOMTabBarController, View {
                     }
                 case .pushToLaunchScreen:
                     
-                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                        let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                    guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                         let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
                     else { return }
                     

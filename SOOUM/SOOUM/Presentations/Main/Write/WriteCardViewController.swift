@@ -191,8 +191,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
         super.updatedKeyboard(withoutBottomSafeInset: height)
         
         self.keyboardHeight = height
-        
-        let isFooterFirstResponder = self.writeCardView.writeCardTags.isFooterFirstResponder()
         self.relatedTagsViewBottomConstraint?.update(offset: -height)
     }
     
