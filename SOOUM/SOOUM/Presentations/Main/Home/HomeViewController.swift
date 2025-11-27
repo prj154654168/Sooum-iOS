@@ -59,9 +59,10 @@ class HomeViewController: BaseNavigationViewController, View {
         $0.contentMode = .scaleAspectFit
     }
     
-    private let rightAlamButton = SOMButton().then {
+    private let rightAlamButton = UIButton()
+    private let rightAlamImageView = UIImageView().then {
         $0.image = .init(.icon(.v2(.outlined(.bell))))
-        $0.foregroundColor = .som.v2.black
+        $0.tintColor = .som.v2.black
     }
     
     private let dotWithoutReadView = UIView().then {
@@ -223,14 +224,17 @@ class HomeViewController: BaseNavigationViewController, View {
         
         self.navigationBar.hidesBackButton = true
         
+        self.rightAlamButton.addSubview(self.rightAlamImageView)
         self.rightAlamButton.addSubview(self.dotWithoutReadView)
+        self.rightAlamImageView.snp.makeConstraints {
+            $0.size.equalTo(24)
+        }
         self.dotWithoutReadView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(12)
-            $0.trailing.equalToSuperview().offset(-12)
+            $0.top.trailing.equalToSuperview()
             $0.size.equalTo(5)
         }
         self.rightAlamButton.snp.makeConstraints {
-            $0.size.equalTo(48)
+            $0.edges.equalTo(self.rightAlamImageView.snp.edges)
         }
         
         self.navigationBar.setRightButtons([self.rightAlamButton])
