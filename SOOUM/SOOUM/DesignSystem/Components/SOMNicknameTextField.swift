@@ -111,7 +111,7 @@ class SOMNicknameTextField: UIView {
     }
     
     var isTextEmpty: Bool {
-        return self.text?.isEmpty ?? false
+        return self.text?.isEmpty ?? true
     }
     
     
@@ -209,11 +209,11 @@ class SOMNicknameTextField: UIView {
 extension SOMNicknameTextField: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.clearButton.isHidden = false
+        self.clearButton.isHidden = self.isTextEmpty
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        self.clearButton.isHidden = true
+        self.clearButton.isHidden = self.isTextEmpty
     }
     
     func textField(
