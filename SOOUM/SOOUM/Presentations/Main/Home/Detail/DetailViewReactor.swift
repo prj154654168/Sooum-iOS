@@ -17,13 +17,14 @@ class DetailViewReactor: Reactor {
     
     enum Action: Equatable {
         case landing
-        case refreshForComment
         case refresh
         case moreFindForComment(lastId: String)
         case delete
         case block(isBlocked: Bool)
         case updateLike(Bool)
         case updateReport(Bool)
+        case willPushToWrite
+        case resetPushState
     }
     
     enum Mutation {
@@ -36,6 +37,7 @@ class DetailViewReactor: Reactor {
         case updateReported(Bool)
         case updateIsBlocked(Bool)
         case updateErrors(Int?)
+        case willPushToWrite(Bool?)
     }
     
     struct State {
@@ -47,6 +49,7 @@ class DetailViewReactor: Reactor {
         fileprivate(set) var isReported: Bool
         fileprivate(set) var isBlocked: Bool
         fileprivate(set) var hasErrors: Int?
+        fileprivate(set) var willPushEnabled: Bool?
     }
     
     var initialState: State = .init(
@@ -57,7 +60,8 @@ class DetailViewReactor: Reactor {
         isDeleted: false,
         isReported: false,
         isBlocked: true,
-        hasErrors: nil
+        hasErrors: nil,
+        willPushEnabled: nil
     )
     
     private let dependencies: AppDIContainerable
@@ -94,9 +98,6 @@ class DetailViewReactor: Reactor {
                     .catch(self.catchClosure),
                 self.commentCards()
             ])
-        case .refreshForComment:
-            
-            return self.commentCards()
         case .refresh:
             
             return .concat([
@@ -138,6 +139,14 @@ class DetailViewReactor: Reactor {
         case let .updateReport(isReported):
             
             return .just(.updateReported(isReported))
+        case .willPushToWrite:
+            
+            return self.detailCard()
+                .map { _ in .willPushToWrite(true) }
+                .catchAndReturn(.willPushToWrite(false))
+        case .resetPushState:
+            
+            return .just(.willPushToWrite(nil))
         }
     }
     
@@ -162,6 +171,8 @@ class DetailViewReactor: Reactor {
             newState.isBlocked = isBlocked
         case let .updateErrors(hasErrors):
             newState.hasErrors = hasErrors
+        case let .willPushToWrite(willPushEnabled):
+            newState.willPushEnabled = willPushEnabled
         }
         return newState
     }
@@ -239,10 +250,6 @@ extension DetailViewReactor {
     ) -> ProfileViewReactor {
         ProfileViewReactor(dependencies: self.dependencies, type: type, with: userId)
     }
-    
-    // func reactorForNoti() -> NotificationTabBarReactor {
-    //     NotificationTabBarReactor(provider: self.provider)
-    // }
 }
 
 extension DetailViewReactor {

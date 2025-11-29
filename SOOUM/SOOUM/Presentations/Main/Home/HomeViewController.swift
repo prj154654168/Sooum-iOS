@@ -323,6 +323,24 @@ class HomeViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
+        let cardIsDeleted = reactor.state.map(\.cardIsDeleted).filterNil()
+        cardIsDeleted
+            .filter { $0.isDeleted }
+            .subscribe(with: self) { object, _ in
+                object.showPungedCardDialog()
+            }
+            .disposed(by: self.disposeBag)
+        cardIsDeleted
+            .filter { $0.isDeleted == false }
+            .subscribe(with: self) { object, cardIsDeleted in
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(with: cardIsDeleted.selectedId)
+                object.navigationPush(detailViewController, animated: true, bottomBarHidden: true) { _ in
+                    reactor.action.onNext(.resetPushState)
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
         reactor.state.map {
             HomeViewReactor.DisplayStates(
                 displayType: $0.displayType,
@@ -493,7 +511,10 @@ private extension HomeViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    self.reactor?.action.onNext(.landing)
+                    self.reactor?.action.onNext(.resetPushState)
+                }
             }
         )
         
@@ -600,7 +621,7 @@ extension HomeViewController: UITableViewDelegate {
             return
         }
         
-        var selectedId: String {
+        var selectedId: String? {
             switch item {
             case let .latest(selectedCard):
                 return selectedCard.id
@@ -609,13 +630,13 @@ extension HomeViewController: UITableViewDelegate {
             case let .distance(selectedCard):
                 return selectedCard.id
             case .empty:
-                return ""
+                return nil
             }
         }
         
-        let detailViewController = DetailViewController()
-        detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
-        self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+        guard let selectedId = selectedId else { return }
+        
+        reactor.action.onNext(.detailCard(selectedId))
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

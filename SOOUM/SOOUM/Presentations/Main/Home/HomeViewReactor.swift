@@ -30,6 +30,8 @@ class HomeViewReactor: Reactor {
         case moreFind(String)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
+        case detailCard(String)
+        case resetPushState
     }
     
     enum Mutation {
@@ -37,6 +39,7 @@ class HomeViewReactor: Reactor {
         case more([BaseCardInfo])
         case updateHasUnreadNotifications(Bool)
         case notices([NoticeInfo])
+        case cardIsDeleted((String, Bool)?)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
         case updateIsRefreshing(Bool)
@@ -50,6 +53,7 @@ class HomeViewReactor: Reactor {
         fileprivate(set) var popularCards: [BaseCardInfo]?
         fileprivate(set) var distanceCards: [BaseCardInfo]?
         fileprivate(set) var hasUnreadNotifications: Bool
+        fileprivate(set) var cardIsDeleted: (selectedId: String, isDeleted: Bool)?
         fileprivate(set) var distanceFilter: String
         fileprivate(set) var isRefreshing: Bool
     }
@@ -75,6 +79,7 @@ class HomeViewReactor: Reactor {
             popularCards: nil,
             distanceCards: nil,
             hasUnreadNotifications: false,
+            cardIsDeleted: nil,
             distanceFilter: "1km",
             isRefreshing: false
         )
@@ -150,6 +155,26 @@ class HomeViewReactor: Reactor {
                 self.refresh(displayType, distanceFilter)
                     .catch(self.catchClosureForCards)
             ])
+        case let .detailCard(selectedId):
+            
+            let coordinate = self.settingsUseCase.coordinate()
+            let latitude = coordinate.latitude
+            let longitude = coordinate.longitude
+            
+            return .concat([
+                .just(.cardIsDeleted(nil)),
+                self.cardUseCase.detailCard(
+                    id: selectedId,
+                    latitude: latitude,
+                    longitude: longitude
+                )
+                .map { _ in (selectedId, false) }
+                .map(Mutation.cardIsDeleted)
+                .catchAndReturn(.cardIsDeleted((selectedId, true)))
+            ])
+        case .resetPushState:
+            
+            return .just(.cardIsDeleted(nil))
         }
     }
     
@@ -172,6 +197,8 @@ class HomeViewReactor: Reactor {
             newState.noticeInfos = noticeInfos
         case let .updateHasUnreadNotifications(hasUnreadNotifications):
             newState.hasUnreadNotifications = hasUnreadNotifications
+        case let .cardIsDeleted(cardIsDeleted):
+            newState.cardIsDeleted = cardIsDeleted
         case let .updateDisplayType(displayType):
             newState.displayType = displayType
         case let .updateDistanceFilter(distanceFilter):
