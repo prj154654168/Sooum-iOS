@@ -30,16 +30,15 @@ class DetailViewFooter: UICollectionReusableView {
         $0.typography = .som.body1WithBold
     }
     
+    /**
+     TODO: 임시,
+     cell을 제외한 top padding 54 * 0.5, top inset = 10 맞추기 위해 -37만큼 올림
+     현재 top padding == 27, 디자인 top padding == 10
+     */
     private let flowLayout = UICollectionViewFlowLayout().then {
         $0.minimumLineSpacing = 10
         $0.minimumInteritemSpacing = 0
         $0.scrollDirection = .horizontal
-        /**
-         TODO: 임시,
-         cell을 제외한 top padding 54 * 0.5, top inset = 10 맞추기 위해 -37만큼 올림
-         현재 top padding == 27, 디자인 top padding == 10
-         */
-        // TODO: 임시, cell을 제외한 top padding 54 * 0.5, top inset = 10 맞추기 위해 -37만큼 올림
         $0.sectionInset = .init(top: -37, left: 16, bottom: 0, right: 16)
     }
     
