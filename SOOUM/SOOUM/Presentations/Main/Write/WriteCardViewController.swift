@@ -677,7 +677,7 @@ extension WriteCardViewController {
                     NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-                        self?.navigationPop()
+                        self?.navigationPopToRoot(animated: true, bottomBarHidden: false)
                     }
                 }
             }
