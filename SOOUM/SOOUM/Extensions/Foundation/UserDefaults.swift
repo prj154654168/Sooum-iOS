@@ -12,6 +12,7 @@ extension UserDefaults {
     
     enum Keys {
         static let hasBeenLaunchedBefore: String = "hasBeenLaunchedBefore"
+        static let hasBeenShowMessageGuide: String = "hasBeenShowMessageGuide"
         static let userNickname: String = "userNickname"
     }
     
@@ -19,9 +20,19 @@ extension UserDefaults {
     static var isFirstLaunch: Bool {
         
         let isFirstLaunch = !UserDefaults.standard.bool(forKey: Keys.hasBeenLaunchedBefore)
-        
         if isFirstLaunch {
             UserDefaults.standard.set(true, forKey: Keys.hasBeenLaunchedBefore)
+        }
+        
+        return isFirstLaunch
+    }
+    
+    // 메인 홈 카드추가 가이드 메시지를 위한 flag
+    static var showGuideMessage: Bool {
+        
+        let isFirstLaunch = !UserDefaults.standard.bool(forKey: Keys.hasBeenShowMessageGuide)
+        if isFirstLaunch {
+            UserDefaults.standard.set(true, forKey: Keys.hasBeenShowMessageGuide)
         }
         
         return isFirstLaunch

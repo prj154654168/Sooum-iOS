@@ -220,6 +220,7 @@ extension UIImage.SOOUMType {
         case onboarding_finish
         case check_square_light
         case detail_delete_card
+        case message_tail
         case placeholder_home
         case placeholder_notification
         case prev_card_button

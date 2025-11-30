@@ -66,11 +66,20 @@ class MainTabBarController: SOMTabBarController, View {
     
     // MARK: Override func
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.hasFirstLaunchGuide = UserDefaults.showGuideMessage
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBar.isHidden = true
     }
+    
+    
+    // MARK: ReactorKit - bind
     
     func bind(reactor: MainTabBarReactor) {
         
@@ -246,6 +255,8 @@ class MainTabBarController: SOMTabBarController, View {
         couldPosting
             .filter { $0.isBaned == false }
             .subscribe(with: self) { object, _ in
+                
+                object.hasFirstLaunchGuide = false
                 
                 let writeCardViewController = WriteCardViewController()
                 writeCardViewController.reactor = reactor.reactorForWriteCard()
