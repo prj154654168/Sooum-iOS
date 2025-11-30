@@ -360,12 +360,8 @@ class DetailViewController: BaseNavigationViewController, View {
              .disposed(by: self.disposeBag)
          willPushEnabled
              .filter { $0 == false }
-             .subscribe(with: self) { object, _ in
-                 object.showDeletedCardDialog {
-                     reactor.action.onNext(.landing)
-                     reactor.action.onNext(.resetPushState)
-                 }
-             }
+             .map { _ in Reactor.Action.resetPushState }
+             .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
          reactor.state.map(\.isLiked)

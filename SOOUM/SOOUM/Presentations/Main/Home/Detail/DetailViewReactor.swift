@@ -143,7 +143,12 @@ class DetailViewReactor: Reactor {
             
             return self.detailCard()
                 .map { _ in .willPushToWrite(true) }
-                .catchAndReturn(.willPushToWrite(false))
+                .catch { _ in
+                    return .concat([
+                        .just(.willPushToWrite(false)),
+                        .just(.updateIsDeleted(true))
+                    ])
+                }
         case .resetPushState:
             
             return .just(.willPushToWrite(nil))
