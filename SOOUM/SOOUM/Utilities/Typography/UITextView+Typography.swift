@@ -27,6 +27,9 @@ extension UITextView {
         if let text = self.text, text.isEmpty == false {
             let selectedRange = self.selectedRange
             
+            // TODO: 임시, 줄바꿈 시 겹치는 문제 해결
+            attributes[.baselineOffset] = attributes[.baselineOffset] as! CGFloat * -0.1
+            
             let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
             self.attributedText = attributedText
             self.selectedRange = selectedRange
