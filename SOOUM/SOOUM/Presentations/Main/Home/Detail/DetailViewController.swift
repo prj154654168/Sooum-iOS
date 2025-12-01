@@ -429,7 +429,9 @@ class DetailViewController: BaseNavigationViewController, View {
                      object.collectionView.reloadData()
                  }
                  
-                 object.showDeletedCardDialog()
+                 object.showDeletedCardDialog {
+                     object.navigationPop()
+                 }
              }
              .disposed(by: self.disposeBag)
      }
