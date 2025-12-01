@@ -40,6 +40,8 @@ class TagCollectCardsView: UIView {
     ).then {
         $0.contentInset = .zero
         
+        $0.contentInsetAdjustmentBehavior = .never
+        
         $0.isScrollEnabled = true
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false

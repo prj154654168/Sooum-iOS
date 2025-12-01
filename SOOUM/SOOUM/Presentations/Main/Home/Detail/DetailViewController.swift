@@ -80,8 +80,6 @@ class DetailViewController: BaseNavigationViewController, View {
         frame: .zero,
         collectionViewLayout: self.flowLayout
      ).then {
-         $0.backgroundColor = .som.v2.gray100
-         
          $0.alwaysBounceVertical = true
          $0.showsVerticalScrollIndicator = false
          $0.showsHorizontalScrollIndicator = false
@@ -618,6 +616,12 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let offset = scrollView.contentOffset.y
+        
+        // 아래 -> 위 스크롤 막음
+        guard offset <= self.initialOffset else {
+            scrollView.contentOffset.y = 0
+            return
+        }
         
         // 당겨서 새로고침
         if self.isRefreshEnabled, offset < self.initialOffset {

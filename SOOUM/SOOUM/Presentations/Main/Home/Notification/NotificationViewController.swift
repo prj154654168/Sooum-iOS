@@ -54,8 +54,8 @@ class NotificationViewController: BaseNavigationViewController, View {
         
         $0.isHidden = true
         
+        $0.contentInsetAdjustmentBehavior = .never
         $0.sectionHeaderTopPadding = .zero
-        $0.decelerationRate = .fast
         
         $0.refreshControl = SOMRefreshControl()
         
