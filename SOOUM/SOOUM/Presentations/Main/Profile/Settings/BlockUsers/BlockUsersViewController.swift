@@ -276,6 +276,8 @@ extension BlockUsersViewController: UITableViewDelegate {
         
         // currentOffset <= 0 && isRefreshing == false 일 때, 테이블 뷰 새로고침 가능
         self.isRefreshEnabled = (offset <= 0) && (self.reactor?.currentState.isRefreshing == false)
+        self.shouldRefreshing = false
+        self.initialOffset = offset
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

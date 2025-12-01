@@ -240,12 +240,6 @@ class TagViewController: BaseNavigationViewController, View {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isUpdatedWithInfo in
                 
-//                let new = reactor.currentState.favoriteTags
-//                if let updatedIndex = new.firstIndex(where: { $0 == isUpdatedWithInfo.model }) {
-//                    new[updatedIndex].isFavorite.toggle()
-//                    reactor.action.onNext(.updatefavoriteTags(new))
-//                }
-                
                 let message = isUpdatedWithInfo.model.isFavorite ? Text.addToastMessage : Text.deleteToastMessage
                 let bottomToastView = SOMBottomToastView(
                     title: "‘\(isUpdatedWithInfo.model.text)’" + message,
@@ -300,6 +294,8 @@ extension TagViewController: UIScrollViewDelegate {
         
         // currentOffset <= 0 && isRefreshing == false 일 때, 테이블 뷰 새로고침 가능
         self.isRefreshEnabled = (offset <= 0) && (self.reactor?.currentState.isRefreshing == false)
+        self.shouldRefreshing = false
+        self.initialOffset = offset
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
