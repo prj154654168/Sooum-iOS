@@ -80,8 +80,6 @@ class DetailViewController: BaseNavigationViewController, View {
         frame: .zero,
         collectionViewLayout: self.flowLayout
      ).then {
-         $0.backgroundColor = .som.v2.gray100
-         
          $0.alwaysBounceVertical = true
          $0.showsVerticalScrollIndicator = false
          $0.showsHorizontalScrollIndicator = false
@@ -135,8 +133,8 @@ class DetailViewController: BaseNavigationViewController, View {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(self.reloadCommentsData(_:)),
-            name: .reloadCommentsData,
+            selector: #selector(self.reloadDetaildata(_:)),
+            name: .reloadDetailData,
             object: nil
         )
         
@@ -191,12 +189,9 @@ class DetailViewController: BaseNavigationViewController, View {
      func bind(reactor: DetailViewReactor) {
          
          // 답카드 작성 전환
-         self.floatingButton.backgoundButton.rx.throttleTap
-             .subscribe(with: self) { object, _ in
-                 let writeCardViewController = WriteCardViewController()
-                 writeCardViewController.reactor = reactor.reactorForWriteCard()
-                 object.navigationPush(writeCardViewController, animated: true, bottomBarHidden: true)
-             }
+         self.floatingButton.backgoundButton.rx.throttleTap(.seconds(3))
+             .map { _ in Reactor.Action.willPushToWrite }
+             .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
          let detailCard = reactor.state.map(\.detailCard).filterNil().distinctUntilChanged()
@@ -235,10 +230,10 @@ class DetailViewController: BaseNavigationViewController, View {
          rightMoreButtonDidTap
              .withLatestFrom(Observable.combineLatest(detailCard, isBlocked, isReported))
              .filter { $0.0.isOwnCard == false }
-             .map { ($0.1, $0.2) }
+             .map { ($0.0.nickname, $0.1, $0.2) }
              .subscribe(with: self) { object, combined in
                  
-                 let (isBlocked, isReported) = combined
+                 let (nickname, isBlocked, isReported) = combined
                  
                  object.actions = [
                     .init(
@@ -247,7 +242,9 @@ class DetailViewController: BaseNavigationViewController, View {
                         action: { [weak object] in
                             SwiftEntryKit.dismiss(.specific(entryName: Text.bottomFloatEntryName)) {
                                 if isBlocked {
-                                    object?.showBlockedUserDialog()
+                                    object?.showBlockedUserDialog(nickname: nickname) {
+                                        reactor.action.onNext(.block(isBlocked: true))
+                                    }
                                 } else {
                                     reactor.action.onNext(.block(isBlocked: false))
                                 }
@@ -344,6 +341,27 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: self.disposeBag)
          
+         let willPushEnabled = reactor.state.map(\.willPushEnabled).distinctUntilChanged().filterNil()
+         willPushEnabled
+             .filter { $0 }
+             .subscribe(with: self) { object, _ in
+                 let writeCardViewController = WriteCardViewController()
+                 writeCardViewController.reactor = reactor.reactorForWriteCard()
+                 object.navigationPush(
+                    writeCardViewController,
+                    animated: true,
+                    bottomBarHidden: true
+                 ) { _ in
+                     reactor.action.onNext(.resetPushState)
+                 }
+             }
+             .disposed(by: self.disposeBag)
+         willPushEnabled
+             .filter { $0 == false }
+             .map { _ in Reactor.Action.resetPushState }
+             .bind(to: reactor.action)
+             .disposed(by: self.disposeBag)
+         
          reactor.state.map(\.isLiked)
              .distinctUntilChanged()
              .filter { $0 }
@@ -397,7 +415,7 @@ class DetailViewController: BaseNavigationViewController, View {
              .subscribe(with: self) { object, _ in
                  NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
                  if reactor.entranceCardType == .comment {
-                     NotificationCenter.default.post(name: .reloadCommentsData, object: nil, userInfo: nil)
+                     NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
                  }
                  
                  object.navigationBar.title = Text.deletedNavigationTitle
@@ -411,7 +429,9 @@ class DetailViewController: BaseNavigationViewController, View {
                      object.collectionView.reloadData()
                  }
                  
-                 object.showDeletedCardDialog()
+                 object.showDeletedCardDialog {
+                     object.navigationPop()
+                 }
              }
              .disposed(by: self.disposeBag)
      }
@@ -420,9 +440,9 @@ class DetailViewController: BaseNavigationViewController, View {
     // MARK: Objc func
     
     @objc
-    private func reloadCommentsData(_ notification: Notification) {
+    private func reloadDetaildata(_ notification: Notification) {
         
-        self.reactor?.action.onNext(.refreshForComment)
+        self.reactor?.action.onNext(.landing)
     }
     
     @objc
@@ -480,22 +500,31 @@ extension DetailViewController: UICollectionViewDataSource {
             }
             .disposed(by: cell.disposeBag)
         
-        cell.likeAndCommentView.likeBackgroundButton.rx.throttleTap(.seconds(3))
-            .withLatestFrom(reactor.state.compactMap(\.detailCard).map(\.isLike))
-            .subscribe(onNext: { isLike in
-                reactor.action.onNext(.updateLike(isLike == false))
-            })
-            .disposed(by: cell.disposeBag)
-        
-        cell.likeAndCommentView.commentBackgroundButton.rx.throttleTap
-            .subscribe(with: self) { object, _ in
-                let writeCardViewController = WriteCardViewController()
-                writeCardViewController.reactor = reactor.reactorForWriteCard()
-                object.navigationPush(writeCardViewController, animated: true, bottomBarHidden: true)
+        cell.tags.tagDidTap
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
+            .subscribe(with: self) { object, tagInfo in
+                let tagCollectViewController = TagCollectViewController()
+                tagCollectViewController.reactor = reactor.reactorForTagCollect(
+                    with: tagInfo.id,
+                    title: tagInfo.text
+                )
+                object.navigationPush(tagCollectViewController, animated: true, bottomBarHidden: true)
             }
             .disposed(by: cell.disposeBag)
         
-        cell.prevCardBackgroundButton.rx.throttleTap
+        cell.likeAndCommentView.likeBackgroundButton.rx.throttleTap
+            .withLatestFrom(reactor.state.compactMap(\.detailCard).map(\.isLike))
+            .subscribe(onNext: { isLike in
+                reactor.action.onNext(.updateLike(!isLike))
+            })
+            .disposed(by: cell.disposeBag)
+        
+        cell.likeAndCommentView.commentBackgroundButton.rx.throttleTap(.seconds(3))
+            .map { _ in Reactor.Action.willPushToWrite }
+            .bind(to: reactor.action)
+            .disposed(by: cell.disposeBag)
+        
+        cell.prevCardBackgroundButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop
                 if let naviStackCount = object.navigationController?.viewControllers.count,
@@ -584,22 +613,27 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         
         // currentOffset <= 0 && isRefreshing == false 일 때, 테이블 뷰 새로고침 가능
         self.isRefreshEnabled = (offset <= 0) && (self.reactor?.currentState.isRefreshing == false)
+        self.shouldRefreshing = false
+        self.initialOffset = offset
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let offset = scrollView.contentOffset.y
         
+        // 아래 -> 위 스크롤 막음
+        guard offset <= self.initialOffset else {
+            scrollView.contentOffset.y = 0
+            return
+        }
+        
         // 당겨서 새로고침
         if self.isRefreshEnabled, offset < self.initialOffset {
-            guard let refreshControl = self.collectionView.refreshControl else {
-                self.currentOffset = offset
-                return
-            }
             
             let pulledOffset = self.initialOffset - offset
-            let refreshingOffset = refreshControl.frame.origin.y + refreshControl.frame.height
-            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset + 10
+            /// refreshControl heigt + top padding
+            let refreshingOffset: CGFloat = 44 + 12
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset
         }
         
         self.currentOffset = offset
@@ -621,9 +655,7 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
 
 private extension DetailViewController {
     
-    func showBlockedUserDialog() {
-        
-        guard let reactor = self.reactor else { return }
+    func showBlockedUserDialog(nickname: String, completion: (() -> Void)? = nil) {
         
         let cancelAction = SOMDialogAction(
             title: Text.cancelActionTitle,
@@ -637,15 +669,14 @@ private extension DetailViewController {
             style: .primary,
             action: {
                 UIApplication.topViewController?.dismiss(animated: true) {
-                    
-                    reactor.action.onNext(.block(isBlocked: true))
+                    completion?()
                 }
             }
          )
 
          SOMDialogViewController.show(
             title: Text.blockDialogTitle,
-            message: (reactor.currentState.detailCard?.nickname ?? "") + Text.blockDialogMessage,
+            message: nickname + Text.blockDialogMessage,
             textAlignment: .left,
             actions: [cancelAction, blockAction]
          )
@@ -681,13 +712,15 @@ private extension DetailViewController {
          )
     }
     
-    func showDeletedCardDialog() {
+    func showDeletedCardDialog(completion: (() -> Void)? = nil) {
         
         let confirmAction = SOMDialogAction(
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    completion?()
+                }
             }
         )
         
@@ -699,20 +732,3 @@ private extension DetailViewController {
         )
     }
 }
-
-// extension DetailViewController: SOMTagsDelegate {
-//
-//     func tags(_ tags: SOMTags, didTouch model: SOMTagModel) {
-//
-//         guard let reactor = self.reactor else { return }
-//         GAManager.shared.logEvent(
-//             event: SOMEvent.Tag.tag_click(
-//                 tag_text: model.originalText,
-//                 click_position: SOMEvent.Tag.ClickPositionKey.post
-//             )
-//         )
-//         let tagDetailVC = TagDetailViewController()
-//         tagDetailVC.reactor = reactor.reactorForTagDetail(model.id)
-//         self.navigationPush(tagDetailVC, animated: true)
-//     }
-// }

@@ -252,7 +252,7 @@ class SettingsViewController: BaseNavigationViewController, View {
                 let subject = Text.inquiryMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                 let guideMessage = """
                     \(Text.identificationInfo)
-                    \(reactor.authManager.authInfo.token.refreshToken)\n
+                    \(reactor.initialState.tokens.refreshToken)\n
                     \(Text.inquiryMailGuideMessage)
                 """
                 let body = guideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -367,7 +367,7 @@ extension SettingsViewController {
         
         let resignAction = SOMDialogAction(
             title: Text.resignTitle,
-            style: .red,
+            style: .primary,
             action: {
                 UIApplication.topViewController?.dismiss(animated: true) {
                     let resignViewController = ResignViewController()

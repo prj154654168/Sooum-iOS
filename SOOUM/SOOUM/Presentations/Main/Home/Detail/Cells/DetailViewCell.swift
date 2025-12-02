@@ -100,7 +100,7 @@ class DetailViewCell: UICollectionViewCell {
         $0.typography = .som.v2.body1
     }
     
-    private let tags = WrittenTags()
+    let tags = WrittenTags()
     
     let likeAndCommentView = LikeAndCommentView()
     

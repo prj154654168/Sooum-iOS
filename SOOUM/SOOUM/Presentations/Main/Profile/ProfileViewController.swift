@@ -197,12 +197,13 @@ class ProfileViewController: BaseNavigationViewController, View {
                     cell.setModels(type: type, feed: feeds, comment: comments ?? [])
                 }
                 
-                // TODO: 상세화면 이동
-                // cell.cardDidTap
-                //     .subscribe(with: self) { object, selectedId in
-                //
-                //     }
-                //     .disposed(by: cell.disposeBag)
+                cell.cardDidTap
+                    .subscribe(with: self) { object, selectedId in
+                        let detailViewController = DetailViewController()
+                        detailViewController.reactor = reactor.reactorForDetail(selectedId)
+                        object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                    }
+                    .disposed(by: cell.disposeBag)
                 
                 cell.moreFindCards
                     .subscribe(with: self) { object, moreInfo in
@@ -598,6 +599,8 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
         
         // currentOffset <= 0 && isRefreshing == false 일 때, 테이블 뷰 새로고침 가능
         self.isRefreshEnabled = (offset <= 0) && (self.reactor?.currentState.isRefreshing == false)
+        self.shouldRefreshing = false
+        self.initialOffset = offset
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -606,14 +609,11 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
         
         // 당겨서 새로고침
         if self.isRefreshEnabled, offset < self.initialOffset {
-            guard let refreshControl = self.collectionView.refreshControl else {
-                self.currentOffset = offset
-                return
-            }
             
             let pulledOffset = self.initialOffset - offset
-            let refreshingOffset = refreshControl.frame.origin.y + refreshControl.frame.height
-            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset + 10
+            /// refreshControl heigt + top padding
+            let refreshingOffset: CGFloat = 44 + 12
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset
         }
         
         self.currentOffset = offset

@@ -59,9 +59,10 @@ class HomeViewController: BaseNavigationViewController, View {
         $0.contentMode = .scaleAspectFit
     }
     
-    private let rightAlamButton = SOMButton().then {
+    private let rightAlamButton = UIButton()
+    private let rightAlamImageView = UIImageView().then {
         $0.image = .init(.icon(.v2(.outlined(.bell))))
-        $0.foregroundColor = .som.v2.black
+        $0.tintColor = .som.v2.black
     }
     
     private let dotWithoutReadView = UIView().then {
@@ -223,14 +224,17 @@ class HomeViewController: BaseNavigationViewController, View {
         
         self.navigationBar.hidesBackButton = true
         
+        self.rightAlamButton.addSubview(self.rightAlamImageView)
         self.rightAlamButton.addSubview(self.dotWithoutReadView)
+        self.rightAlamImageView.snp.makeConstraints {
+            $0.size.equalTo(24)
+        }
         self.dotWithoutReadView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(12)
-            $0.trailing.equalToSuperview().offset(-12)
+            $0.top.trailing.equalToSuperview()
             $0.size.equalTo(5)
         }
         self.rightAlamButton.snp.makeConstraints {
-            $0.size.equalTo(48)
+            $0.edges.equalTo(self.rightAlamImageView.snp.edges)
         }
         
         self.navigationBar.setRightButtons([self.rightAlamButton])
@@ -316,6 +320,24 @@ class HomeViewController: BaseNavigationViewController, View {
                 )
                 object.topNoticeView.setModels(models)
                 object.tableView.tableHeaderView = noticeInfos.isEmpty ? nil : object.topNoticeView
+            }
+            .disposed(by: self.disposeBag)
+        
+        let cardIsDeleted = reactor.state.map(\.cardIsDeleted).filterNil()
+        cardIsDeleted
+            .filter { $0.isDeleted }
+            .subscribe(with: self) { object, _ in
+                object.showPungedCardDialog()
+            }
+            .disposed(by: self.disposeBag)
+        cardIsDeleted
+            .filter { $0.isDeleted == false }
+            .subscribe(with: self) { object, cardIsDeleted in
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(with: cardIsDeleted.selectedId)
+                object.navigationPush(detailViewController, animated: true, bottomBarHidden: true) { _ in
+                    reactor.action.onNext(.resetPushState)
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -405,7 +427,7 @@ class HomeViewController: BaseNavigationViewController, View {
     @objc
     private func changedLocationAuthorization(_ notification: Notification) {
         
-        if self.stickyTabBar.selectedIndex == 2, self.reactor?.locationManager.hasPermission == false {
+        if self.stickyTabBar.selectedIndex == 2, self.reactor?.initialState.hasPermission == false {
             
             self.reactor?.action.onNext(.refresh)
             self.showLocationPermissionDialog()
@@ -489,7 +511,10 @@ private extension HomeViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    self.reactor?.action.onNext(.landing)
+                    self.reactor?.action.onNext(.resetPushState)
+                }
             }
         )
         
@@ -533,7 +558,7 @@ extension HomeViewController: SOMStickyTabBarDelegate {
         }
         self.reactor?.action.onNext(.updateDisplayType(displayType))
         
-        if index == 2, self.reactor?.locationManager.hasPermission == false {
+        if index == 2, self.reactor?.initialState.hasPermission == false {
             self.showLocationPermissionDialog()
         }
     }
@@ -596,7 +621,7 @@ extension HomeViewController: UITableViewDelegate {
             return
         }
         
-        var selectedId: String {
+        var selectedId: String? {
             switch item {
             case let .latest(selectedCard):
                 return selectedCard.id
@@ -605,13 +630,13 @@ extension HomeViewController: UITableViewDelegate {
             case let .distance(selectedCard):
                 return selectedCard.id
             case .empty:
-                return ""
+                return nil
             }
         }
         
-        let detailViewController = DetailViewController()
-        detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
-        self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+        guard let selectedId = selectedId else { return }
+        
+        reactor.action.onNext(.detailCard(selectedId))
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -682,14 +707,11 @@ extension HomeViewController: UITableViewDelegate {
         
         // 당겨서 새로고침
         if self.isRefreshEnabled, offset < self.initialOffset {
-            guard let refreshControl = self.tableView.refreshControl else {
-                self.currentOffset = offset
-                return
-            }
             
             let pulledOffset = self.initialOffset - offset
-            let refreshingOffset = refreshControl.frame.origin.y + refreshControl.frame.height + 16
-            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset + 10
+            /// refreshControl heigt + top padding
+            let refreshingOffset: CGFloat = 44 + 12
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset
         }
         
         // 당겨서 새로고침 시 무시

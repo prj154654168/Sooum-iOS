@@ -36,12 +36,12 @@ class BlockUsersViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let settingsUseCase: SettingsUserCase
+    private let settingsUseCase: SettingsUseCase
     private let userUseCase: UserUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUserCase.self)
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
         self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
     }
     

@@ -25,7 +25,6 @@ import ReactorKit
  */
 class LaunchScreenViewReactor: Reactor {
     
-    // MARK: - Action
     enum Action: Equatable {
         /// 앱이 시작되었을 때, 로그인 및 회원가입 처리 흐름을 시작
         case launch
@@ -54,9 +53,9 @@ class LaunchScreenViewReactor: Reactor {
     private let authUseCase: AuthUseCase
     private let versionUseCase: AppVersionUseCase
     
-    private let pushInfo: NotificationInfo?
+    private let pushInfo: PushNotificationInfo?
     
-    init(dependencies: AppDIContainerable, pushInfo: NotificationInfo? = nil) {
+    init(dependencies: AppDIContainerable, pushInfo: PushNotificationInfo? = nil) {
         self.dependencies = dependencies
         self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
         self.versionUseCase = dependencies.rootContainer.resolve(AppVersionUseCase.self)
@@ -70,13 +69,11 @@ class LaunchScreenViewReactor: Reactor {
             // 계정 이관에 성공했을 때, 온보딩 화면으로 전환
             let isTransfered = self.pushInfo?.isTransfered ?? false
             if isTransfered {
+                // session token 삭제
                 self.authUseCase.initializeAuthInfo()
-                return .just(.updateIsRegistered(false))
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-            } else {
-                return self.check()
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance)
             }
+            
+            return self.check()
         }
     }
     
@@ -104,7 +101,7 @@ extension LaunchScreenViewReactor {
     private func login() -> Observable<Mutation> {
         return self.authUseCase.login()
             .map { .updateIsRegistered($0) }
-            .catch(self.catchClosure)
+            .catchAndReturn(.updateIsRegistered(false))
     }
     
     private func check() -> Observable<Mutation> {
@@ -123,17 +120,6 @@ extension LaunchScreenViewReactor {
     }
 }
 
-private extension LaunchScreenViewReactor {
-    
-    private var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { error in
-            
-            let nsError = error as NSError
-            return nsError.code == 404 ? .just(.updateIsRegistered(false)) : .empty()
-        }
-    }
-}
-
 extension LaunchScreenViewReactor {
     
     func reactorForOnboarding() -> OnboardingViewReactor {
@@ -141,6 +127,6 @@ extension LaunchScreenViewReactor {
     }
     
     func reactorForMainTabBar() -> MainTabBarReactor {
-        MainTabBarReactor(dependencies: self.dependencies)
+        MainTabBarReactor(dependencies: self.dependencies, pushInfo: self.pushInfo)
     }
 }

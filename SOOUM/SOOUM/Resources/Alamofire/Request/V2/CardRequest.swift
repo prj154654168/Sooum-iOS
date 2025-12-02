@@ -65,8 +65,6 @@ enum CardRequest: BaseRequest {
         imgName: String,
         tags: [String]
     )
-    /// 글추가 - 관련 태그 조회
-    case relatedTags(keyword: String, size: Int)
     
     var path: String {
         switch self {
@@ -119,9 +117,6 @@ enum CardRequest: BaseRequest {
         case let .writeComment(id, _, _, _, _, _, _, _, _):
             
             return "/api/cards/\(id)"
-        case let .relatedTags(_, size):
-            
-            return "/api/tags/related/\(size)"
         }
     }
 
@@ -129,7 +124,7 @@ enum CardRequest: BaseRequest {
         switch self {
         case .deleteCard:
             return .delete
-        case .reportCard, .writeCard, .writeComment, .relatedTags:
+        case .reportCard, .writeCard, .writeComment:
             return .post
         case let .updateLike(_, isLike):
             return isLike ? .post : .delete
@@ -231,10 +226,6 @@ enum CardRequest: BaseRequest {
             }
             
             return parameters
-        case let .relatedTags(keyword, _):
-            
-            return ["tag": keyword]
-        
         default:
             return [:]
         }
@@ -242,7 +233,7 @@ enum CardRequest: BaseRequest {
 
     var encoding: ParameterEncoding {
         switch self {
-        case .reportCard, .writeCard, .writeComment, .relatedTags:
+        case .reportCard, .writeCard, .writeComment:
             return JSONEncoding.default
         default:
             return URLEncoding.default
@@ -255,8 +246,7 @@ enum CardRequest: BaseRequest {
 
     func asURLRequest() throws -> URLRequest {
 
-        let pathWithAPIVersion = self.path
-        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(pathWithAPIVersion) {
+        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
             var request = URLRequest(url: url)
             request.method = self.method
             

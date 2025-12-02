@@ -13,7 +13,7 @@ import Then
 class ResignTextFieldView: UIView {
     
     enum Constants {
-        static let maxCharacters: Int = 8
+        static let maxCharacters: Int = 250
     }
     
     
@@ -131,11 +131,16 @@ class ResignTextFieldView: UIView {
     
     private func setupConstraints() {
         
-        self.addSubview(self.textFieldBackgroundView)
-        self.textFieldBackgroundView.snp.makeConstraints {
-            $0.top.horizontalEdges.equalToSuperview()
+        self.snp.makeConstraints {
+            $0.width.equalTo(UIScreen.main.bounds.width - 16 * 2)
             $0.height.equalTo(54)
         }
+        
+        self.addSubview(self.textFieldBackgroundView)
+        self.textFieldBackgroundView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
         self.textFieldBackgroundView.addSubview(self.textField)
         self.textField.snp.makeConstraints {
             $0.centerY.equalToSuperview()
@@ -144,6 +149,9 @@ class ResignTextFieldView: UIView {
         }
     }
 }
+
+
+// MARK: UITextFieldDelegate
 
 extension ResignTextFieldView: UITextFieldDelegate {
     

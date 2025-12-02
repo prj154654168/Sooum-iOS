@@ -29,6 +29,10 @@ protocol SOMTabBarControllerDelegate: AnyObject {
 
 class SOMTabBarController: UIViewController {
     
+    enum Text {
+        static let firstLaunchGuideMessage: String = "✨ 새로운 카드 만들기"
+    }
+    
     
     // MARK: Views
     
@@ -40,11 +44,23 @@ class SOMTabBarController: UIViewController {
         $0.backgroundColor = .som.white
     }
     
+    private let messageBubbleView = SOMMessageBubbleView().then {
+        $0.message = Text.firstLaunchGuideMessage
+    }
+    
     
     // MARK: Variables
     
     var viewControllers: [UIViewController] = [] {
         didSet { self.tabBar.viewControllers = self.viewControllers }
+    }
+    
+    var hasFirstLaunchGuide: Bool = true {
+        didSet {
+            if hasFirstLaunchGuide == false {
+                self.messageBubbleView.removeFromSuperview()
+            }
+        }
     }
     
     private var selectedIndex: Int = -1
@@ -95,6 +111,16 @@ class SOMTabBarController: UIViewController {
             $0.bottom.horizontalEdges.equalToSuperview()
             $0.height.equalTo(88)
         }
+        
+        self.view.addSubview(self.messageBubbleView)
+        self.messageBubbleView.snp.makeConstraints {
+            $0.bottom.equalTo(self.tabBar.snp.top).offset(4)
+            let offset = self.tabBar.itemFrames[1].maxX - self.tabBar.itemFrames[1].width * 0.5
+            let width = (Text.firstLaunchGuideMessage as NSString).size(
+                withAttributes: [.font: Typography.som.v2.caption1.font]
+            ).width + 10 * 2
+            $0.leading.equalToSuperview().offset(offset - width * 0.5)
+        }
     }
     
     
@@ -110,8 +136,8 @@ class SOMTabBarController: UIViewController {
         else { return }
         
         let hidesTabBar = viewController.hidesBottomBarWhenPushed
-        // self.tabBar.isHidden = hidesTabBar
         UIView.animate(withDuration: 0.25) {
+            self.messageBubbleView.isHidden = hidesTabBar
             self.tabBar.frame.origin.y = hidesTabBar ? self.view.frame.maxY : self.view.frame.maxY - 88
         }
     }

@@ -306,8 +306,8 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.hasErrors)
-            .filterNil()
-            .filter { $0 }
+            .distinctUntilChanged()
+            .filter { $0 == true }
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { _ in
                 

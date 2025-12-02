@@ -54,8 +54,8 @@ class NotificationViewController: BaseNavigationViewController, View {
         
         $0.isHidden = true
         
+        $0.contentInsetAdjustmentBehavior = .never
         $0.sectionHeaderTopPadding = .zero
-        $0.decelerationRate = .fast
         
         $0.refreshControl = SOMRefreshControl()
         
@@ -320,6 +320,16 @@ extension NotificationViewController: UITableViewDelegate {
                 default:
                     return
                 }
+            case let .tag(notification):
+                
+                reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
+                
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(
+                    entranceType: .feed,
+                    with: notification.targetCardId
+                )
+                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
             case let .follow(notification):
                 
                 reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
@@ -334,6 +344,14 @@ extension NotificationViewController: UITableViewDelegate {
             
             switch notification {
             case let .default(notification):
+                
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(
+                    entranceType: .feed,
+                    with: notification.targetCardId
+                )
+                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+            case let .tag(notification):
                 
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(
@@ -433,7 +451,7 @@ extension NotificationViewController: UITableViewDelegate {
                    indexPath.section == Section.unread.rawValue,
                    indexPath.row == lastRowIndexPath {
                     
-                    var lastId: String {
+                    var lastId: String? {
                         switch reactor.currentState.notificationsForUnread?.last {
                         case let .default(notification):
                             return notification.notificationInfo.notificationId
@@ -443,10 +461,15 @@ extension NotificationViewController: UITableViewDelegate {
                             return notification.notificationInfo.notificationId
                         case let .blocked(notification):
                             return notification.notificationInfo.notificationId
+                        case let .tag(notification):
+                            return notification.notificationInfo.notificationId
                         default:
-                            return ""
+                            return nil
                         }
                     }
+                    
+                    guard let lastId = lastId else { return }
+                    
                     reactor.action.onNext(.moreFind(lastId: lastId, displayType: .activity(.unread)))
                 }
             case .read:
@@ -456,7 +479,7 @@ extension NotificationViewController: UITableViewDelegate {
                    indexPath.section == Section.read.rawValue,
                    indexPath.row == lastRowIndexPath {
                     
-                    var lastId: String {
+                    var lastId: String? {
                         switch reactor.currentState.notificationsForUnread?.last {
                         case let .default(notification):
                             return notification.notificationInfo.notificationId
@@ -466,10 +489,15 @@ extension NotificationViewController: UITableViewDelegate {
                             return notification.notificationInfo.notificationId
                         case let .blocked(notification):
                             return notification.notificationInfo.notificationId
+                        case let .tag(notification):
+                            return notification.notificationInfo.notificationId
                         default:
-                            return ""
+                            return nil
                         }
                     }
+                    
+                    guard let lastId = lastId else { return }
+                    
                     reactor.action.onNext(.moreFind(lastId: lastId, displayType: .activity(.read)))
                 }
             }
@@ -505,14 +533,11 @@ extension NotificationViewController: UITableViewDelegate {
         
         // 당겨서 새로고침
         if self.isRefreshEnabled, offset < self.initialOffset {
-            guard let refreshControl = self.tableView.refreshControl else {
-                self.currentOffset = offset
-                return
-            }
             
             let pulledOffset = self.initialOffset - offset
-            let refreshingOffset = refreshControl.frame.origin.y + refreshControl.frame.height
-            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset + 10
+            /// refreshControl heigt + top padding
+            let refreshingOffset: CGFloat = 44 + 12
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset
         }
         
         self.currentOffset = offset

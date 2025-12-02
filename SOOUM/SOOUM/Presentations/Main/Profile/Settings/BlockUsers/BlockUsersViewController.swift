@@ -276,6 +276,8 @@ extension BlockUsersViewController: UITableViewDelegate {
         
         // currentOffset <= 0 && isRefreshing == false 일 때, 테이블 뷰 새로고침 가능
         self.isRefreshEnabled = (offset <= 0) && (self.reactor?.currentState.isRefreshing == false)
+        self.shouldRefreshing = false
+        self.initialOffset = offset
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -284,14 +286,11 @@ extension BlockUsersViewController: UITableViewDelegate {
         
         // 당겨서 새로고침
         if self.isRefreshEnabled, offset < self.initialOffset {
-            guard let refreshControl = self.tableView.refreshControl else {
-                self.currentOffset = offset
-                return
-            }
             
             let pulledOffset = self.initialOffset - offset
-            let refreshingOffset = refreshControl.frame.origin.y + refreshControl.frame.height
-            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset + 10
+            /// refreshControl heigt + top padding
+            let refreshingOffset: CGFloat = 44 + 12
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset
         }
         
         self.currentOffset = offset

@@ -12,9 +12,11 @@ import RxSwift
 class SettingsRepositoryImpl: SettingsRepository {
     
     private let remoteDataSource: SettingsRemoteDataSource
+    private let localDataSource: SettingsLocalDataSource
     
-    init(remoteDataSource: SettingsRemoteDataSource) {
+    init(remoteDataSource: SettingsRemoteDataSource, localDataSource: SettingsLocalDataSource) {
         self.remoteDataSource = remoteDataSource
+        self.localDataSource = localDataSource
     }
     
     func rejoinableDate() -> Observable<RejoinableDateInfoResponse> {
@@ -40,5 +42,35 @@ class SettingsRepositoryImpl: SettingsRepository {
     func blockUsers(lastId: String?) -> Observable<BlockUsersInfoResponse> {
         
         return self.remoteDataSource.blockUsers(lastId: lastId)
+    }
+    
+    func notificationStatus() -> Bool {
+        
+        return self.localDataSource.notificationStatus()
+    }
+    
+    func switchNotification(on: Bool) -> Observable<Error?> {
+        
+        return  self.localDataSource.switchNotification(on: on)
+    }
+    
+    func coordinate() -> Coordinate {
+        
+        return self.localDataSource.coordinate()
+    }
+    
+    func hasPermission() -> Bool {
+        
+        return self.localDataSource.hasPermission()
+    }
+    
+    func requestLocationPermission() {
+        
+        self.localDataSource.requestLocationPermission()
+    }
+    
+    func checkLocationAuthStatus() -> AuthStatus {
+        
+        return self.localDataSource.checkLocationAuthStatus()
     }
 }

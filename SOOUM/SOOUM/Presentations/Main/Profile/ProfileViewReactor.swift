@@ -90,6 +90,8 @@ class ProfileViewReactor: Reactor {
                                 .map(Mutation.feedCardInfos)
                         ])
                     } else {
+                        // 사용자 닉네임 업데이트
+                        UserDefaults.standard.nickname = profileInfo.nickname
                         
                         return .concat([
                             .just(.profile(profileInfo)),
@@ -106,6 +108,11 @@ class ProfileViewReactor: Reactor {
             return self.userUseCase.profile(userId: self.userId)
                 .withUnretained(self)
                 .flatMapLatest { object, profileInfo -> Observable<Mutation> in
+                    
+                    if object.entranceType == .my || object.entranceType == .myWithNavi {
+                        // 사용자 닉네임 업데이트
+                        UserDefaults.standard.nickname = profileInfo.nickname
+                    }
                     
                     if object.currentState.cardType == .feed {
                         
@@ -148,6 +155,12 @@ class ProfileViewReactor: Reactor {
         case .updateProfile:
             
             return self.userUseCase.profile(userId: self.userId)
+                .map { profileInfo -> ProfileInfo in
+                    // 사용자 닉네임 업데이트
+                    UserDefaults.standard.nickname = profileInfo.nickname
+                    
+                    return profileInfo
+                }
                 .map(Mutation.profile)
         case .updateCards:
             

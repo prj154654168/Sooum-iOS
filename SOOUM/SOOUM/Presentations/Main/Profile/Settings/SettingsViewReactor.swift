@@ -28,6 +28,7 @@ class SettingsViewReactor: Reactor {
     }
     
     struct State {
+        fileprivate(set) var tokens: Token
         fileprivate(set) var banEndAt: Date?
         fileprivate(set) var version: Version?
         fileprivate(set) var notificationStatus: Bool
@@ -39,24 +40,22 @@ class SettingsViewReactor: Reactor {
     
     private let dependencies: AppDIContainerable
     private let appVersionUseCase: AppVersionUseCase
+    private let authUseCase: AuthUseCase
     private let userUseCase: UserUseCase
-    private let settingsUseCase: SettingsUserCase
-    private let pushManager: PushManagerDelegate
-    
-    let authManager: AuthManagerDelegate
+    private let settingsUseCase: SettingsUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
         self.appVersionUseCase = dependencies.rootContainer.resolve(AppVersionUseCase.self)
+        self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
         self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUserCase.self)
-        self.pushManager = dependencies.rootContainer.resolve(ManagerProviderType.self).pushManager
-        self.authManager = dependencies.rootContainer.resolve(ManagerProviderType.self).authManager
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
         
         self.initialState = .init(
+            tokens: self.authUseCase.tokens(),
             banEndAt: nil,
             version: nil,
-            notificationStatus: self.pushManager.notificationStatus,
+            notificationStatus: self.settingsUseCase.notificationStatus(),
             shouldHideTransfer: UserDefaults.standard.bool(forKey: "AppFlag")
         )
     }

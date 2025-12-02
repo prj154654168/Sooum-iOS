@@ -17,13 +17,14 @@ class DetailViewReactor: Reactor {
     
     enum Action: Equatable {
         case landing
-        case refreshForComment
         case refresh
         case moreFindForComment(lastId: String)
         case delete
         case block(isBlocked: Bool)
         case updateLike(Bool)
         case updateReport(Bool)
+        case willPushToWrite
+        case resetPushState
     }
     
     enum Mutation {
@@ -36,6 +37,7 @@ class DetailViewReactor: Reactor {
         case updateReported(Bool)
         case updateIsBlocked(Bool)
         case updateErrors(Int?)
+        case willPushToWrite(Bool?)
     }
     
     struct State {
@@ -47,6 +49,7 @@ class DetailViewReactor: Reactor {
         fileprivate(set) var isReported: Bool
         fileprivate(set) var isBlocked: Bool
         fileprivate(set) var hasErrors: Int?
+        fileprivate(set) var willPushEnabled: Bool?
     }
     
     var initialState: State = .init(
@@ -57,14 +60,14 @@ class DetailViewReactor: Reactor {
         isDeleted: false,
         isReported: false,
         isBlocked: true,
-        hasErrors: nil
+        hasErrors: nil,
+        willPushEnabled: nil
     )
     
     private let dependencies: AppDIContainerable
     private let cardUseCase: CardUseCase
     private let userUseCase: UserUseCase
-    
-    private let locationManager: LocationManagerDelegate
+    private let settingsUseCase: SettingsUseCase
     
     let entranceCardType: EntranceCardType
     let entranceType: EntranceType
@@ -79,8 +82,7 @@ class DetailViewReactor: Reactor {
         self.dependencies = dependencies
         self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
         self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        
-        self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
         
         self.entranceCardType = entranceCardType
         self.entranceType = entranceType
@@ -96,9 +98,6 @@ class DetailViewReactor: Reactor {
                     .catch(self.catchClosure),
                 self.commentCards()
             ])
-        case .refreshForComment:
-            
-            return self.commentCards()
         case .refresh:
             
             return .concat([
@@ -140,6 +139,19 @@ class DetailViewReactor: Reactor {
         case let .updateReport(isReported):
             
             return .just(.updateReported(isReported))
+        case .willPushToWrite:
+            
+            return self.detailCard()
+                .map { _ in .willPushToWrite(true) }
+                .catch { _ in
+                    return .concat([
+                        .just(.willPushToWrite(false)),
+                        .just(.updateIsDeleted(true))
+                    ])
+                }
+        case .resetPushState:
+            
+            return .just(.willPushToWrite(nil))
         }
     }
     
@@ -164,14 +176,17 @@ class DetailViewReactor: Reactor {
             newState.isBlocked = isBlocked
         case let .updateErrors(hasErrors):
             newState.hasErrors = hasErrors
+        case let .willPushToWrite(willPushEnabled):
+            newState.willPushEnabled = willPushEnabled
         }
         return newState
     }
     
     func detailCard() -> Observable<Mutation> {
         
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let coordinate = self.settingsUseCase.coordinate()
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         return self.cardUseCase.detailCard(
             id: self.selectedCardId,
@@ -183,8 +198,9 @@ class DetailViewReactor: Reactor {
     
     func commentCards() -> Observable<Mutation> {
         
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let coordinate = self.settingsUseCase.coordinate()
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         return self.cardUseCase.commentCard(
             id: self.selectedCardId,
@@ -196,8 +212,10 @@ class DetailViewReactor: Reactor {
     }
     
     func fetchMoreCommentCards(_ lastId: String) -> Observable<Mutation> {
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        
+        let coordinate = self.settingsUseCase.coordinate()
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         return self.cardUseCase.commentCard(
             id: self.selectedCardId,
@@ -227,9 +245,9 @@ extension DetailViewReactor {
         )
     }
     
-    // func reactorForTagDetail(_ tagID: String) -> TagDetailViewrReactor {
-    //     TagDetailViewrReactor(provider: self.provider, tagID: tagID)
-    // }
+    func reactorForTagCollect(with id: String, title: String) -> TagCollectViewReactor {
+        TagCollectViewReactor(dependencies: self.dependencies, with: id, title: title, isFavorite: false)
+    }
     
     func reactorForProfile(
         type: ProfileViewReactor.EntranceType,
@@ -237,10 +255,6 @@ extension DetailViewReactor {
     ) -> ProfileViewReactor {
         ProfileViewReactor(dependencies: self.dependencies, type: type, with: userId)
     }
-    
-    // func reactorForNoti() -> NotificationTabBarReactor {
-    //     NotificationTabBarReactor(provider: self.provider)
-    // }
 }
 
 extension DetailViewReactor {

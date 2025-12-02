@@ -46,6 +46,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let banUserDialogSecondLeadingMessage: String = " 카드 추가는 "
         static let banUserDialogSecondTrailingMessage: String = "부터 가능합니다."
         
+        static let deletedCardDialogTitle: String = "삭제된 카드예요"
+        
         static let cancelActionTitle: String = "취소"
         static let settingActionTitle: String = "설정"
         static let confirmActionTitle: String = "확인"
@@ -191,9 +193,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         super.updatedKeyboard(withoutBottomSafeInset: height)
         
         self.keyboardHeight = height
-        
-        let isFooterFirstResponder = self.writeCardView.writeCardTags.isFooterFirstResponder()
-        self.relatedTagsViewBottomConstraint?.update(offset: isFooterFirstResponder ? -height : 0)
+        self.relatedTagsViewBottomConstraint?.update(offset: -height)
     }
     
     
@@ -380,7 +380,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, options in
                 // 선택된 옵션 중 `거리공유` 옵션이 존재하고, 위치 권한이 허용되지 않았을 때
-                guard reactor.locationManager.hasPermission == false else { return }
+                guard reactor.initialState.hasPermission == false else { return }
                 
                 object.selectOptionsView.selectOptions = options.filter { $0 != .distanceShare }
                 object.showLocationPermissionDialog()
@@ -405,7 +405,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         viewDidLoad
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.selectOptionsView) { selectOptionsView, _ in
-                selectOptionsView.selectOptions = reactor.locationManager.hasPermission ? [.distanceShare] : []
+                selectOptionsView.selectOptions = reactor.initialState.hasPermission ? [.distanceShare] : []
             }
             .disposed(by: self.disposeBag)
         
@@ -465,7 +465,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, writtenCardId in
                 NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
                 if reactor.entranceType == .comment {
-                    NotificationCenter.default.post(name: .reloadCommentsData, object: nil, userInfo: nil)
+                    NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
                 }
                 
                 if let navigationController = object.navigationController {
@@ -494,6 +494,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, hasErrors in
                 if case 422 = hasErrors {
                     object.showInappositeDialog()
+                    return
+                }
+                
+                if case 410 = hasErrors {
+                    object.showDeletedCardDialog()
+                    return
                 }
             }
             .disposed(by: self.disposeBag)
@@ -656,6 +662,30 @@ extension WriteCardViewController {
         SOMDialogViewController.show(
             title: Text.banUserDialogTitle,
             message: dialogFirstMessage + dialogSecondMessage,
+            textAlignment: .left,
+            actions: [confirmAction]
+        )
+    }
+    
+    func showDeletedCardDialog() {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+                        self?.navigationPopToRoot(animated: true, bottomBarHidden: false)
+                    }
+                }
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.deletedCardDialogTitle,
+            messageView: nil,
             textAlignment: .left,
             actions: [confirmAction]
         )

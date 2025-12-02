@@ -30,6 +30,8 @@ class HomeViewReactor: Reactor {
         case moreFind(String)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
+        case detailCard(String)
+        case resetPushState
     }
     
     enum Mutation {
@@ -37,18 +39,21 @@ class HomeViewReactor: Reactor {
         case more([BaseCardInfo])
         case updateHasUnreadNotifications(Bool)
         case notices([NoticeInfo])
+        case cardIsDeleted((String, Bool)?)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
         case updateIsRefreshing(Bool)
     }
     
     struct State {
+        fileprivate(set) var hasPermission: Bool
         fileprivate(set) var displayType: DisplayType
         fileprivate(set) var noticeInfos: [NoticeInfo]?
         fileprivate(set) var latestCards: [BaseCardInfo]?
         fileprivate(set) var popularCards: [BaseCardInfo]?
         fileprivate(set) var distanceCards: [BaseCardInfo]?
         fileprivate(set) var hasUnreadNotifications: Bool
+        fileprivate(set) var cardIsDeleted: (selectedId: String, isDeleted: Bool)?
         fileprivate(set) var distanceFilter: String
         fileprivate(set) var isRefreshing: Bool
     }
@@ -58,23 +63,23 @@ class HomeViewReactor: Reactor {
     private let dependencies: AppDIContainerable
     private let cardUseCase: CardUseCase
     private let notificationUseCase: NotificationUseCase
-    
-    let locationManager: LocationManagerDelegate
+    private let settingsUseCase: SettingsUseCase
     
     init(dependencies: AppDIContainerable, displayType: DisplayType = .latest) {
         self.dependencies = dependencies
         self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
         self.notificationUseCase = dependencies.rootContainer.resolve(NotificationUseCase.self)
-        
-        self.locationManager = dependencies.rootContainer.resolve(ManagerProviderType.self).locationManager
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
         
         self.initialState = State(
+            hasPermission: self.settingsUseCase.hasPermission(),
             displayType: displayType,
             noticeInfos: nil,
             latestCards: nil,
             popularCards: nil,
             distanceCards: nil,
             hasUnreadNotifications: false,
+            cardIsDeleted: nil,
             distanceFilter: "1km",
             isRefreshing: false
         )
@@ -150,6 +155,26 @@ class HomeViewReactor: Reactor {
                 self.refresh(displayType, distanceFilter)
                     .catch(self.catchClosureForCards)
             ])
+        case let .detailCard(selectedId):
+            
+            let coordinate = self.settingsUseCase.coordinate()
+            let latitude = coordinate.latitude
+            let longitude = coordinate.longitude
+            
+            return .concat([
+                .just(.cardIsDeleted(nil)),
+                self.cardUseCase.detailCard(
+                    id: selectedId,
+                    latitude: latitude,
+                    longitude: longitude
+                )
+                .map { _ in (selectedId, false) }
+                .map(Mutation.cardIsDeleted)
+                .catchAndReturn(.cardIsDeleted((selectedId, true)))
+            ])
+        case .resetPushState:
+            
+            return .just(.cardIsDeleted(nil))
         }
     }
     
@@ -172,6 +197,8 @@ class HomeViewReactor: Reactor {
             newState.noticeInfos = noticeInfos
         case let .updateHasUnreadNotifications(hasUnreadNotifications):
             newState.hasUnreadNotifications = hasUnreadNotifications
+        case let .cardIsDeleted(cardIsDeleted):
+            newState.cardIsDeleted = cardIsDeleted
         case let .updateDisplayType(displayType):
             newState.displayType = displayType
         case let .updateDistanceFilter(distanceFilter):
@@ -187,8 +214,9 @@ private extension HomeViewReactor {
     
     func refresh(_ displayType: DisplayType, _ distanceFilter: String) -> Observable<Mutation> {
 
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let coordinate = self.settingsUseCase.coordinate()
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         switch displayType {
         case .latest:
@@ -211,8 +239,9 @@ private extension HomeViewReactor {
     
     func moreFind(_ lastId: String) -> Observable<Mutation> {
         
-        let latitude = self.locationManager.coordinate.latitude
-        let longitude = self.locationManager.coordinate.longitude
+        let coordinate = self.settingsUseCase.coordinate()
+        let latitude = coordinate.latitude
+        let longitude = coordinate.longitude
         
         switch self.currentState.displayType {
         case .latest:

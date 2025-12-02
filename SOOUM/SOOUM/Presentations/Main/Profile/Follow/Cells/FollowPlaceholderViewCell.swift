@@ -64,9 +64,8 @@ class FollowPlaceholderViewCell: UITableViewCell {
         
         self.contentView.addSubview(self.placeholderImageView)
         self.placeholderImageView.snp.makeConstraints {
-            /// (screen height - safe layout guide top - navi height - header height) * 0.5 - (icon height + spacing + label height)
-            let offset = (UIScreen.main.bounds.height - 48 - 56) * 0.5 - (24 + 8 + 21) * 0.5
-            $0.top.equalTo(self.safeAreaLayoutGuide.snp.top).offset(offset)
+            let offset = 8 + 21
+            $0.centerY.equalToSuperview().offset(-offset)
             $0.centerX.equalToSuperview()
             $0.height.equalTo(24)
         }

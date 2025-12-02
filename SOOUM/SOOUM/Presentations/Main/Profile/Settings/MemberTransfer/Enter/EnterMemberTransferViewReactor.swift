@@ -32,14 +32,13 @@ class EnterMemberTransferViewReactor: Reactor {
     var initialState: State = State(isSuccess: nil)
     
     private let dependencies: AppDIContainerable
-    private let settingsUseCase: SettingsUserCase
-    
-    private let authManager: AuthManagerDelegate
+    private let authUseCase: AuthUseCase
+    private let settingsUseCase: SettingsUseCase
   
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUserCase.self)
-        self.authManager = dependencies.rootContainer.resolve(ManagerProviderType.self).authManager
+        self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
+        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -48,16 +47,17 @@ class EnterMemberTransferViewReactor: Reactor {
             
             return .concat([
                 .just(.enterTransferCode(nil)),
-                self.authManager.publicKey()
+                self.authUseCase.encryptedDeviceId()
                     .withUnretained(self)
-                    .flatMapLatest { object, publicKey -> Observable<Mutation> in
+                    .flatMapLatest { object, encryptedDeviceId -> Observable<Mutation> in
                         
-                        if let publicKey = publicKey,
-                           let secKey = object.authManager.convertPEMToSecKey(pemString: publicKey),
-                           let encryptedDeviceId = object.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
-                            
+                        if let encryptedDeviceId = encryptedDeviceId {
                             return object.settingsUseCase.enter(code: transferCode, encryptedDeviceId: encryptedDeviceId)
-                                .map(Mutation.enterTransferCode)
+                                .flatMapLatest { isSuccess -> Observable<Mutation> in
+                                    if isSuccess { object.authUseCase.initializeAuthInfo() }
+                                    
+                                    return .just(.enterTransferCode(isSuccess))
+                                }
                         } else {
                             return .just(.enterTransferCode(false))
                         }
@@ -78,7 +78,7 @@ class EnterMemberTransferViewReactor: Reactor {
 
 extension EnterMemberTransferViewReactor {
     
-    func reactorForLaunch() -> LaunchScreenViewReactor {
-        LaunchScreenViewReactor(dependencies: self.dependencies, pushInfo: nil)
+    func reactorForOnborading() -> OnboardingViewReactor {
+        OnboardingViewReactor(dependencies: self.dependencies)
     }
 }

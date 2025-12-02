@@ -94,7 +94,7 @@ class ResignViewController: BaseNavigationViewController, View {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)
-            $0.height.equalTo(48)
+            $0.height.equalTo(56)
         }
         
         self.view.addSubview(self.scrollView)
@@ -109,32 +109,45 @@ class ResignViewController: BaseNavigationViewController, View {
         guideContainer.addSubview(self.resignGuideMessage)
         self.resignGuideMessage.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)
-            $0.bottom.trailing.equalToSuperview().offset(-16)
-            $0.leading.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-16)
+            $0.horizontalEdges.equalToSuperview()
         }
-        
-        self.container.addArrangedSubview(guideContainer)
-        self.container.setCustomSpacing(16, after: guideContainer)
-        
-        self.setupReportButtons()
+        self.scrollView.addSubview(guideContainer)
+        guideContainer.snp.makeConstraints {
+            $0.top.horizontalEdges.equalToSuperview()
+        }
         
         self.scrollView.addSubview(self.container)
         self.container.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.equalTo(guideContainer.snp.bottom).offset(16)
+            $0.bottom.horizontalEdges.equalToSuperview()
         }
+        
+        self.setupReportButtons()
     }
     
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
         super.updatedKeyboard(withoutBottomSafeInset: height)
         
         let height = height == 0 ? 0 : height + 12
+        
         self.resignButton.snp.updateConstraints {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-height)
         }
         
-        let newHeight = height == 0 ? 0 : 48
-        self.container.snp.updateConstraints {
-            $0.bottom.equalToSuperview().offset(-newHeight)
+        guard height > 0 else { return }
+        
+        let contentHeight = self.scrollView.contentSize.height
+        let boundsHeight = self.scrollView.bounds.height - height
+        let bottomOffset = CGPoint(x: 0, y: contentHeight - boundsHeight + 10)
+        // 키보드 및 스크롤 애니메이션 동기화를 위해 `UIView.animate` 사용
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+            
+            // 스크롤이 필요할 때만 적용
+            if bottomOffset.y > 0 {
+                self.scrollView.setContentOffset(bottomOffset, animated: false)
+            }
         }
     }
     
@@ -243,9 +256,6 @@ private extension ResignViewController {
         }
         
         self.container.addArrangedSubview(self.resignTextField)
-        self.resignTextField.snp.makeConstraints {
-            $0.bottom.lessThanOrEqualToSuperview().offset(-16)
-        }
     }
     
     func showSuccessReportedDialog(completion: @escaping (() -> Void)) {

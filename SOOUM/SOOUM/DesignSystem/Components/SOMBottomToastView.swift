@@ -97,7 +97,6 @@ private extension SOMBottomToastView {
             button.snp.makeConstraints {
                 $0.verticalEdges.trailing.equalToSuperview()
                 $0.leading.greaterThanOrEqualTo(self.titleLabel.snp.trailing)
-                $0.width.equalTo(41)
                 $0.height.equalTo(40)
             }
         }

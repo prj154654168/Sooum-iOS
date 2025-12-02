@@ -94,7 +94,7 @@ class ErrorInterceptor: RequestInterceptor {
                 }
             }
             return
-        case 403:
+        case 418:
             self.goToOnboarding()
             completion(.doNotRetry)
             return
@@ -111,21 +111,6 @@ class ErrorInterceptor: RequestInterceptor {
     
     
     // MARK: Error handling
-    
-    func goToOnboarding() {
-        
-        self.provider.authManager.initializeAuthInfo()
-
-        DispatchQueue.main.async {
-            if let window: UIWindow = UIApplication.currentWindow,
-               let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-                
-                let onboardingViewController = OnboardingViewController()
-                onboardingViewController.reactor = OnboardingViewReactor(dependencies: appDelegate.appDIContainer)
-                window.rootViewController = UINavigationController(rootViewController: onboardingViewController)
-            }
-        }
-    }
     
     func showNetworkErrorDialog() {
         
@@ -187,6 +172,26 @@ class ErrorInterceptor: RequestInterceptor {
                 textAlignment: .left,
                 actions: [closeAction, inquireAction]
             )
+        }
+    }
+    
+    
+    // MARK: go to onboarding
+    
+    func goToOnboarding() {
+        
+        self.provider.authManager.initializeAuthInfo()
+        
+        DispatchQueue.main.async {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
+            else { return }
+            
+            let onBoardingViewController = OnboardingViewController()
+            onBoardingViewController.reactor = OnboardingViewReactor(dependencies: appDelegate.appDIContainer)
+            onBoardingViewController.modalTransitionStyle = .crossDissolve
+            window.rootViewController = UINavigationController(rootViewController: onBoardingViewController)
         }
     }
 }

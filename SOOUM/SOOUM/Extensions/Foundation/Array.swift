@@ -14,4 +14,11 @@ extension Array where Element: Hashable {
         }
         return reversed.reversed()
     }
+    
+    func sliceBySize(into size: Int) -> [[Element]] {
+        return stride(from: 0, to: self.count, by: size).map {
+            let end = Swift.min($0 + size, count)
+            return Array(self[$0..<end])
+        }
+    }
 }

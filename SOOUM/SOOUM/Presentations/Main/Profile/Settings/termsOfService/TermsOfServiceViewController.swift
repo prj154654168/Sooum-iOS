@@ -28,6 +28,8 @@ class TermsOfServiceViewController: BaseNavigationViewController {
         $0.alwaysBounceVertical = true
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
+        
+        $0.contentInsetAdjustmentBehavior = .never
     }
     
     private let privacyPolicyCellView = TermsOfServiceTextCellView(title: Text.privacyPolicyTitle)

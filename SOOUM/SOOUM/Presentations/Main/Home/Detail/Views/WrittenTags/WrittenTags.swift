@@ -73,6 +73,8 @@ class WrittenTags: UIView {
     
     private(set) var models = [WrittenTagModel]()
     
+    let tagDidTap = PublishRelay<(id: String, text: String)>()
+    
     
     // MARK: Initialize
     
@@ -135,6 +137,15 @@ class WrittenTags: UIView {
 // MARK: UICollectionViewDelegateFlowLayout
 
 extension WrittenTags: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        guard let item = self.dataSource.itemIdentifier(for: indexPath) else { return }
+        
+        if case let .tag(model) = item {
+            self.tagDidTap.accept((model.id, model.originalText))
+        }
+    }
     
     func collectionView(
         _ collectionView: UICollectionView,

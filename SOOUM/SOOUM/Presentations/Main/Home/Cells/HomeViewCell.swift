@@ -65,8 +65,4 @@ class HomeViewCell: UITableViewCell {
     func bind(_ model: BaseCardInfo) {
         self.cardView.setModel(model: model)
     }
-    
-    func setData(tagCard: TagDetailCardResponse.TagFeedCard) {
-        self.cardView.setData(tagCard: tagCard)
-    }
 }

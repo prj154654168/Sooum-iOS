@@ -30,22 +30,26 @@ class DetailViewFooter: UICollectionReusableView {
         $0.typography = .som.body1WithBold
     }
     
+    /**
+     TODO: 임시,
+     cell을 제외한 top padding 54 * 0.5, bottom inset = 10 맞추기 위해 32만큼 올림
+     현재 bottom padding == 27, 디자인 bottom padding == 10
+     */
     private let flowLayout = UICollectionViewFlowLayout().then {
         $0.minimumLineSpacing = 10
+        $0.minimumInteritemSpacing = 0
         $0.scrollDirection = .horizontal
-        $0.sectionInset = .init(top: 0, left: 16, bottom: 0, right: 16)
+        $0.sectionInset = .init(top: 0, left: 16, bottom: 32, right: 16)
     }
     
     private lazy var collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: self.flowLayout
     ).then {
-        $0.alwaysBounceHorizontal = true
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
         
-        $0.decelerationRate = .fast
-        
+        $0.alwaysBounceHorizontal = true
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
         

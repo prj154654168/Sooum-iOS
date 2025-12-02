@@ -18,9 +18,11 @@ extension Notification.Name {
     static let scollingToTopWithAnimation = Notification.Name("scollingToTopWithAnimation")
     /// Should reload
     static let reloadData = Notification.Name("reloadData")
-    static let reloadCommentsData = Notification.Name("reloadCommentsData")
+    static let reloadDetailData = Notification.Name("reloadDetailData")
     /// Updated report state
     static let updatedReportState = Notification.Name("updatedReportState")
     /// Should reload progile
     static let reloadProfileData = Notification.Name("reloadProfileData")
+    /// Should reload favorite tag
+    static let reloadFavoriteTagData = Notification.Name("reloadFavoriteTagData")
 }

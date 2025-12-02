@@ -192,7 +192,7 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
     func bind(reactor: EnterMemberTransferViewReactor) {
         
         // Action
-        let transferCode = self.transferTextField.rx.text.orEmpty.distinctUntilChanged()
+        let transferCode = self.transferTextField.rx.text.orEmpty.distinctUntilChanged().share()
         transferCode
             .map { $0.isEmpty == false }
             .bind(to: self.confirmButton.rx.isEnabled)
@@ -213,12 +213,10 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
                 
                 object.showSuccessDialog {
                     
-                    let launchSrceenViewController = LaunchScreenViewController()
-                    launchSrceenViewController.reactor = reactor.reactorForLaunch()
-                    launchSrceenViewController.modalTransitionStyle = .crossDissolve
-                    
-                    let navigationViewController = UINavigationController(rootViewController: launchSrceenViewController)
-                    window.rootViewController = navigationViewController
+                    let onboardingViewController = OnboardingViewController()
+                    onboardingViewController.reactor = reactor.reactorForOnborading()
+                    onboardingViewController.modalTransitionStyle = .crossDissolve
+                    window.rootViewController = UINavigationController(rootViewController: onboardingViewController)
                 }
             }
             .disposed(by: self.disposeBag)

@@ -169,12 +169,11 @@ class OnboardingViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         let startButtonTapped = self.startButton.rx.tap.share()
-        let checkAvailable = reactor.state.map(\.checkAvailable).share()
+        let checkAvailable = reactor.state.map(\.checkAvailable).filterNil().share()
         
         startButtonTapped
             .withLatestFrom(checkAvailable)
-            .filterNil()
-            .filter { $0.banned == false }
+            .filter { $0.banned == false && $0.withdrawn == false }
             .subscribe(with: self) { object, _ in
                 let termsOfServiceViewController = OnboardingTermsOfServiceViewController()
                 termsOfServiceViewController.reactor = reactor.reactorForTermsOfService()
@@ -184,12 +183,21 @@ class OnboardingViewController: BaseNavigationViewController, View {
         
         startButtonTapped
             .withLatestFrom(checkAvailable)
-            .filterNil()
-            .filter { $0.banned == true && $0.rejoinAvailableAt != nil }
+            .filter { $0.banned && $0.rejoinAvailableAt != nil }
             .subscribe(with: self) { object, checkAvailable in
                 
                 if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
-                    object.showDialog(checkAvailable.banned, at: rejoinAvailableAt)
+                    object.showBannedUserDialog(at: rejoinAvailableAt)
+                }
+            }
+            .disposed(by: self.disposeBag)
+        startButtonTapped
+            .withLatestFrom(checkAvailable)
+            .filter { $0.withdrawn && $0.rejoinAvailableAt != nil }
+            .subscribe(with: self) { object, checkAvailable in
+                
+                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
+                    object.showResignUserDialog(at: rejoinAvailableAt)
                 }
             }
             .disposed(by: self.disposeBag)
@@ -204,17 +212,25 @@ class OnboardingViewController: BaseNavigationViewController, View {
         
         // State
         checkAvailable
-            .filterNil()
             .take(1)
-            .filter { $0.banned == true && $0.rejoinAvailableAt != nil }
+            .filter { $0.banned && $0.rejoinAvailableAt != nil }
             .subscribe(with: self) { object, checkAvailable in
                 
                 if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
-                    object.showDialog(checkAvailable.banned, at: rejoinAvailableAt)
+                    object.showBannedUserDialog(at: rejoinAvailableAt)
                 }
             }
             .disposed(by: self.disposeBag)
-        
+        checkAvailable
+            .take(1)
+            .filter { $0.withdrawn && $0.rejoinAvailableAt != nil }
+            .subscribe(with: self) { object, checkAvailable in
+                
+                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
+                    object.showResignUserDialog(at: rejoinAvailableAt)
+                }
+            }
+            .disposed(by: self.disposeBag)
         
         reactor.state.map(\.shouldHideTransfer)
             .subscribe(with: self) { object, shouldHide in
@@ -226,9 +242,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
 
 extension OnboardingViewController {
     
-    func showDialog(_ isBanned: Bool, at rejoinAvailableAt: Date) {
-        let dialogLeadingMessage = isBanned ? Text.banUserDialogLeadingMessage : Text.resignDialogLeadingMessage
-        let dialogMessage = dialogLeadingMessage + rejoinAvailableAt.banEndFormatted + Text.dialogTrailingMessage
+    func showBannedUserDialog(at rejoinAvailableAt: Date) {
         
         let confirmAction = SOMDialogAction(
             title: Text.confirmActionTitle,
@@ -238,8 +252,32 @@ extension OnboardingViewController {
             }
         )
         
+        let dialogMessage = Text.banUserDialogLeadingMessage +
+            rejoinAvailableAt.banEndFormatted +
+            Text.dialogTrailingMessage
         SOMDialogViewController.show(
-            title: isBanned ? Text.banUserDialogTitle : Text.resignDialogTitle,
+            title: Text.banUserDialogTitle,
+            message: dialogMessage,
+            textAlignment: .left,
+            actions: [confirmAction]
+        )
+    }
+    
+    func showResignUserDialog(at rejoinAvailableAt: Date) {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                UIApplication.topViewController?.dismiss(animated: true)
+            }
+        )
+        
+        let dialogMessage = Text.resignDialogLeadingMessage +
+            rejoinAvailableAt.banEndFormatted +
+            Text.dialogTrailingMessage
+        SOMDialogViewController.show(
+            title: Text.resignDialogTitle,
             message: dialogMessage,
             textAlignment: .left,
             actions: [confirmAction]
