@@ -13,10 +13,8 @@ class MainTabBarReactor: Reactor {
     enum EntranceType {
         /// 푸시 알림(알림 화면)으로 진입할 경우
         case pushToNotification
-        /// 푸시 알림(피드 상세 화면)으로 진입할 경우
-        case pushToFeedDetail
-        /// 푸시 알림(댓글 카드 상세 화면)으로 진입할 경우
-        case pushToCommentDetail
+        /// 푸시 알림(상세 화면)으로 진입할 경우
+        case pushToDetail
         /// 푸시 알림(피드 상세 화면 + 태그 탭)으로 진입할 경우
         case pushToTagDetail
         /// 푸시 알림(내 팔로우 화면 + 팔로우 탭)으로 진입할 경우
@@ -69,13 +67,12 @@ class MainTabBarReactor: Reactor {
         
         var willNavigate: EntranceType {
             switch pushInfo?.notificationType {
-            case .feedLike:                   return .pushToFeedDetail
-            case .commentLike, .commentWrite:  return .pushToCommentDetail
-            case .blocked, .deleted:          return .pushToNotification
-            case .tagUsage:                   return .pushToTagDetail
-            case .follow:                     return .pushToFollow
-            case .transferSuccess:             return .pushToLaunchScreen
-            default:                          return .none
+            case .feedLike, .commentLike, .commentWrite:  return .pushToDetail
+            case .blocked, .deleted:                     return .pushToNotification
+            case .tagUsage:                              return .pushToTagDetail
+            case .follow:                                return .pushToFollow
+            case .transferSuccess:                        return .pushToLaunchScreen
+            default:                                     return .none
             }
         }
         self.pushInfo = pushInfo
@@ -166,8 +163,8 @@ extension MainTabBarReactor {
         NotificationViewReactor(dependencies: self.dependencies)
     }
     
-    func reactorForDetail(_ targetCardId: String, type: EntranceCardType) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, type, type: .push, with: targetCardId)
+    func reactorForDetail(_ targetCardId: String) -> DetailViewReactor {
+        DetailViewReactor(dependencies: self.dependencies, with: targetCardId)
     }
     
     func reactorForFollow(nickname: String, with userId: String) -> FollowViewReactor {

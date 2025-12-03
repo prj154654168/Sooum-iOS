@@ -154,7 +154,7 @@ class MainTabBarController: SOMTabBarController, View {
             .subscribe(with: self) { object, profileInfo in
                 
                 switch reactor.currentState.entranceType {
-                case .pushToFeedDetail:
+                case .pushToDetail:
                     
                     guard let navigationController = object.viewControllers[0] as? UINavigationController,
                           let homeViewController = navigationController.viewControllers.first as? HomeViewController,
@@ -166,23 +166,7 @@ class MainTabBarController: SOMTabBarController, View {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.setupDetailViewController(
                             homeViewController,
-                            with: reactor.reactorForDetail(targetCardId, type: .feed),
-                            completion: { reactor.action.onNext(.resetEntrance) }
-                        )
-                    }
-                case .pushToCommentDetail:
-                    
-                    guard let navigationController = object.viewControllers[0] as? UINavigationController,
-                          let homeViewController = navigationController.viewControllers.first as? HomeViewController,
-                          let targetCardId = reactor.pushInfo?.targetCardId
-                    else { return }
-                    
-                    object.didSelectedIndex(0)
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
-                        object?.setupDetailViewController(
-                            homeViewController,
-                            with: reactor.reactorForDetail(targetCardId, type: .comment),
+                            with: reactor.reactorForDetail(targetCardId),
                             completion: { reactor.action.onNext(.resetEntrance) }
                         )
                     }
@@ -213,7 +197,7 @@ class MainTabBarController: SOMTabBarController, View {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.setupTagDetailViewController(
                             tagViewController,
-                            with: reactor.reactorForDetail(targetCardId, type: .feed),
+                            with: reactor.reactorForDetail(targetCardId),
                             completion: { reactor.action.onNext(.resetEntrance) }
                         )
                     }
