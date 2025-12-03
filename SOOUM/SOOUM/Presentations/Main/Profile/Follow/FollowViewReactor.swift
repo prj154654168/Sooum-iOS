@@ -52,7 +52,8 @@ class FollowViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let userUseCase: UserUseCase
+    private let fetchFollowUseCase: FetchFollowUseCase
+    private let updateFollowUseCase: UpdateFollowUseCase
     
     let entranceType: EntranceType
     let viewType: ViewType
@@ -67,7 +68,9 @@ class FollowViewReactor: Reactor {
         with userId: String
     ) {
         self.dependencies = dependencies
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.fetchFollowUseCase = dependencies.rootContainer.resolve(FetchFollowUseCase.self)
+        self.updateFollowUseCase = dependencies.rootContainer.resolve(UpdateFollowUseCase.self)
+        
         self.entranceType = entranceType
         self.viewType = viewType
         self.nickname = nickname
@@ -78,20 +81,23 @@ class FollowViewReactor: Reactor {
         switch action {
         case .landing:
             
-            return self.refresh()
+            return .concat([
+                self.followers(with: nil)
+                    .catchAndReturn(.followers([])),
+                self.followings(with: nil)
+                    .catchAndReturn(.followings([]))
+            ])
         case .refresh:
             
             let emit = self.currentState.followType == .follower ?
-                self.userUseCase.followers(userId: self.userId, lastId: nil)
-                    .map(Mutation.followers)
+                self.followers(with: nil)
                     .catch { _ in
                         return .concat([
                             .just(.updateIsRefreshing(false)),
                             .just(.followers([]))
                         ])
                     } :
-                self.userUseCase.followings(userId: self.userId, lastId: nil)
-                    .map(Mutation.followings)
+                self.followings(with: nil)
                     .catch { _ in
                         return .concat([
                             .just(.updateIsRefreshing(false)),
@@ -106,12 +112,7 @@ class FollowViewReactor: Reactor {
             ])
         case let .moreFind(type, lastId):
             
-            let emit = type == .follower ?
-                self.userUseCase.followers(userId: self.userId, lastId: lastId)
-                    .map(Mutation.moreFollowers) :
-                self.userUseCase.followings(userId: self.userId, lastId: lastId)
-                    .map(Mutation.moreFollowings)
-            
+            let emit = type == .follower ? self.followers(with: lastId) : self.followings(with: lastId)
             return emit
         case let .updateFollowType(followType):
             
@@ -120,7 +121,7 @@ class FollowViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsUpdated(nil)),
-                self.userUseCase.updateFollowing(userId: userId, isFollow: isFollow)
+                self.updateFollowUseCase.updateFollowing(userId: userId, isFollow: isFollow)
                     .map(Mutation.updateIsUpdated)
             ])
         }
@@ -149,15 +150,17 @@ class FollowViewReactor: Reactor {
 }
 
 private extension FollowViewReactor {
-    
-    func refresh() -> Observable<Mutation> {
+     
+    func followers(with lastId: String?) -> Observable<Mutation> {
         
-        return .concat([
-            self.userUseCase.followers(userId: self.userId, lastId: nil)
-                .map(Mutation.followers),
-            self.userUseCase.followings(userId: self.userId, lastId: nil)
-                .map(Mutation.followings)
-        ])
+        return self.fetchFollowUseCase.followers(userId: self.userId, lastId: lastId)
+            .map { lastId == nil ? .followers($0) : .moreFollowers($0) }
+    }
+    
+    func followings(with lastId: String?) -> Observable<Mutation> {
+        
+        return self.fetchFollowUseCase.followings(userId: self.userId, lastId: lastId)
+            .map { lastId == nil ? .followings($0) : .moreFollowings($0) }
     }
 }
 

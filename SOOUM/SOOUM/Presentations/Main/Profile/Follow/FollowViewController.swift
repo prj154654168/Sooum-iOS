@@ -90,7 +90,7 @@ class FollowViewController: BaseNavigationViewController, View {
             
             cell.setModel(follower)
             
-            cell.profileBackgroundButton.rx.throttleTap
+            cell.profileBackgroundButton.rx.throttleTap(.seconds(3))
                 .subscribe(with: self) { object, _ in
                     if follower.isRequester {
                         guard let navigationController = object.navigationController,
@@ -139,7 +139,7 @@ class FollowViewController: BaseNavigationViewController, View {
                 
                 cell.setModel(following)
                 
-                cell.profileBackgroundButton.rx.throttleTap
+                cell.profileBackgroundButton.rx.throttleTap(.seconds(3))
                     .subscribe(with: self) { object, _ in
                         let profileViewController = ProfileViewController()
                         profileViewController.reactor = reactor.reactorForProfile(following.memberId)
@@ -166,7 +166,7 @@ class FollowViewController: BaseNavigationViewController, View {
                 
                 cell.setModel(following)
                 
-                cell.profileBackgroundButton.rx.throttleTap
+                cell.profileBackgroundButton.rx.throttleTap(.seconds(3))
                     .subscribe(with: self) { object, _ in
                         if following.isRequester {
                             guard let navigationController = object.navigationController,
@@ -283,7 +283,10 @@ class FollowViewController: BaseNavigationViewController, View {
         let viewDidLoad = self.rx.viewDidLoad.share()
         viewDidLoad
             .subscribe(with: self.stickyTabBar) { stickyTabBar, _ in
-                stickyTabBar.didSelectTabBarItem(reactor.entranceType == .follower ? 0 : 1)
+                stickyTabBar.didSelectTabBarItem(
+                    reactor.entranceType == .follower ? 0 : 1,
+                    with: false
+                )
             }
             .disposed(by: self.disposeBag)
         
