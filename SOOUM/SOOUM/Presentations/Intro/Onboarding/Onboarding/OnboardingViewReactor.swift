@@ -30,13 +30,13 @@ class OnboardingViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let userUseCase: UserUseCase
-    private let settingsUseCase: SettingsUseCase
+    private let validateUserUseCase: ValidateUserUseCase
+    private let updateNotifyUseCase: UpdateNotifyUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
+        self.validateUserUseCase = dependencies.rootContainer.resolve(ValidateUserUseCase.self)
+        self.updateNotifyUseCase = dependencies.rootContainer.resolve(UpdateNotifyUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -44,8 +44,9 @@ class OnboardingViewReactor: Reactor {
         case .landing:
             
             return .concat([
-                self.check(),
-                self.settingsUseCase.switchNotification(on: true)
+                self.validateUserUseCase.checkValidation()
+                    .map(Mutation.check),
+                self.updateNotifyUseCase.switchNotification(on: true)
                     .flatMapLatest { _ -> Observable<Mutation> in .empty() }
             ])
         }
@@ -58,15 +59,6 @@ class OnboardingViewReactor: Reactor {
             newState.checkAvailable = checkAvailable
         }
         return newState
-    }
-}
-
-extension OnboardingViewReactor {
-    
-    private func check() -> Observable<Mutation> {
-        
-        return self.userUseCase.isAvailableCheck()
-            .map(Mutation.check)
     }
 }
 

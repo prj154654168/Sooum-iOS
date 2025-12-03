@@ -174,6 +174,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
         startButtonTapped
             .withLatestFrom(checkAvailable)
             .filter { $0.banned == false && $0.withdrawn == false }
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 let termsOfServiceViewController = OnboardingTermsOfServiceViewController()
                 termsOfServiceViewController.reactor = reactor.reactorForTermsOfService()
@@ -184,21 +185,21 @@ class OnboardingViewController: BaseNavigationViewController, View {
         startButtonTapped
             .withLatestFrom(checkAvailable)
             .filter { $0.banned && $0.rejoinAvailableAt != nil }
-            .subscribe(with: self) { object, checkAvailable in
+            .compactMap(\.rejoinAvailableAt)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, rejoinAvailableAt in
                 
-                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
-                    object.showBannedUserDialog(at: rejoinAvailableAt)
-                }
+                object.showBannedUserDialog(at: rejoinAvailableAt)
             }
             .disposed(by: self.disposeBag)
         startButtonTapped
             .withLatestFrom(checkAvailable)
             .filter { $0.withdrawn && $0.rejoinAvailableAt != nil }
-            .subscribe(with: self) { object, checkAvailable in
+            .compactMap(\.rejoinAvailableAt)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, rejoinAvailableAt in
                 
-                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
-                    object.showResignUserDialog(at: rejoinAvailableAt)
-                }
+                object.showResignUserDialog(at: rejoinAvailableAt)
             }
             .disposed(by: self.disposeBag)
         
@@ -214,25 +215,26 @@ class OnboardingViewController: BaseNavigationViewController, View {
         checkAvailable
             .take(1)
             .filter { $0.banned && $0.rejoinAvailableAt != nil }
-            .subscribe(with: self) { object, checkAvailable in
+            .compactMap(\.rejoinAvailableAt)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, rejoinAvailableAt in
                 
-                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
-                    object.showBannedUserDialog(at: rejoinAvailableAt)
-                }
+                object.showBannedUserDialog(at: rejoinAvailableAt)
             }
             .disposed(by: self.disposeBag)
         checkAvailable
             .take(1)
             .filter { $0.withdrawn && $0.rejoinAvailableAt != nil }
-            .subscribe(with: self) { object, checkAvailable in
+            .compactMap(\.rejoinAvailableAt)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, rejoinAvailableAt in
                 
-                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
-                    object.showResignUserDialog(at: rejoinAvailableAt)
-                }
+                object.showResignUserDialog(at: rejoinAvailableAt)
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.shouldHideTransfer)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, shouldHide in
                 object.oldUserButton.isHidden = shouldHide
             }
