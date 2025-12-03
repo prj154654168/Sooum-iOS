@@ -470,6 +470,50 @@
 		3894EDE42ED4B2BB0024213E /* FavoriteTagsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3894EDE22ED4B2BA0024213E /* FavoriteTagsViewModel.swift */; };
 		389681102CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */; };
 		389681112CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */; };
+		389E59A52EDEE39500D0946D /* ValidateUserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59A42EDEE38E00D0946D /* ValidateUserUseCase.swift */; };
+		389E59A62EDEE39500D0946D /* ValidateUserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59A42EDEE38E00D0946D /* ValidateUserUseCase.swift */; };
+		389E59A82EDEE6F600D0946D /* ValidateNicknameUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59A72EDEE6EF00D0946D /* ValidateNicknameUseCase.swift */; };
+		389E59A92EDEE6F600D0946D /* ValidateNicknameUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59A72EDEE6EF00D0946D /* ValidateNicknameUseCase.swift */; };
+		389E59AB2EDEE74B00D0946D /* UploadUserImageUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59AA2EDEE73500D0946D /* UploadUserImageUseCase.swift */; };
+		389E59AC2EDEE74B00D0946D /* UploadUserImageUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59AA2EDEE73500D0946D /* UploadUserImageUseCase.swift */; };
+		389E59AE2EDEE8BD00D0946D /* FetchCardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59AD2EDEE8B500D0946D /* FetchCardUseCase.swift */; };
+		389E59AF2EDEE8BD00D0946D /* FetchCardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59AD2EDEE8B500D0946D /* FetchCardUseCase.swift */; };
+		389E59B12EDEEA3A00D0946D /* FetchNoticeUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59B02EDEEA3300D0946D /* FetchNoticeUseCase.swift */; };
+		389E59B22EDEEA3A00D0946D /* FetchNoticeUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59B02EDEEA3300D0946D /* FetchNoticeUseCase.swift */; };
+		389E59B42EDEEA8200D0946D /* FetchCardDetailUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59B32EDEEA7600D0946D /* FetchCardDetailUseCase.swift */; };
+		389E59B52EDEEA8200D0946D /* FetchCardDetailUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59B32EDEEA7600D0946D /* FetchCardDetailUseCase.swift */; };
+		389E59B72EDEEAFC00D0946D /* UpdateCardLikeUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59B62EDEEAEB00D0946D /* UpdateCardLikeUseCase.swift */; };
+		389E59B82EDEEAFC00D0946D /* UpdateCardLikeUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59B62EDEEAEB00D0946D /* UpdateCardLikeUseCase.swift */; };
+		389E59BA2EDEEB8300D0946D /* BlockUserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59B92EDEEB8000D0946D /* BlockUserUseCase.swift */; };
+		389E59BB2EDEEB8300D0946D /* BlockUserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59B92EDEEB8000D0946D /* BlockUserUseCase.swift */; };
+		389E59BD2EDEEBF300D0946D /* ReportCardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59BC2EDEEBEA00D0946D /* ReportCardUseCase.swift */; };
+		389E59BE2EDEEBF300D0946D /* ReportCardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59BC2EDEEBEA00D0946D /* ReportCardUseCase.swift */; };
+		389E59C02EDEEC4900D0946D /* DeleteCardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59BF2EDEEC4500D0946D /* DeleteCardUseCase.swift */; };
+		389E59C12EDEEC4900D0946D /* DeleteCardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59BF2EDEEC4500D0946D /* DeleteCardUseCase.swift */; };
+		389E59C32EDEEC7B00D0946D /* CardImageUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59C22EDEEC7600D0946D /* CardImageUseCase.swift */; };
+		389E59C42EDEEC7B00D0946D /* CardImageUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59C22EDEEC7600D0946D /* CardImageUseCase.swift */; };
+		389E59C62EDEECBF00D0946D /* WriteCardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59C52EDEECBC00D0946D /* WriteCardUseCase.swift */; };
+		389E59C72EDEECBF00D0946D /* WriteCardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59C52EDEECBC00D0946D /* WriteCardUseCase.swift */; };
+		389E59C92EDEED2B00D0946D /* FetchTagUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59C82EDEED2700D0946D /* FetchTagUseCase.swift */; };
+		389E59CA2EDEED2B00D0946D /* FetchTagUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59C82EDEED2700D0946D /* FetchTagUseCase.swift */; };
+		389E59CC2EDEED6500D0946D /* FetchUserInfoUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59CB2EDEED6100D0946D /* FetchUserInfoUseCase.swift */; };
+		389E59CD2EDEED6500D0946D /* FetchUserInfoUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59CB2EDEED6100D0946D /* FetchUserInfoUseCase.swift */; };
+		389E59CF2EDEEDD500D0946D /* FetchFollowUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59CE2EDEEDD000D0946D /* FetchFollowUseCase.swift */; };
+		389E59D02EDEEDD500D0946D /* FetchFollowUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59CE2EDEEDD000D0946D /* FetchFollowUseCase.swift */; };
+		389E59D22EDEEE4100D0946D /* UpdateFollowUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59D12EDEEE3800D0946D /* UpdateFollowUseCase.swift */; };
+		389E59D32EDEEE4100D0946D /* UpdateFollowUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59D12EDEEE3800D0946D /* UpdateFollowUseCase.swift */; };
+		389E59D52EDEEE6B00D0946D /* UpdateUserInfoUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59D42EDEEE6500D0946D /* UpdateUserInfoUseCase.swift */; };
+		389E59D62EDEEE6B00D0946D /* UpdateUserInfoUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59D42EDEEE6500D0946D /* UpdateUserInfoUseCase.swift */; };
+		389E59D82EDEEEC500D0946D /* UpdateNotifyUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59D72EDEEEB900D0946D /* UpdateNotifyUseCase.swift */; };
+		389E59D92EDEEEC500D0946D /* UpdateNotifyUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59D72EDEEEB900D0946D /* UpdateNotifyUseCase.swift */; };
+		389E59DB2EDEEF3600D0946D /* FetchBlockUserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59DA2EDEEF3000D0946D /* FetchBlockUserUseCase.swift */; };
+		389E59DC2EDEEF3600D0946D /* FetchBlockUserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59DA2EDEEF3000D0946D /* FetchBlockUserUseCase.swift */; };
+		389E59DE2EDEEF7C00D0946D /* TransferAccountUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59DD2EDEEF7600D0946D /* TransferAccountUseCase.swift */; };
+		389E59DF2EDEEF7C00D0946D /* TransferAccountUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59DD2EDEEF7600D0946D /* TransferAccountUseCase.swift */; };
+		389E59E12EDEEFA500D0946D /* UpdateTagFavoriteUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59E02EDEEF9E00D0946D /* UpdateTagFavoriteUseCase.swift */; };
+		389E59E22EDEEFA500D0946D /* UpdateTagFavoriteUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59E02EDEEF9E00D0946D /* UpdateTagFavoriteUseCase.swift */; };
+		389E59E42EDEF03000D0946D /* LocationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59E32EDEF02900D0946D /* LocationUseCase.swift */; };
+		389E59E52EDEF03000D0946D /* LocationUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389E59E32EDEF02900D0946D /* LocationUseCase.swift */; };
 		389EF8172D2F450000E053AE /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF8162D2F450000E053AE /* Log.swift */; };
 		389EF8182D2F450000E053AE /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF8162D2F450000E053AE /* Log.swift */; };
 		389EF81A2D2F454600E053AE /* Log+Extract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF8192D2F454600E053AE /* Log+Extract.swift */; };
@@ -496,6 +540,50 @@
 		38AE77DC2E745FFF00B6FD13 /* EnterMemberTransferTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77DA2E745FF700B6FD13 /* EnterMemberTransferTextFieldView.swift */; };
 		38AE77DE2E7465F500B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77DD2E7465E600B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift */; };
 		38AE77DF2E7465F500B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77DD2E7465E600B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift */; };
+		38AE85092EDF414400029E4C /* BlockUserUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85082EDF413C00029E4C /* BlockUserUseCaseImpl.swift */; };
+		38AE850A2EDF414400029E4C /* BlockUserUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85082EDF413C00029E4C /* BlockUserUseCaseImpl.swift */; };
+		38AE850C2EDF41B700029E4C /* CardImageUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE850B2EDF41AF00029E4C /* CardImageUseCaseImpl.swift */; };
+		38AE850D2EDF41B700029E4C /* CardImageUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE850B2EDF41AF00029E4C /* CardImageUseCaseImpl.swift */; };
+		38AE850F2EDF420700029E4C /* DeleteCardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE850E2EDF420300029E4C /* DeleteCardUseCaseImpl.swift */; };
+		38AE85102EDF420700029E4C /* DeleteCardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE850E2EDF420300029E4C /* DeleteCardUseCaseImpl.swift */; };
+		38AE85122EDF424800029E4C /* FetchBlockUserUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85112EDF424600029E4C /* FetchBlockUserUseCaseImpl.swift */; };
+		38AE85132EDF424800029E4C /* FetchBlockUserUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85112EDF424600029E4C /* FetchBlockUserUseCaseImpl.swift */; };
+		38AE85152EDF42B700029E4C /* FetchCardDetailUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85142EDF42B400029E4C /* FetchCardDetailUseCaseImpl.swift */; };
+		38AE85162EDF42B700029E4C /* FetchCardDetailUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85142EDF42B400029E4C /* FetchCardDetailUseCaseImpl.swift */; };
+		38AE85182EDF437400029E4C /* FetchCardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85172EDF436F00029E4C /* FetchCardUseCaseImpl.swift */; };
+		38AE85192EDF437400029E4C /* FetchCardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85172EDF436F00029E4C /* FetchCardUseCaseImpl.swift */; };
+		38AE851B2EDFF7E000029E4C /* FetchFollowUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE851A2EDFF7DE00029E4C /* FetchFollowUseCaseImpl.swift */; };
+		38AE851C2EDFF7E000029E4C /* FetchFollowUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE851A2EDFF7DE00029E4C /* FetchFollowUseCaseImpl.swift */; };
+		38AE851E2EDFF84700029E4C /* FetchNoticeUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE851D2EDFF84500029E4C /* FetchNoticeUseCaseImpl.swift */; };
+		38AE851F2EDFF84700029E4C /* FetchNoticeUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE851D2EDFF84500029E4C /* FetchNoticeUseCaseImpl.swift */; };
+		38AE85212EDFF88C00029E4C /* FetchTagUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85202EDFF88A00029E4C /* FetchTagUseCaseImpl.swift */; };
+		38AE85222EDFF88C00029E4C /* FetchTagUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85202EDFF88A00029E4C /* FetchTagUseCaseImpl.swift */; };
+		38AE85242EDFF90400029E4C /* FetchUserInfoUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85232EDFF90000029E4C /* FetchUserInfoUseCaseImpl.swift */; };
+		38AE85252EDFF90400029E4C /* FetchUserInfoUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85232EDFF90000029E4C /* FetchUserInfoUseCaseImpl.swift */; };
+		38AE85272EDFF95500029E4C /* LocationUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85262EDFF95200029E4C /* LocationUseCaseImpl.swift */; };
+		38AE85282EDFF95500029E4C /* LocationUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85262EDFF95200029E4C /* LocationUseCaseImpl.swift */; };
+		38AE852A2EDFF9CC00029E4C /* ReportCardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85292EDFF99B00029E4C /* ReportCardUseCaseImpl.swift */; };
+		38AE852B2EDFF9CC00029E4C /* ReportCardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85292EDFF99B00029E4C /* ReportCardUseCaseImpl.swift */; };
+		38AE852D2EDFFA3C00029E4C /* TransferAccountUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE852C2EDFFA3900029E4C /* TransferAccountUseCaseImpl.swift */; };
+		38AE852E2EDFFA3C00029E4C /* TransferAccountUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE852C2EDFFA3900029E4C /* TransferAccountUseCaseImpl.swift */; };
+		38AE85302EDFFA9500029E4C /* UpdateCardLikeUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE852F2EDFFA9300029E4C /* UpdateCardLikeUseCaseImpl.swift */; };
+		38AE85312EDFFA9500029E4C /* UpdateCardLikeUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE852F2EDFFA9300029E4C /* UpdateCardLikeUseCaseImpl.swift */; };
+		38AE85332EDFFAC400029E4C /* UpdateFollowUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85322EDFFAC300029E4C /* UpdateFollowUseCaseImpl.swift */; };
+		38AE85342EDFFAC400029E4C /* UpdateFollowUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85322EDFFAC300029E4C /* UpdateFollowUseCaseImpl.swift */; };
+		38AE85362EDFFAF900029E4C /* UpdateNotifyUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85352EDFFAF700029E4C /* UpdateNotifyUseCaseImpl.swift */; };
+		38AE85372EDFFAF900029E4C /* UpdateNotifyUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85352EDFFAF700029E4C /* UpdateNotifyUseCaseImpl.swift */; };
+		38AE85392EDFFBBF00029E4C /* UpdateTagFavoriteUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85382EDFFBBE00029E4C /* UpdateTagFavoriteUseCaseImpl.swift */; };
+		38AE853A2EDFFBBF00029E4C /* UpdateTagFavoriteUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85382EDFFBBE00029E4C /* UpdateTagFavoriteUseCaseImpl.swift */; };
+		38AE853C2EDFFBF700029E4C /* UpdateUserInfoUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE853B2EDFFBF500029E4C /* UpdateUserInfoUseCaseImpl.swift */; };
+		38AE853D2EDFFBF700029E4C /* UpdateUserInfoUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE853B2EDFFBF500029E4C /* UpdateUserInfoUseCaseImpl.swift */; };
+		38AE853F2EDFFC3600029E4C /* UploadUserImageUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE853E2EDFFC3500029E4C /* UploadUserImageUseCaseImpl.swift */; };
+		38AE85402EDFFC3600029E4C /* UploadUserImageUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE853E2EDFFC3500029E4C /* UploadUserImageUseCaseImpl.swift */; };
+		38AE85422EDFFCA600029E4C /* ValidateNicknameUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85412EDFFCA400029E4C /* ValidateNicknameUseCaseImpl.swift */; };
+		38AE85432EDFFCA600029E4C /* ValidateNicknameUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85412EDFFCA400029E4C /* ValidateNicknameUseCaseImpl.swift */; };
+		38AE85452EDFFCF900029E4C /* ValidateUserUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85442EDFFCF800029E4C /* ValidateUserUseCaseImpl.swift */; };
+		38AE85462EDFFCF900029E4C /* ValidateUserUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85442EDFFCF800029E4C /* ValidateUserUseCaseImpl.swift */; };
+		38AE85482EDFFD7E00029E4C /* WriteCardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85472EDFFD7B00029E4C /* WriteCardUseCaseImpl.swift */; };
+		38AE85492EDFFD7E00029E4C /* WriteCardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE85472EDFFD7B00029E4C /* WriteCardUseCaseImpl.swift */; };
 		38B21C022ECEF46200990F49 /* FavoriteTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B21C012ECEF45D00990F49 /* FavoriteTagViewModel.swift */; };
 		38B21C032ECEF46200990F49 /* FavoriteTagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B21C012ECEF45D00990F49 /* FavoriteTagViewModel.swift */; };
 		38B21C082ECEF7D400990F49 /* PopularTagViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B21C072ECEF7CF00990F49 /* PopularTagViewCell.swift */; };
@@ -1016,6 +1104,28 @@
 		3893B6D02D36739500F2004C /* CompositeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeManager.swift; sourceTree = "<group>"; };
 		3894EDE22ED4B2BA0024213E /* FavoriteTagsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagsViewModel.swift; sourceTree = "<group>"; };
 		3896810F2CAFBD6A00FFD89F /* DetailViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewReactor.swift; sourceTree = "<group>"; };
+		389E59A42EDEE38E00D0946D /* ValidateUserUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateUserUseCase.swift; sourceTree = "<group>"; };
+		389E59A72EDEE6EF00D0946D /* ValidateNicknameUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateNicknameUseCase.swift; sourceTree = "<group>"; };
+		389E59AA2EDEE73500D0946D /* UploadUserImageUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadUserImageUseCase.swift; sourceTree = "<group>"; };
+		389E59AD2EDEE8B500D0946D /* FetchCardUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCardUseCase.swift; sourceTree = "<group>"; };
+		389E59B02EDEEA3300D0946D /* FetchNoticeUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchNoticeUseCase.swift; sourceTree = "<group>"; };
+		389E59B32EDEEA7600D0946D /* FetchCardDetailUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCardDetailUseCase.swift; sourceTree = "<group>"; };
+		389E59B62EDEEAEB00D0946D /* UpdateCardLikeUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCardLikeUseCase.swift; sourceTree = "<group>"; };
+		389E59B92EDEEB8000D0946D /* BlockUserUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserUseCase.swift; sourceTree = "<group>"; };
+		389E59BC2EDEEBEA00D0946D /* ReportCardUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportCardUseCase.swift; sourceTree = "<group>"; };
+		389E59BF2EDEEC4500D0946D /* DeleteCardUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteCardUseCase.swift; sourceTree = "<group>"; };
+		389E59C22EDEEC7600D0946D /* CardImageUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardImageUseCase.swift; sourceTree = "<group>"; };
+		389E59C52EDEECBC00D0946D /* WriteCardUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardUseCase.swift; sourceTree = "<group>"; };
+		389E59C82EDEED2700D0946D /* FetchTagUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchTagUseCase.swift; sourceTree = "<group>"; };
+		389E59CB2EDEED6100D0946D /* FetchUserInfoUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchUserInfoUseCase.swift; sourceTree = "<group>"; };
+		389E59CE2EDEEDD000D0946D /* FetchFollowUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchFollowUseCase.swift; sourceTree = "<group>"; };
+		389E59D12EDEEE3800D0946D /* UpdateFollowUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateFollowUseCase.swift; sourceTree = "<group>"; };
+		389E59D42EDEEE6500D0946D /* UpdateUserInfoUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateUserInfoUseCase.swift; sourceTree = "<group>"; };
+		389E59D72EDEEEB900D0946D /* UpdateNotifyUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateNotifyUseCase.swift; sourceTree = "<group>"; };
+		389E59DA2EDEEF3000D0946D /* FetchBlockUserUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBlockUserUseCase.swift; sourceTree = "<group>"; };
+		389E59DD2EDEEF7600D0946D /* TransferAccountUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAccountUseCase.swift; sourceTree = "<group>"; };
+		389E59E02EDEEF9E00D0946D /* UpdateTagFavoriteUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTagFavoriteUseCase.swift; sourceTree = "<group>"; };
+		389E59E32EDEF02900D0946D /* LocationUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationUseCase.swift; sourceTree = "<group>"; };
 		389EF8162D2F450000E053AE /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		389EF8192D2F454600E053AE /* Log+Extract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+Extract.swift"; sourceTree = "<group>"; };
 		389EF81D2D2F469B00E053AE /* CocoaLumberjack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocoaLumberjack.swift; sourceTree = "<group>"; };
@@ -1030,6 +1140,28 @@
 		38AE77D62E7459EA00B6FD13 /* OnboardingCompletedViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingCompletedViewReactor.swift; sourceTree = "<group>"; };
 		38AE77DA2E745FF700B6FD13 /* EnterMemberTransferTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterMemberTransferTextFieldView.swift; sourceTree = "<group>"; };
 		38AE77DD2E7465E600B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnterMemberTransferTextFieldView+Rx.swift"; sourceTree = "<group>"; };
+		38AE85082EDF413C00029E4C /* BlockUserUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE850B2EDF41AF00029E4C /* CardImageUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardImageUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE850E2EDF420300029E4C /* DeleteCardUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteCardUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85112EDF424600029E4C /* FetchBlockUserUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchBlockUserUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85142EDF42B400029E4C /* FetchCardDetailUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCardDetailUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85172EDF436F00029E4C /* FetchCardUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchCardUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE851A2EDFF7DE00029E4C /* FetchFollowUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchFollowUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE851D2EDFF84500029E4C /* FetchNoticeUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchNoticeUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85202EDFF88A00029E4C /* FetchTagUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchTagUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85232EDFF90000029E4C /* FetchUserInfoUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchUserInfoUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85262EDFF95200029E4C /* LocationUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85292EDFF99B00029E4C /* ReportCardUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportCardUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE852C2EDFFA3900029E4C /* TransferAccountUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferAccountUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE852F2EDFFA9300029E4C /* UpdateCardLikeUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateCardLikeUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85322EDFFAC300029E4C /* UpdateFollowUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateFollowUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85352EDFFAF700029E4C /* UpdateNotifyUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateNotifyUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85382EDFFBBE00029E4C /* UpdateTagFavoriteUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTagFavoriteUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE853B2EDFFBF500029E4C /* UpdateUserInfoUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateUserInfoUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE853E2EDFFC3500029E4C /* UploadUserImageUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadUserImageUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85412EDFFCA400029E4C /* ValidateNicknameUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateNicknameUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85442EDFFCF800029E4C /* ValidateUserUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateUserUseCaseImpl.swift; sourceTree = "<group>"; };
+		38AE85472EDFFD7B00029E4C /* WriteCardUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardUseCaseImpl.swift; sourceTree = "<group>"; };
 		38B21C012ECEF45D00990F49 /* FavoriteTagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagViewModel.swift; sourceTree = "<group>"; };
 		38B21C072ECEF7CF00990F49 /* PopularTagViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularTagViewCell.swift; sourceTree = "<group>"; };
 		38B21C0A2ECEFF9F00990F49 /* FavoriteTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagsView.swift; sourceTree = "<group>"; };
@@ -2175,8 +2307,30 @@
 			children = (
 				3889A24C2E79AEAD0030F7CA /* AppVersionUseCaseImpl.swift */,
 				3889A2882E79D81E0030F7CA /* AuthUseCaseImpl.swift */,
-				380F42382E885057009AC59E /* CardUseCaseImpl.swift */,
+				38AE85082EDF413C00029E4C /* BlockUserUseCaseImpl.swift */,
+				38AE850B2EDF41AF00029E4C /* CardImageUseCaseImpl.swift */,
+				38AE850E2EDF420300029E4C /* DeleteCardUseCaseImpl.swift */,
+				38AE85112EDF424600029E4C /* FetchBlockUserUseCaseImpl.swift */,
+				38AE85142EDF42B400029E4C /* FetchCardDetailUseCaseImpl.swift */,
+				38AE85172EDF436F00029E4C /* FetchCardUseCaseImpl.swift */,
+				38AE851A2EDFF7DE00029E4C /* FetchFollowUseCaseImpl.swift */,
+				38AE851D2EDFF84500029E4C /* FetchNoticeUseCaseImpl.swift */,
+				38AE85202EDFF88A00029E4C /* FetchTagUseCaseImpl.swift */,
+				38AE85232EDFF90000029E4C /* FetchUserInfoUseCaseImpl.swift */,
+				38AE85262EDFF95200029E4C /* LocationUseCaseImpl.swift */,
 				3889A2942E79D9200030F7CA /* NotificationUseCaseImpl.swift */,
+				38AE85292EDFF99B00029E4C /* ReportCardUseCaseImpl.swift */,
+				38AE852C2EDFFA3900029E4C /* TransferAccountUseCaseImpl.swift */,
+				38AE852F2EDFFA9300029E4C /* UpdateCardLikeUseCaseImpl.swift */,
+				38AE85322EDFFAC300029E4C /* UpdateFollowUseCaseImpl.swift */,
+				38AE85352EDFFAF700029E4C /* UpdateNotifyUseCaseImpl.swift */,
+				38AE85382EDFFBBE00029E4C /* UpdateTagFavoriteUseCaseImpl.swift */,
+				38AE853B2EDFFBF500029E4C /* UpdateUserInfoUseCaseImpl.swift */,
+				38AE853E2EDFFC3500029E4C /* UploadUserImageUseCaseImpl.swift */,
+				38AE85412EDFFCA400029E4C /* ValidateNicknameUseCaseImpl.swift */,
+				38AE85442EDFFCF800029E4C /* ValidateUserUseCaseImpl.swift */,
+				38AE85472EDFFD7B00029E4C /* WriteCardUseCaseImpl.swift */,
+				380F42382E885057009AC59E /* CardUseCaseImpl.swift */,
 				38C9AF282E966A8B00B401C0 /* TagUseCaseImpl.swift */,
 				38C2A7F22EC0798600B941A2 /* SettingsUseCaseImpl.swift */,
 				3889A2672E79BC840030F7CA /* UserUseCaseImpl.swift */,
@@ -2204,11 +2358,33 @@
 			children = (
 				3889A2492E79AE900030F7CA /* AppVersionUseCase.swift */,
 				3889A2852E79D8060030F7CA /* AuthUseCase.swift */,
-				380F42352E88502F009AC59E /* CardUseCase.swift */,
+				389E59B92EDEEB8000D0946D /* BlockUserUseCase.swift */,
+				389E59C22EDEEC7600D0946D /* CardImageUseCase.swift */,
+				389E59BF2EDEEC4500D0946D /* DeleteCardUseCase.swift */,
+				389E59DA2EDEEF3000D0946D /* FetchBlockUserUseCase.swift */,
+				389E59B32EDEEA7600D0946D /* FetchCardDetailUseCase.swift */,
+				389E59AD2EDEE8B500D0946D /* FetchCardUseCase.swift */,
+				389E59CE2EDEEDD000D0946D /* FetchFollowUseCase.swift */,
+				389E59B02EDEEA3300D0946D /* FetchNoticeUseCase.swift */,
+				389E59C82EDEED2700D0946D /* FetchTagUseCase.swift */,
+				389E59CB2EDEED6100D0946D /* FetchUserInfoUseCase.swift */,
+				389E59E32EDEF02900D0946D /* LocationUseCase.swift */,
 				3889A2912E79D8F40030F7CA /* NotificationUseCase.swift */,
+				389E59BC2EDEEBEA00D0946D /* ReportCardUseCase.swift */,
+				389E59DD2EDEEF7600D0946D /* TransferAccountUseCase.swift */,
+				389E59B62EDEEAEB00D0946D /* UpdateCardLikeUseCase.swift */,
+				389E59D12EDEEE3800D0946D /* UpdateFollowUseCase.swift */,
+				389E59D72EDEEEB900D0946D /* UpdateNotifyUseCase.swift */,
+				389E59E02EDEEF9E00D0946D /* UpdateTagFavoriteUseCase.swift */,
+				389E59D42EDEEE6500D0946D /* UpdateUserInfoUseCase.swift */,
+				389E59AA2EDEE73500D0946D /* UploadUserImageUseCase.swift */,
+				389E59A72EDEE6EF00D0946D /* ValidateNicknameUseCase.swift */,
+				389E59A42EDEE38E00D0946D /* ValidateUserUseCase.swift */,
+				389E59C52EDEECBC00D0946D /* WriteCardUseCase.swift */,
+				380F42352E88502F009AC59E /* CardUseCase.swift */,
 				38C9AF252E966A6100B401C0 /* TagUseCase.swift */,
-				38C2A7EF2EC0795F00B941A2 /* SettingsUseCase.swift */,
 				3889A2642E79BBC00030F7CA /* UserUseCase.swift */,
+				38C2A7EF2EC0795F00B941A2 /* SettingsUseCase.swift */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -2966,6 +3142,8 @@
 				385C01B12E8E8DD8003C7894 /* SOMPageView.swift in Sources */,
 				3803CF6A2D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */,
 				381B83E52EBC73FC00C84015 /* FollowInfoResponse.swift in Sources */,
+				389E59CF2EDEEDD500D0946D /* FetchFollowUseCase.swift in Sources */,
+				389E59D92EDEEEC500D0946D /* UpdateNotifyUseCase.swift in Sources */,
 				3878F4782CA3F08300AA46A2 /* UIView.swift in Sources */,
 				3816E23B2D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift in Sources */,
 				38773E7D2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */,
@@ -2974,6 +3152,7 @@
 				3889A24D2E79AEB30030F7CA /* AppVersionUseCaseImpl.swift in Sources */,
 				38CC49862CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */,
 				388DA0FC2C8F521300A9DD56 /* FontContainer.swift in Sources */,
+				389E59C32EDEEC7B00D0946D /* CardImageUseCase.swift in Sources */,
 				384972A12CA4DEC00012FCA1 /* CardRequest.swift in Sources */,
 				381B83E02EBC72B400C84015 /* FollowInfo.swift in Sources */,
 				38D488CB2D0C557300F2D38D /* SOMButton.swift in Sources */,
@@ -2988,6 +3167,8 @@
 				381854982E992E9900424D71 /* WriteCardSelectImageView.swift in Sources */,
 				385053592C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				386E966E2E9A53D6005E047D /* SelectOptionsView.swift in Sources */,
+				389E59DF2EDEEF7C00D0946D /* TransferAccountUseCase.swift in Sources */,
+				38AE85332EDFFAC400029E4C /* UpdateFollowUseCaseImpl.swift in Sources */,
 				383EC61D2E7A548E00EC2D1E /* BaseDIContainer.swift in Sources */,
 				385009C32D363525007175A1 /* FilterNil.swift in Sources */,
 				38FDC2B72C9E746B00C094C2 /* BaseViewController.swift in Sources */,
@@ -2995,11 +3176,13 @@
 				38E7FBF02D3CF6BC00A359CD /* SOMDialogAction.swift in Sources */,
 				3878D07E2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
 				3878B8632D0DC8BD00B3B128 /* UIViewController+Toast.swift in Sources */,
+				389E59AF2EDEE8BD00D0946D /* FetchCardUseCase.swift in Sources */,
 				38C2A7D82EC054C500B941A2 /* SettingVersionCellView+Rx.swift in Sources */,
 				38F1614B2ECDAD34003BADB6 /* FavoriteTagViewCell.swift in Sources */,
 				38E9CE112D376E0E00E85A2D /* PushTokenSet.swift in Sources */,
 				386867A42E9E378200171A5E /* Array.swift in Sources */,
 				38899E6F2E79400C0030F7CA /* ImageUrlInfoResponse.swift in Sources */,
+				38AE852B2EDFF9CC00029E4C /* ReportCardUseCaseImpl.swift in Sources */,
 				3889A2772E79C29F0030F7CA /* NotificationRemoteDataSoruceImpl.swift in Sources */,
 				38F3760D2ECB779E00E4A41D /* FavoriteTagInfoResponse.swift in Sources */,
 				38C2A7EE2EC074B200B941A2 /* SettingsRepositoryImpl.swift in Sources */,
@@ -3019,6 +3202,7 @@
 				38B65E7C2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */,
 				38D2FBCE2E81B52F006DD739 /* SOMSwipableTabBar.swift in Sources */,
 				38FD4DB52D034F6600BF5FF1 /* FollowerViewCell.swift in Sources */,
+				389E59A82EDEE6F600D0946D /* ValidateNicknameUseCase.swift in Sources */,
 				380F42372E885032009AC59E /* CardUseCase.swift in Sources */,
 				382E153B2D15A67A0097B09C /* NotificationViewCell.swift in Sources */,
 				38C2A80C2EC0BC4500B941A2 /* BlockUsersViewController.swift in Sources */,
@@ -3029,6 +3213,7 @@
 				383EC6122E7A4F6B00EC2D1E /* AuthLocalDataSource.swift in Sources */,
 				38C9AF3A2E96AB9100B401C0 /* WriteCardTagFooter.swift in Sources */,
 				385C01B82E8EA1EF003C7894 /* SOMPageViews.swift in Sources */,
+				389E59D32EDEEE4100D0946D /* UpdateFollowUseCase.swift in Sources */,
 				385C01AE2E8E8C6F003C7894 /* SOMPageModel.swift in Sources */,
 				2A032EFE2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */,
 				38787B822ED1EB21004BBAA7 /* TagCollectCardsView.swift in Sources */,
@@ -3037,6 +3222,7 @@
 				3878D0892CFFEF0F00F9522F /* TermsOfServiceTextCellView+Rx.swift in Sources */,
 				3878D0702CFFDF9600F9522F /* SettingTextCellView.swift in Sources */,
 				2A5BB7BF2CDB870000E1C799 /* OnboardingGuideMessageView.swift in Sources */,
+				389E59CC2EDEED6500D0946D /* FetchUserInfoUseCase.swift in Sources */,
 				38FEBE612E8661F4002916A8 /* NoticeInfo.swift in Sources */,
 				3878D07A2CFFE1E800F9522F /* ResignViewController.swift in Sources */,
 				38899EAD2E79A09B0030F7CA /* UserRequest.swift in Sources */,
@@ -3051,6 +3237,7 @@
 				3800575D2D9C12CB00E58A19 /* DefinedError.swift in Sources */,
 				387FA11E2E88DDC1004DF7CE /* HomeViewReactor.swift in Sources */,
 				38899E942E79518F0030F7CA /* CommonNotificationInfo.swift in Sources */,
+				389E59C92EDEED2B00D0946D /* FetchTagUseCase.swift in Sources */,
 				2AFD056E2D048CAF007C84AD /* TagRequest.swift in Sources */,
 				38CA91F42EBDCFF2002C261A /* ProfileCardsPlaceholderViewCell.swift in Sources */,
 				38E928D02EB75FA300B3F00B /* PungView.swift in Sources */,
@@ -3061,6 +3248,8 @@
 				38899E862E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */,
 				38EBA9112EB399A1008B28F4 /* PostingPermissionResponse.swift in Sources */,
 				38C2D4212CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */,
+				38AE85392EDFFBBF00029E4C /* UpdateTagFavoriteUseCaseImpl.swift in Sources */,
+				38AE85452EDFFCF900029E4C /* ValidateUserUseCaseImpl.swift in Sources */,
 				38816D9F2D004A5E00EB87D6 /* UpdateProfileViewController.swift in Sources */,
 				38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
 				38572CDF2D2254E800B07C69 /* HomePlaceholderViewCell.swift in Sources */,
@@ -3075,6 +3264,7 @@
 				38787B882ED22324004BBAA7 /* RxSwift+Unretained.swift in Sources */,
 				38B543E32D46179500DDF2C5 /* AuthManagerConfiguration.swift in Sources */,
 				38D055C42CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
+				38AE85182EDF437400029E4C /* FetchCardUseCaseImpl.swift in Sources */,
 				3880EF7B2EA0D17E00D88608 /* RelatedTagsView+Rx.swift in Sources */,
 				38B543EF2D46506300DDF2C5 /* ManagerType.swift in Sources */,
 				3850719B2CA295A800A7905A /* LaunchScreenViewController.swift in Sources */,
@@ -3091,14 +3281,18 @@
 				38899E892E794D620030F7CA /* NetworkManager_Version.swift in Sources */,
 				3803B92B2ECF5580009D14B9 /* TagCollectViewController.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
+				389E59C72EDEECBF00D0946D /* WriteCardUseCase.swift in Sources */,
 				388A2D312D00D6A100E2F2F0 /* FollowViewReactor.swift in Sources */,
 				2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */,
 				3893B6CF2D36728000F2004C /* ManagerProvider.swift in Sources */,
+				38AE85372EDFFAF900029E4C /* UpdateNotifyUseCaseImpl.swift in Sources */,
 				38C2A7FC2EC0925C00B941A2 /* WithdrawType.swift in Sources */,
 				38C2A7DC2EC06ECE00B941A2 /* SettingsRequest.swift in Sources */,
 				38A7219A2E73EA6F0071E1D8 /* SOMBottomFloatView.swift in Sources */,
 				3866577F2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */,
 				385441912C870544004E2BB0 /* AppDelegate.swift in Sources */,
+				389E59B52EDEEA8200D0946D /* FetchCardDetailUseCase.swift in Sources */,
+				389E59E42EDEF03000D0946D /* LocationUseCase.swift in Sources */,
 				38D522692E742F610044911B /* SOMLoadingIndicatorView.swift in Sources */,
 				38D869642CF821F900BF87DA /* UserDefaults.swift in Sources */,
 				380F422D2E884F3D009AC59E /* CardRemoteDataSourceImpl.swift in Sources */,
@@ -3117,6 +3311,7 @@
 				3889A24B2E79AE960030F7CA /* AppVersionUseCase.swift in Sources */,
 				2A980BA12D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */,
 				38F161472ECDA8F0003BADB6 /* FavoriteTagPlaceholderViewCell.swift in Sources */,
+				389E59BB2EDEEB8300D0946D /* BlockUserUseCase.swift in Sources */,
 				38C9AF2A2E966A8F00B401C0 /* TagUseCaseImpl.swift in Sources */,
 				2A5BB7E12CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */,
 				38D8FE8D2EBE36F800F32D02 /* ProfileCardsViewCell.swift in Sources */,
@@ -3137,10 +3332,12 @@
 				3889A25C2E79BB340030F7CA /* UserRepository.swift in Sources */,
 				38899E7E2E794B420030F7CA /* SignUpResponse.swift in Sources */,
 				38CA91F72EBDD342002C261A /* ProfileViewHeader.swift in Sources */,
+				38AE850C2EDF41B700029E4C /* CardImageUseCaseImpl.swift in Sources */,
 				381E7C232ECCC63E00E80249 /* SearchViewButton.swift in Sources */,
 				38B21C022ECEF46200990F49 /* FavoriteTagViewModel.swift in Sources */,
 				38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				38D2FBD12E81B9B7006DD739 /* SOMSwipableTabBarDelegate.swift in Sources */,
+				389E59B12EDEEA3A00D0946D /* FetchNoticeUseCase.swift in Sources */,
 				38D2FBC12E812354006DD739 /* HomeViewController.swift in Sources */,
 				3816C0612CCDE35300C8688C /* ErrorInterceptor.swift in Sources */,
 				3803CF7B2D016BDB00FD90DB /* IssueMemberTransferViewReactor.swift in Sources */,
@@ -3152,6 +3349,7 @@
 				3889A2802E79D0250030F7CA /* Token.swift in Sources */,
 				38787B7E2ED1E8F4004BBAA7 /* TagSearchViewReactor.swift in Sources */,
 				38F161432ECDA858003BADB6 /* SearchViewButton+Rx.swift in Sources */,
+				38AE850F2EDF420700029E4C /* DeleteCardUseCaseImpl.swift in Sources */,
 				3879B4B52EC5AD5E0070846B /* RejoinableDateInfo.swift in Sources */,
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38C9AF202E9669F600B401C0 /* TagRepository.swift in Sources */,
@@ -3171,8 +3369,11 @@
 				3889A2892E79D8220030F7CA /* AuthUseCaseImpl.swift in Sources */,
 				3880098F2CABF4C2002A9209 /* SOMTag.swift in Sources */,
 				3803CF892D01914200FD90DB /* ResignViewReactor.swift in Sources */,
+				389E59BD2EDEEBF300D0946D /* ReportCardUseCase.swift in Sources */,
 				388A2D342D00D7BF00E2F2F0 /* UpdateProfileViewReactor.swift in Sources */,
 				38B543E62D4617CB00DDF2C5 /* PushManagerConfiguration.swift in Sources */,
+				389E59B72EDEEAFC00D0946D /* UpdateCardLikeUseCase.swift in Sources */,
+				389E59A52EDEE39500D0946D /* ValidateUserUseCase.swift in Sources */,
 				3889A2462E79ADCE0030F7CA /* AppVersionRepositoryImpl.swift in Sources */,
 				2AE6B14A2CBC15BF00FA5C3C /* ReportViewController.swift in Sources */,
 				388D8AE02E73E6190044BA79 /* SwiftEntryKit.swift in Sources */,
@@ -3189,12 +3390,15 @@
 				2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				38E9CE142D37711600E85A2D /* OnboardingViewReactor.swift in Sources */,
 				38E928B92EB715C900B3F00B /* ReortType.swift in Sources */,
+				38AE853D2EDFFBF700029E4C /* UpdateUserInfoUseCaseImpl.swift in Sources */,
 				38F3D9312D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
 				38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
 				383088092EDC7B8C00D99D88 /* SOMMessageBubbleView.swift in Sources */,
 				2A5BB7BA2CDB860D00E1C799 /* OnboardingTermsOfServiceViewController.swift in Sources */,
 				38787B7B2ED1E8B3004BBAA7 /* TagSearchViewController.swift in Sources */,
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
+				389E59C12EDEEC4900D0946D /* DeleteCardUseCase.swift in Sources */,
+				38AE85162EDF42B700029E4C /* FetchCardDetailUseCaseImpl.swift in Sources */,
 				38C9AF272E966A6300B401C0 /* TagUseCase.swift in Sources */,
 				38787B782ED1E719004BBAA7 /* SearchTermsView.swift in Sources */,
 				38C9AF0F2E96602300B401C0 /* DefaultImagesResponse.swift in Sources */,
@@ -3214,12 +3418,15 @@
 				38C9AF242E966A1B00B401C0 /* TagRepositoryImpl.swift in Sources */,
 				38FCF4192E9F88EA003AC3D8 /* WriteCardTags+Rx.swift in Sources */,
 				38C2D4182CFEAACA00CEA092 /* ProfileCardViewCell.swift in Sources */,
+				389E59DC2EDEEF3600D0946D /* FetchBlockUserUseCase.swift in Sources */,
 				381DEA8C2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				3818549D2E992F7D00424D71 /* WriteCardDefaultImageCell.swift in Sources */,
 				3889A2752E79C1D80030F7CA /* NotificationRemoteDataSource.swift in Sources */,
+				38AE85222EDFF88C00029E4C /* FetchTagUseCaseImpl.swift in Sources */,
 				386712C42E97734B00541389 /* UITextField.swift in Sources */,
 				38C9AF0B2E965EFB00B401C0 /* DefaultImages.swift in Sources */,
 				381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
+				38AE85092EDF414400029E4C /* BlockUserUseCaseImpl.swift in Sources */,
 				3874B5642ECB2613004CC22A /* SettingsLocalDataSourceImpl.swift in Sources */,
 				3803CF832D017DB800FD90DB /* EnterMemberTransferViewController.swift in Sources */,
 				388693A02CF77FA7005F9EF3 /* UIApplication+Top.swift in Sources */,
@@ -3229,6 +3436,8 @@
 				388372022C8C8FCF004212EB /* UIColor.swift in Sources */,
 				38B543E92D4617EA00DDF2C5 /* NetworkManagerConfiguration.swift in Sources */,
 				38C9AF112E96656600B401C0 /* TagInfo.swift in Sources */,
+				38AE852E2EDFFA3C00029E4C /* TransferAccountUseCaseImpl.swift in Sources */,
+				38AE85432EDFFCA600029E4C /* ValidateNicknameUseCaseImpl.swift in Sources */,
 				388698592D1982DE00008600 /* NotificationViewController.swift in Sources */,
 				38389B9D2CCCF98B006728AF /* AuthRequest.swift in Sources */,
 				385E65A42CBE56D00032E120 /* Coordinate.swift in Sources */,
@@ -3244,6 +3453,7 @@
 				38899EA62E799BD60030F7CA /* AppVersionRemoteDataSourceImpl.swift in Sources */,
 				38AE77D42E74580000B6FD13 /* OnboardingCompletedViewController.swift in Sources */,
 				389EF81B2D2F454600E053AE /* Log+Extract.swift in Sources */,
+				38AE85482EDFFD7E00029E4C /* WriteCardUseCaseImpl.swift in Sources */,
 				381701792CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				386E966B2E9A51D9005E047D /* SelectOptionItem.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
@@ -3251,27 +3461,35 @@
 				3880EF752EA0CEEE00D88608 /* RelatedTagsView.swift in Sources */,
 				3887D0372CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
 				381E7C1C2ECCB1AD00E80249 /* TagViewReactor.swift in Sources */,
+				38AE85252EDFF90400029E4C /* FetchUserInfoUseCaseImpl.swift in Sources */,
 				38C9AF1B2E96696C00B401C0 /* TagRemoteDataSourceImpl.swift in Sources */,
 				3889A2952E79D9250030F7CA /* NotificationUseCaseImpl.swift in Sources */,
 				38B8A58C2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
 				3889A2512E79B3260030F7CA /* UserRemoteDataSource.swift in Sources */,
 				380F42222E87ECA3009AC59E /* CompositeNotificationInfo.swift in Sources */,
+				38AE85132EDF424800029E4C /* FetchBlockUserUseCaseImpl.swift in Sources */,
 				38899E5E2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */,
+				38AE851C2EDFF7E000029E4C /* FetchFollowUseCaseImpl.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38C2A8092EC0BB9800B941A2 /* BlockUserViewCell.swift in Sources */,
 				3880EF6F2EA0CD7100D88608 /* RelatedTagViewModel.swift in Sources */,
 				3889A28F2E79D8860030F7CA /* NotificationRepositoryImpl.swift in Sources */,
 				38B65E7A2E72A29F00DF6919 /* OnboardingNumberingView.swift in Sources */,
 				3889A28C2E79D86B0030F7CA /* NotificationRepository.swift in Sources */,
+				38AE853F2EDFFC3600029E4C /* UploadUserImageUseCaseImpl.swift in Sources */,
 				38B543EC2D461B1A00DDF2C5 /* LocationManagerConfigruation.swift in Sources */,
 				38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */,
 				385602B72D2FB18400118530 /* NotificationPlaceholderViewCell.swift in Sources */,
+				389E59E12EDEEFA500D0946D /* UpdateTagFavoriteUseCase.swift in Sources */,
 				383EC6152E7A50EB00EC2D1E /* AuthLocalDataSourceImpl.swift in Sources */,
 				38D8F5592EC4D89D00DED428 /* TagNofificationInfoResponse.swift in Sources */,
 				38C9AF302E96A49F00B401C0 /* WriteCardTag.swift in Sources */,
+				38AE85312EDFFA9500029E4C /* UpdateCardLikeUseCaseImpl.swift in Sources */,
+				389E59D52EDEEE6B00D0946D /* UpdateUserInfoUseCase.swift in Sources */,
 				3889A27D2E79C56E0030F7CA /* ToeknResponse.swift in Sources */,
 				3878D06C2CFFDF1F00F9522F /* SettingsViewController.swift in Sources */,
 				3803B9262ECF530C009D14B9 /* TagCollectPlaceholderViewCell.swift in Sources */,
+				38AE851E2EDFF84700029E4C /* FetchNoticeUseCaseImpl.swift in Sources */,
 				38FD4DAF2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift in Sources */,
 				3802BDAD2D0AC1FB001256EA /* UIImage.swift in Sources */,
 				3889A2622E79BB5B0030F7CA /* UserRepositoryImpl.swift in Sources */,
@@ -3288,8 +3506,10 @@
 				38B6AAE32CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
 				380F42392E88505B009AC59E /* CardUseCaseImpl.swift in Sources */,
 				38899E592E7936DD0030F7CA /* SooumStyle_V2.swift in Sources */,
+				38AE85272EDFF95500029E4C /* LocationUseCaseImpl.swift in Sources */,
 				380F42342E884FDC009AC59E /* CardRepositoryImpl.swift in Sources */,
 				38FCF41C2EA00625003AC3D8 /* UITtextView.swift in Sources */,
+				389E59AC2EDEE74B00D0946D /* UploadUserImageUseCase.swift in Sources */,
 				38B8A5852CAE9CC4000AFE83 /* HomeViewCell.swift in Sources */,
 				3878D0642CFFD66700F9522F /* FollowViewController.swift in Sources */,
 				38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */,
@@ -3351,6 +3571,8 @@
 				385C01B22E8E8DD8003C7894 /* SOMPageView.swift in Sources */,
 				3830FFA62CEC6E3100ABA9FD /* Kingfisher.swift in Sources */,
 				381B83E62EBC73FC00C84015 /* FollowInfoResponse.swift in Sources */,
+				389E59D02EDEEDD500D0946D /* FetchFollowUseCase.swift in Sources */,
+				389E59D82EDEEEC500D0946D /* UpdateNotifyUseCase.swift in Sources */,
 				381701782CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				3816E23A2D3BF402004CC196 /* TermsOfServiceCellView+Rx.swift in Sources */,
 				2A649ECF2CAE8970002D8284 /* SOMDialogViewController.swift in Sources */,
@@ -3359,6 +3581,7 @@
 				388009912CABF855002A9209 /* SOMTagModel.swift in Sources */,
 				3889A2562E79BA160030F7CA /* UserRemoteDataSourceImpl.swift in Sources */,
 				385C01B52E8EA1B7003C7894 /* SOMPageViewsDelegate.swift in Sources */,
+				389E59C42EDEEC7B00D0946D /* CardImageUseCase.swift in Sources */,
 				3889A24E2E79AEB30030F7CA /* AppVersionUseCaseImpl.swift in Sources */,
 				388FCAD02CFAC2BF0012C4D6 /* Notification.swift in Sources */,
 				381B83DF2EBC72B400C84015 /* FollowInfo.swift in Sources */,
@@ -3373,6 +3596,8 @@
 				386E966F2E9A53D6005E047D /* SelectOptionsView.swift in Sources */,
 				38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				383EC61C2E7A548E00EC2D1E /* BaseDIContainer.swift in Sources */,
+				389E59DE2EDEEF7C00D0946D /* TransferAccountUseCase.swift in Sources */,
+				38AE85342EDFFAC400029E4C /* UpdateFollowUseCaseImpl.swift in Sources */,
 				2A5BB7D12CDC7ADC00E1C799 /* OnboardingViewController.swift in Sources */,
 				3887D0392CC5504500FB52E1 /* UITextField+Typography.swift in Sources */,
 				3803CF7A2D016BDB00FD90DB /* IssueMemberTransferViewReactor.swift in Sources */,
@@ -3380,11 +3605,13 @@
 				38E7FBEF2D3CF6BB00A359CD /* SOMDialogAction.swift in Sources */,
 				38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */,
 				38C2A7D92EC054C500B941A2 /* SettingVersionCellView+Rx.swift in Sources */,
+				389E59AE2EDEE8BD00D0946D /* FetchCardUseCase.swift in Sources */,
 				38D5CE0B2CBCE8CA0054AB9A /* SimpleDefaults.swift in Sources */,
 				38F1614A2ECDAD34003BADB6 /* FavoriteTagViewCell.swift in Sources */,
 				38E9CE102D376E0E00E85A2D /* PushTokenSet.swift in Sources */,
 				386867A52E9E378200171A5E /* Array.swift in Sources */,
 				38F3760E2ECB779E00E4A41D /* FavoriteTagInfoResponse.swift in Sources */,
+				38AE852A2EDFF9CC00029E4C /* ReportCardUseCaseImpl.swift in Sources */,
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				38899E6E2E79400C0030F7CA /* ImageUrlInfoResponse.swift in Sources */,
 				3889A2782E79C29F0030F7CA /* NotificationRemoteDataSoruceImpl.swift in Sources */,
@@ -3404,6 +3631,7 @@
 				2A980BA42D803EEA007DFA45 /* SOMEvent.swift in Sources */,
 				38B65E7D2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */,
 				38E928D92EB7727400B3F00B /* SOMBottomToastView.swift in Sources */,
+				389E59A92EDEE6F600D0946D /* ValidateNicknameUseCase.swift in Sources */,
 				38D2FBCF2E81B52F006DD739 /* SOMSwipableTabBar.swift in Sources */,
 				380F42362E885032009AC59E /* CardUseCase.swift in Sources */,
 				388009942CABFAAA002A9209 /* SOMTags.swift in Sources */,
@@ -3414,6 +3642,7 @@
 				382D5CF62CFE9B8600BFA23E /* ProfileViewController.swift in Sources */,
 				38773E7C2CB3ACB2004815CD /* SOMRefreshControl.swift in Sources */,
 				3817016E2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
+				389E59D22EDEEE4100D0946D /* UpdateFollowUseCase.swift in Sources */,
 				383EC6112E7A4F6B00EC2D1E /* AuthLocalDataSource.swift in Sources */,
 				388A2D302D00D6A100E2F2F0 /* FollowViewReactor.swift in Sources */,
 				38787B812ED1EB21004BBAA7 /* TagCollectCardsView.swift in Sources */,
@@ -3422,6 +3651,7 @@
 				385C01B72E8EA1EF003C7894 /* SOMPageViews.swift in Sources */,
 				385C01AF2E8E8C6F003C7894 /* SOMPageModel.swift in Sources */,
 				3880098E2CABF4C2002A9209 /* SOMTag.swift in Sources */,
+				389E59CD2EDEED6500D0946D /* FetchUserInfoUseCase.swift in Sources */,
 				38C2A8012EC09A5A00B941A2 /* ResignTextFieldView.swift in Sources */,
 				38C2D4202CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */,
 				38CC49822CDE3854007A0145 /* SOMPresentationController.swift in Sources */,
@@ -3436,6 +3666,7 @@
 				38D8E2912CCD232B00CE2E0A /* AuthManager.swift in Sources */,
 				3889A2862E79D8090030F7CA /* AuthUseCase.swift in Sources */,
 				3886985F2D1984D600008600 /* NotificationViewReactor.swift in Sources */,
+				389E59CA2EDEED2B00D0946D /* FetchTagUseCase.swift in Sources */,
 				380F42312E884FBC009AC59E /* CardRepository.swift in Sources */,
 				387FA11D2E88DDC1004DF7CE /* HomeViewReactor.swift in Sources */,
 				3800575C2D9C12CB00E58A19 /* DefinedError.swift in Sources */,
@@ -3446,6 +3677,8 @@
 				3816C0602CCDE35300C8688C /* ErrorInterceptor.swift in Sources */,
 				38899E872E794CEE0030F7CA /* NetworkManager_FCM.swift in Sources */,
 				3879B4B92EC5ADC50070846B /* RejoinableDateInfoResponse.swift in Sources */,
+				38AE853A2EDFFBBF00029E4C /* UpdateTagFavoriteUseCaseImpl.swift in Sources */,
+				38AE85462EDFFCF900029E4C /* ValidateUserUseCaseImpl.swift in Sources */,
 				38CA91F32EBDCFF2002C261A /* ProfileCardsPlaceholderViewCell.swift in Sources */,
 				38E928D12EB75FA300B3F00B /* PungView.swift in Sources */,
 				38E928C72EB73FF800B3F00B /* WrittenTagModel.swift in Sources */,
@@ -3460,6 +3693,7 @@
 				38787B892ED22324004BBAA7 /* RxSwift+Unretained.swift in Sources */,
 				38B543E22D46179500DDF2C5 /* AuthManagerConfiguration.swift in Sources */,
 				38B8A58B2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
+				38AE85192EDF437400029E4C /* FetchCardUseCaseImpl.swift in Sources */,
 				38B543EE2D46506300DDF2C5 /* ManagerType.swift in Sources */,
 				38C2A8052EC09BC400B941A2 /* ResignTextFieldView+Rx.swift in Sources */,
 				2A5BB7E02CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */,
@@ -3476,14 +3710,18 @@
 				38899E8A2E794D620030F7CA /* NetworkManager_Version.swift in Sources */,
 				3803B92A2ECF5580009D14B9 /* TagCollectViewController.swift in Sources */,
 				388698582D1982DE00008600 /* NotificationViewController.swift in Sources */,
+				389E59C62EDEECBF00D0946D /* WriteCardUseCase.swift in Sources */,
 				38C2A7E22EC0707D00B941A2 /* TransferCodeInfo.swift in Sources */,
 				38121E342CA6DA4000602499 /* Date.swift in Sources */,
 				3878D0752CFFE01500F9522F /* SettingVersionCellView.swift in Sources */,
+				38AE85362EDFFAF900029E4C /* UpdateNotifyUseCaseImpl.swift in Sources */,
 				38C2A7EA2EC074A200B941A2 /* SettingsRepository.swift in Sources */,
 				38A721992E73EA6F0071E1D8 /* SOMBottomFloatView.swift in Sources */,
 				3893B6CE2D36728000F2004C /* ManagerProvider.swift in Sources */,
 				3880097B2CABEE3D002A9209 /* DetailViewController.swift in Sources */,
 				38D522682E742F610044911B /* SOMLoadingIndicatorView.swift in Sources */,
+				389E59B42EDEEA8200D0946D /* FetchCardDetailUseCase.swift in Sources */,
+				389E59E52EDEF03000D0946D /* LocationUseCase.swift in Sources */,
 				38C2A7FD2EC0925C00B941A2 /* WithdrawType.swift in Sources */,
 				38C2A7DB2EC06ECE00B941A2 /* SettingsRequest.swift in Sources */,
 				38D869632CF821F900BF87DA /* UserDefaults.swift in Sources */,
@@ -3502,6 +3740,7 @@
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
 				380F42272E884B80009AC59E /* BaseCardInfo.swift in Sources */,
 				38F161482ECDA8F0003BADB6 /* FavoriteTagPlaceholderViewCell.swift in Sources */,
+				389E59BA2EDEEB8300D0946D /* BlockUserUseCase.swift in Sources */,
 				3889A24A2E79AE960030F7CA /* AppVersionUseCase.swift in Sources */,
 				2A980BA02D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */,
 				38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
@@ -3522,10 +3761,12 @@
 				381B83DC2EBC707A00C84015 /* ProfileInfo.swift in Sources */,
 				38D8F55F2EC4F38700DED428 /* SimpleReachability.swift in Sources */,
 				38899E712E79402C0030F7CA /* ImageUrlInfo.swift in Sources */,
+				38AE850D2EDF41B700029E4C /* CardImageUseCaseImpl.swift in Sources */,
 				381E7C242ECCC63E00E80249 /* SearchViewButton.swift in Sources */,
 				38B21C032ECEF46200990F49 /* FavoriteTagViewModel.swift in Sources */,
 				3880EF772EA0CF2F00D88608 /* RelatedTagsViewLayout.swift in Sources */,
 				381B83F22EBCEC2E00C84015 /* ProfileUserViewCell.swift in Sources */,
+				389E59B22EDEEA3A00D0946D /* FetchNoticeUseCase.swift in Sources */,
 				3889A25D2E79BB340030F7CA /* UserRepository.swift in Sources */,
 				385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				38899E7D2E794B420030F7CA /* SignUpResponse.swift in Sources */,
@@ -3537,6 +3778,7 @@
 				381701712CD88374005FC220 /* CompositeInterceptor.swift in Sources */,
 				38787B7F2ED1E8F4004BBAA7 /* TagSearchViewReactor.swift in Sources */,
 				38F161442ECDA858003BADB6 /* SearchViewButton+Rx.swift in Sources */,
+				38AE85102EDF420700029E4C /* DeleteCardUseCaseImpl.swift in Sources */,
 				38FDC2C72C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				381B83E92EBC75D700C84015 /* ProfileCardInfo.swift in Sources */,
 				38D5637B2D16D72D006265AA /* SOMStickyTabBar.swift in Sources */,
@@ -3556,8 +3798,11 @@
 				38F3760B2ECB772A00E4A41D /* FavoriteTagInfo.swift in Sources */,
 				3889A28A2E79D8220030F7CA /* AuthUseCaseImpl.swift in Sources */,
 				38D8FE902EBE664C00F32D02 /* SOMNicknameTextField.swift in Sources */,
+				389E59BE2EDEEBF300D0946D /* ReportCardUseCase.swift in Sources */,
 				388DA0FE2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38B543E52D4617CB00DDF2C5 /* PushManagerConfiguration.swift in Sources */,
+				389E59B82EDEEAFC00D0946D /* UpdateCardLikeUseCase.swift in Sources */,
+				389E59A62EDEE39500D0946D /* ValidateUserUseCase.swift in Sources */,
 				3889A2472E79ADCE0030F7CA /* AppVersionRepositoryImpl.swift in Sources */,
 				388D8ADF2E73E6190044BA79 /* SwiftEntryKit.swift in Sources */,
 				38899E972E7953310030F7CA /* NotificationInfoResponse.swift in Sources */,
@@ -3574,12 +3819,15 @@
 				38E9CE132D37711600E85A2D /* OnboardingViewReactor.swift in Sources */,
 				3836ACBA2C8F050D00A3C566 /* UILabel+Typography.swift in Sources */,
 				38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */,
+				38AE853C2EDFFBF700029E4C /* UpdateUserInfoUseCaseImpl.swift in Sources */,
 				388A2D332D00D7BF00E2F2F0 /* UpdateProfileViewReactor.swift in Sources */,
 				38E928BA2EB715C900B3F00B /* ReortType.swift in Sources */,
 				3830880A2EDC7B8C00D99D88 /* SOMMessageBubbleView.swift in Sources */,
 				3887D0362CC5335D00FB52E1 /* WriteCardView.swift in Sources */,
 				38787B7C2ED1E8B3004BBAA7 /* TagSearchViewController.swift in Sources */,
 				2A5BB7CD2CDBB7D100E1C799 /* OnboardingProfileImageSettingViewController.swift in Sources */,
+				389E59C02EDEEC4900D0946D /* DeleteCardUseCase.swift in Sources */,
+				38AE85152EDF42B700029E4C /* FetchCardDetailUseCaseImpl.swift in Sources */,
 				385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
 				38787B792ED1E719004BBAA7 /* SearchTermsView.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
@@ -3599,12 +3847,15 @@
 				38C2A7F92EC090B100B941A2 /* BlockUsersInfoResponse.swift in Sources */,
 				38C9AF232E966A1B00B401C0 /* TagRepositoryImpl.swift in Sources */,
 				38FCF41A2E9F88EA003AC3D8 /* WriteCardTags+Rx.swift in Sources */,
+				389E59DB2EDEEF3600D0946D /* FetchBlockUserUseCase.swift in Sources */,
 				3889A2742E79C1D80030F7CA /* NotificationRemoteDataSource.swift in Sources */,
 				3818549C2E992F7D00424D71 /* WriteCardDefaultImageCell.swift in Sources */,
 				3878D07D2CFFE6E500F9522F /* IssueMemberTransferViewController.swift in Sources */,
+				38AE85212EDFF88C00029E4C /* FetchTagUseCaseImpl.swift in Sources */,
 				386712C52E97734B00541389 /* UITextField.swift in Sources */,
 				38C9AF0C2E965EFB00B401C0 /* DefaultImages.swift in Sources */,
 				381DEA8B2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
+				38AE850A2EDF414400029E4C /* BlockUserUseCaseImpl.swift in Sources */,
 				3878D08C2CFFF0BF00F9522F /* AnnouncementViewControler.swift in Sources */,
 				3874B5632ECB2613004CC22A /* SettingsLocalDataSourceImpl.swift in Sources */,
 				38B8BE472D1ECBDA0084569C /* PushNotificationInfo.swift in Sources */,
@@ -3614,6 +3865,8 @@
 				38C2A80F2EC0BC8900B941A2 /* BlockUserPlaceholderViewCell.swift in Sources */,
 				38C9AF122E96656600B401C0 /* TagInfo.swift in Sources */,
 				2AFD054C2CFF76CB007C84AD /* TagRequest.swift in Sources */,
+				38AE852D2EDFFA3C00029E4C /* TransferAccountUseCaseImpl.swift in Sources */,
+				38AE85422EDFFCA600029E4C /* ValidateNicknameUseCaseImpl.swift in Sources */,
 				38B6AADF2CA4777200CE6DB6 /* UIViewController+Rx.swift in Sources */,
 				389681102CAFBD6A00FFD89F /* DetailViewReactor.swift in Sources */,
 				38E928B72EB711E200B3F00B /* DetailCardInfo.swift in Sources */,
@@ -3629,6 +3882,7 @@
 				38899EA72E799BD60030F7CA /* AppVersionRemoteDataSourceImpl.swift in Sources */,
 				38AE77D52E74580000B6FD13 /* OnboardingCompletedViewController.swift in Sources */,
 				3878D06F2CFFDF9600F9522F /* SettingTextCellView.swift in Sources */,
+				38AE85492EDFFD7E00029E4C /* WriteCardUseCaseImpl.swift in Sources */,
 				38B8A5842CAE9CC4000AFE83 /* HomeViewCell.swift in Sources */,
 				3803CF852D017DC700FD90DB /* EnterMemberTransferViewReactor.swift in Sources */,
 				386E966C2E9A51D9005E047D /* SelectOptionItem.swift in Sources */,
@@ -3636,27 +3890,35 @@
 				38D2FBCB2E81B0E5006DD739 /* SOMSwipableTabBarItem.swift in Sources */,
 				3880EF742EA0CEEE00D88608 /* RelatedTagsView.swift in Sources */,
 				381E7C1D2ECCB1AD00E80249 /* TagViewReactor.swift in Sources */,
+				38AE85242EDFF90400029E4C /* FetchUserInfoUseCaseImpl.swift in Sources */,
 				3878F4712CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				3878D06B2CFFDF1F00F9522F /* SettingsViewController.swift in Sources */,
 				38C9AF1A2E96696C00B401C0 /* TagRemoteDataSourceImpl.swift in Sources */,
 				3889A2962E79D9250030F7CA /* NotificationUseCaseImpl.swift in Sources */,
 				3878D0882CFFEF0F00F9522F /* TermsOfServiceTextCellView+Rx.swift in Sources */,
+				38AE85122EDF424800029E4C /* FetchBlockUserUseCaseImpl.swift in Sources */,
 				3889A2502E79B3260030F7CA /* UserRemoteDataSource.swift in Sources */,
+				38AE851B2EDFF7E000029E4C /* FetchFollowUseCaseImpl.swift in Sources */,
 				380F42212E87ECA3009AC59E /* CompositeNotificationInfo.swift in Sources */,
 				38899E5F2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */,
 				38C2A8082EC0BB9800B941A2 /* BlockUserViewCell.swift in Sources */,
 				3880EF6E2EA0CD7100D88608 /* RelatedTagViewModel.swift in Sources */,
 				3889A2902E79D8860030F7CA /* NotificationRepositoryImpl.swift in Sources */,
 				38B6AAE22CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
+				38AE85402EDFFC3600029E4C /* UploadUserImageUseCaseImpl.swift in Sources */,
 				38B65E792E72A29F00DF6919 /* OnboardingNumberingView.swift in Sources */,
 				2A5BB7D52CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
 				3889A28D2E79D86B0030F7CA /* NotificationRepository.swift in Sources */,
+				389E59E22EDEEFA500D0946D /* UpdateTagFavoriteUseCase.swift in Sources */,
 				38B543EB2D461B1A00DDF2C5 /* LocationManagerConfigruation.swift in Sources */,
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
 				383EC6162E7A50EB00EC2D1E /* AuthLocalDataSourceImpl.swift in Sources */,
+				38AE85302EDFFA9500029E4C /* UpdateCardLikeUseCaseImpl.swift in Sources */,
+				389E59D62EDEEE6B00D0946D /* UpdateUserInfoUseCase.swift in Sources */,
 				3878D0852CFFED7800F9522F /* TermsOfServiceTextCellView.swift in Sources */,
 				38D8F5582EC4D89D00DED428 /* TagNofificationInfoResponse.swift in Sources */,
 				3803B9272ECF530C009D14B9 /* TagCollectPlaceholderViewCell.swift in Sources */,
+				38AE851F2EDFF84700029E4C /* FetchNoticeUseCaseImpl.swift in Sources */,
 				38C9AF312E96A49F00B401C0 /* WriteCardTag.swift in Sources */,
 				3889A27E2E79C56E0030F7CA /* ToeknResponse.swift in Sources */,
 				3878D0812CFFEC6900F9522F /* TermsOfServiceViewController.swift in Sources */,
@@ -3673,8 +3935,10 @@
 				38AE77DF2E7465F500B6FD13 /* EnterMemberTransferTextFieldView+Rx.swift in Sources */,
 				388698622D1986B100008600 /* NotificationRequest.swift in Sources */,
 				38572CDE2D2254E800B07C69 /* HomePlaceholderViewCell.swift in Sources */,
+				38AE85282EDFF95500029E4C /* LocationUseCaseImpl.swift in Sources */,
 				380F423A2E88505B009AC59E /* CardUseCaseImpl.swift in Sources */,
 				38899E582E7936DD0030F7CA /* SooumStyle_V2.swift in Sources */,
+				389E59AB2EDEE74B00D0946D /* UploadUserImageUseCase.swift in Sources */,
 				38FCF41D2EA00625003AC3D8 /* UITtextView.swift in Sources */,
 				380F42332E884FDC009AC59E /* CardRepositoryImpl.swift in Sources */,
 				388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,

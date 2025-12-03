@@ -46,4 +46,10 @@ class SettingsRemoteDataSourceImpl: SettingsRemoteDataSource {
         let request: SettingsRequest = .blockUsers(lastId: lastId)
         return self.provider.networkManager.fetch(BlockUsersInfoResponse.self, request: request)
     }
+    
+    func updateNotify(isAllowNotify: Bool) -> Observable<Int> {
+        
+        let request: UserRequest = .updateNotify(isAllowNotify: isAllowNotify)
+        return self.provider.networkManager.perform(request)
+    }
 }

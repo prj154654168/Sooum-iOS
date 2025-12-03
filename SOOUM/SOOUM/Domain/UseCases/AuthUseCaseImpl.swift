@@ -5,11 +5,9 @@
 //  Created by 오현식 on 9/17/25.
 //
 
-import Foundation
-
 import RxSwift
 
-class AuthUseCaseImpl: AuthUseCase {
+final class AuthUseCaseImpl: AuthUseCase {
     
     private let repository: AuthRepository
     
@@ -32,6 +30,11 @@ class AuthUseCaseImpl: AuthUseCase {
         return self.repository.withdraw(reaseon: reaseon).map { $0 == 200 }
     }
     
+    func encryptedDeviceId() -> Observable<String?> {
+        
+        return self.repository.encryptedDeviceId()
+    }
+    
     func initializeAuthInfo() {
         
         self.repository.initializeAuthInfo()
@@ -45,10 +48,5 @@ class AuthUseCaseImpl: AuthUseCase {
     func tokens() -> Token {
         
         return self.repository.tokens()
-    }
-    
-    func encryptedDeviceId() -> Observable<String?> {
-        
-        return self.repository.encryptedDeviceId()
     }
 }

@@ -44,6 +44,11 @@ class SettingsRepositoryImpl: SettingsRepository {
         return self.remoteDataSource.blockUsers(lastId: lastId)
     }
     
+    func updateNotify(isAllowNotify: Bool) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateNotify(isAllowNotify: isAllowNotify)
+    }
+    
     func notificationStatus() -> Bool {
         
         return self.localDataSource.notificationStatus()

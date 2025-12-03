@@ -55,4 +55,15 @@ protocol CardRepository {
         imgName: String,
         tags: [String]
     ) -> Observable<WriteCardResponse>
+    
+    
+    // MARK: Tag
+    
+    func tagCards(tagId: String, lastId: String?) -> Observable<TagCardInfoResponse>
+    
+    
+    // MARK: My
+    
+    func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse>
+    func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse>
 }

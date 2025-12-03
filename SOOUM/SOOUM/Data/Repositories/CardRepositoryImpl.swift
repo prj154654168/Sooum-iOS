@@ -130,4 +130,25 @@ class CardRepositoryImpl: CardRepository {
             tags: tags
         )
     }
+    
+    
+    // MARK: Tag
+    
+    func tagCards(tagId: String, lastId: String?) -> Observable<TagCardInfoResponse> {
+        
+        return self.remoteDataSource.tagCards(tagId: tagId, lastId: lastId)
+    }
+    
+    
+    // MARK: My
+    
+    func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        return self.remoteDataSource.feedCards(userId: userId, lastId: lastId)
+    }
+    
+    func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        return self.remoteDataSource.myCommentCards(lastId: lastId)
+    }
 }
