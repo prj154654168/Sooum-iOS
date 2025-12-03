@@ -176,6 +176,8 @@ extension DetailCardInfo: Decodable {
         self.tags = try container.decode([Tag].self, forKey: .tags)
         self.isOwnCard = try container.decode(Bool.self, forKey: .isOwnCard)
         self.visitedCnt = String(try container.decode(Int64.self, forKey: .visitedCnt))
-        self.prevCardInfo = try container.decodeIfPresent(PrevCardInfo.self, forKey: .prevCardInfo)
+        
+        let singleContainer = try decoder.singleValueContainer()
+        self.prevCardInfo = try? singleContainer.decode(PrevCardInfo.self)
     }
 }
