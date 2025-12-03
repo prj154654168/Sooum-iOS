@@ -142,7 +142,7 @@ class MainTabBarController: SOMTabBarController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.willPushWriteCard
+        self.willPushWriteCard.throttle(.seconds(3), scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.postingPermission }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -251,9 +251,10 @@ class MainTabBarController: SOMTabBarController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let couldPosting = reactor.state.map(\.couldPosting).distinctUntilChanged().filterNil()
+        let couldPosting = reactor.pulse(\.$couldPosting).distinctUntilChanged().filterNil()
         couldPosting
             .filter { $0.isBaned == false }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 
                 object.hasFirstLaunchGuide = false
@@ -273,6 +274,7 @@ class MainTabBarController: SOMTabBarController, View {
         
         couldPosting
             .filter { $0.isBaned }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, postingPermission in
                 
                 let banEndGapToDays = postingPermission.expiredAt?.infoReadableTimeTakenFromThisForBanEndPosting(to: Date().toKorea())
@@ -336,23 +338,6 @@ private extension MainTabBarController {
             title: Constants.Text.banUserDialogTitle,
             message: dialogFirstMessage + dialogSecondMessage,
             textAlignment: .left,
-            actions: [confirmAction]
-        )
-    }
-    
-    func showPrepare() {
-        
-        let confirmAction = SOMDialogAction(
-            title: "확인",
-            style: .primary,
-            action: {
-                UIApplication.topViewController?.dismiss(animated: true)
-            }
-        )
-        
-        SOMDialogViewController.show(
-            title: "서비스 준비중입니다.",
-            message: "추후 개발 완료되면 사용가능합니다.",
             actions: [confirmAction]
         )
     }
