@@ -222,6 +222,8 @@ extension SOMNicknameTextField: UITextFieldDelegate {
         replacementString string: String
     ) -> Bool {
         
+        self.clearButton.isHidden = self.isTextEmpty
+        
         return textField.shouldChangeCharactersIn(
             in: range,
             replacementString: string,
