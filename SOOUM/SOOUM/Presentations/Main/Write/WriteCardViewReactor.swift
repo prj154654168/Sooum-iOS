@@ -53,10 +53,11 @@ class WriteCardViewReactor: Reactor {
     var initialState: State
     
     private let dependencies: AppDIContainerable
-    private let cardUseCase: CardUseCase
-    private let tagUseCase: TagUseCase
-    private let userUseCase: UserUseCase
-    private let settingsUseCase: SettingsUseCase
+    private let cardImageUseCase: CardImageUseCase
+    private let writeCardUseCase: WriteCardUseCase
+    private let fetchTagUseCase: FetchTagUseCase
+    private let validateUserUseCase: ValidateUserUseCase
+    private let locationUseCase: LocationUseCase
     
     let entranceType: EntranceCardType
     
@@ -68,15 +69,17 @@ class WriteCardViewReactor: Reactor {
         parentCardId: String? = nil
     ) {
         self.dependencies = dependencies
-        self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
-        self.tagUseCase = dependencies.rootContainer.resolve(TagUseCase.self)
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
+        self.cardImageUseCase = dependencies.rootContainer.resolve(CardImageUseCase.self)
+        self.writeCardUseCase = dependencies.rootContainer.resolve(WriteCardUseCase.self)
+        self.fetchTagUseCase = dependencies.rootContainer.resolve(FetchTagUseCase.self)
+        self.validateUserUseCase = dependencies.rootContainer.resolve(ValidateUserUseCase.self)
+        self.locationUseCase = dependencies.rootContainer.resolve(LocationUseCase.self)
+        
         self.entranceType = entranceType
         self.parentCardId = parentCardId
         
         self.initialState = State(
-            hasPermission: self.settingsUseCase.hasPermission(),
+            hasPermission: self.locationUseCase.hasPermission(),
             shouldUseCoordinates: false,
             defaultImages: nil,
             userImage: nil,
@@ -93,7 +96,7 @@ class WriteCardViewReactor: Reactor {
         switch action {
         case .landing:
             
-            return self.cardUseCase.defaultImages().map(Mutation.defaultImages)
+            return self.cardImageUseCase.defaultImages().map(Mutation.defaultImages)
             
         case let .updateUserImage(userImage, isDownloaded):
             
@@ -126,14 +129,14 @@ class WriteCardViewReactor: Reactor {
             ])
         case let .relatedTags(keyword):
             
-            return self.tagUseCase.related(keyword: keyword, size: 8)
+            return self.fetchTagUseCase.related(keyword: keyword, size: 8)
                 .map(Mutation.relatedTags)
         case .updateRelatedTags:
             
             return .just(.relatedTags([]))
         case .postingPermission:
             
-            return self.userUseCase.postingPermission()
+            return self.validateUserUseCase.postingPermission()
                 .map(Mutation.updatePostingPermission)
         }
     }
@@ -165,13 +168,13 @@ private extension WriteCardViewReactor {
     
     func uploadImage(_ image: UIImage) -> Observable<String?> {
         
-        return self.cardUseCase.presignedURL()
+        return self.cardImageUseCase.presignedURL()
             .withUnretained(self)
             .flatMapLatest { object, presignedInfo -> Observable<String?> in
                 if let imageData = image.jpegData(compressionQuality: 0.5),
                    let url = URL(string: presignedInfo.imgUrl) {
                     
-                    return object.cardUseCase.uploadImage(imageData, with: url)
+                    return object.cardImageUseCase.uploadToS3(imageData, with: url)
                         .flatMapLatest { isSuccess -> Observable<String?> in
                             
                             let imageName = isSuccess ? presignedInfo.imgName : nil
@@ -193,14 +196,14 @@ private extension WriteCardViewReactor {
         tags: [String]
     ) -> Observable<Mutation> {
         
-        let coordinate = self.settingsUseCase.coordinate()
+        let coordinate = self.locationUseCase.coordinate()
         let trimedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if case .default = imageType, let imageName = imageName {
             
             if self.entranceType == .feed {
                 
-                return self.cardUseCase.writeCard(
+                return self.writeCardUseCase.writeFeed(
                     isDistanceShared: isDistanceShared,
                     latitude: coordinate.latitude,
                     longitude: coordinate.longitude,
@@ -214,8 +217,8 @@ private extension WriteCardViewReactor {
                 .map(Mutation.writeCard)
             } else {
                 
-                return self.cardUseCase.writeComment(
-                    id: self.parentCardId ?? "",
+                return self.writeCardUseCase.writeComment(
+                    parentCardId: self.parentCardId ?? "",
                     isDistanceShared: isDistanceShared,
                     latitude: coordinate.latitude,
                     longitude: coordinate.longitude,
@@ -238,7 +241,7 @@ private extension WriteCardViewReactor {
                     
                     if self.entranceType == .feed {
                         
-                        return object.cardUseCase.writeCard(
+                        return object.writeCardUseCase.writeFeed(
                             isDistanceShared: isDistanceShared,
                             latitude: coordinate.latitude,
                             longitude: coordinate.longitude,
@@ -252,8 +255,8 @@ private extension WriteCardViewReactor {
                         .map(Mutation.writeCard)
                     } else {
                         
-                        return object.cardUseCase.writeComment(
-                            id: object.parentCardId ?? "",
+                        return object.writeCardUseCase.writeComment(
+                            parentCardId: object.parentCardId ?? "",
                             isDistanceShared: isDistanceShared,
                             latitude: coordinate.latitude,
                             longitude: coordinate.longitude,
@@ -279,7 +282,7 @@ private extension WriteCardViewReactor {
                 return .concat([
                     .just(.writeCard(nil)),
                     .just(.updateIsProcessing(false)),
-                    self.userUseCase.postingPermission()
+                    self.validateUserUseCase.postingPermission()
                         .map(Mutation.updatePostingPermission)
                 ])
             }

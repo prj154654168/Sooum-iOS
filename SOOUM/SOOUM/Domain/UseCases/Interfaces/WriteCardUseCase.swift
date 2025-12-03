@@ -21,7 +21,7 @@ protocol WriteCardUseCase: AnyObject {
         tags: [String]
     ) -> Observable<String>
     func writeComment(
-        prevCardId: String,
+        parentCardId: String,
         isDistanceShared: Bool,
         latitude: String?,
         longitude: String?,

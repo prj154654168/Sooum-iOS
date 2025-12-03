@@ -42,7 +42,7 @@ final class WriteCardUseCaseImpl: WriteCardUseCase {
     }
     
     func writeComment(
-        prevCardId: String,
+        parentCardId: String,
         isDistanceShared: Bool,
         latitude: String?,
         longitude: String?,
@@ -54,7 +54,7 @@ final class WriteCardUseCaseImpl: WriteCardUseCase {
     ) -> Observable<String> {
         
         return self.repository.writeComment(
-            id: prevCardId,
+            id: parentCardId,
             isDistanceShared: isDistanceShared,
             latitude: latitude,
             longitude: longitude,

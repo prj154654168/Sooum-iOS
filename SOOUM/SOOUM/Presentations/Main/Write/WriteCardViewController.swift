@@ -211,7 +211,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.selectOptionsView.items = options
         
         self.writeCardView.textViewDidBeginEditing
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.isScrollingByFirstResponder = true
                 
@@ -224,7 +224,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         self.relatedTagsView.updatedContentHeight
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, updatedContentHeight in
                 object.isScrollingByFirstResponder = true
                 
@@ -275,6 +275,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         let selectedRelatedTag = self.relatedTagsView.selectedRelatedTag.filterNil().share()
         selectedRelatedTag
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 object.writeCardView.writeCardTags.updateFooterText = nil
             }
@@ -305,7 +306,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.selectImageView.selectedUseUserImageCell
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 
                 let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
@@ -388,7 +389,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // Action
-        
         let viewDidLoad = self.rx.viewDidLoad.share()
         viewDidLoad
             .map { _ in Reactor.Action.landing }
@@ -443,7 +443,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // State
-        
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
             .observe(on: MainScheduler.asyncInstance)
@@ -461,7 +460,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.writtenCardId)
             .filterNil()
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, writtenCardId in
                 NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
                 if reactor.entranceType == .comment {
@@ -490,7 +489,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.hasErrors)
             .filterNil()
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, hasErrors in
                 if case 422 = hasErrors {
                     object.showInappositeDialog()
@@ -507,6 +506,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.couldPosting)
             .filterNil()
             .filter { $0.isBaned }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, postingPermission in
                 
                 let banEndGapToDays = postingPermission.expiredAt?.infoReadableTimeTakenFromThisForBanEndPosting(to: Date().toKorea())
@@ -543,11 +543,13 @@ class WriteCardViewController: BaseNavigationViewController, View {
         let relatedTags = reactor.state.map(\.relatedTags).filterNil().distinctUntilChanged().share()
         relatedTags
             .map { $0.isEmpty }
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.relatedTagsView.rx.isHidden)
             .disposed(by: self.disposeBag)
         
         relatedTags
             .map { $0.map { RelatedTagViewModel(originalText: $0.name, count: "\($0.usageCnt)") } }
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.relatedTagsView.rx.models())
             .disposed(by: self.disposeBag)
     }
