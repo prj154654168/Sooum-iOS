@@ -91,10 +91,6 @@
 		380F42312E884FBC009AC59E /* CardRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F422F2E884FB5009AC59E /* CardRepository.swift */; };
 		380F42332E884FDC009AC59E /* CardRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F42322E884FD4009AC59E /* CardRepositoryImpl.swift */; };
 		380F42342E884FDC009AC59E /* CardRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F42322E884FD4009AC59E /* CardRepositoryImpl.swift */; };
-		380F42362E885032009AC59E /* CardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F42352E88502F009AC59E /* CardUseCase.swift */; };
-		380F42372E885032009AC59E /* CardUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F42352E88502F009AC59E /* CardUseCase.swift */; };
-		380F42392E88505B009AC59E /* CardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F42382E885057009AC59E /* CardUseCaseImpl.swift */; };
-		380F423A2E88505B009AC59E /* CardUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380F42382E885057009AC59E /* CardUseCaseImpl.swift */; };
 		38121E312CA6C77500602499 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E302CA6C77500602499 /* Double.swift */; };
 		38121E322CA6C77500602499 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E302CA6C77500602499 /* Double.swift */; };
 		38121E342CA6DA4000602499 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38121E332CA6DA4000602499 /* Date.swift */; };
@@ -412,10 +408,6 @@
 		3889A25D2E79BB340030F7CA /* UserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889A25B2E79BB2F0030F7CA /* UserRepository.swift */; };
 		3889A2622E79BB5B0030F7CA /* UserRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889A2612E79BB540030F7CA /* UserRepositoryImpl.swift */; };
 		3889A2632E79BB5B0030F7CA /* UserRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889A2612E79BB540030F7CA /* UserRepositoryImpl.swift */; };
-		3889A2652E79BBC40030F7CA /* UserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889A2642E79BBC00030F7CA /* UserUseCase.swift */; };
-		3889A2662E79BBC40030F7CA /* UserUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889A2642E79BBC00030F7CA /* UserUseCase.swift */; };
-		3889A2682E79BC880030F7CA /* UserUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889A2672E79BC840030F7CA /* UserUseCaseImpl.swift */; };
-		3889A2692E79BC880030F7CA /* UserUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889A2672E79BC840030F7CA /* UserUseCaseImpl.swift */; };
 		3889A26B2E79BD450030F7CA /* AuthRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889A26A2E79BD410030F7CA /* AuthRemoteDataSource.swift */; };
 		3889A26C2E79BD450030F7CA /* AuthRemoteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889A26A2E79BD410030F7CA /* AuthRemoteDataSource.swift */; };
 		3889A26E2E79BE9F0030F7CA /* AuthRemoteDataSourceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889A26D2E79BE970030F7CA /* AuthRemoteDataSourceImpl.swift */; };
@@ -644,10 +636,6 @@
 		38C2A7EB2EC074A200B941A2 /* SettingsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7E92EC0749A00B941A2 /* SettingsRepository.swift */; };
 		38C2A7ED2EC074B200B941A2 /* SettingsRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7EC2EC074AE00B941A2 /* SettingsRepositoryImpl.swift */; };
 		38C2A7EE2EC074B200B941A2 /* SettingsRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7EC2EC074AE00B941A2 /* SettingsRepositoryImpl.swift */; };
-		38C2A7F02EC0796700B941A2 /* SettingsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7EF2EC0795F00B941A2 /* SettingsUseCase.swift */; };
-		38C2A7F12EC0796700B941A2 /* SettingsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7EF2EC0795F00B941A2 /* SettingsUseCase.swift */; };
-		38C2A7F32EC0798B00B941A2 /* SettingsUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7F22EC0798600B941A2 /* SettingsUseCaseImpl.swift */; };
-		38C2A7F42EC0798B00B941A2 /* SettingsUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7F22EC0798600B941A2 /* SettingsUseCaseImpl.swift */; };
 		38C2A7F62EC08FF600B941A2 /* BlockUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7F52EC08FEF00B941A2 /* BlockUserInfo.swift */; };
 		38C2A7F72EC08FF600B941A2 /* BlockUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7F52EC08FEF00B941A2 /* BlockUserInfo.swift */; };
 		38C2A7F92EC090B100B941A2 /* BlockUsersInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7F82EC090AC00B941A2 /* BlockUsersInfoResponse.swift */; };
@@ -686,10 +674,6 @@
 		38C9AF212E9669F600B401C0 /* TagRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF1F2E9669F100B401C0 /* TagRepository.swift */; };
 		38C9AF232E966A1B00B401C0 /* TagRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF222E966A1300B401C0 /* TagRepositoryImpl.swift */; };
 		38C9AF242E966A1B00B401C0 /* TagRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF222E966A1300B401C0 /* TagRepositoryImpl.swift */; };
-		38C9AF262E966A6300B401C0 /* TagUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF252E966A6100B401C0 /* TagUseCase.swift */; };
-		38C9AF272E966A6300B401C0 /* TagUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF252E966A6100B401C0 /* TagUseCase.swift */; };
-		38C9AF292E966A8F00B401C0 /* TagUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF282E966A8B00B401C0 /* TagUseCaseImpl.swift */; };
-		38C9AF2A2E966A8F00B401C0 /* TagUseCaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF282E966A8B00B401C0 /* TagUseCaseImpl.swift */; };
 		38C9AF2D2E96A3E500B401C0 /* WriteCardTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF2C2E96A3D600B401C0 /* WriteCardTagModel.swift */; };
 		38C9AF2E2E96A3E500B401C0 /* WriteCardTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF2C2E96A3D600B401C0 /* WriteCardTagModel.swift */; };
 		38C9AF302E96A49F00B401C0 /* WriteCardTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9AF2F2E96A49B00B401C0 /* WriteCardTag.swift */; };
@@ -905,8 +889,6 @@
 		380F422C2E884F35009AC59E /* CardRemoteDataSourceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRemoteDataSourceImpl.swift; sourceTree = "<group>"; };
 		380F422F2E884FB5009AC59E /* CardRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRepository.swift; sourceTree = "<group>"; };
 		380F42322E884FD4009AC59E /* CardRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRepositoryImpl.swift; sourceTree = "<group>"; };
-		380F42352E88502F009AC59E /* CardUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardUseCase.swift; sourceTree = "<group>"; };
-		380F42382E885057009AC59E /* CardUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardUseCaseImpl.swift; sourceTree = "<group>"; };
 		38121E302CA6C77500602499 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
 		38121E332CA6DA4000602499 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorInterceptor.swift; sourceTree = "<group>"; };
@@ -1074,8 +1056,6 @@
 		3889A2552E79BA0F0030F7CA /* UserRemoteDataSourceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRemoteDataSourceImpl.swift; sourceTree = "<group>"; };
 		3889A25B2E79BB2F0030F7CA /* UserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepository.swift; sourceTree = "<group>"; };
 		3889A2612E79BB540030F7CA /* UserRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepositoryImpl.swift; sourceTree = "<group>"; };
-		3889A2642E79BBC00030F7CA /* UserUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUseCase.swift; sourceTree = "<group>"; };
-		3889A2672E79BC840030F7CA /* UserUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserUseCaseImpl.swift; sourceTree = "<group>"; };
 		3889A26A2E79BD410030F7CA /* AuthRemoteDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRemoteDataSource.swift; sourceTree = "<group>"; };
 		3889A26D2E79BE970030F7CA /* AuthRemoteDataSourceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRemoteDataSourceImpl.swift; sourceTree = "<group>"; };
 		3889A2702E79C0370030F7CA /* AuthRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRepository.swift; sourceTree = "<group>"; };
@@ -1194,8 +1174,6 @@
 		38C2A7E62EC0718900B941A2 /* SettingsRemoteDataSourceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRemoteDataSourceImpl.swift; sourceTree = "<group>"; };
 		38C2A7E92EC0749A00B941A2 /* SettingsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRepository.swift; sourceTree = "<group>"; };
 		38C2A7EC2EC074AE00B941A2 /* SettingsRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRepositoryImpl.swift; sourceTree = "<group>"; };
-		38C2A7EF2EC0795F00B941A2 /* SettingsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUseCase.swift; sourceTree = "<group>"; };
-		38C2A7F22EC0798600B941A2 /* SettingsUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUseCaseImpl.swift; sourceTree = "<group>"; };
 		38C2A7F52EC08FEF00B941A2 /* BlockUserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUserInfo.swift; sourceTree = "<group>"; };
 		38C2A7F82EC090AC00B941A2 /* BlockUsersInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockUsersInfoResponse.swift; sourceTree = "<group>"; };
 		38C2A7FB2EC0925700B941A2 /* WithdrawType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawType.swift; sourceTree = "<group>"; };
@@ -1215,8 +1193,6 @@
 		38C9AF192E96696500B401C0 /* TagRemoteDataSourceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRemoteDataSourceImpl.swift; sourceTree = "<group>"; };
 		38C9AF1F2E9669F100B401C0 /* TagRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRepository.swift; sourceTree = "<group>"; };
 		38C9AF222E966A1300B401C0 /* TagRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRepositoryImpl.swift; sourceTree = "<group>"; };
-		38C9AF252E966A6100B401C0 /* TagUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagUseCase.swift; sourceTree = "<group>"; };
-		38C9AF282E966A8B00B401C0 /* TagUseCaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagUseCaseImpl.swift; sourceTree = "<group>"; };
 		38C9AF2C2E96A3D600B401C0 /* WriteCardTagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardTagModel.swift; sourceTree = "<group>"; };
 		38C9AF2F2E96A49B00B401C0 /* WriteCardTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardTag.swift; sourceTree = "<group>"; };
 		38C9AF322E96A82600B401C0 /* WriteCardTags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardTags.swift; sourceTree = "<group>"; };
@@ -2330,10 +2306,6 @@
 				38AE85412EDFFCA400029E4C /* ValidateNicknameUseCaseImpl.swift */,
 				38AE85442EDFFCF800029E4C /* ValidateUserUseCaseImpl.swift */,
 				38AE85472EDFFD7B00029E4C /* WriteCardUseCaseImpl.swift */,
-				380F42382E885057009AC59E /* CardUseCaseImpl.swift */,
-				38C9AF282E966A8B00B401C0 /* TagUseCaseImpl.swift */,
-				38C2A7F22EC0798600B941A2 /* SettingsUseCaseImpl.swift */,
-				3889A2672E79BC840030F7CA /* UserUseCaseImpl.swift */,
 				3889A2482E79AE870030F7CA /* Interfaces */,
 			);
 			path = UseCases;
@@ -2381,10 +2353,6 @@
 				389E59A72EDEE6EF00D0946D /* ValidateNicknameUseCase.swift */,
 				389E59A42EDEE38E00D0946D /* ValidateUserUseCase.swift */,
 				389E59C52EDEECBC00D0946D /* WriteCardUseCase.swift */,
-				380F42352E88502F009AC59E /* CardUseCase.swift */,
-				38C9AF252E966A6100B401C0 /* TagUseCase.swift */,
-				3889A2642E79BBC00030F7CA /* UserUseCase.swift */,
-				38C2A7EF2EC0795F00B941A2 /* SettingsUseCase.swift */,
 			);
 			path = Interfaces;
 			sourceTree = "<group>";
@@ -3115,13 +3083,11 @@
 				38B8A5892CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
 				389EF81F2D2F469B00E053AE /* CocoaLumberjack.swift in Sources */,
 				3802BDB92D0AF2F7001256EA /* PushManager+Rx.swift in Sources */,
-				38C2A7F32EC0798B00B941A2 /* SettingsUseCaseImpl.swift in Sources */,
 				3880EF802EA0DB0900D88608 /* WriteCardTagsDelegate.swift in Sources */,
 				385620F72CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
 				3817016F2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
 				38AE565D2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */,
 				38E928CB2EB7402200B3F00B /* WrittenTag.swift in Sources */,
-				3889A2682E79BC880030F7CA /* UserUseCaseImpl.swift in Sources */,
 				38C9AF3C2E96ACEB00B401C0 /* WriteCardTagFooterDelegate.swift in Sources */,
 				3878D0762CFFE01500F9522F /* SettingVersionCellView.swift in Sources */,
 				3878D08D2CFFF0BF00F9522F /* AnnouncementViewControler.swift in Sources */,
@@ -3190,7 +3156,6 @@
 				38FEBE552E865121002916A8 /* FollowNotificationInfoResponse.swift in Sources */,
 				38EBA90F2EB39920008B28F4 /* PostingPermission.swift in Sources */,
 				38899E9C2E7954D90030F7CA /* DeletedNotificationInfoResponse.swift in Sources */,
-				38C2A7F02EC0796700B941A2 /* SettingsUseCase.swift in Sources */,
 				38899E8C2E794E690030F7CA /* AppVersionStatusResponse.swift in Sources */,
 				38C9AF2D2E96A3E500B401C0 /* WriteCardTagModel.swift in Sources */,
 				38A721962E73E7140071E1D8 /* View+SwiftEntryKit.swift in Sources */,
@@ -3203,7 +3168,6 @@
 				38D2FBCE2E81B52F006DD739 /* SOMSwipableTabBar.swift in Sources */,
 				38FD4DB52D034F6600BF5FF1 /* FollowerViewCell.swift in Sources */,
 				389E59A82EDEE6F600D0946D /* ValidateNicknameUseCase.swift in Sources */,
-				380F42372E885032009AC59E /* CardUseCase.swift in Sources */,
 				382E153B2D15A67A0097B09C /* NotificationViewCell.swift in Sources */,
 				38C2A80C2EC0BC4500B941A2 /* BlockUsersViewController.swift in Sources */,
 				388009922CABF855002A9209 /* SOMTagModel.swift in Sources */,
@@ -3312,7 +3276,6 @@
 				2A980BA12D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */,
 				38F161472ECDA8F0003BADB6 /* FavoriteTagPlaceholderViewCell.swift in Sources */,
 				389E59BB2EDEEB8300D0946D /* BlockUserUseCase.swift in Sources */,
-				38C9AF2A2E966A8F00B401C0 /* TagUseCaseImpl.swift in Sources */,
 				2A5BB7E12CDCBE7E00E1C799 /* OnboardingNicknameSettingViewReactor.swift in Sources */,
 				38D8FE8D2EBE36F800F32D02 /* ProfileCardsViewCell.swift in Sources */,
 				38C2A7DF2EC0704700B941A2 /* SettingsRemoteDataSource.swift in Sources */,
@@ -3399,7 +3362,6 @@
 				385441922C870544004E2BB0 /* SceneDelegate.swift in Sources */,
 				389E59C12EDEEC4900D0946D /* DeleteCardUseCase.swift in Sources */,
 				38AE85162EDF42B700029E4C /* FetchCardDetailUseCaseImpl.swift in Sources */,
-				38C9AF272E966A6300B401C0 /* TagUseCase.swift in Sources */,
 				38787B782ED1E719004BBAA7 /* SearchTermsView.swift in Sources */,
 				38C9AF0F2E96602300B401C0 /* DefaultImagesResponse.swift in Sources */,
 				38D563852D1719B1006265AA /* SOMStickyTabBarItem.swift in Sources */,
@@ -3411,7 +3373,6 @@
 				3878D0822CFFEC6900F9522F /* TermsOfServiceViewController.swift in Sources */,
 				38B21C0E2ECF0F1D00990F49 /* PopularTagsView.swift in Sources */,
 				38C2A8122EC0BE0B00B941A2 /* BlockUsersViewReactor.swift in Sources */,
-				3889A2662E79BBC40030F7CA /* UserUseCase.swift in Sources */,
 				38121E352CA6DA4000602499 /* Date.swift in Sources */,
 				38C2A7FA2EC090B100B941A2 /* BlockUsersInfoResponse.swift in Sources */,
 				38899E6B2E793AFD0030F7CA /* CheckAvailable.swift in Sources */,
@@ -3504,7 +3465,6 @@
 				3878F4722CA3F03400AA46A2 /* SOMCard.swift in Sources */,
 				3803CF862D017DC700FD90DB /* EnterMemberTransferViewReactor.swift in Sources */,
 				38B6AAE32CA4787200CE6DB6 /* MainTabBarReactor.swift in Sources */,
-				380F42392E88505B009AC59E /* CardUseCaseImpl.swift in Sources */,
 				38899E592E7936DD0030F7CA /* SooumStyle_V2.swift in Sources */,
 				38AE85272EDFF95500029E4C /* LocationUseCaseImpl.swift in Sources */,
 				380F42342E884FDC009AC59E /* CardRepositoryImpl.swift in Sources */,
@@ -3545,13 +3505,11 @@
 				38F88EBA2D2C1CB8002AD7A8 /* Info.swift in Sources */,
 				38D563842D1719B1006265AA /* SOMStickyTabBarItem.swift in Sources */,
 				2A5BB7BE2CDB870000E1C799 /* OnboardingGuideMessageView.swift in Sources */,
-				38C2A7F42EC0798B00B941A2 /* SettingsUseCaseImpl.swift in Sources */,
 				3880EF812EA0DB0900D88608 /* WriteCardTagsDelegate.swift in Sources */,
 				3836ACB42C8F045300A3C566 /* Typography.swift in Sources */,
 				38AE565C2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */,
 				38E928CA2EB7402200B3F00B /* WrittenTag.swift in Sources */,
 				385E65A32CBE56D00032E120 /* Coordinate.swift in Sources */,
-				3889A2692E79BC880030F7CA /* UserUseCaseImpl.swift in Sources */,
 				38C9AF3D2E96ACEB00B401C0 /* WriteCardTagFooterDelegate.swift in Sources */,
 				3878FE0D2D0365C800D8955C /* SOMNavigationBar+Rx.swift in Sources */,
 				38FD4DB42D034F6600BF5FF1 /* FollowerViewCell.swift in Sources */,
@@ -3622,7 +3580,6 @@
 				3878D0792CFFE1E800F9522F /* ResignViewController.swift in Sources */,
 				38EBA90E2EB39920008B28F4 /* PostingPermission.swift in Sources */,
 				38899E8D2E794E690030F7CA /* AppVersionStatusResponse.swift in Sources */,
-				38C2A7F12EC0796700B941A2 /* SettingsUseCase.swift in Sources */,
 				38A721952E73E7140071E1D8 /* View+SwiftEntryKit.swift in Sources */,
 				38C9AF2E2E96A3E500B401C0 /* WriteCardTagModel.swift in Sources */,
 				380F422A2E884E9C009AC59E /* HomeCardInfoResponse.swift in Sources */,
@@ -3633,7 +3590,6 @@
 				38E928D92EB7727400B3F00B /* SOMBottomToastView.swift in Sources */,
 				389E59A92EDEE6F600D0946D /* ValidateNicknameUseCase.swift in Sources */,
 				38D2FBCF2E81B52F006DD739 /* SOMSwipableTabBar.swift in Sources */,
-				380F42362E885032009AC59E /* CardUseCase.swift in Sources */,
 				388009942CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				38C2A80B2EC0BC4500B941A2 /* BlockUsersViewController.swift in Sources */,
 				3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
@@ -3744,7 +3700,6 @@
 				3889A24A2E79AE960030F7CA /* AppVersionUseCase.swift in Sources */,
 				2A980BA02D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */,
 				38B8A58E2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */,
-				38C9AF292E966A8F00B401C0 /* TagUseCaseImpl.swift in Sources */,
 				2A5BB7C92CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				2AE6B1492CBC15BF00FA5C3C /* ReportViewController.swift in Sources */,
 				3887D0332CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */,
@@ -3831,13 +3786,11 @@
 				385053552C92DCF900C80B02 /* SOMTabBar.swift in Sources */,
 				38787B792ED1E719004BBAA7 /* SearchTermsView.swift in Sources */,
 				387FBAF22C8702C100A5E139 /* SceneDelegate.swift in Sources */,
-				38C9AF262E966A6300B401C0 /* TagUseCase.swift in Sources */,
 				38121E312CA6C77500602499 /* Double.swift in Sources */,
 				38C9AF0E2E96602300B401C0 /* DefaultImagesResponse.swift in Sources */,
 				3889A26C2E79BD450030F7CA /* AuthRemoteDataSource.swift in Sources */,
 				38C2A7E82EC0719200B941A2 /* SettingsRemoteDataSourceImpl.swift in Sources */,
 				3889A2922E79D8F80030F7CA /* NotificationUseCase.swift in Sources */,
-				3889A2652E79BBC40030F7CA /* UserUseCase.swift in Sources */,
 				38B21C0F2ECF0F1D00990F49 /* PopularTagsView.swift in Sources */,
 				384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */,
 				38899E6C2E793AFD0030F7CA /* CheckAvailable.swift in Sources */,
@@ -3936,7 +3889,6 @@
 				388698622D1986B100008600 /* NotificationRequest.swift in Sources */,
 				38572CDE2D2254E800B07C69 /* HomePlaceholderViewCell.swift in Sources */,
 				38AE85282EDFF95500029E4C /* LocationUseCaseImpl.swift in Sources */,
-				380F423A2E88505B009AC59E /* CardUseCaseImpl.swift in Sources */,
 				38899E582E7936DD0030F7CA /* SooumStyle_V2.swift in Sources */,
 				389E59AB2EDEE74B00D0946D /* UploadUserImageUseCase.swift in Sources */,
 				38FCF41D2EA00625003AC3D8 /* UITtextView.swift in Sources */,
