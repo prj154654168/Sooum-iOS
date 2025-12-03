@@ -439,11 +439,7 @@ class HomeViewController: BaseNavigationViewController, View {
     @objc
     private func changedLocationAuthorization(_ notification: Notification) {
         
-        if self.stickyTabBar.selectedIndex == 2, self.reactor?.currentState.hasPermission == false {
-            
-            self.reactor?.action.onNext(.refresh)
-            self.showLocationPermissionDialog()
-        }
+        self.reactor?.action.onNext(.updateLocationPermission)
     }
 }
 

@@ -25,6 +25,7 @@ class HomeViewReactor: Reactor {
     }
     
     enum Action: Equatable {
+        case updateLocationPermission
         case landing
         case refresh
         case moreFind(String)
@@ -36,6 +37,7 @@ class HomeViewReactor: Reactor {
     }
     
     enum Mutation {
+        case updateLocationPermission(Bool)
         case cards([BaseCardInfo])
         case more([BaseCardInfo])
         case updateHasUnreadNotifications(Bool)
@@ -90,9 +92,11 @@ class HomeViewReactor: Reactor {
         )
     }
     
-    
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .updateLocationPermission:
+            
+            return .just(.updateLocationPermission(self.locationUseCase.hasPermission()))
         case .landing:
             
             let displayType = self.currentState.displayType
@@ -188,6 +192,8 @@ class HomeViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
+        case let .updateLocationPermission(hasPermission):
+            newState.hasPermission = hasPermission
         case let .cards(cards):
             switch newState.displayType {
             case .latest: newState.latestCards = cards
