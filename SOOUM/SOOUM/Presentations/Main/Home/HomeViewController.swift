@@ -264,7 +264,7 @@ class HomeViewController: BaseNavigationViewController, View {
     func bind(reactor: HomeViewReactor) {
         
         // navigation
-        self.rightAlamButton.rx.throttleTap()
+        self.rightAlamButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 let viewController = NotificationViewController()
                 viewController.reactor = reactor.reactorForNotification()
@@ -273,7 +273,8 @@ class HomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // tabBar 표시
-        self.rx.viewDidAppear
+        let viewDidAppear = self.rx.viewDidAppear
+        viewDidAppear
             .subscribe(with: self) { object, _ in
                 object.hidesBottomBarWhenPushed = false
             }
@@ -282,6 +283,11 @@ class HomeViewController: BaseNavigationViewController, View {
         // Action
         self.rx.viewDidLoad
             .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        viewDidAppear
+            .map { _ in Reactor.Action.unreadNotisAndNotice }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -306,12 +312,14 @@ class HomeViewController: BaseNavigationViewController, View {
         reactor.state.map(\.hasUnreadNotifications)
             .distinctUntilChanged()
             .map { $0 == false }
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.dotWithoutReadView.rx.isHidden)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.noticeInfos)
             .filterNil()
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, noticeInfos in
                 let models: [SOMPageModel] = noticeInfos.map { SOMPageModel(data: $0) }
                 object.topNoticeView.frame = CGRect(
@@ -326,12 +334,14 @@ class HomeViewController: BaseNavigationViewController, View {
         let cardIsDeleted = reactor.state.map(\.cardIsDeleted).filterNil()
         cardIsDeleted
             .filter { $0.isDeleted }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.showPungedCardDialog()
             }
             .disposed(by: self.disposeBag)
         cardIsDeleted
             .filter { $0.isDeleted == false }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, cardIsDeleted in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(with: cardIsDeleted.selectedId)
@@ -427,7 +437,7 @@ class HomeViewController: BaseNavigationViewController, View {
     @objc
     private func changedLocationAuthorization(_ notification: Notification) {
         
-        if self.stickyTabBar.selectedIndex == 2, self.reactor?.initialState.hasPermission == false {
+        if self.stickyTabBar.selectedIndex == 2, self.reactor?.currentState.hasPermission == false {
             
             self.reactor?.action.onNext(.refresh)
             self.showLocationPermissionDialog()
@@ -558,7 +568,7 @@ extension HomeViewController: SOMStickyTabBarDelegate {
         }
         self.reactor?.action.onNext(.updateDisplayType(displayType))
         
-        if index == 2, self.reactor?.initialState.hasPermission == false {
+        if index == 2, self.reactor?.currentState.hasPermission == false {
             self.showLocationPermissionDialog()
         }
     }
