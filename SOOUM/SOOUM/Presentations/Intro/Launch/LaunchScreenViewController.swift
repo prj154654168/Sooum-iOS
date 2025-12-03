@@ -70,7 +70,7 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         reactor.state.map(\.mustUpdate)
             .distinctUntilChanged()
             .filter { $0 }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 
                 let updateAction = SOMDialogAction(
@@ -108,7 +108,7 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         let isRegistered = reactor.state.map(\.isRegistered).distinctUntilChanged().share()
         isRegistered
             .filter { $0 == true }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let viewController = MainTabBarController()
                 viewController.reactor = reactor.reactorForMainTabBar()
@@ -121,7 +121,7 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         // 로그인 실패 시 온보딩 화면으로 전환
         isRegistered
             .filter { $0 == false }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let viewController = OnboardingViewController()
                 viewController.reactor = reactor.reactorForOnboarding()

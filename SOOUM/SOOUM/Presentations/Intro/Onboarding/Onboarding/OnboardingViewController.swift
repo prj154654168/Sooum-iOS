@@ -174,7 +174,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
         startButtonTapped
             .withLatestFrom(checkAvailable)
             .filter { $0.banned == false && $0.withdrawn == false }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let termsOfServiceViewController = OnboardingTermsOfServiceViewController()
                 termsOfServiceViewController.reactor = reactor.reactorForTermsOfService()
@@ -186,7 +186,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
             .withLatestFrom(checkAvailable)
             .filter { $0.banned && $0.rejoinAvailableAt != nil }
             .compactMap(\.rejoinAvailableAt)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, rejoinAvailableAt in
                 
                 object.showBannedUserDialog(at: rejoinAvailableAt)
@@ -196,7 +196,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
             .withLatestFrom(checkAvailable)
             .filter { $0.withdrawn && $0.rejoinAvailableAt != nil }
             .compactMap(\.rejoinAvailableAt)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, rejoinAvailableAt in
                 
                 object.showResignUserDialog(at: rejoinAvailableAt)
@@ -216,7 +216,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
             .take(1)
             .filter { $0.banned && $0.rejoinAvailableAt != nil }
             .compactMap(\.rejoinAvailableAt)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, rejoinAvailableAt in
                 
                 object.showBannedUserDialog(at: rejoinAvailableAt)
@@ -226,7 +226,7 @@ class OnboardingViewController: BaseNavigationViewController, View {
             .take(1)
             .filter { $0.withdrawn && $0.rejoinAvailableAt != nil }
             .compactMap(\.rejoinAvailableAt)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, rejoinAvailableAt in
                 
                 object.showResignUserDialog(at: rejoinAvailableAt)
