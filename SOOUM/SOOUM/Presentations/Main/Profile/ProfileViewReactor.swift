@@ -259,8 +259,6 @@ extension ProfileViewReactor {
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
         DetailViewReactor(
             dependencies: self.dependencies,
-            self.currentState.cardType,
-            type: .navi,
             with: selectedId
         )
     }

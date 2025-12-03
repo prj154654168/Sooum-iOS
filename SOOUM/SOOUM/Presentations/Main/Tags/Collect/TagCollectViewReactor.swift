@@ -129,6 +129,6 @@ class TagCollectViewReactor: Reactor {
 extension TagCollectViewReactor {
     
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, .feed, type: .navi, with: selectedId)
+        DetailViewReactor(dependencies: self.dependencies, with: selectedId)
     }
 }

@@ -263,8 +263,8 @@ extension NotificationViewReactor {
 
 extension NotificationViewReactor {
     
-    func reactorForDetail(entranceType: EntranceCardType, with id: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, entranceType, type: .navi, with: id)
+    func reactorForDetail(with id: String) -> DetailViewReactor {
+        DetailViewReactor(dependencies: self.dependencies, with: id)
     }
     
     func reactorForProfile(with userId: String) -> ProfileViewReactor {

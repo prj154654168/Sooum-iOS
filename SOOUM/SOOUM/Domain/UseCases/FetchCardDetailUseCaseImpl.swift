@@ -52,7 +52,7 @@ final class FetchCardDetailUseCaseImpl: FetchCardDetailUseCase {
     ) -> Observable<Bool> {
         
         return self.detailCard(id: cardId, latitude: latitude, longitude: longitude)
-            .map { _ in true }
-            .catchAndReturn(false)
+            .map { _ in false }
+            .catchAndReturn(true)
     }
 }

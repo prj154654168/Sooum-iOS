@@ -297,6 +297,6 @@ private extension WriteCardViewReactor {
 extension WriteCardViewReactor {
     
     func reactorForDetail(with targetCardId: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, self.entranceType, type: .navi, with: targetCardId)
+        DetailViewReactor(dependencies: self.dependencies, with: targetCardId)
     }
 }

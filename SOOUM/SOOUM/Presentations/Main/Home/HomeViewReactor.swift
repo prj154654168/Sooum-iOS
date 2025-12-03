@@ -340,6 +340,6 @@ extension HomeViewReactor {
     }
     
     func reactorForDetail(with id: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, .feed, with: id)
+        DetailViewReactor(dependencies: self.dependencies, with: id)
     }
 }

@@ -136,6 +136,6 @@ class TagSearchCollectViewReactor: Reactor {
 extension TagSearchCollectViewReactor {
     
     func reactorForDetail(with id: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, .feed, type: .navi, with: id)
+        DetailViewReactor(dependencies: self.dependencies, with: id)
     }
 }
