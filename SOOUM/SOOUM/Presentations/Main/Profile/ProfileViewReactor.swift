@@ -62,14 +62,22 @@ class ProfileViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let userUseCase: UserUseCase
+    private let fetchUserInfoUseCase: FetchUserInfoUseCase
+    private let fetchCardUseCase: FetchCardUseCase
+    private let blockUserUseCase: BlockUserUseCase
+    private let updateFollowUseCase: UpdateFollowUseCase
+    
     
     let entranceType: EntranceType
     private let userId: String?
     
     init(dependencies: AppDIContainerable, type entranceType: EntranceType, with userId: String? = nil) {
         self.dependencies = dependencies
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.fetchUserInfoUseCase = dependencies.rootContainer.resolve(FetchUserInfoUseCase.self)
+        self.fetchCardUseCase = dependencies.rootContainer.resolve(FetchCardUseCase.self)
+        self.blockUserUseCase = dependencies.rootContainer.resolve(BlockUserUseCase.self)
+        self.updateFollowUseCase = dependencies.rootContainer.resolve(UpdateFollowUseCase.self)
+        
         self.entranceType = entranceType
         self.userId = userId
     }
@@ -78,7 +86,7 @@ class ProfileViewReactor: Reactor {
         switch action {
         case .landing:
             
-            return self.userUseCase.profile(userId: self.userId)
+            return self.fetchUserInfoUseCase.userInfo(userId: self.userId)
                 .withUnretained(self)
                 .flatMapLatest { object, profileInfo -> Observable<Mutation> in
                     
@@ -86,7 +94,7 @@ class ProfileViewReactor: Reactor {
                         
                         return .concat([
                             .just(.profile(profileInfo)),
-                            object.userUseCase.feedCards(userId: profileInfo.userId, lastId: nil)
+                            object.fetchCardUseCase.writtenFeedCards(userId: profileInfo.userId, lastId: nil)
                                 .map(Mutation.feedCardInfos)
                         ])
                     } else {
@@ -95,9 +103,9 @@ class ProfileViewReactor: Reactor {
                         
                         return .concat([
                             .just(.profile(profileInfo)),
-                            object.userUseCase.feedCards(userId: profileInfo.userId, lastId: nil)
+                            object.fetchCardUseCase.writtenFeedCards(userId: profileInfo.userId, lastId: nil)
                                 .map(Mutation.feedCardInfos),
-                            object.userUseCase.myCommentCards(lastId: nil)
+                            object.fetchCardUseCase.writtenCommentCards(lastId: nil)
                                 .map(Mutation.commentCardInfos)
                         ])
                     }
@@ -105,11 +113,11 @@ class ProfileViewReactor: Reactor {
             
         case .refresh:
             
-            return self.userUseCase.profile(userId: self.userId)
+            return self.fetchUserInfoUseCase.userInfo(userId: self.userId)
                 .withUnretained(self)
                 .flatMapLatest { object, profileInfo -> Observable<Mutation> in
                     
-                    if object.entranceType == .my || object.entranceType == .myWithNavi {
+                    if object.entranceType == .my {
                         // 사용자 닉네임 업데이트
                         UserDefaults.standard.nickname = profileInfo.nickname
                     }
@@ -120,7 +128,7 @@ class ProfileViewReactor: Reactor {
                             .just(.updateIsRefreshing(true)),
                             .just(.profile(profileInfo))
                             .catch(self.catchClosure),
-                            object.userUseCase.feedCards(userId: profileInfo.userId, lastId: nil)
+                            object.fetchCardUseCase.writtenFeedCards(userId: profileInfo.userId, lastId: nil)
                                 .map(Mutation.feedCardInfos)
                                 .catch(self.catchClosure),
                             .just(.updateIsRefreshing(false))
@@ -131,7 +139,7 @@ class ProfileViewReactor: Reactor {
                             .just(.updateIsRefreshing(true)),
                             .just(.profile(profileInfo))
                                 .catch(self.catchClosure),
-                            object.userUseCase.myCommentCards(lastId: nil)
+                            object.fetchCardUseCase.writtenCommentCards(lastId: nil)
                                 .map(Mutation.commentCardInfos)
                                 .catch(self.catchClosure),
                             .just(.updateIsRefreshing(false))
@@ -145,16 +153,16 @@ class ProfileViewReactor: Reactor {
             
             if cardType == .feed {
                 
-                return self.userUseCase.feedCards(userId: userId, lastId: lastId)
+                return self.fetchCardUseCase.writtenFeedCards(userId: userId, lastId: lastId)
                     .map(Mutation.moreFeedCardInfos)
             } else {
                 
-                return self.userUseCase.myCommentCards(lastId: lastId)
+                return self.fetchCardUseCase.writtenCommentCards(lastId: lastId)
                     .map(Mutation.moreCommentCardInfos)
             }
         case .updateProfile:
             
-            return self.userUseCase.profile(userId: self.userId)
+            return self.fetchUserInfoUseCase.userInfo(userId: self.userId)
                 .map { profileInfo -> ProfileInfo in
                     // 사용자 닉네임 업데이트
                     UserDefaults.standard.nickname = profileInfo.nickname
@@ -167,9 +175,9 @@ class ProfileViewReactor: Reactor {
             if self.entranceType == .other, let userId = self.currentState.profileInfo?.userId {
                 
                 return .concat([
-                    self.userUseCase.profile(userId: userId)
+                    self.fetchUserInfoUseCase.userInfo(userId: userId)
                         .map(Mutation.profile),
-                    self.userUseCase.feedCards(userId: userId, lastId: nil)
+                    self.fetchCardUseCase.writtenFeedCards(userId: userId, lastId: nil)
                             .map(Mutation.feedCardInfos)
                 ])
             }
@@ -186,7 +194,7 @@ class ProfileViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsBlocked(nil)),
-                self.userUseCase.updateBlocked(id: userId, isBlocked: !isBlocked)
+                self.blockUserUseCase.updateBlocked(userId: userId, isBlocked: !isBlocked)
                     .map(Mutation.updateIsBlocked)
             ])
         case .follow:
@@ -197,7 +205,7 @@ class ProfileViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsFollowing(nil)),
-                self.userUseCase.updateFollowing(userId: userId, isFollow: !isFollowing)
+                self.updateFollowUseCase.updateFollowing(userId: userId, isFollow: !isFollowing)
                     .map(Mutation.updateIsFollowing)
             ])
         }
@@ -283,7 +291,6 @@ extension ProfileViewReactor {
     
     enum EntranceType {
         case my
-        case myWithNavi
         case other
     }
 }

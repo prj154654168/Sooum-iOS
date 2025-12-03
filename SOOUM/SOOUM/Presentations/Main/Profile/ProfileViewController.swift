@@ -263,7 +263,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         guard let reactor = self.reactor else { return }
         
-        let isMine = reactor.entranceType == .my || reactor.entranceType == .myWithNavi
+        let isMine = reactor.entranceType == .my
         
         self.navigationBar.hidesBackButton = isMine
         self.navigationBar.title = isMine ? Text.navigationTitle : nil
@@ -304,7 +304,7 @@ class ProfileViewController: BaseNavigationViewController, View {
     func bind(reactor: ProfileViewReactor) {
         
         // 설정 화면 전환
-        self.rightSettingButton.rx.throttleTap
+        self.rightSettingButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 let settingsViewController = SettingsViewController()
                 settingsViewController.reactor = reactor.reactorForSettings()
@@ -411,7 +411,6 @@ class ProfileViewController: BaseNavigationViewController, View {
         reactor.pulse(\.$isBlocked)
             .filterNil()
             .filter { $0 }
-            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.updateCards)
             }
@@ -420,7 +419,6 @@ class ProfileViewController: BaseNavigationViewController, View {
         reactor.pulse(\.$isFollowing)
             .filterNil()
             .filter { $0 }
-            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.updateProfile)
             }

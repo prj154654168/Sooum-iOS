@@ -156,7 +156,7 @@ extension MainTabBarReactor {
     }
     
     func reactorForProfile() -> ProfileViewReactor {
-        ProfileViewReactor(dependencies: self.dependencies, type: .myWithNavi)
+        ProfileViewReactor(dependencies: self.dependencies, type: .my)
     }
     
     func reactorForNoti() -> NotificationViewReactor {
