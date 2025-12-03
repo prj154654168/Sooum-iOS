@@ -142,4 +142,28 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         )
         return self.provider.networkManager.perform(WriteCardResponse.self, request: request)
     }
+    
+    
+    // MARK: Tag
+    
+    func tagCards(tagId: String, lastId: String?) -> Observable<TagCardInfoResponse> {
+        
+        let requset: TagRequest = .tagCards(tagId: tagId, lastId: lastId)
+        return self.provider.networkManager.fetch(TagCardInfoResponse.self, request: requset)
+    }
+    
+    
+    // MARK: My
+    
+    func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        let request: UserRequest = .feedCards(userId: userId, lastId: lastId)
+        return self.provider.networkManager.fetch(ProfileCardInfoResponse.self, request: request)
+    }
+    
+    func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        let request: UserRequest = .myCommentCards(lastId: lastId)
+        return self.provider.networkManager.fetch(ProfileCardInfoResponse.self, request: request)
+    }
 }
