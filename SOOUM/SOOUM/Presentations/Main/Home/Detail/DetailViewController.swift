@@ -278,7 +278,7 @@ class DetailViewController: BaseNavigationViewController, View {
          // 댓글카드 홈 버튼 액션
          self.leftHomeButton.rx.throttleTap(.seconds(3))
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(animated: false, bottomBarHidden: false)
+                 object.navigationPopToRoot(animated: false, bottomBarHidden: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -349,7 +349,7 @@ class DetailViewController: BaseNavigationViewController, View {
          
          let willPushEnabled = reactor.state.map(\.willPushEnabled).distinctUntilChanged().filterNil()
          willPushEnabled
-             .filter { $0 }
+             .filter { $0 == false }
              .observe(on: MainScheduler.instance)
              .subscribe(with: self) { object, _ in
                  let writeCardViewController = WriteCardViewController()
@@ -364,7 +364,7 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: self.disposeBag)
          willPushEnabled
-             .filter { $0 == false }
+             .filter { $0 }
              .map { _ in Reactor.Action.resetPushState }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
