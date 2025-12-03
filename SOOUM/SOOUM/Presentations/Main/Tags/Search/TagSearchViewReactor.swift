@@ -34,11 +34,13 @@ class TagSearchViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let tagUseCase: TagUseCase
+    private let fetchTagUseCase: FetchTagUseCase
+    private let updateTagFavoriteUseCase: UpdateTagFavoriteUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.tagUseCase = dependencies.rootContainer.resolve(TagUseCase.self)
+        self.fetchTagUseCase = dependencies.rootContainer.resolve(FetchTagUseCase.self)
+        self.updateTagFavoriteUseCase = dependencies.rootContainer.resolve(UpdateTagFavoriteUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -48,13 +50,13 @@ class TagSearchViewReactor: Reactor {
             return .just(.searchTerms(nil))
         case let .search(terms):
             
-            return self.tagUseCase.related(keyword: terms, size: 20)
+            return self.fetchTagUseCase.related(keyword: terms, size: 20)
                 .map(Mutation.searchTerms)
         case let .updateIsFavorite(tagId, isFavorite):
             
             return .concat([
                 .just(.updateIsUpdate(nil)),
-                self.tagUseCase.updateFavorite(tagId: tagId, isFavorite: !isFavorite)
+                self.updateTagFavoriteUseCase.updateFavorite(tagId: tagId, isFavorite: !isFavorite)
                     .flatMapLatest { isUpdated -> Observable<Mutation> in
                         
                         let isFavorite = isUpdated ? !isFavorite : isFavorite
