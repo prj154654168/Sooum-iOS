@@ -215,6 +215,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.issueUserTransferCodeCellView.rx.didSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let issueMemberTransferViewController = IssueMemberTransferViewController()
                 issueMemberTransferViewController.reactor = reactor.reactorForTransferIssue()
@@ -223,6 +224,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.enterUserTransferCodeCellView.rx.didSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let enterMemberTransferViewController = EnterMemberTransferViewController()
                 enterMemberTransferViewController.reactor = reactor.reactorForTransferEnter()
@@ -231,6 +233,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.blockUsersCellView.rx.didSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let blockUsersViewController = BlockUsersViewController()
                 blockUsersViewController.reactor = reactor.reactorForBlock()
@@ -239,6 +242,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.announcementCellView.rx.didSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let announcementViewController = AnnouncementViewController()
                 announcementViewController.reactor = reactor.reactorForAnnouncement()
@@ -247,6 +251,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.inquiryCellView.rx.didSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 
                 let subject = Text.inquiryMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -267,6 +272,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.acceptTermsCellView.rx.didSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let rermsOfServiceViewController = TermsOfServiceViewController()
                 object.navigationPush(rermsOfServiceViewController, animated: true, bottomBarHidden: true)
@@ -275,6 +281,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         let version = reactor.state.map(\.version).filterNil().distinctUntilChanged().share()
         self.appVersionCellView.rx.didSelect
+            .throttle(.seconds(1), scheduler: MainScheduler.instance)
             .withLatestFrom(version)
             .subscribe(with: self) { object, version in
                 if version.mustUpdate {
@@ -296,13 +303,13 @@ class SettingsViewController: BaseNavigationViewController, View {
                     
                     var wrapper: SwiftEntryKitViewWrapper = bottomFloatView.sek
                     wrapper.entryName = Text.bottomToastEntryName
-                    // TODO: 임시, 하단 네비바 높이를 34로 가정 후 사용
                     wrapper.showBottomToast(verticalOffset: 34 + 8, displayDuration: 4)
                 }
             }
             .disposed(by: self.disposeBag)
         
         self.resignCellView.rx.didSelect
+            .throttle(.seconds(1), scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.rejoinableDate }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -310,6 +317,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         // State
         reactor.state.map(\.banEndAt)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, banEndAt in
                 object.postingBlockedBackgroundView.isHidden = (banEndAt == nil)
                 object.postingBlockedMessageLabel.text = Text.postingBlockedLeadingGuideMessage +
@@ -320,6 +328,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.rejoinableDate)
             .filterNil()
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, rejoinableDate in
                 object.showResignDialog(rejoinableDate: rejoinableDate)
             }
@@ -327,10 +336,12 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.notificationStatus)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.notificationSettingCellView.toggleSwitch.rx.isOn)
             .disposed(by: self.disposeBag)
         
         version
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, version in
                 object.appVersionCellView.setLatestVersion(Text.latestVersionTitle + version.latestVersion)
             }
@@ -338,6 +349,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.shouldHideTransfer)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, shouldHide in
                 object.issueUserTransferCodeCellView.isHidden = shouldHide
                 object.enterUserTransferCodeCellView.isHidden = shouldHide
