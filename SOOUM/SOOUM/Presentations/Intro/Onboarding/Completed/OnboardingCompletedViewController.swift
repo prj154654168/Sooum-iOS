@@ -95,7 +95,7 @@ class OnboardingCompletedViewController: BaseNavigationViewController, View {
     func bind(reactor: OnboardingCompletedViewReactor) {
         
         // Action
-        self.confirmButton.rx.throttleTap
+        self.confirmButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 let viewController = MainTabBarController()
                 viewController.reactor = reactor.reactorForMainTabBar()
