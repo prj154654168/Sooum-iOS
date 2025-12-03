@@ -11,5 +11,6 @@ protocol FetchTagUseCase: AnyObject {
     
     func related(keyword: String, size: Int) -> Observable<[TagInfo]>
     func favorites() -> Observable<[FavoriteTagInfo]>
+    func isFavorites(with tagInfo: FavoriteTagInfo) -> Observable<Bool>
     func ranked() -> Observable<[TagInfo]>
 }

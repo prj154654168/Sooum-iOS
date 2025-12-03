@@ -26,6 +26,11 @@ final class FetchTagUseCaseImpl: FetchTagUseCase {
         return self.repository.favorites().map(\.tagInfos).map { Array($0.prefix(9)) }
     }
     
+    func isFavorites(with tagInfo: FavoriteTagInfo) -> Observable<Bool> {
+        
+        return self.favorites().map { $0.contains(tagInfo) }
+    }
+    
     // 인기 태그는 최소 1개 이상일 때 표시
     // 인기 태그는 최대 10개까지 표시
     func ranked() -> Observable<[TagInfo]> {

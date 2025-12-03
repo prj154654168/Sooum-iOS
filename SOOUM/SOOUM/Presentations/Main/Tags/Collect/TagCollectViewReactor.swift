@@ -34,14 +34,16 @@ class TagCollectViewReactor: Reactor {
     var initialState: State
     
     private let dependencies: AppDIContainerable
-    private let tagUseCase: TagUseCase
+    private let fetchCardUseCase: FetchCardUseCase
+    private let updateTagFavoriteUseCase: UpdateTagFavoriteUseCase
     
     private let id: String
     let title: String
     
     init(dependencies: AppDIContainerable, with id: String, title: String, isFavorite: Bool) {
         self.dependencies = dependencies
-        self.tagUseCase = dependencies.rootContainer.resolve(TagUseCase.self)
+        self.fetchCardUseCase = dependencies.rootContainer.resolve(FetchCardUseCase.self)
+        self.updateTagFavoriteUseCase = dependencies.rootContainer.resolve(UpdateTagFavoriteUseCase.self)
         
         self.id = id
         self.title = title
@@ -58,7 +60,7 @@ class TagCollectViewReactor: Reactor {
         switch action {
         case .landing:
             
-            return self.tagUseCase.tagCards(tagId: self.id, lastId: nil)
+            return self.fetchCardUseCase.cardsWithTag(tagId: self.id, lastId: nil)
                 .flatMapLatest { tagCardsInfo -> Observable<Mutation> in
                     
                     let isFavorite = tagCardsInfo.cardInfos.isEmpty ?
@@ -73,7 +75,7 @@ class TagCollectViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsRefreshing(true)),
-                self.tagUseCase.tagCards(tagId: self.id, lastId: nil)
+                self.fetchCardUseCase.cardsWithTag(tagId: self.id, lastId: nil)
                     .flatMapLatest { tagCardsInfo -> Observable<Mutation> in
                         
                         let isFavorite = tagCardsInfo.cardInfos.isEmpty ?
@@ -88,14 +90,14 @@ class TagCollectViewReactor: Reactor {
             ])
         case let .more(lastId):
             
-            return self.tagUseCase.tagCards(tagId: self.id, lastId: lastId)
+            return self.fetchCardUseCase.cardsWithTag(tagId: self.id, lastId: lastId)
                 .map(\.cardInfos)
                 .map(Mutation.moreFind)
         case let .updateIsFavorite(isFavorite):
             
             return .concat([
                 .just(.updateIsUpdate(nil)),
-                self.tagUseCase.updateFavorite(tagId: self.id, isFavorite: !isFavorite)
+                self.updateTagFavoriteUseCase.updateFavorite(tagId: self.id, isFavorite: !isFavorite)
                     .flatMapLatest { isUpdated -> Observable<Mutation> in
                         
                         let isFavorite = isUpdated ? !isFavorite : isFavorite
