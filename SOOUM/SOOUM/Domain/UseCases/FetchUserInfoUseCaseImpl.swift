@@ -22,6 +22,6 @@ final class FetchUserInfoUseCaseImpl: FetchUserInfoUseCase {
     
     func myNickname() -> Observable<String> {
         
-        return self.repository.profile(userId: nil).map { $0.profileInfo.nickname }
+        return self.userInfo(userId: nil).map(\.nickname)
     }
 }
