@@ -61,6 +61,7 @@ class EnterMemberTransferViewReactor: Reactor {
                                     
                                     return .just(.enterTransferCode(isSuccess))
                                 }
+                                .catchAndReturn(.enterTransferCode(false))
                         } else {
                             return .just(.enterTransferCode(false))
                         }
