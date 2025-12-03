@@ -78,7 +78,7 @@ class BlockUsersViewController: BaseNavigationViewController, View {
             
             cell.setModel(blockUserInfo)
             
-            cell.profileBackgroundButton.rx.throttleTap
+            cell.profileBackgroundButton.rx.throttleTap(.seconds(3))
                 .subscribe(with: self) { object, _ in
                     let profileViewController = ProfileViewController()
                     profileViewController.reactor = reactor.reactorForProfile(blockUserInfo.userId)
