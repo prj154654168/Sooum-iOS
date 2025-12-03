@@ -42,15 +42,15 @@ class OnboardingProfileImageSettingViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let userUseCase: UserUseCase
     private let authUseCase: AuthUseCase
+    private let uploadUserImageUseCase: UploadUserImageUseCase
     
     private let nickname: String
     
     init(dependencies: AppDIContainerable, nickname: String) {
         self.dependencies = dependencies
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
         self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
+        self.uploadUserImageUseCase = dependencies.rootContainer.resolve(UploadUserImageUseCase.self)
         self.nickname = nickname
     }
     
@@ -114,7 +114,7 @@ extension OnboardingProfileImageSettingViewReactor {
                 if let imageData = image.jpegData(compressionQuality: 0.5),
                    let url = URL(string: presignedInfo.imgUrl) {
                     
-                    return object.userUseCase.uploadImage(imageData, with: url)
+                    return object.uploadUserImageUseCase.uploadToS3(imageData, with: url)
                         .flatMapLatest { isSuccess -> Observable<Mutation> in
                             
                             let image = isSuccess ? image : nil
@@ -131,7 +131,7 @@ extension OnboardingProfileImageSettingViewReactor {
     
     private func presignedURL() -> Observable<ImageUrlInfo> {
         
-        return self.userUseCase.presignedURL()
+        return self.uploadUserImageUseCase.presignedURL()
     }
     
     private var catchClosure: ((Error) throws -> Observable<Mutation> ) {
