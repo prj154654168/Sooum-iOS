@@ -77,18 +77,18 @@ class OnboardingNicknameSettingViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let userUseCase: UserUseCase
+    private let validateNicknameUseCase: ValidateNicknameUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.validateNicknameUseCase = dependencies.rootContainer.resolve(ValidateNicknameUseCase.self)
     }
 
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
             
-            return self.userUseCase.nickname()
+            return self.validateNicknameUseCase.nickname()
                 .map(Mutation.updateNickname)
         case let .checkValidate(nickname):
             
@@ -101,7 +101,7 @@ class OnboardingNicknameSettingViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsErrorMessage(nil)),
-                self.userUseCase.isNicknameValid(nickname: nickname)
+                self.validateNicknameUseCase.checkValidation(nickname: nickname)
                     .withUnretained(self)
                     .flatMapLatest { object, isValid -> Observable<Mutation> in
                         
