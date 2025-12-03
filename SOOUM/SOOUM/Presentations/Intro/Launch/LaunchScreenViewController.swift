@@ -70,27 +70,28 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         reactor.state.map(\.mustUpdate)
             .distinctUntilChanged()
             .filter { $0 }
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { _ in
                 
                 let updateAction = SOMDialogAction(
                     title: Text.updateActionTitle,
                     style: .primary,
                     action: {
-                        #if DEVELOP
-                        // 개발 버전일 때 testFlight로 전환
-                        let strUrl = "\(Text.testFlightStrUrl)/\(Info.appId)"
-                        if let testFlightUrl = URL(string: strUrl) {
-                            UIApplication.shared.open(testFlightUrl, options: [:], completionHandler: nil)
+                        UIApplication.topViewController?.dismiss(animated: true) {
+                            #if DEVELOP
+                            // 개발 버전일 때 testFlight로 전환
+                            let strUrl = "\(Text.testFlightStrUrl)/\(Info.appId)"
+                            if let testFlightUrl = URL(string: strUrl) {
+                                UIApplication.shared.open(testFlightUrl, options: [:], completionHandler: nil)
+                            }
+                            #elseif PRODUCTION
+                            // 운영 버전일 때 app store로 전환
+                            let strUrl = "\(Text.appStoreStrUrl)\(Info.appId)"
+                            if let appStoreUrl = URL(string: strUrl) {
+                                UIApplication.shared.open(appStoreUrl, options: [:], completionHandler: nil)
+                            }
+                            #endif
                         }
-                        #elseif PRODUCTION
-                        // 운영 버전일 때 app store로 전환
-                        let strUrl = "\(Text.appStoreStrUrl)\(Info.appId)"
-                        if let appStoreUrl = URL(string: strUrl) {
-                            UIApplication.shared.open(appStoreUrl, options: [:], completionHandler: nil)
-                        }
-                        #endif
-
-                        UIApplication.topViewController?.dismiss(animated: true)
                     }
                 )
                 
@@ -107,6 +108,7 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         let isRegistered = reactor.state.map(\.isRegistered).distinctUntilChanged().share()
         isRegistered
             .filter { $0 == true }
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 let viewController = MainTabBarController()
                 viewController.reactor = reactor.reactorForMainTabBar()
@@ -119,6 +121,7 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         // 로그인 실패 시 온보딩 화면으로 전환
         isRegistered
             .filter { $0 == false }
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 let viewController = OnboardingViewController()
                 viewController.reactor = reactor.reactorForOnboarding()

@@ -33,14 +33,12 @@ class LaunchScreenViewReactor: Reactor {
     enum Mutation {
         case check(Bool)
         case updateIsRegistered(Bool)
-        case appFlag(Bool)
     }
     
     struct State {
         fileprivate(set) var mustUpdate: Bool
         /// deviceId 서버 등록 여부, 로그인 성공 여부
         fileprivate(set) var isRegistered: Bool?
-        fileprivate(set) var appFlag: Bool?
     }
     
     var initialState: State = .init(
@@ -82,12 +80,8 @@ class LaunchScreenViewReactor: Reactor {
         switch mutation {
         case let .check(mustUpdate):
             newState.mustUpdate = mustUpdate
-            
         case let .updateIsRegistered(isRegistered):
             newState.isRegistered = isRegistered
-            
-        case let .appFlag(appFlag):
-            newState.appFlag = appFlag
         }
         return newState
     }
@@ -101,7 +95,6 @@ extension LaunchScreenViewReactor {
     private func login() -> Observable<Mutation> {
         return self.authUseCase.login()
             .map { .updateIsRegistered($0) }
-            .catchAndReturn(.updateIsRegistered(false))
     }
     
     private func check() -> Observable<Mutation> {
