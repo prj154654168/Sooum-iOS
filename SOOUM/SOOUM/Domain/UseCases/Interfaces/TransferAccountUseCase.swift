@@ -10,5 +10,6 @@ import RxSwift
 protocol TransferAccountUseCase: AnyObject {
     
     func issue() -> Observable<TransferCodeInfo>
+    func update() -> Observable<TransferCodeInfo>
     func enter(code: String, encryptedDeviceId: String) -> Observable<Bool>
 }

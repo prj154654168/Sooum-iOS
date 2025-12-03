@@ -20,6 +20,11 @@ final class TransferAccountUseCaseImpl: TransferAccountUseCase {
         return self.repository.issue().map(\.transferInfo)
     }
     
+    func update() -> Observable<TransferCodeInfo> {
+        
+        return self.repository.update().map(\.transferInfo)
+    }
+    
     func enter(code: String, encryptedDeviceId: String) -> Observable<Bool> {
         
         return self.repository.enter(

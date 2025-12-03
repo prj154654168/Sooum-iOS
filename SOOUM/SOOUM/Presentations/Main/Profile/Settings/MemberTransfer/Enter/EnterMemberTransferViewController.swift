@@ -208,6 +208,7 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         let isSuccess = reactor.state.map(\.isSuccess).filterNil().share()
         isSuccess
             .filter { $0 }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 guard let window = object.view.window else { return }
                 
@@ -223,6 +224,7 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         
         isSuccess
             .filter { $0 == false }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.showErrorDialog()
             }

@@ -31,26 +31,26 @@ class IssueMemberTransferViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let settingsUseCase: SettingsUseCase
+    private let transferAccountUseCase: TransferAccountUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
+        self.transferAccountUseCase = dependencies.rootContainer.resolve(TransferAccountUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
             
-            return self.settingsUseCase.issue()
+            return self.transferAccountUseCase.issue()
                 .map(Mutation.updateTransferInfo)
         case .updateTransferCode:
             
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.settingsUseCase.update()
+                self.transferAccountUseCase.update()
                     .map(Mutation.updateTransferInfo)
-                    .catch(self.catchClosure)
+                    .catchAndReturn(.updateIsProcessing(false))
                     .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
@@ -66,16 +66,5 @@ class IssueMemberTransferViewReactor: Reactor {
             state.isProcessing = isProcessing
         }
         return state
-    }
-}
-
-extension IssueMemberTransferViewReactor {
-    
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { _ in
-            .concat([
-                .just(.updateIsProcessing(false))
-            ])
-        }
     }
 }
