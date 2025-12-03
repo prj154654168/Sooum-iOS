@@ -331,7 +331,9 @@ class HomeViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let cardIsDeleted = reactor.state.map(\.cardIsDeleted).filterNil()
+        let cardIsDeleted = reactor.state.map(\.cardIsDeleted)
+            .distinctUntilChanged(reactor.canPushToDetail)
+            .filterNil()
         cardIsDeleted
             .filter { $0.isDeleted }
             .observe(on: MainScheduler.instance)

@@ -330,6 +330,14 @@ extension HomeViewReactor {
             prevDisplayState.populars == currDisplayState.populars &&
             prevDisplayState.distances == currDisplayState.distances
     }
+    
+    func canPushToDetail(
+        prev prevCardIsDeleted: (selectedId: String, isDeleted: Bool)?,
+        vurr currCardIsDeleted: (selectedId: String, isDeleted: Bool)?
+    ) -> Bool {
+        return prevCardIsDeleted?.selectedId == currCardIsDeleted?.selectedId &&
+            prevCardIsDeleted?.isDeleted == currCardIsDeleted?.isDeleted
+    }
 }
 
 
