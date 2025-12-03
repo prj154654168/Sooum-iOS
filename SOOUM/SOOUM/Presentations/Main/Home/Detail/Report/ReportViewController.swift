@@ -126,6 +126,7 @@ class ReportViewController: BaseNavigationViewController, View {
         reactor.state.map(\.reportReason)
             .filterNil()
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, reportReason in
                 
                 let items = object.container.arrangedSubviews
@@ -141,6 +142,7 @@ class ReportViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isReported)
             .filter { $0 }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.showSuccessReportedDialog()
             }
@@ -148,6 +150,7 @@ class ReportViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.hasErrors)
             .filter { $0 }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.navigationPop {
                     NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
