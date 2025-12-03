@@ -214,10 +214,10 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
                 
                 object.showSuccessDialog {
                     
-                    let onboardingViewController = OnboardingViewController()
-                    onboardingViewController.reactor = reactor.reactorForOnborading()
-                    onboardingViewController.modalTransitionStyle = .crossDissolve
-                    window.rootViewController = UINavigationController(rootViewController: onboardingViewController)
+                    let launchScreenViewController = LaunchScreenViewController()
+                    launchScreenViewController.reactor = reactor.reactorForLaunchScreen()
+                    launchScreenViewController.modalTransitionStyle = .crossDissolve
+                    window.rootViewController = launchScreenViewController
                 }
             }
             .disposed(by: self.disposeBag)
