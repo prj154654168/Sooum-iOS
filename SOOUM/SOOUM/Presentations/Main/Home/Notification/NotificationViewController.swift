@@ -180,6 +180,7 @@ class NotificationViewController: BaseNavigationViewController, View {
         reactor.state.map(\.displayType)
             .filter { $0 == .notice }
             .take(1)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.headerView) { headerView, _ in
                 headerView.didSelectTabBarItem(1, onlyUpdateApperance: true)
             }
@@ -313,7 +314,6 @@ extension NotificationViewController: UITableViewDelegate {
                     
                     let detailViewController = DetailViewController()
                     detailViewController.reactor = reactor.reactorForDetail(
-                        entranceType: .feed,
                         with: notification.targetCardId
                     )
                     self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
@@ -326,7 +326,6 @@ extension NotificationViewController: UITableViewDelegate {
                 
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(
-                    entranceType: .feed,
                     with: notification.targetCardId
                 )
                 self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
@@ -347,7 +346,6 @@ extension NotificationViewController: UITableViewDelegate {
                 
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(
-                    entranceType: .feed,
                     with: notification.targetCardId
                 )
                 self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
@@ -355,7 +353,6 @@ extension NotificationViewController: UITableViewDelegate {
                 
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(
-                    entranceType: .feed,
                     with: notification.targetCardId
                 )
                 self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
