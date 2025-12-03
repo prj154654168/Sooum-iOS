@@ -49,7 +49,9 @@ class UpdateProfileViewReactor: Reactor {
     private var imageName: String?
     
     private let dependencies: AppDIContainerable
-    private let userUseCase: UserUseCase
+    private let validateNicknameUseCase: ValidateNicknameUseCase
+    private let uploadUserImageUseCase: UploadUserImageUseCase
+    private let updateUserInfoUseCase: UpdateUserInfoUseCase
     
     let nickname: String
     
@@ -59,7 +61,10 @@ class UpdateProfileViewReactor: Reactor {
         image profileImage: UIImage?
     ) {
         self.dependencies = dependencies
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.validateNicknameUseCase = dependencies.rootContainer.resolve(ValidateNicknameUseCase.self)
+        self.uploadUserImageUseCase = dependencies.rootContainer.resolve(UploadUserImageUseCase.self)
+        self.updateUserInfoUseCase = dependencies.rootContainer.resolve(UpdateUserInfoUseCase.self)
+        
         self.nickname = nickname
         
         self.initialState = .init(
@@ -105,7 +110,7 @@ class UpdateProfileViewReactor: Reactor {
             
             return .concat([
                 .just(.updateErrorMessage(nil)),
-                self.userUseCase.isNicknameValid(nickname: nickname)
+                self.validateNicknameUseCase.checkValidation(nickname: nickname)
                     .withUnretained(self)
                     .flatMapLatest { object, isValid -> Observable<Mutation> in
                         
@@ -122,7 +127,7 @@ class UpdateProfileViewReactor: Reactor {
             let updatedNickname = trimedNickname == self.nickname ? nil : trimedNickname
             return .concat([
                 .just(.updateErrors(false)),
-                self.userUseCase.updateMyProfile(
+                self.updateUserInfoUseCase.updateUserInfo(
                     nickname: updatedNickname,
                     imageName: self.currentState.profileImageName
                 )
@@ -163,7 +168,7 @@ extension UpdateProfileViewReactor {
                 if let imageData = image.jpegData(compressionQuality: 0.5),
                    let url = URL(string: presignedInfo.imgUrl) {
                     
-                    return object.userUseCase.uploadImage(imageData, with: url)
+                    return object.uploadUserImageUseCase.uploadToS3(imageData, with: url)
                         .flatMapLatest { isSuccess -> Observable<Mutation> in
                             
                             let image = isSuccess ? image : nil
@@ -180,7 +185,7 @@ extension UpdateProfileViewReactor {
     
     private func presignedURL() -> Observable<ImageUrlInfo> {
         
-        return self.userUseCase.presignedURL()
+        return self.uploadUserImageUseCase.presignedURL()
     }
     
     private var catchClosure: ((Error) throws -> Observable<Mutation> ) {
