@@ -26,6 +26,9 @@ class TagCollectViewController: BaseNavigationViewController, View {
         static let bottomToastEntryNameWithAction: String = "bottomToastEntryNameWithAction"
         static let failedToastMessage: String = "네트워크 확인 후 재시도해주세요."
         static let failToastActionTitle: String = "재시도"
+        
+        static let bottomToastEntryNameWithoutAction: String = "bottomToastEntryNameWithoutAction"
+        static let addAdditionalLimitedFloatMessage: String = "관심 태그는 9개까지 추가할 수 있어요"
     }
     
     enum Section: Int, CaseIterable {
@@ -180,8 +183,22 @@ class TagCollectViewController: BaseNavigationViewController, View {
                 let bottomToastView = SOMBottomToastView(title: Text.failedToastMessage, actions: actions)
                 
                 var wrapper: SwiftEntryKitViewWrapper = bottomToastView.sek
-                wrapper.entryName = Text.bottomToastEntryName
-                wrapper.showBottomToast(verticalOffset: 34 + 54 + 8)
+                wrapper.entryName = Text.bottomToastEntryNameWithAction
+                wrapper.showBottomToast(verticalOffset: 34 + 8)
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.hasErrors)
+            .distinctUntilChanged()
+            .filterNil()
+            .filter { $0 }
+            .subscribe(with: self) { object, _ in
+                
+                let bottomToastView = SOMBottomToastView(title: Text.addAdditionalLimitedFloatMessage, actions: nil)
+                
+                var wrapper: SwiftEntryKitViewWrapper = bottomToastView.sek
+                wrapper.entryName = Text.bottomToastEntryNameWithoutAction
+                wrapper.showBottomToast(verticalOffset: 34 + 8)
             }
             .disposed(by: self.disposeBag)
         

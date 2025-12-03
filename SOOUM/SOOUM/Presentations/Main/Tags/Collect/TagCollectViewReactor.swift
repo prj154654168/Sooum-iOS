@@ -22,6 +22,7 @@ class TagCollectViewReactor: Reactor {
         case updateIsFavorite(Bool)
         case updateIsUpdate(Bool?)
         case updateIsRefreshing(Bool)
+        case updateHasErrors(Bool?)
     }
     
     struct State {
@@ -29,6 +30,7 @@ class TagCollectViewReactor: Reactor {
         fileprivate(set) var isFavorite: Bool
         fileprivate(set) var isUpdated: Bool?
         fileprivate(set) var isRefreshing: Bool
+        fileprivate(set) var hasErrors: Bool?
     }
     
     var initialState: State
@@ -52,7 +54,8 @@ class TagCollectViewReactor: Reactor {
             tagCardInfos: [],
             isFavorite: isFavorite,
             isUpdated: nil,
-            isRefreshing: false
+            isRefreshing: false,
+            hasErrors: nil
         )
     }
     
@@ -97,6 +100,7 @@ class TagCollectViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsUpdate(nil)),
+                .just(.updateHasErrors(nil)),
                 self.updateTagFavoriteUseCase.updateFavorite(tagId: self.id, isFavorite: !isFavorite)
                     .flatMapLatest { isUpdated -> Observable<Mutation> in
                         
@@ -106,6 +110,7 @@ class TagCollectViewReactor: Reactor {
                             .just(.updateIsUpdate(isUpdated))
                         ])
                     }
+                    .catch(self.catchClosure)
             ])
         }
     }
@@ -123,8 +128,27 @@ class TagCollectViewReactor: Reactor {
             newState.isUpdated = isUpdated
         case let .updateIsRefreshing(isRefreshing):
             newState.isRefreshing = isRefreshing
+        case let .updateHasErrors(hasErrors):
+            newState.hasErrors = hasErrors
         }
         return newState
+    }
+}
+
+private extension TagCollectViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation>) {
+        return { error in
+            
+            let nsError = error as NSError
+            
+            if case 400 = nsError.code {
+                
+                return .just(.updateHasErrors(true))
+            }
+            
+            return .just(.updateIsUpdate(false))
+        }
     }
 }
 

@@ -22,6 +22,7 @@ class TagSearchCollectViewReactor: Reactor {
         case updateIsUpdate(Bool?)
         case updateIsFavorite(Bool)
         case updateIsRefreshing(Bool)
+        case updateHasErrors(Bool?)
     }
     
     struct State {
@@ -29,13 +30,15 @@ class TagSearchCollectViewReactor: Reactor {
         fileprivate(set) var isUpdated: Bool?
         fileprivate(set) var isFavorite: Bool
         fileprivate(set) var isRefreshing: Bool
+        fileprivate(set) var hasErrors: Bool?
     }
     
     var initialState: State = .init(
         tagCardInfos: [],
         isUpdated: nil,
         isFavorite: false,
-        isRefreshing: false
+        isRefreshing: false,
+        hasErrors: nil
     )
     
     private let dependencies: AppDIContainerable
@@ -79,6 +82,7 @@ class TagSearchCollectViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsUpdate(nil)),
+                .just(.updateHasErrors(nil)),
                 self.updateTagFavoriteUseCase.updateFavorite(tagId: self.tagId, isFavorite: !isFavorite)
                     .flatMapLatest { isUpdated -> Observable<Mutation> in
                         
@@ -88,6 +92,7 @@ class TagSearchCollectViewReactor: Reactor {
                             .just(.updateIsUpdate(isUpdated))
                         ])
                     }
+                    .catch(self.catchClosure)
             ])
         }
     }
@@ -105,6 +110,8 @@ class TagSearchCollectViewReactor: Reactor {
             newState.isFavorite = isFavorite
         case let .updateIsRefreshing(isRefreshing):
             newState.isRefreshing = isRefreshing
+        case let .updateHasErrors(hasErrors):
+            newState.hasErrors = hasErrors
         }
         return newState
     }
@@ -135,6 +142,20 @@ private extension TagSearchCollectViewReactor {
                     .just(.updateIsFavorite(tagCardsInfo.isFavorite))
                 ])
             }
+    }
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation>) {
+        return { error in
+            
+            let nsError = error as NSError
+            
+            if case 400 = nsError.code {
+                
+                return .just(.updateHasErrors(true))
+            }
+            
+            return .just(.updateIsUpdate(false))
+        }
     }
 }
 
