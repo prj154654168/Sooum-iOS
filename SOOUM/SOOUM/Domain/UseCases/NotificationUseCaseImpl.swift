@@ -25,6 +25,11 @@ class NotificationUseCaseImpl: NotificationUseCase {
         return self.repository.readNotifications(lastId: lastId).map(\.notificationInfo)
     }
     
+    func isUnreadNotiEmpty() -> Observable<Bool> {
+        
+        return self.unreadNotifications(lastId: nil).map(\.isEmpty)
+    }
+    
     func requestRead(notificationId: String) -> Observable<Bool> {
         
         return self.repository.requestRead(notificationId: notificationId).map { $0 == 200 }

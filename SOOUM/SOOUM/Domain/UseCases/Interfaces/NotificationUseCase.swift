@@ -11,5 +11,6 @@ protocol NotificationUseCase: AnyObject {
     
     func unreadNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]>
     func readNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]>
+    func isUnreadNotiEmpty() -> Observable<Bool>
     func requestRead(notificationId: String) -> Observable<Bool>
 }
