@@ -268,15 +268,7 @@ class HomeViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 let viewController = NotificationViewController()
                 viewController.reactor = reactor.reactorForNotification()
-                object.navigationPush(viewController, animated: true, bottomBarHidden: true)
-            }
-            .disposed(by: self.disposeBag)
-        
-        // tabBar 표시
-        let viewDidAppear = self.rx.viewDidAppear
-        viewDidAppear
-            .subscribe(with: self) { object, _ in
-                object.hidesBottomBarWhenPushed = false
+                object.parent?.navigationPush(viewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -286,7 +278,7 @@ class HomeViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        viewDidAppear
+        self.rx.viewDidAppear
             .map { _ in Reactor.Action.unreadNotisAndNotice }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -347,7 +339,7 @@ class HomeViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, cardIsDeleted in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(with: cardIsDeleted.selectedId)
-                object.navigationPush(detailViewController, animated: true, bottomBarHidden: true) { _ in
+                object.parent?.navigationPush(detailViewController, animated: true) { _ in
                     reactor.action.onNext(.resetPushState)
                 }
             }
@@ -593,7 +585,7 @@ extension HomeViewController: SOMPageViewsDelegate {
         
         let viewController = NotificationViewController()
         viewController.reactor = reactorForNotification
-        self.navigationPush(viewController, animated: true, bottomBarHidden: true)
+        self.parent?.navigationPush(viewController, animated: true)
     }
 }
 

@@ -156,31 +156,28 @@ class MainTabBarController: SOMTabBarController, View {
                 switch reactor.currentState.entranceType {
                 case .pushToDetail:
                     
-                    guard let navigationController = object.viewControllers[0] as? UINavigationController,
-                          let homeViewController = navigationController.viewControllers.first as? HomeViewController,
+                    object.didSelectedIndex(0)
+                    
+                    guard let selectedViewController = object.selectedViewController,
                           let targetCardId = reactor.pushInfo?.targetCardId
                     else { return }
                     
-                    object.didSelectedIndex(0)
-                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.setupDetailViewController(
-                            homeViewController,
+                            selectedViewController,
                             with: reactor.reactorForDetail(targetCardId),
                             completion: { reactor.action.onNext(.resetEntrance) }
                         )
                     }
                 case .pushToNotification:
                     
-                    guard let navigationController = object.viewControllers[0] as? UINavigationController,
-                          let homeViewController = navigationController.viewControllers.first as? HomeViewController
-                    else { return }
-                    
                     object.didSelectedIndex(0)
+                    
+                    guard let selectedViewController = object.selectedViewController else { return }
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.setupNotificationViewController(
-                            homeViewController,
+                            selectedViewController,
                             with: reactor.reactorForNoti(),
                             completion: { reactor.action.onNext(.resetEntrance) }
                         )
@@ -189,14 +186,13 @@ class MainTabBarController: SOMTabBarController, View {
                     
                     object.didSelectedIndex(2)
                     
-                    guard let navigationController = object.viewControllers[2] as? UINavigationController,
-                          let tagViewController = navigationController.viewControllers.first as? TagViewController,
+                    guard let selectedViewController = object.selectedViewController,
                           let targetCardId = reactor.pushInfo?.targetCardId
                     else { return }
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.setupTagDetailViewController(
-                            tagViewController,
+                            selectedViewController,
                             with: reactor.reactorForDetail(targetCardId),
                             completion: { reactor.action.onNext(.resetEntrance) }
                         )
@@ -205,13 +201,11 @@ class MainTabBarController: SOMTabBarController, View {
                     
                     object.didSelectedIndex(3)
                     
-                    guard let navigationController = object.viewControllers[3] as? UINavigationController,
-                          let profileViewController = navigationController.viewControllers.first as? ProfileViewController
-                    else { return }
+                    guard let selectedViewController = object.selectedViewController else { return }
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.setupFollowViewController(
-                            profileViewController,
+                            selectedViewController,
                             with: reactor.reactorForFollow(nickname: profileInfo.nickname, with: profileInfo.userId),
                             completion: { reactor.action.onNext(.resetEntrance) }
                         )
@@ -333,65 +327,61 @@ private extension MainTabBarController {
 private extension MainTabBarController {
     
     func setupDetailViewController(
-        _ homeViewController: HomeViewController,
+        _ selectedViewController: UIViewController,
         with reactor: DetailViewReactor,
         completion: @escaping (() -> Void)
     ) {
         
         let detailViewController = DetailViewController()
         detailViewController.reactor = reactor
-        homeViewController.navigationPush(
+        selectedViewController.navigationPush(
             detailViewController,
             animated: true,
-            bottomBarHidden: true,
             completion: { _ in completion() }
         )
     }
     
     func setupNotificationViewController(
-        _ homeViewController: HomeViewController,
+        _ selectedViewController: UIViewController,
         with reactor: NotificationViewReactor,
         completion: @escaping (() -> Void)
     ) {
         
         let notificationViewController = NotificationViewController()
         notificationViewController.reactor = reactor
-        homeViewController.navigationPush(
+        selectedViewController.navigationPush(
             notificationViewController,
             animated: true,
-            bottomBarHidden: true,
             completion: { _ in completion() }
         )
     }
     
     func setupTagDetailViewController(
-        _ tagViewController: TagViewController,
+        _ selectedViewController: UIViewController,
         with reactor: DetailViewReactor,
         completion: @escaping (() -> Void)
     ) {
         
         let detailViewController = DetailViewController()
         detailViewController.reactor = reactor
-        tagViewController.navigationPush(
+        selectedViewController.navigationPush(
             detailViewController,
             animated: true,
-            bottomBarHidden: true,
             completion: { _ in completion() }
         )
     }
     
     func setupFollowViewController(
-        _ profileViewController: ProfileViewController,
+        _ selectedViewController: UIViewController,
         with reactor: FollowViewReactor,
         completion: @escaping (() -> Void)
     ) {
         
         let followViewController = FollowViewController()
         followViewController.reactor = reactor
-        profileViewController.navigationPush(
+        selectedViewController.navigationPush(
             followViewController,
             animated: true,
-            bottomBarHidden: true,
             completion: { _ in completion() }
         )
     }

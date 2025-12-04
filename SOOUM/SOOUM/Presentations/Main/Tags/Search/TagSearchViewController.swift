@@ -114,8 +114,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     object.navigationPush(
                         tagSearchCollectViewController,
-                        animated: true,
-                        bottomBarHidden: true
+                        animated: true
                     )
                 }
             }

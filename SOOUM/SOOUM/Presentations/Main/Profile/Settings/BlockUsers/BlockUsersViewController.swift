@@ -82,7 +82,7 @@ class BlockUsersViewController: BaseNavigationViewController, View {
                 .subscribe(with: self) { object, _ in
                     let profileViewController = ProfileViewController()
                     profileViewController.reactor = reactor.reactorForProfile(blockUserInfo.userId)
-                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                    object.navigationPush(profileViewController, animated: true)
                 }
                 .disposed(by: cell.disposeBag)
             

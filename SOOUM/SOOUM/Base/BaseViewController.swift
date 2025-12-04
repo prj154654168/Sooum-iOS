@@ -36,11 +36,12 @@ class BaseViewController: UIViewController {
     private(set) var isEndEditingWhenWillDisappear: Bool = true
     private(set) var bottomToastMessageOffset: CGFloat = 88 + 8
     
-    override var hidesBottomBarWhenPushed: Bool {
-        didSet {
-            NotificationCenter.default.post(name: .hidesBottomBarWhenPushedDidChange, object: self)
-        }
-    }
+    // TODO: 임시, 탭바 숨기지 않음
+    // override var hidesBottomBarWhenPushed: Bool {
+    //     didSet {
+    //         NotificationCenter.default.post(name: .hidesBottomBarWhenPushedDidChange, object: self)
+    //     }
+    // }
 
     init() {
         super.init(nibName: nil, bundle: nil)

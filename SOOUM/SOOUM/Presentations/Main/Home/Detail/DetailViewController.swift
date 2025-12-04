@@ -254,7 +254,7 @@ class DetailViewController: BaseNavigationViewController, View {
                                 
                                 let reportViewController = ReportViewController()
                                 reportViewController.reactor = reactor.reactorForReport()
-                                object?.navigationPush(reportViewController, animated: true, bottomBarHidden: true)
+                                object?.navigationPush(reportViewController, animated: true)
                             }
                         }
                     )
@@ -356,8 +356,7 @@ class DetailViewController: BaseNavigationViewController, View {
                  writeCardViewController.reactor = reactor.reactorForWriteCard()
                  object.navigationPush(
                     writeCardViewController,
-                    animated: true,
-                    bottomBarHidden: true
+                    animated: true
                  ) { _ in
                      reactor.action.onNext(.resetPushState)
                  }
@@ -502,7 +501,7 @@ extension DetailViewController: UICollectionViewDataSource {
                         type: .other,
                         object.detailCard.memberId
                     )
-                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                    object.navigationPush(profileViewController, animated: true)
                 }
             }
             .disposed(by: cell.disposeBag)
@@ -515,7 +514,7 @@ extension DetailViewController: UICollectionViewDataSource {
                     with: tagInfo.id,
                     title: tagInfo.text
                 )
-                object.navigationPush(tagCollectViewController, animated: true, bottomBarHidden: true)
+                object.navigationPush(tagCollectViewController, animated: true)
             }
             .disposed(by: cell.disposeBag)
         
@@ -544,7 +543,7 @@ extension DetailViewController: UICollectionViewDataSource {
                     guard let prevCardId = object.detailCard.prevCardInfo?.prevCardId else { return }
                     let detailViewController = DetailViewController()
                     detailViewController.reactor = reactor.reactorForPush(prevCardId)
-                    object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                    object.navigationPush(detailViewController, animated: true)
                 }
             }
             .disposed(by: cell.disposeBag)
@@ -574,7 +573,7 @@ extension DetailViewController: UICollectionViewDataSource {
                 .subscribe(with: self) { object, selectedId in
                     let viewController = DetailViewController()
                     viewController.reactor = reactor.reactorForPush(selectedId)
-                    object.navigationPush(viewController, animated: true, bottomBarHidden: true)
+                    object.navigationPush(viewController, animated: true)
                 }
                 .disposed(by: footer.disposeBag)
             

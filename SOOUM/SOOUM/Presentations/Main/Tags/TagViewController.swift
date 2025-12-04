@@ -140,18 +140,11 @@ class TagViewController: BaseNavigationViewController, View {
     
     func bind(reactor: TagViewReactor) {
         
-        // tabBar 표시
-        self.rx.viewDidAppear
-            .subscribe(with: self) { object, _ in
-                object.hidesBottomBarWhenPushed = false
-            }
-            .disposed(by: self.disposeBag)
-        
         self.searchViewButtonView.rx.didTap
             .subscribe(with: self) { object, _ in
                 let tagSearchViewController = TagSearchViewController()
                 tagSearchViewController.reactor = reactor.reactorForSearch()
-                object.navigationPush(tagSearchViewController, animated: true, bottomBarHidden: true)
+                object.parent?.navigationPush(tagSearchViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -163,7 +156,7 @@ class TagViewController: BaseNavigationViewController, View {
                     title: model.text,
                     isFavorite: model.isFavorite
                 )
-                object.navigationPush(tagCollectViewController, animated: true, bottomBarHidden: true)
+                object.parent?.navigationPush(tagCollectViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -176,7 +169,7 @@ class TagViewController: BaseNavigationViewController, View {
                     title: model.name,
                     isFavorite: reactor.currentState.favoriteTags.contains(where: { $0.id == model.id })
                 )
-                object.navigationPush(tagCollectViewController, animated: true, bottomBarHidden: true)
+                object.parent?.navigationPush(tagCollectViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         

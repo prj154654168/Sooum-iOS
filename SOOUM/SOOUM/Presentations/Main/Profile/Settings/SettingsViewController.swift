@@ -219,7 +219,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 let issueMemberTransferViewController = IssueMemberTransferViewController()
                 issueMemberTransferViewController.reactor = reactor.reactorForTransferIssue()
-                object.navigationPush(issueMemberTransferViewController, animated: true, bottomBarHidden: true)
+                object.navigationPush(issueMemberTransferViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -228,7 +228,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 let enterMemberTransferViewController = EnterMemberTransferViewController()
                 enterMemberTransferViewController.reactor = reactor.reactorForTransferEnter()
-                object.navigationPush(enterMemberTransferViewController, animated: true, bottomBarHidden: true)
+                object.navigationPush(enterMemberTransferViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -237,7 +237,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 let blockUsersViewController = BlockUsersViewController()
                 blockUsersViewController.reactor = reactor.reactorForBlock()
-                object.navigationPush(blockUsersViewController, animated: true, bottomBarHidden: true)
+                object.navigationPush(blockUsersViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -246,7 +246,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 let announcementViewController = AnnouncementViewController()
                 announcementViewController.reactor = reactor.reactorForAnnouncement()
-                object.navigationPush(announcementViewController, animated: true, bottomBarHidden: true)
+                object.navigationPush(announcementViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -275,7 +275,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let rermsOfServiceViewController = TermsOfServiceViewController()
-                object.navigationPush(rermsOfServiceViewController, animated: true, bottomBarHidden: true)
+                object.navigationPush(rermsOfServiceViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -386,8 +386,7 @@ extension SettingsViewController {
                     resignViewController.reactor = reactor.reactorForResign()
                     self.navigationPush(
                         resignViewController,
-                        animated: true,
-                        bottomBarHidden: true
+                        animated: true
                     ) { _ in
                         reactor.action.onNext(.resetState)
                     }

@@ -316,7 +316,7 @@ extension NotificationViewController: UITableViewDelegate {
                     detailViewController.reactor = reactor.reactorForDetail(
                         with: notification.targetCardId
                     )
-                    self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                    self.navigationPush(detailViewController, animated: true)
                 default:
                     return
                 }
@@ -328,14 +328,14 @@ extension NotificationViewController: UITableViewDelegate {
                 detailViewController.reactor = reactor.reactorForDetail(
                     with: notification.targetCardId
                 )
-                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                self.navigationPush(detailViewController, animated: true)
             case let .follow(notification):
                 
                 reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
                 
                 let profileViewController = ProfileViewController()
                 profileViewController.reactor = reactor.reactorForProfile(with: notification.userId)
-                self.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                self.navigationPush(profileViewController, animated: true)
             default:
                 return
             }
@@ -348,19 +348,19 @@ extension NotificationViewController: UITableViewDelegate {
                 detailViewController.reactor = reactor.reactorForDetail(
                     with: notification.targetCardId
                 )
-                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                self.navigationPush(detailViewController, animated: true)
             case let .tag(notification):
                 
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(
                     with: notification.targetCardId
                 )
-                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                self.navigationPush(detailViewController, animated: true)
             case let .follow(notification):
                 
                 let profileViewController = ProfileViewController()
                 profileViewController.reactor = reactor.reactorForProfile(with: notification.userId)
-                self.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                self.navigationPush(profileViewController, animated: true)
             default:
                 return
             }

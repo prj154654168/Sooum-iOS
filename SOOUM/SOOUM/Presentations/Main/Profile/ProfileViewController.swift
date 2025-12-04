@@ -134,7 +134,8 @@ class ProfileViewController: BaseNavigationViewController, View {
                             nickname: profileInfo.nickname,
                             with: profileInfo.userId
                         )
-                        object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
+                        let base = profileInfo.isAlreadyFollowing == nil ? object.parent : object
+                        base?.navigationPush(followViewController, animated: true)
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -147,7 +148,8 @@ class ProfileViewController: BaseNavigationViewController, View {
                             nickname: profileInfo.nickname,
                             with: profileInfo.userId
                         )
-                        object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
+                        let base = profileInfo.isAlreadyFollowing == nil ? object.parent : object
+                        base?.navigationPush(followViewController, animated: true)
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -162,7 +164,7 @@ class ProfileViewController: BaseNavigationViewController, View {
                                 nickname: profileInfo.nickname,
                                 image: profileImage
                             )
-                            object?.navigationPush(updateProfileViewController, animated: true, bottomBarHidden: true)
+                            object?.parent?.navigationPush(updateProfileViewController, animated: true)
                         }
                     }
                     .disposed(by: cell.disposeBag)
@@ -198,10 +200,12 @@ class ProfileViewController: BaseNavigationViewController, View {
                 }
                 
                 cell.cardDidTap
+                    .throttle(.seconds(3), scheduler: MainScheduler.instance)
                     .subscribe(with: self) { object, selectedId in
                         let detailViewController = DetailViewController()
                         detailViewController.reactor = reactor.reactorForDetail(selectedId)
-                        object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                        let base = type == .feed ? object.parent : object
+                        base?.navigationPush(detailViewController, animated: true)
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -308,7 +312,7 @@ class ProfileViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 let settingsViewController = SettingsViewController()
                 settingsViewController.reactor = reactor.reactorForSettings()
-                object.navigationPush(settingsViewController, animated: true, bottomBarHidden: true)
+                object.parent?.navigationPush(settingsViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -339,13 +343,6 @@ class ProfileViewController: BaseNavigationViewController, View {
                     textAlignment: .left,
                     actions: [cancelAction, confirmAction]
                 )
-            }
-            .disposed(by: self.disposeBag)
-        
-        // tabBar 표시
-        self.rx.viewDidAppear
-            .subscribe(with: self) { object, _ in
-                object.hidesBottomBarWhenPushed = reactor.entranceType == .other
             }
             .disposed(by: self.disposeBag)
         

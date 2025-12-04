@@ -101,7 +101,7 @@ class TagCollectViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, model in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(model.id)
-                object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                object.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
