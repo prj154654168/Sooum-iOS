@@ -158,7 +158,6 @@ class TagViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.favoriteTagsView.backgroundDidTap
-            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, model in
                 let tagCollectViewController = TagCollectViewController()
                 tagCollectViewController.reactor = reactor.reactorForCollect(
@@ -190,7 +189,6 @@ class TagViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.favoriteTagsView.favoriteIconDidTap
-            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .map(Reactor.Action.updateIsFavorite)
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
