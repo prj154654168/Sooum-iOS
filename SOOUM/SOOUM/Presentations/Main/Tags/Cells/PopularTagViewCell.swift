@@ -72,34 +72,6 @@ class PopularTagViewCell: UICollectionViewCell {
         self.countLabel.text = nil
     }
     
-    // Set highlighted color
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        
-//        guard let touch = touches.first else { return }
-//        
-//        let location = touch.location(in: self.container)
-//        if self.container.frame.contains(location) {
-//            
-//            self.updateColors(true)
-//        }
-//        
-//        super.touchesBegan(touches, with: event)
-//    }
-//    
-//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        
-//        self.updateColors(false)
-//        
-//        super.touchesEnded(touches, with: event)
-//    }
-//    
-//    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        
-//        self.updateColors(false)
-//        
-//        super.touchesCancelled(touches, with: event)
-//    }
-    
     
     // MARK: Private func
     
