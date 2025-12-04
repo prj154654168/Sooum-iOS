@@ -384,10 +384,12 @@ class SOMCard: UIView {
         
         // 좋아요 수, 답글 수
         let likeText = model.likeCnt > 99 ? "99+" : "\(model.likeCnt)"
-        self.likeLabel.attributedText = .init(string: likeText, attributes: Typography.som.v2.caption2.attributes)
+        self.likeLabel.text = likeText
+        self.likeLabel.typography = .som.v2.caption2
         
         let commentText = model.commentCnt > 99 ? "99+" : "\(model.commentCnt)"
-        self.commentLabel.attributedText = .init(string: commentText, attributes: Typography.som.v2.caption2.attributes)
+        self.commentLabel.text = commentText
+        self.commentLabel.typography = .som.v2.caption2
         
         // 스토리 정보 설정
         self.subscribePungTime(model.storyExpirationTime)
