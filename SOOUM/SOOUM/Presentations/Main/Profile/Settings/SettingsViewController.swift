@@ -30,7 +30,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         static let announcementTitle: String = "공지사항"
         static let inquiryTitle: String = "문의하기"
         
-        static let acceptTermsTitle: String = "이용약관 및 개인정보 처리 방침"
+        static let acceptTermsTitle: String = "약관 및 개인정보 처리 동의"
         
         static let appVersionTitle: String = "최신버전 업데이트"
         static let latestVersionTitle: String = "최신버전 : "
