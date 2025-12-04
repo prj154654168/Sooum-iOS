@@ -19,6 +19,11 @@ extension UITextView {
         objc_setAssociatedObject(self, &Self.kUITextViewTypography, typography, .OBJC_ASSOCIATION_RETAIN)
 
         var attributes: [NSAttributedString.Key: Any] = typography.attributes
+        var baselineOffset = attributes[.baselineOffset] as! CGFloat
+        baselineOffset -= abs(typography.font.descender)
+        attributes.removeValue(forKey: .baselineOffset)
+        
+        attributes[.baselineOffset] = baselineOffset
         attributes[.font] = typography.font
         attributes[.foregroundColor] = self.textColor
         closure?(&attributes)
@@ -26,9 +31,6 @@ extension UITextView {
         
         if let text = self.text, text.isEmpty == false {
             let selectedRange = self.selectedRange
-            
-            // TODO: 임시, 줄바꿈 시 겹치는 문제 해결
-            attributes[.baselineOffset] = attributes[.baselineOffset] as! CGFloat * -0.1
             
             let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
             self.attributedText = attributedText
