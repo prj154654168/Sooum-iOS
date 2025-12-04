@@ -102,8 +102,8 @@ class TermsOfServiceCellView: UIView {
         
         let animationDuration: TimeInterval = animated ? 0.25 : 0
         
-        UIView.animate(withDuration: animationDuration) {
-            self.checkBoxImageView.tintColor = state ? .som.v2.pDark : .som.v2.gray200
+        UIView.animate(withDuration: animationDuration) { [weak self] in
+            self?.checkBoxImageView.tintColor = state ? .som.v2.pDark : .som.v2.gray200
         }
     }
 }

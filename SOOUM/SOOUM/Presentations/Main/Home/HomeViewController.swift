@@ -746,8 +746,8 @@ extension HomeViewController: UITableViewDelegate {
             self.headerViewContainerTopConstraint?.update(offset: 0).update(priority: .high)
         }
 
-        UIView.animate(withDuration: 0.25) {
-            self.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.25) { [weak self] in
+            self?.view.layoutIfNeeded()
         }
         
         // 아래로 스크롤 중일 때, 데이터 추가로드 가능
