@@ -123,7 +123,7 @@ extension Date {
     }
     
     var banEndFormatted: String {
-        return self.toString("yyyy년 MM월 dd일")
+        return self.addingTimeInterval(24 * 60 * 60).toString("yyyy년 MM월 dd일")
     }
     
     var banEndDetailFormatted: String {
