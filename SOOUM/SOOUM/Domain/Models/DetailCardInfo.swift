@@ -19,6 +19,7 @@ struct DetailCardInfo: Hashable {
     let createdAt: Date
     let storyExpirationTime: Date?
     let isAdminCard: Bool
+    let isReported: Bool
     let memberId: String
     let nickname: String
     let profileImgURL: String?
@@ -47,6 +48,7 @@ extension DetailCardInfo {
             createdAt: self.createdAt,
             storyExpirationTime: self.storyExpirationTime,
             isAdminCard: self.isAdminCard,
+            isReported: self.isReported,
             memberId: self.memberId,
             nickname: self.nickname,
             profileImgURL: self.profileImgURL,
@@ -118,6 +120,7 @@ extension DetailCardInfo {
         createdAt: Date(),
         storyExpirationTime: nil,
         isAdminCard: false,
+        isReported: false,
         memberId: "",
         nickname: "",
         profileImgURL: nil,
@@ -144,6 +147,7 @@ extension DetailCardInfo: Decodable {
         case createdAt
         case storyExpirationTime
         case isAdminCard
+        case isReported
         case memberId
         case nickname
         case profileImgURL = "profileImgUrl"
@@ -168,6 +172,7 @@ extension DetailCardInfo: Decodable {
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
         self.storyExpirationTime = try container.decodeIfPresent(Date.self, forKey: .storyExpirationTime)
         self.isAdminCard = try container.decode(Bool.self, forKey: .isAdminCard)
+        self.isReported = try container.decode(Bool.self, forKey: .isReported)
         self.memberId = String(try container.decode(Int64.self, forKey: .memberId))
         self.nickname = try container.decode(String.self, forKey: .nickname)
         self.profileImgURL = try container.decodeIfPresent(String.self, forKey: .profileImgURL)

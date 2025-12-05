@@ -99,6 +99,7 @@ class DetailViewReactor: Reactor {
                 .flatMapLatest { detailCardInfo -> Observable<Mutation> in
                     return .concat([
                         .just(.cardType(detailCardInfo.prevCardInfo == nil)),
+                        .just(.updateReported(detailCardInfo.isReported)),
                         .just(.detailCard(detailCardInfo))
                     ])
                 }
