@@ -204,7 +204,7 @@ class ProfileViewController: BaseNavigationViewController, View {
                     .subscribe(with: self) { object, selectedId in
                         let detailViewController = DetailViewController()
                         detailViewController.reactor = reactor.reactorForDetail(selectedId)
-                        let base = type == .feed ? object.parent : object
+                        let base = reactor.entranceType == .my ? object.parent : object
                         base?.navigationPush(detailViewController, animated: true)
                     }
                     .disposed(by: cell.disposeBag)
@@ -288,6 +288,9 @@ class ProfileViewController: BaseNavigationViewController, View {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 제스처 뒤로가기를 위한 델리게이트 설정
+        self.parent?.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         NotificationCenter.default.addObserver(
             self,
