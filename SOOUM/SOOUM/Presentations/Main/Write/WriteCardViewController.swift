@@ -68,6 +68,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     // MARK: Views
     
+    private let writeCardGuideView = WriteCardGuideView()
+    
     private let writeButton = SOMButton().then {
         $0.title = Text.navigationWriteButtonTitle
         $0.typography = .som.v2.subtitle1
@@ -181,12 +183,23 @@ class WriteCardViewController: BaseNavigationViewController, View {
             self.relatedTagsViewBottomConstraint = $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).constraint
             $0.horizontalEdges.equalToSuperview()
         }
+        
+        guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+            let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
+        else { return }
+        
+        window.addSubview(self.writeCardGuideView)
+        self.writeCardGuideView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
+        
+        self.writeCardGuideView.isHidden = UserDefaults.showGuideView == false
     }
     
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
@@ -200,6 +213,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
     // MARK: ReactorKit - bind
     
     func bind(reactor: WriteCardViewReactor) {
+        
+        self.writeCardGuideView.closeButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                object.writeCardGuideView.isHidden = true
+            }
+            .disposed(by: self.disposeBag)
         
         var options: [SelectOptionItem.OptionType] {
             if reactor.entranceType == .feed {

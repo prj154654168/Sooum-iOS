@@ -13,6 +13,7 @@ extension UserDefaults {
     enum Keys {
         static let hasBeenLaunchedBefore: String = "hasBeenLaunchedBefore"
         static let hasBeenShowMessageGuide: String = "hasBeenShowMessageGuide"
+        static let hasBeenShowWriteCardGuide: String = "hasBeenShowWriteCardGuide"
         static let userNickname: String = "userNickname"
     }
     
@@ -33,6 +34,17 @@ extension UserDefaults {
         let isFirstLaunch = !UserDefaults.standard.bool(forKey: Keys.hasBeenShowMessageGuide)
         if isFirstLaunch {
             UserDefaults.standard.set(true, forKey: Keys.hasBeenShowMessageGuide)
+        }
+        
+        return isFirstLaunch
+    }
+    
+    // 카드추가 시 가이드 뷰를 위한 flag
+    static var showGuideView: Bool {
+        
+        let isFirstLaunch = !UserDefaults.standard.bool(forKey: Keys.hasBeenShowWriteCardGuide)
+        if isFirstLaunch {
+            UserDefaults.standard.set(true, forKey: Keys.hasBeenShowWriteCardGuide)
         }
         
         return isFirstLaunch

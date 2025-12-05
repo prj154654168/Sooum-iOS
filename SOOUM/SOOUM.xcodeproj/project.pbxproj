@@ -792,6 +792,8 @@
 		38F1614B2ECDAD34003BADB6 /* FavoriteTagViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F161492ECDAD29003BADB6 /* FavoriteTagViewCell.swift */; };
 		38F3398F2EE31C870066A5F7 /* IsCardDeletedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3398E2EE31C7E0066A5F7 /* IsCardDeletedResponse.swift */; };
 		38F339902EE31C870066A5F7 /* IsCardDeletedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3398E2EE31C7E0066A5F7 /* IsCardDeletedResponse.swift */; };
+		38F339922EE328750066A5F7 /* WriteCardGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F339912EE328710066A5F7 /* WriteCardGuideView.swift */; };
+		38F339932EE328750066A5F7 /* WriteCardGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F339912EE328710066A5F7 /* WriteCardGuideView.swift */; };
 		38F3760A2ECB772A00E4A41D /* FavoriteTagInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F376092ECB772600E4A41D /* FavoriteTagInfo.swift */; };
 		38F3760B2ECB772A00E4A41D /* FavoriteTagInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F376092ECB772600E4A41D /* FavoriteTagInfo.swift */; };
 		38F3760D2ECB779E00E4A41D /* FavoriteTagInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3760C2ECB778C00E4A41D /* FavoriteTagInfoResponse.swift */; };
@@ -1255,6 +1257,7 @@
 		38F161462ECDA8D1003BADB6 /* FavoriteTagPlaceholderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagPlaceholderViewCell.swift; sourceTree = "<group>"; };
 		38F161492ECDAD29003BADB6 /* FavoriteTagViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagViewCell.swift; sourceTree = "<group>"; };
 		38F3398E2EE31C7E0066A5F7 /* IsCardDeletedResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsCardDeletedResponse.swift; sourceTree = "<group>"; };
+		38F339912EE328710066A5F7 /* WriteCardGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardGuideView.swift; sourceTree = "<group>"; };
 		38F376092ECB772600E4A41D /* FavoriteTagInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagInfo.swift; sourceTree = "<group>"; };
 		38F3760C2ECB778C00E4A41D /* FavoriteTagInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagInfoResponse.swift; sourceTree = "<group>"; };
 		38F376102ECB789200E4A41D /* TagCardInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCardInfoResponse.swift; sourceTree = "<group>"; };
@@ -2657,6 +2660,7 @@
 				38C9AF2B2E96A37E00B401C0 /* Tags */,
 				381A1D672CC38E8E005FDB8E /* TextView */,
 				3887D0352CC5335D00FB52E1 /* WriteCardView.swift */,
+				38F339912EE328710066A5F7 /* WriteCardGuideView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3128,6 +3132,7 @@
 				38D488CB2D0C557300F2D38D /* SOMButton.swift in Sources */,
 				38C2A7F62EC08FF600B941A2 /* BlockUserInfo.swift in Sources */,
 				388FCAD12CFAC2BF0012C4D6 /* Notification.swift in Sources */,
+				38F339922EE328750066A5F7 /* WriteCardGuideView.swift in Sources */,
 				3802BDB62D0AF16A001256EA /* PushManager.swift in Sources */,
 				38B6AADC2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				38B543E02D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */,
@@ -3550,6 +3555,7 @@
 				381B83DF2EBC72B400C84015 /* FollowInfo.swift in Sources */,
 				388C96362CCE41700061C598 /* AuthInfo.swift in Sources */,
 				38C2A7F72EC08FF600B941A2 /* BlockUserInfo.swift in Sources */,
+				38F339932EE328750066A5F7 /* WriteCardGuideView.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				38B543DF2D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */,
 				38D5637E2D17152F006265AA /* SOMStickyTabBarDelegate.swift in Sources */,
