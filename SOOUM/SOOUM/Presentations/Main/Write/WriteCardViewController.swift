@@ -216,8 +216,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 object.isScrollingByFirstResponder = true
                 
                 object.scrollContainer.setContentOffset(.zero, animated: true)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    object.isScrollingByFirstResponder = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak object] in
+                    object?.isScrollingByFirstResponder = false
                 }
             }
             .disposed(by: self.disposeBag)
@@ -241,16 +241,16 @@ class WriteCardViewController: BaseNavigationViewController, View {
                         object.scrollContainer.setContentOffset(scrollTo, animated: true)
                     }
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        object.isScrollingByFirstResponder = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak object] in
+                        object?.isScrollingByFirstResponder = false
                     }
                 } else {
                     
-                    DispatchQueue.main.async {
-                        object.scrollContainer.setContentOffset(.zero, animated: true)
+                    DispatchQueue.main.async { [weak object] in
+                        object?.scrollContainer.setContentOffset(.zero, animated: true)
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            object.isScrollingByFirstResponder = false
+                            object?.isScrollingByFirstResponder = false
                         }
                     }
                 }
@@ -738,8 +738,8 @@ extension WriteCardViewController {
             picker?.dismiss(animated: true, completion: nil)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            self.present(picker, animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+            self?.present(picker, animated: true, completion: nil)
         }
     }
 }

@@ -228,8 +228,8 @@ class SOMStickyTabBar: UIView {
             self.selectedIndicatorLeadingConstraint?.update(offset: leadingOffset)
             
             let duration = animated ? 0.25 : 0
-            UIView.animate(withDuration: duration) {
-                self.layoutIfNeeded()
+            UIView.animate(withDuration: duration) { [weak self] in
+                self?.layoutIfNeeded()
             }
         }
         

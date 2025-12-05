@@ -111,8 +111,8 @@ class TagSearchViewController: BaseNavigationViewController, View {
                     with: model.id,
                     title: model.name
                 )
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    object.navigationPush(
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak object] in
+                    object?.navigationPush(
                         tagSearchCollectViewController,
                         animated: true
                     )

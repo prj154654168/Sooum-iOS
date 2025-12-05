@@ -421,8 +421,8 @@ private extension UpdateProfileViewController {
             picker?.dismiss(animated: true, completion: nil)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            self.present(picker, animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+            self?.present(picker, animated: true, completion: nil)
         }
     }
 }

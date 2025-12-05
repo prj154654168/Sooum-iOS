@@ -216,8 +216,8 @@ class MainTabBarController: SOMTabBarController, View {
                         let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
                     else { return }
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                        object.setupLaunchScreenViewController(
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
+                        object?.setupLaunchScreenViewController(
                             window,
                             with: reactor.reactorForLaunchScreen()
                         )
