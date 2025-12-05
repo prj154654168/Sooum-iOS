@@ -15,7 +15,6 @@ import RxSwift
 import SnapKit
 import Then
 
-
 class MainTabBarController: SOMTabBarController, View {
     
     enum Constants {
@@ -68,6 +67,9 @@ class MainTabBarController: SOMTabBarController, View {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 제스처 뒤로가기를 위한 델리게이트 설정
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         self.hasFirstLaunchGuide = UserDefaults.showGuideMessage
     }
@@ -391,5 +393,12 @@ private extension MainTabBarController {
         let launchScreenViewController = LaunchScreenViewController()
         launchScreenViewController.reactor = reactor
         window.rootViewController = UINavigationController(rootViewController: launchScreenViewController)
+    }
+}
+
+extension MainTabBarController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
