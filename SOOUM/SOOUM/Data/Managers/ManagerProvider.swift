@@ -23,13 +23,3 @@ final class ManagerProviderContainer: ManagerProviderType {
     var networkManager: NetworkManagerDelegate { self.managerType.networkManager }
     var locationManager: LocationManagerDelegate { self.managerType.locationManager }
 }
-
-extension ManagerProviderType {
-    
-    func initialize() {
-        _ = self.authManager
-        _ = self.pushManager
-        _ = self.networkManager
-        _ = self.locationManager
-    }
-}
