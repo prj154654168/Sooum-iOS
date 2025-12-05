@@ -22,6 +22,7 @@ protocol CardRemoteDataSource {
     // MARK: Detail
     
     func detailCard(id: String, latitude: String?, longitude: String?) -> Observable<DetailCardInfoResponse>
+    func isCardDeleted(id: String) -> Observable<IsCardDeletedResponse>
     func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<BaseCardInfoResponse>
     func deleteCard(id: String) -> Observable<Int>
     func updateLike(id: String, isLike: Bool) -> Observable<Int>

@@ -43,6 +43,11 @@ class CardRepositoryImpl: CardRepository {
         return self.remoteDataSource.detailCard(id: id, latitude: latitude, longitude: longitude)
     }
     
+    func isCardDeleted(id: String) -> Observable<IsCardDeletedResponse> {
+        
+        return self.remoteDataSource.isCardDeleted(id: id)
+    }
+    
     func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<BaseCardInfoResponse> {
         
         return self.remoteDataSource.commentCard(id: id, lastId: lastId, latitude: latitude, longitude: longitude)

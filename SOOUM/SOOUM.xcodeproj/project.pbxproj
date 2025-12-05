@@ -790,6 +790,8 @@
 		38F161482ECDA8F0003BADB6 /* FavoriteTagPlaceholderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F161462ECDA8D1003BADB6 /* FavoriteTagPlaceholderViewCell.swift */; };
 		38F1614A2ECDAD34003BADB6 /* FavoriteTagViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F161492ECDAD29003BADB6 /* FavoriteTagViewCell.swift */; };
 		38F1614B2ECDAD34003BADB6 /* FavoriteTagViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F161492ECDAD29003BADB6 /* FavoriteTagViewCell.swift */; };
+		38F3398F2EE31C870066A5F7 /* IsCardDeletedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3398E2EE31C7E0066A5F7 /* IsCardDeletedResponse.swift */; };
+		38F339902EE31C870066A5F7 /* IsCardDeletedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3398E2EE31C7E0066A5F7 /* IsCardDeletedResponse.swift */; };
 		38F3760A2ECB772A00E4A41D /* FavoriteTagInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F376092ECB772600E4A41D /* FavoriteTagInfo.swift */; };
 		38F3760B2ECB772A00E4A41D /* FavoriteTagInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F376092ECB772600E4A41D /* FavoriteTagInfo.swift */; };
 		38F3760D2ECB779E00E4A41D /* FavoriteTagInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3760C2ECB778C00E4A41D /* FavoriteTagInfoResponse.swift */; };
@@ -1252,6 +1254,7 @@
 		38F161422ECDA853003BADB6 /* SearchViewButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchViewButton+Rx.swift"; sourceTree = "<group>"; };
 		38F161462ECDA8D1003BADB6 /* FavoriteTagPlaceholderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagPlaceholderViewCell.swift; sourceTree = "<group>"; };
 		38F161492ECDAD29003BADB6 /* FavoriteTagViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagViewCell.swift; sourceTree = "<group>"; };
+		38F3398E2EE31C7E0066A5F7 /* IsCardDeletedResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsCardDeletedResponse.swift; sourceTree = "<group>"; };
 		38F376092ECB772600E4A41D /* FavoriteTagInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagInfo.swift; sourceTree = "<group>"; };
 		38F3760C2ECB778C00E4A41D /* FavoriteTagInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagInfoResponse.swift; sourceTree = "<group>"; };
 		38F376102ECB789200E4A41D /* TagCardInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCardInfoResponse.swift; sourceTree = "<group>"; };
@@ -2152,6 +2155,7 @@
 		38899E632E7938CD0030F7CA /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				38F3398E2EE31C7E0066A5F7 /* IsCardDeletedResponse.swift */,
 				38F376102ECB789200E4A41D /* TagCardInfoResponse.swift */,
 				38F3760C2ECB778C00E4A41D /* FavoriteTagInfoResponse.swift */,
 				3879B4B72EC5ADBF0070846B /* RejoinableDateInfoResponse.swift */,
@@ -3261,6 +3265,7 @@
 				38D869642CF821F900BF87DA /* UserDefaults.swift in Sources */,
 				380F422D2E884F3D009AC59E /* CardRemoteDataSourceImpl.swift in Sources */,
 				38C9AF332E96A82900B401C0 /* WriteCardTags.swift in Sources */,
+				38F3398F2EE31C870066A5F7 /* IsCardDeletedResponse.swift in Sources */,
 				38899E672E7939600030F7CA /* CheckAvailableResponse.swift in Sources */,
 				38AE77DB2E745FFF00B6FD13 /* EnterMemberTransferTextFieldView.swift in Sources */,
 				3889A2432E79AD7D0030F7CA /* AppVersionRepository.swift in Sources */,
@@ -3682,6 +3687,7 @@
 				38C2A7DB2EC06ECE00B941A2 /* SettingsRequest.swift in Sources */,
 				38D869632CF821F900BF87DA /* UserDefaults.swift in Sources */,
 				380F422E2E884F3D009AC59E /* CardRemoteDataSourceImpl.swift in Sources */,
+				38F339902EE31C870066A5F7 /* IsCardDeletedResponse.swift in Sources */,
 				38899E662E7939600030F7CA /* CheckAvailableResponse.swift in Sources */,
 				38C9AF342E96A82900B401C0 /* WriteCardTags.swift in Sources */,
 				385620F22CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,

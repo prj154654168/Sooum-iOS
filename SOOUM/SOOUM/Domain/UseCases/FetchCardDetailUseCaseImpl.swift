@@ -45,14 +45,8 @@ final class FetchCardDetailUseCaseImpl: FetchCardDetailUseCase {
         .map(\.cardInfos)
     }
     
-    func isDeleted(
-        cardId: String,
-        latitude: String?,
-        longitude: String?
-    ) -> Observable<Bool> {
+    func isDeleted(cardId: String) -> Observable<Bool> {
         
-        return self.detailCard(id: cardId, latitude: latitude, longitude: longitude)
-            .map { _ in false }
-            .catchAndReturn(true)
+        return self.repository.isCardDeleted(id: cardId).map(\.isDeleted)
     }
 }

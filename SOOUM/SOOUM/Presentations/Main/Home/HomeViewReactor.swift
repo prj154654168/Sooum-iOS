@@ -169,17 +169,9 @@ class HomeViewReactor: Reactor {
             ])
         case let .detailCard(selectedId):
             
-            let coordinate = self.locationUseCase.coordinate()
-            let latitude = coordinate.latitude
-            let longitude = coordinate.longitude
-            
             return .concat([
                 .just(.cardIsDeleted(nil)),
-                self.fetchCardDetailUseCase.isDeleted(
-                    cardId: selectedId,
-                    latitude: latitude,
-                    longitude: longitude
-                )
+                self.fetchCardDetailUseCase.isDeleted(cardId: selectedId)
                 .map { (selectedId, $0) }
                 .map(Mutation.cardIsDeleted)
             ])

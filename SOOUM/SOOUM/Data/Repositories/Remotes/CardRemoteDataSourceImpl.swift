@@ -47,6 +47,12 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         return self.provider.networkManager.fetch(DetailCardInfoResponse.self, request: requset)
     }
     
+    func isCardDeleted(id: String) -> Observable<IsCardDeletedResponse> {
+        
+        let request: CardRequest = .isCardDeleted(id: id)
+        return self.provider.networkManager.fetch(IsCardDeletedResponse.self, request: request)
+    }
+    
     func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<BaseCardInfoResponse> {
         
         let request: CardRequest = .commentCard(id: id, lastId: lastId, latitude: latitude, longitude: longitude)

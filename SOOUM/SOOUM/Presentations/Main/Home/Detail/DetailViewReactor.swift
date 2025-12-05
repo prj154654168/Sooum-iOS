@@ -148,15 +148,7 @@ class DetailViewReactor: Reactor {
             return .just(.updateReported(isReported))
         case .willPushToWrite:
             
-            let coordinate = self.locationUseCase.coordinate()
-            let latitude = coordinate.latitude
-            let longitude = coordinate.longitude
-            
-            return self.fetchCardDetailUseCase.isDeleted(
-                cardId: self.selectedCardId,
-                latitude: latitude,
-                longitude: longitude
-            )
+            return self.fetchCardDetailUseCase.isDeleted(cardId: self.selectedCardId)
             .flatMapLatest { isDeleted -> Observable<Mutation> in
                 return .concat([
                     .just(.willPushToWrite(isDeleted)),

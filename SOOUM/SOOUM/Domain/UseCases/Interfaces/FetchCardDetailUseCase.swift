@@ -22,9 +22,5 @@ protocol FetchCardDetailUseCase: AnyObject {
         longitude: String?
     ) -> Observable<[BaseCardInfo]>
     
-    func isDeleted(
-        cardId: String,
-        latitude: String?,
-        longitude: String?
-    ) -> Observable<Bool>
+    func isDeleted(cardId: String) -> Observable<Bool>
 }
