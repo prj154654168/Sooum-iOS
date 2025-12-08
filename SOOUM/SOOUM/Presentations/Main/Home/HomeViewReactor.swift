@@ -101,12 +101,8 @@ class HomeViewReactor: Reactor {
             
             let displayType = self.currentState.displayType
             let distanceFilter = self.currentState.distanceFilter
-            return .concat([
-                self.refresh(displayType, distanceFilter)
-                    .catch(self.catchClosureForCards),
-                self.unreadNotifications()
-                    .catch(self.catchClosureForNotis)
-            ])
+            return self.refresh(displayType, distanceFilter)
+                .catch(self.catchClosureForCards)
         case .refresh:
             
             let displayType = self.currentState.displayType
@@ -126,6 +122,7 @@ class HomeViewReactor: Reactor {
         case .unreadNotisAndNotice:
             
             return self.unreadNotifications()
+                .catch(self.catchClosureForNotis)
         case let .updateDisplayType(displayType):
             
             let distanceFilter = self.currentState.distanceFilter
