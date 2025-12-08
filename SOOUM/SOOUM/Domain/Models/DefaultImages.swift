@@ -14,6 +14,7 @@ struct DefaultImages: Equatable {
     let food: [ImageUrlInfo]
     let color: [ImageUrlInfo]
     let memo: [ImageUrlInfo]
+    let event: [ImageUrlInfo]?
 }
 
 extension DefaultImages {
@@ -24,7 +25,8 @@ extension DefaultImages {
         sensitivity: [],
         food: [],
         color: [],
-        memo: []
+        memo: [],
+        event: nil
     )
 }
 
@@ -37,6 +39,7 @@ extension DefaultImages: Decodable {
         case food = "FOOD"
         case color = "COLOR"
         case memo = "MEMO"
+        case event = "EVENT"
     }
     
     init(from decoder: any Decoder) throws {
@@ -47,5 +50,6 @@ extension DefaultImages: Decodable {
         self.food = try container.decode([ImageUrlInfo].self, forKey: .food)
         self.color = try container.decode([ImageUrlInfo].self, forKey: .color)
         self.memo = try container.decode([ImageUrlInfo].self, forKey: .memo)
+        self.event = try container.decodeIfPresent([ImageUrlInfo].self, forKey: .event)
     }
 }
