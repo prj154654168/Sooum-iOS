@@ -41,7 +41,6 @@ class ErrorInterceptor: RequestInterceptor {
     }
     
     func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
-        self.lock.lock(); defer { self.lock.unlock() }
         
         /// API 호출 중 네트워크 오류 발생
         if let afError = error.asAFError,
@@ -88,11 +87,9 @@ class ErrorInterceptor: RequestInterceptor {
                 switch result {
                 case .success:
                     completion(.retry)
-                    return
                 case let .failure(error):
                     Log.error("ReAuthenticate failed. \(error.localizedDescription)")
                     completion(.doNotRetry)
-                    return
                 }
             }
             return
