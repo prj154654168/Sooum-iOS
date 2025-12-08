@@ -84,13 +84,12 @@ class TagSearchViewController: BaseNavigationViewController, View {
                 // 검색 결과가 없을 때만
                 if isNil {
                     /// 뒤로가기로 TagViewController를 표시할 때, 관심 태그만 리로드
-                    object.navigationPop(animated: true, bottomBarHidden: false) {
-                        NotificationCenter.default.post(
-                            name: .reloadFavoriteTagData,
-                            object: nil,
-                            userInfo: nil
-                        )
-                    }
+                    NotificationCenter.default.post(
+                        name: .reloadFavoriteTagData,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    object.navigationPop()
                 } else {
                     object.reactor?.action.onNext(.reset)
                     object.searchTextFieldView.text = nil

@@ -271,14 +271,14 @@ class DetailViewController: BaseNavigationViewController, View {
          // 카드 삭제 후 X 버튼 액션
          self.rightDeleteButton.rx.throttleTap(.seconds(3))
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(animated: false, bottomBarHidden: false)
+                 object.navigationPop(animated: false)
              }
              .disposed(by: self.disposeBag)
          
          // 댓글카드 홈 버튼 액션
          self.leftHomeButton.rx.throttleTap(.seconds(3))
              .subscribe(with: self) { object, _ in
-                 object.navigationPopToRoot(animated: false, bottomBarHidden: false)
+                 object.navigationPopToRoot(animated: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -419,7 +419,6 @@ class DetailViewController: BaseNavigationViewController, View {
              .filter { $0 }
              .observe(on: MainScheduler.asyncInstance)
              .subscribe(with: self) { object, _ in
-                 NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
                  if reactor.currentState.isFeed == false {
                      NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
                  }

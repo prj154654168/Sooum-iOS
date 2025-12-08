@@ -481,7 +481,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, writtenCardId in
-                NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
                 if reactor.entranceType == .comment {
                     NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
                 }
@@ -695,10 +694,9 @@ extension WriteCardViewController {
             style: .primary,
             action: {
                 UIApplication.topViewController?.dismiss(animated: true) {
-                    NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-                        self?.navigationPopToRoot(animated: true, bottomBarHidden: false)
+                        self?.navigationPopToRoot()
                     }
                 }
             }

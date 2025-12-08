@@ -196,13 +196,6 @@ class HomeViewController: BaseNavigationViewController, View {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(self.reloadData(_:)),
-            name: .reloadData,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(self.changedLocationAuthorization(_:)),
             name: .changedLocationAuthorization,
             object: nil
@@ -273,13 +266,8 @@ class HomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // Action
-        self.rx.viewDidLoad
-            .map { _ in Reactor.Action.landing }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
         self.rx.viewDidAppear
-            .map { _ in Reactor.Action.unreadNotisAndNotice }
+            .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -420,12 +408,6 @@ class HomeViewController: BaseNavigationViewController, View {
         
         let toTop = CGPoint(x: 0, y: -(self.tableView.contentInset.top))
         self.tableView.setContentOffset(toTop, animated: true)
-    }
-    
-    @objc
-    private func reloadData(_ notification: Notification) {
-        
-        self.reactor?.action.onNext(.landing)
     }
     
     @objc

@@ -291,9 +291,8 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
             .filter { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                object.navigationPop(bottomBarHidden: false) {
-                    NotificationCenter.default.post(name: .reloadProfileData, object: nil, userInfo: nil)
-                }
+                NotificationCenter.default.post(name: .reloadProfileData, object: nil, userInfo: nil)
+                object.navigationPop()
             }
             .disposed(by: self.disposeBag)
         

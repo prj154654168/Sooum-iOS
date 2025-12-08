@@ -99,7 +99,7 @@ class FollowViewController: BaseNavigationViewController, View {
                         
                         if navigationController.viewControllers.first?.isKind(of: ProfileViewController.self) == true {
                             
-                            object.navigationPopToRoot(animated: false, bottomBarHidden: false)
+                            object.navigationPopToRoot(animated: false)
                         } else {
                             
                             tabBarController.didSelectedIndex(3)
@@ -175,7 +175,7 @@ class FollowViewController: BaseNavigationViewController, View {
                             
                             if navigationController.viewControllers.first?.isKind(of: ProfileViewController.self) == true {
                                 
-                                object.navigationPopToRoot(animated: false, bottomBarHidden: false)
+                                object.navigationPopToRoot(animated: false)
                             } else {
                                 
                                 tabBarController.didSelectedIndex(3)
@@ -260,18 +260,6 @@ class FollowViewController: BaseNavigationViewController, View {
             $0.top.equalTo(self.stickyTabBar.snp.bottom)
             $0.bottom.horizontalEdges.equalToSuperview()
         }
-    }
-    
-    override func bind() {
-        // 뒤로가기 시 상대 팔로우 화면이면 하단 네비바 숨김
-        self.navigationBar.backButton.rx.throttleTap
-            .subscribe(with: self) { object, _ in
-                object.navigationPop(
-                    animated: true,
-                    bottomBarHidden: object.reactor?.viewType == .other
-                )
-            }
-            .disposed(by: self.disposeBag)
     }
     
     

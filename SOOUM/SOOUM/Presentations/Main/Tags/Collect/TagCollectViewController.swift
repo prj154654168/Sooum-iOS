@@ -79,13 +79,14 @@ class TagCollectViewController: BaseNavigationViewController, View {
         /// 뒤로가기로 TagViewController를 표시할 때, 관심 태그만 리로드
         self.navigationBar.backButton.rx.throttleTap
             .subscribe(with: self) { object, _ in
-                object.navigationPop(animated: true, bottomBarHidden: true) {
+                if object.reactor?.initialState.isFavorite != object.reactor?.currentState.isFavorite {
                     NotificationCenter.default.post(
                         name: .reloadFavoriteTagData,
                         object: nil,
                         userInfo: nil
                     )
                 }
+                object.navigationPop()
             }
             .disposed(by: self.disposeBag)
     }

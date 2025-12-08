@@ -97,10 +97,6 @@ class ReportViewController: BaseNavigationViewController, View {
             $0.trailing.equalToSuperview().offset(-16)
             $0.height.equalTo(56)
         }
-    }
-    
-    override func bind() {
-        super.bind()
         
         self.setupReportButtons()
     }
@@ -152,9 +148,8 @@ class ReportViewController: BaseNavigationViewController, View {
             .filter { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                object.navigationPop {
-                    NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
-                }
+                NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
+                object.navigationPop()
             }
             .disposed(by: self.disposeBag)
     }
@@ -186,7 +181,7 @@ private extension ReportViewController {
             item.snp.makeConstraints {
                 $0.height.equalTo(48)
             }
-            item.rx.throttleTap
+            item.rx.throttleTap(.seconds(2))
                 .map { _ in Reactor.Action.updateReportReason(reportType) }
                 .bind(to: reactor.action)
                 .disposed(by: self.disposeBag)
@@ -202,9 +197,8 @@ private extension ReportViewController {
             style: .primary,
             action: {
                 UIApplication.topViewController?.dismiss(animated: true) {
-                    self.navigationPop {
-                        NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
-                    }
+                    NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
+                    self.navigationPop()
                 }
             }
         )

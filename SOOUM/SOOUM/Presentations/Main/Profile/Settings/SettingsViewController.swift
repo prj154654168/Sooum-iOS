@@ -187,15 +187,6 @@ class SettingsViewController: BaseNavigationViewController, View {
         }
     }
     
-    override func bind() {
-        
-        self.navigationBar.backButton.rx.tap
-            .subscribe(with: self) { object, _ in
-                object.navigationPop(bottomBarHidden: false)
-            }
-            .disposed(by: self.disposeBag)
-    }
-    
     
     // MARK: ReactorKit - bind
     
