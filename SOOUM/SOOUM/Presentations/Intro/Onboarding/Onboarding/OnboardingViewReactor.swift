@@ -7,11 +7,11 @@
 
 import ReactorKit
 
-
 class OnboardingViewReactor: Reactor {
     
     enum Action: Equatable {
         case landing
+        case check
     }
     
     
@@ -49,6 +49,10 @@ class OnboardingViewReactor: Reactor {
                 self.updateNotifyUseCase.switchNotification(on: true)
                     .flatMapLatest { _ -> Observable<Mutation> in .empty() }
             ])
+        case .check:
+            
+            return self.validateUserUseCase.checkValidation()
+                .map(Mutation.check)
         }
     }
     

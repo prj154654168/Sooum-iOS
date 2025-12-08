@@ -162,17 +162,16 @@ class OnboardingViewController: BaseNavigationViewController, View {
     
     func bind(reactor: OnboardingViewReactor) {
         
-        // Action
-        self.rx.viewDidLoad
-            .map { _ in Reactor.Action.landing }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
-        let startButtonTapped = self.startButton.rx.tap.share()
+        let startButtonTapped = self.startButton.rx.throttleTap.share()
         let checkAvailable = reactor.state.map(\.checkAvailable).filterNil().share()
+        // `숨 시작하기` 버튼을 탭한 이후 최신 상태 반영
+        let latestAvailableDidTapped = startButtonTapped
+            .flatMapLatest { _ in checkAvailable.skip(1).take(1) }
+            // .observe(on: MainScheduler.instance)
+            .share()
         
-        startButtonTapped
-            .withLatestFrom(checkAvailable)
+        // 차단 및 탈퇴한 계정이 아닐 경우 온보딩 화면 전환
+        latestAvailableDidTapped
             .filter { $0.banned == false && $0.withdrawn == false }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
@@ -181,9 +180,8 @@ class OnboardingViewController: BaseNavigationViewController, View {
                 object.navigationPush(termsOfServiceViewController, animated: true)
             }
             .disposed(by: disposeBag)
-        
-        startButtonTapped
-            .withLatestFrom(checkAvailable)
+        // 차단된 계정인 경우 팝업 표시
+        latestAvailableDidTapped
             .filter { $0.banned && $0.rejoinAvailableAt != nil }
             .compactMap(\.rejoinAvailableAt)
             .observe(on: MainScheduler.instance)
@@ -192,8 +190,8 @@ class OnboardingViewController: BaseNavigationViewController, View {
                 object.showBannedUserDialog(at: rejoinAvailableAt)
             }
             .disposed(by: self.disposeBag)
-        startButtonTapped
-            .withLatestFrom(checkAvailable)
+        // 탈퇴한 계정인 경우 팝업 표시
+        latestAvailableDidTapped
             .filter { $0.withdrawn && $0.rejoinAvailableAt != nil }
             .compactMap(\.rejoinAvailableAt)
             .observe(on: MainScheduler.instance)
@@ -202,14 +200,25 @@ class OnboardingViewController: BaseNavigationViewController, View {
                 object.showResignUserDialog(at: rejoinAvailableAt)
             }
             .disposed(by: self.disposeBag)
-        
-        self.oldUserButton.rx.tap
+        // 계정 이관 화면 이동
+        self.oldUserButton.rx.throttleTap
             .subscribe(with: self) { object, _ in
               let enterMemberTransferViewController = EnterMemberTransferViewController()
               enterMemberTransferViewController.reactor = reactor.reactorForEnterTransfer()
               object.navigationPush(enterMemberTransferViewController, animated: true)
             }
             .disposed(by: disposeBag)
+        
+        // Action
+        self.rx.viewDidLoad
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        startButtonTapped
+            .map { _ in Reactor.Action.check }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
         
         // State
         checkAvailable
