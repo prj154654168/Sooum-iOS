@@ -38,9 +38,7 @@ class ProfileUserViewCell: UICollectionViewCell {
         $0.spacing = 2
     }
     
-    private let visitedCountContainer = UIView().then {
-        $0.isHidden = true
-    }
+    private let visitedCountContainer = UIView()
     
     private let totalVisitedTitleLabel = UILabel().then {
         $0.text = Text.totalVisitedTitle
@@ -246,7 +244,6 @@ class ProfileUserViewCell: UICollectionViewCell {
         
         self.model = model
         
-        self.visitedCountContainer.isHidden = model.cardCnt == "0"
         self.totalVisitedCountLabel.text = model.totalVisitCnt
         self.totalVisitedCountLabel.typography = .som.v2.caption2
         self.todayVisitedCountLabel.text = model.todayVisitCnt
