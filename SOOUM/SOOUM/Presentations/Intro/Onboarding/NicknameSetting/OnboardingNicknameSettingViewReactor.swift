@@ -61,18 +61,21 @@ class OnboardingNicknameSettingViewReactor: Reactor {
     enum Mutation {
         case updateNickname(String)
         case updateIsValid(Bool)
+        case updateIsProcessing(Bool)
         case updateIsErrorMessage(String?)
     }
 
     struct State {
         fileprivate(set) var nickname: String
         fileprivate(set) var isValid: Bool
+        fileprivate(set) var isProcessing: Bool
         fileprivate(set) var errorMessage: String?
     }
 
     var initialState: State = .init(
         nickname: "\(Text.adjectives.randomElement()!) \(Text.nouns.randomElement()!)",
         isValid: false,
+        isProcessing: false,
         errorMessage: nil
     )
     
@@ -100,6 +103,7 @@ class OnboardingNicknameSettingViewReactor: Reactor {
             }
             
             return .concat([
+                .just(.updateIsProcessing(true)),
                 .just(.updateIsErrorMessage(nil)),
                 self.validateNicknameUseCase.checkValidation(nickname: nickname)
                     .withUnretained(self)
@@ -112,7 +116,8 @@ class OnboardingNicknameSettingViewReactor: Reactor {
                             .just(.updateNickname(nickname)),
                             .just(.updateIsErrorMessage(errorMessage))
                         ])
-                    }
+                    },
+                .just(.updateIsProcessing(false))
             ])
         }
     }
@@ -124,6 +129,8 @@ class OnboardingNicknameSettingViewReactor: Reactor {
             newState.nickname = nickname
         case let .updateIsValid(isValid):
             newState.isValid = isValid
+        case let .updateIsProcessing(isProcessing):
+            newState.isProcessing = isProcessing
         case let .updateIsErrorMessage(errorMessage):
             newState.errorMessage = errorMessage
         }

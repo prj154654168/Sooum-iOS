@@ -109,7 +109,10 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.nextButton.rx.tap
+        self.nextButton.rx.throttleTap
+            .withLatestFrom(reactor.state.map(\.isProcessing))
+            .filter { $0 == false }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let profileImageSettingVC = OnboardingProfileImageSettingViewController()
                 profileImageSettingVC.reactor = reactor.reactorForProfileImage()
