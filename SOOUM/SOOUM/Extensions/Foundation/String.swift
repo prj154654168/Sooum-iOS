@@ -17,4 +17,12 @@ extension String {
         let consonantScalarRange: ClosedRange<UInt32> = 12593...12622
         return consonantScalarRange ~= scalar
     }
+    /// 영어인지 여부 확인
+    var isEnglish: Bool {
+        guard self.isEmpty == false else { return false }
+        
+        let pattern = "^[a-zA-Z]+$"
+        let predicate = NSPredicate(format: "SELF MATCHES %@", pattern)
+        return predicate.evaluate(with: self)
+    }
 }
