@@ -35,7 +35,8 @@ final class FetchTagUseCaseImpl: FetchTagUseCase {
     // 인기 태그는 최대 10개까지 표시
     func ranked() -> Observable<[TagInfo]> {
         
-        return self.repository.ranked().map(\.tagInfos)
+        return self.repository.ranked()
+            .map(\.tagInfos)
             .map { $0.filter { $0.usageCnt > 0 } }
             // 중복 제거
             // .map { Array(Set($0)) }
