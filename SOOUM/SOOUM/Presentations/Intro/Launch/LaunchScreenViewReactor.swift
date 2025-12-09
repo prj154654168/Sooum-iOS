@@ -95,6 +95,7 @@ extension LaunchScreenViewReactor {
     private func login() -> Observable<Mutation> {
         return self.authUseCase.login()
             .map { .updateIsRegistered($0) }
+            .catchAndReturn(.updateIsRegistered(false))
     }
     
     private func check() -> Observable<Mutation> {
