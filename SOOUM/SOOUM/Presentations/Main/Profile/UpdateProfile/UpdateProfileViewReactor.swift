@@ -35,18 +35,16 @@ class UpdateProfileViewReactor: Reactor {
     }
     
     struct State {
-        var profileImage: UIImage?
-        var profileImageName: String?
-        var isValid: Bool
-        var isUpdatedSuccess: Bool
-        var isProcessing: Bool
-        var hasErrors: Bool?
-        var errorMessage: String?
+        fileprivate(set) var profileImage: UIImage?
+        fileprivate(set) var profileImageName: String?
+        fileprivate(set) var isValid: Bool
+        fileprivate(set) var isUpdatedSuccess: Bool
+        fileprivate(set) var isProcessing: Bool
+        fileprivate(set) var hasErrors: Bool?
+        fileprivate(set) var errorMessage: String?
     }
     
     var initialState: State
-    
-    private var imageName: String?
     
     private let dependencies: AppDIContainerable
     private let validateNicknameUseCase: ValidateNicknameUseCase
@@ -58,7 +56,8 @@ class UpdateProfileViewReactor: Reactor {
     init(
         dependencies: AppDIContainerable,
         nickname: String,
-        image profileImage: UIImage?
+        image profileImage: UIImage?,
+        imageName profileImageName: String?
     ) {
         self.dependencies = dependencies
         self.validateNicknameUseCase = dependencies.rootContainer.resolve(ValidateNicknameUseCase.self)
@@ -69,6 +68,7 @@ class UpdateProfileViewReactor: Reactor {
         
         self.initialState = .init(
             profileImage: profileImage,
+            profileImageName: profileImageName,
             isValid: false,
             isUpdatedSuccess: false,
             isProcessing: false,

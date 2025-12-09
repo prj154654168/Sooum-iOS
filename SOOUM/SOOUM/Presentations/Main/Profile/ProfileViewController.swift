@@ -162,7 +162,8 @@ class ProfileViewController: BaseNavigationViewController, View {
                             let updateProfileViewController = UpdateProfileViewController()
                             updateProfileViewController.reactor = reactor.reactorForUpdate(
                                 nickname: profileInfo.nickname,
-                                image: profileImage
+                                image: profileImage,
+                                imageName: profileInfo.profileImgName
                             )
                             object?.parent?.navigationPush(updateProfileViewController, animated: true)
                         }

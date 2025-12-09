@@ -260,8 +260,17 @@ extension ProfileViewReactor {
         SettingsViewReactor(dependencies: self.dependencies)
     }
     
-    func reactorForUpdate(nickname: String, image profileImage: UIImage?) -> UpdateProfileViewReactor {
-        UpdateProfileViewReactor(dependencies: self.dependencies, nickname: nickname, image: profileImage)
+    func reactorForUpdate(
+        nickname: String,
+        image profileImage: UIImage?,
+        imageName profileImageName: String?
+    ) -> UpdateProfileViewReactor {
+        UpdateProfileViewReactor(
+            dependencies: self.dependencies,
+            nickname: nickname,
+            image: profileImage,
+            imageName: profileImageName
+        )
     }
     
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
