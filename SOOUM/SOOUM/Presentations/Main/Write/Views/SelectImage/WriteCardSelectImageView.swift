@@ -63,7 +63,7 @@ class WriteCardSelectImageView: UIView {
     private lazy var collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UICollectionViewFlowLayout().then {
-            $0.scrollDirection = .horizontal
+            $0.scrollDirection = .vertical
             $0.minimumLineSpacing = 0
             $0.minimumInteritemSpacing = 0
         }
