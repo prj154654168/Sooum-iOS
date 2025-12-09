@@ -48,6 +48,8 @@ class SOMNicknameTextField: UIView {
         $0.setContentCompressionResistancePriority(.defaultHigh + 1, for: .vertical)
         
         $0.delegate = self
+        
+        $0.addTarget(self, action: #selector(self.textDidChanged(_:)), for: .valueChanged)
     }
     
     private let guideMessageContainer = UIStackView().then {
@@ -110,10 +112,6 @@ class SOMNicknameTextField: UIView {
         }
     }
     
-    var isTextEmpty: Bool {
-        return self.text?.isEmpty ?? true
-    }
-    
     
     // MARK: Initalization
     
@@ -164,6 +162,11 @@ class SOMNicknameTextField: UIView {
         }
     }
     
+    @objc
+    func textDidChanged(_ textField: UITextField) {
+        self.clearButton.isHidden = textField.text?.isEmpty ?? true
+    }
+    
     
     // MARK: Private func
     
@@ -209,11 +212,11 @@ class SOMNicknameTextField: UIView {
 extension SOMNicknameTextField: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.clearButton.isHidden = self.isTextEmpty
+        self.clearButton.isHidden = textField.text?.isEmpty ?? true
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        self.clearButton.isHidden = self.isTextEmpty
+        self.clearButton.isHidden = textField.text?.isEmpty ?? true
     }
     
     func textField(
@@ -221,8 +224,6 @@ extension SOMNicknameTextField: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
-        
-        self.clearButton.isHidden = self.isTextEmpty
         
         return textField.shouldChangeCharactersIn(
             in: range,
