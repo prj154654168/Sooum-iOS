@@ -54,7 +54,7 @@ extension UITextField {
                             self?.selectedTextRange = self?.textRange(from: position, to: position)
                         }
                     }
-                    self.sendActions(for: .valueChanged)
+                    self.sendActions(for: .editingChanged)
                 }
             } else {
                 // 텍스트 입력 후에 제한을 벗어남
@@ -68,7 +68,7 @@ extension UITextField {
                         self?.selectedTextRange = self?.textRange(from: position, to: position)
                     }
                 }
-                self.sendActions(for: .valueChanged)
+                self.sendActions(for: .editingChanged)
             }
             return false
         } else {

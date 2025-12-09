@@ -49,7 +49,7 @@ class SOMNicknameTextField: UIView {
         
         $0.delegate = self
         
-        $0.addTarget(self, action: #selector(self.textDidChanged(_:)), for: .valueChanged)
+        $0.addTarget(self, action: #selector(self.textDidChanged(_:)), for: .editingChanged)
     }
     
     private let guideMessageContainer = UIStackView().then {
@@ -86,7 +86,7 @@ class SOMNicknameTextField: UIView {
     var text: String? {
         set {
             self.textField.text = newValue
-            self.textField.sendActions(for: .valueChanged)
+            self.textField.sendActions(for: .editingChanged)
         }
         get {
             return self.textField.text
@@ -156,7 +156,7 @@ class SOMNicknameTextField: UIView {
     private func clear() {
         self.clearButton.isHidden = true
         self.text = nil
-        self.textField.sendActions(for: .valueChanged)
+        self.textField.sendActions(for: .editingChanged)
         if self.textField.isFirstResponder == false {
             self.textField.becomeFirstResponder()
         }

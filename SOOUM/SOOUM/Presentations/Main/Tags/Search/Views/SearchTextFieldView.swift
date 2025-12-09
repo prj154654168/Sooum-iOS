@@ -72,7 +72,7 @@ class SearchTextFieldView: UIView {
     var text: String? {
         set {
             self.textField.text = newValue
-            self.textField.sendActions(for: .valueChanged)
+            self.textField.sendActions(for: .editingChanged)
         }
         get {
             return self.textField.text
@@ -149,7 +149,7 @@ class SearchTextFieldView: UIView {
     private func clear() {
         self.clearButton.isHidden = true
         self.text = nil
-        self.textField.sendActions(for: .valueChanged)
+        self.textField.sendActions(for: .editingChanged)
         if self.textField.isFirstResponder == false {
             self.textField.becomeFirstResponder()
         }
