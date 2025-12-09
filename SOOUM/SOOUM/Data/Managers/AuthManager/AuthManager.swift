@@ -187,7 +187,8 @@ extension AuthManager: AuthManagerDelegate {
                     let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
                     return provider.networkManager.perform(LoginResponse.self, request: request)
                         .map(\.token)
-                        .flatMapLatest { token -> Observable<Bool> in
+                        .withUnretained(object)
+                        .flatMapLatest { object, token -> Observable<Bool> in
                             
                             // session token 업데이트
                             object.authInfo.updateToken(token)
