@@ -253,7 +253,7 @@ extension AuthManager: AuthManagerDelegate {
         
         /// AccessToken이 업데이트 됐다면, 즉시 성공 처리
         guard token == self.authInfo.token else {
-            self.excutePendingResults(.success)
+            completion(.success)
             return
         }
         
