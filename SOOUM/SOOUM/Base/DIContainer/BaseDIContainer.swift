@@ -29,7 +29,7 @@ protocol BaseDIContainerable: AnyObject {
 final class BaseDIContainer: BaseDIContainerable {
     
     // 부모 컨테이너에 대한 참조입니다.
-    private let parent: BaseDIContainerable?
+    private weak var parent: BaseDIContainerable?
     // 등록된 서비스의 생성 클로저(factory)를 저장하는 딕셔너리입니다.
     // 키는 서비스 타입의 이름(String), 값은 Any를 반환하는 클로저입니다.
     private var factories: [String: (BaseDIContainerable) -> Any] = [:]

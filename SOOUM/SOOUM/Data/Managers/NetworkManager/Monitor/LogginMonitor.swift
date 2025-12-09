@@ -5,12 +5,9 @@
 //  Created by 오현식 on 11/4/24.
 //
 
-import Foundation
-
 import Alamofire
 
-
-class LogginMonitor: EventMonitor {
+final class LogginMonitor: EventMonitor {
     
     private let formatter: DateFormatter = {
         let formatter = DateFormatter()

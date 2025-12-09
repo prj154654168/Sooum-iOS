@@ -50,7 +50,7 @@ class AuthManager: CompositeManager<AuthManagerConfiguration> {
     
     var hasToken: Bool {
         let token = self.authInfo.token
-        return !token.accessToken.isEmpty && !token.refreshToken.isEmpty
+        return token.accessToken.isEmpty == false && token.refreshToken.isEmpty == false
     }
     
     override init(provider: ManagerTypeDelegate, configure: AuthManagerConfiguration) {
@@ -187,8 +187,7 @@ extension AuthManager: AuthManagerDelegate {
                     let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
                     return provider.networkManager.perform(LoginResponse.self, request: request)
                         .map(\.token)
-                        .withUnretained(self)
-                        .flatMapLatest { object, token -> Observable<Bool> in
+                        .flatMapLatest { token -> Observable<Bool> in
                             
                             // session token 업데이트
                             object.authInfo.updateToken(token)

@@ -21,7 +21,6 @@ extension NetworkManager {
         return self.fetch(AppVersionStatusResponse.self, request: request)
             .map { return .success($0) }
             .catch { return .just(.failure($0)) }
-            .observe(on: MainScheduler.instance)
     }
     
     func updateCheck() -> Observable<AppVersionStatusResponse> {
