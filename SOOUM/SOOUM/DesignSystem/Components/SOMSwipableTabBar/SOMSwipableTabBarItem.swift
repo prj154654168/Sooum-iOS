@@ -21,6 +21,21 @@ class SOMSwipableTabBarItem: UIView {
         $0.typography = .som.v2.subtitle3
     }
     
+    private let dotWithoutReadView = UIView().then {
+        $0.backgroundColor = .som.v2.rMain
+        $0.layer.cornerRadius = 5 * 0.5
+        $0.isHidden = true
+    }
+    
+    
+    // MARK: Variables
+    
+    var isEventDotHidden: Bool = true {
+        didSet {
+            self.dotWithoutReadView.isHidden = self.isEventDotHidden
+        }
+    }
+    
     
     // MARK: Initialize
     
@@ -54,6 +69,13 @@ class SOMSwipableTabBarItem: UIView {
             $0.bottom.equalToSuperview().offset(-8)
             $0.leading.equalToSuperview().offset(10)
             $0.trailing.equalToSuperview().offset(-10)
+        }
+        
+        self.addSubview(self.dotWithoutReadView)
+        self.dotWithoutReadView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(6)
+            $0.trailing.equalToSuperview().offset(-3)
+            $0.size.equalTo(5)
         }
     }
     
