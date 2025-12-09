@@ -428,8 +428,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let enteredTag = self.writeCardView.textDidChanged.filterNil().share()
+        let enteredTag = self.writeCardView.textDidChanged.share()
         enteredTag
+            .filterNil()
             .distinctUntilChanged()
             .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .map(Reactor.Action.relatedTags)
@@ -441,7 +442,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             selectedImageInfo.filterNil(),
             selectedTypography,
             selectedOptions,
-            enteredTag
+            enteredTag.startWith(nil)
         )
         self.writeButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(combined)
@@ -450,7 +451,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 let (content, imageInfo, typography, options, enteredTag) = combined
                 
                 var enteredTagTexts = object.writeCardView.writeCardTags.models.map { $0.originalText }
-                enteredTagTexts.append(enteredTag)
+                if let enteredTag = enteredTag, enteredTag.isEmpty == false {
+                    enteredTagTexts.append(enteredTag)
+                }
                 return Reactor.Action.writeCard(
                     isDistanceShared: options.contains(.distanceShare),
                     content: content,
