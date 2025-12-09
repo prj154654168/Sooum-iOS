@@ -48,7 +48,7 @@ class TagViewController: BaseNavigationViewController, View {
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
         
-        $0.contentInset.bottom = 54 + 16
+        $0.contentInsetAdjustmentBehavior = .never
         
         $0.refreshControl = SOMRefreshControl()
         
@@ -296,7 +296,13 @@ extension TagViewController: UIScrollViewDelegate {
         let offset = scrollView.contentOffset.y
         
         // 당겨서 새로고침
-        if self.isRefreshEnabled, offset < self.initialOffset {
+        if self.isRefreshEnabled, offset < self.initialOffset,
+           let refreshControl = self.scrollView.refreshControl as? SOMRefreshControl {
+           
+           refreshControl.updateProgress(
+               offset: scrollView.contentOffset.y,
+               topInset: scrollView.adjustedContentInset.top
+           )
             
             let pulledOffset = self.initialOffset - offset
             /// refreshControl heigt + top padding
