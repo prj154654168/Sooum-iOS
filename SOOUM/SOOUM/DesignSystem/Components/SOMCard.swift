@@ -37,6 +37,7 @@ class SOMCard: UIView {
         $0.contentMode = .scaleAspectFill
         $0.layer.cornerRadius = 16
         $0.layer.borderWidth = 1
+        $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.layer.masksToBounds = true
     }
     
@@ -60,8 +61,10 @@ class SOMCard: UIView {
     /// 펑 시간, 거리, 시간, 좋아요 수, 답글 수 정보를 담는 뷰
     private let cardInfoContainer = UIView().then {
         $0.backgroundColor = .som.v2.white
-        $0.layer.borderColor = UIColor.som.v2.white.cgColor
+        $0.layer.cornerRadius = 16
         $0.layer.borderWidth = 1
+        $0.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        $0.layer.masksToBounds = true
     }
     /// 펑 시간, 거리, 시간을 담는 스택 뷰
     private let cardInfoLeadingStackView = UIStackView().then {
@@ -236,11 +239,12 @@ class SOMCard: UIView {
         // 배경 이미지 뷰
         self.addSubview(self.rootContainerImageView)
         self.rootContainerImageView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.top.horizontalEdges.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-34)
         }
         
         // 하단 카드 정보 컨테이너
-        self.rootContainerImageView.addSubview(self.cardInfoContainer)
+        self.addSubview(self.cardInfoContainer)
         self.cardInfoContainer.snp.makeConstraints {
             $0.bottom.horizontalEdges.equalToSuperview()
             $0.height.equalTo(34)
@@ -319,7 +323,7 @@ class SOMCard: UIView {
         // 카드 문구
         self.rootContainerImageView.addSubview(self.cardTextBackgroundBlurView)
         self.cardTextBackgroundBlurView.snp.makeConstraints {
-            $0.centerY.equalToSuperview().offset(-34 * 0.5)
+            $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(32)
             $0.trailing.equalToSuperview().offset(-32)
         }
@@ -355,9 +359,11 @@ class SOMCard: UIView {
     func setModel(model: BaseCardInfo) {
         
         self.model = model
+        
+        let borderColor = model.isAdminCard ? UIColor.som.v2.pMain : UIColor.som.v2.gray100
         // 카드 배경 이미지
         self.rootContainerImageView.setImage(strUrl: model.cardImgURL, with: model.cardImgName)
-        self.rootContainerImageView.layer.borderColor = model.isAdminCard ? UIColor.som.v2.pMain.cgColor : UIColor.som.v2.gray100.cgColor
+        self.rootContainerImageView.layer.borderColor = borderColor.cgColor
         
         // 카드 본문
         let typography: Typography
@@ -373,6 +379,8 @@ class SOMCard: UIView {
         
         // 하단 정보
         // 어드민, 펑 시간, 거리, 시간
+        self.cardInfoContainer.layer.borderColor = borderColor.cgColor
+        
         self.adminStackView.isHidden = model.isAdminCard == false
         self.firstDot.isHidden = model.isAdminCard == false
         self.cardPungTimeStackView.isHidden = model.storyExpirationTime == nil
@@ -458,6 +466,7 @@ class SOMCard: UIView {
         self.cardPungTimeLabel.text = "00 : 00 : 00"
         self.rootContainerImageView.layer.borderWidth = 0
         self.rootContainerImageView.image = UIColor.som.v2.gray200.toImage
+        self.cardInfoContainer.layer.borderWidth = 0
         self.cardInfoContainer.subviews
             .filter { $0 != self.cardInfoLeadingStackView }
             .forEach { $0.removeFromSuperview() }
