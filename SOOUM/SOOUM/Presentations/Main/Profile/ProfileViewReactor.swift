@@ -15,7 +15,7 @@ class ProfileViewReactor: Reactor {
         let cardType: EntranceCardType
         let profileInfo: ProfileInfo?
         let feedCardInfos: [ProfileCardInfo]
-        let commCardInfos: [ProfileCardInfo]
+        let commentCardInfos: [ProfileCardInfo]
     }
     
     enum Action: Equatable {
@@ -250,7 +250,7 @@ extension ProfileViewReactor {
         return prevDisplayState.cardType == currDisplayState.cardType &&
             prevDisplayState.profileInfo == currDisplayState.profileInfo &&
             prevDisplayState.feedCardInfos == currDisplayState.feedCardInfos &&
-            prevDisplayState.commCardInfos == currDisplayState.commCardInfos
+            prevDisplayState.commentCardInfos == currDisplayState.commentCardInfos
     }
 }
 

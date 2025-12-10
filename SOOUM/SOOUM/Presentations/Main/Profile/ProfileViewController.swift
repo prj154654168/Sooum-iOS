@@ -374,7 +374,7 @@ class ProfileViewController: BaseNavigationViewController, View {
                 cardType: $0.cardType,
                 profileInfo: $0.profileInfo,
                 feedCardInfos: $0.feedCardInfos,
-                commCardInfos: $0.commentCardInfos
+                commentCardInfos: $0.commentCardInfos
             )
         }
         .distinctUntilChanged(reactor.canUpdateCells)
@@ -396,7 +396,7 @@ class ProfileViewController: BaseNavigationViewController, View {
             let cardItem = Item.card(
                 type: displayStates.cardType,
                 feed: displayStates.feedCardInfos,
-                comment: displayStates.commCardInfos.isEmpty ? nil : displayStates.commCardInfos
+                comment: displayStates.commentCardInfos.isEmpty ? nil : displayStates.commentCardInfos
             )
             snapshot.appendItems([cardItem], toSection: .card)
             
