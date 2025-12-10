@@ -87,9 +87,13 @@ enum UserRequest: BaseRequest {
             } else {
                 return "/api/members/\(userId)/cards/feed"
             }
-        case .myCommentCards:
+        case let .myCommentCards(lastId):
             
-            return "/api/members/me/cards/comment"
+            if let lastId = lastId {
+                return "/api/members/me/cards/comment/\(lastId)"
+            } else {
+                return "/api/members/me/cards/comment"
+            }
         case let .followers(userId, lastId):
             
             if let lastId = lastId {
