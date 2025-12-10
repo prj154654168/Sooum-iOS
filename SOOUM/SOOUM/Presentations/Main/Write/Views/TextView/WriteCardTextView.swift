@@ -24,7 +24,7 @@ class WriteCardTextView: UIView {
     private lazy var backgroundImageView = UIImageView().then {
         $0.backgroundColor = .clear
         $0.contentMode = .scaleAspectFill
-        $0.layer.borderColor = UIColor.som.v2.white.cgColor
+        $0.layer.borderColor = UIColor.som.v2.gray100.cgColor
         $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 16
         $0.clipsToBounds = true
