@@ -75,8 +75,7 @@ class ProfileViewController: BaseNavigationViewController, View {
     ).then {
         $0.backgroundColor = .som.v2.white
         
-        $0.contentInset.top = 0
-        $0.contentInset.bottom = 88 + 16
+        $0.contentInset = .zero
         
         $0.contentInsetAdjustmentBehavior = .never
         
@@ -121,7 +120,20 @@ class ProfileViewController: BaseNavigationViewController, View {
                 
                 cell.cardContainerDidTap
                     .subscribe(with: self) { object, _ in
-                        object.collectionView.setContentOffset(CGPoint(x: 0, y: 84 + 76 + 48 + 16), animated: true)
+                        switch reactor.currentState.cardType {
+                        case .feed:
+                            guard reactor.currentState.feedCardInfos.isEmpty == false else { return }
+                            object.collectionView.setContentOffset(
+                                CGPoint(x: 0, y: 84 + 76 + 48 + 16),
+                                animated: true
+                            )
+                        case .comment:
+                            guard reactor.currentState.commentCardInfos.isEmpty == false else { return }
+                            object.collectionView.setContentOffset(
+                                CGPoint(x: 0, y: 84 + 76 + 48 + 16),
+                                animated: true
+                            )
+                        }
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -434,7 +446,11 @@ class ProfileViewController: BaseNavigationViewController, View {
         let itemHeight = (self.collectionView.bounds.width - 2) / 3
         let newHeight = (numberOfRows * itemHeight) + ((numberOfRows - 1) * lineSpacing)
         
-        return max(newHeight, self.collectionView.bounds.height - 56)
+        let cellHeight: CGFloat = 84 + 76 + 48 + 16
+        let headerHeight: CGFloat = 56
+        let defaultHeight: CGFloat = collectionView.bounds.height - cellHeight - headerHeight
+        
+        return max(newHeight, defaultHeight)
     }
     
     
@@ -569,14 +585,16 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
                 switch reactor.currentState.cardType {
                 case .feed:
                     
-                    return feeds.isEmpty ?
-                        defaultHeight :
-                        self.updateCollectionViewHeight(numberOfItems: feeds.count)
+                    let newHeight = self.updateCollectionViewHeight(numberOfItems: feeds.count)
+                    collectionView.contentInset.bottom = defaultHeight <= newHeight ? 88 + 16 : 0
+                    
+                    return feeds.isEmpty ? defaultHeight : newHeight
                 case .comment:
                     
-                    return comments.isEmpty ?
-                        defaultHeight :
-                        self.updateCollectionViewHeight(numberOfItems: comments.count)
+                    let newHeight = self.updateCollectionViewHeight(numberOfItems: comments.count)
+                    collectionView.contentInset.bottom = defaultHeight <= newHeight ? 88 + 16 : 0
+                    
+                    return comments.isEmpty ? defaultHeight : newHeight
                 }
             }
             
