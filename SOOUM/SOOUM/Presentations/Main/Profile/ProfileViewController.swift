@@ -76,7 +76,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         $0.backgroundColor = .som.v2.white
         
         $0.contentInset.top = 0
-        $0.contentInset.bottom = 54 + 16
+        $0.contentInset.bottom = 88 + 16
         
         $0.contentInsetAdjustmentBehavior = .never
         
