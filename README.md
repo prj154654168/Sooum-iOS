@@ -111,7 +111,7 @@ final class MockManagerProviderContainer: ManagerProviderType {
 ```
 
 ### 3. 단방향 데이터 흐름 아키텍처
-을 활용하여 단방향 데이터 흐름 아키텍처를 구현했습니다. 이 아키텍처는 앞서 설명한 의존성 주입 기반 관리자 패턴과 결합하여 예측 가능하고 테스트하기 쉬운 코드베이스를 구축합니다.
+단방향 데이터 흐름 아키텍처는 앞서 설명한 의존성 주입 기반 관리자 패턴과 결합하여 예측 가능하고 테스트하기 쉬운 코드베이스를 구축합니다.
 
 ReactorKit의 가장 큰 특징은 데이터가 한 방향으로만 흐른다는 것입니다:
 ```
@@ -154,6 +154,100 @@ class SomeViewReactor: Reactor {
 }
 ```
 
+# 25.12.11 변경사항
+
+### 4. 클린 아키텍처 도입
+클린 아키텍처를 도입하기에 앞서 레파지토리 패턴을 도입해 데이터 접근 계층을 분리하고, 비즈니스 로직의 독립성을 보장합니다. 이 구조로 인해 테스트하기 쉬운 구조를 설계했습니다.
+
+레파지토리 패턴의 핵심 구조는 구체적인 구현 방식에 의존하지 않도록 추상화하는 것입니다. 이 구조는 데이터 접근 변경하더라도 상위 계층의 코드 수정을 최소화하도록 보장합니다.
+
+레파지토리의 프로토콜은 도메인 계층에 정의되어, 비즈니스 로직이 요구하는 데이터 접근 인터페이스를 정의합니다.
+```
+protocol AuthRepository {
+    
+    func signUp(nickname: String, profileImageName: String?) -> Observable<Bool>
+    func login() -> Observable<Bool>
+    func withdraw(reaseon: String) -> Observable<Int>
+
+    ...
+}
+```
+
+레파지토리의 구현체는 데이터 계증에서 구현하며, 하나 이상의 데이터 소스를 조합하여 데이터를 제공합니다.
+```
+class AuthRepositoryImpl: AuthRepository {
+    
+    private let remoteDataSource: AuthRemoteDataSource
+    private let localDataSource: AuthLocalDataSource
+    
+    init(remoteDataSource: AuthRemoteDataSource, localDataSource: AuthLocalDataSource) {
+        self.remoteDataSource = remoteDataSource
+        self.localDataSource = localDataSource
+    }
+    
+    func signUp(nickname: String, profileImageName: String?) -> Observable<Bool> {
+        
+        self.remoteDataSource.signUp(nickname: nickname, profileImageName: profileImageName)
+    }
+    
+    func login() -> Observable<Bool> {
+        
+        self.remoteDataSource.login()
+    }
+    
+    func withdraw(reaseon: String) -> Observable<Int> {
+        
+        self.remoteDataSource.withdraw(reaseon: reaseon)
+    }
+
+    ...
+}
+```
+
+UseCase는 앱의 특정 기능을 캡슐화 합니다. ReactorKit에서 Reactor는 UseCase만 호출하며, 복잡한 비즈니스 로직을 UseCase에 위임하여 책임을 가볍게 만듭니다.
+```
+protocol FetchTagUseCase: AnyObject {
+    
+    ...
+
+    func isFavorites(with tagInfo: FavoriteTagInfo) -> Observable<Bool>
+    func ranked() -> Observable<[TagInfo]>
+}
+
+final class FetchTagUseCaseImpl: FetchTagUseCase {
+    
+    private let repository: TagRepository
+    
+    init(repository: TagRepository) {
+        self.repository = repository
+    }
+
+    ...
+    
+    func isFavorites(with tagInfo: FavoriteTagInfo) -> Observable<Bool> {
+        
+        return self.favorites().map { $0.contains(tagInfo) }
+    }
+    
+    // 인기 태그는 최소 1개 이상일 때 표시
+    // 인기 태그는 최대 10개까지 표시
+    func ranked() -> Observable<[TagInfo]> {
+        
+        return self.repository.ranked()
+            .map(\.tagInfos)
+            .map { $0.filter { $0.usageCnt > 0 } }
+            // 중복 제거
+            // .map { Array(Set($0)) }
+            // 태그 갯수로 정렬
+            // .map { $0.sorted(by: { $0.usageCnt > $1.usageCnt }) }
+            .map { Array($0.prefix(10)) }
+    }
+}
+```
+
+비즈니스 로직에서 사용하는 모델과 데이터 통신을 위한 모델을 분리합니다.
+ - 도메인 모델: 순수한 비즈니스 로직만 포함하며 데이터 소스 구현에 독립적입니다.
+ - 데이터 모델: API 응답 구조 또는 로컬 DB 스키마에 맞게 정의합니다.
 
 # 향후 개선할 사항
 1. ReactorKit 기반 비즈니스 로직의 단위 테스트 추가
@@ -164,14 +258,14 @@ class SomeViewReactor: Reactor {
       - 액션-뮤테이션-상태 흐름 검증: 단방향 데이터 흐름의 각 단계가 올바르게 작동하는지 검증
       - 테스트 커버리지 확대: 모든 비즈니스 로직 컴포넌트에 대한 테스트 커버리지 80% 이상 달성
   
-2. 클린 아키텍처의 레포지토리 패턴 적용
+2. ~~클린 아키텍처의 레포지토리 패턴 적용~~
 
-   현재 프로젝트는 매니저들과 의존성 주입을 통해 관리하고 있지만, 데이터 접근 계층을 더욱 체계화하기 위해 클린 아키텍처의 레포지토리 패턴을 도입할 계획입니다:
+   ~~현재 프로젝트는 매니저들과 의존성 주입을 통해 관리하고 있지만, 데이터 접근 계층을 더욱 체계화하기 위해 클린 아키텍처의 레포지토리 패턴을 도입할 계획입니다:~~
 
-     - 데이터 레이어 추상화: 데이터 소스(로컬 저장소, 원격 API 등)에 상관없이 일관된 인터페이스를 제공하는 레포지토리 계층 도입
-     - 도메인 모델과 데이터 모델 분리: 비즈니스 로직에서 사용하는 도메인 모델과 데이터 저장/통신에 사용하는 데이터 모델을 명확히 분리
-     - UseCase 패턴 도입: 비즈니스 로직을 캡슐화하는 UseCase 클래스 구현으로 리액터의 책임을 더욱 가볍게 만듦
-     - 데이터 소스 전략 패턴: 네트워크, 로컬 간의 전환을 자동화하는 전략 패턴 구현
+     - ~~데이터 레이어 추상화: 데이터 소스(로컬 저장소, 원격 API 등)에 상관없이 일관된 인터페이스를 제공하는 레포지토리 계층 도입~~
+     - ~~도메인 모델과 데이터 모델 분리: 비즈니스 로직에서 사용하는 도메인 모델과 데이터 저장/통신에 사용하는 데이터 모델을 명확히 분리~~
+     - ~~UseCase 패턴 도입: 비즈니스 로직을 캡슐화하는 UseCase 클래스 구현으로 리액터의 책임을 더욱 가볍게 만듦~~
+     - ~~데이터 소스 전략 패턴: 네트워크, 로컬 간의 전환을 자동화하는 전략 패턴 구현~~
 
 # Tech Stacks
 <div align="leading">
