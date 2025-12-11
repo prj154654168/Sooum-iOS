@@ -19,7 +19,7 @@ class DetailViewReactor: Reactor {
         case updateLike(Bool)
         case updateReport(Bool)
         case willPushToWrite
-        case resetPushState
+        case cleanup
     }
     
     enum Mutation {
@@ -156,7 +156,7 @@ class DetailViewReactor: Reactor {
                     .just(.updateIsDeleted(isDeleted))
                 ])
             }
-        case .resetPushState:
+        case .cleanup:
             
             return .just(.willPushToWrite(nil))
         }

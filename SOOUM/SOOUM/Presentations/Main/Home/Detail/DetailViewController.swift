@@ -358,13 +358,13 @@ class DetailViewController: BaseNavigationViewController, View {
                     writeCardViewController,
                     animated: true
                  ) { _ in
-                     reactor.action.onNext(.resetPushState)
+                     reactor.action.onNext(.cleanup)
                  }
              }
              .disposed(by: self.disposeBag)
          willPushEnabled
              .filter { $0 }
-             .map { _ in Reactor.Action.resetPushState }
+             .map { _ in Reactor.Action.cleanup }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
          
