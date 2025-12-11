@@ -362,7 +362,7 @@ extension SettingsViewController {
             title: Text.cancelActionButtonTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     reactor.action.onNext(.resetState)
                 }
             }
@@ -372,7 +372,7 @@ extension SettingsViewController {
             title: Text.resignTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     let resignViewController = ResignViewController()
                     resignViewController.reactor = reactor.reactorForResign()
                     self.navigationPush(

@@ -196,7 +196,7 @@ private extension ReportViewController {
             title: Text.confirmButtonTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
                     self.navigationPop()
                 }

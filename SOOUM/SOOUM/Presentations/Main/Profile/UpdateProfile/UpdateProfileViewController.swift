@@ -334,14 +334,14 @@ private extension UpdateProfileViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         let settingAction = SOMDialogAction(
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     
                     let application = UIApplication.shared
                     let openSettingsURLString: String = UIApplication.openSettingsURLString
@@ -367,7 +367,7 @@ private extension UpdateProfileViewController {
                 title: Text.inappositeDialogConfirmButtonTitle,
                 style: .primary,
                 action: {
-                    UIApplication.topViewController?.dismiss(animated: true) {
+                    SOMDialogViewController.dismiss {
                         reactor.action.onNext(.setDefaultImage)
                     }
                 }

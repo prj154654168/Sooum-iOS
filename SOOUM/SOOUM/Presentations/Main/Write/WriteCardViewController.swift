@@ -590,21 +590,22 @@ extension WriteCardViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         let settingAction = SOMDialogAction(
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                let application = UIApplication.shared
-                let openSettingsURLString: String = UIApplication.openSettingsURLString
-                if let settingsURL = URL(string: openSettingsURLString),
-                   application.canOpenURL(settingsURL) {
-                    application.open(settingsURL)
+                SOMDialogViewController.dismiss {
+                    
+                    let application = UIApplication.shared
+                    let openSettingsURLString: String = UIApplication.openSettingsURLString
+                    if let settingsURL = URL(string: openSettingsURLString),
+                       application.canOpenURL(settingsURL) {
+                        application.open(settingsURL)
+                    }
                 }
-                
-                UIApplication.topViewController?.dismiss(animated: true)
             }
         )
         
@@ -621,21 +622,22 @@ extension WriteCardViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         let settingAction = SOMDialogAction(
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                let application = UIApplication.shared
-                let openSettingsURLString: String = UIApplication.openSettingsURLString
-                if let settingsURL = URL(string: openSettingsURLString),
-                   application.canOpenURL(settingsURL) {
-                    application.open(settingsURL)
+                SOMDialogViewController.dismiss {
+                    
+                    let application = UIApplication.shared
+                    let openSettingsURLString: String = UIApplication.openSettingsURLString
+                    if let settingsURL = URL(string: openSettingsURLString),
+                       application.canOpenURL(settingsURL) {
+                        application.open(settingsURL)
+                    }
                 }
-                
-                UIApplication.topViewController?.dismiss(animated: true)
             }
         )
         
@@ -653,7 +655,7 @@ extension WriteCardViewController {
                 title: Text.confirmActionTitle,
                 style: .primary,
                 action: {
-                    UIApplication.topViewController?.dismiss(animated: true)
+                    SOMDialogViewController.dismiss()
                 }
             )
         ]
@@ -679,7 +681,7 @@ extension WriteCardViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     self.navigationPop()
                 }
             }
@@ -699,7 +701,7 @@ extension WriteCardViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
                         self?.navigationPopToRoot()

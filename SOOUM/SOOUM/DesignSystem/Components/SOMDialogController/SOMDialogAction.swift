@@ -7,8 +7,7 @@
 
 import UIKit
 
-
-class SOMDialogAction {
+final class SOMDialogAction {
     
     enum Style {
         case primary

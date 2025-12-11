@@ -334,14 +334,14 @@ class ProfileViewController: BaseNavigationViewController, View {
                     title: Text.cancelActionTitle,
                     style: .gray,
                     action: {
-                        UIApplication.topViewController?.dismiss(animated: true)
+                        SOMDialogViewController.dismiss()
                     }
                 )
                 let confirmAction = SOMDialogAction(
                     title: Text.blockActionTitle,
                     style: .red,
                     action: {
-                        UIApplication.topViewController?.dismiss(animated: true) {
+                        SOMDialogViewController.dismiss {
                             
                             reactor.action.onNext(.block)
                         }
@@ -474,14 +474,14 @@ private extension ProfileViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         let deleteAction = SOMDialogAction(
             title: Text.deleteActionTitle,
             style: .red,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     self.reactor?.action.onNext(.follow)
                 }
             }
@@ -501,7 +501,7 @@ private extension ProfileViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         
@@ -509,7 +509,7 @@ private extension ProfileViewController {
             title: Text.unBlockActionTitle,
             style: .red,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     self.reactor?.action.onNext(.block)
                 }
             }

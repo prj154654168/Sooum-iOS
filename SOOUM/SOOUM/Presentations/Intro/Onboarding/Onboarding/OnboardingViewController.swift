@@ -259,7 +259,7 @@ extension OnboardingViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         
@@ -280,7 +280,7 @@ extension OnboardingViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         

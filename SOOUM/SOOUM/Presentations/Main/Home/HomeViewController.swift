@@ -456,7 +456,7 @@ private extension HomeViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     let prevIdx = self.stickyTabBar.previousIndex
                     let currInx = self.stickyTabBar.selectedIndex
                     
@@ -468,7 +468,7 @@ private extension HomeViewController {
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     let application = UIApplication.shared
                     let openSettingsURLString: String = UIApplication.openSettingsURLString
                     if let settingsURL = URL(string: openSettingsURLString),
@@ -493,7 +493,7 @@ private extension HomeViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     self.reactor?.action.onNext(.landing)
                     self.reactor?.action.onNext(.resetPushState)
                 }

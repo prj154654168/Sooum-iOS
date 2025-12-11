@@ -305,7 +305,7 @@ private extension MainTabBarController {
             title: Constants.Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     self.reactor?.action.onNext(.resetCouldPosting)
                 }
             }

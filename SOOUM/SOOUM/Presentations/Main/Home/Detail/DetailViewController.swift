@@ -672,14 +672,14 @@ private extension DetailViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
          )
          let blockAction = SOMDialogAction(
             title: Text.blockButtonFloatActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     completion?()
                 }
             }
@@ -701,14 +701,14 @@ private extension DetailViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
          )
          let deleteAction = SOMDialogAction(
             title: Text.deleteButtonFloatActionTitle,
             style: .red,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     
                     reactor.action.onNext(.delete)
                 }
@@ -729,7 +729,7 @@ private extension DetailViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     completion?()
                 }
             }

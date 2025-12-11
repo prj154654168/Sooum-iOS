@@ -209,7 +209,7 @@ extension BlockUsersViewController {
             title: Text.cancelActionButtonTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         
@@ -217,7 +217,7 @@ extension BlockUsersViewController {
             title: Text.unBlockActionButtonTitle,
             style: .red,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     self.reactor?.action.onNext(.cancelBlock(userId: userId))
                 }
             }

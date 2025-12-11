@@ -240,7 +240,7 @@ extension EnterMemberTransferViewController {
             title: Text.confirmButtonTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         
@@ -258,7 +258,7 @@ extension EnterMemberTransferViewController {
             title: Text.confirmButtonTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) { completion() }
+                SOMDialogViewController.dismiss { completion() }
             }
         )
         

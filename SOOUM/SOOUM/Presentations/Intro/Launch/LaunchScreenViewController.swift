@@ -77,7 +77,7 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
                     title: Text.updateActionTitle,
                     style: .primary,
                     action: {
-                        UIApplication.topViewController?.dismiss(animated: true) {
+                        SOMDialogViewController.dismiss {
                             #if DEVELOP
                             // 개발 버전일 때 testFlight로 전환
                             let strUrl = "\(Text.testFlightStrUrl)/\(Info.appId)"
