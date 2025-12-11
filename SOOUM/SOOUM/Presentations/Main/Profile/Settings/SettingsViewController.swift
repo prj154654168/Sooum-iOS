@@ -363,7 +363,7 @@ extension SettingsViewController {
             style: .gray,
             action: {
                 SOMDialogViewController.dismiss {
-                    reactor.action.onNext(.resetState)
+                    reactor.action.onNext(.cleanup)
                 }
             }
         )
@@ -379,7 +379,7 @@ extension SettingsViewController {
                         resignViewController,
                         animated: true
                     ) { _ in
-                        reactor.action.onNext(.resetState)
+                        reactor.action.onNext(.cleanup)
                     }
                 }
             }
