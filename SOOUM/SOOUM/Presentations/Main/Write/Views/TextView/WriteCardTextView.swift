@@ -24,7 +24,7 @@ class WriteCardTextView: UIView {
     private lazy var backgroundImageView = UIImageView().then {
         $0.backgroundColor = .clear
         $0.contentMode = .scaleAspectFill
-        $0.layer.borderColor = UIColor.som.v2.white.cgColor
+        $0.layer.borderColor = UIColor.som.v2.gray100.cgColor
         $0.layer.borderWidth = 1
         $0.layer.cornerRadius = 16
         $0.clipsToBounds = true
@@ -50,10 +50,13 @@ class WriteCardTextView: UIView {
         
         $0.textContainerInset = .init(top: 20, left: 24, bottom: 20, right: 24)
         $0.textContainer.lineFragmentPadding = 0
+        $0.textContainer.lineBreakMode = .byCharWrapping
         
         $0.scrollIndicatorInsets = .init(top: 20, left: 0, bottom: 20, right: 0)
         $0.indicatorStyle = .white
         $0.isScrollEnabled = false
+        
+        $0.showsHorizontalScrollIndicator = false
         
         $0.returnKeyType = .default
         
@@ -108,8 +111,13 @@ class WriteCardTextView: UIView {
     
     var typography: Typography = .som.v2.body1 {
         didSet {
-            self.placeholder = self.placeholderLabel.text
-            self.text = self.textView.text
+            self.textView.typography = self.typography
+            self.placeholderLabel.typography = self.typography
+            
+            let limit = self.typography.lineHeight * 8 + 20 * 2
+            self.backgroundDimView.snp.updateConstraints {
+                $0.height.lessThanOrEqualTo(limit)
+            }
         }
     }
     
@@ -117,11 +125,6 @@ class WriteCardTextView: UIView {
     // MARK: Delegate
     
     weak var delegate: WritrCardTextViewDelegate?
-    
-    
-    // MARK: Constraint
-    
-    private var textViewBackgroundHeightConstraint: Constraint?
     
     
     // MARK: Override func
@@ -166,7 +169,8 @@ class WriteCardTextView: UIView {
             $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(32)
             $0.trailing.equalToSuperview().offset(-32)
-            self.textViewBackgroundHeightConstraint = $0.height.equalTo(self.typography.lineHeight + 20 * 2).constraint
+            let limit = self.typography.lineHeight * 8 + 20 * 2
+            $0.height.lessThanOrEqualTo(limit)
         }
         
         self.backgroundDimView.addSubview(self.textView)
@@ -180,30 +184,23 @@ class WriteCardTextView: UIView {
         }
     }
     
-    private func updateTextContainerInsetAndHeight(_ textView: UITextView) {
+    private func updateTextContainerHeightLimit(_ textView: UITextView) {
         
-        var attributes = self.typography.attributes
-        attributes[.font] = self.typography.font
         let attributedText = NSAttributedString(
             string: textView.text,
-            attributes: attributes
+            attributes: self.typography.attributes
         )
         
         /// width 계산 시 textContainerInset 고려
         let textSize: CGSize = .init(width: textView.bounds.width - 24 * 2, height: .greatestFiniteMagnitude)
-        var boundingHeight = attributedText.boundingRect(
+        let boundingHeight = attributedText.boundingRect(
             with: textSize,
             options: [.usesLineFragmentOrigin, .usesFontLeading],
             context: nil
         ).height
-        /// 자연스러운 줄바꿈을 위해 offset 추가
-        boundingHeight += 1.0
         
         let lines: CGFloat = boundingHeight / self.typography.lineHeight
         let isScrollEnabled: Bool = lines > 8
-        let newHeight: CGFloat = isScrollEnabled ? self.typography.lineHeight * 8 : boundingHeight
-        let updatedHeight: CGFloat = max(newHeight, self.typography.lineHeight)
-        self.textViewBackgroundHeightConstraint?.update(offset: updatedHeight + 20 * 2)
         textView.isScrollEnabled = isScrollEnabled
     }
 }
@@ -225,7 +222,7 @@ extension WriteCardTextView: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        self.updateTextContainerInsetAndHeight(textView)
+        self.updateTextContainerHeightLimit(textView)
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

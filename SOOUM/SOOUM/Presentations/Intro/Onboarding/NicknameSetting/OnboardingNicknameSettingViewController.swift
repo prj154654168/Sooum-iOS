@@ -97,6 +97,11 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
     func bind(reactor: OnboardingNicknameSettingViewReactor) {
         
         // Action
+        self.rx.viewDidLoad
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
         let nickname = self.nicknameTextField.textField.rx.text.orEmpty.distinctUntilChanged().share()
         nickname
             .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
@@ -104,12 +109,10 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.rx.viewDidLoad
-            .map { _ in Reactor.Action.landing }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
-        self.nextButton.rx.tap
+        self.nextButton.rx.throttleTap
+            .withLatestFrom(reactor.state.map(\.isProcessing))
+            .filter { $0 == false }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let profileImageSettingVC = OnboardingProfileImageSettingViewController()
                 profileImageSettingVC.reactor = reactor.reactorForProfileImage()
@@ -120,6 +123,7 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         // State
         reactor.state.map(\.nickname)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, randomText in
                 object.nicknameTextField.text = randomText
                 object.nicknameTextField.textField.sendActions(for: .editingChanged)
@@ -128,11 +132,13 @@ class OnboardingNicknameSettingViewController: BaseNavigationViewController, Vie
         
         reactor.state.map(\.isValid)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.nextButton.rx.isEnabled)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.errorMessage)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, errorMessage in
                 object.nicknameTextField.guideMessage = errorMessage == nil ? Text.guideMessage : errorMessage
                 object.nicknameTextField.hasError = errorMessage != nil

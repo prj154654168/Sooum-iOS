@@ -40,10 +40,4 @@ class TagRemoteDataSourceImpl: TagRemoteDataSource {
         let request: TagRequest = .ranked
         return self.provider.networkManager.fetch(TagInfoResponse.self, request: request)
     }
-    
-    func tagCards(tagId: String, lastId: String?) -> Observable<TagCardInfoResponse> {
-        
-        let requset: TagRequest = .tagCards(tagId: tagId, lastId: lastId)
-        return self.provider.networkManager.fetch(TagCardInfoResponse.self, request: requset)
-    }
 }

@@ -48,7 +48,7 @@ class TagViewController: BaseNavigationViewController, View {
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
         
-        $0.contentInset.bottom = 54 + 16
+        $0.contentInsetAdjustmentBehavior = .never
         
         $0.refreshControl = SOMRefreshControl()
         
@@ -125,7 +125,7 @@ class TagViewController: BaseNavigationViewController, View {
         super.viewDidLoad()
         
         // 제스처 뒤로가기를 위한 델리게이트 설정
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        self.parent?.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         NotificationCenter.default.addObserver(
             self,
@@ -133,8 +133,6 @@ class TagViewController: BaseNavigationViewController, View {
             name: .reloadFavoriteTagData,
             object: nil
         )
-        
-        self.favoriteTagHeaderView.title = (UserDefaults.standard.nickname ?? "") + Text.favoriteTagHeaderTitle
     }
     
     
@@ -142,18 +140,11 @@ class TagViewController: BaseNavigationViewController, View {
     
     func bind(reactor: TagViewReactor) {
         
-        // tabBar 표시
-        self.rx.viewDidAppear
-            .subscribe(with: self) { object, _ in
-                object.hidesBottomBarWhenPushed = false
-            }
-            .disposed(by: self.disposeBag)
-        
         self.searchViewButtonView.rx.didTap
             .subscribe(with: self) { object, _ in
                 let tagSearchViewController = TagSearchViewController()
                 tagSearchViewController.reactor = reactor.reactorForSearch()
-                object.navigationPush(tagSearchViewController, animated: true, bottomBarHidden: true)
+                object.parent?.navigationPush(tagSearchViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -165,12 +156,12 @@ class TagViewController: BaseNavigationViewController, View {
                     title: model.text,
                     isFavorite: model.isFavorite
                 )
-                object.navigationPush(tagCollectViewController, animated: true, bottomBarHidden: true)
+                object.parent?.navigationPush(tagCollectViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
         self.popularTagsView.backgroundDidTap
-            .throttle(.seconds(3), scheduler: MainScheduler.instance)
+            .throttle(.seconds(2), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, model in
                 let tagCollectViewController = TagCollectViewController()
                 tagCollectViewController.reactor = reactor.reactorForCollect(
@@ -178,7 +169,7 @@ class TagViewController: BaseNavigationViewController, View {
                     title: model.name,
                     isFavorite: reactor.currentState.favoriteTags.contains(where: { $0.id == model.id })
                 )
-                object.navigationPush(tagCollectViewController, animated: true, bottomBarHidden: true)
+                object.parent?.navigationPush(tagCollectViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -221,6 +212,8 @@ class TagViewController: BaseNavigationViewController, View {
         .observe(on: MainScheduler.asyncInstance)
         .subscribe(with: self) { object, displayStats in
             
+            object.favoriteTagHeaderView.title = (UserDefaults.standard.nickname ?? "") + Text.favoriteTagHeaderTitle
+            
             guard let favoriteTags = displayStats.favoriteTags else { return }
             
             object.favoriteTagsView.setModels(favoriteTags)
@@ -237,7 +230,7 @@ class TagViewController: BaseNavigationViewController, View {
         let isUpdatedWithInfo = reactor.pulse(\.$isUpdatedWithInfo).filterNil()
         isUpdatedWithInfo
             .filter { $0.isUpdated }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isUpdatedWithInfo in
                 
                 let message = isUpdatedWithInfo.model.isFavorite ? Text.addToastMessage : Text.deleteToastMessage
@@ -254,7 +247,7 @@ class TagViewController: BaseNavigationViewController, View {
         
         isUpdatedWithInfo
             .filter { $0.isUpdated == false }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isUpdatedWithInfo in
                 
                 let actions = [
@@ -303,7 +296,13 @@ extension TagViewController: UIScrollViewDelegate {
         let offset = scrollView.contentOffset.y
         
         // 당겨서 새로고침
-        if self.isRefreshEnabled, offset < self.initialOffset {
+        if self.isRefreshEnabled, offset < self.initialOffset,
+           let refreshControl = self.scrollView.refreshControl as? SOMRefreshControl {
+           
+           refreshControl.updateProgress(
+               offset: scrollView.contentOffset.y,
+               topInset: scrollView.adjustedContentInset.top
+           )
             
             let pulledOffset = self.initialOffset - offset
             /// refreshControl heigt + top padding

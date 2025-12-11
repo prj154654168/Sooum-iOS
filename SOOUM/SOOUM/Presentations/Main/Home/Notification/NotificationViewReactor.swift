@@ -42,10 +42,12 @@ class NotificationViewReactor: Reactor {
     
     private let dependencies: AppDIContainerable
     private let notificationUseCase: NotificationUseCase
+    private let fetchNoticeUseCase: FetchNoticeUseCase
     
     init(dependencies: AppDIContainerable, displayType: DisplayType = .activity(.unread)) {
         self.dependencies = dependencies
         self.notificationUseCase = dependencies.rootContainer.resolve(NotificationUseCase.self)
+        self.fetchNoticeUseCase = dependencies.rootContainer.resolve(FetchNoticeUseCase.self)
         
         self.initialState = State(
           displayType: displayType,
@@ -68,7 +70,7 @@ class NotificationViewReactor: Reactor {
                 )
                     .map(Mutation.notifications)
                     .catch(self.catchClosureNotis),
-                self.notificationUseCase.notices(lastId: nil, size: 10, requestType: .notification)
+                self.fetchNoticeUseCase.notices(lastId: nil, size: 10, requestType: .notification)
                     .map(Mutation.notices)
                     .catch(self.catchClosureNotices)
             ])
@@ -90,7 +92,7 @@ class NotificationViewReactor: Reactor {
             case .notice:
                 return .concat([
                     .just(.updateIsRefreshing(true)),
-                    self.notificationUseCase.notices(lastId: nil, size: 10, requestType: .notification)
+                    self.fetchNoticeUseCase.notices(lastId: nil, size: 10, requestType: .notification)
                         .map(Mutation.notices)
                         .catch(self.catchClosureNotices),
                     .just(.updateIsRefreshing(false))
@@ -109,7 +111,7 @@ class NotificationViewReactor: Reactor {
                 ])
             case .notice:
                 return .concat([
-                    self.notificationUseCase.notices(lastId: lastId, size: 10, requestType: .notification)
+                    self.fetchNoticeUseCase.notices(lastId: lastId, size: 10, requestType: .notification)
                         .map(Mutation.moreNotices)
                         .catch(self.catchClosureNoticesMore)
                 ])
@@ -263,8 +265,8 @@ extension NotificationViewReactor {
 
 extension NotificationViewReactor {
     
-    func reactorForDetail(entranceType: EntranceCardType, with id: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, entranceType, type: .navi, with: id)
+    func reactorForDetail(with id: String) -> DetailViewReactor {
+        DetailViewReactor(dependencies: self.dependencies, with: id)
     }
     
     func reactorForProfile(with userId: String) -> ProfileViewReactor {

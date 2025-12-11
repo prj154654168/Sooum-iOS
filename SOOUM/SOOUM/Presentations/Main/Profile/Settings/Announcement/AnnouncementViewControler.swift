@@ -110,6 +110,7 @@ class AnnouncementViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.announcements)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, announcements in
                 object.announcements = announcements
                 
@@ -173,7 +174,13 @@ extension AnnouncementViewController: UITableViewDelegate {
         let offset = scrollView.contentOffset.y
         
         // 당겨서 새로고침
-        if self.isRefreshEnabled, offset < self.initialOffset {
+        if self.isRefreshEnabled, offset < self.initialOffset,
+           let refreshControl = self.tableView.refreshControl as? SOMRefreshControl {
+           
+           refreshControl.updateProgress(
+               offset: scrollView.contentOffset.y,
+               topInset: scrollView.adjustedContentInset.top
+           )
             
             let pulledOffset = self.initialOffset - offset
             /// refreshControl heigt + top padding

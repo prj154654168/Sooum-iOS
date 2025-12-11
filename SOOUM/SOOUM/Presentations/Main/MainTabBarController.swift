@@ -15,7 +15,6 @@ import RxSwift
 import SnapKit
 import Then
 
-
 class MainTabBarController: SOMTabBarController, View {
     
     enum Constants {
@@ -142,7 +141,7 @@ class MainTabBarController: SOMTabBarController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.willPushWriteCard
+        self.willPushWriteCard.throttle(.seconds(3), scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.postingPermission }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -154,49 +153,30 @@ class MainTabBarController: SOMTabBarController, View {
             .subscribe(with: self) { object, profileInfo in
                 
                 switch reactor.currentState.entranceType {
-                case .pushToFeedDetail:
-                    
-                    guard let navigationController = object.viewControllers[0] as? UINavigationController,
-                          let homeViewController = navigationController.viewControllers.first as? HomeViewController,
-                          let targetCardId = reactor.pushInfo?.targetCardId
-                    else { return }
+                case .pushToDetail:
                     
                     object.didSelectedIndex(0)
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
-                        object?.setupDetailViewController(
-                            homeViewController,
-                            with: reactor.reactorForDetail(targetCardId, type: .feed),
-                            completion: { reactor.action.onNext(.resetEntrance) }
-                        )
-                    }
-                case .pushToCommentDetail:
-                    
-                    guard let navigationController = object.viewControllers[0] as? UINavigationController,
-                          let homeViewController = navigationController.viewControllers.first as? HomeViewController,
+                    guard let selectedViewController = object.selectedViewController,
                           let targetCardId = reactor.pushInfo?.targetCardId
                     else { return }
                     
-                    object.didSelectedIndex(0)
-                    
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.setupDetailViewController(
-                            homeViewController,
-                            with: reactor.reactorForDetail(targetCardId, type: .comment),
+                            selectedViewController,
+                            with: reactor.reactorForDetail(targetCardId),
                             completion: { reactor.action.onNext(.resetEntrance) }
                         )
                     }
                 case .pushToNotification:
                     
-                    guard let navigationController = object.viewControllers[0] as? UINavigationController,
-                          let homeViewController = navigationController.viewControllers.first as? HomeViewController
-                    else { return }
-                    
                     object.didSelectedIndex(0)
+                    
+                    guard let selectedViewController = object.selectedViewController else { return }
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.setupNotificationViewController(
-                            homeViewController,
+                            selectedViewController,
                             with: reactor.reactorForNoti(),
                             completion: { reactor.action.onNext(.resetEntrance) }
                         )
@@ -205,15 +185,14 @@ class MainTabBarController: SOMTabBarController, View {
                     
                     object.didSelectedIndex(2)
                     
-                    guard let navigationController = object.viewControllers[2] as? UINavigationController,
-                          let tagViewController = navigationController.viewControllers.first as? TagViewController,
+                    guard let selectedViewController = object.selectedViewController,
                           let targetCardId = reactor.pushInfo?.targetCardId
                     else { return }
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.setupTagDetailViewController(
-                            tagViewController,
-                            with: reactor.reactorForDetail(targetCardId, type: .feed),
+                            selectedViewController,
+                            with: reactor.reactorForDetail(targetCardId),
                             completion: { reactor.action.onNext(.resetEntrance) }
                         )
                     }
@@ -221,13 +200,11 @@ class MainTabBarController: SOMTabBarController, View {
                     
                     object.didSelectedIndex(3)
                     
-                    guard let navigationController = object.viewControllers[3] as? UINavigationController,
-                          let profileViewController = navigationController.viewControllers.first as? ProfileViewController
-                    else { return }
+                    guard let selectedViewController = object.selectedViewController else { return }
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.setupFollowViewController(
-                            profileViewController,
+                            selectedViewController,
                             with: reactor.reactorForFollow(nickname: profileInfo.nickname, with: profileInfo.userId),
                             completion: { reactor.action.onNext(.resetEntrance) }
                         )
@@ -238,8 +215,8 @@ class MainTabBarController: SOMTabBarController, View {
                         let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
                     else { return }
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                        object.setupLaunchScreenViewController(
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
+                        object?.setupLaunchScreenViewController(
                             window,
                             with: reactor.reactorForLaunchScreen()
                         )
@@ -251,9 +228,10 @@ class MainTabBarController: SOMTabBarController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let couldPosting = reactor.state.map(\.couldPosting).distinctUntilChanged().filterNil()
+        let couldPosting = reactor.pulse(\.$couldPosting).distinctUntilChanged().filterNil()
         couldPosting
             .filter { $0.isBaned == false }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 
                 object.hasFirstLaunchGuide = false
@@ -273,6 +251,7 @@ class MainTabBarController: SOMTabBarController, View {
         
         couldPosting
             .filter { $0.isBaned }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, postingPermission in
                 
                 let banEndGapToDays = postingPermission.expiredAt?.infoReadableTimeTakenFromThisForBanEndPosting(to: Date().toKorea())
@@ -339,23 +318,6 @@ private extension MainTabBarController {
             actions: [confirmAction]
         )
     }
-    
-    func showPrepare() {
-        
-        let confirmAction = SOMDialogAction(
-            title: "확인",
-            style: .primary,
-            action: {
-                UIApplication.topViewController?.dismiss(animated: true)
-            }
-        )
-        
-        SOMDialogViewController.show(
-            title: "서비스 준비중입니다.",
-            message: "추후 개발 완료되면 사용가능합니다.",
-            actions: [confirmAction]
-        )
-    }
 }
 
 
@@ -364,65 +326,61 @@ private extension MainTabBarController {
 private extension MainTabBarController {
     
     func setupDetailViewController(
-        _ homeViewController: HomeViewController,
+        _ selectedViewController: UIViewController,
         with reactor: DetailViewReactor,
         completion: @escaping (() -> Void)
     ) {
         
         let detailViewController = DetailViewController()
         detailViewController.reactor = reactor
-        homeViewController.navigationPush(
+        selectedViewController.navigationPush(
             detailViewController,
             animated: true,
-            bottomBarHidden: true,
             completion: { _ in completion() }
         )
     }
     
     func setupNotificationViewController(
-        _ homeViewController: HomeViewController,
+        _ selectedViewController: UIViewController,
         with reactor: NotificationViewReactor,
         completion: @escaping (() -> Void)
     ) {
         
         let notificationViewController = NotificationViewController()
         notificationViewController.reactor = reactor
-        homeViewController.navigationPush(
+        selectedViewController.navigationPush(
             notificationViewController,
             animated: true,
-            bottomBarHidden: true,
             completion: { _ in completion() }
         )
     }
     
     func setupTagDetailViewController(
-        _ tagViewController: TagViewController,
+        _ selectedViewController: UIViewController,
         with reactor: DetailViewReactor,
         completion: @escaping (() -> Void)
     ) {
         
         let detailViewController = DetailViewController()
         detailViewController.reactor = reactor
-        tagViewController.navigationPush(
+        selectedViewController.navigationPush(
             detailViewController,
             animated: true,
-            bottomBarHidden: true,
             completion: { _ in completion() }
         )
     }
     
     func setupFollowViewController(
-        _ profileViewController: ProfileViewController,
+        _ selectedViewController: UIViewController,
         with reactor: FollowViewReactor,
         completion: @escaping (() -> Void)
     ) {
         
         let followViewController = FollowViewController()
         followViewController.reactor = reactor
-        profileViewController.navigationPush(
+        selectedViewController.navigationPush(
             followViewController,
             animated: true,
-            bottomBarHidden: true,
             completion: { _ in completion() }
         )
     }

@@ -75,8 +75,7 @@ class ProfileViewController: BaseNavigationViewController, View {
     ).then {
         $0.backgroundColor = .som.v2.white
         
-        $0.contentInset.top = 0
-        $0.contentInset.bottom = 54 + 16
+        $0.contentInset = .zero
         
         $0.contentInsetAdjustmentBehavior = .never
         
@@ -121,7 +120,20 @@ class ProfileViewController: BaseNavigationViewController, View {
                 
                 cell.cardContainerDidTap
                     .subscribe(with: self) { object, _ in
-                        object.collectionView.setContentOffset(CGPoint(x: 0, y: 84 + 76 + 48 + 16), animated: true)
+                        switch reactor.currentState.cardType {
+                        case .feed:
+                            guard reactor.currentState.feedCardInfos.isEmpty == false else { return }
+                            object.collectionView.setContentOffset(
+                                CGPoint(x: 0, y: 84 + 76 + 48 + 16),
+                                animated: true
+                            )
+                        case .comment:
+                            guard reactor.currentState.commentCardInfos.isEmpty == false else { return }
+                            object.collectionView.setContentOffset(
+                                CGPoint(x: 0, y: 84 + 76 + 48 + 16),
+                                animated: true
+                            )
+                        }
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -134,7 +146,8 @@ class ProfileViewController: BaseNavigationViewController, View {
                             nickname: profileInfo.nickname,
                             with: profileInfo.userId
                         )
-                        object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
+                        let base = profileInfo.isAlreadyFollowing == nil ? object.parent : object
+                        base?.navigationPush(followViewController, animated: true)
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -147,7 +160,8 @@ class ProfileViewController: BaseNavigationViewController, View {
                             nickname: profileInfo.nickname,
                             with: profileInfo.userId
                         )
-                        object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
+                        let base = profileInfo.isAlreadyFollowing == nil ? object.parent : object
+                        base?.navigationPush(followViewController, animated: true)
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -160,9 +174,10 @@ class ProfileViewController: BaseNavigationViewController, View {
                             let updateProfileViewController = UpdateProfileViewController()
                             updateProfileViewController.reactor = reactor.reactorForUpdate(
                                 nickname: profileInfo.nickname,
-                                image: profileImage
+                                image: profileImage,
+                                imageName: profileInfo.profileImgName
                             )
-                            object?.navigationPush(updateProfileViewController, animated: true, bottomBarHidden: true)
+                            object?.parent?.navigationPush(updateProfileViewController, animated: true)
                         }
                     }
                     .disposed(by: cell.disposeBag)
@@ -198,10 +213,12 @@ class ProfileViewController: BaseNavigationViewController, View {
                 }
                 
                 cell.cardDidTap
+                    .throttle(.seconds(3), scheduler: MainScheduler.instance)
                     .subscribe(with: self) { object, selectedId in
                         let detailViewController = DetailViewController()
                         detailViewController.reactor = reactor.reactorForDetail(selectedId)
-                        object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                        let base = reactor.entranceType == .my ? object.parent : object
+                        base?.navigationPush(detailViewController, animated: true)
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -263,7 +280,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         guard let reactor = self.reactor else { return }
         
-        let isMine = reactor.entranceType == .my || reactor.entranceType == .myWithNavi
+        let isMine = reactor.entranceType == .my
         
         self.navigationBar.hidesBackButton = isMine
         self.navigationBar.title = isMine ? Text.navigationTitle : nil
@@ -286,9 +303,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         super.viewDidLoad()
         
         // 제스처 뒤로가기를 위한 델리게이트 설정
-        if self.reactor?.entranceType != .other {
-            self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-        }
+        self.parent?.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         NotificationCenter.default.addObserver(
             self,
@@ -304,11 +319,11 @@ class ProfileViewController: BaseNavigationViewController, View {
     func bind(reactor: ProfileViewReactor) {
         
         // 설정 화면 전환
-        self.rightSettingButton.rx.throttleTap
+        self.rightSettingButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 let settingsViewController = SettingsViewController()
                 settingsViewController.reactor = reactor.reactorForSettings()
-                object.navigationPush(settingsViewController, animated: true, bottomBarHidden: true)
+                object.parent?.navigationPush(settingsViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -342,13 +357,6 @@ class ProfileViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        // tabBar 표시
-        self.rx.viewDidAppear
-            .subscribe(with: self) { object, _ in
-                object.hidesBottomBarWhenPushed = reactor.entranceType == .other
-            }
-            .disposed(by: self.disposeBag)
-        
         // Action
         self.rx.viewDidLoad
             .map { _ in Reactor.Action.landing }
@@ -378,7 +386,7 @@ class ProfileViewController: BaseNavigationViewController, View {
                 cardType: $0.cardType,
                 profileInfo: $0.profileInfo,
                 feedCardInfos: $0.feedCardInfos,
-                commCardInfos: $0.commentCardInfos
+                commentCardInfos: $0.commentCardInfos
             )
         }
         .distinctUntilChanged(reactor.canUpdateCells)
@@ -400,7 +408,7 @@ class ProfileViewController: BaseNavigationViewController, View {
             let cardItem = Item.card(
                 type: displayStates.cardType,
                 feed: displayStates.feedCardInfos,
-                comment: displayStates.commCardInfos.isEmpty ? nil : displayStates.commCardInfos
+                comment: displayStates.commentCardInfos.isEmpty ? nil : displayStates.commentCardInfos
             )
             snapshot.appendItems([cardItem], toSection: .card)
             
@@ -411,7 +419,6 @@ class ProfileViewController: BaseNavigationViewController, View {
         reactor.pulse(\.$isBlocked)
             .filterNil()
             .filter { $0 }
-            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.updateCards)
             }
@@ -420,7 +427,6 @@ class ProfileViewController: BaseNavigationViewController, View {
         reactor.pulse(\.$isFollowing)
             .filterNil()
             .filter { $0 }
-            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 reactor.action.onNext(.updateProfile)
             }
@@ -440,7 +446,11 @@ class ProfileViewController: BaseNavigationViewController, View {
         let itemHeight = (self.collectionView.bounds.width - 2) / 3
         let newHeight = (numberOfRows * itemHeight) + ((numberOfRows - 1) * lineSpacing)
         
-        return max(newHeight, self.collectionView.bounds.height - 56)
+        let cellHeight: CGFloat = 84 + 76 + 48 + 16
+        let headerHeight: CGFloat = 56
+        let defaultHeight: CGFloat = collectionView.bounds.height - cellHeight - headerHeight
+        
+        return max(newHeight, defaultHeight)
     }
     
     
@@ -575,14 +585,16 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
                 switch reactor.currentState.cardType {
                 case .feed:
                     
-                    return feeds.isEmpty ?
-                        defaultHeight :
-                        self.updateCollectionViewHeight(numberOfItems: feeds.count)
+                    let newHeight = self.updateCollectionViewHeight(numberOfItems: feeds.count)
+                    collectionView.contentInset.bottom = defaultHeight <= newHeight ? 88 + 16 : 0
+                    
+                    return feeds.isEmpty ? defaultHeight : newHeight
                 case .comment:
                     
-                    return comments.isEmpty ?
-                        defaultHeight :
-                        self.updateCollectionViewHeight(numberOfItems: comments.count)
+                    let newHeight = self.updateCollectionViewHeight(numberOfItems: comments.count)
+                    collectionView.contentInset.bottom = defaultHeight <= newHeight ? 88 + 16 : 0
+                    
+                    return comments.isEmpty ? defaultHeight : newHeight
                 }
             }
             
@@ -608,7 +620,13 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
         let offset = scrollView.contentOffset.y
         
         // 당겨서 새로고침
-        if self.isRefreshEnabled, offset < self.initialOffset {
+        if self.isRefreshEnabled, offset < self.initialOffset,
+           let refreshControl = self.collectionView.refreshControl as? SOMRefreshControl {
+           
+           refreshControl.updateProgress(
+               offset: scrollView.contentOffset.y,
+               topInset: scrollView.adjustedContentInset.top
+           )
             
             let pulledOffset = self.initialOffset - offset
             /// refreshControl heigt + top padding

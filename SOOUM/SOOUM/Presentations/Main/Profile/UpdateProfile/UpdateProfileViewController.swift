@@ -212,7 +212,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
             self.profileImageView.rx.tapGesture().when(.ended).map { _ in },
             self.cameraButton.rx.tap.asObservable()
         )
-        .observe(on: MainScheduler.asyncInstance)
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, _ in
             
             let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
@@ -289,10 +289,10 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isUpdatedSuccess)
             .distinctUntilChanged()
             .filter { $0 }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                object.navigationPop(bottomBarHidden: false) {
-                    NotificationCenter.default.post(name: .reloadProfileData, object: nil, userInfo: nil)
-                }
+                NotificationCenter.default.post(name: .reloadProfileData, object: nil, userInfo: nil)
+                object.navigationPop()
             }
             .disposed(by: self.disposeBag)
         
@@ -308,28 +308,11 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         reactor.state.map(\.hasErrors)
             .distinctUntilChanged()
             .filter { $0 == true }
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { _ in
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
                 
-                let actions: [SOMDialogAction] = [
-                    .init(
-                        title: Text.inappositeDialogConfirmButtonTitle,
-                        style: .primary,
-                        action: {
-                            UIApplication.topViewController?.dismiss(animated: true) {
-                                reactor.action.onNext(.setDefaultImage)
-                            }
-                        }
-                    )
-                ]
-                
-                SOMDialogViewController.show(
-                    title: Text.inappositeDialogTitle,
-                    message: Text.inappositeDialogMessage,
-                    textAlignment: .left,
-                    actions: actions
-                )
-            })
+                object.showInappositeDialog(reactor)
+            }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.errorMessage)
@@ -358,14 +341,15 @@ private extension UpdateProfileViewController {
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                let application = UIApplication.shared
-                let openSettingsURLString: String = UIApplication.openSettingsURLString
-                if let settingsURL = URL(string: openSettingsURLString),
-                   application.canOpenURL(settingsURL) {
-                    application.open(settingsURL)
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    
+                    let application = UIApplication.shared
+                    let openSettingsURLString: String = UIApplication.openSettingsURLString
+                    if let settingsURL = URL(string: openSettingsURLString),
+                       application.canOpenURL(settingsURL) {
+                        application.open(settingsURL)
+                    }
                 }
-                
-                UIApplication.topViewController?.dismiss(animated: true)
             }
         )
         
@@ -373,6 +357,28 @@ private extension UpdateProfileViewController {
             title: Text.libraryDialogTitle,
             message: Text.libraryDialogMessage,
             actions: [cancelAction, settingAction]
+        )
+    }
+    
+    func showInappositeDialog(_ reactor: UpdateProfileViewReactor) {
+        
+        let actions: [SOMDialogAction] = [
+            .init(
+                title: Text.inappositeDialogConfirmButtonTitle,
+                style: .primary,
+                action: {
+                    UIApplication.topViewController?.dismiss(animated: true) {
+                        reactor.action.onNext(.setDefaultImage)
+                    }
+                }
+            )
+        ]
+        
+        SOMDialogViewController.show(
+            title: Text.inappositeDialogTitle,
+            message: Text.inappositeDialogMessage,
+            textAlignment: .left,
+            actions: actions
         )
     }
     
@@ -414,8 +420,8 @@ private extension UpdateProfileViewController {
             picker?.dismiss(animated: true, completion: nil)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            self.present(picker, animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+            self?.present(picker, animated: true, completion: nil)
         }
     }
 }

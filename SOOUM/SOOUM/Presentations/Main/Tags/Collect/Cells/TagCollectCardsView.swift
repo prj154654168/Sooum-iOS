@@ -224,7 +224,13 @@ extension TagCollectCardsView: UICollectionViewDelegateFlowLayout {
         let offset = scrollView.contentOffset.y
         
         // 당겨서 새로고침
-        if self.isRefreshEnabled, offset < self.initialOffset {
+        if self.isRefreshEnabled, offset < self.initialOffset,
+           let refreshControl = self.collectionView.refreshControl as? SOMRefreshControl {
+           
+           refreshControl.updateProgress(
+               offset: scrollView.contentOffset.y,
+               topInset: scrollView.adjustedContentInset.top
+           )
             
             let pulledOffset = self.initialOffset - offset
             /// refreshControl heigt + top padding

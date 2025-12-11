@@ -38,6 +38,7 @@ class WriteCardView: UIView {
     var textFieldDidBeginEditing = PublishRelay<Void>()
     var textDidChanged = BehaviorRelay<String?>(value: nil)
     
+    
     // MARK: Initialize
     
     override init(frame: CGRect) {

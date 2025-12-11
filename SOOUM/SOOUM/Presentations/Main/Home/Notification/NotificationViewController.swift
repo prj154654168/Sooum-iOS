@@ -180,6 +180,7 @@ class NotificationViewController: BaseNavigationViewController, View {
         reactor.state.map(\.displayType)
             .filter { $0 == .notice }
             .take(1)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.headerView) { headerView, _ in
                 headerView.didSelectTabBarItem(1, onlyUpdateApperance: true)
             }
@@ -313,10 +314,9 @@ extension NotificationViewController: UITableViewDelegate {
                     
                     let detailViewController = DetailViewController()
                     detailViewController.reactor = reactor.reactorForDetail(
-                        entranceType: .feed,
                         with: notification.targetCardId
                     )
-                    self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                    self.navigationPush(detailViewController, animated: true)
                 default:
                     return
                 }
@@ -326,17 +326,16 @@ extension NotificationViewController: UITableViewDelegate {
                 
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(
-                    entranceType: .feed,
                     with: notification.targetCardId
                 )
-                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                self.navigationPush(detailViewController, animated: true)
             case let .follow(notification):
                 
                 reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
                 
                 let profileViewController = ProfileViewController()
                 profileViewController.reactor = reactor.reactorForProfile(with: notification.userId)
-                self.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                self.navigationPush(profileViewController, animated: true)
             default:
                 return
             }
@@ -347,23 +346,21 @@ extension NotificationViewController: UITableViewDelegate {
                 
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(
-                    entranceType: .feed,
                     with: notification.targetCardId
                 )
-                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                self.navigationPush(detailViewController, animated: true)
             case let .tag(notification):
                 
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(
-                    entranceType: .feed,
                     with: notification.targetCardId
                 )
-                self.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                self.navigationPush(detailViewController, animated: true)
             case let .follow(notification):
                 
                 let profileViewController = ProfileViewController()
                 profileViewController.reactor = reactor.reactorForProfile(with: notification.userId)
-                self.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                self.navigationPush(profileViewController, animated: true)
             default:
                 return
             }
@@ -532,7 +529,13 @@ extension NotificationViewController: UITableViewDelegate {
         let offset = scrollView.contentOffset.y
         
         // 당겨서 새로고침
-        if self.isRefreshEnabled, offset < self.initialOffset {
+        if self.isRefreshEnabled, offset < self.initialOffset,
+           let refreshControl = self.tableView.refreshControl as? SOMRefreshControl {
+           
+           refreshControl.updateProgress(
+               offset: scrollView.contentOffset.y,
+               topInset: scrollView.adjustedContentInset.top
+           )
             
             let pulledOffset = self.initialOffset - offset
             /// refreshControl heigt + top padding

@@ -25,7 +25,10 @@ enum CardRequest: BaseRequest {
     
     // MARK: Detail
     
+    /// 상세보기
     case detailCard(id: String, latitude: String?, longitude: String?)
+    /// 상세보기 - 삭제 여부
+    case isCardDeleted(id: String)
     /// 상세보기 - 답카드
     case commentCard(id: String, lastId: String?, latitude: String?, longitude: String?)
     /// 상세보기 - 카드 삭제
@@ -99,6 +102,9 @@ enum CardRequest: BaseRequest {
         case let .deleteCard(id):
             
             return "/api/cards/\(id)"
+        case let .isCardDeleted(id):
+            
+            return "/api/cards/\(id)/delete-check"
         case let .updateLike(id, _):
             
             return "/api/cards/\(id)/like"

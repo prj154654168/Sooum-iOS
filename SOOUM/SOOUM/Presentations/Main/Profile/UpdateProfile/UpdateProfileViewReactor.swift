@@ -35,35 +35,40 @@ class UpdateProfileViewReactor: Reactor {
     }
     
     struct State {
-        var profileImage: UIImage?
-        var profileImageName: String?
-        var isValid: Bool
-        var isUpdatedSuccess: Bool
-        var isProcessing: Bool
-        var hasErrors: Bool?
-        var errorMessage: String?
+        fileprivate(set) var profileImage: UIImage?
+        fileprivate(set) var profileImageName: String?
+        fileprivate(set) var isValid: Bool
+        fileprivate(set) var isUpdatedSuccess: Bool
+        fileprivate(set) var isProcessing: Bool
+        fileprivate(set) var hasErrors: Bool?
+        fileprivate(set) var errorMessage: String?
     }
     
     var initialState: State
     
-    private var imageName: String?
-    
     private let dependencies: AppDIContainerable
-    private let userUseCase: UserUseCase
+    private let validateNicknameUseCase: ValidateNicknameUseCase
+    private let uploadUserImageUseCase: UploadUserImageUseCase
+    private let updateUserInfoUseCase: UpdateUserInfoUseCase
     
     let nickname: String
     
     init(
         dependencies: AppDIContainerable,
         nickname: String,
-        image profileImage: UIImage?
+        image profileImage: UIImage?,
+        imageName profileImageName: String?
     ) {
         self.dependencies = dependencies
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.validateNicknameUseCase = dependencies.rootContainer.resolve(ValidateNicknameUseCase.self)
+        self.uploadUserImageUseCase = dependencies.rootContainer.resolve(UploadUserImageUseCase.self)
+        self.updateUserInfoUseCase = dependencies.rootContainer.resolve(UpdateUserInfoUseCase.self)
+        
         self.nickname = nickname
         
         self.initialState = .init(
             profileImage: profileImage,
+            profileImageName: profileImageName,
             isValid: false,
             isUpdatedSuccess: false,
             isProcessing: false,
@@ -105,7 +110,7 @@ class UpdateProfileViewReactor: Reactor {
             
             return .concat([
                 .just(.updateErrorMessage(nil)),
-                self.userUseCase.isNicknameValid(nickname: nickname)
+                self.validateNicknameUseCase.checkValidation(nickname: nickname)
                     .withUnretained(self)
                     .flatMapLatest { object, isValid -> Observable<Mutation> in
                         
@@ -122,7 +127,7 @@ class UpdateProfileViewReactor: Reactor {
             let updatedNickname = trimedNickname == self.nickname ? nil : trimedNickname
             return .concat([
                 .just(.updateErrors(false)),
-                self.userUseCase.updateMyProfile(
+                self.updateUserInfoUseCase.updateUserInfo(
                     nickname: updatedNickname,
                     imageName: self.currentState.profileImageName
                 )
@@ -163,7 +168,7 @@ extension UpdateProfileViewReactor {
                 if let imageData = image.jpegData(compressionQuality: 0.5),
                    let url = URL(string: presignedInfo.imgUrl) {
                     
-                    return object.userUseCase.uploadImage(imageData, with: url)
+                    return object.uploadUserImageUseCase.uploadToS3(imageData, with: url)
                         .flatMapLatest { isSuccess -> Observable<Mutation> in
                             
                             let image = isSuccess ? image : nil
@@ -180,7 +185,7 @@ extension UpdateProfileViewReactor {
     
     private func presignedURL() -> Observable<ImageUrlInfo> {
         
-        return self.userUseCase.presignedURL()
+        return self.uploadUserImageUseCase.presignedURL()
     }
     
     private var catchClosure: ((Error) throws -> Observable<Mutation> ) {

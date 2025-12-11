@@ -19,6 +19,7 @@ struct DetailCardInfo: Hashable {
     let createdAt: Date
     let storyExpirationTime: Date?
     let isAdminCard: Bool
+    let isReported: Bool
     let memberId: String
     let nickname: String
     let profileImgURL: String?
@@ -27,10 +28,8 @@ struct DetailCardInfo: Hashable {
     let tags: [Tag]
     let isOwnCard: Bool
     let visitedCnt: String
-    /// 답카드 상세보기
-    let prevCardId: String?
-    let isPrevCardDeleted: Bool?
-    let prevCardImgURL: String?
+    /// 이전 카드 정보
+    let prevCardInfo: PrevCardInfo?
 }
 
 extension DetailCardInfo {
@@ -49,6 +48,7 @@ extension DetailCardInfo {
             createdAt: self.createdAt,
             storyExpirationTime: self.storyExpirationTime,
             isAdminCard: self.isAdminCard,
+            isReported: self.isReported,
             memberId: self.memberId,
             nickname: self.nickname,
             profileImgURL: self.profileImgURL,
@@ -57,9 +57,7 @@ extension DetailCardInfo {
             tags: self.tags,
             isOwnCard: self.isOwnCard,
             visitedCnt: self.visitedCnt,
-            prevCardId: self.prevCardId,
-            isPrevCardDeleted: self.isPrevCardDeleted,
-            prevCardImgURL: self.prevCardImgURL
+            prevCardInfo: self.prevCardInfo
         )
     }
 }
@@ -69,6 +67,12 @@ extension DetailCardInfo {
     struct Tag: Hashable {
         let id: String
         let title: String
+    }
+    /// 이전 카드 정보
+    struct PrevCardInfo: Hashable {
+        let prevCardId: String
+        let isPrevCardDeleted: Bool
+        let prevCardImgURL: String?
     }
 }
 
@@ -86,6 +90,22 @@ extension DetailCardInfo.Tag: Decodable {
     }
 }
 
+extension DetailCardInfo.PrevCardInfo: Decodable {
+    
+    enum CodingKeys: String, CodingKey {
+        case prevCardId = "previousCardId"
+        case isPrevCardDeleted = "isPreviousCardDeleted"
+        case prevCardImgURL = "previousCardImgUrl"
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.prevCardId = try container.decode(String.self, forKey: .prevCardId)
+        self.isPrevCardDeleted = try container.decode(Bool.self, forKey: .isPrevCardDeleted)
+        self.prevCardImgURL = try container.decodeIfPresent(String.self, forKey: .prevCardImgURL)
+    }
+}
+
 extension DetailCardInfo {
     
     static var defaultValue: DetailCardInfo = DetailCardInfo(
@@ -100,6 +120,7 @@ extension DetailCardInfo {
         createdAt: Date(),
         storyExpirationTime: nil,
         isAdminCard: false,
+        isReported: false,
         memberId: "",
         nickname: "",
         profileImgURL: nil,
@@ -108,9 +129,7 @@ extension DetailCardInfo {
         tags: [],
         isOwnCard: false,
         visitedCnt: "0",
-        prevCardId: nil,
-        isPrevCardDeleted: nil,
-        prevCardImgURL: nil
+        prevCardInfo: nil
     )
 }
 
@@ -128,6 +147,7 @@ extension DetailCardInfo: Decodable {
         case createdAt
         case storyExpirationTime
         case isAdminCard
+        case isReported
         case memberId
         case nickname
         case profileImgURL = "profileImgUrl"
@@ -136,9 +156,7 @@ extension DetailCardInfo: Decodable {
         case tags
         case isOwnCard
         case visitedCnt
-        case prevCardId = "previousCardId"
-        case isPrevCardDeleted = "isPreviousCardDeleted"
-        case prevCardImgURL = "previousCardImgUrl"
+        case prevCardInfo
     }
     
     init(from decoder: any Decoder) throws {
@@ -154,6 +172,7 @@ extension DetailCardInfo: Decodable {
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
         self.storyExpirationTime = try container.decodeIfPresent(Date.self, forKey: .storyExpirationTime)
         self.isAdminCard = try container.decode(Bool.self, forKey: .isAdminCard)
+        self.isReported = try container.decode(Bool.self, forKey: .isReported)
         self.memberId = String(try container.decode(Int64.self, forKey: .memberId))
         self.nickname = try container.decode(String.self, forKey: .nickname)
         self.profileImgURL = try container.decodeIfPresent(String.self, forKey: .profileImgURL)
@@ -162,8 +181,8 @@ extension DetailCardInfo: Decodable {
         self.tags = try container.decode([Tag].self, forKey: .tags)
         self.isOwnCard = try container.decode(Bool.self, forKey: .isOwnCard)
         self.visitedCnt = String(try container.decode(Int64.self, forKey: .visitedCnt))
-        self.prevCardId = try container.decodeIfPresent(String.self, forKey: .prevCardId)
-        self.isPrevCardDeleted = try container.decodeIfPresent(Bool.self, forKey: .isPrevCardDeleted)
-        self.prevCardImgURL = try container.decodeIfPresent(String.self, forKey: .prevCardImgURL)
+        
+        let singleContainer = try decoder.singleValueContainer()
+        self.prevCardInfo = try? singleContainer.decode(PrevCardInfo.self)
     }
 }

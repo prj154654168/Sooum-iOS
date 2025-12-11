@@ -132,7 +132,10 @@ class SOMPageViews: UIView {
             offset: .init(width: 0, height: 6)
         )
         
-        self.hasLayoutsubviews = true
+        if self.hasLayoutsubviews == false {
+            self.hasLayoutsubviews = true
+            self.startAutoScroll()
+        }
     }
     
     override func didMoveToWindow() {
@@ -228,18 +231,16 @@ class SOMPageViews: UIView {
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems(modelsToItem, toSection: .main)
         self.dataSource.apply(snapshot, animatingDifferences: false) { [weak self] in
-            guard models.count > 1 else { return }
+            guard let self = self, models.count > 1 else { return }
             
             DispatchQueue.main.async {
                 let initialIndexPath: IndexPath = IndexPath(item: 1, section: Section.main.rawValue)
-                self?.collectionView.scrollToItem(
+                self.collectionView.scrollToItem(
                     at: initialIndexPath,
                     at: .centeredHorizontally,
                     animated: false
                 )
             }
-            
-            self?.startAutoScroll()
         }
     }
     
@@ -255,14 +256,15 @@ class SOMPageViews: UIView {
         // 다음 인덱스 (무한 스크롤 배열을 기준으로)
         let nextIndex = currentIndex + 1
         
-        let nextIndexPath = IndexPath(item: nextIndex, section: Section.main.rawValue)
+        let targetX = cellWidth * CGFloat(nextIndex)
+        let targetOffset = CGPoint(x: targetX, y: 0)
         
         // 애니메이션과 함께 다음 아이템으로 스크롤
-        self.collectionView.scrollToItem(
-            at: nextIndexPath,
-            at: .centeredHorizontally,
-            animated: true
-        )
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            self?.collectionView.contentOffset = targetOffset
+        } completion: { _ in
+            self.infiniteScroll(self.collectionView)
+        }
     }
 }
 
@@ -303,11 +305,6 @@ extension SOMPageViews: UICollectionViewDelegateFlowLayout {
         
         self.infiniteScroll(scrollView)
         self.startAutoScroll()
-    }
-    /// 자동 스크롤이 끝났을 때, 무한 스크롤 로직 수행
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-        
-        self.infiniteScroll(scrollView)
     }
     
     private func infiniteScroll(_ scrollView: UIScrollView) {

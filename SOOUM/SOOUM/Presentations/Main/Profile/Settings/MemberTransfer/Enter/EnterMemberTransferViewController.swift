@@ -208,21 +208,23 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         let isSuccess = reactor.state.map(\.isSuccess).filterNil().share()
         isSuccess
             .filter { $0 }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 guard let window = object.view.window else { return }
                 
                 object.showSuccessDialog {
                     
-                    let onboardingViewController = OnboardingViewController()
-                    onboardingViewController.reactor = reactor.reactorForOnborading()
-                    onboardingViewController.modalTransitionStyle = .crossDissolve
-                    window.rootViewController = UINavigationController(rootViewController: onboardingViewController)
+                    let launchScreenViewController = LaunchScreenViewController()
+                    launchScreenViewController.reactor = reactor.reactorForLaunchScreen()
+                    launchScreenViewController.modalTransitionStyle = .crossDissolve
+                    window.rootViewController = launchScreenViewController
                 }
             }
             .disposed(by: self.disposeBag)
         
         isSuccess
             .filter { $0 == false }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.showErrorDialog()
             }

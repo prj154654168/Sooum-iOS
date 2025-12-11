@@ -185,19 +185,12 @@ class HomeViewController: BaseNavigationViewController, View {
         super.viewDidLoad()
         
         // 제스처 뒤로가기를 위한 델리게이트 설정
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+        self.parent?.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.scollingToTopWithAnimation(_:)),
             name: .scollingToTopWithAnimation,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.reloadData(_:)),
-            name: .reloadData,
             object: nil
         )
         
@@ -264,23 +257,16 @@ class HomeViewController: BaseNavigationViewController, View {
     func bind(reactor: HomeViewReactor) {
         
         // navigation
-        self.rightAlamButton.rx.throttleTap()
+        self.rightAlamButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 let viewController = NotificationViewController()
                 viewController.reactor = reactor.reactorForNotification()
-                object.navigationPush(viewController, animated: true, bottomBarHidden: true)
-            }
-            .disposed(by: self.disposeBag)
-        
-        // tabBar 표시
-        self.rx.viewDidAppear
-            .subscribe(with: self) { object, _ in
-                object.hidesBottomBarWhenPushed = false
+                object.parent?.navigationPush(viewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
         // Action
-        self.rx.viewDidLoad
+        self.rx.viewDidAppear
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -306,12 +292,14 @@ class HomeViewController: BaseNavigationViewController, View {
         reactor.state.map(\.hasUnreadNotifications)
             .distinctUntilChanged()
             .map { $0 == false }
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.dotWithoutReadView.rx.isHidden)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.noticeInfos)
             .filterNil()
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, noticeInfos in
                 let models: [SOMPageModel] = noticeInfos.map { SOMPageModel(data: $0) }
                 object.topNoticeView.frame = CGRect(
@@ -323,19 +311,23 @@ class HomeViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let cardIsDeleted = reactor.state.map(\.cardIsDeleted).filterNil()
+        let cardIsDeleted = reactor.state.map(\.cardIsDeleted)
+            .distinctUntilChanged(reactor.canPushToDetail)
+            .filterNil()
         cardIsDeleted
             .filter { $0.isDeleted }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.showPungedCardDialog()
             }
             .disposed(by: self.disposeBag)
         cardIsDeleted
             .filter { $0.isDeleted == false }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, cardIsDeleted in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(with: cardIsDeleted.selectedId)
-                object.navigationPush(detailViewController, animated: true, bottomBarHidden: true) { _ in
+                object.parent?.navigationPush(detailViewController, animated: true) { _ in
                     reactor.action.onNext(.resetPushState)
                 }
             }
@@ -419,19 +411,9 @@ class HomeViewController: BaseNavigationViewController, View {
     }
     
     @objc
-    private func reloadData(_ notification: Notification) {
-        
-        self.reactor?.action.onNext(.landing)
-    }
-    
-    @objc
     private func changedLocationAuthorization(_ notification: Notification) {
         
-        if self.stickyTabBar.selectedIndex == 2, self.reactor?.initialState.hasPermission == false {
-            
-            self.reactor?.action.onNext(.refresh)
-            self.showLocationPermissionDialog()
-        }
+        self.reactor?.action.onNext(.updateLocationPermission)
     }
 }
 
@@ -558,7 +540,7 @@ extension HomeViewController: SOMStickyTabBarDelegate {
         }
         self.reactor?.action.onNext(.updateDisplayType(displayType))
         
-        if index == 2, self.reactor?.initialState.hasPermission == false {
+        if index == 2, self.reactor?.currentState.hasPermission == false {
             self.showLocationPermissionDialog()
         }
     }
@@ -585,7 +567,7 @@ extension HomeViewController: SOMPageViewsDelegate {
         
         let viewController = NotificationViewController()
         viewController.reactor = reactorForNotification
-        self.navigationPush(viewController, animated: true, bottomBarHidden: true)
+        self.parent?.navigationPush(viewController, animated: true)
     }
 }
 
@@ -706,7 +688,13 @@ extension HomeViewController: UITableViewDelegate {
         let isScrollingDown = delta > 0
         
         // 당겨서 새로고침
-        if self.isRefreshEnabled, offset < self.initialOffset {
+        if self.isRefreshEnabled, offset < self.initialOffset,
+            let refreshControl = self.tableView.refreshControl as? SOMRefreshControl {
+            
+            refreshControl.updateProgress(
+                offset: scrollView.contentOffset.y,
+                topInset: scrollView.adjustedContentInset.top
+            )
             
             let pulledOffset = self.initialOffset - offset
             /// refreshControl heigt + top padding
@@ -738,8 +726,8 @@ extension HomeViewController: UITableViewDelegate {
             self.headerViewContainerTopConstraint?.update(offset: 0).update(priority: .high)
         }
 
-        UIView.animate(withDuration: 0.25) {
-            self.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.25) { [weak self] in
+            self?.view.layoutIfNeeded()
         }
         
         // 아래로 스크롤 중일 때, 데이터 추가로드 가능

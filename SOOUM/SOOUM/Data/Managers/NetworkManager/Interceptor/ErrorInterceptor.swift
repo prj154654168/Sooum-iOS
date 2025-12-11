@@ -7,7 +7,7 @@
 
 import Alamofire
 
-class ErrorInterceptor: RequestInterceptor {
+final class ErrorInterceptor: RequestInterceptor {
     
     enum Text {
         static let networkErrorDialogTitle: String = "네트워크 상태가 불안정해요"
@@ -30,18 +30,15 @@ class ErrorInterceptor: RequestInterceptor {
         """
     }
     
-    private let lock = NSLock()
-    
     private let retryLimit: Int = 1
     
-    private let provider: ManagerTypeDelegate
+    private weak var provider: ManagerTypeDelegate?
     
     init(provider: ManagerTypeDelegate) {
         self.provider = provider
     }
     
     func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
-        self.lock.lock(); defer { self.lock.unlock() }
         
         /// API 호출 중 네트워크 오류 발생
         if let afError = error.asAFError,
@@ -82,8 +79,20 @@ class ErrorInterceptor: RequestInterceptor {
                 return
             }
             
-            let token = self.provider.authManager.authInfo.token
-            self.provider.authManager.reAuthenticate(token) { result in
+            guard let provider = self.provider else {
+                let retryError = NSError(
+                    domain: "SOOUM",
+                    code: -99,
+                    userInfo: [
+                        NSLocalizedDescriptionKey: "Retry error: `self` deallocated before network response received."
+                    ]
+                )
+                completion(.doNotRetryWithError(retryError))
+                return
+            }
+            
+            let token = provider.authManager.authInfo.token
+            provider.authManager.reAuthenticate(token) { result in
                 
                 switch result {
                 case .success:
@@ -150,7 +159,7 @@ class ErrorInterceptor: RequestInterceptor {
                     let subject = Text.inquiryMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                     let guideMessage = """
                         \(Text.identificationInfo)
-                        \(self.provider.authManager.authInfo.token.refreshToken)\n
+                        \(self.provider?.authManager.authInfo.token.refreshToken ?? "")\n
                         \(Text.inquiryMailGuideMessage)
                     """
                     let body = guideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -180,7 +189,7 @@ class ErrorInterceptor: RequestInterceptor {
     
     func goToOnboarding() {
         
-        self.provider.authManager.initializeAuthInfo()
+        self.provider?.authManager.initializeAuthInfo()
         
         DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,

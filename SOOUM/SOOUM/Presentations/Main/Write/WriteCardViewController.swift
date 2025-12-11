@@ -68,6 +68,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     // MARK: Views
     
+    private let writeCardGuideView = WriteCardGuideView()
+    
     private let writeButton = SOMButton().then {
         $0.title = Text.navigationWriteButtonTitle
         $0.typography = .som.v2.subtitle1
@@ -181,12 +183,23 @@ class WriteCardViewController: BaseNavigationViewController, View {
             self.relatedTagsViewBottomConstraint = $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).constraint
             $0.horizontalEdges.equalToSuperview()
         }
+        
+        guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+            let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
+        else { return }
+        
+        window.addSubview(self.writeCardGuideView)
+        self.writeCardGuideView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
+        
+        self.writeCardGuideView.isHidden = UserDefaults.showGuideView == false
     }
     
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
@@ -201,6 +214,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     func bind(reactor: WriteCardViewReactor) {
         
+        self.writeCardGuideView.closeButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                object.writeCardGuideView.isHidden = true
+            }
+            .disposed(by: self.disposeBag)
+        
         var options: [SelectOptionItem.OptionType] {
             if reactor.entranceType == .feed {
                 return [.distanceShare, .story]
@@ -211,20 +230,20 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.selectOptionsView.items = options
         
         self.writeCardView.textViewDidBeginEditing
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.isScrollingByFirstResponder = true
                 
                 object.scrollContainer.setContentOffset(.zero, animated: true)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    object.isScrollingByFirstResponder = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak object] in
+                    object?.isScrollingByFirstResponder = false
                 }
             }
             .disposed(by: self.disposeBag)
         
         self.relatedTagsView.updatedContentHeight
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, updatedContentHeight in
                 object.isScrollingByFirstResponder = true
                 
@@ -241,16 +260,16 @@ class WriteCardViewController: BaseNavigationViewController, View {
                         object.scrollContainer.setContentOffset(scrollTo, animated: true)
                     }
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        object.isScrollingByFirstResponder = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak object] in
+                        object?.isScrollingByFirstResponder = false
                     }
                 } else {
                     
-                    DispatchQueue.main.async {
-                        object.scrollContainer.setContentOffset(.zero, animated: true)
+                    DispatchQueue.main.async { [weak object] in
+                        object?.scrollContainer.setContentOffset(.zero, animated: true)
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            object.isScrollingByFirstResponder = false
+                            object?.isScrollingByFirstResponder = false
                         }
                     }
                 }
@@ -275,6 +294,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         let selectedRelatedTag = self.relatedTagsView.selectedRelatedTag.filterNil().share()
         selectedRelatedTag
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 object.writeCardView.writeCardTags.updateFooterText = nil
             }
@@ -305,7 +325,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.selectImageView.selectedUseUserImageCell
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 
                 let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
@@ -388,7 +408,6 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // Action
-        
         let viewDidLoad = self.rx.viewDidLoad.share()
         viewDidLoad
             .map { _ in Reactor.Action.landing }
@@ -409,7 +428,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        self.writeCardView.textDidChanged
+        let enteredTag = self.writeCardView.textDidChanged.share()
+        enteredTag
             .filterNil()
             .distinctUntilChanged()
             .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
@@ -421,14 +441,19 @@ class WriteCardViewController: BaseNavigationViewController, View {
             writeCardtext,
             selectedImageInfo.filterNil(),
             selectedTypography,
-            selectedOptions
+            selectedOptions,
+            enteredTag.startWith(nil)
         )
         self.writeButton.rx.throttleTap(.seconds(3))
             .withLatestFrom(combined)
             .withUnretained(self)
             .map { object, combined in
-                let (content, imageInfo, typography, options) = combined
+                let (content, imageInfo, typography, options, enteredTag) = combined
                 
+                var enteredTagTexts = object.writeCardView.writeCardTags.models.map { $0.originalText }
+                if let enteredTag = enteredTag, enteredTag.isEmpty == false {
+                    enteredTagTexts.append(enteredTag)
+                }
                 return Reactor.Action.writeCard(
                     isDistanceShared: options.contains(.distanceShare),
                     content: content,
@@ -436,14 +461,13 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     imageType: imageInfo.type,
                     imageName: imageInfo.info.imgName,
                     isStory: options.contains(.story),
-                    tags: object.writeCardView.writeCardTags.models.map { $0.originalText }
+                    tags: enteredTagTexts
                 )
             }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
             .observe(on: MainScheduler.asyncInstance)
@@ -461,9 +485,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.writtenCardId)
             .filterNil()
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, writtenCardId in
-                NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
                 if reactor.entranceType == .comment {
                     NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
                 }
@@ -490,7 +513,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.hasErrors)
             .filterNil()
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, hasErrors in
                 if case 422 = hasErrors {
                     object.showInappositeDialog()
@@ -507,6 +530,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.couldPosting)
             .filterNil()
             .filter { $0.isBaned }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, postingPermission in
                 
                 let banEndGapToDays = postingPermission.expiredAt?.infoReadableTimeTakenFromThisForBanEndPosting(to: Date().toKorea())
@@ -543,11 +567,13 @@ class WriteCardViewController: BaseNavigationViewController, View {
         let relatedTags = reactor.state.map(\.relatedTags).filterNil().distinctUntilChanged().share()
         relatedTags
             .map { $0.isEmpty }
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.relatedTagsView.rx.isHidden)
             .disposed(by: self.disposeBag)
         
         relatedTags
             .map { $0.map { RelatedTagViewModel(originalText: $0.name, count: "\($0.usageCnt)") } }
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.relatedTagsView.rx.models())
             .disposed(by: self.disposeBag)
     }
@@ -674,10 +700,9 @@ extension WriteCardViewController {
             style: .primary,
             action: {
                 UIApplication.topViewController?.dismiss(animated: true) {
-                    NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-                        self?.navigationPopToRoot(animated: true, bottomBarHidden: false)
+                        self?.navigationPopToRoot()
                     }
                 }
             }
@@ -736,8 +761,8 @@ extension WriteCardViewController {
             picker?.dismiss(animated: true, completion: nil)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            self.present(picker, animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+            self?.present(picker, animated: true, completion: nil)
         }
     }
 }

@@ -55,13 +55,15 @@ class ResignViewReactor: Reactor {
                     (self.currentState.otherReason ?? reason.message) :
                     reason.message
             )
-            .map { isSuccess in
+            .withUnretained(self)
+            .flatMapLatest { object, isSuccess -> Observable<Mutation> in
                 // 사용자 닉네임 제거
                 UserDefaults.standard.nickname = nil
+                // 인증 토큰 제거
+                object.authUseCase.initializeAuthInfo()
                 
-                return isSuccess
+                return .just(.updateIsSuccess(isSuccess))
             }
-            .map(Mutation.updateIsSuccess)
         case let .updateReason(reason):
             
             return .just(.updateReason(reason))

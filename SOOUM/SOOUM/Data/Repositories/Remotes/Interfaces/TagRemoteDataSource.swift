@@ -13,5 +13,4 @@ protocol TagRemoteDataSource {
     func favorites() -> Observable<FavoriteTagInfoResponse>
     func updateFavorite(tagId: String, isFavorite: Bool) -> Observable<Int>
     func ranked() -> Observable<TagInfoResponse>
-    func tagCards(tagId: String, lastId: String?) -> Observable<TagCardInfoResponse>
 }

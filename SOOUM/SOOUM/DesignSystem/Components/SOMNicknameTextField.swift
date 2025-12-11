@@ -48,6 +48,8 @@ class SOMNicknameTextField: UIView {
         $0.setContentCompressionResistancePriority(.defaultHigh + 1, for: .vertical)
         
         $0.delegate = self
+        
+        $0.addTarget(self, action: #selector(self.textDidChanged(_:)), for: .editingChanged)
     }
     
     private let guideMessageContainer = UIStackView().then {
@@ -84,7 +86,7 @@ class SOMNicknameTextField: UIView {
     var text: String? {
         set {
             self.textField.text = newValue
-            self.textField.sendActions(for: .valueChanged)
+            self.textField.sendActions(for: .editingChanged)
         }
         get {
             return self.textField.text
@@ -108,10 +110,6 @@ class SOMNicknameTextField: UIView {
         get {
             self.errorImageView.isHidden == false
         }
-    }
-    
-    var isTextEmpty: Bool {
-        return self.text?.isEmpty ?? true
     }
     
     
@@ -158,10 +156,15 @@ class SOMNicknameTextField: UIView {
     private func clear() {
         self.clearButton.isHidden = true
         self.text = nil
-        self.textField.sendActions(for: .valueChanged)
+        self.textField.sendActions(for: .editingChanged)
         if self.textField.isFirstResponder == false {
             self.textField.becomeFirstResponder()
         }
+    }
+    
+    @objc
+    func textDidChanged(_ textField: UITextField) {
+        self.clearButton.isHidden = textField.text?.isEmpty ?? true
     }
     
     
@@ -209,11 +212,11 @@ class SOMNicknameTextField: UIView {
 extension SOMNicknameTextField: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.clearButton.isHidden = self.isTextEmpty
+        self.clearButton.isHidden = textField.text?.isEmpty ?? true
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        self.clearButton.isHidden = self.isTextEmpty
+        self.clearButton.isHidden = textField.text?.isEmpty ?? true
     }
     
     func textField(

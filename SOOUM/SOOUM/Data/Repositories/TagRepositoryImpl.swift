@@ -36,9 +36,4 @@ class TagRepositoryImpl: TagRepository {
         
         return self.remoteDataSource.ranked()
     }
-    
-    func tagCards(tagId: String, lastId: String?) -> Observable<TagCardInfoResponse> {
-        
-        return self.remoteDataSource.tagCards(tagId: tagId, lastId: lastId)
-    }
 }

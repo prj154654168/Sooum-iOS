@@ -27,19 +27,18 @@ class ReportViewReactor: Reactor {
         fileprivate(set) var hasErrors: Bool
     }
     
-    var initialState: State
+    var initialState: State = .init(reportReason: nil, isReported: false, hasErrors: false)
     
     private let dependencies: AppDIContainerable
-    private let cardUseCase: CardUseCase
+    private let reportCardUseCase: ReportCardUseCase
     /// 신고할 카드 id
     private let id: String
     
     init(dependencies: AppDIContainerable, with id: String) {
         self.dependencies = dependencies
-        self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
-        self.id = id
+        self.reportCardUseCase = dependencies.rootContainer.resolve(ReportCardUseCase.self)
         
-        self.initialState = State(reportReason: nil, isReported: false, hasErrors: false)
+        self.id = id
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -51,9 +50,9 @@ class ReportViewReactor: Reactor {
             
             guard let reportReason = self.currentState.reportReason else { return .empty() }
             
-            return self.cardUseCase.reportCard(id: self.id, reportType: reportReason.rawValue)
+            return self.reportCardUseCase.report(cardId: self.id, reportType: reportReason.rawValue)
                 .map(Mutation.updateisReported)
-                .catch(self.catchClosure)
+                .catchAndReturn(.updateHasErrors(true))
         }
     }
     
@@ -73,14 +72,15 @@ class ReportViewReactor: Reactor {
 
 extension ReportViewReactor {
     
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { error in
-            
-            let nsError = error as NSError
-            switch nsError.code {
-            case 409, 410:  return .just(.updateHasErrors(true))
-            default:        return .empty()
-            }
-        }
-    }
+    // TODO: 임시, 에러 발생 시 뒤로가기
+    // var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+    //     return { error in
+    //
+    //         let nsError = error as NSError
+    //         switch nsError.code {
+    //         case 409, 410:  return .just(.updateHasErrors(true))
+    //         default:        return .empty()
+    //         }
+    //     }
+    // }
 }

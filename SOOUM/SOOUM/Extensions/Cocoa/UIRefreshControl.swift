@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIRefreshControl {
-    
+    /// RefreshControl 에 offset 설정
     func beginRefreshingWithOffset(_ offset: CGFloat) {
         self.bounds.origin.y = -offset
         self.beginRefreshing()

@@ -13,10 +13,8 @@ class MainTabBarReactor: Reactor {
     enum EntranceType {
         /// 푸시 알림(알림 화면)으로 진입할 경우
         case pushToNotification
-        /// 푸시 알림(피드 상세 화면)으로 진입할 경우
-        case pushToFeedDetail
-        /// 푸시 알림(댓글 카드 상세 화면)으로 진입할 경우
-        case pushToCommentDetail
+        /// 푸시 알림(상세 화면)으로 진입할 경우
+        case pushToDetail
         /// 푸시 알림(피드 상세 화면 + 태그 탭)으로 진입할 경우
         case pushToTagDetail
         /// 푸시 알림(내 팔로우 화면 + 팔로우 탭)으로 진입할 경우
@@ -44,7 +42,7 @@ class MainTabBarReactor: Reactor {
     
     struct State {
         fileprivate(set) var entranceType: EntranceType
-        fileprivate(set) var couldPosting: PostingPermission?
+        @Pulse fileprivate(set) var couldPosting: PostingPermission?
         @Pulse fileprivate(set) var profileInfo: ProfileInfo?
     }
     
@@ -53,25 +51,28 @@ class MainTabBarReactor: Reactor {
     var pushInfo: PushNotificationInfo?
     
     private let dependencies: AppDIContainerable
-    private let userUseCase: UserUseCase
+    private let fetchUserInfoUseCase: FetchUserInfoUseCase
+    private let validateUserUseCase: ValidateUserUseCase
     private let notificationUseCase: NotificationUseCase
-    private let settingsUseCase: SettingsUseCase
+    private let updateNotifyUseCase: UpdateNotifyUseCase
+    private let locationUseCase: LocationUseCase
     
     init(dependencies: AppDIContainerable, pushInfo: PushNotificationInfo? = nil) {
         self.dependencies = dependencies
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.fetchUserInfoUseCase = dependencies.rootContainer.resolve(FetchUserInfoUseCase.self)
+        self.validateUserUseCase = dependencies.rootContainer.resolve(ValidateUserUseCase.self)
         self.notificationUseCase = dependencies.rootContainer.resolve(NotificationUseCase.self)
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
+        self.updateNotifyUseCase = dependencies.rootContainer.resolve(UpdateNotifyUseCase.self)
+        self.locationUseCase = dependencies.rootContainer.resolve(LocationUseCase.self)
         
         var willNavigate: EntranceType {
             switch pushInfo?.notificationType {
-            case .feedLike:                   return .pushToFeedDetail
-            case .commentLike, .commentWrite:  return .pushToCommentDetail
-            case .blocked, .deleted:          return .pushToNotification
-            case .tagUsage:                   return .pushToTagDetail
-            case .follow:                     return .pushToFollow
-            case .transferSuccess:             return .pushToLaunchScreen
-            default:                          return .none
+            case .feedLike, .commentLike, .commentWrite:  return .pushToDetail
+            case .blocked, .deleted:                     return .pushToNotification
+            case .tagUsage:                              return .pushToTagDetail
+            case .follow:                                return .pushToFollow
+            case .transferSuccess:                        return .pushToLaunchScreen
+            default:                                     return .none
             }
         }
         self.pushInfo = pushInfo
@@ -87,35 +88,31 @@ class MainTabBarReactor: Reactor {
         switch action {
         case .requestLocationPermission:
             
-            if self.settingsUseCase.checkLocationAuthStatus() == .notDetermined {
-                self.settingsUseCase.requestLocationPermission()
+            if self.locationUseCase.checkLocationAuthStatus() == .notDetermined {
+                self.locationUseCase.requestLocationPermission()
             }
             
-            return .empty()
+            return self.updateNotifyUseCase.switchNotification(on: true)
+                .flatMapLatest { _ -> Observable<Mutation> in .empty() }
         case .judgeEntrance:
             
-            if let pushInfo = self.pushInfo {
-                
-                return .concat([
-                    self.userUseCase.profile(userId: nil)
-                        .flatMapLatest { profileInfo -> Observable<Mutation> in
-                            
-                            return self.notificationUseCase.requestRead(
-                                notificationId: pushInfo.notificationId ?? ""
-                            )
-                                .map { _ in .updateEntrance(profileInfo) }
-                        },
-                    self.settingsUseCase.switchNotification(on: true)
-                        .flatMapLatest { _ -> Observable<Mutation> in .empty() }
-                ])
-            } else {
-                
-                return self.settingsUseCase.switchNotification(on: true)
-                    .flatMapLatest { _ -> Observable<Mutation> in .empty() }
-            }
+            guard let pushInfo = self.pushInfo else { return .empty() }
+            
+            return self.fetchUserInfoUseCase.userInfo(userId: nil)
+                .flatMapLatest { profileInfo -> Observable<Mutation> in
+                    
+                    if let notificationId = pushInfo.notificationId {
+                        
+                        return self.notificationUseCase.requestRead(notificationId: notificationId)
+                            .map { _ in .updateEntrance(profileInfo) }
+                    } else {
+                        
+                        return .just(.updateEntrance(profileInfo))
+                    }
+                }
         case .postingPermission:
             
-            return self.userUseCase.postingPermission()
+            return self.validateUserUseCase.postingPermission()
                 .map(Mutation.updatePostingPermission)
         case .resetCouldPosting:
             
@@ -159,15 +156,15 @@ extension MainTabBarReactor {
     }
     
     func reactorForProfile() -> ProfileViewReactor {
-        ProfileViewReactor(dependencies: self.dependencies, type: .myWithNavi)
+        ProfileViewReactor(dependencies: self.dependencies, type: .my)
     }
     
     func reactorForNoti() -> NotificationViewReactor {
         NotificationViewReactor(dependencies: self.dependencies)
     }
     
-    func reactorForDetail(_ targetCardId: String, type: EntranceCardType) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, type, type: .push, with: targetCardId)
+    func reactorForDetail(_ targetCardId: String) -> DetailViewReactor {
+        DetailViewReactor(dependencies: self.dependencies, with: targetCardId)
     }
     
     func reactorForFollow(nickname: String, with userId: String) -> FollowViewReactor {

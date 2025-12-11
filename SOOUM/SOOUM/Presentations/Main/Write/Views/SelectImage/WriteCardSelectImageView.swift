@@ -23,6 +23,7 @@ class WriteCardSelectImageView: UIView {
         static let foodTitle: String = "푸드"
         static let abstractTitle: String = "추상"
         static let memoTitle: String = "메모"
+        static let eventTitle: String = "이벤트"
     }
     
     enum Section: Int, CaseIterable {
@@ -32,6 +33,7 @@ class WriteCardSelectImageView: UIView {
         case food
         case abstract
         case memo
+        case event
     }
     
     enum Item: Hashable {
@@ -41,6 +43,7 @@ class WriteCardSelectImageView: UIView {
         case food(ImageUrlInfo)
         case abstract(ImageUrlInfo)
         case memo(ImageUrlInfo)
+        case event(ImageUrlInfo)
         case user
     }
     
@@ -54,14 +57,13 @@ class WriteCardSelectImageView: UIView {
     }
     
     private lazy var headerView = SOMSwipableTabBar().then {
-        $0.items = [Text.colorTitle, Text.natureTitle, Text.sensitivitytitle, Text.foodTitle, Text.abstractTitle, Text.memoTitle]
         $0.delegate = self
     }
     
     private lazy var collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UICollectionViewFlowLayout().then {
-            $0.scrollDirection = .horizontal
+            $0.scrollDirection = .vertical
             $0.minimumLineSpacing = 0
             $0.minimumInteritemSpacing = 0
         }
@@ -138,6 +140,13 @@ class WriteCardSelectImageView: UIView {
             cell.isSelected = imageInfo == self.selectedImageInfo.value?.info
             
             return cell
+        case let .event(imageInfo):
+            
+            let cell: WriteCardDefaultImageCell = self.cellForDefault(collectionView, with: indexPath)
+            cell.setModel(imageInfo)
+            cell.isSelected = imageInfo == self.selectedImageInfo.value?.info
+            
+            return cell
         case .user:
             
             let cell: WriteCardUserImageCell = self.cellForUser(collectionView, with: indexPath)
@@ -207,6 +216,20 @@ class WriteCardSelectImageView: UIView {
         
         var snapshot = Snapshot()
         snapshot.appendSections(Section.allCases)
+        var items = [
+            Text.colorTitle,
+            Text.natureTitle,
+            Text.sensitivitytitle,
+            Text.foodTitle,
+            Text.abstractTitle,
+            Text.memoTitle,
+            Text.eventTitle
+        ]
+        if models.event == nil {
+            snapshot.deleteSections([.event])
+            items.removeAll(where: { $0 == Text.eventTitle })
+        }
+        self.headerView.items = items
         
         var new = models.color.map { Item.color($0) }
         new.append(Item.user)
@@ -237,7 +260,8 @@ class WriteCardSelectImageView: UIView {
                 let .sensitivity(imageInfo),
                 let .food(imageInfo),
                 let .abstract(imageInfo),
-                let .memo(imageInfo):
+                let .memo(imageInfo),
+                let .event(imageInfo):
                 return imageInfo == self.selectedImageInfo.value?.info
             case .user:
                 return false
@@ -306,6 +330,10 @@ extension WriteCardSelectImageView: SOMSwipableTabBarDelegate {
             case 5:
                 let items = self.models.memo.map { Item.memo($0) }
                 return (.memo, items)
+            case 6:
+                guard let events = self.models.event else { return nil }
+                let items = events.map { Item.event($0) }
+                return (.event, items)
             default:
                 return nil
             }
@@ -327,7 +355,8 @@ extension WriteCardSelectImageView: SOMSwipableTabBarDelegate {
                 let .sensitivity(imageInfo),
                 let .food(imageInfo),
                 let .abstract(imageInfo),
-                let .memo(imageInfo):
+                let .memo(imageInfo),
+                let .event(imageInfo):
                 return imageInfo == self.selectedImageInfo.value?.info
             case .user:
                 return false
@@ -357,7 +386,8 @@ extension WriteCardSelectImageView: UICollectionViewDelegate {
                 let .sensitivity(imageInfo),
                 let .food(imageInfo),
                 let .abstract(imageInfo),
-                let .memo(imageInfo):
+                let .memo(imageInfo),
+                let .event(imageInfo):
                 return imageInfo == self.selectedImageInfo.value?.info
             case .user:
                 return false
@@ -378,6 +408,8 @@ extension WriteCardSelectImageView: UICollectionViewDelegate {
         case let .abstract(imageInfo):
             self.selectedImageInfo.accept((.default, imageInfo))
         case let .memo(imageInfo):
+            self.selectedImageInfo.accept((.default, imageInfo))
+        case let .event(imageInfo):
             self.selectedImageInfo.accept((.default, imageInfo))
         case .user:
             self.selectedUseUserImageCell.accept(())

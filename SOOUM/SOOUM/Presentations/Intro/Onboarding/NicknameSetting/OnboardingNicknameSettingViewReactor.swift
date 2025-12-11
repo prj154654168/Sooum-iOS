@@ -61,34 +61,37 @@ class OnboardingNicknameSettingViewReactor: Reactor {
     enum Mutation {
         case updateNickname(String)
         case updateIsValid(Bool)
+        case updateIsProcessing(Bool)
         case updateIsErrorMessage(String?)
     }
 
     struct State {
         fileprivate(set) var nickname: String
         fileprivate(set) var isValid: Bool
+        fileprivate(set) var isProcessing: Bool
         fileprivate(set) var errorMessage: String?
     }
 
     var initialState: State = .init(
         nickname: "\(Text.adjectives.randomElement()!) \(Text.nouns.randomElement()!)",
         isValid: false,
+        isProcessing: false,
         errorMessage: nil
     )
     
     private let dependencies: AppDIContainerable
-    private let userUseCase: UserUseCase
+    private let validateNicknameUseCase: ValidateNicknameUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.validateNicknameUseCase = dependencies.rootContainer.resolve(ValidateNicknameUseCase.self)
     }
 
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
             
-            return self.userUseCase.nickname()
+            return self.validateNicknameUseCase.nickname()
                 .map(Mutation.updateNickname)
         case let .checkValidate(nickname):
             
@@ -100,8 +103,9 @@ class OnboardingNicknameSettingViewReactor: Reactor {
             }
             
             return .concat([
+                .just(.updateIsProcessing(true)),
                 .just(.updateIsErrorMessage(nil)),
-                self.userUseCase.isNicknameValid(nickname: nickname)
+                self.validateNicknameUseCase.checkValidation(nickname: nickname)
                     .withUnretained(self)
                     .flatMapLatest { object, isValid -> Observable<Mutation> in
                         
@@ -112,7 +116,8 @@ class OnboardingNicknameSettingViewReactor: Reactor {
                             .just(.updateNickname(nickname)),
                             .just(.updateIsErrorMessage(errorMessage))
                         ])
-                    }
+                    },
+                .just(.updateIsProcessing(false))
             ])
         }
     }
@@ -124,6 +129,8 @@ class OnboardingNicknameSettingViewReactor: Reactor {
             newState.nickname = nickname
         case let .updateIsValid(isValid):
             newState.isValid = isValid
+        case let .updateIsProcessing(isProcessing):
+            newState.isProcessing = isProcessing
         case let .updateIsErrorMessage(errorMessage):
             newState.errorMessage = errorMessage
         }

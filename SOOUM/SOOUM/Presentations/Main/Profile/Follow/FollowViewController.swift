@@ -90,7 +90,7 @@ class FollowViewController: BaseNavigationViewController, View {
             
             cell.setModel(follower)
             
-            cell.profileBackgroundButton.rx.throttleTap
+            cell.profileBackgroundButton.rx.throttleTap(.seconds(3))
                 .subscribe(with: self) { object, _ in
                     if follower.isRequester {
                         guard let navigationController = object.navigationController,
@@ -99,7 +99,7 @@ class FollowViewController: BaseNavigationViewController, View {
                         
                         if navigationController.viewControllers.first?.isKind(of: ProfileViewController.self) == true {
                             
-                            object.navigationPopToRoot(animated: false, bottomBarHidden: false)
+                            object.navigationPopToRoot(animated: false)
                         } else {
                             
                             tabBarController.didSelectedIndex(3)
@@ -108,7 +108,7 @@ class FollowViewController: BaseNavigationViewController, View {
                     } else {
                         let profileViewController = ProfileViewController()
                         profileViewController.reactor = reactor.reactorForProfile(follower.memberId)
-                        object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                        object.navigationPush(profileViewController, animated: true)
                     }
                 }
                 .disposed(by: cell.disposeBag)
@@ -139,11 +139,11 @@ class FollowViewController: BaseNavigationViewController, View {
                 
                 cell.setModel(following)
                 
-                cell.profileBackgroundButton.rx.throttleTap
+                cell.profileBackgroundButton.rx.throttleTap(.seconds(3))
                     .subscribe(with: self) { object, _ in
                         let profileViewController = ProfileViewController()
                         profileViewController.reactor = reactor.reactorForProfile(following.memberId)
-                        object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                        object.navigationPush(profileViewController, animated: true)
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -166,7 +166,7 @@ class FollowViewController: BaseNavigationViewController, View {
                 
                 cell.setModel(following)
                 
-                cell.profileBackgroundButton.rx.throttleTap
+                cell.profileBackgroundButton.rx.throttleTap(.seconds(3))
                     .subscribe(with: self) { object, _ in
                         if following.isRequester {
                             guard let navigationController = object.navigationController,
@@ -175,7 +175,7 @@ class FollowViewController: BaseNavigationViewController, View {
                             
                             if navigationController.viewControllers.first?.isKind(of: ProfileViewController.self) == true {
                                 
-                                object.navigationPopToRoot(animated: false, bottomBarHidden: false)
+                                object.navigationPopToRoot(animated: false)
                             } else {
                                 
                                 tabBarController.didSelectedIndex(3)
@@ -184,7 +184,7 @@ class FollowViewController: BaseNavigationViewController, View {
                         } else {
                             let profileViewController = ProfileViewController()
                             profileViewController.reactor = reactor.reactorForProfile(following.memberId)
-                            object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                            object.navigationPush(profileViewController, animated: true)
                         }
                     }
                     .disposed(by: cell.disposeBag)
@@ -262,18 +262,6 @@ class FollowViewController: BaseNavigationViewController, View {
         }
     }
     
-    override func bind() {
-        // 뒤로가기 시 상대 팔로우 화면이면 하단 네비바 숨김
-        self.navigationBar.backButton.rx.throttleTap
-            .subscribe(with: self) { object, _ in
-                object.navigationPop(
-                    animated: true,
-                    bottomBarHidden: object.reactor?.viewType == .other
-                )
-            }
-            .disposed(by: self.disposeBag)
-    }
-    
     
     // MARK: ReactorKit - bind
     
@@ -283,7 +271,10 @@ class FollowViewController: BaseNavigationViewController, View {
         let viewDidLoad = self.rx.viewDidLoad.share()
         viewDidLoad
             .subscribe(with: self.stickyTabBar) { stickyTabBar, _ in
-                stickyTabBar.didSelectTabBarItem(reactor.entranceType == .follower ? 0 : 1)
+                stickyTabBar.didSelectTabBarItem(
+                    reactor.entranceType == .follower ? 0 : 1,
+                    with: false
+                )
             }
             .disposed(by: self.disposeBag)
         
@@ -476,7 +467,13 @@ extension FollowViewController: UITableViewDelegate {
         let offset = scrollView.contentOffset.y
         
         // 당겨서 새로고침
-        if self.isRefreshEnabled, offset < self.initialOffset {
+        if self.isRefreshEnabled, offset < self.initialOffset,
+           let refreshControl = self.tableView.refreshControl as? SOMRefreshControl {
+           
+           refreshControl.updateProgress(
+               offset: scrollView.contentOffset.y,
+               topInset: scrollView.adjustedContentInset.top
+           )
             
             let pulledOffset = self.initialOffset - offset
             /// refreshControl heigt + top padding

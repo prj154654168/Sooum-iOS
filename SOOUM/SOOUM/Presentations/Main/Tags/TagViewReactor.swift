@@ -39,21 +39,22 @@ class TagViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let tagUseCase: TagUseCase
-    private let userUseCase: UserUseCase
+    private let fetchUserInfoUseCase: FetchUserInfoUseCase
+    private let fetchTagUseCase: FetchTagUseCase
+    private let updateTagFavoriteUseCase: UpdateTagFavoriteUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.tagUseCase = dependencies.rootContainer.resolve(TagUseCase.self)
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.fetchUserInfoUseCase = dependencies.rootContainer.resolve(FetchUserInfoUseCase.self)
+        self.fetchTagUseCase = dependencies.rootContainer.resolve(FetchTagUseCase.self)
+        self.updateTagFavoriteUseCase = dependencies.rootContainer.resolve(UpdateTagFavoriteUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
             
-            return self.userUseCase.profile(userId: nil)
-                .map(\.nickname)
+            return self.fetchUserInfoUseCase.myNickname()
                 .withUnretained(self)
                 .flatMapLatest { object, nickname -> Observable<Mutation> in
                     
@@ -84,8 +85,10 @@ class TagViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsFavorite(nil)),
-                self.tagUseCase.updateFavorite(tagId: model.id, isFavorite: !model.isFavorite)
-                    .flatMapLatest { isUpdated -> Observable<Mutation> in .just(.updateIsFavorite((model, isUpdated))) }
+                self.updateTagFavoriteUseCase.updateFavorite(tagId: model.id, isFavorite: !model.isFavorite)
+                    .flatMapLatest { isUpdated -> Observable<Mutation> in
+                        return .just(.updateIsFavorite((model, isUpdated)))
+                    }
                     .catchAndReturn(.updateIsFavorite((model, false)))
             ])
         }
@@ -111,23 +114,14 @@ private extension TagViewReactor {
     
     func favoriteTags() -> Observable<Mutation> {
         
-        return self.tagUseCase.favorites()
-            // 관심 태그는 최대 9개까지 표시
-            .map { Array($0.prefix(9)).map { FavoriteTagViewModel(id: $0.id, text: $0.title) } }
+        return self.fetchTagUseCase.favorites()
+            .map { favorites in favorites.map { FavoriteTagViewModel(id: $0.id, text: $0.title) } }
             .map(Mutation.favoriteTags)
     }
     
     func popularTags() -> Observable<Mutation> {
         
-        return self.tagUseCase.ranked()
-            // 인기 태그는 최소 1개 이상일 때 표시
-            .map { $0.filter { $0.usageCnt > 0 } }
-            // // 중복 제거
-            // .map { Array(Set($0)) }
-            // // 태그 갯수로 정렬
-            // .map { $0.sorted(by: { $0.usageCnt > $1.usageCnt }) }
-            // 인기 태그는 최대 10개까지 표시
-            .map { Array($0.prefix(10)) }
+        return self.fetchTagUseCase.ranked()
             .map(Mutation.popularTags)
     }
 }

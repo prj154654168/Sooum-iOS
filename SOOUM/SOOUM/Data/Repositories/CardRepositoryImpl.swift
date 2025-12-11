@@ -43,6 +43,11 @@ class CardRepositoryImpl: CardRepository {
         return self.remoteDataSource.detailCard(id: id, latitude: latitude, longitude: longitude)
     }
     
+    func isCardDeleted(id: String) -> Observable<IsCardDeletedResponse> {
+        
+        return self.remoteDataSource.isCardDeleted(id: id)
+    }
+    
     func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<BaseCardInfoResponse> {
         
         return self.remoteDataSource.commentCard(id: id, lastId: lastId, latitude: latitude, longitude: longitude)
@@ -129,5 +134,26 @@ class CardRepositoryImpl: CardRepository {
             imgName: imgName,
             tags: tags
         )
+    }
+    
+    
+    // MARK: Tag
+    
+    func tagCards(tagId: String, lastId: String?) -> Observable<TagCardInfoResponse> {
+        
+        return self.remoteDataSource.tagCards(tagId: tagId, lastId: lastId)
+    }
+    
+    
+    // MARK: My
+    
+    func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        return self.remoteDataSource.feedCards(userId: userId, lastId: lastId)
+    }
+    
+    func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse> {
+        
+        return self.remoteDataSource.myCommentCards(lastId: lastId)
     }
 }

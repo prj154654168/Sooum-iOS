@@ -52,11 +52,6 @@ class UserRepositoryImpl: UserRepository {
         return self.remoteDataSource.updateImage(imageName: imageName)
     }
     
-    func updateFCMToken(fcmToken: String) -> Observable<Int> {
-        
-        return self.remoteDataSource.updateFCMToken(fcmToken: fcmToken)
-    }
-    
     func postingPermission() -> Observable<PostingPermissionResponse> {
         
         return self.remoteDataSource.postingPermission()
@@ -70,16 +65,6 @@ class UserRepositoryImpl: UserRepository {
     func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int> {
         
         return self.remoteDataSource.updateMyProfile(nickname: nickname, imageName: imageName)
-    }
-    
-    func feedCards(userId: String, lastId: String?) -> Observable<ProfileCardInfoResponse> {
-        
-        return self.remoteDataSource.feedCards(userId: userId, lastId: lastId)
-    }
-    
-    func myCommentCards(lastId: String?) -> Observable<ProfileCardInfoResponse> {
-        
-        return self.remoteDataSource.myCommentCards(lastId: lastId)
     }
     
     func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse> {
@@ -100,10 +85,5 @@ class UserRepositoryImpl: UserRepository {
     func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int> {
         
         return self.remoteDataSource.updateBlocked(id: id, isBlocked: isBlocked)
-    }
-    
-    func updateNotify(isAllowNotify: Bool) -> Observable<Int> {
-        
-        return self.remoteDataSource.updateNotify(isAllowNotify: isAllowNotify)
     }
 }

@@ -5,12 +5,9 @@
 //  Created by 오현식 on 11/4/24.
 //
 
-import Foundation
-
 import Alamofire
 
-
-class CompositeInterceptor: RequestInterceptor {
+final class CompositeInterceptor: RequestInterceptor {
     
     private let interceptors: [RequestInterceptor]
     
@@ -43,9 +40,9 @@ class CompositeInterceptor: RequestInterceptor {
     }
 }
 
-extension CompositeInterceptor {
+private extension CompositeInterceptor {
     
-    private func adapts(
+    func adapts(
         _ urlRequest: URLRequest,
         index: Int,
         session: Session,

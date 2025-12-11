@@ -22,6 +22,7 @@ class TagCollectViewReactor: Reactor {
         case updateIsFavorite(Bool)
         case updateIsUpdate(Bool?)
         case updateIsRefreshing(Bool)
+        case updateHasErrors(Bool?)
     }
     
     struct State {
@@ -29,19 +30,22 @@ class TagCollectViewReactor: Reactor {
         fileprivate(set) var isFavorite: Bool
         fileprivate(set) var isUpdated: Bool?
         fileprivate(set) var isRefreshing: Bool
+        fileprivate(set) var hasErrors: Bool?
     }
     
     var initialState: State
     
     private let dependencies: AppDIContainerable
-    private let tagUseCase: TagUseCase
+    private let fetchCardUseCase: FetchCardUseCase
+    private let updateTagFavoriteUseCase: UpdateTagFavoriteUseCase
     
     private let id: String
     let title: String
     
     init(dependencies: AppDIContainerable, with id: String, title: String, isFavorite: Bool) {
         self.dependencies = dependencies
-        self.tagUseCase = dependencies.rootContainer.resolve(TagUseCase.self)
+        self.fetchCardUseCase = dependencies.rootContainer.resolve(FetchCardUseCase.self)
+        self.updateTagFavoriteUseCase = dependencies.rootContainer.resolve(UpdateTagFavoriteUseCase.self)
         
         self.id = id
         self.title = title
@@ -50,7 +54,8 @@ class TagCollectViewReactor: Reactor {
             tagCardInfos: [],
             isFavorite: isFavorite,
             isUpdated: nil,
-            isRefreshing: false
+            isRefreshing: false,
+            hasErrors: nil
         )
     }
     
@@ -58,7 +63,7 @@ class TagCollectViewReactor: Reactor {
         switch action {
         case .landing:
             
-            return self.tagUseCase.tagCards(tagId: self.id, lastId: nil)
+            return self.fetchCardUseCase.cardsWithTag(tagId: self.id, lastId: nil)
                 .flatMapLatest { tagCardsInfo -> Observable<Mutation> in
                     
                     let isFavorite = tagCardsInfo.cardInfos.isEmpty ?
@@ -73,7 +78,7 @@ class TagCollectViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsRefreshing(true)),
-                self.tagUseCase.tagCards(tagId: self.id, lastId: nil)
+                self.fetchCardUseCase.cardsWithTag(tagId: self.id, lastId: nil)
                     .flatMapLatest { tagCardsInfo -> Observable<Mutation> in
                         
                         let isFavorite = tagCardsInfo.cardInfos.isEmpty ?
@@ -88,14 +93,15 @@ class TagCollectViewReactor: Reactor {
             ])
         case let .more(lastId):
             
-            return self.tagUseCase.tagCards(tagId: self.id, lastId: lastId)
+            return self.fetchCardUseCase.cardsWithTag(tagId: self.id, lastId: lastId)
                 .map(\.cardInfos)
                 .map(Mutation.moreFind)
         case let .updateIsFavorite(isFavorite):
             
             return .concat([
                 .just(.updateIsUpdate(nil)),
-                self.tagUseCase.updateFavorite(tagId: self.id, isFavorite: !isFavorite)
+                .just(.updateHasErrors(nil)),
+                self.updateTagFavoriteUseCase.updateFavorite(tagId: self.id, isFavorite: !isFavorite)
                     .flatMapLatest { isUpdated -> Observable<Mutation> in
                         
                         let isFavorite = isUpdated ? !isFavorite : isFavorite
@@ -104,6 +110,7 @@ class TagCollectViewReactor: Reactor {
                             .just(.updateIsUpdate(isUpdated))
                         ])
                     }
+                    .catch(self.catchClosure)
             ])
         }
     }
@@ -121,14 +128,33 @@ class TagCollectViewReactor: Reactor {
             newState.isUpdated = isUpdated
         case let .updateIsRefreshing(isRefreshing):
             newState.isRefreshing = isRefreshing
+        case let .updateHasErrors(hasErrors):
+            newState.hasErrors = hasErrors
         }
         return newState
+    }
+}
+
+private extension TagCollectViewReactor {
+    
+    var catchClosure: ((Error) throws -> Observable<Mutation>) {
+        return { error in
+            
+            let nsError = error as NSError
+            
+            if case 400 = nsError.code {
+                
+                return .just(.updateHasErrors(true))
+            }
+            
+            return .just(.updateIsUpdate(false))
+        }
     }
 }
 
 extension TagCollectViewReactor {
     
     func reactorForDetail(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, .feed, type: .navi, with: selectedId)
+        DetailViewReactor(dependencies: self.dependencies, with: selectedId)
     }
 }

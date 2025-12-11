@@ -10,11 +10,6 @@ import ReactorKit
 
 class DetailViewReactor: Reactor {
     
-    enum EntranceType {
-        case push
-        case navi
-    }
-    
     enum Action: Equatable {
         case landing
         case refresh
@@ -28,6 +23,7 @@ class DetailViewReactor: Reactor {
     }
     
     enum Mutation {
+        case cardType(Bool)
         case detailCard(DetailCardInfo?)
         case commentCards([BaseCardInfo])
         case moreComment([BaseCardInfo])
@@ -41,6 +37,7 @@ class DetailViewReactor: Reactor {
     }
     
     struct State {
+        fileprivate(set) var isFeed: Bool?
         fileprivate(set) var detailCard: DetailCardInfo?
         fileprivate(set) var commentCards: [BaseCardInfo]
         fileprivate(set) var isRefreshing: Bool
@@ -53,6 +50,7 @@ class DetailViewReactor: Reactor {
     }
     
     var initialState: State = .init(
+        isFeed: nil,
         detailCard: nil,
         commentCards: [],
         isRefreshing: false,
@@ -65,27 +63,22 @@ class DetailViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let cardUseCase: CardUseCase
-    private let userUseCase: UserUseCase
-    private let settingsUseCase: SettingsUseCase
+    private let fetchCardDetailUseCase: FetchCardDetailUseCase
+    private let deleteCardUseCase: DeleteCardUseCase
+    private let updateCardLikeUseCase: UpdateCardLikeUseCase
+    private let blockUserUseCase: BlockUserUseCase
+    private let locationUseCase: LocationUseCase
     
-    let entranceCardType: EntranceCardType
-    let entranceType: EntranceType
     let selectedCardId: String
     
-    init(
-        dependencies: AppDIContainerable,
-        _ entranceCardType: EntranceCardType,
-        type entranceType: EntranceType = .navi,
-        with selectedCardId: String
-    ) {
+    init(dependencies: AppDIContainerable, with selectedCardId: String) {
         self.dependencies = dependencies
-        self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
+        self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
+        self.deleteCardUseCase = dependencies.rootContainer.resolve(DeleteCardUseCase.self)
+        self.updateCardLikeUseCase = dependencies.rootContainer.resolve(UpdateCardLikeUseCase.self)
+        self.blockUserUseCase = dependencies.rootContainer.resolve(BlockUserUseCase.self)
+        self.locationUseCase = dependencies.rootContainer.resolve(LocationUseCase.self)
         
-        self.entranceCardType = entranceCardType
-        self.entranceType = entranceType
         self.selectedCardId = selectedCardId
     }
     
@@ -93,9 +86,24 @@ class DetailViewReactor: Reactor {
         switch action {
         case .landing:
             
+            let coordinate = self.locationUseCase.coordinate()
+            let latitude = coordinate.latitude
+            let longitude = coordinate.longitude
+            
             return .concat([
-                self.detailCard()
-                    .catch(self.catchClosure),
+                self.fetchCardDetailUseCase.detailCard(
+                    id: self.selectedCardId,
+                    latitude: latitude,
+                    longitude: longitude
+                )
+                .flatMapLatest { detailCardInfo -> Observable<Mutation> in
+                    return .concat([
+                        .just(.cardType(detailCardInfo.prevCardInfo == nil)),
+                        .just(.updateReported(detailCardInfo.isReported)),
+                        .just(.detailCard(detailCardInfo))
+                    ])
+                }
+                .catch(self.catchClosure),
                 self.commentCards()
             ])
         case .refresh:
@@ -112,13 +120,13 @@ class DetailViewReactor: Reactor {
             return self.fetchMoreCommentCards(lastId)
         case .delete:
             
-            return self.cardUseCase.deleteCard(id: self.selectedCardId)
+            return self.deleteCardUseCase.delete(cardId: self.selectedCardId)
                 .map(Mutation.updateIsDeleted)
         case let .block(isBlocked):
             
             guard let memberId = self.currentState.detailCard?.memberId else { return .empty() }
             
-            return self.userUseCase.updateBlocked(id: memberId, isBlocked: isBlocked)
+            return self.blockUserUseCase.updateBlocked(userId: memberId, isBlocked: isBlocked)
                 .flatMapLatest { isBlockedSuccess -> Observable<Mutation> in
                     /// isBlocked == true 일 때, 차단 요청
                     return isBlockedSuccess ? .just(.updateIsBlocked(isBlocked == false)) : .empty()
@@ -128,7 +136,7 @@ class DetailViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsLiked(false)),
-                self.cardUseCase.updateLike(id: self.selectedCardId, isLike: isLike)
+                self.updateCardLikeUseCase.updateLike(cardId: self.selectedCardId, isLike: isLike)
                     .filter { $0 }
                     .withUnretained(self)
                     .flatMapLatest { object, _ -> Observable<Mutation> in
@@ -141,14 +149,13 @@ class DetailViewReactor: Reactor {
             return .just(.updateReported(isReported))
         case .willPushToWrite:
             
-            return self.detailCard()
-                .map { _ in .willPushToWrite(true) }
-                .catch { _ in
-                    return .concat([
-                        .just(.willPushToWrite(false)),
-                        .just(.updateIsDeleted(true))
-                    ])
-                }
+            return self.fetchCardDetailUseCase.isDeleted(cardId: self.selectedCardId)
+            .flatMapLatest { isDeleted -> Observable<Mutation> in
+                return .concat([
+                    .just(.willPushToWrite(isDeleted)),
+                    .just(.updateIsDeleted(isDeleted))
+                ])
+            }
         case .resetPushState:
             
             return .just(.willPushToWrite(nil))
@@ -158,6 +165,8 @@ class DetailViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
+        case let .cardType(isFeed):
+            newState.isFeed = isFeed
         case let .detailCard(detailCard):
             newState.detailCard = detailCard
         case let .commentCards(commentCards):
@@ -184,11 +193,11 @@ class DetailViewReactor: Reactor {
     
     func detailCard() -> Observable<Mutation> {
         
-        let coordinate = self.settingsUseCase.coordinate()
+        let coordinate = self.locationUseCase.coordinate()
         let latitude = coordinate.latitude
         let longitude = coordinate.longitude
         
-        return self.cardUseCase.detailCard(
+        return self.fetchCardDetailUseCase.detailCard(
             id: self.selectedCardId,
             latitude: latitude,
             longitude: longitude
@@ -198,11 +207,11 @@ class DetailViewReactor: Reactor {
     
     func commentCards() -> Observable<Mutation> {
         
-        let coordinate = self.settingsUseCase.coordinate()
+        let coordinate = self.locationUseCase.coordinate()
         let latitude = coordinate.latitude
         let longitude = coordinate.longitude
         
-        return self.cardUseCase.commentCard(
+        return self.fetchCardDetailUseCase.commentCards(
             id: self.selectedCardId,
             lastId: nil,
             latitude: latitude,
@@ -213,11 +222,11 @@ class DetailViewReactor: Reactor {
     
     func fetchMoreCommentCards(_ lastId: String) -> Observable<Mutation> {
         
-        let coordinate = self.settingsUseCase.coordinate()
+        let coordinate = self.locationUseCase.coordinate()
         let latitude = coordinate.latitude
         let longitude = coordinate.longitude
         
-        return self.cardUseCase.commentCard(
+        return self.fetchCardDetailUseCase.commentCards(
             id: self.selectedCardId,
             lastId: lastId,
             latitude: latitude,
@@ -230,7 +239,7 @@ class DetailViewReactor: Reactor {
 extension DetailViewReactor {
     
     func reactorForPush(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, .comment, type: .push, with: selectedId)
+        DetailViewReactor(dependencies: self.dependencies, with: selectedId)
     }
     
     func reactorForReport() -> ReportViewReactor {

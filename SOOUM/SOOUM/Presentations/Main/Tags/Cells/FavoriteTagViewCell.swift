@@ -124,7 +124,7 @@ class FavoriteTagViewCell: UICollectionViewCell {
             }
             
             itemContainer.rx.tapGesture()
-                .throttle(.seconds(3), scheduler: MainScheduler.instance)
+                .throttle(.seconds(2), scheduler: MainScheduler.instance)
                 .when(.recognized)
                 .subscribe(with: self) { object, gesture in
                     guard itemContainer.isTappedDirectly(gesture: gesture) else { return }

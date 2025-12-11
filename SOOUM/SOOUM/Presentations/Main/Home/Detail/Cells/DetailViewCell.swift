@@ -258,9 +258,9 @@ class DetailViewCell: UICollectionViewCell {
         self.memberInfoView.distance = model.distance
         self.memberInfoView.createAt = model.createdAt
         
-        if let prevCardImgURL = model.prevCardImgURL {
+        if let prevCardInfo = model.prevCardInfo {
             
-            self.prevCardBackgroundImageView.setImage(strUrl: prevCardImgURL)
+            self.prevCardBackgroundImageView.setImage(strUrl: prevCardInfo.prevCardImgURL)
             
             self.prevCardBackgroundImageView.isHidden = false
             self.prevCardBackgroundButton.isHidden = false
@@ -270,7 +270,7 @@ class DetailViewCell: UICollectionViewCell {
             self.prevCardBackgroundButton.isHidden = true
         }
         
-        if let isPrevCardDeleted = model.isPrevCardDeleted, isPrevCardDeleted {
+        if let isPrevCardDeleted = model.prevCardInfo?.isPrevCardDeleted, isPrevCardDeleted {
             
             self.prevCardBackgroundImageView.image = nil
         }

@@ -36,36 +36,36 @@ class BlockUsersViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let settingsUseCase: SettingsUseCase
-    private let userUseCase: UserUseCase
+    private let fetchBlockUserUseCase: FetchBlockUserUseCase
+    private let blockUserUseCase: BlockUserUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
+        self.fetchBlockUserUseCase = dependencies.rootContainer.resolve(FetchBlockUserUseCase.self)
+        self.blockUserUseCase = dependencies.rootContainer.resolve(BlockUserUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
             
-            return self.settingsUseCase.blockUsers(lastId: nil)
+            return self.fetchBlockUserUseCase.blockUsers(lastId: nil)
                 .map(Mutation.blockUserInfos)
         case .refresh:
             
             return .concat([
                 .just(.updateIsRefreshing(true)),
-                self.settingsUseCase.blockUsers(lastId: nil)
+                self.fetchBlockUserUseCase.blockUsers(lastId: nil)
                     .map(Mutation.blockUserInfos),
                 .just(.updateIsRefreshing(false))
             ])
         case let .moreFind(lastId):
             
-            return self.settingsUseCase.blockUsers(lastId: lastId)
+            return self.fetchBlockUserUseCase.blockUsers(lastId: lastId)
                 .map(Mutation.more)
         case let .cancelBlock(userId):
             
-            return self.userUseCase.updateBlocked(id: userId, isBlocked: false)
+            return self.blockUserUseCase.updateBlocked(userId: userId, isBlocked: false)
                 .map(Mutation.updateIsCanceled)
         }
     }
@@ -91,8 +91,4 @@ extension BlockUsersViewReactor {
     func reactorForProfile(_ userId: String) -> ProfileViewReactor {
         ProfileViewReactor(dependencies: self.dependencies, type: .other, with: userId)
     }
-    
-    // func reactorForMainTabBar() -> MainTabBarReactor {
-    //     MainTabBarReactor(provider: self.provider)
-    // }
 }

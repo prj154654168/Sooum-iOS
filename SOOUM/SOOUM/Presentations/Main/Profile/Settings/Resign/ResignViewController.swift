@@ -141,12 +141,12 @@ class ResignViewController: BaseNavigationViewController, View {
         let boundsHeight = self.scrollView.bounds.height - height
         let bottomOffset = CGPoint(x: 0, y: contentHeight - boundsHeight + 10)
         // 키보드 및 스크롤 애니메이션 동기화를 위해 `UIView.animate` 사용
-        UIView.animate(withDuration: 0.25) {
-            self.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.25) { [weak self] in
+            self?.view.layoutIfNeeded()
             
             // 스크롤이 필요할 때만 적용
             if bottomOffset.y > 0 {
-                self.scrollView.setContentOffset(bottomOffset, animated: false)
+                self?.scrollView.setContentOffset(bottomOffset, animated: false)
             }
         }
     }
@@ -175,9 +175,10 @@ class ResignViewController: BaseNavigationViewController, View {
         
         // State
         reactor.state.map(\.isSuccess)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .filter { $0 }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 guard let window = object.view.window else { return }
                 
@@ -194,8 +195,9 @@ class ResignViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.reason)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, reason in
                 
                 let items = object.container.arrangedSubviews.compactMap { $0 as? SOMButton }

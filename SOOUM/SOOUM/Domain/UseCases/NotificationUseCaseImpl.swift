@@ -5,8 +5,6 @@
 //  Created by 오현식 on 9/17/25.
 //
 
-import Foundation
-
 import RxSwift
 
 class NotificationUseCaseImpl: NotificationUseCase {
@@ -19,21 +17,21 @@ class NotificationUseCaseImpl: NotificationUseCase {
     
     func unreadNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]> {
         
-        return self.repository.unreadNotifications(lastId: lastId).map { $0.notificationInfo }
+        return self.repository.unreadNotifications(lastId: lastId).map(\.notificationInfo)
     }
     
     func readNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]> {
         
-        return self.repository.readNotifications(lastId: lastId).map { $0.notificationInfo }
+        return self.repository.readNotifications(lastId: lastId).map(\.notificationInfo)
+    }
+    
+    func isUnreadNotiEmpty() -> Observable<Bool> {
+        
+        return self.unreadNotifications(lastId: nil).map(\.isEmpty)
     }
     
     func requestRead(notificationId: String) -> Observable<Bool> {
         
         return self.repository.requestRead(notificationId: notificationId).map { $0 == 200 }
-    }
-    
-    func notices(lastId: String?, size: Int?, requestType: NotificationRequest.RequestType) -> Observable<[NoticeInfo]> {
-        
-        return self.repository.notices(lastId: lastId, size: size, requestType: requestType).map { $0.noticeInfos }
     }
 }

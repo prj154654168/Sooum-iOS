@@ -150,6 +150,7 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
         // State
         reactor.state.map(\.isProcessing)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.loadingIndicatorView) { loadingIndicatorView, isLoading in
                 if isLoading {
                     loadingIndicatorView.startAnimating()
@@ -162,11 +163,13 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
         let trnsferCodeInfo = reactor.state.map(\.trnsferCodeInfo).filterNil().distinctUntilChanged().share()
         trnsferCodeInfo
             .map(\.code)
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.transferCodeLabel.rx.text)
             .disposed(by: self.disposeBag)
         
         trnsferCodeInfo
             .map(\.expiredAt)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, expiredAt in
                 object.subscribePungTime(expiredAt)
             }

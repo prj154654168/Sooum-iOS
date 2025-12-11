@@ -16,6 +16,10 @@ struct Token: Equatable {
 extension Token {
     
     static var defaultValue: Token = Token(accessToken: "", refreshToken: "")
+    
+    var isEmpty: Bool {
+        return self.accessToken.isEmpty && self.refreshToken.isEmpty
+    }
 }
 
 extension Token: Decodable { }

@@ -50,7 +50,7 @@ class AuthManager: CompositeManager<AuthManagerConfiguration> {
     
     var hasToken: Bool {
         let token = self.authInfo.token
-        return !token.accessToken.isEmpty && !token.refreshToken.isEmpty
+        return token.accessToken.isEmpty == false && token.refreshToken.isEmpty == false
     }
     
     override init(provider: ManagerTypeDelegate, configure: AuthManagerConfiguration) {
@@ -187,7 +187,7 @@ extension AuthManager: AuthManagerDelegate {
                     let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
                     return provider.networkManager.perform(LoginResponse.self, request: request)
                         .map(\.token)
-                        .withUnretained(self)
+                        .withUnretained(object)
                         .flatMapLatest { object, token -> Observable<Bool> in
                             
                             // session token 업데이트
@@ -235,18 +235,18 @@ extension AuthManager: AuthManagerDelegate {
      */
     func reAuthenticate(_ token: Token, _ completion: @escaping (AuthResult) -> Void) {
         
-        guard self.authInfo.token.refreshToken.isEmpty == false else {
+        guard self.authInfo.token.isEmpty == false else {
             let error = NSError(
                 domain: "SOOUM",
                 code: -99,
-                userInfo: [NSLocalizedDescriptionKey: "Refresh token not found"]
+                userInfo: [NSLocalizedDescriptionKey: "tokens not found"]
             )
             completion(.failure(error))
             return
         }
         
         /// 1개 이상의 API에서 reAuthenticate 요청 했을 때,
-        /// 기존 요청이 끝날 떄까지 대기
+        /// 처음 요청이 끝날 떄까지 대기
         guard self.isReAuthenticating == false else {
             self.pendingResults.append(completion)
             return
@@ -270,7 +270,7 @@ extension AuthManager: AuthManagerDelegate {
                 with: self,
                 onNext: { object, token in
                 
-                    if token.accessToken.isEmpty || token.refreshToken.isEmpty {
+                    if token.accessToken.isEmpty && token.refreshToken.isEmpty {
                         let error = NSError(
                             domain: "SOOUM",
                             code: -99,

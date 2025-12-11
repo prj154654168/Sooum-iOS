@@ -12,33 +12,29 @@ class TagSearchViewReactor: Reactor {
     enum Action: Equatable {
         case reset
         case search(String)
-        case updateIsFavorite(String, Bool)
     }
     
     enum Mutation {
         case searchTerms([TagInfo]?)
         case updateIsUpdate(Bool?)
-        case updateIsFavorite(Bool)
     }
     
     struct State {
         fileprivate(set) var searchTerms: [TagInfo]?
         fileprivate(set) var isUpdated: Bool?
-        fileprivate(set) var isFavorite: Bool
     }
     
     var initialState: State = .init(
         searchTerms: nil,
-        isUpdated: nil,
-        isFavorite: false
+        isUpdated: nil
     )
     
     private let dependencies: AppDIContainerable
-    private let tagUseCase: TagUseCase
+    private let fetchTagUseCase: FetchTagUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.tagUseCase = dependencies.rootContainer.resolve(TagUseCase.self)
+        self.fetchTagUseCase = dependencies.rootContainer.resolve(FetchTagUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -48,22 +44,8 @@ class TagSearchViewReactor: Reactor {
             return .just(.searchTerms(nil))
         case let .search(terms):
             
-            return self.tagUseCase.related(keyword: terms, size: 20)
+            return self.fetchTagUseCase.related(keyword: terms, size: 20)
                 .map(Mutation.searchTerms)
-        case let .updateIsFavorite(tagId, isFavorite):
-            
-            return .concat([
-                .just(.updateIsUpdate(nil)),
-                self.tagUseCase.updateFavorite(tagId: tagId, isFavorite: !isFavorite)
-                    .flatMapLatest { isUpdated -> Observable<Mutation> in
-                        
-                        let isFavorite = isUpdated ? !isFavorite : isFavorite
-                        return .concat([
-                            .just(.updateIsFavorite(isFavorite)),
-                            .just(.updateIsUpdate(isUpdated))
-                        ])
-                    }
-            ])
         }
     }
     
@@ -74,8 +56,6 @@ class TagSearchViewReactor: Reactor {
             newState.searchTerms = searchTerms
         case let .updateIsUpdate(isUpdated):
             newState.isUpdated = isUpdated
-        case let .updateIsFavorite(isFavorite):
-            newState.isFavorite = isFavorite
         }
         return newState
     }

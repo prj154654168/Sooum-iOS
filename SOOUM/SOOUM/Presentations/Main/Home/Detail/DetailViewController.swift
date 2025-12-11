@@ -105,7 +105,6 @@ class DetailViewController: BaseNavigationViewController, View {
     // MARK: Variables
      
     private var detailCard: DetailCardInfo = .defaultValue
-     
     private var commentCards: [BaseCardInfo] = []
      
     private var isDeleted = false
@@ -149,15 +148,6 @@ class DetailViewController: BaseNavigationViewController, View {
      override func setupNaviBar() {
          super.setupNaviBar()
          
-         guard let reactor = self.reactor else { return }
-         
-         self.navigationBar.title = reactor.entranceCardType == .feed ?
-            Text.feedDetailNavigationTitle :
-            Text.commentDetailNavigationTitle
-         
-         if reactor.entranceCardType == .comment {
-             self.navigationBar.setLeftButtons([self.leftHomeButton])
-         }
          self.navigationBar.setRightButtons([self.rightMoreButton])
      }
      
@@ -203,6 +193,7 @@ class DetailViewController: BaseNavigationViewController, View {
          rightMoreButtonDidTap
              .withLatestFrom(detailCard)
              .filter { $0.isOwnCard }
+             .observe(on: MainScheduler.instance)
              .subscribe(with: self) { object, _ in
                  
                  object.actions = [
@@ -231,6 +222,7 @@ class DetailViewController: BaseNavigationViewController, View {
              .withLatestFrom(Observable.combineLatest(detailCard, isBlocked, isReported))
              .filter { $0.0.isOwnCard == false }
              .map { ($0.0.nickname, $0.1, $0.2) }
+             .observe(on: MainScheduler.instance)
              .subscribe(with: self) { object, combined in
                  
                  let (nickname, isBlocked, isReported) = combined
@@ -262,7 +254,7 @@ class DetailViewController: BaseNavigationViewController, View {
                                 
                                 let reportViewController = ReportViewController()
                                 reportViewController.reactor = reactor.reactorForReport()
-                                object?.navigationPush(reportViewController, animated: true, bottomBarHidden: true)
+                                object?.navigationPush(reportViewController, animated: true)
                             }
                         }
                     )
@@ -277,16 +269,16 @@ class DetailViewController: BaseNavigationViewController, View {
              .disposed(by: self.disposeBag)
          
          // 카드 삭제 후 X 버튼 액션
-         self.rightDeleteButton.rx.throttleTap
+         self.rightDeleteButton.rx.throttleTap(.seconds(3))
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: HomeViewController.self, animated: false, bottomBarHidden: false)
+                 object.navigationPop(animated: false)
              }
              .disposed(by: self.disposeBag)
          
-         // 답카드 홈 버튼 액션
-         self.leftHomeButton.rx.throttleTap
+         // 댓글카드 홈 버튼 액션
+         self.leftHomeButton.rx.throttleTap(.seconds(3))
              .subscribe(with: self) { object, _ in
-                 object.navigationPop(to: HomeViewController.self, animated: false, bottomBarHidden: false)
+                 object.navigationPopToRoot(animated: false)
              }
              .disposed(by: self.disposeBag)
          
@@ -312,6 +304,20 @@ class DetailViewController: BaseNavigationViewController, View {
              .filter { $0 == false }
              .subscribe(with: self.collectionView) { collectionView, _ in
                  collectionView.refreshControl?.endRefreshing()
+             }
+             .disposed(by: self.disposeBag)
+         
+         reactor.state.map(\.isFeed)
+             .filterNil()
+             .observe(on: MainScheduler.asyncInstance)
+             .subscribe(with: self) { object, isFeed in
+                 object.navigationBar.title = isFeed ?
+                    Text.feedDetailNavigationTitle :
+                    Text.commentDetailNavigationTitle
+                 
+                 if isFeed == false {
+                     object.navigationBar.setLeftButtons([object.leftHomeButton])
+                 }
              }
              .disposed(by: self.disposeBag)
          
@@ -343,21 +349,21 @@ class DetailViewController: BaseNavigationViewController, View {
          
          let willPushEnabled = reactor.state.map(\.willPushEnabled).distinctUntilChanged().filterNil()
          willPushEnabled
-             .filter { $0 }
+             .filter { $0 == false }
+             .observe(on: MainScheduler.instance)
              .subscribe(with: self) { object, _ in
                  let writeCardViewController = WriteCardViewController()
                  writeCardViewController.reactor = reactor.reactorForWriteCard()
                  object.navigationPush(
                     writeCardViewController,
-                    animated: true,
-                    bottomBarHidden: true
+                    animated: true
                  ) { _ in
                      reactor.action.onNext(.resetPushState)
                  }
              }
              .disposed(by: self.disposeBag)
          willPushEnabled
-             .filter { $0 == false }
+             .filter { $0 }
              .map { _ in Reactor.Action.resetPushState }
              .bind(to: reactor.action)
              .disposed(by: self.disposeBag)
@@ -389,7 +395,7 @@ class DetailViewController: BaseNavigationViewController, View {
          
          isBlocked
              .filter { $0 == false }
-             .observe(on: MainScheduler.asyncInstance)
+             .observe(on: MainScheduler.instance)
              .subscribe(with: self) { object, _ in
                  
                  let title = Text.blockToastLeadingTitle + object.detailCard.nickname + Text.blockToastTrailingTitle
@@ -413,8 +419,7 @@ class DetailViewController: BaseNavigationViewController, View {
              .filter { $0 }
              .observe(on: MainScheduler.asyncInstance)
              .subscribe(with: self) { object, _ in
-                 NotificationCenter.default.post(name: .reloadData, object: nil, userInfo: nil)
-                 if reactor.entranceCardType == .comment {
+                 if reactor.currentState.isFeed == false {
                      NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
                  }
                  
@@ -495,7 +500,7 @@ extension DetailViewController: UICollectionViewDataSource {
                         type: .other,
                         object.detailCard.memberId
                     )
-                    object.navigationPush(profileViewController, animated: true, bottomBarHidden: true)
+                    object.navigationPush(profileViewController, animated: true)
                 }
             }
             .disposed(by: cell.disposeBag)
@@ -508,7 +513,7 @@ extension DetailViewController: UICollectionViewDataSource {
                     with: tagInfo.id,
                     title: tagInfo.text
                 )
-                object.navigationPush(tagCollectViewController, animated: true, bottomBarHidden: true)
+                object.navigationPush(tagCollectViewController, animated: true)
             }
             .disposed(by: cell.disposeBag)
         
@@ -529,15 +534,15 @@ extension DetailViewController: UICollectionViewDataSource {
                 /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop
                 if let naviStackCount = object.navigationController?.viewControllers.count,
                    let prevViewController = object.navigationController?.viewControllers[naviStackCount - 2] as? DetailViewController,
-                   prevViewController.reactor?.selectedCardId == object.detailCard.prevCardId {
+                   prevViewController.reactor?.selectedCardId == object.detailCard.prevCardInfo?.prevCardId {
                     
                     object.navigationPop()
                 } else {
                     /// 없다면 새로운 viewController로 naviPush
-                    guard let prevCardId = object.detailCard.prevCardId else { return }
+                    guard let prevCardId = object.detailCard.prevCardInfo?.prevCardId else { return }
                     let detailViewController = DetailViewController()
                     detailViewController.reactor = reactor.reactorForPush(prevCardId)
-                    object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+                    object.navigationPush(detailViewController, animated: true)
                 }
             }
             .disposed(by: cell.disposeBag)
@@ -567,7 +572,7 @@ extension DetailViewController: UICollectionViewDataSource {
                 .subscribe(with: self) { object, selectedId in
                     let viewController = DetailViewController()
                     viewController.reactor = reactor.reactorForPush(selectedId)
-                    object.navigationPush(viewController, animated: true, bottomBarHidden: true)
+                    object.navigationPush(viewController, animated: true)
                 }
                 .disposed(by: footer.disposeBag)
             
@@ -628,7 +633,13 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         }
         
         // 당겨서 새로고침
-        if self.isRefreshEnabled, offset < self.initialOffset {
+        if self.isRefreshEnabled, offset < self.initialOffset,
+           let refreshControl = self.collectionView.refreshControl as? SOMRefreshControl {
+           
+           refreshControl.updateProgress(
+               offset: scrollView.contentOffset.y,
+               topInset: scrollView.adjustedContentInset.top
+           )
             
             let pulledOffset = self.initialOffset - offset
             /// refreshControl heigt + top padding

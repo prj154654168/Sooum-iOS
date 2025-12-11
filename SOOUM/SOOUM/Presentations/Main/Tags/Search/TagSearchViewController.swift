@@ -67,6 +67,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
     
     func bind(reactor: TagSearchViewReactor) {
         
+        // 검색 화면 진입 시 포커스
         self.rx.viewDidAppear
             .subscribe(with: self) { object, _ in
                 object.searchTextFieldView.becomeFirstResponder()
@@ -78,17 +79,17 @@ class TagSearchViewController: BaseNavigationViewController, View {
         self.navigationBar.backButton.rx.throttleTap
             .withLatestFrom(searchTerms)
             .map { $0 == nil }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isNil in
                 // 검색 결과가 없을 때만
                 if isNil {
                     /// 뒤로가기로 TagViewController를 표시할 때, 관심 태그만 리로드
-                    object.navigationPop(animated: true, bottomBarHidden: false) {
-                        NotificationCenter.default.post(
-                            name: .reloadFavoriteTagData,
-                            object: nil,
-                            userInfo: nil
-                        )
-                    }
+                    NotificationCenter.default.post(
+                        name: .reloadFavoriteTagData,
+                        object: nil,
+                        userInfo: nil
+                    )
+                    object.navigationPop()
                 } else {
                     object.reactor?.action.onNext(.reset)
                     object.searchTextFieldView.text = nil
@@ -109,11 +110,10 @@ class TagSearchViewController: BaseNavigationViewController, View {
                     with: model.id,
                     title: model.name
                 )
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    object.navigationPush(
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak object] in
+                    object?.navigationPush(
                         tagSearchCollectViewController,
-                        animated: true,
-                        bottomBarHidden: true
+                        animated: true
                     )
                 }
             }
@@ -138,6 +138,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
         // State
         searchTerms
             .filter { $0 == nil }
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 object.searchTermsView.isHidden = true
             }
@@ -145,6 +146,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
         
         searchTerms
             .filterNil()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, searchTerms in
                 object.searchTermsView.setModels(searchTerms)
                 object.searchTermsView.isHidden = false

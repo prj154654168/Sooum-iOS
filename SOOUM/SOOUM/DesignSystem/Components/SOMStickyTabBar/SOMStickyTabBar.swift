@@ -216,7 +216,7 @@ class SOMStickyTabBar: UIView {
     
     // MARK: Public func
     
-    func didSelectTabBarItem(_ index: Int) {
+    func didSelectTabBarItem(_ index: Int, with animated: Bool = true) {
         
         self.tabBarItemContainer.arrangedSubviews.enumerated().forEach {
             let selectedItem = $1 as? SOMStickyTabBarItem
@@ -227,8 +227,9 @@ class SOMStickyTabBar: UIView {
             let leadingOffset: CGFloat = self.inset.left + (self.spacing * CGFloat(index)) + prevItemWidths
             self.selectedIndicatorLeadingConstraint?.update(offset: leadingOffset)
             
-            UIView.animate(withDuration: 0.25) {
-                self.layoutIfNeeded()
+            let duration = animated ? 0.25 : 0
+            UIView.animate(withDuration: duration) { [weak self] in
+                self?.layoutIfNeeded()
             }
         }
         

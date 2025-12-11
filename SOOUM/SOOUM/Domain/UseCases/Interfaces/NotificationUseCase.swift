@@ -5,14 +5,12 @@
 //  Created by 오현식 on 9/17/25.
 //
 
-import Foundation
-
 import RxSwift
 
-protocol NotificationUseCase {
+protocol NotificationUseCase: AnyObject {
     
     func unreadNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]>
     func readNotifications(lastId: String?) -> Observable<[CompositeNotificationInfo]>
+    func isUnreadNotiEmpty() -> Observable<Bool>
     func requestRead(notificationId: String) -> Observable<Bool>
-    func notices(lastId: String?, size: Int?, requestType: NotificationRequest.RequestType) -> Observable<[NoticeInfo]>
 }

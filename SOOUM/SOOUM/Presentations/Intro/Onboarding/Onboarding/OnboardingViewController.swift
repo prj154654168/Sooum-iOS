@@ -162,47 +162,46 @@ class OnboardingViewController: BaseNavigationViewController, View {
     
     func bind(reactor: OnboardingViewReactor) {
         
-        // Action
-        self.rx.viewDidLoad
-            .map { _ in Reactor.Action.landing }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
-        
-        let startButtonTapped = self.startButton.rx.tap.share()
+        let startButtonTapped = self.startButton.rx.throttleTap.share()
         let checkAvailable = reactor.state.map(\.checkAvailable).filterNil().share()
+        // `숨 시작하기` 버튼을 탭한 이후 최신 상태 반영
+        let latestAvailableDidTapped = startButtonTapped
+            .flatMapLatest { _ in checkAvailable.skip(1).take(1) }
+            // .observe(on: MainScheduler.instance)
+            .share()
         
-        startButtonTapped
-            .withLatestFrom(checkAvailable)
+        // 차단 및 탈퇴한 계정이 아닐 경우 온보딩 화면 전환
+        latestAvailableDidTapped
             .filter { $0.banned == false && $0.withdrawn == false }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let termsOfServiceViewController = OnboardingTermsOfServiceViewController()
                 termsOfServiceViewController.reactor = reactor.reactorForTermsOfService()
                 object.navigationPush(termsOfServiceViewController, animated: true)
             }
             .disposed(by: disposeBag)
-        
-        startButtonTapped
-            .withLatestFrom(checkAvailable)
+        // 차단된 계정인 경우 팝업 표시
+        latestAvailableDidTapped
             .filter { $0.banned && $0.rejoinAvailableAt != nil }
-            .subscribe(with: self) { object, checkAvailable in
+            .compactMap(\.rejoinAvailableAt)
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, rejoinAvailableAt in
                 
-                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
-                    object.showBannedUserDialog(at: rejoinAvailableAt)
-                }
+                object.showBannedUserDialog(at: rejoinAvailableAt)
             }
             .disposed(by: self.disposeBag)
-        startButtonTapped
-            .withLatestFrom(checkAvailable)
+        // 탈퇴한 계정인 경우 팝업 표시
+        latestAvailableDidTapped
             .filter { $0.withdrawn && $0.rejoinAvailableAt != nil }
-            .subscribe(with: self) { object, checkAvailable in
+            .compactMap(\.rejoinAvailableAt)
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, rejoinAvailableAt in
                 
-                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
-                    object.showResignUserDialog(at: rejoinAvailableAt)
-                }
+                object.showResignUserDialog(at: rejoinAvailableAt)
             }
             .disposed(by: self.disposeBag)
-        
-        self.oldUserButton.rx.tap
+        // 계정 이관 화면 이동
+        self.oldUserButton.rx.throttleTap
             .subscribe(with: self) { object, _ in
               let enterMemberTransferViewController = EnterMemberTransferViewController()
               enterMemberTransferViewController.reactor = reactor.reactorForEnterTransfer()
@@ -210,29 +209,41 @@ class OnboardingViewController: BaseNavigationViewController, View {
             }
             .disposed(by: disposeBag)
         
+        // Action
+        self.rx.viewDidLoad
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        startButtonTapped
+            .map { _ in Reactor.Action.check }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
         // State
         checkAvailable
             .take(1)
             .filter { $0.banned && $0.rejoinAvailableAt != nil }
-            .subscribe(with: self) { object, checkAvailable in
+            .compactMap(\.rejoinAvailableAt)
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, rejoinAvailableAt in
                 
-                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
-                    object.showBannedUserDialog(at: rejoinAvailableAt)
-                }
+                object.showBannedUserDialog(at: rejoinAvailableAt)
             }
             .disposed(by: self.disposeBag)
         checkAvailable
             .take(1)
             .filter { $0.withdrawn && $0.rejoinAvailableAt != nil }
-            .subscribe(with: self) { object, checkAvailable in
+            .compactMap(\.rejoinAvailableAt)
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, rejoinAvailableAt in
                 
-                if let rejoinAvailableAt = checkAvailable.rejoinAvailableAt {
-                    object.showResignUserDialog(at: rejoinAvailableAt)
-                }
+                object.showResignUserDialog(at: rejoinAvailableAt)
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.shouldHideTransfer)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, shouldHide in
                 object.oldUserButton.isHidden = shouldHide
             }

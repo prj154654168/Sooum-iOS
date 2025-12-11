@@ -21,6 +21,10 @@ class TermsOfServiceViewController: BaseNavigationViewController {
         static let privacyPolicyTitle: String = "개인정보처리방침"
         static let termsOfServiceTitle: String = "서비스 이용약관"
         static let termsOfLocationInfoTitle: String = "위치정보 이용약관"
+        
+        static let privacyPolicyURLString: String = "https://adjoining-guanaco-d0a.notion.site/26b2142ccaa38059a1dbf3e6b6b6b4e6?pvs=74"
+        static let termsOfServiceURLString: String = "https://adjoining-guanaco-d0a.notion.site/26b2142ccaa38076b491df099cd7b559"
+        static let termsOfLocationInfoURLString: String = "https://adjoining-guanaco-d0a.notion.site/26b2142ccaa380f1bfafe99f5f8a10f1?pvs=74"
     }
     
     private let scrollView = UIScrollView().then {
@@ -83,8 +87,9 @@ class TermsOfServiceViewController: BaseNavigationViewController {
         super.bind()
         
         self.privacyPolicyCellView.rx.didSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                if let url = URL(string: "https://mewing-space-6d3.notion.site/3f92380d536a4b569921d2809ed147ef?pvs=4") {
+                if let url = URL(string: Text.privacyPolicyURLString) {
                     if UIApplication.shared.canOpenURL(url) {
                         UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     }
@@ -93,8 +98,9 @@ class TermsOfServiceViewController: BaseNavigationViewController {
             .disposed(by: self.disposeBag)
         
         self.termsOfServiceCellView.rx.didSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                if let url = URL(string: "https://mewing-space-6d3.notion.site/45d151f68ba74b23b24483ad8b2662b4?pvs=4") {
+                if let url = URL(string: Text.termsOfServiceURLString) {
                     if UIApplication.shared.canOpenURL(url) {
                         UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     }
@@ -103,8 +109,9 @@ class TermsOfServiceViewController: BaseNavigationViewController {
             .disposed(by: self.disposeBag)
         
         self.termsOfLocationInfoCellView.rx.didSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                if let url = URL(string: "https://mewing-space-6d3.notion.site/44e378c9d11d45159859492434b6b128?pvs=4") {
+                if let url = URL(string: Text.termsOfLocationInfoURLString) {
                     if UIApplication.shared.canOpenURL(url) {
                         UIApplication.shared.open(url, options: [:], completionHandler: nil)
                     }

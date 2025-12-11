@@ -32,31 +32,31 @@ class AnnouncementViewReactor: Reactor {
     )
     
     private let dependencies: AppDIContainerable
-    private let notificationUseCase: NotificationUseCase
+    private let fetchNoticeUseCase: FetchNoticeUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
-        self.notificationUseCase = dependencies.rootContainer.resolve(NotificationUseCase.self)
+        self.fetchNoticeUseCase = dependencies.rootContainer.resolve(FetchNoticeUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
             
-            return self.notificationUseCase.notices(lastId: nil, size: 10, requestType: .settings)
+            return self.fetchNoticeUseCase.notices(lastId: nil, size: 10, requestType: .settings)
                 .map(Mutation.announcements)
         case .refresh:
             
             return .concat([
                 .just(.updateIsRefreshing(true)),
-                self.notificationUseCase.notices(lastId: nil, size: 10, requestType: .settings)
+                self.fetchNoticeUseCase.notices(lastId: nil, size: 10, requestType: .settings)
                     .map(Mutation.announcements)
-                    .catch { _ in .just(.updateIsRefreshing(false)) },
+                    .catchAndReturn(.updateIsRefreshing(false)),
                 .just(.updateIsRefreshing(false))
             ])
         case let .more(lastId):
             
-            return self.notificationUseCase.notices(lastId: lastId, size: 10, requestType: .settings)
+            return self.fetchNoticeUseCase.notices(lastId: lastId, size: 10, requestType: .settings)
                 .map(Mutation.more)
         }
     }

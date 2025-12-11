@@ -33,12 +33,12 @@ class EnterMemberTransferViewReactor: Reactor {
     
     private let dependencies: AppDIContainerable
     private let authUseCase: AuthUseCase
-    private let settingsUseCase: SettingsUseCase
+    private let transferAccountUseCase: TransferAccountUseCase
   
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
         self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
+        self.transferAccountUseCase = dependencies.rootContainer.resolve(TransferAccountUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -52,12 +52,16 @@ class EnterMemberTransferViewReactor: Reactor {
                     .flatMapLatest { object, encryptedDeviceId -> Observable<Mutation> in
                         
                         if let encryptedDeviceId = encryptedDeviceId {
-                            return object.settingsUseCase.enter(code: transferCode, encryptedDeviceId: encryptedDeviceId)
+                            return object.transferAccountUseCase.enter(
+                                code: transferCode,
+                                encryptedDeviceId: encryptedDeviceId
+                            )
                                 .flatMapLatest { isSuccess -> Observable<Mutation> in
                                     if isSuccess { object.authUseCase.initializeAuthInfo() }
                                     
                                     return .just(.enterTransferCode(isSuccess))
                                 }
+                                .catchAndReturn(.enterTransferCode(false))
                         } else {
                             return .just(.enterTransferCode(false))
                         }
@@ -78,7 +82,7 @@ class EnterMemberTransferViewReactor: Reactor {
 
 extension EnterMemberTransferViewReactor {
     
-    func reactorForOnborading() -> OnboardingViewReactor {
-        OnboardingViewReactor(dependencies: self.dependencies)
+    func reactorForLaunchScreen() -> LaunchScreenViewReactor {
+        LaunchScreenViewReactor(dependencies: self.dependencies)
     }
 }

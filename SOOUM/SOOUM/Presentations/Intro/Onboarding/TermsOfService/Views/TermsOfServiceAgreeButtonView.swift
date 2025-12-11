@@ -89,8 +89,8 @@ class TermsOfServiceAgreeButtonView: UIView {
         
         let animationDuration: TimeInterval = animated ? 0.25 : 0
         
-        UIView.animate(withDuration: animationDuration) {
-            self.checkImageView.tintColor = state ? .som.v2.pDark : .som.v2.gray400
+        UIView.animate(withDuration: animationDuration) { [weak self] in
+            self?.checkImageView.tintColor = state ? .som.v2.pDark : .som.v2.gray400
         }
     }
 }

@@ -53,6 +53,7 @@ class SOMRefreshControl: UIRefreshControl {
     
     override func beginRefreshing() {
         super.beginRefreshing()
+        self.animationView.alpha = 1.0
         self.animationView.play()
         self.sendActions(for: .valueChanged)
     }
@@ -77,5 +78,20 @@ class SOMRefreshControl: UIRefreshControl {
             $0.center.equalToSuperview()
             $0.size.equalTo(44)
         }
+    }
+    
+    
+    // MARK: Public func
+    
+    func updateProgress(offset contentOffsetY: CGFloat, topInset adjustedContentInsetTop: CGFloat) {
+        
+        guard self.isRefreshing == false else { return }
+        
+        let offset = contentOffsetY + adjustedContentInsetTop
+        
+        let threshold: CGFloat = 60
+        let alpha = min(max(-offset / threshold, 0.0), 1.0)
+        
+        self.animationView.alpha = alpha
     }
 }

@@ -20,6 +20,10 @@ class SOMSwipableTabBar: UIView {
         static let unSelectedColor: UIColor = UIColor.som.v2.gray400
         
         static let selectedBackgroundColor: UIColor = UIColor.som.v2.gray100
+        
+        enum Text {
+            static let eventTitle: String = "이벤트"
+        }
     }
     
     
@@ -172,6 +176,7 @@ class SOMSwipableTabBar: UIView {
                 color: index == 0 ? Constants.selectedColor : Constants.unSelectedColor,
                 backgroundColor: index == 0 ? Constants.selectedBackgroundColor : nil
             )
+            item.isEventDotHidden = title != Constants.Text.eventTitle
             
             self.tabBarItemContainer.addArrangedSubview(item)
         }

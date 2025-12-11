@@ -47,6 +47,8 @@ class NotificationViewCell: UITableViewCell {
     
     private let contentLabel = UILabel().then {
         $0.textColor = .som.v2.gray600
+        $0.lineBreakMode = .byWordWrapping
+        $0.lineBreakStrategy = .hangulWordPriority
         $0.numberOfLines = 0
         $0.textAlignment = .left
     }

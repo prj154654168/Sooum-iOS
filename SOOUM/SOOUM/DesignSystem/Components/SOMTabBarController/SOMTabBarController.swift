@@ -72,11 +72,12 @@ class SOMTabBarController: UIViewController {
     // MARK: Deinitialize
     
     deinit {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: .hidesBottomBarWhenPushedDidChange,
-            object: nil
-        )
+        // TODO: 임시, 탭바 숨기지 않음
+        // NotificationCenter.default.removeObserver(
+        //     self,
+        //     name: .hidesBottomBarWhenPushedDidChange,
+        //     object: nil
+        // )
     }
     
     
@@ -85,12 +86,13 @@ class SOMTabBarController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.hidesBottomBarWhenPushed(_:)),
-            name: .hidesBottomBarWhenPushedDidChange,
-            object: nil
-        )
+        // TODO: 임시, 탭바 숨기지 않음
+        // NotificationCenter.default.addObserver(
+        //     self,
+        //     selector: #selector(self.hidesBottomBarWhenPushed(_:)),
+        //     name: .hidesBottomBarWhenPushedDidChange,
+        //     object: nil
+        // )
         
         self.setupConstraints()
     }
@@ -106,7 +108,6 @@ class SOMTabBarController: UIViewController {
         }
         
         self.view.addSubview(self.tabBar)
-        self.view.bringSubviewToFront(self.tabBar)
         self.tabBar.snp.makeConstraints {
             $0.bottom.horizontalEdges.equalToSuperview()
             $0.height.equalTo(88)
@@ -126,21 +127,22 @@ class SOMTabBarController: UIViewController {
     
     // MARK: Objc func
     
-    @objc
-    private func hidesBottomBarWhenPushed(_ notification: Notification) {
-        
-        // 탭바컨트롤러의 탭바의 숨김처리를 위해 추가
-        guard let viewController = notification.object as? UIViewController,
-              let selectedViewController = self.selectedViewController as? UINavigationController,
-              viewController == selectedViewController.topViewController
-        else { return }
-        
-        let hidesTabBar = viewController.hidesBottomBarWhenPushed
-        UIView.animate(withDuration: 0.25) {
-            self.messageBubbleView.isHidden = hidesTabBar
-            self.tabBar.frame.origin.y = hidesTabBar ? self.view.frame.maxY : self.view.frame.maxY - 88
-        }
-    }
+    // TODO: 임시, 탭바 숨김 애니메이션 제거
+    // @objc
+    // private func hidesBottomBarWhenPushed(_ notification: Notification) {
+    //
+    //     // 탭바컨트롤러의 탭바의 숨김처리를 위해 추가
+    //     guard let viewController = notification.object as? UIViewController,
+    //           let selectedViewController = self.selectedViewController as? UINavigationController,
+    //           viewController == selectedViewController.topViewController
+    //     else { return }
+    //
+    //     let hidesTabBar = viewController.hidesBottomBarWhenPushed
+    //     UIView.animate(withDuration: 0.25) {
+    //         self.messageBubbleView.isHidden = hidesTabBar
+    //         self.tabBar.frame.origin.y = hidesTabBar ? self.view.frame.maxY : self.view.frame.maxY - 88
+    //     }
+    // }
     
     
     // MARK: Public func

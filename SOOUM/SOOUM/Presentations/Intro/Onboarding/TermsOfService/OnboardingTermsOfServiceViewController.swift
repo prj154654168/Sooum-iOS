@@ -23,9 +23,9 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
         
         static let guideMessageTitle: String = "숨 서비스 이용을 위해\n동의해주세요"
         
-        static let termsOfSeviceUrlString: String = "https://mewing-space-6d3.notion.site/3f92380d536a4b569921d2809ed147ef?pvs=4"
-        static let locationServiceUrlString: String = "https://mewing-space-6d3.notion.site/45d151f68ba74b23b24483ad8b2662b4?pvs=4"
-        static let privacyPolicyUrlString: String = "https://mewing-space-6d3.notion.site/44e378c9d11d45159859492434b6b128?pvs=4"
+        static let termsOfSeviceUrlString: String = "https://adjoining-guanaco-d0a.notion.site/26b2142ccaa38076b491df099cd7b559"
+        static let locationServiceUrlString: String = "https://adjoining-guanaco-d0a.notion.site/26b2142ccaa380f1bfafe99f5f8a10f1?pvs=74"
+        static let privacyPolicyUrlString: String = "https://adjoining-guanaco-d0a.notion.site/26b2142ccaa38059a1dbf3e6b6b6b4e6?pvs=74"
         
         static let nextButtonTitle: String = "다음"
     }
@@ -162,6 +162,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .disposed(by: self.disposeBag)
         
         self.termsOfServiceCellView.rx.moveSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 if UIApplication.shared.canOpenURL(TermsOfService.termsOfService.url) {
                     UIApplication.shared.open(
@@ -179,6 +180,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .disposed(by: self.disposeBag)
         
         self.locationServiceCellView.rx.moveSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 if UIApplication.shared.canOpenURL(TermsOfService.locationService.url) {
                     UIApplication.shared.open(
@@ -196,6 +198,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .disposed(by: self.disposeBag)
         
         self.privacyPolicyCellView.rx.moveSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 if UIApplication.shared.canOpenURL(TermsOfService.privacyPolicy.url) {
                     UIApplication.shared.open(
@@ -207,7 +210,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             })
             .disposed(by: self.disposeBag)
         
-        self.nextButton.rx.tap
+        self.nextButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 let nicknameSettingVC = OnboardingNicknameSettingViewController()
                 nicknameSettingVC.reactor = reactor.reactorForNickname()
@@ -218,6 +221,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
         // State
         reactor.state.map(\.isAllAgreed)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isAllAgreed in
                 object.agreeAllButtonView.updateState(isAllAgreed, animated: false)
                 object.nextButton.isEnabled = isAllAgreed
@@ -226,6 +230,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
 
         reactor.state.map(\.isTermsOfServiceAgreed)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isTermsOfServiceAgreed in
                 object.termsOfServiceCellView.updateState(isTermsOfServiceAgreed, animated: false)
             }
@@ -233,6 +238,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
         
         reactor.state.map(\.isLocationAgreed)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isLocationAgreed in
                 object.locationServiceCellView.updateState(isLocationAgreed, animated: false)
             }
@@ -240,6 +246,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
         
         reactor.state.map(\.isPrivacyPolicyAgreed)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isPrivacyPolicyAgreed in
                 object.privacyPolicyCellView.updateState(isPrivacyPolicyAgreed, animated: false)
             }

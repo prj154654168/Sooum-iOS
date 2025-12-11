@@ -41,21 +41,21 @@ class SettingsViewReactor: Reactor {
     private let dependencies: AppDIContainerable
     private let appVersionUseCase: AppVersionUseCase
     private let authUseCase: AuthUseCase
-    private let userUseCase: UserUseCase
-    private let settingsUseCase: SettingsUseCase
+    private let validateUserUseCase: ValidateUserUseCase
+    private let updateNotifyUseCase: UpdateNotifyUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
         self.appVersionUseCase = dependencies.rootContainer.resolve(AppVersionUseCase.self)
         self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
-        self.userUseCase = dependencies.rootContainer.resolve(UserUseCase.self)
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
+        self.validateUserUseCase = dependencies.rootContainer.resolve(ValidateUserUseCase.self)
+        self.updateNotifyUseCase = dependencies.rootContainer.resolve(UpdateNotifyUseCase.self)
         
         self.initialState = .init(
             tokens: self.authUseCase.tokens(),
             banEndAt: nil,
             version: nil,
-            notificationStatus: self.settingsUseCase.notificationStatus(),
+            notificationStatus: self.updateNotifyUseCase.notificationStatus(),
             shouldHideTransfer: UserDefaults.standard.bool(forKey: "AppFlag")
         )
     }
@@ -67,20 +67,20 @@ class SettingsViewReactor: Reactor {
             return .concat([
                 self.appVersionUseCase.version()
                     .map(Mutation.updateVersion),
-                self.userUseCase.postingPermission()
+                self.validateUserUseCase.postingPermission()
                     .map(\.expiredAt)
                     .map(Mutation.updateBanEndAt),
-                self.userUseCase.updateNotify(isAllowNotify: self.initialState.notificationStatus)
+                self.updateNotifyUseCase.updateNotify(isAllowNotify: self.initialState.notificationStatus)
                     .map(Mutation.updateNotificationStatus)
             ])
         case let .updateNotificationStatus(state):
             
-            return self.userUseCase.updateNotify(isAllowNotify: state)
+            return self.updateNotifyUseCase.updateNotify(isAllowNotify: state)
                 .map { _ in state }
                 .map(Mutation.updateNotificationStatus)
         case .rejoinableDate:
             
-            return self.settingsUseCase.rejoinableDate()
+            return self.validateUserUseCase.iswithdrawn()
                 .map(Mutation.rejoinableDate)
         case .resetState:
             

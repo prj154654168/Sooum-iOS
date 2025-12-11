@@ -157,7 +157,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         // Action
         Observable.merge(
             self.profileImageView.rx.tapGesture().when(.ended).map { _ in },
-            self.cameraButton.rx.tap.asObservable()
+            self.cameraButton.rx.throttleTap.asObservable()
         )
         .subscribe(with: self) { object, _ in
             
@@ -176,12 +176,12 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         }
         .disposed(by: self.disposeBag)
 
-        self.completeButton.rx.tap
+        self.completeButton.rx.throttleTap(.seconds(3))
             .map { _ in Reactor.Action.signUp }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
 
-        self.passButton.rx.tap
+        self.passButton.rx.throttleTap(.seconds(3))
             .map { _ in Reactor.Action.signUp }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -190,6 +190,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         reactor.state.map(\.isSignUp)
             .distinctUntilChanged()
             .filter { $0 }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let viewController = OnboardingCompletedViewController()
                 viewController.reactor = reactor.reactorForCompleted()
@@ -199,6 +200,7 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         
         reactor.state.map(\.isLoading)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.loadingIndicatorView) { loadingIndicatorView, isLoading in
                 if isLoading {
                     loadingIndicatorView.startAnimating()
@@ -211,31 +213,16 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
         reactor.state.map(\.hasErrors)
             .distinctUntilChanged()
             .filter { $0 }
-            .subscribe(onNext: { _ in
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _  in
                 
-                let actions: [SOMDialogAction] = [
-                    .init(
-                        title: Text.inappositeDialogConfirmButtonTitle,
-                        style: .primary,
-                        action: {
-                            UIApplication.topViewController?.dismiss(animated: true) {
-                                reactor.action.onNext(.setDefaultImage)
-                            }
-                        }
-                    )
-                ]
-                
-                SOMDialogViewController.show(
-                    title: Text.inappositeDialogTitle,
-                    message: Text.inappositeDialogMessage,
-                    textAlignment: .left,
-                    actions: actions
-                )
-            })
+                object.showInappositeDialog(reactor)
+            }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.profileImage)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, profileImage in
                 object.profileImageView.image = profileImage ?? .init(.image(.v2(.profile_large)))
                 
@@ -293,14 +280,15 @@ extension OnboardingProfileImageSettingViewController {
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                let application = UIApplication.shared
-                let openSettingsURLString: String = UIApplication.openSettingsURLString
-                if let settingsURL = URL(string: openSettingsURLString),
-                   application.canOpenURL(settingsURL) {
-                    application.open(settingsURL)
+                UIApplication.topViewController?.dismiss(animated: true) {
+                    
+                    let application = UIApplication.shared
+                    let openSettingsURLString: String = UIApplication.openSettingsURLString
+                    if let settingsURL = URL(string: openSettingsURLString),
+                       application.canOpenURL(settingsURL) {
+                        application.open(settingsURL)
+                    }
                 }
-                
-                UIApplication.topViewController?.dismiss(animated: true)
             }
         )
         
@@ -308,6 +296,28 @@ extension OnboardingProfileImageSettingViewController {
             title: Text.libraryDialogTitle,
             message: Text.libraryDialogMessage,
             actions: [cancelAction, settingAction]
+        )
+    }
+    
+    func showInappositeDialog(_ reactor: OnboardingProfileImageSettingViewReactor) {
+        
+        let actions: [SOMDialogAction] = [
+            .init(
+                title: Text.inappositeDialogConfirmButtonTitle,
+                style: .primary,
+                action: {
+                    UIApplication.topViewController?.dismiss(animated: true) {
+                        reactor.action.onNext(.setDefaultImage)
+                    }
+                }
+            )
+        ]
+        
+        SOMDialogViewController.show(
+            title: Text.inappositeDialogTitle,
+            message: Text.inappositeDialogMessage,
+            textAlignment: .left,
+            actions: actions
         )
     }
     
@@ -349,8 +359,8 @@ extension OnboardingProfileImageSettingViewController {
             picker?.dismiss(animated: true, completion: nil)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            self.present(picker, animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+            self?.present(picker, animated: true, completion: nil)
         }
     }
 }

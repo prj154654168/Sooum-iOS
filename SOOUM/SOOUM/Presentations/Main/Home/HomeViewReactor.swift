@@ -25,6 +25,7 @@ class HomeViewReactor: Reactor {
     }
     
     enum Action: Equatable {
+        case updateLocationPermission
         case landing
         case refresh
         case moreFind(String)
@@ -35,6 +36,7 @@ class HomeViewReactor: Reactor {
     }
     
     enum Mutation {
+        case updateLocationPermission(Bool)
         case cards([BaseCardInfo])
         case more([BaseCardInfo])
         case updateHasUnreadNotifications(Bool)
@@ -61,18 +63,22 @@ class HomeViewReactor: Reactor {
     var initialState: State
     
     private let dependencies: AppDIContainerable
-    private let cardUseCase: CardUseCase
+    private let fetchCardUseCase: FetchCardUseCase
+    private let fetchCardDetailUseCase: FetchCardDetailUseCase
+    private let fetchNoticeUseCase: FetchNoticeUseCase
     private let notificationUseCase: NotificationUseCase
-    private let settingsUseCase: SettingsUseCase
+    private let locationUseCase: LocationUseCase
     
     init(dependencies: AppDIContainerable, displayType: DisplayType = .latest) {
         self.dependencies = dependencies
-        self.cardUseCase = dependencies.rootContainer.resolve(CardUseCase.self)
+        self.fetchCardUseCase = dependencies.rootContainer.resolve(FetchCardUseCase.self)
+        self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
+        self.fetchNoticeUseCase = dependencies.rootContainer.resolve(FetchNoticeUseCase.self)
         self.notificationUseCase = dependencies.rootContainer.resolve(NotificationUseCase.self)
-        self.settingsUseCase = dependencies.rootContainer.resolve(SettingsUseCase.self)
+        self.locationUseCase = dependencies.rootContainer.resolve(LocationUseCase.self)
         
         self.initialState = State(
-            hasPermission: self.settingsUseCase.hasPermission(),
+            hasPermission: self.locationUseCase.hasPermission(),
             displayType: displayType,
             noticeInfos: nil,
             latestCards: nil,
@@ -85,9 +91,11 @@ class HomeViewReactor: Reactor {
         )
     }
     
-    
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case .updateLocationPermission:
+            
+            return .just(.updateLocationPermission(self.locationUseCase.hasPermission()))
         case .landing:
             
             let displayType = self.currentState.displayType
@@ -157,20 +165,11 @@ class HomeViewReactor: Reactor {
             ])
         case let .detailCard(selectedId):
             
-            let coordinate = self.settingsUseCase.coordinate()
-            let latitude = coordinate.latitude
-            let longitude = coordinate.longitude
-            
             return .concat([
                 .just(.cardIsDeleted(nil)),
-                self.cardUseCase.detailCard(
-                    id: selectedId,
-                    latitude: latitude,
-                    longitude: longitude
-                )
-                .map { _ in (selectedId, false) }
+                self.fetchCardDetailUseCase.isDeleted(cardId: selectedId)
+                .map { (selectedId, $0) }
                 .map(Mutation.cardIsDeleted)
-                .catchAndReturn(.cardIsDeleted((selectedId, true)))
             ])
         case .resetPushState:
             
@@ -181,6 +180,8 @@ class HomeViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
+        case let .updateLocationPermission(hasPermission):
+            newState.hasPermission = hasPermission
         case let .cards(cards):
             switch newState.displayType {
             case .latest: newState.latestCards = cards
@@ -214,20 +215,24 @@ private extension HomeViewReactor {
     
     func refresh(_ displayType: DisplayType, _ distanceFilter: String) -> Observable<Mutation> {
 
-        let coordinate = self.settingsUseCase.coordinate()
+        let coordinate = self.locationUseCase.coordinate()
         let latitude = coordinate.latitude
         let longitude = coordinate.longitude
         
         switch displayType {
         case .latest:
-            return self.cardUseCase.latestCard(lastId: nil, latitude: latitude, longitude: longitude)
-                .map(Mutation.cards)
+            return self.fetchCardUseCase.latestCards(
+                lastId: nil,
+                latitude: latitude,
+                longitude: longitude
+            )
+            .map(Mutation.cards)
         case .popular:
-            return self.cardUseCase.popularCard(latitude: latitude, longitude: longitude)
+            return self.fetchCardUseCase.popularCards(latitude: latitude, longitude: longitude)
                 .map(Mutation.cards)
         case .distance:
             let distanceFilter = distanceFilter.replacingOccurrences(of: "km", with: "")
-            return self.cardUseCase.distanceCard(
+            return self.fetchCardUseCase.distanceCards(
                 lastId: nil,
                 latitude: latitude,
                 longitude: longitude,
@@ -239,17 +244,21 @@ private extension HomeViewReactor {
     
     func moreFind(_ lastId: String) -> Observable<Mutation> {
         
-        let coordinate = self.settingsUseCase.coordinate()
+        let coordinate = self.locationUseCase.coordinate()
         let latitude = coordinate.latitude
         let longitude = coordinate.longitude
         
         switch self.currentState.displayType {
         case .latest:
-            return self.cardUseCase.latestCard(lastId: lastId, latitude: latitude, longitude: longitude)
-                .map(Mutation.more)
+            return self.fetchCardUseCase.latestCards(
+                lastId: lastId,
+                latitude: latitude,
+                longitude: longitude
+            )
+            .map(Mutation.more)
         case .distance:
             let distanceFilter = self.currentState.distanceFilter.replacingOccurrences(of: "km", with: "")
-            return self.cardUseCase.distanceCard(
+            return self.fetchCardUseCase.distanceCards(
                 lastId: lastId,
                 latitude: latitude,
                 longitude: longitude,
@@ -263,12 +272,13 @@ private extension HomeViewReactor {
     
     func unreadNotifications() -> Observable<Mutation> {
         
-        return self.notificationUseCase.notices(lastId: nil, size: 3, requestType: .notification)
+        return self.fetchNoticeUseCase.notices(lastId: nil, size: 3, requestType: .notification)
             .flatMapLatest { noticeInfos -> Observable<Mutation> in
                 
                 return .concat([
-                    self.notificationUseCase.unreadNotifications(lastId: nil)
-                        .map { .updateHasUnreadNotifications($0.isEmpty == false && noticeInfos.isEmpty == false) },
+                    self.notificationUseCase.isUnreadNotiEmpty()
+                        .map { !$0 }
+                        .map(Mutation.updateHasUnreadNotifications),
                     .just(.notices(noticeInfos))
                 ])
             }
@@ -314,6 +324,14 @@ extension HomeViewReactor {
             prevDisplayState.populars == currDisplayState.populars &&
             prevDisplayState.distances == currDisplayState.distances
     }
+    
+    func canPushToDetail(
+        prev prevCardIsDeleted: (selectedId: String, isDeleted: Bool)?,
+        curr currCardIsDeleted: (selectedId: String, isDeleted: Bool)?
+    ) -> Bool {
+        return prevCardIsDeleted?.selectedId == currCardIsDeleted?.selectedId &&
+            prevCardIsDeleted?.isDeleted == currCardIsDeleted?.isDeleted
+    }
 }
 
 
@@ -324,6 +342,6 @@ extension HomeViewReactor {
     }
     
     func reactorForDetail(with id: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, .feed, with: id)
+        DetailViewReactor(dependencies: self.dependencies, with: id)
     }
 }

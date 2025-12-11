@@ -29,13 +29,14 @@ extension UITextField {
             if aleadyFull {
                 // 텍스트 입력 전에 제한을 벗어남
                 if isTyped {
-                    // 입력 시 더 이상 입력되지 않음
+                    // 영어 입력 시 더 이상 입력되지 않음
+                    guard string.isEnglish == false else { return false }
                     let lastCharacter = String(text[text.index(before: text.endIndex)])
                     let separatedCharacters = lastCharacter.decomposedStringWithCanonicalMapping.unicodeScalars.map { String($0) }
                     let separatedCharactersCount = separatedCharacters.count
                     // 마지막 문자를 자음 + 모음으로 나누어 갯수에 따라 판단,
                     // 갯수가 1일 때, 모음이면 입력 가능
-                    if separatedCharactersCount == 1 && string.isConsonant == false { return true }
+                    if separatedCharactersCount == 1 && lastCharacter.isConsonant && string.isConsonant == false { return true }
                     // 갯수가 2일 때, 자음이면 입력 가능
                     if separatedCharactersCount == 2 && string.isConsonant { return true }
                     // TODO: 겹받침일 때는 고려 X
@@ -53,7 +54,7 @@ extension UITextField {
                             self?.selectedTextRange = self?.textRange(from: position, to: position)
                         }
                     }
-                    self.sendActions(for: .valueChanged)
+                    self.sendActions(for: .editingChanged)
                 }
             } else {
                 // 텍스트 입력 후에 제한을 벗어남
@@ -67,7 +68,7 @@ extension UITextField {
                         self?.selectedTextRange = self?.textRange(from: position, to: position)
                     }
                 }
-                self.sendActions(for: .valueChanged)
+                self.sendActions(for: .editingChanged)
             }
             return false
         } else {
