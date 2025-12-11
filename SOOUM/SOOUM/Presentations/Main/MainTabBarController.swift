@@ -165,7 +165,7 @@ class MainTabBarController: SOMTabBarController, View {
                         object?.setupDetailViewController(
                             selectedViewController,
                             with: reactor.reactorForDetail(targetCardId),
-                            completion: { reactor.action.onNext(.resetEntrance) }
+                            completion: { reactor.action.onNext(.cleanup) }
                         )
                     }
                 case .pushToNotification:
@@ -178,7 +178,7 @@ class MainTabBarController: SOMTabBarController, View {
                         object?.setupNotificationViewController(
                             selectedViewController,
                             with: reactor.reactorForNoti(),
-                            completion: { reactor.action.onNext(.resetEntrance) }
+                            completion: { reactor.action.onNext(.cleanup) }
                         )
                     }
                 case .pushToTagDetail:
@@ -193,7 +193,7 @@ class MainTabBarController: SOMTabBarController, View {
                         object?.setupTagDetailViewController(
                             selectedViewController,
                             with: reactor.reactorForDetail(targetCardId),
-                            completion: { reactor.action.onNext(.resetEntrance) }
+                            completion: { reactor.action.onNext(.cleanup) }
                         )
                     }
                 case .pushToFollow:
@@ -206,7 +206,7 @@ class MainTabBarController: SOMTabBarController, View {
                         object?.setupFollowViewController(
                             selectedViewController,
                             with: reactor.reactorForFollow(nickname: profileInfo.nickname, with: profileInfo.userId),
-                            completion: { reactor.action.onNext(.resetEntrance) }
+                            completion: { reactor.action.onNext(.cleanup) }
                         )
                     }
                 case .pushToLaunchScreen:
@@ -243,7 +243,7 @@ class MainTabBarController: SOMTabBarController, View {
                         writeCardViewController,
                         animated: true
                     ) { _ in
-                        reactor.action.onNext(.resetCouldPosting)
+                        reactor.action.onNext(.cleanup)
                     }
                 }
             }
@@ -306,7 +306,7 @@ private extension MainTabBarController {
             style: .primary,
             action: {
                 SOMDialogViewController.dismiss {
-                    self.reactor?.action.onNext(.resetCouldPosting)
+                    self.reactor?.action.onNext(.cleanup)
                 }
             }
         )
