@@ -316,19 +316,21 @@ class HomeViewController: BaseNavigationViewController, View {
             .filterNil()
         cardIsDeleted
             .filter { $0.isDeleted }
+            .map { $0.selectedId }
             .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, _ in
-                object.showPungedCardDialog()
+            .subscribe(with: self) { object, selectedId in
+                object.showPungedCardDialog(reactor, with: selectedId)
             }
             .disposed(by: self.disposeBag)
         cardIsDeleted
             .filter { $0.isDeleted == false }
+            .map { $0.selectedId }
             .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, cardIsDeleted in
+            .subscribe(with: self) { object, selectedId in
                 let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(with: cardIsDeleted.selectedId)
+                detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
                 object.parent?.navigationPush(detailViewController, animated: true) { _ in
-                    reactor.action.onNext(.resetPushState)
+                    reactor.action.onNext(.cleanup)
                 }
             }
             .disposed(by: self.disposeBag)
@@ -341,7 +343,7 @@ class HomeViewController: BaseNavigationViewController, View {
                 distances: $0.distanceCards
             )
         }
-        .observe(on: MainScheduler.asyncInstance)
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, displayStats in
             
             var snapshot = Snapshot()
@@ -487,15 +489,22 @@ private extension HomeViewController {
         )
     }
     
-    func showPungedCardDialog() {
+    func showPungedCardDialog(_ reactor: HomeViewReactor, with selectedId: String) {
         
         let confirmAction = SOMDialogAction(
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
                 SOMDialogViewController.dismiss {
-                    self.reactor?.action.onNext(.landing)
-                    self.reactor?.action.onNext(.resetPushState)
+                    reactor.action.onNext(.cleanup)
+                    
+                    reactor.action.onNext(
+                        .updateCards(
+                            latests: (reactor.currentState.latestCards ?? []).filter { $0.id != selectedId },
+                            populars: (reactor.currentState.popularCards ?? []).filter { $0.id != selectedId },
+                            distances: (reactor.currentState.distanceCards ?? []).filter { $0.id != selectedId }
+                        )
+                    )
                 }
             }
         )
@@ -598,11 +607,6 @@ extension HomeViewController: UITableViewDelegate {
             }
         }
         
-        guard isPunged == false else {
-            self.showPungedCardDialog()
-            return
-        }
-        
         var selectedId: String? {
             switch item {
             case let .latest(selectedCard):
@@ -617,6 +621,11 @@ extension HomeViewController: UITableViewDelegate {
         }
         
         guard let selectedId = selectedId else { return }
+        
+        guard isPunged == false else {
+            self.showPungedCardDialog(reactor, with: selectedId)
+            return
+        }
         
         reactor.action.onNext(.detailCard(selectedId))
     }
