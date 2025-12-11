@@ -6,8 +6,8 @@
  - **숨**은 완전한 익명성을 보장하는 카드형 SNS 앱 서비스입니다. 사용자들이 자유롭게 생각을 공유할 수 있는 안전한 공간을 제공합니다.
  - 사용자의 개인정보 사용을 최소화하기 위해 하나의 기기당 하나의 계정을 발급하고, 계정을 위한 ID는 비대칭 키 암호화를 사용해 안전하게 사용합니다.
  - 사용자의 감정을 글과 함께 직접 찍은 사진 또는 숨에서 제공하는 기본 이미지로 표현할 수 있습니다.
- - 해시태그 검색을 통해 특정 키워드의 피드를 구경할 수 있습니다.
- - 다양한 사용자들을 팔로우하며 피드에 공감 혹은 답카드 작성으로 표현할 수 있습니다.
+ - 해시태그 검색을 통해 특정 키워드가 포함된 알림이나 피드를 구경할 수 있습니다.
+ - 다양한 사용자들을 팔로우하며 피드에 공감 혹은 댓글카드 작성으로 표현할 수 있습니다.
 
 <div align="center">
   <a href="https://apps.apple.com/kr/app/%EC%88%A8-%EC%B9%B4%EB%93%9C%ED%98%95-%EC%9D%B5%EB%AA%85-sns/id6740403078">
@@ -23,7 +23,7 @@
 # Features
 ### 1. 네트워크 레이어
 
-HTTP 네트워킹을 위한 Alamofire와 반응형 프로그래밍을 위한 RxSwift를 활용한 네트워킹 레이어를 포함하고 있습니다. 이 프로젝트에선 적절한 오류 처리, 요청 구성 및 환경별 엔드포인트를 갖춘 RESTful API 호출을 위한 깔끔한 프로토콜 지향 아키텍처를 제공합니다.
+HTTP 네트워킹을 위한 Alamofire와 반응형 프로그래밍을 위한 RxSwift를 활용한 네트워크 클래스를 사용하고 있습니다. 이 프로젝트에선 적절한 오류 처리, 요청 구성 및 환경별 엔드포인트를 갖춘 RESTful API 호출을 위한 프로토콜 지향 아키텍처를 제공합니다.
 
 개발 환경과 운영 환경 간에 endpoint를 전처리문으로 전환합니다:
 ```
@@ -53,7 +53,7 @@ protocol BaseRequest: URLRequestConvertible {
 func request<T: Decodable>(_ object: T.Type, request: BaseRequest) -> Observable<T>
 ```
 
-서버측과 함께 정의한 HTTP 상태 코드 매핑을 포함한 포괄적인 오류 처리:
+서버측과 함께 정의한 HTTP 상태 코드 매핑을 포함한 오류 처리:
 ```
 enum DefinedError: Error, LocalizedError {
     case badRequest
@@ -68,7 +68,7 @@ enum DefinedError: Error, LocalizedError {
 ```
 ### 2. 테스트하기 쉬운 매니저
 
-의존성 주입을 활용하여 매니저 객체들을 효율적으로 구성하고 테스트하기 쉬운 아키텍처를 구현했습니다. 이 접근 방식은 코드의 결합도를 낮추고, 단위 테스트를 용이하게 하며, 애플리케이션의 유지보수성을 크게 향상시킵니다.
+의존성 주입을 활용하여 매니저 객체들을 구성하고 테스트하기 쉬운 아키텍처를 구현했습니다. 이 구조는 코드의 결합도를 낮추고, 단위 테스트하기 쉬운 구조를 만들어줍니다.
 
 여러 매니저들을 관리하는 **CompositeManager**를 통해 접근에 용이합니다:
 ```
@@ -98,20 +98,9 @@ final class ManagerTypeContainer: ManagerTypeDelegate {
     }
 }
 ```
-매니저 단위 테스트를 위해 목 객체를 사용해 매니저를 독립적으로 테스트할 수 있습니다:
-```
-final class MockManagerProviderContainer: ManagerProviderType {
-    lazy var managerType: ManagerTypeDelegate = MockManagerProvider()
-    
-    var authManager: AuthManagerDelegate { self.managerType.authManager }
-    var pushManager: PushManagerDelegate { self.managerType.pushManager }
-    var networkManager: NetworkManagerDelegate { self.managerType.networkManager }
-    var locationManager: LocationManagerDelegate { self.managerType.locationManager }
-}
-```
 
 ### 3. 단방향 데이터 흐름 아키텍처
-단방향 데이터 흐름 아키텍처는 앞서 설명한 의존성 주입 기반 관리자 패턴과 결합하여 예측 가능하고 테스트하기 쉬운 코드베이스를 구축합니다.
+단방향 데이터 흐름 아키텍처는 앞서 설명한 의존성 주입 기반 관리자 패턴과 결합하여 예측 가능하고 테스트하기 쉬운 구조를 만듭니다.
 
 ReactorKit의 가장 큰 특징은 데이터가 한 방향으로만 흐른다는 것입니다:
 ```
@@ -119,22 +108,7 @@ ReactorKit의 가장 큰 특징은 데이터가 한 방향으로만 흐른다는
 ```
 이 흐름은 상태 변화를 예측 가능하게 만들고 디버깅을 용이하게 합니다.
 
-ReactorKit은 View와 Reactor를 쉽게 바인딩할 수 있는 방법을 제공합니다:
-```
-class SomeViewController: UIViewController, View {
-    var disposeBag = DisposeBag()
-
-    let button = UIButton()
-
-    func bind(reactor: SomeViewReactor) {
-        button.rx.tap
-            .map { _ in Reactor.Action.someAction }
-            .bind(to: reactore.action)
-            .disposed(by: disposeBag) 
-    }
-}
-```
-앞서 설명한 의존성 주입과 ReactorKit을 결합하여 강력한 아키텍처를 구현합니다:
+앞서 설명한 의존성 주입과 ReactorKit을 결합하여 아키텍처를 구현합니다:
 ```
 class SomeViewReactor: Reactor {
     private let provider: ManagerProviderType
@@ -157,7 +131,7 @@ class SomeViewReactor: Reactor {
 # 25.12.11 변경사항
 
 ### 4. 클린 아키텍처 도입
-클린 아키텍처를 도입하기에 앞서 레파지토리 패턴을 도입해 데이터 접근 계층을 분리하고, 비즈니스 로직의 독립성을 보장합니다. 이 구조로 인해 테스트하기 쉬운 구조를 설계했습니다.
+클린 아키텍처를 도입하기에 앞서 레파지토리 패턴을 도입해 데이터 접근 계층을 분리하고, 비즈니스 로직의 독립성을 보장합니다. 이 변경으로 인해 테스트하기 쉬운 구조를 설계했습니다.
 
 레파지토리 패턴의 핵심 구조는 구체적인 구현 방식에 의존하지 않도록 추상화하는 것입니다. 이 구조는 데이터 접근 변경하더라도 상위 계층의 코드 수정을 최소화하도록 보장합니다.
 
@@ -246,8 +220,8 @@ final class FetchTagUseCaseImpl: FetchTagUseCase {
 ```
 
 비즈니스 로직에서 사용하는 모델과 데이터 통신을 위한 모델을 분리합니다.
- - 도메인 모델: 순수한 비즈니스 로직만 포함하며 데이터 소스 구현에 독립적입니다.
- - 데이터 모델: API 응답 구조 또는 로컬 DB 스키마에 맞게 정의합니다.
+ - 도메인의 모델: 순수한 비즈니스 로직만 포함하며 데이터 소스 구현에 독립적입니다.
+ - 데이터의 모델: API 응답 구조 또는 로컬 DB 스키마에 맞게 정의합니다.
 
 # 향후 개선할 사항
 1. ReactorKit 기반 비즈니스 로직의 단위 테스트 추가
