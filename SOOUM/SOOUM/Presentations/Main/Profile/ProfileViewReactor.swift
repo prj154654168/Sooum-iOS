@@ -172,17 +172,22 @@ class ProfileViewReactor: Reactor {
                 .map(Mutation.profile)
         case .updateCards:
             
-            if self.entranceType == .other, let userId = self.currentState.profileInfo?.userId {
+            guard let userId = self.currentState.profileInfo?.userId else { return .empty() }
+            
+            switch self.entranceType {
+            case .my:
                 
                 return .concat([
-                    self.fetchUserInfoUseCase.userInfo(userId: userId)
-                        .map(Mutation.profile),
                     self.fetchCardUseCase.writtenFeedCards(userId: userId, lastId: nil)
-                            .map(Mutation.feedCardInfos)
+                        .map(Mutation.feedCardInfos),
+                    self.fetchCardUseCase.writtenCommentCards(lastId: nil)
+                        .map(Mutation.commentCardInfos)
                 ])
+            case .other:
+                
+                return self.fetchCardUseCase.writtenFeedCards(userId: userId, lastId: nil)
+                    .map(Mutation.feedCardInfos)
             }
-            
-            return .empty()
         case let .updateCardType(cardType):
             
             return .just(.updateCardType(cardType))

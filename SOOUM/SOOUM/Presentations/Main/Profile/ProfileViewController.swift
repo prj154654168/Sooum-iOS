@@ -311,6 +311,20 @@ class ProfileViewController: BaseNavigationViewController, View {
             name: .reloadProfileData,
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reloadCardsData(_:)),
+            name: .reloadHomeData,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reloadCardsData(_:)),
+            name: .deletedCardWithId,
+            object: nil
+        )
     }
     
     
@@ -416,21 +430,14 @@ class ProfileViewController: BaseNavigationViewController, View {
         }
         .disposed(by: self.disposeBag)
         
-        reactor.pulse(\.$isBlocked)
-            .filterNil()
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                reactor.action.onNext(.updateCards)
-            }
-            .disposed(by: self.disposeBag)
-        
-        reactor.pulse(\.$isFollowing)
-            .filterNil()
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                reactor.action.onNext(.updateProfile)
-            }
-            .disposed(by: self.disposeBag)
+        Observable.merge(
+            reactor.pulse(\.$isBlocked).filterNil().filter { $0 },
+            reactor.pulse(\.$isFollowing).filterNil().filter { $0 }
+        )
+        .subscribe(with: self) { object, _ in
+            reactor.action.onNext(.updateProfile)
+        }
+        .disposed(by: self.disposeBag)
     }
     
     
@@ -460,6 +467,12 @@ class ProfileViewController: BaseNavigationViewController, View {
     private func reloadProfileData(_ notification: Notification) {
         
         self.reactor?.action.onNext(.updateProfile)
+    }
+    
+    @objc
+    private func reloadCardsData(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.updateCards)
     }
 }
 

@@ -194,7 +194,13 @@ class NotificationViewController: BaseNavigationViewController, View {
                 notices: $0.notices
             )
         }
-        .observe(on: MainScheduler.asyncInstance)
+        // TODO: 임시, 읽지 않은 알림이 없을 때, 홈 리로드
+        .do(onNext: {
+            if $0.unreads?.isEmpty == true {
+                NotificationCenter.default.post(name: .reloadHomeData, object: nil, userInfo: nil)
+            }
+        })
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, displayStats in
             
             var snapshot = Snapshot()
@@ -233,15 +239,6 @@ class NotificationViewController: BaseNavigationViewController, View {
             object.tableView.isHidden = false
         }
         .disposed(by: self.disposeBag)
-    }
-    
-    
-    // MARK: Objc func
-    
-    @objc
-    private func reloadData(_ notification: Notification) {
-        
-        self.reactor?.action.onNext(.landing)
     }
 }
 

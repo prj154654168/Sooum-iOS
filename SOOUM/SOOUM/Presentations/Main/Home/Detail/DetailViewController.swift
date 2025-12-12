@@ -282,6 +282,31 @@ class DetailViewController: BaseNavigationViewController, View {
              }
              .disposed(by: self.disposeBag)
          
+         // 카드 정보 업데이트 시 전역으로 알림
+         self.rx.viewDidDisappear
+             .subscribe(with: self) { object, _ in
+                 /// 좋아요 업데이트 후 뒤로갔을 때, 좋아요 업데이트 알림
+                 if reactor.currentState.isLiked {
+                     NotificationCenter.default.post(
+                        name: .addedFavoriteWithCardId,
+                        object: nil,
+                        userInfo: [
+                            "cardId": object.detailCard.id,
+                            "addedFavorite": object.detailCard.isLike
+                        ]
+                     )
+                 }
+                 /// 사용자 차단 후 뒤로 갔을 때, 차단된 사용자 카드 숨김 알림
+                 if reactor.initialState.isBlocked != reactor.currentState.isBlocked {
+                     NotificationCenter.default.post(
+                        name: .updatedBlockUser,
+                        object: nil,
+                        userInfo: ["isBlocked": !reactor.currentState.isBlocked]
+                     )
+                 }
+             }
+             .disposed(by: self.disposeBag)
+         
          
          // Action
          self.rx.viewDidLoad
@@ -435,7 +460,30 @@ class DetailViewController: BaseNavigationViewController, View {
                  }
                  
                  object.showDeletedCardDialog {
-                     object.navigationPop()
+                     /// 카드 삭제 시, 피드카드일 경우 카드 삭제 알림 / 댓글카드일 경우 댓글수 업데이트
+                     if reactor.currentState.isFeed == true {
+                         NotificationCenter.default.post(
+                            name: .deletedCardWithId,
+                            object: nil,
+                            userInfo: [
+                                "cardId": object.detailCard.id,
+                                "isDeleted": true
+                            ]
+                         )
+                     } else {
+                         NotificationCenter.default.post(
+                             name: .addedCommentWithCardId,
+                             object: nil,
+                             userInfo: [
+                                 "cardId": object.detailCard.id,
+                                 "addedComment": false
+                             ]
+                         )
+                     }
+                     
+                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
+                         object?.navigationPop()
+                     }
                  }
              }
              .disposed(by: self.disposeBag)

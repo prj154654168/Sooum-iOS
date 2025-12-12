@@ -189,6 +189,41 @@ class HomeViewController: BaseNavigationViewController, View {
         
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(self.reloadHomeData(_:)),
+            name: .reloadHomeData,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.addedFavoriteWithCardId(_:)),
+            name: .addedFavoriteWithCardId,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.addedCommentWithCardId(_:)),
+            name: .addedCommentWithCardId,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.deletedCardWithId(_:)),
+            name: .deletedCardWithId,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.updatedBlockUser(_:)),
+            name: .updatedBlockUser,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(self.scollingToTopWithAnimation(_:)),
             name: .scollingToTopWithAnimation,
             object: nil
@@ -266,7 +301,7 @@ class HomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // Action
-        self.rx.viewDidAppear
+        self.rx.viewDidLoad
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -394,6 +429,147 @@ class HomeViewController: BaseNavigationViewController, View {
     
     
     // MARK: Objc func
+    
+    @objc
+    private func reloadHomeData(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.landing)
+    }
+    
+    /// 피드카드 좋아요 업데이트 시, 최신/인기/거리 해당 카드만 업데이트
+    @objc
+    private func addedFavoriteWithCardId(_ notification: Notification) {
+        
+        guard let cardId = notification.userInfo?["cardId"] as? String else { return }
+        
+        var latests = self.reactor?.currentState.latestCards ?? []
+        var populars = self.reactor?.currentState.popularCards ?? []
+        var distances = self.reactor?.currentState.distanceCards ?? []
+        
+        latests = latests.map { latest in
+            
+            if latest.id == cardId, let addedFavorite = notification.userInfo?["addedFavorite"] as? Bool {
+                
+                let updatedLikeCnt = addedFavorite ? latest.likeCnt + 1 : latest.likeCnt - 1
+                return latest.updateLikeCnt(updatedLikeCnt)
+            }
+            
+            return latest
+        }
+        
+        populars = populars.map { popular in
+            
+            if popular.id == cardId, let addedFavorite = notification.userInfo?["addedFavorite"] as? Bool {
+                
+                let updatedLikeCnt = addedFavorite ? popular.likeCnt + 1 : popular.likeCnt - 1
+                return popular.updateLikeCnt(updatedLikeCnt)
+            }
+            
+            return popular
+        }
+        
+        distances = distances.map { distance in
+            
+            if distance.id == cardId, let addedFavorite = notification.userInfo?["addedFavorite"] as? Bool {
+                
+                let updatedLikeCnt = addedFavorite ? distance.likeCnt + 1 : distance.likeCnt - 1
+                return distance.updateLikeCnt(updatedLikeCnt)
+            }
+            
+            return distance
+        }
+        
+        self.reactor?.action.onNext(
+            .updateCards(
+                latests: latests,
+                populars: populars,
+                distances: distances
+            )
+        )
+    }
+    /// 피드카드 댓글카드 작성 및 삭제 시, 최신/인기/거리 해당 카드만 업데이트
+    @objc
+    private func addedCommentWithCardId(_ notification: Notification) {
+        
+        guard let cardId = notification.userInfo?["cardId"] as? String else { return }
+        
+        var latests = self.reactor?.currentState.latestCards ?? []
+        var populars = self.reactor?.currentState.popularCards ?? []
+        var distances = self.reactor?.currentState.distanceCards ?? []
+        
+        latests = latests.map { latest in
+            
+            if latest.id == cardId, let addedComment = notification.userInfo?["addedComment"] as? Bool {
+                
+                let updatedCommentCnt = addedComment ? latest.commentCnt + 1 : latest.commentCnt - 1
+                return latest.updateCommentCnt(updatedCommentCnt)
+            }
+            
+            return latest
+        }
+        
+        populars = populars.map { popular in
+            
+            if popular.id == cardId, let addedComment = notification.userInfo?["addedComment"] as? Bool {
+                
+                let updatedCommentCnt = addedComment ? popular.commentCnt + 1 : popular.commentCnt - 1
+                return popular.updateCommentCnt(updatedCommentCnt)
+            }
+            
+            return popular
+        }
+        
+        distances = distances.map { distance in
+            
+            if distance.id == cardId, let addedComment = notification.userInfo?["addedComment"] as? Bool {
+                
+                let updatedCommentCnt = addedComment ? distance.commentCnt + 1 : distance.commentCnt - 1
+                return distance.updateCommentCnt(updatedCommentCnt)
+            }
+            
+            return distance
+        }
+        
+        self.reactor?.action.onNext(
+            .updateCards(
+                latests: latests,
+                populars: populars,
+                distances: distances
+            )
+        )
+    }
+    /// 피드카드 삭제 시, 최신/인기/거리 해당 카드만 업데이트
+    @objc
+    private func deletedCardWithId(_ notification: Notification) {
+        
+        guard let cardId = notification.userInfo?["cardId"] as? String,
+            notification.userInfo?["isDeleted"] as? Bool == true
+        else { return }
+        
+        var latests = self.reactor?.currentState.latestCards ?? []
+        var populars = self.reactor?.currentState.popularCards ?? []
+        var distances = self.reactor?.currentState.distanceCards ?? []
+        
+        latests.removeAll(where: { $0.id == cardId })
+        populars.removeAll(where: { $0.id == cardId })
+        distances.removeAll(where: { $0.id == cardId })
+        
+        self.reactor?.action.onNext(
+            .updateCards(
+                latests: latests,
+                populars: populars,
+                distances: distances
+            )
+        )
+    }
+    /// 특정 사용자 차단 시, 최신/인기/거리 특정 사용자 카드 숨김 처리
+    @objc
+    private func updatedBlockUser(_ notification: Notification) {
+        
+        guard notification.userInfo?["isBlocked"] as? Bool != nil else { return }
+        
+        self.reactor?.action.onNext(.landing)
+    }
     
     @objc
     private func scollingToTopWithAnimation(_ notification: Notification) {

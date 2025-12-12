@@ -16,6 +16,16 @@ extension Notification.Name {
     static let changedLocationAuthorization = Notification.Name("changedLocationAuthorization")
     /// Should scroll to top
     static let scollingToTopWithAnimation = Notification.Name("scollingToTopWithAnimation")
+    /// Updated favorite
+    static let addedFavoriteWithCardId = Notification.Name("addedFavoriteWithCardId")
+    /// Added comment
+    static let addedCommentWithCardId = Notification.Name("addedCommentWithCardId")
+    /// Deleted card
+    static let deletedCardWithId = Notification.Name("deletedCardWithId")
+    /// Updated block user
+    static let updatedBlockUser = Notification.Name("updatedBlockUser")
+    /// Should reload home
+    static let reloadHomeData = Notification.Name("reloadHomeData")
     /// Should reload detail
     static let reloadDetailData = Notification.Name("reloadDetailData")
     /// Updated report state

@@ -170,8 +170,9 @@ class BlockUsersViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.blockUserInfos)
-            .observe(on: MainScheduler.asyncInstance)
+        let blockUserInfos = reactor.state.map(\.blockUserInfos).distinctUntilChanged()
+        blockUserInfos
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, blockUserInfos in
                 
                 var snapshot = Snapshot()
@@ -188,13 +189,26 @@ class BlockUsersViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isCanceled)
-            .filterNil()
-            .distinctUntilChanged()
-            .filter { $0 }
-            .map { _ in Reactor.Action.landing }
-            .bind(to: reactor.action)
-            .disposed(by: self.disposeBag)
+        Observable.combineLatest(
+            blockUserInfos,
+            reactor.state.map(\.isCanceledWithId)
+                .filterNil()
+                .distinctUntilChanged(reactor.canUpdateCanceledWithId)
+                .filter { $0.isCanceled }
+                .map(\.userId)
+        )
+        .observe(on: MainScheduler.instance)
+        .subscribe(onNext: { combined in
+            
+            NotificationCenter.default.post(name: .reloadHomeData, object: nil, userInfo: nil)
+            
+            let (blockuserInfos, userId) = combined
+            
+            reactor.action.onNext(
+                .updateBlockUserInfos(blockuserInfos.filter { $0.userId != userId })
+            )
+        })
+        .disposed(by: self.disposeBag)
     }
 }
 
