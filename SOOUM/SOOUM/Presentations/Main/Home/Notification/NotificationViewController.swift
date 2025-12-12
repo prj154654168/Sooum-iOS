@@ -180,7 +180,7 @@ class NotificationViewController: BaseNavigationViewController, View {
         reactor.state.map(\.displayType)
             .filter { $0 == .notice }
             .take(1)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self.headerView) { headerView, _ in
                 headerView.didSelectTabBarItem(1, onlyUpdateApperance: true)
             }

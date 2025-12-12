@@ -136,7 +136,7 @@ class TagSearchCollectViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         isFavorite
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isFavorite in
                 object.rightFavoriteButton.foregroundColor = isFavorite ? .som.v2.yMain : .som.v2.gray200
             }
@@ -146,7 +146,7 @@ class TagSearchCollectViewController: BaseNavigationViewController, View {
         isUpdated
             .filter { $0 }
             .withLatestFrom(isFavorite)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isFavorite in
                 
                 let message = isFavorite ? Text.addToastMessage : Text.deleteToastMessage
@@ -164,7 +164,7 @@ class TagSearchCollectViewController: BaseNavigationViewController, View {
         isUpdated
             .filter { $0 == false }
             .withLatestFrom(isFavorite)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isFavorite in
                 
                 let actions = [
@@ -186,6 +186,7 @@ class TagSearchCollectViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .filterNil()
             .filter { $0 }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 
                 let bottomToastView = SOMBottomToastView(title: Text.addAdditionalLimitedFloatMessage, actions: nil)
@@ -198,7 +199,7 @@ class TagSearchCollectViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.tagCardInfos)
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, tagCardInfos in
                 
                 object.tagCollectCardsView.setModels(tagCardInfos)

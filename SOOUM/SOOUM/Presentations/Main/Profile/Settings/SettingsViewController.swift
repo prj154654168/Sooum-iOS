@@ -308,7 +308,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         // State
         reactor.state.map(\.banEndAt)
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, banEndAt in
                 object.postingBlockedBackgroundView.isHidden = (banEndAt == nil)
                 object.postingBlockedMessageLabel.text = Text.postingBlockedLeadingGuideMessage +
@@ -319,7 +319,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.rejoinableDate)
             .filterNil()
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, rejoinableDate in
                 object.showResignDialog(rejoinableDate: rejoinableDate)
             }
@@ -340,7 +340,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.shouldHideTransfer)
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, shouldHide in
                 object.issueUserTransferCodeCellView.isHidden = shouldHide
                 object.enterUserTransferCodeCellView.isHidden = shouldHide

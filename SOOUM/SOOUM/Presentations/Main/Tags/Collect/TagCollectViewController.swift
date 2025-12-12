@@ -135,15 +135,15 @@ class TagCollectViewController: BaseNavigationViewController, View {
         
         // State
         isRefreshing
-            .observe(on: MainScheduler.asyncInstance)
             .filter { $0 == false }
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.tagCollectCardsView) { tagCollectCardsView, _ in
                 tagCollectCardsView.isRefreshing = false
             }
             .disposed(by: self.disposeBag)
         
         isFavorite
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isFavorite in
                 object.rightFavoriteButton.foregroundColor = isFavorite ? .som.v2.yMain : .som.v2.gray200
             }
@@ -153,7 +153,7 @@ class TagCollectViewController: BaseNavigationViewController, View {
         isUpdated
             .filter { $0 }
             .withLatestFrom(isFavorite)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isFavorite in
                 
                 let message = isFavorite ? Text.addToastMessage : Text.deleteToastMessage
@@ -171,7 +171,7 @@ class TagCollectViewController: BaseNavigationViewController, View {
         isUpdated
             .filter { $0 == false }
             .withLatestFrom(isFavorite)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isFavorite in
                 
                 let actions = [
@@ -193,6 +193,7 @@ class TagCollectViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .filterNil()
             .filter { $0 }
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 
                 let bottomToastView = SOMBottomToastView(title: Text.addAdditionalLimitedFloatMessage, actions: nil)
@@ -205,7 +206,7 @@ class TagCollectViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.tagCardInfos)
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, tagCardInfos in
                 
                 object.tagCollectCardsView.setModels(tagCardInfos)

@@ -334,7 +334,7 @@ class DetailViewController: BaseNavigationViewController, View {
          
          reactor.state.map(\.isFeed)
              .filterNil()
-             .observe(on: MainScheduler.asyncInstance)
+             .observe(on: MainScheduler.instance)
              .subscribe(with: self) { object, isFeed in
                  object.navigationBar.title = isFeed ?
                     Text.feedDetailNavigationTitle :
@@ -347,7 +347,7 @@ class DetailViewController: BaseNavigationViewController, View {
              .disposed(by: self.disposeBag)
          
          detailCard
-             .observe(on: MainScheduler.asyncInstance)
+             .observe(on: MainScheduler.instance)
              .subscribe(with: self) { object, detailCard in
                  object.detailCard = detailCard
                  
@@ -362,7 +362,7 @@ class DetailViewController: BaseNavigationViewController, View {
          
          reactor.state.map(\.commentCards)
              .distinctUntilChanged()
-             .observe(on: MainScheduler.asyncInstance)
+             .observe(on: MainScheduler.instance)
              .subscribe(with: self) { object, commentCards in
                  object.commentCards = commentCards
                  
@@ -396,7 +396,7 @@ class DetailViewController: BaseNavigationViewController, View {
          reactor.state.map(\.isLiked)
              .distinctUntilChanged()
              .filter { $0 }
-             .observe(on: MainScheduler.asyncInstance)
+             .observe(on: MainScheduler.instance)
              .subscribe(with: self) { object, _ in
                  
                  let updated: DetailCardInfo
@@ -442,7 +442,7 @@ class DetailViewController: BaseNavigationViewController, View {
          reactor.state.map(\.isDeleted)
              .distinctUntilChanged()
              .filter { $0 }
-             .observe(on: MainScheduler.asyncInstance)
+             .observe(on: MainScheduler.instance)
              .subscribe(with: self) { object, _ in
                  if reactor.currentState.isFeed == false {
                      NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)

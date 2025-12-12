@@ -149,7 +149,7 @@ class MainTabBarController: SOMTabBarController, View {
         // State
         reactor.pulse(\.$profileInfo)
             .filterNil()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, profileInfo in
                 
                 switch reactor.currentState.entranceType {

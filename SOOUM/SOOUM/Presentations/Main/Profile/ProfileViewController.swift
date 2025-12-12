@@ -404,7 +404,7 @@ class ProfileViewController: BaseNavigationViewController, View {
             )
         }
         .distinctUntilChanged(reactor.canUpdateCells)
-        .observe(on: MainScheduler.asyncInstance)
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, displayStates in
             
             var snapshot = Snapshot()

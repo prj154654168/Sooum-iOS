@@ -247,7 +247,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         // State
         let profileImage = reactor.state.map(\.profileImage).distinctUntilChanged().share()
         profileImage
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, profileImage in
                 object.profileImageView.image = profileImage ?? .init(.image(.v2(.profile_large)))
                 

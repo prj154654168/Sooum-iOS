@@ -309,7 +309,7 @@ class FollowViewController: BaseNavigationViewController, View {
                 followings: $0.followings
             )
         }
-        .observe(on: MainScheduler.asyncInstance)
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, displayStates in
             
             var followerTabItem: String {

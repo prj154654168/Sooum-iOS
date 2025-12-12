@@ -288,7 +288,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.writeCardView.writeCardTags.updateWrittenTags
             .filterNil()
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .bind(to: self.writeCardView.writeCardTags.rx.models())
             .disposed(by: self.disposeBag)
         
@@ -367,7 +367,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .share(replay: 1)
         selectedTypography
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self.writeCardView) { writeCardView, selectedTypography in
                 var typograhpyToTextView: Typography {
                     switch selectedTypography {
@@ -397,7 +397,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .share()
         selectedOptions
             .filter { $0.contains(.distanceShare) }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, options in
                 // 선택된 옵션 중 `거리공유` 옵션이 존재하고, 위치 권한이 허용되지 않았을 때
                 guard reactor.initialState.hasPermission == false else { return }
@@ -487,6 +487,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, writtenCardId in
+                NotificationCenter.default.post(name: .reloadHomeData, object: nil, userInfo: nil)
                 if reactor.entranceType == .comment {
                     NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
                 }
@@ -543,7 +544,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.defaultImages)
             .filterNil()
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .bind(to: self.selectImageView.rx.setModels)
             .disposed(by: self.disposeBag)
         
@@ -558,7 +559,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isDownloaded)
             .filter { $0 == true }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self.selectImageView) { selectImageView, _ in
                 selectImageView.updatedByUser()
             }

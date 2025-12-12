@@ -209,7 +209,7 @@ class TagViewController: BaseNavigationViewController, View {
             )
         }
         .distinctUntilChanged(reactor.canUpdateCells)
-        .observe(on: MainScheduler.asyncInstance)
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, displayStats in
             
             object.favoriteTagHeaderView.title = (UserDefaults.standard.nickname ?? "") + Text.favoriteTagHeaderTitle
