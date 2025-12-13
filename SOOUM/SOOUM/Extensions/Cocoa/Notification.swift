@@ -20,8 +20,8 @@ extension Notification.Name {
     static let addedFavoriteWithCardId = Notification.Name("addedFavoriteWithCardId")
     /// Added comment
     static let addedCommentWithCardId = Notification.Name("addedCommentWithCardId")
-    /// Deleted card
-    static let deletedCardWithId = Notification.Name("deletedCardWithId")
+    /// Deleted feed card
+    static let deletedFeedCardWithId = Notification.Name("deletedFeedCardWithId")
     /// Updated block user
     static let updatedBlockUser = Notification.Name("updatedBlockUser")
     /// Should reload home

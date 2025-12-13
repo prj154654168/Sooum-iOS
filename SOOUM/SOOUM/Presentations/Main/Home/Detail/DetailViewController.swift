@@ -463,7 +463,7 @@ class DetailViewController: BaseNavigationViewController, View {
                      /// 카드 삭제 시, 피드카드일 경우 카드 삭제 알림 / 댓글카드일 경우 댓글수 업데이트
                      if reactor.currentState.isFeed == true {
                          NotificationCenter.default.post(
-                            name: .deletedCardWithId,
+                            name: .deletedFeedCardWithId,
                             object: nil,
                             userInfo: [
                                 "cardId": object.detailCard.id,

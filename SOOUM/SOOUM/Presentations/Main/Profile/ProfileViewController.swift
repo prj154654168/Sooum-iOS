@@ -322,7 +322,7 @@ class ProfileViewController: BaseNavigationViewController, View {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.reloadCardsData(_:)),
-            name: .deletedCardWithId,
+            name: .deletedFeedCardWithId,
             object: nil
         )
     }

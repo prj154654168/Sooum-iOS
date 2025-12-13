@@ -210,8 +210,8 @@ class HomeViewController: BaseNavigationViewController, View {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(self.deletedCardWithId(_:)),
-            name: .deletedCardWithId,
+            selector: #selector(self.deletedFeedCardWithId(_:)),
+            name: .deletedFeedCardWithId,
             object: nil
         )
         
@@ -540,7 +540,7 @@ class HomeViewController: BaseNavigationViewController, View {
     }
     /// 피드카드 삭제 시, 최신/인기/거리 해당 카드만 업데이트
     @objc
-    private func deletedCardWithId(_ notification: Notification) {
+    private func deletedFeedCardWithId(_ notification: Notification) {
         
         guard let cardId = notification.userInfo?["cardId"] as? String,
             notification.userInfo?["isDeleted"] as? Bool == true
