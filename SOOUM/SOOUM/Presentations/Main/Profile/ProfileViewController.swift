@@ -599,7 +599,9 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
                 case .feed:
                     
                     let newHeight = self.updateCollectionViewHeight(numberOfItems: feeds.count)
-                    collectionView.contentInset.bottom = defaultHeight <= newHeight ? 88 + 16 : 0
+                    if reactor.entranceType == .my {
+                        collectionView.contentInset.bottom = defaultHeight <= newHeight ? 88 + 16 : 0
+                    }
                     
                     return feeds.isEmpty ? defaultHeight : newHeight
                 case .comment:
