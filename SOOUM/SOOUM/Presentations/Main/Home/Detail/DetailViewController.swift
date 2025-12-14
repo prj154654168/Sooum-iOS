@@ -176,27 +176,29 @@ class DetailViewController: BaseNavigationViewController, View {
      
      // MARK: - Bind
      
-     func bind(reactor: DetailViewReactor) {
-         
-         // 답카드 작성 전환
-         self.floatingButton.backgoundButton.rx.throttleTap(.seconds(3))
-             .map { _ in Reactor.Action.willPushToWrite }
-             .bind(to: reactor.action)
-             .disposed(by: self.disposeBag)
-         
-         let detailCard = reactor.state.map(\.detailCard).filterNil().distinctUntilChanged()
-         let isBlocked = reactor.state.map(\.isBlocked).distinctUntilChanged()
-         let isReported = reactor.state.map(\.isReported).distinctUntilChanged()
-         
-         let rightMoreButtonDidTap = self.rightMoreButton.rx.throttleTap.share()
-         // 더보기 버튼 액션
-         rightMoreButtonDidTap
-             .withLatestFrom(detailCard)
-             .filter { $0.isOwnCard }
-             .observe(on: MainScheduler.instance)
-             .subscribe(with: self) { object, _ in
-                 
-                 object.actions = [
+    func bind(reactor: DetailViewReactor) {
+        
+        // 답카드 작성 전환
+        self.floatingButton.backgoundButton.rx.throttleTap(.seconds(3))
+            .map { _ in Reactor.Action.willPushToWrite }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        let detailCard = reactor.state.map(\.detailCard).filterNil().distinctUntilChanged()
+        let commentCards = reactor.state.map(\.commentCards).distinctUntilChanged()
+        let isFeed = reactor.state.map(\.isFeed).filterNil().distinctUntilChanged()
+        let isBlocked = reactor.state.map(\.isBlocked).distinctUntilChanged()
+        let isReported = reactor.state.map(\.isReported).distinctUntilChanged()
+        
+        let rightMoreButtonDidTap = self.rightMoreButton.rx.throttleTap.share()
+        // 더보기 버튼 액션
+        rightMoreButtonDidTap
+            .withLatestFrom(detailCard)
+            .filter { $0.isOwnCard }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                
+                object.actions = [
                     .init(
                         title: Text.deleteButtonFloatActionTitle,
                         image: .init(.icon(.v2(.outlined(.trash)))),
@@ -208,26 +210,26 @@ class DetailViewController: BaseNavigationViewController, View {
                             }
                         }
                     )
-                 ]
-                 
-                 let bottomFloatView = SOMBottomFloatView(actions: object.actions)
-                 
-                 var wrapper: SwiftEntryKitViewWrapper = bottomFloatView.sek
-                 wrapper.entryName = Text.bottomFloatEntryName
-                 wrapper.showBottomFloat(screenInteraction: .dismiss)
-             }
-             .disposed(by: self.disposeBag)
-         
-         rightMoreButtonDidTap
-             .withLatestFrom(Observable.combineLatest(detailCard, isBlocked, isReported))
-             .filter { $0.0.isOwnCard == false }
-             .map { ($0.0.nickname, $0.1, $0.2) }
-             .observe(on: MainScheduler.instance)
-             .subscribe(with: self) { object, combined in
-                 
-                 let (nickname, isBlocked, isReported) = combined
-                 
-                 object.actions = [
+                ]
+                
+                let bottomFloatView = SOMBottomFloatView(actions: object.actions)
+                
+                var wrapper: SwiftEntryKitViewWrapper = bottomFloatView.sek
+                wrapper.entryName = Text.bottomFloatEntryName
+                wrapper.showBottomFloat(screenInteraction: .dismiss)
+            }
+            .disposed(by: self.disposeBag)
+        
+        rightMoreButtonDidTap
+            .withLatestFrom(Observable.combineLatest(detailCard, isBlocked, isReported))
+            .filter { $0.0.isOwnCard == false }
+            .map { ($0.0.nickname, $0.1, $0.2) }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, combined in
+                
+                let (nickname, isBlocked, isReported) = combined
+                
+                object.actions = [
                     .init(
                         title: isBlocked ? Text.blockButtonFloatActionTitle : Text.unblockButtonFloatActionTitle,
                         image: .init(.icon(.v2(.outlined(isBlocked ? .hide : .eye)))),
@@ -258,236 +260,239 @@ class DetailViewController: BaseNavigationViewController, View {
                             }
                         }
                     )
-                 ]
-                 
-                 let bottomFloatView = SOMBottomFloatView(actions: object.actions)
-                 
-                 var wrapper: SwiftEntryKitViewWrapper = bottomFloatView.sek
-                 wrapper.entryName = Text.bottomFloatEntryName
-                 wrapper.showBottomFloat(screenInteraction: .dismiss)
-             }
-             .disposed(by: self.disposeBag)
-         
-         // 카드 삭제 후 X 버튼 액션
-         self.rightDeleteButton.rx.throttleTap(.seconds(3))
-             .subscribe(with: self) { object, _ in
-                 object.navigationPop(animated: false)
-             }
-             .disposed(by: self.disposeBag)
-         
-         // 댓글카드 홈 버튼 액션
-         self.leftHomeButton.rx.throttleTap(.seconds(3))
-             .subscribe(with: self) { object, _ in
-                 object.navigationPopToRoot(animated: false)
-             }
-             .disposed(by: self.disposeBag)
-         
-         // 카드 정보 업데이트 시 전역으로 알림
-         self.rx.viewDidDisappear
-             .subscribe(with: self) { object, _ in
-                 /// 좋아요 업데이트 후 뒤로갔을 때, 좋아요 업데이트 알림
-                 if reactor.currentState.isLiked {
-                     NotificationCenter.default.post(
+                ]
+                
+                let bottomFloatView = SOMBottomFloatView(actions: object.actions)
+                
+                var wrapper: SwiftEntryKitViewWrapper = bottomFloatView.sek
+                wrapper.entryName = Text.bottomFloatEntryName
+                wrapper.showBottomFloat(screenInteraction: .dismiss)
+            }
+            .disposed(by: self.disposeBag)
+        
+        // 카드 삭제 후 X 버튼 액션
+        self.rightDeleteButton.rx.throttleTap(.seconds(3))
+            .subscribe(with: self) { object, _ in
+                object.navigationPop(animated: false)
+            }
+            .disposed(by: self.disposeBag)
+        
+        // 댓글카드 홈 버튼 액션
+        self.leftHomeButton.rx.throttleTap(.seconds(3))
+            .subscribe(with: self) { object, _ in
+                object.navigationPopToRoot(animated: false)
+            }
+            .disposed(by: self.disposeBag)
+        
+        // 카드 정보 업데이트 시 전역으로 알림
+        self.rx.viewDidDisappear
+            .subscribe(with: self) { object, _ in
+                /// 좋아요 업데이트 후 뒤로갔을 때, 좋아요 업데이트 알림
+                if reactor.currentState.isLiked {
+                    NotificationCenter.default.post(
                         name: .addedFavoriteWithCardId,
                         object: nil,
                         userInfo: [
                             "cardId": object.detailCard.id,
                             "addedFavorite": object.detailCard.isLike
                         ]
-                     )
-                 }
-                 /// 사용자 차단 후 뒤로 갔을 때, 차단된 사용자 카드 숨김 알림
-                 if reactor.initialState.isBlocked != reactor.currentState.isBlocked {
-                     NotificationCenter.default.post(
+                    )
+                }
+                /// 사용자 차단 후 뒤로 갔을 때, 차단된 사용자 카드 숨김 알림
+                if reactor.initialState.isBlocked != reactor.currentState.isBlocked {
+                    NotificationCenter.default.post(
                         name: .updatedBlockUser,
                         object: nil,
                         userInfo: ["isBlocked": !reactor.currentState.isBlocked]
-                     )
-                 }
-             }
-             .disposed(by: self.disposeBag)
-         
-         
-         // Action
-         self.rx.viewDidLoad
-             .map { _ in Reactor.Action.landing }
-             .bind(to: reactor.action)
-             .disposed(by: self.disposeBag)
-         
-         let isRefreshing = reactor.state.map(\.isRefreshing).distinctUntilChanged().share()
-         self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
-             .withLatestFrom(isRefreshing)
-             .filter { $0 == false }
-             .delay(.milliseconds(1000), scheduler: MainScheduler.instance)
-             .map { _ in Reactor.Action.refresh }
-             .bind(to: reactor.action)
-             .disposed(by: self.disposeBag)
-         
-         // State
-         isRefreshing
-             .observe(on: MainScheduler.asyncInstance)
-             .filter { $0 == false }
-             .subscribe(with: self.collectionView) { collectionView, _ in
-                 collectionView.refreshControl?.endRefreshing()
-             }
-             .disposed(by: self.disposeBag)
-         
-         reactor.state.map(\.isFeed)
-             .filterNil()
-             .observe(on: MainScheduler.instance)
-             .subscribe(with: self) { object, isFeed in
-                 object.navigationBar.title = isFeed ?
-                    Text.feedDetailNavigationTitle :
-                    Text.commentDetailNavigationTitle
-                 
-                 if isFeed == false {
-                     object.navigationBar.setLeftButtons([object.leftHomeButton])
-                 }
-             }
-             .disposed(by: self.disposeBag)
-         
-         detailCard
-             .observe(on: MainScheduler.instance)
-             .subscribe(with: self) { object, detailCard in
-                 object.detailCard = detailCard
-                 
-                 object.pungView.subscribePungTime(detailCard.storyExpirationTime)
-                 object.pungView.isHidden = detailCard.storyExpirationTime == nil
-                 
-                 UIView.performWithoutAnimation {
-                     object.collectionView.reloadData()
-                 }
-             }
-             .disposed(by: self.disposeBag)
-         
-         reactor.state.map(\.commentCards)
-             .distinctUntilChanged()
-             .observe(on: MainScheduler.instance)
-             .subscribe(with: self) { object, commentCards in
-                 object.commentCards = commentCards
-                 
-                 UIView.performWithoutAnimation {
-                     object.collectionView.reloadData()
-                 }
-             }
-             .disposed(by: self.disposeBag)
-         
-         let willPushEnabled = reactor.state.map(\.willPushEnabled).distinctUntilChanged().filterNil()
-         willPushEnabled
-             .filter { $0 == false }
-             .observe(on: MainScheduler.instance)
-             .subscribe(with: self) { object, _ in
-                 let writeCardViewController = WriteCardViewController()
-                 writeCardViewController.reactor = reactor.reactorForWriteCard()
-                 object.navigationPush(
+                    )
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        
+        // Action
+        self.rx.viewDidLoad
+            .map { _ in Reactor.Action.landing }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        let isRefreshing = reactor.state.map(\.isRefreshing).distinctUntilChanged().share()
+        self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
+            .withLatestFrom(isRefreshing)
+            .filter { $0 == false }
+            .delay(.milliseconds(1000), scheduler: MainScheduler.instance)
+            .map { _ in Reactor.Action.refresh }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        // State
+        isRefreshing
+            .observe(on: MainScheduler.asyncInstance)
+            .filter { $0 == false }
+            .subscribe(with: self.collectionView) { collectionView, _ in
+                collectionView.refreshControl?.endRefreshing()
+            }
+            .disposed(by: self.disposeBag)
+        
+        isFeed
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, isFeed in
+                object.navigationBar.title = isFeed ?
+                Text.feedDetailNavigationTitle :
+                Text.commentDetailNavigationTitle
+                
+                if isFeed == false {
+                    object.navigationBar.setLeftButtons([object.leftHomeButton])
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        detailCard
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, detailCard in
+                object.detailCard = detailCard
+                
+                object.pungView.subscribePungTime(detailCard.storyExpirationTime)
+                object.pungView.isHidden = detailCard.storyExpirationTime == nil
+                
+                UIView.performWithoutAnimation {
+                    object.collectionView.reloadData()
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        commentCards
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, commentCards in
+                object.commentCards = commentCards
+                
+                UIView.performWithoutAnimation {
+                    object.collectionView.reloadData()
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        let willPushEnabled = reactor.state.map(\.willPushEnabled).distinctUntilChanged().filterNil()
+        willPushEnabled
+            .filter { $0 == false }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                let writeCardViewController = WriteCardViewController()
+                writeCardViewController.reactor = reactor.reactorForWriteCard()
+                object.navigationPush(
                     writeCardViewController,
                     animated: true
-                 ) { _ in
-                     reactor.action.onNext(.cleanup)
-                 }
-             }
-             .disposed(by: self.disposeBag)
-         willPushEnabled
-             .filter { $0 }
-             .map { _ in Reactor.Action.cleanup }
-             .bind(to: reactor.action)
-             .disposed(by: self.disposeBag)
-         
-         reactor.state.map(\.isLiked)
-             .distinctUntilChanged()
-             .filter { $0 }
-             .observe(on: MainScheduler.instance)
-             .subscribe(with: self) { object, _ in
-                 
-                 let updated: DetailCardInfo
-                 if object.detailCard.isLike {
-                     
-                     let updatedLikeCnt = object.detailCard.likeCnt - 1
-                     updated = object.detailCard.updateLikeCnt(updatedLikeCnt, with: false)
-                 } else {
-                     
-                     let updatedLikeCnt = object.detailCard.likeCnt + 1
-                     updated = object.detailCard.updateLikeCnt(updatedLikeCnt, with: true)
-                 }
-                 
-                 object.detailCard = updated
-                 
-                 UIView.performWithoutAnimation {
-                     object.collectionView.reloadData()
-                 }
-             }
-             .disposed(by: self.disposeBag)
-         
-         isBlocked
-             .filter { $0 == false }
-             .observe(on: MainScheduler.instance)
-             .subscribe(with: self) { object, _ in
-                 
-                 let title = Text.blockToastLeadingTitle + object.detailCard.nickname + Text.blockToastTrailingTitle
-                 let actions = [
+                ) { _ in
+                    reactor.action.onNext(.cleanup)
+                }
+            }
+            .disposed(by: self.disposeBag)
+        willPushEnabled
+            .filter { $0 }
+            .map { _ in Reactor.Action.cleanup }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isLiked)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                
+                let updated: DetailCardInfo
+                if object.detailCard.isLike {
+                    
+                    let updatedLikeCnt = object.detailCard.likeCnt - 1
+                    updated = object.detailCard.updateLikeCnt(updatedLikeCnt, with: false)
+                } else {
+                    
+                    let updatedLikeCnt = object.detailCard.likeCnt + 1
+                    updated = object.detailCard.updateLikeCnt(updatedLikeCnt, with: true)
+                }
+                
+                object.detailCard = updated
+                
+                UIView.performWithoutAnimation {
+                    object.collectionView.reloadData()
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        isBlocked
+            .filter { $0 == false }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                
+                let title = Text.blockToastLeadingTitle + object.detailCard.nickname + Text.blockToastTrailingTitle
+                let actions = [
                     SOMBottomToastView.ToastAction(title: Text.cancelActionTitle, action: {
                         SwiftEntryKit.dismiss(.specific(entryName: Text.bottomToastEntryName)) {
                             reactor.action.onNext(.block(isBlocked: false))
                         }
                     })
-                 ]
-                 let bottomToastView = SOMBottomToastView(title: title, actions: actions)
-                 
-                 var wrapper: SwiftEntryKitViewWrapper = bottomToastView.sek
-                 wrapper.entryName = Text.bottomToastEntryName
-                 wrapper.showBottomToast(verticalOffset: 34 + 56 + 8)
-             }
-             .disposed(by: self.disposeBag)
-         
-         reactor.state.map(\.isDeleted)
-             .distinctUntilChanged()
-             .filter { $0 }
-             .observe(on: MainScheduler.instance)
-             .subscribe(with: self) { object, _ in
-                 if reactor.currentState.isFeed == false {
-                     NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
-                 }
-                 
-                 object.navigationBar.title = Text.deletedNavigationTitle
-                 object.navigationBar.setRightButtons([object.rightDeleteButton])
-                 
-                 object.floatingButton.removeFromSuperview()
-                 
-                 object.isDeleted = true
-                 
-                 UIView.performWithoutAnimation {
-                     object.collectionView.reloadData()
-                 }
-                 
-                 object.showDeletedCardDialog {
-                     /// 카드 삭제 시, 피드카드일 경우 카드 삭제 알림 / 댓글카드일 경우 댓글수 업데이트
-                     if reactor.currentState.isFeed == true {
-                         NotificationCenter.default.post(
-                            name: .deletedFeedCardWithId,
-                            object: nil,
-                            userInfo: [
-                                "cardId": object.detailCard.id,
-                                "isDeleted": true
-                            ]
-                         )
-                     } else {
-                         NotificationCenter.default.post(
-                             name: .addedCommentWithCardId,
-                             object: nil,
-                             userInfo: [
-                                 "cardId": object.detailCard.id,
-                                 "addedComment": false
-                             ]
-                         )
-                     }
-                     
-                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
-                         object?.navigationPop()
-                     }
-                 }
-             }
-             .disposed(by: self.disposeBag)
-     }
+                ]
+                let bottomToastView = SOMBottomToastView(title: title, actions: actions)
+                
+                var wrapper: SwiftEntryKitViewWrapper = bottomToastView.sek
+                wrapper.entryName = Text.bottomToastEntryName
+                wrapper.showBottomToast(verticalOffset: 34 + 56 + 8)
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.isDeleted)
+            .distinctUntilChanged()
+            .filter { $0 }
+            .withLatestFrom(Observable.combineLatest(detailCard.map(\.id), commentCards.map(\.isEmpty), isFeed))
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, combined in
+                
+                object.navigationBar.title = Text.deletedNavigationTitle
+                object.navigationBar.setRightButtons([object.rightDeleteButton])
+                
+                object.floatingButton.removeFromSuperview()
+                
+                object.isDeleted = true
+                
+                UIView.performWithoutAnimation {
+                    object.collectionView.reloadData()
+                }
+                
+                let (cardId, isCommentEmpty, isFeed) = combined
+                
+                if isFeed {
+                    NotificationCenter.default.post(
+                        name: .deletedFeedCardWithId,
+                        object: nil,
+                        userInfo: ["cardId": cardId, "isDeleted": true]
+                    )
+                } else {
+                    NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
+                    
+                    NotificationCenter.default.post(
+                        name: .addedCommentWithCardId,
+                        object: nil,
+                        userInfo: ["cardId": cardId, "addedComment": false]
+                    )
+                }
+
+                if isCommentEmpty {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
+                        object?.navigationPop()
+                    }
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.hasErrors)
+            .filterNil()
+            .distinctUntilChanged()
+            .subscribe(with: self) { object, errors in
+                if case 410 = errors {
+                    object.showDeletedCardDialog()
+                }
+            }
+            .disposed(by: self.disposeBag)
+    }
     
     
     // MARK: Objc func

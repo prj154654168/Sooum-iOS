@@ -91,6 +91,7 @@ class DetailViewReactor: Reactor {
             let longitude = coordinate.longitude
             
             return .concat([
+                .just(.updateErrors(nil)),
                 self.fetchCardDetailUseCase.detailCard(
                     id: self.selectedCardId,
                     latitude: latitude,
@@ -110,6 +111,7 @@ class DetailViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsRefreshing(true)),
+                .just(.updateErrors(nil)),
                 self.detailCard()
                     .catch(self.catchClosure),
                 self.commentCards(),
@@ -126,15 +128,19 @@ class DetailViewReactor: Reactor {
             
             guard let memberId = self.currentState.detailCard?.memberId else { return .empty() }
             
-            return self.blockUserUseCase.updateBlocked(userId: memberId, isBlocked: isBlocked)
-                .flatMapLatest { isBlockedSuccess -> Observable<Mutation> in
-                    /// isBlocked == true 일 때, 차단 요청
-                    return isBlockedSuccess ? .just(.updateIsBlocked(isBlocked == false)) : .empty()
-                }
-                .catch(self.catchClosure)
+            return .concat([
+                .just(.updateErrors(nil)),
+                self.blockUserUseCase.updateBlocked(userId: memberId, isBlocked: isBlocked)
+                    .flatMapLatest { isBlockedSuccess -> Observable<Mutation> in
+                        /// isBlocked == true 일 때, 차단 요청
+                        return isBlockedSuccess ? .just(.updateIsBlocked(isBlocked == false)) : .empty()
+                    }
+                    .catch(self.catchClosure)
+            ])
         case let .updateLike(isLike):
             
             return .concat([
+                .just(.updateErrors(nil)),
                 .just(.updateIsLiked(false)),
                 self.updateCardLikeUseCase.updateLike(cardId: self.selectedCardId, isLike: isLike)
                     .filter { $0 }
@@ -283,6 +289,7 @@ extension DetailViewReactor {
             if case 410 = nsError.code {
                 return .concat([
                     .just(.updateIsRefreshing(false)),
+                    .just(.updateErrors(410)),
                     .just(.updateIsDeleted(true))
                 ])
             }
