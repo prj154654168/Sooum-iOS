@@ -199,6 +199,7 @@ extension UIImage.SOOUMType {
             case swap
             case tag
             case time
+            case timer
             case trash
             case up
             case user

@@ -109,7 +109,7 @@ class SOMCard: UIView {
     }
     /// 펑 남은시간 표시 아이콘
     private let cardPungTimeImageView = UIImageView().then {
-        $0.image = .init(.icon(.v2(.filled(.bomb))))
+        $0.image = .init(.icon(.v2(.outlined(.timer))))
         $0.tintColor = .som.v2.pMain
     }
     /// 펑 남은시간 표시 라벨
