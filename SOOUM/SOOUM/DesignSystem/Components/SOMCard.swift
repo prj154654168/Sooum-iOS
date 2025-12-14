@@ -446,12 +446,12 @@ class SOMCard: UIView {
             .map { object, _ in
                 guard let pungTime = pungTime else {
                     object.serialTimer?.dispose()
-                    return "00 : 00 : 00"
+                    return "00:00:00"
                 }
                 
                 let currentDate = Date()
                 let remainingTime = currentDate.infoReadableTimeTakenFromThisForPung(to: pungTime)
-                if remainingTime == "00 : 00 : 00" {
+                if remainingTime == "00:00:00" {
                     object.serialTimer?.dispose()
                     object.updatePungUI()
                 }
@@ -463,7 +463,7 @@ class SOMCard: UIView {
     
     /// 펑 ui 즉각적으로 업데이트
     private func updatePungUI() {
-        self.cardPungTimeLabel.text = "00 : 00 : 00"
+        self.cardPungTimeLabel.text = "00:00:00"
         self.rootContainerImageView.layer.borderWidth = 0
         self.rootContainerImageView.image = UIColor.som.v2.gray200.toImage
         self.cardInfoContainer.layer.borderWidth = 0
