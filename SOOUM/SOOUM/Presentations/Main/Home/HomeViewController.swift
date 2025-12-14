@@ -440,43 +440,30 @@ class HomeViewController: BaseNavigationViewController, View {
     @objc
     private func addedFavoriteWithCardId(_ notification: Notification) {
         
-        guard let cardId = notification.userInfo?["cardId"] as? String else { return }
+        guard let cardId = notification.userInfo?["cardId"] as? String,
+            let addedFavorite = notification.userInfo?["addedFavorite"] as? Bool
+        else { return }
         
         var latests = self.reactor?.currentState.latestCards ?? []
         var populars = self.reactor?.currentState.popularCards ?? []
         var distances = self.reactor?.currentState.distanceCards ?? []
         
-        latests = latests.map { latest in
-            
-            if latest.id == cardId, let addedFavorite = notification.userInfo?["addedFavorite"] as? Bool {
-                
-                let updatedLikeCnt = addedFavorite ? latest.likeCnt + 1 : latest.likeCnt - 1
-                return latest.updateLikeCnt(updatedLikeCnt)
-            }
-            
-            return latest
+        if let index = latests.firstIndex(where: { $0.id == cardId }) {
+            let curr = latests[index].likeCnt
+            let new = addedFavorite ? curr + 1 : curr - 1
+            latests[index] = latests[index].updateLikeCnt(new)
         }
         
-        populars = populars.map { popular in
-            
-            if popular.id == cardId, let addedFavorite = notification.userInfo?["addedFavorite"] as? Bool {
-                
-                let updatedLikeCnt = addedFavorite ? popular.likeCnt + 1 : popular.likeCnt - 1
-                return popular.updateLikeCnt(updatedLikeCnt)
-            }
-            
-            return popular
+        if let index = populars.firstIndex(where: { $0.id == cardId }) {
+            let curr = populars[index].likeCnt
+            let new = addedFavorite ? curr + 1 : curr - 1
+            populars[index] = populars[index].updateLikeCnt(new)
         }
         
-        distances = distances.map { distance in
-            
-            if distance.id == cardId, let addedFavorite = notification.userInfo?["addedFavorite"] as? Bool {
-                
-                let updatedLikeCnt = addedFavorite ? distance.likeCnt + 1 : distance.likeCnt - 1
-                return distance.updateLikeCnt(updatedLikeCnt)
-            }
-            
-            return distance
+        if let index = distances.firstIndex(where: { $0.id == cardId }) {
+            let curr = distances[index].likeCnt
+            let new = addedFavorite ? curr + 1 : curr - 1
+            distances[index] = distances[index].updateLikeCnt(new)
         }
         
         self.reactor?.action.onNext(
@@ -491,43 +478,30 @@ class HomeViewController: BaseNavigationViewController, View {
     @objc
     private func addedCommentWithCardId(_ notification: Notification) {
         
-        guard let cardId = notification.userInfo?["cardId"] as? String else { return }
+        guard let cardId = notification.userInfo?["cardId"] as? String,
+            let addedComment = notification.userInfo?["addedComment"] as? Bool
+        else { return }
         
         var latests = self.reactor?.currentState.latestCards ?? []
         var populars = self.reactor?.currentState.popularCards ?? []
         var distances = self.reactor?.currentState.distanceCards ?? []
         
-        latests = latests.map { latest in
-            
-            if latest.id == cardId, let addedComment = notification.userInfo?["addedComment"] as? Bool {
-                
-                let updatedCommentCnt = addedComment ? latest.commentCnt + 1 : latest.commentCnt - 1
-                return latest.updateCommentCnt(updatedCommentCnt)
-            }
-            
-            return latest
+        if let index = latests.firstIndex(where: { $0.id == cardId }) {
+            let curr = latests[index].commentCnt
+            let new = addedComment ? curr + 1 : curr - 1
+            latests[index] = latests[index].updateCommentCnt(new)
         }
         
-        populars = populars.map { popular in
-            
-            if popular.id == cardId, let addedComment = notification.userInfo?["addedComment"] as? Bool {
-                
-                let updatedCommentCnt = addedComment ? popular.commentCnt + 1 : popular.commentCnt - 1
-                return popular.updateCommentCnt(updatedCommentCnt)
-            }
-            
-            return popular
+        if let index = populars.firstIndex(where: { $0.id == cardId }) {
+            let curr = populars[index].commentCnt
+            let new = addedComment ? curr + 1 : curr - 1
+            populars[index] = populars[index].updateCommentCnt(new)
         }
         
-        distances = distances.map { distance in
-            
-            if distance.id == cardId, let addedComment = notification.userInfo?["addedComment"] as? Bool {
-                
-                let updatedCommentCnt = addedComment ? distance.commentCnt + 1 : distance.commentCnt - 1
-                return distance.updateCommentCnt(updatedCommentCnt)
-            }
-            
-            return distance
+        if let index = distances.firstIndex(where: { $0.id == cardId }) {
+            let curr = distances[index].commentCnt
+            let new = addedComment ? curr + 1 : curr - 1
+            distances[index] = distances[index].updateCommentCnt(new)
         }
         
         self.reactor?.action.onNext(
