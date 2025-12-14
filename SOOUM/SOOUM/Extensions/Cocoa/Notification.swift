@@ -22,6 +22,8 @@ extension Notification.Name {
     static let addedCommentWithCardId = Notification.Name("addedCommentWithCardId")
     /// Deleted feed card
     static let deletedFeedCardWithId = Notification.Name("deletedFeedCardWithId")
+    /// Deleted comment card
+    static let deletedCommentCardWithId = Notification.Name("deletedCommentCardWithId")
     /// Updated block user
     static let updatedBlockUser = Notification.Name("updatedBlockUser")
     /// Should reload home

@@ -88,4 +88,13 @@ class PungView: UIView {
             }
             .bind(to: self.pungTimeLabel.rx.text)
     }
+    
+    func isDeleted() {
+        
+        self.serialTimer?.dispose()
+        self.serialTimer = nil
+        
+        self.pungTimeLabel.removeFromSuperview()
+        self.removeFromSuperview()
+    }
 }

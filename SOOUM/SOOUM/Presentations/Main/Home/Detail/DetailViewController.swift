@@ -139,6 +139,13 @@ class DetailViewController: BaseNavigationViewController, View {
         
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(self.deletedCommentCardWithId(_:)),
+            name: .deletedCommentCardWithId,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(self.updatedReportState(_:)),
             name: .updatedReportState,
             object: nil
@@ -439,11 +446,19 @@ class DetailViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
+        let hasErrors = reactor.state.map(\.hasErrors).distinctUntilChanged()
         reactor.state.map(\.isDeleted)
             .distinctUntilChanged()
             .filter { $0 }
-            .withLatestFrom(Observable.combineLatest(detailCard.map(\.id), commentCards.map(\.isEmpty), isFeed))
-            .observe(on: MainScheduler.instance)
+            .withLatestFrom(
+                Observable.combineLatest(
+                    detailCard.map(\.id),
+                    commentCards.map(\.isEmpty),
+                    isFeed,
+                    hasErrors
+                )
+            )
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, combined in
                 
                 object.navigationBar.title = Text.deletedNavigationTitle
@@ -457,7 +472,7 @@ class DetailViewController: BaseNavigationViewController, View {
                     object.collectionView.reloadData()
                 }
                 
-                let (cardId, isCommentEmpty, isFeed) = combined
+                let (cardId, isCommentEmpty, isFeed, errors) = combined
                 
                 if isFeed {
                     NotificationCenter.default.post(
@@ -466,7 +481,11 @@ class DetailViewController: BaseNavigationViewController, View {
                         userInfo: ["cardId": cardId, "isDeleted": true]
                     )
                 } else {
-                    NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
+                    NotificationCenter.default.post(
+                        name: .deletedCommentCardWithId,
+                        object: nil,
+                        userInfo: ["cardId": cardId, "isDeleted": true]
+                    )
                     
                     NotificationCenter.default.post(
                         name: .addedCommentWithCardId,
@@ -474,21 +493,20 @@ class DetailViewController: BaseNavigationViewController, View {
                         userInfo: ["cardId": cardId, "addedComment": false]
                     )
                 }
+                
+                if case 410 = errors {
+                    object.showDeletedCardDialog {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
+                            object?.navigationPopToRoot()
+                        }
+                    }
+                    return
+                }
 
                 if isCommentEmpty {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
                         object?.navigationPop()
                     }
-                }
-            }
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.hasErrors)
-            .filterNil()
-            .distinctUntilChanged()
-            .subscribe(with: self) { object, errors in
-                if case 410 = errors {
-                    object.showDeletedCardDialog()
                 }
             }
             .disposed(by: self.disposeBag)
@@ -501,6 +519,24 @@ class DetailViewController: BaseNavigationViewController, View {
     private func reloadDetaildata(_ notification: Notification) {
         
         self.reactor?.action.onNext(.landing)
+    }
+    
+    @objc
+    private func deletedCommentCardWithId(_ notification: Notification) {
+        
+        guard let cardId = notification.userInfo?["cardId"] as? String,
+            notification.userInfo?["isDeleted"] as? Bool == true
+        else { return }
+        
+        if let detailCard = self.reactor?.currentState.detailCard {
+            let commentCnt = detailCard.commentCnt > 0 ? detailCard.commentCnt - 1 : 0
+            self.reactor?.action.onNext(.updateDetail(detailCard.updateCommentCnt(commentCnt)))
+        }
+        
+        var commentCards = self.reactor?.currentState.commentCards ?? []
+        commentCards.removeAll(where: { $0.id == cardId })
+        
+        self.reactor?.action.onNext(.updateComments(commentCards))
     }
     
     @objc
@@ -530,6 +566,7 @@ extension DetailViewController: UICollectionViewDataSource {
     
         guard self.isDeleted == false else {
             cell.isDeleted()
+            self.pungView.isDeleted()
             return cell
         }
         

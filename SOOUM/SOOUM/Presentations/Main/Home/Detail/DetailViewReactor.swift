@@ -14,6 +14,8 @@ class DetailViewReactor: Reactor {
         case landing
         case refresh
         case moreFindForComment(lastId: String)
+        case updateDetail(DetailCardInfo)
+        case updateComments([BaseCardInfo])
         case delete
         case block(isBlocked: Bool)
         case updateLike(Bool)
@@ -120,6 +122,12 @@ class DetailViewReactor: Reactor {
         case let .moreFindForComment(lastId):
             
             return self.fetchMoreCommentCards(lastId)
+        case let .updateDetail(detailCard):
+            
+            return .just(.detailCard(detailCard))
+        case let .updateComments(commentCards):
+            
+            return .just(.commentCards(commentCards))
         case .delete:
             
             return self.deleteCardUseCase.delete(cardId: self.selectedCardId)
