@@ -14,6 +14,8 @@ import Photos
 import SwiftEntryKit
 import YPImagePicker
 
+import Clarity
+
 import ReactorKit
 import RxCocoa
 import RxGesture
@@ -356,11 +358,11 @@ extension OnboardingProfileImageSettingViewController {
             } else {
                 Log.error("Error occured while picking an image")
             }
-            picker?.dismiss(animated: true, completion: nil)
+            picker?.dismiss(animated: true) { ClaritySDK.resume() }
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-            self?.present(picker, animated: true, completion: nil)
+            self?.present(picker, animated: true) { ClaritySDK.pause() }
         }
     }
 }

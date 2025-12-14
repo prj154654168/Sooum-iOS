@@ -3971,7 +3971,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
-				SOOUM_CLARITY_ID = qrggvyniav;
+				SOOUM_CLARITY_ID = ukvzck1lyo;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
@@ -4023,7 +4023,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
-				SOOUM_CLARITY_ID = qrggvyniav;
+				SOOUM_CLARITY_ID = ukvzck1lyo;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
@@ -4260,7 +4260,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_APP_ID = 6740403078;
-				SOOUM_CLARITY_ID = qrghkiok4a;
+				SOOUM_CLARITY_ID = ukvz4wjnqm;
 				SOOUM_DISPLAY_NAME = "숨";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;
@@ -4308,7 +4308,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_APP_ID = 6740403078;
-				SOOUM_CLARITY_ID = qrghkiok4a;
+				SOOUM_CLARITY_ID = ukvz4wjnqm;
 				SOOUM_DISPLAY_NAME = "숨";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;
