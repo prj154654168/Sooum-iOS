@@ -16,7 +16,8 @@ class NotificationViewReactor: Reactor {
         case refresh
         case updateDisplayType(DisplayType)
         case moreFind(lastId: String, displayType: DisplayType)
-        case hasDetailCard(String)
+        case hasDetailCard(selectedId: String, selectedNotiId: String?)
+        case updateNotifications
         case requestRead(String)
         case cleanup
     }
@@ -27,7 +28,7 @@ class NotificationViewReactor: Reactor {
         case notices([NoticeInfo])
         case moreNotices([NoticeInfo])
         case updateDisplayType(DisplayType)
-        case cardIsDeleted((String, Bool)?)
+        case cardIsDeleted((String, String?, Bool)?)
         case updateIsRefreshing(Bool)
         case updateIsReadSuccess(Bool)
     }
@@ -37,7 +38,7 @@ class NotificationViewReactor: Reactor {
         fileprivate(set) var notificationsForUnread: [CompositeNotificationInfo]?
         fileprivate(set) var notifications: [CompositeNotificationInfo]?
         fileprivate(set) var notices: [NoticeInfo]?
-        fileprivate(set) var cardIsDeleted: (selectedId: String, isDeleted: Bool)?
+        fileprivate(set) var cardIsDeleted: (selectedId: String, selectedNotiId: String?, isDeleted: Bool)?
         fileprivate(set) var isRefreshing: Bool
         fileprivate(set) var isReadSuccess: Bool
     }
@@ -123,14 +124,22 @@ class NotificationViewReactor: Reactor {
                         .catch(self.catchClosureNoticesMore)
                 ])
             }
-        case let .hasDetailCard(selectedId):
+        case let .hasDetailCard(selectedId, selectedNotiId):
             
             return .concat([
                 .just(.cardIsDeleted(nil)),
                 self.fetchCardDetailUseCase.isDeleted(cardId: selectedId)
-                .map { (selectedId, $0) }
+                .map { (selectedId, selectedNotiId, $0) }
                 .map(Mutation.cardIsDeleted)
             ])
+        case .updateNotifications:
+
+            return Observable.zip(
+                self.notificationUseCase.unreadNotifications(lastId: nil),
+                self.notificationUseCase.readNotifications(lastId: nil)
+            )
+                .map(Mutation.notifications)
+                .catch(self.catchClosureNotis)
         case let .requestRead(selectedId):
             
             return self.notificationUseCase.requestRead(notificationId: selectedId)
@@ -283,10 +292,11 @@ extension NotificationViewReactor {
     }
     
     func canPushToDetail(
-        prev prevCardIsDeleted: (selectedId: String, isDeleted: Bool)?,
-        curr currCardIsDeleted: (selectedId: String, isDeleted: Bool)?
+        prev prevCardIsDeleted: (selectedId: String, selectedNotiId: String?, isDeleted: Bool)?,
+        curr currCardIsDeleted: (selectedId: String, selectedNotiId: String?, isDeleted: Bool)?
     ) -> Bool {
         return prevCardIsDeleted?.selectedId == currCardIsDeleted?.selectedId &&
+            prevCardIsDeleted?.selectedNotiId == currCardIsDeleted?.selectedNotiId &&
             prevCardIsDeleted?.isDeleted == currCardIsDeleted?.isDeleted
     }
 }
