@@ -381,9 +381,26 @@ class DetailViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let willPushEnabled = reactor.state.map(\.willPushEnabled).distinctUntilChanged().filterNil()
-        willPushEnabled
-            .filter { $0 == false }
+        reactor.state.map(\.willPushToDetailEnabled)
+            .distinctUntilChanged(reactor.canPushToDetail)
+            .filterNil()
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, willPushToDetailEnabled in
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForPush(
+                    willPushToDetailEnabled.prevCardId,
+                    hasDeleted: willPushToDetailEnabled.isDeleted
+                )
+                object.navigationPush(detailViewController, animated: true) { _ in
+                    reactor.action.onNext(.cleanup)
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        reactor.state.map(\.willPushToWriteEnabled)
+            .distinctUntilChanged()
+            .filterNil()
+            .filter { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 let writeCardViewController = WriteCardViewController()
@@ -395,11 +412,6 @@ class DetailViewController: BaseNavigationViewController, View {
                     reactor.action.onNext(.cleanup)
                 }
             }
-            .disposed(by: self.disposeBag)
-        willPushEnabled
-            .filter { $0 }
-            .map { _ in Reactor.Action.cleanup }
-            .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.isLiked)
@@ -448,70 +460,65 @@ class DetailViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let hasErrors = reactor.state.map(\.hasErrors).distinctUntilChanged()
-        reactor.state.map(\.isDeleted)
-            .distinctUntilChanged()
-            .filter { $0 }
-            .withLatestFrom(
-                Observable.combineLatest(
-                    detailCard.map(\.id),
-                    commentCards.map(\.isEmpty),
-                    isFeed,
-                    hasErrors
-                )
-            )
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(with: self) { object, combined in
-                
-                object.navigationBar.title = Text.deletedNavigationTitle
-                object.navigationBar.setRightButtons([object.rightDeleteButton])
-                
-                object.floatingButton.removeFromSuperview()
-                
-                object.isDeleted = true
-                
-                UIView.performWithoutAnimation {
-                    object.collectionView.reloadData()
-                }
-                
-                let (cardId, isCommentEmpty, isFeed, errors) = combined
-                
-                if isFeed {
-                    NotificationCenter.default.post(
-                        name: .deletedFeedCardWithId,
-                        object: nil,
-                        userInfo: ["cardId": cardId, "isDeleted": true]
-                    )
-                } else {
-                    NotificationCenter.default.post(
-                        name: .deletedCommentCardWithId,
-                        object: nil,
-                        userInfo: ["cardId": cardId, "isDeleted": true]
-                    )
-                    
-                    NotificationCenter.default.post(
-                        name: .addedCommentWithCardId,
-                        object: nil,
-                        userInfo: ["cardId": cardId, "addedComment": false]
-                    )
-                }
-                
-                if case 410 = errors {
-                    object.showDeletedCardDialog {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
-                            object?.navigationPopToRoot()
-                        }
-                    }
-                    return
-                }
-
-                if isCommentEmpty {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
-                        object?.navigationPop()
-                    }
-                }
+        Observable.combineLatest(
+            reactor.state.map(\.isDeleted).distinctUntilChanged().filter { $0 },
+            commentCards.map(\.isEmpty),
+            isFeed,
+            reactor.state.map(\.hasErrors)
+        )
+        .map { ($0.1, $0.2, $0.3) }
+        .observe(on: MainScheduler.asyncInstance)
+        .subscribe(with: self) { object, combined in
+            
+            object.navigationBar.title = Text.deletedNavigationTitle
+            object.navigationBar.setRightButtons([object.rightDeleteButton])
+            
+            object.floatingButton.removeFromSuperview()
+            
+            object.isDeleted = true
+            
+            UIView.performWithoutAnimation {
+                object.collectionView.reloadData()
             }
-            .disposed(by: self.disposeBag)
+            
+            let (isCommentEmpty, isFeed, errors) = combined
+            
+            if let isFeed = isFeed, isFeed {
+                NotificationCenter.default.post(
+                    name: .deletedFeedCardWithId,
+                    object: nil,
+                    userInfo: ["cardId": reactor.selectedCardId, "isDeleted": true]
+                )
+            } else {
+                NotificationCenter.default.post(
+                    name: .addedCommentWithCardId,
+                    object: nil,
+                    userInfo: ["cardId": reactor.selectedCardId, "addedComment": false]
+                )
+            }
+            
+            if case 410 = errors {
+                object.showDeletedCardDialog {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
+                        object?.navigationPopToRoot()
+                    }
+                }
+                return
+            }
+
+            if isCommentEmpty {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
+                    object?.navigationPop()
+                }
+            } else {
+                NotificationCenter.default.post(
+                    name: .deletedCommentCardWithId,
+                    object: nil,
+                    userInfo: ["cardId": reactor.selectedCardId, "isDeleted": true]
+                )
+            }
+        }
+        .disposed(by: self.disposeBag)
     }
     
     
@@ -623,18 +630,30 @@ extension DetailViewController: UICollectionViewDataSource {
         
         cell.prevCardBackgroundButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
+                guard let prevCardInfo = reactor.currentState.detailCard?.prevCardInfo else {
+                    object.navigationPop()
+                    return
+                }
                 /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop
                 if let naviStackCount = object.navigationController?.viewControllers.count,
-                   let prevViewController = object.navigationController?.viewControllers[naviStackCount - 2] as? DetailViewController,
-                   prevViewController.reactor?.selectedCardId == object.detailCard.prevCardInfo?.prevCardId {
+                   let prevViewController = object.navigationController?.viewControllers[naviStackCount - 2] as? Self,
+                   prevViewController.reactor?.selectedCardId == prevCardInfo.prevCardId {
                     
                     object.navigationPop()
                 } else {
-                    /// 없다면 새로운 viewController로 naviPush
-                    guard let prevCardId = object.detailCard.prevCardInfo?.prevCardId else { return }
-                    let detailViewController = DetailViewController()
-                    detailViewController.reactor = reactor.reactorForPush(prevCardId)
-                    object.navigationPush(detailViewController, animated: true)
+                    
+                    if prevCardInfo.isPrevCardDeleted {
+                        let detailViewController = DetailViewController()
+                        detailViewController.reactor = reactor.reactorForPush(
+                            prevCardInfo.prevCardId,
+                            hasDeleted: true
+                        )
+                        object.navigationPush(detailViewController, animated: true) { _ in
+                            reactor.action.onNext(.cleanup)
+                        }
+                    } else {
+                        reactor.action.onNext(.willPushToDetail(prevCardInfo.prevCardId))
+                    }
                 }
             }
             .disposed(by: cell.disposeBag)

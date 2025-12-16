@@ -27,6 +27,8 @@ class ProfileViewReactor: Reactor {
         case updateProfile
         case updateCards
         case updateCardType(EntranceCardType)
+        case hasDetailCard(String)
+        case cleanup
     }
     
     enum Mutation {
@@ -36,6 +38,7 @@ class ProfileViewReactor: Reactor {
         case commentCardInfos([ProfileCardInfo])
         case moreCommentCardInfos([ProfileCardInfo])
         case updateCardType(EntranceCardType)
+        case cardIsDeleted((String, Bool)?)
         case updateIsBlocked(Bool?)
         case updateIsFollowing(Bool?)
         case updateIsRefreshing(Bool)
@@ -46,6 +49,7 @@ class ProfileViewReactor: Reactor {
         fileprivate(set) var feedCardInfos: [ProfileCardInfo]
         fileprivate(set) var commentCardInfos: [ProfileCardInfo]
         fileprivate(set) var cardType: EntranceCardType
+        fileprivate(set) var cardIsDeleted: (selectedId: String, isDeleted: Bool)?
         @Pulse fileprivate(set) var isBlocked: Bool?
         @Pulse fileprivate(set) var isFollowing: Bool?
         fileprivate(set) var isRefreshing: Bool
@@ -56,6 +60,7 @@ class ProfileViewReactor: Reactor {
         feedCardInfos: [],
         commentCardInfos: [],
         cardType: .feed,
+        cardIsDeleted: nil,
         isBlocked: nil,
         isFollowing: nil,
         isRefreshing: false
@@ -64,6 +69,7 @@ class ProfileViewReactor: Reactor {
     private let dependencies: AppDIContainerable
     private let fetchUserInfoUseCase: FetchUserInfoUseCase
     private let fetchCardUseCase: FetchCardUseCase
+    private let fetchCardDetailUseCase: FetchCardDetailUseCase
     private let blockUserUseCase: BlockUserUseCase
     private let updateFollowUseCase: UpdateFollowUseCase
     
@@ -75,6 +81,7 @@ class ProfileViewReactor: Reactor {
         self.dependencies = dependencies
         self.fetchUserInfoUseCase = dependencies.rootContainer.resolve(FetchUserInfoUseCase.self)
         self.fetchCardUseCase = dependencies.rootContainer.resolve(FetchCardUseCase.self)
+        self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
         self.blockUserUseCase = dependencies.rootContainer.resolve(BlockUserUseCase.self)
         self.updateFollowUseCase = dependencies.rootContainer.resolve(UpdateFollowUseCase.self)
         
@@ -191,6 +198,17 @@ class ProfileViewReactor: Reactor {
         case let .updateCardType(cardType):
             
             return .just(.updateCardType(cardType))
+        case let .hasDetailCard(selectedId):
+            
+            return .concat([
+                .just(.cardIsDeleted(nil)),
+                self.fetchCardDetailUseCase.isDeleted(cardId: selectedId)
+                .map { (selectedId, $0) }
+                .map(Mutation.cardIsDeleted)
+            ])
+        case .cleanup:
+            
+            return .just(.cardIsDeleted(nil))
         case .block:
             
             guard let userId = self.currentState.profileInfo?.userId,
@@ -231,6 +249,8 @@ class ProfileViewReactor: Reactor {
             newState.commentCardInfos += commentCardInfos
         case let .updateCardType(cardType):
             newState.cardType = cardType
+        case let .cardIsDeleted(cardIsDeleted):
+            newState.cardIsDeleted = cardIsDeleted
         case let .updateIsBlocked(isBlocked):
             newState.isBlocked = isBlocked
         case let .updateIsFollowing(isFollowing):
@@ -256,6 +276,14 @@ extension ProfileViewReactor {
             prevDisplayState.profileInfo == currDisplayState.profileInfo &&
             prevDisplayState.feedCardInfos == currDisplayState.feedCardInfos &&
             prevDisplayState.commentCardInfos == currDisplayState.commentCardInfos
+    }
+    
+    func canPushToDetail(
+        prev prevCardIsDeleted: (selectedId: String, isDeleted: Bool)?,
+        curr currCardIsDeleted: (selectedId: String, isDeleted: Bool)?
+    ) -> Bool {
+        return prevCardIsDeleted?.selectedId == currCardIsDeleted?.selectedId &&
+            prevCardIsDeleted?.isDeleted == currCardIsDeleted?.isDeleted
     }
 }
 

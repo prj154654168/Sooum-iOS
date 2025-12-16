@@ -29,6 +29,9 @@ class TagCollectViewController: BaseNavigationViewController, View {
         
         static let bottomToastEntryNameWithoutAction: String = "bottomToastEntryNameWithoutAction"
         static let addAdditionalLimitedFloatMessage: String = "관심 태그는 9개까지 추가할 수 있어요"
+        
+        static let pungedCardDialogTitle: String = "삭제된 카드예요"
+        static let confirmActionTitle: String = "확인"
     }
     
     enum Section: Int, CaseIterable {
@@ -98,12 +101,10 @@ class TagCollectViewController: BaseNavigationViewController, View {
         
         // 상세화면 전환
         self.tagCollectCardsView.cardDidTapped
+            .map(\.id)
             .throttle(.seconds(3), scheduler: MainScheduler.instance)
-            .subscribe(with: self) { object, model in
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(model.id)
-                object.navigationPush(detailViewController, animated: true)
-            }
+            .map(Reactor.Action.hasDetailCard)
+            .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // Action
@@ -212,5 +213,58 @@ class TagCollectViewController: BaseNavigationViewController, View {
                 object.tagCollectCardsView.setModels(tagCardInfos)
             }
             .disposed(by: self.disposeBag)
+        
+        let cardIsDeleted = reactor.state.map(\.cardIsDeleted)
+            .distinctUntilChanged(reactor.canPushToDetail)
+            .filterNil()
+        cardIsDeleted
+            .filter { $0.isDeleted }
+            .map(\.selectedId)
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, selectedId in
+                object.showPungedCardDialog(reactor, with: selectedId)
+            }
+            .disposed(by: self.disposeBag)
+        cardIsDeleted
+            .filter { $0.isDeleted == false }
+            .map { $0.selectedId }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, selectedId in
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(selectedId)
+                object.navigationPush(detailViewController, animated: true) { _ in
+                    reactor.action.onNext(.cleanup)
+                }
+            }
+            .disposed(by: self.disposeBag)
+    }
+}
+
+extension TagCollectViewController {
+    
+    func showPungedCardDialog(_ reactor: TagCollectViewReactor, with selectedId: String) {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                SOMDialogViewController.dismiss {
+                    reactor.action.onNext(.cleanup)
+                    
+                    reactor.action.onNext(
+                        .updateTagCards(
+                            reactor.currentState.tagCardInfos.filter { $0.id != selectedId }
+                        )
+                    )
+                }
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.pungedCardDialogTitle,
+            messageView: nil,
+            textAlignment: .left,
+            actions: [confirmAction]
+        )
     }
 }

@@ -31,6 +31,9 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         static let deleteFollowingDialogTitle: String = "님을 팔로워에서 삭제하시겠어요?"
         
+        static let pungedCardDialogTitle: String = "삭제된 카드예요"
+        
+        static let confirmActionTitle: String = "확인"
         static let cancelActionTitle: String = "취소"
         static let blockActionTitle: String = "차단하기"
         static let unBlockActionTitle: String = "차단 해제"
@@ -214,12 +217,8 @@ class ProfileViewController: BaseNavigationViewController, View {
                 
                 cell.cardDidTap
                     .throttle(.seconds(3), scheduler: MainScheduler.instance)
-                    .subscribe(with: self) { object, selectedId in
-                        let detailViewController = DetailViewController()
-                        detailViewController.reactor = reactor.reactorForDetail(selectedId)
-                        let base = reactor.entranceType == .my ? object.parent : object
-                        base?.navigationPush(detailViewController, animated: true)
-                    }
+                    .map(Reactor.Action.hasDetailCard)
+                    .bind(to: reactor.action)
                     .disposed(by: cell.disposeBag)
                 
                 cell.moreFindCards
@@ -395,7 +394,7 @@ class ProfileViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map {
+        let displayStates = reactor.state.map {
             ProfileViewReactor.DisplayStates(
                 cardType: $0.cardType,
                 profileInfo: $0.profileInfo,
@@ -403,6 +402,33 @@ class ProfileViewController: BaseNavigationViewController, View {
                 commentCardInfos: $0.commentCardInfos
             )
         }
+        let cardIsDeleted = reactor.state.map(\.cardIsDeleted)
+            .distinctUntilChanged(reactor.canPushToDetail)
+            .filterNil()
+        cardIsDeleted
+            .filter { $0.isDeleted }
+            .withLatestFrom(displayStates.map(\.cardType))
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, cardType in
+                object.showPungedCardDialog(reactor, with: cardType)
+            }
+            .disposed(by: self.disposeBag)
+        
+        cardIsDeleted
+            .filter { $0.isDeleted == false }
+            .map(\.selectedId)
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, selectedId in
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(selectedId)
+                let base = reactor.entranceType == .my ? object.parent : object
+                base?.navigationPush(detailViewController, animated: true) { _ in
+                    reactor.action.onNext(.cleanup)
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        displayStates
         .distinctUntilChanged(reactor.canUpdateCells)
         .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, displayStates in
@@ -533,6 +559,27 @@ private extension ProfileViewController {
             message: nickname + Text.unBlockUserDialogMessage,
             textAlignment: .left,
             actions: [cancelAction, unBlockAction]
+        )
+    }
+    
+    func showPungedCardDialog(_ reactor: ProfileViewReactor, with cardType: EntranceCardType) {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                SOMDialogViewController.dismiss {
+                    reactor.action.onNext(.cleanup)
+                    reactor.action.onNext(.updateCards)
+                }
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.pungedCardDialogTitle,
+            messageView: nil,
+            textAlignment: .left,
+            actions: [confirmAction]
         )
     }
 }

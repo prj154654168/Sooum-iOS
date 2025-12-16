@@ -20,6 +20,7 @@ class DetailViewReactor: Reactor {
         case block(isBlocked: Bool)
         case updateLike(Bool)
         case updateReport(Bool)
+        case willPushToDetail(String)
         case willPushToWrite
         case cleanup
     }
@@ -35,34 +36,25 @@ class DetailViewReactor: Reactor {
         case updateReported(Bool)
         case updateIsBlocked(Bool)
         case updateErrors(Int?)
+        case willPushToDetail(((String, Bool)?))
         case willPushToWrite(Bool?)
     }
     
     struct State {
         fileprivate(set) var isFeed: Bool?
         fileprivate(set) var detailCard: DetailCardInfo?
-        fileprivate(set) var commentCards: [BaseCardInfo]
+        fileprivate(set) var commentCards: [BaseCardInfo]?
         fileprivate(set) var isRefreshing: Bool
         fileprivate(set) var isLiked: Bool
         fileprivate(set) var isDeleted: Bool
         fileprivate(set) var isReported: Bool
         fileprivate(set) var isBlocked: Bool
         fileprivate(set) var hasErrors: Int?
-        fileprivate(set) var willPushEnabled: Bool?
+        fileprivate(set) var willPushToDetailEnabled: (prevCardId: String, isDeleted: Bool)?
+        fileprivate(set) var willPushToWriteEnabled: Bool?
     }
     
-    var initialState: State = .init(
-        isFeed: nil,
-        detailCard: nil,
-        commentCards: [],
-        isRefreshing: false,
-        isLiked: false,
-        isDeleted: false,
-        isReported: false,
-        isBlocked: true,
-        hasErrors: nil,
-        willPushEnabled: nil
-    )
+    var initialState: State
     
     private let dependencies: AppDIContainerable
     private let fetchCardDetailUseCase: FetchCardDetailUseCase
@@ -73,7 +65,11 @@ class DetailViewReactor: Reactor {
     
     let selectedCardId: String
     
-    init(dependencies: AppDIContainerable, with selectedCardId: String) {
+    init(
+        dependencies: AppDIContainerable,
+        with selectedCardId: String,
+        hasDeleted: Bool = false
+    ) {
         self.dependencies = dependencies
         self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
         self.deleteCardUseCase = dependencies.rootContainer.resolve(DeleteCardUseCase.self)
@@ -82,11 +78,28 @@ class DetailViewReactor: Reactor {
         self.locationUseCase = dependencies.rootContainer.resolve(LocationUseCase.self)
         
         self.selectedCardId = selectedCardId
+        
+        self.initialState = .init(
+            isFeed: nil,
+            detailCard: nil,
+            commentCards: nil,
+            isRefreshing: false,
+            isLiked: false,
+            isDeleted: hasDeleted,
+            isReported: false,
+            isBlocked: true,
+            hasErrors: nil,
+            willPushToDetailEnabled: nil,
+            willPushToWriteEnabled: nil
+        )
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
+            
+            // 삭제된 카드의 경우, 댓글 카드만 조회
+            guard self.initialState.isDeleted == false else { return self.commentCards()}
             
             let coordinate = self.locationUseCase.coordinate()
             let latitude = coordinate.latitude
@@ -161,18 +174,26 @@ class DetailViewReactor: Reactor {
         case let .updateReport(isReported):
             
             return .just(.updateReported(isReported))
+        case let .willPushToDetail(prevCardId):
+            
+            return self.fetchCardDetailUseCase.isDeleted(cardId: prevCardId)
+                .map { (prevCardId, $0) }
+                .map(Mutation.willPushToDetail)
         case .willPushToWrite:
             
             return self.fetchCardDetailUseCase.isDeleted(cardId: self.selectedCardId)
-            .flatMapLatest { isDeleted -> Observable<Mutation> in
-                return .concat([
-                    .just(.willPushToWrite(isDeleted)),
-                    .just(.updateIsDeleted(isDeleted))
-                ])
-            }
+                .flatMapLatest { isDeleted -> Observable<Mutation> in
+                    return .concat([
+                        .just(.willPushToWrite(!isDeleted)),
+                        .just(.updateIsDeleted(isDeleted))
+                    ])
+                }
         case .cleanup:
             
-            return .just(.willPushToWrite(nil))
+            return .concat([
+                .just(.willPushToDetail(nil)),
+                .just(.willPushToWrite(nil))
+            ])
         }
     }
     
@@ -186,7 +207,7 @@ class DetailViewReactor: Reactor {
         case let .commentCards(commentCards):
             newState.commentCards = commentCards
         case let .moreComment(commentCards):
-            newState.commentCards += commentCards
+            newState.commentCards? += commentCards
         case let .updateIsRefreshing(isRefreshing):
             newState.isRefreshing = isRefreshing
         case let .updateIsLiked(isLiked):
@@ -199,8 +220,10 @@ class DetailViewReactor: Reactor {
             newState.isBlocked = isBlocked
         case let .updateErrors(hasErrors):
             newState.hasErrors = hasErrors
-        case let .willPushToWrite(willPushEnabled):
-            newState.willPushEnabled = willPushEnabled
+        case let .willPushToDetail(willPushToDetailEnabled):
+            newState.willPushToDetailEnabled = willPushToDetailEnabled
+        case let .willPushToWrite(willPushToWriteEnabled):
+            newState.willPushToWriteEnabled = willPushToWriteEnabled
         }
         return newState
     }
@@ -252,8 +275,8 @@ class DetailViewReactor: Reactor {
 
 extension DetailViewReactor {
     
-    func reactorForPush(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, with: selectedId)
+    func reactorForPush(_ selectedId: String, hasDeleted: Bool = false) -> DetailViewReactor {
+        DetailViewReactor(dependencies: self.dependencies, with: selectedId, hasDeleted: hasDeleted)
     }
     
     func reactorForReport() -> ReportViewReactor {
@@ -304,5 +327,13 @@ extension DetailViewReactor {
             
             return .just(.updateIsRefreshing(false))
         }
+    }
+    
+    func canPushToDetail(
+        prev prevCardIsDeleted: (prevCardId: String, isDeleted: Bool)?,
+        curr currCardIsDeleted: (prevCardId: String, isDeleted: Bool)?
+    ) -> Bool {
+        return prevCardIsDeleted?.prevCardId == currCardIsDeleted?.prevCardId &&
+            prevCardIsDeleted?.isDeleted == currCardIsDeleted?.isDeleted
     }
 }

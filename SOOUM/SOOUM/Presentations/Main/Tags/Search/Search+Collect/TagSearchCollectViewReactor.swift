@@ -13,12 +13,16 @@ class TagSearchCollectViewReactor: Reactor {
         case landing
         case refresh
         case more(String)
+        case updateTagCards([ProfileCardInfo])
+        case hasDetailCard(String)
         case updateIsFavorite(Bool)
+        case cleanup
     }
     
     enum Mutation {
         case tagCardInfos([ProfileCardInfo])
         case moreFind([ProfileCardInfo])
+        case cardIsDeleted((String, Bool)?)
         case updateIsUpdate(Bool?)
         case updateIsFavorite(Bool)
         case updateIsRefreshing(Bool)
@@ -27,6 +31,7 @@ class TagSearchCollectViewReactor: Reactor {
     
     struct State {
         fileprivate(set) var tagCardInfos: [ProfileCardInfo]
+        fileprivate(set) var cardIsDeleted: (selectedId: String, isDeleted: Bool)?
         fileprivate(set) var isUpdated: Bool?
         fileprivate(set) var isFavorite: Bool
         fileprivate(set) var isRefreshing: Bool
@@ -35,6 +40,7 @@ class TagSearchCollectViewReactor: Reactor {
     
     var initialState: State = .init(
         tagCardInfos: [],
+        cardIsDeleted: nil,
         isUpdated: nil,
         isFavorite: false,
         isRefreshing: false,
@@ -43,6 +49,7 @@ class TagSearchCollectViewReactor: Reactor {
     
     private let dependencies: AppDIContainerable
     private let fetchCardUseCase: FetchCardUseCase
+    private let fetchCardDetailUseCase: FetchCardDetailUseCase
     private let fetchTagUseCase: FetchTagUseCase
     private let updateTagFavoriteUseCase: UpdateTagFavoriteUseCase
     
@@ -52,6 +59,7 @@ class TagSearchCollectViewReactor: Reactor {
     init(dependencies: AppDIContainerable, with tagId: String, title: String) {
         self.dependencies = dependencies
         self.fetchCardUseCase = dependencies.rootContainer.resolve(FetchCardUseCase.self)
+        self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
         self.fetchTagUseCase = dependencies.rootContainer.resolve(FetchTagUseCase.self)
         self.updateTagFavoriteUseCase = dependencies.rootContainer.resolve(UpdateTagFavoriteUseCase.self)
         
@@ -78,6 +86,17 @@ class TagSearchCollectViewReactor: Reactor {
             return self.fetchCardUseCase.cardsWithTag(tagId: self.tagId, lastId: lastId)
                 .map(\.cardInfos)
                 .map(Mutation.moreFind)
+        case let .updateTagCards(tagCardInfos):
+            
+            return .just(.tagCardInfos(tagCardInfos))
+        case let .hasDetailCard(selectedId):
+            
+            return .concat([
+                .just(.cardIsDeleted(nil)),
+                self.fetchCardDetailUseCase.isDeleted(cardId: selectedId)
+                .map { (selectedId, $0) }
+                .map(Mutation.cardIsDeleted)
+            ])
         case let .updateIsFavorite(isFavorite):
             
             return .concat([
@@ -94,6 +113,9 @@ class TagSearchCollectViewReactor: Reactor {
                     }
                     .catch(self.catchClosure)
             ])
+        case .cleanup:
+            
+            return .just(.cardIsDeleted(nil))
         }
     }
     
@@ -104,6 +126,8 @@ class TagSearchCollectViewReactor: Reactor {
             newState.tagCardInfos = tagCardInfos
         case let .moreFind(tagCardInfos):
             newState.tagCardInfos += tagCardInfos
+        case let .cardIsDeleted(cardIsDeleted):
+            newState.cardIsDeleted = cardIsDeleted
         case let .updateIsUpdate(isUpdated):
             newState.isUpdated = isUpdated
         case let .updateIsFavorite(isFavorite):
@@ -156,6 +180,17 @@ private extension TagSearchCollectViewReactor {
             
             return .just(.updateIsUpdate(false))
         }
+    }
+}
+
+extension TagSearchCollectViewReactor {
+    
+    func canPushToDetail(
+        prev prevCardIsDeleted: (selectedId: String, isDeleted: Bool)?,
+        curr currCardIsDeleted: (selectedId: String, isDeleted: Bool)?
+    ) -> Bool {
+        return prevCardIsDeleted?.selectedId == currCardIsDeleted?.selectedId &&
+            prevCardIsDeleted?.isDeleted == currCardIsDeleted?.isDeleted
     }
 }
 

@@ -31,7 +31,7 @@ class HomeViewReactor: Reactor {
         case moreFind(String)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
-        case detailCard(String)
+        case hasDetailCard(String)
         case updateCards(latests: [BaseCardInfo], populars: [BaseCardInfo], distances: [BaseCardInfo])
         case cleanup
     }
@@ -159,7 +159,7 @@ class HomeViewReactor: Reactor {
                 self.refresh(displayType, distanceFilter)
                     .catch(self.catchClosureForCards)
             ])
-        case let .detailCard(selectedId):
+        case let .hasDetailCard(selectedId):
             
             return .concat([
                 .just(.cardIsDeleted(nil)),

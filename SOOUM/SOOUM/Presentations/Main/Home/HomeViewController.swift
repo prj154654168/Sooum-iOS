@@ -777,7 +777,7 @@ extension HomeViewController: UITableViewDelegate {
             return
         }
         
-        reactor.action.onNext(.detailCard(selectedId))
+        reactor.action.onNext(.hasDetailCard(selectedId))
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
