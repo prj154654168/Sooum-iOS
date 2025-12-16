@@ -463,7 +463,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     imageType: imageInfo.type,
                     imageName: imageInfo.info.imgName,
                     isStory: options.contains(.story),
-                    tags: enteredTagTexts
+                    tags: Array(Set(enteredTagTexts))
                 )
             }
             .bind(to: reactor.action)
