@@ -120,8 +120,8 @@ class ReportViewController: BaseNavigationViewController, View {
     private func bindState(reactor: ReportViewReactor) {
         
         reactor.state.map(\.reportReason)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, reportReason in
                 

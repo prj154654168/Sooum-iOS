@@ -332,8 +332,8 @@ class HomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.noticeInfos)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, noticeInfos in
                 let models: [SOMPageModel] = noticeInfos.map { SOMPageModel(data: $0) }

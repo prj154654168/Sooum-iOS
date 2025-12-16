@@ -270,7 +270,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let version = reactor.state.map(\.version).filterNil().distinctUntilChanged().share()
+        let version = reactor.state.map(\.version).distinctUntilChanged().filterNil().share()
         self.appVersionCellView.rx.didSelect
             .throttle(.seconds(1), scheduler: MainScheduler.instance)
             .withLatestFrom(version)

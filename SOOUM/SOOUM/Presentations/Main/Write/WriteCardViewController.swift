@@ -288,8 +288,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.writeCardView.writeCardTags.updateWrittenTags
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.instance)
             .bind(to: self.writeCardView.writeCardTags.rx.models())
             .disposed(by: self.disposeBag)
@@ -365,8 +365,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         let selectedTypography = self.selectTypographyView.selectedTypography
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .share(replay: 1)
         selectedTypography
             .observe(on: MainScheduler.instance)
@@ -394,8 +394,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         let selectedOptions = self.selectOptionsView.selectedOptions
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .share()
         selectedOptions
             .filter { $0.contains(.distanceShare) }
@@ -432,8 +432,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         let enteredTag = self.writeCardView.textDidChanged.share()
         enteredTag
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .map(Reactor.Action.relatedTags)
             .bind(to: reactor.action)
@@ -485,8 +485,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.writtenCardId)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, writtenCardId in
                 NotificationCenter.default.post(name: .reloadHomeData, object: nil, userInfo: nil)
@@ -514,8 +514,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.hasErrors)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, hasErrors in
                 if case 422 = hasErrors {
@@ -544,15 +544,15 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.defaultImages)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.instance)
             .bind(to: self.selectImageView.rx.setModels)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.userImage)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.writeCardView.writeCardTextView) { writeCardTextView, userImage in
                 writeCardTextView.image = userImage
@@ -567,7 +567,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let relatedTags = reactor.state.map(\.relatedTags).filterNil().distinctUntilChanged().share()
+        let relatedTags = reactor.state.map(\.relatedTags).distinctUntilChanged().filterNil().share()
         relatedTags
             .map { $0.isEmpty }
             .observe(on: MainScheduler.asyncInstance)

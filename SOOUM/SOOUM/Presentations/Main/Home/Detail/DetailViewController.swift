@@ -191,11 +191,11 @@ class DetailViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        let detailCard = reactor.state.map(\.detailCard).filterNil().distinctUntilChanged()
-        let commentCards = reactor.state.map(\.commentCards).distinctUntilChanged()
-        let isFeed = reactor.state.map(\.isFeed).filterNil().distinctUntilChanged()
-        let isBlocked = reactor.state.map(\.isBlocked).distinctUntilChanged()
-        let isReported = reactor.state.map(\.isReported).distinctUntilChanged()
+        let detailCard = reactor.state.map(\.detailCard).distinctUntilChanged().filterNil().share()
+        let commentCards = reactor.state.map(\.commentCards).distinctUntilChanged().filterNil().share()
+        let isFeed = reactor.state.map(\.isFeed).share()
+        let isBlocked = reactor.state.map(\.isBlocked).distinctUntilChanged().share()
+        let isReported = reactor.state.map(\.isReported).distinctUntilChanged().share()
         
         let rightMoreButtonDidTap = self.rightMoreButton.rx.throttleTap.share()
         // 더보기 버튼 액션
@@ -342,6 +342,8 @@ class DetailViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         isFeed
+            .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isFeed in
                 object.navigationBar.title = isFeed ?

@@ -192,8 +192,8 @@ class BlockUsersViewController: BaseNavigationViewController, View {
         Observable.combineLatest(
             blockUserInfos,
             reactor.state.map(\.isCanceledWithId)
-                .filterNil()
                 .distinctUntilChanged(reactor.canUpdateCanceledWithId)
+                .filterNil()
                 .filter { $0.isCanceled }
                 .map(\.userId)
         )
