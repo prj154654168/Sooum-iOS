@@ -33,6 +33,7 @@ class HomeViewReactor: Reactor {
         case updateDistanceFilter(String)
         case hasDetailCard(String)
         case updateCards(latests: [BaseCardInfo], populars: [BaseCardInfo], distances: [BaseCardInfo])
+        case updateHasUnReadNotifications(Bool)
         case cleanup
     }
     
@@ -170,6 +171,9 @@ class HomeViewReactor: Reactor {
         case let .updateCards(latest, populars, distances):
             
             return .just(.cards(latests: latest, populars: populars, distances: distances))
+        case let .updateHasUnReadNotifications(hasUnReads):
+            
+            return .just(.updateHasUnreadNotifications(hasUnReads))
         case .cleanup:
             
             return .just(.cardIsDeleted(nil))

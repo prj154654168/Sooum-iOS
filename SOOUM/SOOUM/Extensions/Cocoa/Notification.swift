@@ -26,6 +26,8 @@ extension Notification.Name {
     static let deletedCommentCardWithId = Notification.Name("deletedCommentCardWithId")
     /// Updated block user
     static let updatedBlockUser = Notification.Name("updatedBlockUser")
+    /// Updated hasUnreads
+    static let updatedHasUnreadNotification = Notification.Name("updatedHasUnreadNotification")
     /// Should reload home
     static let reloadHomeData = Notification.Name("reloadHomeData")
     /// Should reload detail

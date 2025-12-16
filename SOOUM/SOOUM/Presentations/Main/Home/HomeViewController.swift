@@ -224,6 +224,13 @@ class HomeViewController: BaseNavigationViewController, View {
         
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(self.updatedHasUnreadNotification(_:)),
+            name: .updatedHasUnreadNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(self.scollingToTopWithAnimation(_:)),
             name: .scollingToTopWithAnimation,
             object: nil
@@ -543,6 +550,12 @@ class HomeViewController: BaseNavigationViewController, View {
         guard notification.userInfo?["isBlocked"] as? Bool != nil else { return }
         
         self.reactor?.action.onNext(.landing)
+    }
+    
+    @objc
+    private func updatedHasUnreadNotification(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.updateHasUnReadNotifications(false))
     }
     
     @objc

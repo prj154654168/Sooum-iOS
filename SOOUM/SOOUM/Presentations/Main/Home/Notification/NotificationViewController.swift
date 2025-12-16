@@ -197,10 +197,10 @@ class NotificationViewController: BaseNavigationViewController, View {
                 notices: $0.notices
             )
         }
-        // TODO: 임시, 읽지 않은 알림이 없을 때, 홈 리로드
+        /// 읽지 않은 알림이 없을 때, 홈에 알림
         .do(onNext: {
             if $0.unreads?.isEmpty == true {
-                NotificationCenter.default.post(name: .reloadHomeData, object: nil, userInfo: nil)
+                NotificationCenter.default.post(name: .updatedHasUnreadNotification, object: nil, userInfo: nil)
             }
         })
         .observe(on: MainScheduler.instance)
@@ -260,7 +260,7 @@ class NotificationViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, selectedId in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
-                object.parent?.navigationPush(detailViewController, animated: true) { _ in
+                object.navigationPush(detailViewController, animated: true) { _ in
                     reactor.action.onNext(.cleanup)
                 }
             }
@@ -355,13 +355,7 @@ extension NotificationViewController: UITableViewDelegate {
                 
                 reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
                 
-                switch notification.notificationInfo.notificationType {
-                case .feedLike, .commentLike, .commentWrite:
-                    
-                    reactor.action.onNext(.hasDetailCard(notification.targetCardId))
-                default:
-                    return
-                }
+                reactor.action.onNext(.hasDetailCard(notification.targetCardId))
             case let .tag(notification):
                 
                 reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
