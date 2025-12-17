@@ -17,8 +17,9 @@
 
 # Preview
 <div align="center">
-  <img width="5580" alt="Preview" src="https://github.com/user-attachments/assets/5b41aa70-8304-4e40-8bae-8ba674febbf6"/>
+  <img width="6600" height="2868" alt="sooum_v2_banner_image" src="https://github.com/user-attachments/assets/10168e03-cf67-4805-a7ed-75e14974974f"/>
 </div>
+
 
 # Features
 ### 1. 네트워크 레이어
@@ -255,7 +256,7 @@ final class FetchTagUseCaseImpl: FetchTagUseCase {
 # Environment
  - Xcode 16.0(16A242d)
  - iOS Deployment Target 15.0
- - Ccocoapods Version 1.16.2
+ - Cocoapods Version 1.16.2
 
 # Members
 |오현식|서정덕|
