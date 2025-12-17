@@ -157,7 +157,8 @@ class DetailViewController: BaseNavigationViewController, View {
      override func setupNaviBar() {
          super.setupNaviBar()
          
-         self.navigationBar.setRightButtons([self.rightMoreButton])
+         let isDeleted = self.reactor?.currentState.isDeleted ?? false
+         self.navigationBar.setRightButtons([isDeleted ? self.rightDeleteButton : self.rightMoreButton])
      }
      
     override func setupConstraints() {
@@ -510,7 +511,9 @@ class DetailViewController: BaseNavigationViewController, View {
             
             let (isCommentEmpty, isFeed, errors) = combined
             
-            if let isFeed = isFeed, isFeed {
+            guard let isFeed = isFeed else { return }
+            
+            if isFeed {
                 NotificationCenter.default.post(
                     name: .deletedFeedCardWithId,
                     object: nil,
@@ -522,6 +525,12 @@ class DetailViewController: BaseNavigationViewController, View {
                     object: nil,
                     userInfo: ["cardId": reactor.selectedCardId, "addedComment": false]
                 )
+                
+                NotificationCenter.default.post(
+                    name: .deletedCommentCardWithId,
+                    object: nil,
+                    userInfo: ["cardId": reactor.selectedCardId, "isDeleted": true]
+                )
             }
             
             if case 410 = errors {
@@ -532,17 +541,11 @@ class DetailViewController: BaseNavigationViewController, View {
                 }
                 return
             }
-
-            if isCommentEmpty {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
-                    object?.navigationPop()
-                }
-            } else {
-                NotificationCenter.default.post(
-                    name: .deletedCommentCardWithId,
-                    object: nil,
-                    userInfo: ["cardId": reactor.selectedCardId, "isDeleted": true]
-                )
+            
+            guard isCommentEmpty else { return }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
+                object?.navigationPop()
             }
         }
         .disposed(by: self.disposeBag)
@@ -563,6 +566,8 @@ class DetailViewController: BaseNavigationViewController, View {
         guard let cardId = notification.userInfo?["cardId"] as? String,
             notification.userInfo?["isDeleted"] as? Bool == true
         else { return }
+        
+        guard self.reactor?.currentState.commentCards?.contains(where: { $0.id == cardId }) == true else { return }
         
         if let detailCard = self.reactor?.currentState.detailCard {
             let commentCnt = detailCard.commentCnt > 0 ? detailCard.commentCnt - 1 : 0
