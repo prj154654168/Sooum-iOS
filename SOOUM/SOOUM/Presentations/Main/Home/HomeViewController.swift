@@ -35,6 +35,8 @@ class HomeViewController: BaseNavigationViewController, View {
         static let cancelActionTitle: String = "취소"
         static let settingActionTitle: String = "설정"
         static let confirmActionTitle: String = "확인"
+        
+        static let eventCardTitle: String = "event"
     }
     
     enum Section: Int, CaseIterable {
@@ -189,6 +191,48 @@ class HomeViewController: BaseNavigationViewController, View {
         
         NotificationCenter.default.addObserver(
             self,
+            selector: #selector(self.reloadHomeData(_:)),
+            name: .reloadHomeData,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.addedFavoriteWithCardId(_:)),
+            name: .addedFavoriteWithCardId,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.addedCommentWithCardId(_:)),
+            name: .addedCommentWithCardId,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.deletedFeedCardWithId(_:)),
+            name: .deletedFeedCardWithId,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.updatedBlockUser(_:)),
+            name: .updatedBlockUser,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.updatedHasUnreadNotification(_:)),
+            name: .updatedHasUnreadNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
             selector: #selector(self.scollingToTopWithAnimation(_:)),
             name: .scollingToTopWithAnimation,
             object: nil
@@ -266,7 +310,7 @@ class HomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // Action
-        self.rx.viewDidAppear
+        self.rx.viewDidLoad
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
@@ -297,8 +341,8 @@ class HomeViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.noticeInfos)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, noticeInfos in
                 let models: [SOMPageModel] = noticeInfos.map { SOMPageModel(data: $0) }
@@ -316,19 +360,26 @@ class HomeViewController: BaseNavigationViewController, View {
             .filterNil()
         cardIsDeleted
             .filter { $0.isDeleted }
+            .map { $0.selectedId }
             .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, _ in
-                object.showPungedCardDialog()
+            .subscribe(with: self) { object, selectedId in
+                object.showPungedCardDialog(reactor, with: selectedId)
             }
             .disposed(by: self.disposeBag)
         cardIsDeleted
             .filter { $0.isDeleted == false }
+            .map { $0.selectedId }
             .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, cardIsDeleted in
+            .subscribe(with: self) { object, selectedId in
                 let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(with: cardIsDeleted.selectedId)
+                detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
                 object.parent?.navigationPush(detailViewController, animated: true) { _ in
-                    reactor.action.onNext(.resetPushState)
+                    reactor.action.onNext(.cleanup)
+                    
+                    GAHelper.shared.logEvent(event: GAEvent.HomeView.feedToCardDetailView_card_click)
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailView_tracePath_click(previous_path: .home)
+                    )
                 }
             }
             .disposed(by: self.disposeBag)
@@ -341,7 +392,7 @@ class HomeViewController: BaseNavigationViewController, View {
                 distances: $0.distanceCards
             )
         }
-        .observe(on: MainScheduler.asyncInstance)
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, displayStats in
             
             var snapshot = Snapshot()
@@ -394,6 +445,127 @@ class HomeViewController: BaseNavigationViewController, View {
     // MARK: Objc func
     
     @objc
+    private func reloadHomeData(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.landing)
+    }
+    
+    /// 피드카드 좋아요 업데이트 시, 최신/인기/거리 해당 카드만 업데이트
+    @objc
+    private func addedFavoriteWithCardId(_ notification: Notification) {
+        
+        guard let cardId = notification.userInfo?["cardId"] as? String,
+            let addedFavorite = notification.userInfo?["addedFavorite"] as? Bool
+        else { return }
+        
+        var latests = self.reactor?.currentState.latestCards ?? []
+        var populars = self.reactor?.currentState.popularCards ?? []
+        var distances = self.reactor?.currentState.distanceCards ?? []
+        
+        if let index = latests.firstIndex(where: { $0.id == cardId }) {
+            let curr = latests[index].likeCnt
+            let new = addedFavorite ? curr + 1 : curr - 1
+            latests[index] = latests[index].updateLikeCnt(new)
+        }
+        
+        if let index = populars.firstIndex(where: { $0.id == cardId }) {
+            let curr = populars[index].likeCnt
+            let new = addedFavorite ? curr + 1 : curr - 1
+            populars[index] = populars[index].updateLikeCnt(new)
+        }
+        
+        if let index = distances.firstIndex(where: { $0.id == cardId }) {
+            let curr = distances[index].likeCnt
+            let new = addedFavorite ? curr + 1 : curr - 1
+            distances[index] = distances[index].updateLikeCnt(new)
+        }
+        
+        self.reactor?.action.onNext(
+            .updateCards(
+                latests: latests,
+                populars: populars,
+                distances: distances
+            )
+        )
+    }
+    /// 피드카드 댓글카드 작성 및 삭제 시, 최신/인기/거리 해당 카드만 업데이트
+    @objc
+    private func addedCommentWithCardId(_ notification: Notification) {
+        
+        guard let cardId = notification.userInfo?["cardId"] as? String,
+            let addedComment = notification.userInfo?["addedComment"] as? Bool
+        else { return }
+        
+        var latests = self.reactor?.currentState.latestCards ?? []
+        var populars = self.reactor?.currentState.popularCards ?? []
+        var distances = self.reactor?.currentState.distanceCards ?? []
+        
+        if let index = latests.firstIndex(where: { $0.id == cardId }) {
+            let curr = latests[index].commentCnt
+            let new = addedComment ? curr + 1 : curr - 1
+            latests[index] = latests[index].updateCommentCnt(new)
+        }
+        
+        if let index = populars.firstIndex(where: { $0.id == cardId }) {
+            let curr = populars[index].commentCnt
+            let new = addedComment ? curr + 1 : curr - 1
+            populars[index] = populars[index].updateCommentCnt(new)
+        }
+        
+        if let index = distances.firstIndex(where: { $0.id == cardId }) {
+            let curr = distances[index].commentCnt
+            let new = addedComment ? curr + 1 : curr - 1
+            distances[index] = distances[index].updateCommentCnt(new)
+        }
+        
+        self.reactor?.action.onNext(
+            .updateCards(
+                latests: latests,
+                populars: populars,
+                distances: distances
+            )
+        )
+    }
+    /// 피드카드 삭제 시, 최신/인기/거리 해당 카드만 업데이트
+    @objc
+    private func deletedFeedCardWithId(_ notification: Notification) {
+        
+        guard let cardId = notification.userInfo?["cardId"] as? String,
+            notification.userInfo?["isDeleted"] as? Bool == true
+        else { return }
+        
+        var latests = self.reactor?.currentState.latestCards ?? []
+        var populars = self.reactor?.currentState.popularCards ?? []
+        var distances = self.reactor?.currentState.distanceCards ?? []
+        
+        latests.removeAll(where: { $0.id == cardId })
+        populars.removeAll(where: { $0.id == cardId })
+        distances.removeAll(where: { $0.id == cardId })
+        
+        self.reactor?.action.onNext(
+            .updateCards(
+                latests: latests,
+                populars: populars,
+                distances: distances
+            )
+        )
+    }
+    /// 특정 사용자 차단 시, 최신/인기/거리 특정 사용자 카드 숨김 처리
+    @objc
+    private func updatedBlockUser(_ notification: Notification) {
+        
+        guard notification.userInfo?["isBlocked"] as? Bool != nil else { return }
+        
+        self.reactor?.action.onNext(.landing)
+    }
+    
+    @objc
+    private func updatedHasUnreadNotification(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.updateHasUnReadNotifications(false))
+    }
+    
+    @objc
     private func scollingToTopWithAnimation(_ notification: Notification) {
         
         guard let displayType = self.reactor?.currentState.displayType else { return }
@@ -408,6 +580,8 @@ class HomeViewController: BaseNavigationViewController, View {
         
         let toTop = CGPoint(x: 0, y: -(self.tableView.contentInset.top))
         self.tableView.setContentOffset(toTop, animated: true)
+        
+        GAHelper.shared.logEvent(event: GAEvent.HomeView.feedMoveToTop_home_btn_click)
     }
     
     @objc
@@ -456,7 +630,7 @@ private extension HomeViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     let prevIdx = self.stickyTabBar.previousIndex
                     let currInx = self.stickyTabBar.selectedIndex
                     
@@ -468,7 +642,7 @@ private extension HomeViewController {
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     let application = UIApplication.shared
                     let openSettingsURLString: String = UIApplication.openSettingsURLString
                     if let settingsURL = URL(string: openSettingsURLString),
@@ -487,15 +661,22 @@ private extension HomeViewController {
         )
     }
     
-    func showPungedCardDialog() {
+    func showPungedCardDialog(_ reactor: HomeViewReactor, with selectedId: String) {
         
         let confirmAction = SOMDialogAction(
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
-                    self.reactor?.action.onNext(.landing)
-                    self.reactor?.action.onNext(.resetPushState)
+                SOMDialogViewController.dismiss {
+                    reactor.action.onNext(.cleanup)
+                    
+                    reactor.action.onNext(
+                        .updateCards(
+                            latests: (reactor.currentState.latestCards ?? []).filter { $0.id != selectedId },
+                            populars: (reactor.currentState.popularCards ?? []).filter { $0.id != selectedId },
+                            distances: (reactor.currentState.distanceCards ?? []).filter { $0.id != selectedId }
+                        )
+                    )
                 }
             }
         )
@@ -598,11 +779,6 @@ extension HomeViewController: UITableViewDelegate {
             }
         }
         
-        guard isPunged == false else {
-            self.showPungedCardDialog()
-            return
-        }
-        
         var selectedId: String? {
             switch item {
             case let .latest(selectedCard):
@@ -618,7 +794,25 @@ extension HomeViewController: UITableViewDelegate {
         
         guard let selectedId = selectedId else { return }
         
-        reactor.action.onNext(.detailCard(selectedId))
+        guard isPunged == false else {
+            self.showPungedCardDialog(reactor, with: selectedId)
+            return
+        }
+        
+        var isEventCard: Bool {
+            switch item {
+            case let .latest(selectedCard):
+                return selectedCard.cardImgName.contains(Text.eventCardTitle)
+            case let .popular(selectedCard):
+                return selectedCard.cardImgName.contains(Text.eventCardTitle)
+            case let .distance(selectedCard):
+                return selectedCard.cardImgName.contains(Text.eventCardTitle)
+            case .empty:
+                return false
+            }
+        }
+        
+        reactor.action.onNext(.hasDetailCard(selectedId, isEventCard))
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

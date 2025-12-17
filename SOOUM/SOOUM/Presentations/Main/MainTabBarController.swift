@@ -149,7 +149,7 @@ class MainTabBarController: SOMTabBarController, View {
         // State
         reactor.pulse(\.$profileInfo)
             .filterNil()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, profileInfo in
                 
                 switch reactor.currentState.entranceType {
@@ -165,7 +165,7 @@ class MainTabBarController: SOMTabBarController, View {
                         object?.setupDetailViewController(
                             selectedViewController,
                             with: reactor.reactorForDetail(targetCardId),
-                            completion: { reactor.action.onNext(.resetEntrance) }
+                            completion: { reactor.action.onNext(.cleanup) }
                         )
                     }
                 case .pushToNotification:
@@ -178,7 +178,7 @@ class MainTabBarController: SOMTabBarController, View {
                         object?.setupNotificationViewController(
                             selectedViewController,
                             with: reactor.reactorForNoti(),
-                            completion: { reactor.action.onNext(.resetEntrance) }
+                            completion: { reactor.action.onNext(.cleanup) }
                         )
                     }
                 case .pushToTagDetail:
@@ -193,7 +193,7 @@ class MainTabBarController: SOMTabBarController, View {
                         object?.setupTagDetailViewController(
                             selectedViewController,
                             with: reactor.reactorForDetail(targetCardId),
-                            completion: { reactor.action.onNext(.resetEntrance) }
+                            completion: { reactor.action.onNext(.cleanup) }
                         )
                     }
                 case .pushToFollow:
@@ -206,7 +206,7 @@ class MainTabBarController: SOMTabBarController, View {
                         object?.setupFollowViewController(
                             selectedViewController,
                             with: reactor.reactorForFollow(nickname: profileInfo.nickname, with: profileInfo.userId),
-                            completion: { reactor.action.onNext(.resetEntrance) }
+                            completion: { reactor.action.onNext(.cleanup) }
                         )
                     }
                 case .pushToLaunchScreen:
@@ -243,12 +243,11 @@ class MainTabBarController: SOMTabBarController, View {
                         writeCardViewController,
                         animated: true
                     ) { _ in
-                        reactor.action.onNext(.resetCouldPosting)
+                        reactor.action.onNext(.cleanup)
                     }
                 }
             }
             .disposed(by: self.disposeBag)
-        
         couldPosting
             .filter { $0.isBaned }
             .observe(on: MainScheduler.instance)
@@ -276,6 +275,9 @@ extension MainTabBarController: SOMTabBarControllerDelegate {
         if viewController.tabBarItem.tag == 1 {
             
             self.willPushWriteCard.accept(())
+            
+            GAHelper.shared.logEvent(event: GAEvent.TabBar.moveToCreateFeedCardView_btn_click)
+            
             return false
         }
         
@@ -305,8 +307,8 @@ private extension MainTabBarController {
             title: Constants.Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
-                    self.reactor?.action.onNext(.resetCouldPosting)
+                SOMDialogViewController.dismiss {
+                    self.reactor?.action.onNext(.cleanup)
                 }
             }
         )

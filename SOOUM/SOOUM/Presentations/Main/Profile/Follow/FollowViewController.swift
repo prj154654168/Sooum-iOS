@@ -309,7 +309,7 @@ class FollowViewController: BaseNavigationViewController, View {
                 followings: $0.followings
             )
         }
-        .observe(on: MainScheduler.asyncInstance)
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, displayStates in
             
             var followerTabItem: String {
@@ -378,14 +378,14 @@ private extension FollowViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         let deleteAction = SOMDialogAction(
             title: Text.deleteActionTitle,
             style: .red,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     self.reactor?.action.onNext(.updateFollow(userId, false))
                 }
             }

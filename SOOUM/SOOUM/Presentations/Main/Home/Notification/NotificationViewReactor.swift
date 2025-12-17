@@ -16,7 +16,10 @@ class NotificationViewReactor: Reactor {
         case refresh
         case updateDisplayType(DisplayType)
         case moreFind(lastId: String, displayType: DisplayType)
+        case hasDetailCard(selectedId: String, selectedNotiId: String?)
+        case updateNotifications
         case requestRead(String)
+        case cleanup
     }
     
     enum Mutation {
@@ -25,6 +28,7 @@ class NotificationViewReactor: Reactor {
         case notices([NoticeInfo])
         case moreNotices([NoticeInfo])
         case updateDisplayType(DisplayType)
+        case cardIsDeleted((String, String?, Bool)?)
         case updateIsRefreshing(Bool)
         case updateIsReadSuccess(Bool)
     }
@@ -34,6 +38,7 @@ class NotificationViewReactor: Reactor {
         fileprivate(set) var notificationsForUnread: [CompositeNotificationInfo]?
         fileprivate(set) var notifications: [CompositeNotificationInfo]?
         fileprivate(set) var notices: [NoticeInfo]?
+        fileprivate(set) var cardIsDeleted: (selectedId: String, selectedNotiId: String?, isDeleted: Bool)?
         fileprivate(set) var isRefreshing: Bool
         fileprivate(set) var isReadSuccess: Bool
     }
@@ -43,17 +48,20 @@ class NotificationViewReactor: Reactor {
     private let dependencies: AppDIContainerable
     private let notificationUseCase: NotificationUseCase
     private let fetchNoticeUseCase: FetchNoticeUseCase
+    private let fetchCardDetailUseCase: FetchCardDetailUseCase
     
     init(dependencies: AppDIContainerable, displayType: DisplayType = .activity(.unread)) {
         self.dependencies = dependencies
         self.notificationUseCase = dependencies.rootContainer.resolve(NotificationUseCase.self)
         self.fetchNoticeUseCase = dependencies.rootContainer.resolve(FetchNoticeUseCase.self)
+        self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
         
         self.initialState = State(
           displayType: displayType,
           notificationsForUnread: nil,
           notifications: nil,
           notices: nil,
+          cardIsDeleted: nil,
           isRefreshing: false,
           isReadSuccess: false
         )
@@ -116,6 +124,22 @@ class NotificationViewReactor: Reactor {
                         .catch(self.catchClosureNoticesMore)
                 ])
             }
+        case let .hasDetailCard(selectedId, selectedNotiId):
+            
+            return .concat([
+                .just(.cardIsDeleted(nil)),
+                self.fetchCardDetailUseCase.isDeleted(cardId: selectedId)
+                .map { (selectedId, selectedNotiId, $0) }
+                .map(Mutation.cardIsDeleted)
+            ])
+        case .updateNotifications:
+
+            return Observable.zip(
+                self.notificationUseCase.unreadNotifications(lastId: nil),
+                self.notificationUseCase.readNotifications(lastId: nil)
+            )
+                .map(Mutation.notifications)
+                .catch(self.catchClosureNotis)
         case let .requestRead(selectedId):
             
             return self.notificationUseCase.requestRead(notificationId: selectedId)
@@ -134,6 +158,9 @@ class NotificationViewReactor: Reactor {
                         return .just(.updateIsReadSuccess(false))
                     }
                 }
+        case .cleanup:
+            
+            return .just(.cardIsDeleted(nil))
         }
     }
     
@@ -152,6 +179,8 @@ class NotificationViewReactor: Reactor {
             newState.notices? += notices
         case let .updateDisplayType(displayType):
             newState.displayType = displayType
+        case let .cardIsDeleted(cardIsDeleted):
+            newState.cardIsDeleted = cardIsDeleted
         case let .updateIsRefreshing(isRefreshing):
             newState.isRefreshing = isRefreshing
         case let .updateIsReadSuccess(isReadSuccess):
@@ -260,6 +289,15 @@ extension NotificationViewReactor {
             prevStates.unreads == currStates.unreads &&
             prevStates.reads == currStates.reads &&
             prevStates.notices == currStates.notices
+    }
+    
+    func canPushToDetail(
+        prev prevCardIsDeleted: (selectedId: String, selectedNotiId: String?, isDeleted: Bool)?,
+        curr currCardIsDeleted: (selectedId: String, selectedNotiId: String?, isDeleted: Bool)?
+    ) -> Bool {
+        return prevCardIsDeleted?.selectedId == currCardIsDeleted?.selectedId &&
+            prevCardIsDeleted?.selectedNotiId == currCardIsDeleted?.selectedNotiId &&
+            prevCardIsDeleted?.isDeleted == currCardIsDeleted?.isDeleted
     }
 }
 

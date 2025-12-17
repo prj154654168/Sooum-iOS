@@ -14,6 +14,8 @@ import Photos
 import SwiftEntryKit
 import YPImagePicker
 
+import Clarity
+
 import ReactorKit
 import RxCocoa
 import RxKeyboard
@@ -209,6 +211,29 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.relatedTagsViewBottomConstraint?.update(offset: -height)
     }
     
+    override func bind() {
+        
+        self.navigationBar.backButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                
+                object.navigationPop {
+                    
+                    if case .feed = object.reactor?.entranceType {
+                        GAHelper.shared.logEvent(
+                            event: GAEvent.WriteCardView.moveToCreateFeedCardView_cancel_btn_click
+                        )
+                    }
+                    
+                    if case .comment = object.reactor?.entranceType {
+                        GAHelper.shared.logEvent(
+                            event: GAEvent.WriteCardView.moveToCreateCommentCardView_cancel_btn_click
+                        )
+                    }
+                }
+            }
+            .disposed(by: self.disposeBag)
+    }
+    
     
     // MARK: ReactorKit - bind
     
@@ -286,9 +311,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.writeCardView.writeCardTags.updateWrittenTags
-            .filterNil()
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .filterNil()
+            .observe(on: MainScheduler.instance)
             .bind(to: self.writeCardView.writeCardTags.rx.models())
             .disposed(by: self.disposeBag)
         
@@ -363,11 +388,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         let selectedTypography = self.selectTypographyView.selectedTypography
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .share(replay: 1)
         selectedTypography
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self.writeCardView) { writeCardView, selectedTypography in
                 var typograhpyToTextView: Typography {
                     switch selectedTypography {
@@ -392,12 +417,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         let selectedOptions = self.selectOptionsView.selectedOptions
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .share()
         selectedOptions
             .filter { $0.contains(.distanceShare) }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, options in
                 // 선택된 옵션 중 `거리공유` 옵션이 존재하고, 위치 권한이 허용되지 않았을 때
                 guard reactor.initialState.hasPermission == false else { return }
@@ -430,8 +455,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         let enteredTag = self.writeCardView.textDidChanged.share()
         enteredTag
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .map(Reactor.Action.relatedTags)
             .bind(to: reactor.action)
@@ -450,6 +475,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .map { object, combined in
                 let (content, imageInfo, typography, options, enteredTag) = combined
                 
+                GAHelper.shared.logEvent(event: GAEvent.WriteCardView.createFeedCard_btn_click)
+                
+                if options.contains(.distanceShare) == false {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.WriteCardView.createFeedCardWithoutDistanceSharedOpt_btn_click
+                    )
+                }
+                
                 var enteredTagTexts = object.writeCardView.writeCardTags.models.map { $0.originalText }
                 if let enteredTag = enteredTag, enteredTag.isEmpty == false {
                     enteredTagTexts.append(enteredTag)
@@ -461,7 +494,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     imageType: imageInfo.type,
                     imageName: imageInfo.info.imgName,
                     isStory: options.contains(.story),
-                    tags: enteredTagTexts
+                    tags: enteredTagTexts.reduce(into: []) { if !$0.contains($1) { $0.append($1) } }
                 )
             }
             .bind(to: reactor.action)
@@ -483,10 +516,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.writtenCardId)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, writtenCardId in
+                NotificationCenter.default.post(name: .reloadHomeData, object: nil, userInfo: nil)
                 if reactor.entranceType == .comment {
                     NotificationCenter.default.post(name: .reloadDetailData, object: nil, userInfo: nil)
                 }
@@ -498,6 +532,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     
                     var viewControllers = navigationController.viewControllers
                     if (viewControllers.popLast() as? Self) != nil {
+                        
+                        GAHelper.shared.logEvent(
+                            event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                                previous_path: .writeCard
+                            )
+                        )
                         
                         viewControllers.append(detailViewController)
                         navigationController.setViewControllers(viewControllers, animated: true)
@@ -511,8 +551,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.hasErrors)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, hasErrors in
                 if case 422 = hasErrors {
@@ -541,15 +581,16 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.defaultImages)
-            .filterNil()
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .filterNil()
+            .map { ($0, reactor.entranceType) }
+            .observe(on: MainScheduler.instance)
             .bind(to: self.selectImageView.rx.setModels)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.userImage)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.writeCardView.writeCardTextView) { writeCardTextView, userImage in
                 writeCardTextView.image = userImage
@@ -558,13 +599,13 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isDownloaded)
             .filter { $0 == true }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self.selectImageView) { selectImageView, _ in
                 selectImageView.updatedByUser()
             }
             .disposed(by: self.disposeBag)
         
-        let relatedTags = reactor.state.map(\.relatedTags).filterNil().distinctUntilChanged().share()
+        let relatedTags = reactor.state.map(\.relatedTags).distinctUntilChanged().filterNil().share()
         relatedTags
             .map { $0.isEmpty }
             .observe(on: MainScheduler.asyncInstance)
@@ -590,21 +631,22 @@ extension WriteCardViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         let settingAction = SOMDialogAction(
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                let application = UIApplication.shared
-                let openSettingsURLString: String = UIApplication.openSettingsURLString
-                if let settingsURL = URL(string: openSettingsURLString),
-                   application.canOpenURL(settingsURL) {
-                    application.open(settingsURL)
+                SOMDialogViewController.dismiss {
+                    
+                    let application = UIApplication.shared
+                    let openSettingsURLString: String = UIApplication.openSettingsURLString
+                    if let settingsURL = URL(string: openSettingsURLString),
+                       application.canOpenURL(settingsURL) {
+                        application.open(settingsURL)
+                    }
                 }
-                
-                UIApplication.topViewController?.dismiss(animated: true)
             }
         )
         
@@ -621,21 +663,22 @@ extension WriteCardViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         let settingAction = SOMDialogAction(
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                let application = UIApplication.shared
-                let openSettingsURLString: String = UIApplication.openSettingsURLString
-                if let settingsURL = URL(string: openSettingsURLString),
-                   application.canOpenURL(settingsURL) {
-                    application.open(settingsURL)
+                SOMDialogViewController.dismiss {
+                    
+                    let application = UIApplication.shared
+                    let openSettingsURLString: String = UIApplication.openSettingsURLString
+                    if let settingsURL = URL(string: openSettingsURLString),
+                       application.canOpenURL(settingsURL) {
+                        application.open(settingsURL)
+                    }
                 }
-                
-                UIApplication.topViewController?.dismiss(animated: true)
             }
         )
         
@@ -653,7 +696,7 @@ extension WriteCardViewController {
                 title: Text.confirmActionTitle,
                 style: .primary,
                 action: {
-                    UIApplication.topViewController?.dismiss(animated: true)
+                    SOMDialogViewController.dismiss()
                 }
             )
         ]
@@ -679,7 +722,7 @@ extension WriteCardViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     self.navigationPop()
                 }
             }
@@ -699,7 +742,7 @@ extension WriteCardViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
                         self?.navigationPopToRoot()
@@ -758,11 +801,11 @@ extension WriteCardViewController {
                 self?.reactor?.action.onNext(.updateUserImage(nil, false))
                 Log.error("Error occured while picking an image")
             }
-            picker?.dismiss(animated: true, completion: nil)
+            picker?.dismiss(animated: true) { ClaritySDK.resume() }
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-            self?.present(picker, animated: true, completion: nil)
+            self?.present(picker, animated: true) { ClaritySDK.pause() }
         }
     }
 }

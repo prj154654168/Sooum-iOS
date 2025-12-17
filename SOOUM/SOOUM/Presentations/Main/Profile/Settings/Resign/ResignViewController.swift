@@ -197,7 +197,7 @@ class ResignViewController: BaseNavigationViewController, View {
         reactor.state.map(\.reason)
             .distinctUntilChanged()
             .filterNil()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, reason in
                 
                 let items = object.container.arrangedSubviews.compactMap { $0 as? SOMButton }
@@ -266,7 +266,7 @@ private extension ResignViewController {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) { completion() }
+                SOMDialogViewController.dismiss { completion() }
             }
         )
 

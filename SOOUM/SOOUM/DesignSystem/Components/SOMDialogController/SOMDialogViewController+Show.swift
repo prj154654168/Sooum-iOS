@@ -8,9 +8,11 @@
 import UIKit
 
 
+// MARK: Show
+
 extension SOMDialogViewController {
     
-    private static weak var displayedDialogViewController: SOMDialogViewController?
+    fileprivate static weak var displayedDialogViewController: SOMDialogViewController?
     
     @discardableResult
     static func show(
@@ -114,5 +116,23 @@ extension SOMDialogViewController {
         }
         
         return dialogViewController
+    }
+}
+
+
+// MARK: Dismiss
+
+extension SOMDialogViewController {
+    
+    static func dismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
+        
+        guard let dialog = self.displayedDialogViewController else {
+            completion?()
+            return
+        }
+        
+        self.displayedDialogViewController = nil
+        
+        dialog.dismiss(animated: animated) { completion?() }
     }
 }

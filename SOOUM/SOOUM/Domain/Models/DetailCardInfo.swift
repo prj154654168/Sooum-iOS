@@ -60,6 +60,33 @@ extension DetailCardInfo {
             prevCardInfo: self.prevCardInfo
         )
     }
+    
+    func updateCommentCnt(_ commentCnt: Int) -> DetailCardInfo {
+        
+        return DetailCardInfo(
+            id: self.id,
+            likeCnt: self.likeCnt,
+            commentCnt: commentCnt,
+            cardImgName: self.cardImgName,
+            cardImgURL: self.cardImgURL,
+            cardContent: self.cardContent,
+            font: self.font,
+            distance: self.distance,
+            createdAt: self.createdAt,
+            storyExpirationTime: self.storyExpirationTime,
+            isAdminCard: self.isAdminCard,
+            isReported: self.isReported,
+            memberId: self.memberId,
+            nickname: self.nickname,
+            profileImgURL: self.profileImgURL,
+            isLike: self.isLike,
+            isCommentWritten: self.isCommentWritten,
+            tags: self.tags,
+            isOwnCard: self.isOwnCard,
+            visitedCnt: self.visitedCnt,
+            prevCardInfo: self.prevCardInfo
+        )
+    }
 }
 
 extension DetailCardInfo {

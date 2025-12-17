@@ -57,7 +57,7 @@ class SOMTabBarController: UIViewController {
     
     var hasFirstLaunchGuide: Bool = true {
         didSet {
-            if hasFirstLaunchGuide == false {
+            if self.hasFirstLaunchGuide == false {
                 self.messageBubbleView.removeFromSuperview()
             }
         }

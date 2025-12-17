@@ -22,6 +22,43 @@ struct BaseCardInfo: Hashable {
 }
 
 extension BaseCardInfo {
+    
+    func updateLikeCnt(_ likeCnt: Int) -> BaseCardInfo {
+        
+        return BaseCardInfo(
+            id: self.id,
+            likeCnt: likeCnt,
+            commentCnt: self.commentCnt,
+            cardImgName: self.cardImgName,
+            cardImgURL: self.cardImgURL,
+            cardContent: self.cardContent,
+            font: self.font,
+            distance: self.distance,
+            createdAt: self.createdAt,
+            storyExpirationTime: self.storyExpirationTime,
+            isAdminCard: self.isAdminCard
+        )
+    }
+    
+    func updateCommentCnt(_ commentCnt: Int) -> BaseCardInfo {
+        
+        return BaseCardInfo(
+            id: self.id,
+            likeCnt: self.likeCnt,
+            commentCnt: commentCnt,
+            cardImgName: self.cardImgName,
+            cardImgURL: self.cardImgURL,
+            cardContent: self.cardContent,
+            font: self.font,
+            distance: self.distance,
+            createdAt: self.createdAt,
+            storyExpirationTime: self.storyExpirationTime,
+            isAdminCard: self.isAdminCard
+        )
+    }
+}
+
+extension BaseCardInfo {
     /// 사용하는 폰트
     enum Font: String, Decodable {
         case pretendard = "PRETENDARD"

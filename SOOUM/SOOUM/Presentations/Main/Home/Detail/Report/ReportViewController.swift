@@ -120,8 +120,8 @@ class ReportViewController: BaseNavigationViewController, View {
     private func bindState(reactor: ReportViewReactor) {
         
         reactor.state.map(\.reportReason)
-            .filterNil()
             .distinctUntilChanged()
+            .filterNil()
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, reportReason in
                 
@@ -196,7 +196,7 @@ private extension ReportViewController {
             title: Text.confirmButtonTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
                     self.navigationPop()
                 }

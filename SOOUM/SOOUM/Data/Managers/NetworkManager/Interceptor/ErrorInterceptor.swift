@@ -127,7 +127,7 @@ final class ErrorInterceptor: RequestInterceptor {
             title: Text.confirmActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         
@@ -147,7 +147,7 @@ final class ErrorInterceptor: RequestInterceptor {
             title: Text.closeActionButtonTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         
@@ -155,7 +155,7 @@ final class ErrorInterceptor: RequestInterceptor {
             title: Text.inquiryActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     let subject = Text.inquiryMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                     let guideMessage = """
                         \(Text.identificationInfo)

@@ -14,6 +14,8 @@ import Photos
 import SwiftEntryKit
 import YPImagePicker
 
+import Clarity
+
 import ReactorKit
 import RxCocoa
 import RxGesture
@@ -247,7 +249,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         // State
         let profileImage = reactor.state.map(\.profileImage).distinctUntilChanged().share()
         profileImage
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, profileImage in
                 object.profileImageView.image = profileImage ?? .init(.image(.v2(.profile_large)))
                 
@@ -334,14 +336,14 @@ private extension UpdateProfileViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         let settingAction = SOMDialogAction(
             title: Text.settingActionTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     
                     let application = UIApplication.shared
                     let openSettingsURLString: String = UIApplication.openSettingsURLString
@@ -367,7 +369,7 @@ private extension UpdateProfileViewController {
                 title: Text.inappositeDialogConfirmButtonTitle,
                 style: .primary,
                 action: {
-                    UIApplication.topViewController?.dismiss(animated: true) {
+                    SOMDialogViewController.dismiss {
                         reactor.action.onNext(.setDefaultImage)
                     }
                 }
@@ -417,11 +419,11 @@ private extension UpdateProfileViewController {
             } else {
                 Log.error("Error occured while picking an image")
             }
-            picker?.dismiss(animated: true, completion: nil)
+            picker?.dismiss(animated: true) { ClaritySDK.resume() }
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
-            self?.present(picker, animated: true, completion: nil)
+            self?.present(picker, animated: true) { ClaritySDK.pause() }
         }
     }
 }

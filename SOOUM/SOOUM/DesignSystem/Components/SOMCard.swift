@@ -32,12 +32,16 @@ class SOMCard: UIView {
         $0.layer.cornerRadius = 16
     }
     
+    private let borderBackgroundView = UIView().then {
+        $0.backgroundColor = .som.v2.white
+        $0.layer.cornerRadius = 16
+        $0.layer.borderWidth = 1
+        $0.clipsToBounds = true
+    }
+    
     /// 배경 이미지
     private let rootContainerImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
-        $0.layer.cornerRadius = 16
-        $0.layer.borderWidth = 1
-        $0.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         $0.layer.masksToBounds = true
     }
     
@@ -61,10 +65,6 @@ class SOMCard: UIView {
     /// 펑 시간, 거리, 시간, 좋아요 수, 답글 수 정보를 담는 뷰
     private let cardInfoContainer = UIView().then {
         $0.backgroundColor = .som.v2.white
-        $0.layer.cornerRadius = 16
-        $0.layer.borderWidth = 1
-        $0.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        $0.layer.masksToBounds = true
     }
     /// 펑 시간, 거리, 시간을 담는 스택 뷰
     private let cardInfoLeadingStackView = UIStackView().then {
@@ -109,7 +109,7 @@ class SOMCard: UIView {
     }
     /// 펑 남은시간 표시 아이콘
     private let cardPungTimeImageView = UIImageView().then {
-        $0.image = .init(.icon(.v2(.filled(.bomb))))
+        $0.image = .init(.icon(.v2(.outlined(.timer))))
         $0.tintColor = .som.v2.pMain
     }
     /// 펑 남은시간 표시 라벨
@@ -236,15 +236,20 @@ class SOMCard: UIView {
             $0.edges.equalToSuperview()
         }
         
+        self.addSubview(self.borderBackgroundView)
+        self.borderBackgroundView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
         // 배경 이미지 뷰
-        self.addSubview(self.rootContainerImageView)
+        self.borderBackgroundView.addSubview(self.rootContainerImageView)
         self.rootContainerImageView.snp.makeConstraints {
             $0.top.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-34)
         }
         
         // 하단 카드 정보 컨테이너
-        self.addSubview(self.cardInfoContainer)
+        self.borderBackgroundView.addSubview(self.cardInfoContainer)
         self.cardInfoContainer.snp.makeConstraints {
             $0.bottom.horizontalEdges.equalToSuperview()
             $0.height.equalTo(34)
@@ -361,9 +366,10 @@ class SOMCard: UIView {
         self.model = model
         
         let borderColor = model.isAdminCard ? UIColor.som.v2.pMain : UIColor.som.v2.gray100
+        self.borderBackgroundView.layer.borderColor = borderColor.cgColor
+        
         // 카드 배경 이미지
         self.rootContainerImageView.setImage(strUrl: model.cardImgURL, with: model.cardImgName)
-        self.rootContainerImageView.layer.borderColor = borderColor.cgColor
         
         // 카드 본문
         let typography: Typography
@@ -379,8 +385,6 @@ class SOMCard: UIView {
         
         // 하단 정보
         // 어드민, 펑 시간, 거리, 시간
-        self.cardInfoContainer.layer.borderColor = borderColor.cgColor
-        
         self.adminStackView.isHidden = model.isAdminCard == false
         self.firstDot.isHidden = model.isAdminCard == false
         self.cardPungTimeStackView.isHidden = model.storyExpirationTime == nil
@@ -446,12 +450,12 @@ class SOMCard: UIView {
             .map { object, _ in
                 guard let pungTime = pungTime else {
                     object.serialTimer?.dispose()
-                    return "00 : 00 : 00"
+                    return "00:00:00"
                 }
                 
                 let currentDate = Date()
                 let remainingTime = currentDate.infoReadableTimeTakenFromThisForPung(to: pungTime)
-                if remainingTime == "00 : 00 : 00" {
+                if remainingTime == "00:00:00" {
                     object.serialTimer?.dispose()
                     object.updatePungUI()
                 }
@@ -463,16 +467,15 @@ class SOMCard: UIView {
     
     /// 펑 ui 즉각적으로 업데이트
     private func updatePungUI() {
-        self.cardPungTimeLabel.text = "00 : 00 : 00"
-        self.rootContainerImageView.layer.borderWidth = 0
+        self.cardPungTimeLabel.text = "00:00:00"
         self.rootContainerImageView.image = UIColor.som.v2.gray200.toImage
-        self.cardInfoContainer.layer.borderWidth = 0
         self.cardInfoContainer.subviews
             .filter { $0 != self.cardInfoLeadingStackView }
             .forEach { $0.removeFromSuperview() }
         self.cardInfoLeadingStackView.subviews
             .filter { $0 != self.cardPungTimeStackView }
             .forEach { $0.removeFromSuperview() }
+        self.borderBackgroundView.removeFromSuperview()
         
         self.cardTextContentLabel.text = Text.pungedCardText
         self.updateContentHeight(Text.pungedCardText, with: .som.v2.body1)

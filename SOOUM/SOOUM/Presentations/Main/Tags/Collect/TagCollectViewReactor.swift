@@ -13,12 +13,16 @@ class TagCollectViewReactor: Reactor {
         case landing
         case refresh
         case more(String)
+        case updateTagCards([ProfileCardInfo])
+        case hasDetailCard(String)
         case updateIsFavorite(Bool)
+        case cleanup
     }
     
     enum Mutation {
         case tagCardInfos([ProfileCardInfo])
         case moreFind([ProfileCardInfo])
+        case cardIsDeleted((String, Bool)?)
         case updateIsFavorite(Bool)
         case updateIsUpdate(Bool?)
         case updateIsRefreshing(Bool)
@@ -27,6 +31,7 @@ class TagCollectViewReactor: Reactor {
     
     struct State {
         fileprivate(set) var tagCardInfos: [ProfileCardInfo]
+        fileprivate(set) var cardIsDeleted: (selectedId: String, isDeleted: Bool)?
         fileprivate(set) var isFavorite: Bool
         fileprivate(set) var isUpdated: Bool?
         fileprivate(set) var isRefreshing: Bool
@@ -37,6 +42,7 @@ class TagCollectViewReactor: Reactor {
     
     private let dependencies: AppDIContainerable
     private let fetchCardUseCase: FetchCardUseCase
+    private let fetchCardDetailUseCase: FetchCardDetailUseCase
     private let updateTagFavoriteUseCase: UpdateTagFavoriteUseCase
     
     private let id: String
@@ -45,6 +51,7 @@ class TagCollectViewReactor: Reactor {
     init(dependencies: AppDIContainerable, with id: String, title: String, isFavorite: Bool) {
         self.dependencies = dependencies
         self.fetchCardUseCase = dependencies.rootContainer.resolve(FetchCardUseCase.self)
+        self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
         self.updateTagFavoriteUseCase = dependencies.rootContainer.resolve(UpdateTagFavoriteUseCase.self)
         
         self.id = id
@@ -52,6 +59,7 @@ class TagCollectViewReactor: Reactor {
         
         self.initialState = .init(
             tagCardInfos: [],
+            cardIsDeleted: nil,
             isFavorite: isFavorite,
             isUpdated: nil,
             isRefreshing: false,
@@ -96,6 +104,17 @@ class TagCollectViewReactor: Reactor {
             return self.fetchCardUseCase.cardsWithTag(tagId: self.id, lastId: lastId)
                 .map(\.cardInfos)
                 .map(Mutation.moreFind)
+        case let .updateTagCards(tagCardInfos):
+            
+            return .just(.tagCardInfos(tagCardInfos))
+        case let .hasDetailCard(selectedId):
+            
+            return .concat([
+                .just(.cardIsDeleted(nil)),
+                self.fetchCardDetailUseCase.isDeleted(cardId: selectedId)
+                .map { (selectedId, $0) }
+                .map(Mutation.cardIsDeleted)
+            ])
         case let .updateIsFavorite(isFavorite):
             
             return .concat([
@@ -112,6 +131,9 @@ class TagCollectViewReactor: Reactor {
                     }
                     .catch(self.catchClosure)
             ])
+        case .cleanup:
+            
+            return .just(.cardIsDeleted(nil))
         }
     }
     
@@ -122,6 +144,8 @@ class TagCollectViewReactor: Reactor {
             newState.tagCardInfos = tagCardInfos
         case let .moreFind(tagCardInfos):
             newState.tagCardInfos += tagCardInfos
+        case let .cardIsDeleted(cardIsDeleted):
+            newState.cardIsDeleted = cardIsDeleted
         case let .updateIsFavorite(isFavorite):
             newState.isFavorite = isFavorite
         case let .updateIsUpdate(isUpdated):
@@ -135,7 +159,7 @@ class TagCollectViewReactor: Reactor {
     }
 }
 
-private extension TagCollectViewReactor {
+extension TagCollectViewReactor {
     
     var catchClosure: ((Error) throws -> Observable<Mutation>) {
         return { error in
@@ -149,6 +173,14 @@ private extension TagCollectViewReactor {
             
             return .just(.updateIsUpdate(false))
         }
+    }
+    
+    func canPushToDetail(
+        prev prevCardIsDeleted: (selectedId: String, isDeleted: Bool)?,
+        curr currCardIsDeleted: (selectedId: String, isDeleted: Bool)?
+    ) -> Bool {
+        return prevCardIsDeleted?.selectedId == currCardIsDeleted?.selectedId &&
+            prevCardIsDeleted?.isDeleted == currCardIsDeleted?.isDeleted
     }
 }
 

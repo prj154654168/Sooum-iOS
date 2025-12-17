@@ -7,11 +7,12 @@
 
 import UIKit
 
-
 extension UIApplication {
 
     var currentWindow: UIWindow? {
-        let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+        let scenes: Set = UIApplication.shared.connectedScenes
+        let activeScene: UIScene? = scenes.first { $0.activationState == .foregroundActive } ?? scenes.first
+        let windowScene = activeScene as? UIWindowScene
         return windowScene?.windows.first { $0.isKeyWindow }
     }
 

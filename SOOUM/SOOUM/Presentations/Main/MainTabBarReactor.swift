@@ -29,15 +29,13 @@ class MainTabBarReactor: Reactor {
         case requestLocationPermission
         case judgeEntrance
         case postingPermission
-        case resetCouldPosting
-        case resetEntrance
+        case cleanup
     }
     
     enum Mutation {
         case updateEntrance(ProfileInfo)
         case updatePostingPermission(PostingPermission?)
-        case resetCouldPosting
-        case resetEntrance
+        case cleanup
     }
     
     struct State {
@@ -114,12 +112,9 @@ class MainTabBarReactor: Reactor {
             
             return self.validateUserUseCase.postingPermission()
                 .map(Mutation.updatePostingPermission)
-        case .resetCouldPosting:
+        case .cleanup:
             
-            return .just(.resetCouldPosting)
-        case .resetEntrance:
-            
-            return .just(.resetEntrance)
+            return .just(.cleanup)
         }
     }
     
@@ -130,10 +125,9 @@ class MainTabBarReactor: Reactor {
             newState.profileInfo = profileInfo
         case let .updatePostingPermission(couldPosting):
             newState.couldPosting = couldPosting
-        case .resetCouldPosting:
-            newState.couldPosting = nil
-        case .resetEntrance:
+        case .cleanup:
             newState.entranceType = .none
+            newState.couldPosting = nil
             newState.profileInfo = nil
             self.pushInfo = nil
         }
@@ -179,5 +173,14 @@ extension MainTabBarReactor {
     
     func reactorForLaunchScreen() -> LaunchScreenViewReactor {
         LaunchScreenViewReactor(dependencies: self.dependencies, pushInfo: self.pushInfo)
+    }
+}
+
+extension MainTabBarReactor.State: Equatable {
+    
+    static func == (lhs: MainTabBarReactor.State, rhs: MainTabBarReactor.State) -> Bool {
+        return lhs.entranceType == rhs.entranceType &&
+            lhs.couldPosting == rhs.couldPosting &&
+            lhs.profileInfo == rhs.profileInfo
     }
 }

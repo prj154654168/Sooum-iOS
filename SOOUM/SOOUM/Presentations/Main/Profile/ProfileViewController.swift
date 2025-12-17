@@ -31,6 +31,9 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         static let deleteFollowingDialogTitle: String = "님을 팔로워에서 삭제하시겠어요?"
         
+        static let pungedCardDialogTitle: String = "삭제된 카드예요"
+        
+        static let confirmActionTitle: String = "확인"
         static let cancelActionTitle: String = "취소"
         static let blockActionTitle: String = "차단하기"
         static let unBlockActionTitle: String = "차단 해제"
@@ -214,12 +217,8 @@ class ProfileViewController: BaseNavigationViewController, View {
                 
                 cell.cardDidTap
                     .throttle(.seconds(3), scheduler: MainScheduler.instance)
-                    .subscribe(with: self) { object, selectedId in
-                        let detailViewController = DetailViewController()
-                        detailViewController.reactor = reactor.reactorForDetail(selectedId)
-                        let base = reactor.entranceType == .my ? object.parent : object
-                        base?.navigationPush(detailViewController, animated: true)
-                    }
+                    .map(Reactor.Action.hasDetailCard)
+                    .bind(to: reactor.action)
                     .disposed(by: cell.disposeBag)
                 
                 cell.moreFindCards
@@ -311,6 +310,20 @@ class ProfileViewController: BaseNavigationViewController, View {
             name: .reloadProfileData,
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reloadCardsData(_:)),
+            name: .reloadHomeData,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reloadCardsData(_:)),
+            name: .deletedFeedCardWithId,
+            object: nil
+        )
     }
     
     
@@ -334,14 +347,14 @@ class ProfileViewController: BaseNavigationViewController, View {
                     title: Text.cancelActionTitle,
                     style: .gray,
                     action: {
-                        UIApplication.topViewController?.dismiss(animated: true)
+                        SOMDialogViewController.dismiss()
                     }
                 )
                 let confirmAction = SOMDialogAction(
                     title: Text.blockActionTitle,
                     style: .red,
                     action: {
-                        UIApplication.topViewController?.dismiss(animated: true) {
+                        SOMDialogViewController.dismiss {
                             
                             reactor.action.onNext(.block)
                         }
@@ -381,7 +394,7 @@ class ProfileViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map {
+        let displayStates = reactor.state.map {
             ProfileViewReactor.DisplayStates(
                 cardType: $0.cardType,
                 profileInfo: $0.profileInfo,
@@ -389,8 +402,41 @@ class ProfileViewController: BaseNavigationViewController, View {
                 commentCardInfos: $0.commentCardInfos
             )
         }
+        let cardIsDeleted = reactor.state.map(\.cardIsDeleted)
+            .distinctUntilChanged(reactor.canPushToDetail)
+            .filterNil()
+        cardIsDeleted
+            .filter { $0.isDeleted }
+            .withLatestFrom(displayStates.map(\.cardType))
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, cardType in
+                object.showPungedCardDialog(reactor, with: cardType)
+            }
+            .disposed(by: self.disposeBag)
+        
+        cardIsDeleted
+            .filter { $0.isDeleted == false }
+            .map(\.selectedId)
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, selectedId in
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(selectedId)
+                let base = reactor.entranceType == .my ? object.parent : object
+                base?.navigationPush(detailViewController, animated: true) { _ in
+                    reactor.action.onNext(.cleanup)
+                    
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                            previous_path: .profile
+                        )
+                    )
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        displayStates
         .distinctUntilChanged(reactor.canUpdateCells)
-        .observe(on: MainScheduler.asyncInstance)
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, displayStates in
             
             var snapshot = Snapshot()
@@ -416,21 +462,14 @@ class ProfileViewController: BaseNavigationViewController, View {
         }
         .disposed(by: self.disposeBag)
         
-        reactor.pulse(\.$isBlocked)
-            .filterNil()
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                reactor.action.onNext(.updateCards)
-            }
-            .disposed(by: self.disposeBag)
-        
-        reactor.pulse(\.$isFollowing)
-            .filterNil()
-            .filter { $0 }
-            .subscribe(with: self) { object, _ in
-                reactor.action.onNext(.updateProfile)
-            }
-            .disposed(by: self.disposeBag)
+        Observable.merge(
+            reactor.pulse(\.$isBlocked).filterNil().filter { $0 },
+            reactor.pulse(\.$isFollowing).filterNil().filter { $0 }
+        )
+        .subscribe(with: self) { object, _ in
+            reactor.action.onNext(.updateProfile)
+        }
+        .disposed(by: self.disposeBag)
     }
     
     
@@ -461,6 +500,12 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         self.reactor?.action.onNext(.updateProfile)
     }
+    
+    @objc
+    private func reloadCardsData(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.updateCards)
+    }
 }
 
 
@@ -474,14 +519,14 @@ private extension ProfileViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         let deleteAction = SOMDialogAction(
             title: Text.deleteActionTitle,
             style: .red,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     self.reactor?.action.onNext(.follow)
                 }
             }
@@ -501,7 +546,7 @@ private extension ProfileViewController {
             title: Text.cancelActionTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         
@@ -509,7 +554,7 @@ private extension ProfileViewController {
             title: Text.unBlockActionTitle,
             style: .red,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     self.reactor?.action.onNext(.block)
                 }
             }
@@ -520,6 +565,27 @@ private extension ProfileViewController {
             message: nickname + Text.unBlockUserDialogMessage,
             textAlignment: .left,
             actions: [cancelAction, unBlockAction]
+        )
+    }
+    
+    func showPungedCardDialog(_ reactor: ProfileViewReactor, with cardType: EntranceCardType) {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                SOMDialogViewController.dismiss {
+                    reactor.action.onNext(.cleanup)
+                    reactor.action.onNext(.updateCards)
+                }
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.pungedCardDialogTitle,
+            messageView: nil,
+            textAlignment: .left,
+            actions: [confirmAction]
         )
     }
 }
@@ -586,7 +652,9 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
                 case .feed:
                     
                     let newHeight = self.updateCollectionViewHeight(numberOfItems: feeds.count)
-                    collectionView.contentInset.bottom = defaultHeight <= newHeight ? 88 + 16 : 0
+                    if reactor.entranceType == .my {
+                        collectionView.contentInset.bottom = defaultHeight <= newHeight ? 88 + 16 : 0
+                    }
                     
                     return feeds.isEmpty ? defaultHeight : newHeight
                 case .comment:

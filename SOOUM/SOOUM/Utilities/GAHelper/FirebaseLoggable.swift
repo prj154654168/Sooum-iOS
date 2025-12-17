@@ -12,4 +12,5 @@ extension String: FirebaseLoggable {}
 extension Int: FirebaseLoggable {}
 extension Double: FirebaseLoggable {}
 extension Bool: FirebaseLoggable {}
-extension Array: FirebaseLoggable where Element == String {} // [String]만 허용
+/// [String]만 허용
+extension Array: FirebaseLoggable where Element == String {}

@@ -110,7 +110,7 @@ class AnnouncementViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.announcements)
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, announcements in
                 object.announcements = announcements
                 

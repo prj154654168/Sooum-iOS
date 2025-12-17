@@ -14,12 +14,15 @@ class DetailViewReactor: Reactor {
         case landing
         case refresh
         case moreFindForComment(lastId: String)
+        case updateDetail(DetailCardInfo)
+        case updateComments([BaseCardInfo])
         case delete
         case block(isBlocked: Bool)
         case updateLike(Bool)
         case updateReport(Bool)
-        case willPushToWrite
-        case resetPushState
+        case willPushToDetail(String)
+        case willPushToWrite(GAEvent.DetailView.EnterTo)
+        case cleanup
     }
     
     enum Mutation {
@@ -33,34 +36,25 @@ class DetailViewReactor: Reactor {
         case updateReported(Bool)
         case updateIsBlocked(Bool)
         case updateErrors(Int?)
-        case willPushToWrite(Bool?)
+        case willPushToDetail((String, Bool)?)
+        case willPushToWrite((Bool, GAEvent.DetailView.EnterTo)?)
     }
     
     struct State {
         fileprivate(set) var isFeed: Bool?
         fileprivate(set) var detailCard: DetailCardInfo?
-        fileprivate(set) var commentCards: [BaseCardInfo]
+        fileprivate(set) var commentCards: [BaseCardInfo]?
         fileprivate(set) var isRefreshing: Bool
         fileprivate(set) var isLiked: Bool
         fileprivate(set) var isDeleted: Bool
         fileprivate(set) var isReported: Bool
         fileprivate(set) var isBlocked: Bool
         fileprivate(set) var hasErrors: Int?
-        fileprivate(set) var willPushEnabled: Bool?
+        fileprivate(set) var willPushToDetailEnabled: (prevCardId: String, isDeleted: Bool)?
+        fileprivate(set) var willPushToWriteEnabled: (isDeleted: Bool, enterTo: GAEvent.DetailView.EnterTo)?
     }
     
-    var initialState: State = .init(
-        isFeed: nil,
-        detailCard: nil,
-        commentCards: [],
-        isRefreshing: false,
-        isLiked: false,
-        isDeleted: false,
-        isReported: false,
-        isBlocked: true,
-        hasErrors: nil,
-        willPushEnabled: nil
-    )
+    var initialState: State
     
     private let dependencies: AppDIContainerable
     private let fetchCardDetailUseCase: FetchCardDetailUseCase
@@ -71,7 +65,11 @@ class DetailViewReactor: Reactor {
     
     let selectedCardId: String
     
-    init(dependencies: AppDIContainerable, with selectedCardId: String) {
+    init(
+        dependencies: AppDIContainerable,
+        with selectedCardId: String,
+        hasDeleted: Bool = false
+    ) {
         self.dependencies = dependencies
         self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
         self.deleteCardUseCase = dependencies.rootContainer.resolve(DeleteCardUseCase.self)
@@ -80,17 +78,35 @@ class DetailViewReactor: Reactor {
         self.locationUseCase = dependencies.rootContainer.resolve(LocationUseCase.self)
         
         self.selectedCardId = selectedCardId
+        
+        self.initialState = .init(
+            isFeed: nil,
+            detailCard: nil,
+            commentCards: nil,
+            isRefreshing: false,
+            isLiked: false,
+            isDeleted: hasDeleted,
+            isReported: false,
+            isBlocked: true,
+            hasErrors: nil,
+            willPushToDetailEnabled: nil,
+            willPushToWriteEnabled: nil
+        )
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
             
+            // 삭제된 카드의 경우, 댓글 카드만 조회
+            guard self.initialState.isDeleted == false else { return self.commentCards()}
+            
             let coordinate = self.locationUseCase.coordinate()
             let latitude = coordinate.latitude
             let longitude = coordinate.longitude
             
             return .concat([
+                .just(.updateErrors(nil)),
                 self.fetchCardDetailUseCase.detailCard(
                     id: self.selectedCardId,
                     latitude: latitude,
@@ -110,6 +126,7 @@ class DetailViewReactor: Reactor {
             
             return .concat([
                 .just(.updateIsRefreshing(true)),
+                .just(.updateErrors(nil)),
                 self.detailCard()
                     .catch(self.catchClosure),
                 self.commentCards(),
@@ -118,6 +135,12 @@ class DetailViewReactor: Reactor {
         case let .moreFindForComment(lastId):
             
             return self.fetchMoreCommentCards(lastId)
+        case let .updateDetail(detailCard):
+            
+            return .just(.detailCard(detailCard))
+        case let .updateComments(commentCards):
+            
+            return .just(.commentCards(commentCards))
         case .delete:
             
             return self.deleteCardUseCase.delete(cardId: self.selectedCardId)
@@ -126,15 +149,19 @@ class DetailViewReactor: Reactor {
             
             guard let memberId = self.currentState.detailCard?.memberId else { return .empty() }
             
-            return self.blockUserUseCase.updateBlocked(userId: memberId, isBlocked: isBlocked)
-                .flatMapLatest { isBlockedSuccess -> Observable<Mutation> in
-                    /// isBlocked == true 일 때, 차단 요청
-                    return isBlockedSuccess ? .just(.updateIsBlocked(isBlocked == false)) : .empty()
-                }
-                .catch(self.catchClosure)
+            return .concat([
+                .just(.updateErrors(nil)),
+                self.blockUserUseCase.updateBlocked(userId: memberId, isBlocked: isBlocked)
+                    .flatMapLatest { isBlockedSuccess -> Observable<Mutation> in
+                        /// isBlocked == true 일 때, 차단 요청
+                        return isBlockedSuccess ? .just(.updateIsBlocked(isBlocked == false)) : .empty()
+                    }
+                    .catch(self.catchClosure)
+            ])
         case let .updateLike(isLike):
             
             return .concat([
+                .just(.updateErrors(nil)),
                 .just(.updateIsLiked(false)),
                 self.updateCardLikeUseCase.updateLike(cardId: self.selectedCardId, isLike: isLike)
                     .filter { $0 }
@@ -147,18 +174,26 @@ class DetailViewReactor: Reactor {
         case let .updateReport(isReported):
             
             return .just(.updateReported(isReported))
-        case .willPushToWrite:
+        case let .willPushToDetail(prevCardId):
+            
+            return self.fetchCardDetailUseCase.isDeleted(cardId: prevCardId)
+                .map { (prevCardId, $0) }
+                .map(Mutation.willPushToDetail)
+        case let .willPushToWrite(enterTo):
             
             return self.fetchCardDetailUseCase.isDeleted(cardId: self.selectedCardId)
-            .flatMapLatest { isDeleted -> Observable<Mutation> in
-                return .concat([
-                    .just(.willPushToWrite(isDeleted)),
-                    .just(.updateIsDeleted(isDeleted))
-                ])
-            }
-        case .resetPushState:
+                .flatMapLatest { isDeleted -> Observable<Mutation> in
+                    return .concat([
+                        .just(.willPushToWrite((!isDeleted, enterTo))),
+                        .just(.updateIsDeleted(isDeleted))
+                    ])
+                }
+        case .cleanup:
             
-            return .just(.willPushToWrite(nil))
+            return .concat([
+                .just(.willPushToDetail(nil)),
+                .just(.willPushToWrite(nil))
+            ])
         }
     }
     
@@ -172,7 +207,7 @@ class DetailViewReactor: Reactor {
         case let .commentCards(commentCards):
             newState.commentCards = commentCards
         case let .moreComment(commentCards):
-            newState.commentCards += commentCards
+            newState.commentCards? += commentCards
         case let .updateIsRefreshing(isRefreshing):
             newState.isRefreshing = isRefreshing
         case let .updateIsLiked(isLiked):
@@ -185,8 +220,10 @@ class DetailViewReactor: Reactor {
             newState.isBlocked = isBlocked
         case let .updateErrors(hasErrors):
             newState.hasErrors = hasErrors
-        case let .willPushToWrite(willPushEnabled):
-            newState.willPushEnabled = willPushEnabled
+        case let .willPushToDetail(willPushToDetailEnabled):
+            newState.willPushToDetailEnabled = willPushToDetailEnabled
+        case let .willPushToWrite(willPushToWriteEnabled):
+            newState.willPushToWriteEnabled = willPushToWriteEnabled
         }
         return newState
     }
@@ -238,8 +275,8 @@ class DetailViewReactor: Reactor {
 
 extension DetailViewReactor {
     
-    func reactorForPush(_ selectedId: String) -> DetailViewReactor {
-        DetailViewReactor(dependencies: self.dependencies, with: selectedId)
+    func reactorForPush(_ selectedId: String, hasDeleted: Bool = false) -> DetailViewReactor {
+        DetailViewReactor(dependencies: self.dependencies, with: selectedId, hasDeleted: hasDeleted)
     }
     
     func reactorForReport() -> ReportViewReactor {
@@ -283,11 +320,28 @@ extension DetailViewReactor {
             if case 410 = nsError.code {
                 return .concat([
                     .just(.updateIsRefreshing(false)),
+                    .just(.updateErrors(410)),
                     .just(.updateIsDeleted(true))
                 ])
             }
             
             return .just(.updateIsRefreshing(false))
         }
+    }
+    
+    func canPushToDetail(
+        prev prevCardIsDeleted: (prevCardId: String, isDeleted: Bool)?,
+        curr currCardIsDeleted: (prevCardId: String, isDeleted: Bool)?
+    ) -> Bool {
+        return prevCardIsDeleted?.prevCardId == currCardIsDeleted?.prevCardId &&
+            prevCardIsDeleted?.isDeleted == currCardIsDeleted?.isDeleted
+    }
+    
+    func canPushToWrite(
+        prev prevCardIsDelete: (isDeleted: Bool, enterTo: GAEvent.DetailView.EnterTo)?,
+        curr currCardIsDelete: (isDeleted: Bool, enterTo: GAEvent.DetailView.EnterTo)?
+    ) -> Bool {
+        return prevCardIsDelete?.isDeleted == currCardIsDelete?.isDeleted &&
+            prevCardIsDelete?.enterTo == currCardIsDelete?.enterTo
     }
 }

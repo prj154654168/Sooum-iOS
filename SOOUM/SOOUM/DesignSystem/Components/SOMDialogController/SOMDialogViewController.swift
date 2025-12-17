@@ -10,8 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-
-class SOMDialogViewController: UIViewController {
+final class SOMDialogViewController: UIViewController {
     
     
     // MARK: Views

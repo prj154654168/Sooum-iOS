@@ -121,7 +121,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
         
         // 스크롤 시 키보드 내림
         self.searchTermsView.didScrolled.asObservable()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in object.view.endEditing(true) }
             .disposed(by: self.disposeBag)
         
@@ -138,7 +138,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
         // State
         searchTerms
             .filter { $0 == nil }
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.searchTermsView.isHidden = true
             }
@@ -146,7 +146,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
         
         searchTerms
             .filterNil()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, searchTerms in
                 object.searchTermsView.setModels(searchTerms)
                 object.searchTermsView.isHidden = false
@@ -158,7 +158,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
             self.searchTextFieldView.textFieldDidReturn,
             resultSelector: { ($0, $1) }
         )
-        .observe(on: MainScheduler.asyncInstance)
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, searchTermInfos in
             let (searchTerms, returnKeyDidTap) = searchTermInfos
             

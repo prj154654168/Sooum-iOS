@@ -270,7 +270,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        let version = reactor.state.map(\.version).filterNil().distinctUntilChanged().share()
+        let version = reactor.state.map(\.version).distinctUntilChanged().filterNil().share()
         self.appVersionCellView.rx.didSelect
             .throttle(.seconds(1), scheduler: MainScheduler.instance)
             .withLatestFrom(version)
@@ -308,7 +308,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         // State
         reactor.state.map(\.banEndAt)
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, banEndAt in
                 object.postingBlockedBackgroundView.isHidden = (banEndAt == nil)
                 object.postingBlockedMessageLabel.text = Text.postingBlockedLeadingGuideMessage +
@@ -319,7 +319,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.rejoinableDate)
             .filterNil()
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, rejoinableDate in
                 object.showResignDialog(rejoinableDate: rejoinableDate)
             }
@@ -340,7 +340,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.shouldHideTransfer)
             .distinctUntilChanged()
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, shouldHide in
                 object.issueUserTransferCodeCellView.isHidden = shouldHide
                 object.enterUserTransferCodeCellView.isHidden = shouldHide
@@ -362,8 +362,8 @@ extension SettingsViewController {
             title: Text.cancelActionButtonTitle,
             style: .gray,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
-                    reactor.action.onNext(.resetState)
+                SOMDialogViewController.dismiss {
+                    reactor.action.onNext(.cleanup)
                 }
             }
         )
@@ -372,14 +372,14 @@ extension SettingsViewController {
             title: Text.resignTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) {
+                SOMDialogViewController.dismiss {
                     let resignViewController = ResignViewController()
                     resignViewController.reactor = reactor.reactorForResign()
                     self.navigationPush(
                         resignViewController,
                         animated: true
                     ) { _ in
-                        reactor.action.onNext(.resetState)
+                        reactor.action.onNext(.cleanup)
                     }
                 }
             }

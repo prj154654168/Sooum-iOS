@@ -159,6 +159,7 @@ class WriteCardSelectImageView: UIView {
     // MARK: Variables
     
     private(set) var models: DefaultImages = .defaultValue
+    private(set) var cardType: EntranceCardType = .feed
     
     var selectedImageInfo = BehaviorRelay<(type: BaseCardInfo.ImageType, info: ImageUrlInfo)?>(value: nil)
     var selectedUseUserImageCell = PublishRelay<Void>()
@@ -206,9 +207,10 @@ class WriteCardSelectImageView: UIView {
     
     // MARK: Public func
     
-    func setModels(_ models: DefaultImages) {
+    func setModels(_ models: DefaultImages, cardType: EntranceCardType) {
         
         self.models = models
+        self.cardType = cardType
         
         guard let initialImage = models.color.first else { return }
         
@@ -355,8 +357,32 @@ extension WriteCardSelectImageView: SOMSwipableTabBarDelegate {
                 let .sensitivity(imageInfo),
                 let .food(imageInfo),
                 let .abstract(imageInfo),
-                let .memo(imageInfo),
-                let .event(imageInfo):
+                let .memo(imageInfo):
+                
+                if self.cardType == .feed {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.WriteCardView.feedBackgroundCategory_tab_click
+                    )
+                } else {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.WriteCardView.commentBackgroundCategory_tab_click
+                    )
+                }
+                
+                return imageInfo == self.selectedImageInfo.value?.info
+            case let .event(imageInfo):
+                
+                if self.cardType == .feed {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.WriteCardView.feedBackgroundCategory_tab_click
+                    )
+                } else {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.WriteCardView.commentBackgroundCategory_tab_click
+                    )
+                    GAHelper.shared.logEvent(event: GAEvent.WriteCardView.createFeedCardEventCategory_btn_click)
+                }
+                
                 return imageInfo == self.selectedImageInfo.value?.info
             case .user:
                 return false

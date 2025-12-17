@@ -61,25 +61,20 @@ class DetailViewCell: UICollectionViewCell {
         $0.clipsToBounds = true
     }
     /// 상세보기, 본문
-    private let contentScrollView = UITextView().then {
-        $0.textColor = .som.v2.white
-        $0.typography = .som.v2.body1
-        
-        $0.backgroundColor = .clear
-        $0.tintColor = .clear
-        
-        $0.textAlignment = .center
-        $0.textContainerInset = .init(top: 20, left: 24, bottom: 20, right: 24)
-        $0.textContainer.lineFragmentPadding = 0
-        
-        $0.indicatorStyle = .white
-        $0.scrollIndicatorInsets = .init(top: 20, left: 24, bottom: 20, right: 24)
-        
+    private let contentScrollView = UIScrollView().then {
         $0.isScrollEnabled = false
         $0.showsVerticalScrollIndicator = true
         $0.showsHorizontalScrollIndicator = false
-        
-        $0.isEditable = false
+        $0.indicatorStyle = .white
+        $0.scrollIndicatorInsets = .zero
+    }
+    private let contentLabelView = UILabel().then {
+        $0.textColor = .som.v2.white
+        $0.typography = .som.v2.body1
+        $0.textAlignment = .center
+        $0.numberOfLines = 0
+        $0.lineBreakMode = .byWordWrapping
+        $0.lineBreakStrategy = .hangulWordPriority
     }
     
     /// 상세보기, 카드 삭제 됐을 때 배경
@@ -186,7 +181,15 @@ class DetailViewCell: UICollectionViewCell {
         
         self.contentBackgroundDimView.addSubview(self.contentScrollView)
         self.contentScrollView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(20)
+            $0.bottom.equalToSuperview().offset(-20)
+            $0.leading.equalToSuperview().offset(24)
+            $0.trailing.equalToSuperview().offset(-24)
+        }
+        self.contentScrollView.addSubview(self.contentLabelView)
+        self.contentLabelView.snp.makeConstraints {
             $0.edges.equalToSuperview()
+            $0.width.equalTo(self.contentScrollView.snp.width)
         }
         
         self.contentView.addSubview(self.tags)
@@ -231,13 +234,11 @@ class DetailViewCell: UICollectionViewCell {
         )
         
         let size: CGSize = .init(width: self.contentScrollView.bounds.width, height: .greatestFiniteMagnitude)
-        let textSize: CGSize = self.contentScrollView.sizeThatFits(size)
-        var boundingHeight = attributedText.boundingRect(
-            with: textSize,
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
+        let boundingHeight = attributedText.boundingRect(
+            with: size,
+            options: [.usesLineFragmentOrigin],
             context: nil
         ).height
-        boundingHeight += 1.0
         
         let lines: CGFloat = boundingHeight / typography.lineHeight
         let isScrollEnabled: Bool = lines > 8
@@ -284,8 +285,8 @@ class DetailViewCell: UICollectionViewCell {
         case .yoonwoo:      typography = .som.v2.yoonwooCard
         case .kkookkkook:   typography = .som.v2.kkookkkookCard
         }
-        self.contentScrollView.text = model.cardContent
-        self.contentScrollView.typography = typography
+        self.contentLabelView.text = model.cardContent
+        self.contentLabelView.typography = typography
         self.updateTextContainerInsetAndHeight(model.cardContent, typography: typography)
         
         let tagModels: [WrittenTagModel] = model.tags.map { tag in

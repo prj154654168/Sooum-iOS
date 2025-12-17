@@ -23,6 +23,9 @@ class NotificationViewController: BaseNavigationViewController, View {
         static let noticeTitle: String = "공지사항"
         
         static let headerTextForRead: String = "지난 알림"
+        
+        static let pungedCardDialogTitle: String = "삭제된 카드예요"
+        static let confirmActionTitle: String = "확인"
     }
     
     enum Section: Int, CaseIterable {
@@ -180,7 +183,7 @@ class NotificationViewController: BaseNavigationViewController, View {
         reactor.state.map(\.displayType)
             .filter { $0 == .notice }
             .take(1)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.instance)
             .subscribe(with: self.headerView) { headerView, _ in
                 headerView.didSelectTabBarItem(1, onlyUpdateApperance: true)
             }
@@ -194,7 +197,13 @@ class NotificationViewController: BaseNavigationViewController, View {
                 notices: $0.notices
             )
         }
-        .observe(on: MainScheduler.asyncInstance)
+        /// 읽지 않은 알림이 없을 때, 홈에 알림
+        .do(onNext: {
+            if $0.unreads?.isEmpty == true {
+                NotificationCenter.default.post(name: .updatedHasUnreadNotification, object: nil, userInfo: nil)
+            }
+        })
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, displayStats in
             
             var snapshot = Snapshot()
@@ -233,15 +242,41 @@ class NotificationViewController: BaseNavigationViewController, View {
             object.tableView.isHidden = false
         }
         .disposed(by: self.disposeBag)
-    }
-    
-    
-    // MARK: Objc func
-    
-    @objc
-    private func reloadData(_ notification: Notification) {
         
-        self.reactor?.action.onNext(.landing)
+        let cardIsDeleted = reactor.state.map(\.cardIsDeleted)
+            .distinctUntilChanged(reactor.canPushToDetail)
+            .filterNil()
+        cardIsDeleted
+            .filter { $0.isDeleted }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                object.showPungedCardDialog(reactor)
+            }
+            .disposed(by: self.disposeBag)
+        cardIsDeleted
+            .filter { $0.isDeleted == false }
+            .map { ($0.selectedId, $0.selectedNotiId) }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, combined in
+                
+                let (selectedId, selectedNotiId) = combined
+                if let selectedNotiId = selectedNotiId {
+                    reactor.action.onNext(.requestRead(selectedNotiId))
+                }
+                
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
+                object.navigationPush(detailViewController, animated: true) { _ in
+                    reactor.action.onNext(.cleanup)
+                    
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                            previous_path: .notification
+                        )
+                    )
+                }
+            }
+            .disposed(by: self.disposeBag)
     }
 }
 
@@ -284,6 +319,31 @@ private extension NotificationViewController {
     }
 }
 
+private extension NotificationViewController {
+    
+    func showPungedCardDialog(_ reactor: NotificationViewReactor) {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                SOMDialogViewController.dismiss {
+                    reactor.action.onNext(.cleanup)
+                    
+                    reactor.action.onNext(.updateNotifications)
+                }
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.pungedCardDialogTitle,
+            messageView: nil,
+            textAlignment: .left,
+            actions: [confirmAction]
+        )
+    }
+}
+
 
 // MARK: UITableViewDelegate
 
@@ -307,28 +367,20 @@ extension NotificationViewController: UITableViewDelegate {
             switch notification {
             case let .default(notification):
                 
-                reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
-                
-                switch notification.notificationInfo.notificationType {
-                case .feedLike, .commentLike, .commentWrite:
-                    
-                    let detailViewController = DetailViewController()
-                    detailViewController.reactor = reactor.reactorForDetail(
-                        with: notification.targetCardId
+                reactor.action.onNext(
+                    .hasDetailCard(
+                        selectedId: notification.targetCardId,
+                        selectedNotiId: notification.notificationInfo.notificationId
                     )
-                    self.navigationPush(detailViewController, animated: true)
-                default:
-                    return
-                }
+                )
             case let .tag(notification):
                 
-                reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
-                
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(
-                    with: notification.targetCardId
+                reactor.action.onNext(
+                    .hasDetailCard(
+                        selectedId: notification.targetCardId,
+                        selectedNotiId: notification.notificationInfo.notificationId
+                    )
                 )
-                self.navigationPush(detailViewController, animated: true)
             case let .follow(notification):
                 
                 reactor.action.onNext(.requestRead(notification.notificationInfo.notificationId))
@@ -344,18 +396,20 @@ extension NotificationViewController: UITableViewDelegate {
             switch notification {
             case let .default(notification):
                 
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(
-                    with: notification.targetCardId
+                reactor.action.onNext(
+                    .hasDetailCard(
+                        selectedId: notification.targetCardId,
+                        selectedNotiId: nil
+                    )
                 )
-                self.navigationPush(detailViewController, animated: true)
             case let .tag(notification):
                 
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(
-                    with: notification.targetCardId
+                reactor.action.onNext(
+                    .hasDetailCard(
+                        selectedId: notification.targetCardId,
+                        selectedNotiId: nil
+                    )
                 )
-                self.navigationPush(detailViewController, animated: true)
             case let .follow(notification):
                 
                 let profileViewController = ProfileViewController()

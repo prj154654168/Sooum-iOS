@@ -89,9 +89,9 @@ extension Date {
         let seconds: Int = .init(time % 60)
         
         if hours <= 0 && minutes <= 0 && seconds <= 0 {
-            return "00 : 00 : 00"
+            return "00:00:00"
         }
-        return String(format: "%02d : %02d : %02d", hours, minutes, seconds)
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
     }
     
     func infoReadableTimeTakenFromThisForPungToHoursAndMinutes(to: Date) -> String {

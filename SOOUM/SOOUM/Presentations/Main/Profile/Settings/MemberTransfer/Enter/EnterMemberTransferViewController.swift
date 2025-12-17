@@ -212,6 +212,8 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 guard let window = object.view.window else { return }
                 
+                GAHelper.shared.logEvent(event: GAEvent.TransferView.accountTransferSuccess)
+                
                 object.showSuccessDialog {
                     
                     let launchScreenViewController = LaunchScreenViewController()
@@ -240,7 +242,7 @@ extension EnterMemberTransferViewController {
             title: Text.confirmButtonTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true)
+                SOMDialogViewController.dismiss()
             }
         )
         
@@ -258,7 +260,7 @@ extension EnterMemberTransferViewController {
             title: Text.confirmButtonTitle,
             style: .primary,
             action: {
-                UIApplication.topViewController?.dismiss(animated: true) { completion() }
+                SOMDialogViewController.dismiss { completion() }
             }
         )
         

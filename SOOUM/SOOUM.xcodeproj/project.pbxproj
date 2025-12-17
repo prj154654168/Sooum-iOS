@@ -33,10 +33,8 @@
 		2A980B9E2D803E9D007DFA45 /* FirebaseLoggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980B9C2D803E9D007DFA45 /* FirebaseLoggable.swift */; };
 		2A980BA02D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */; };
 		2A980BA12D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */; };
-		2A980BA42D803EEA007DFA45 /* SOMEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA32D803EE2007DFA45 /* SOMEvent.swift */; };
-		2A980BA52D803EEA007DFA45 /* SOMEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA32D803EE2007DFA45 /* SOMEvent.swift */; };
-		2A980BA82D803F04007DFA45 /* GAManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA72D803F04007DFA45 /* GAManager.swift */; };
-		2A980BA92D803F04007DFA45 /* GAManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA72D803F04007DFA45 /* GAManager.swift */; };
+		2A980BA82D803F04007DFA45 /* GAHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA72D803F04007DFA45 /* GAHelper.swift */; };
+		2A980BA92D803F04007DFA45 /* GAHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A980BA72D803F04007DFA45 /* GAHelper.swift */; };
 		2AE6B1492CBC15BF00FA5C3C /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1482CBC15BF00FA5C3C /* ReportViewController.swift */; };
 		2AE6B14A2CBC15BF00FA5C3C /* ReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B1482CBC15BF00FA5C3C /* ReportViewController.swift */; };
 		2AE6B14C2CBC160C00FA5C3C /* ReportViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AE6B14B2CBC160C00FA5C3C /* ReportViewReactor.swift */; };
@@ -296,6 +294,8 @@
 		3879B4B62EC5AD5E0070846B /* RejoinableDateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3879B4B42EC5AD580070846B /* RejoinableDateInfo.swift */; };
 		3879B4B82EC5ADC50070846B /* RejoinableDateInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3879B4B72EC5ADBF0070846B /* RejoinableDateInfoResponse.swift */; };
 		3879B4B92EC5ADC50070846B /* RejoinableDateInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3879B4B72EC5ADBF0070846B /* RejoinableDateInfoResponse.swift */; };
+		387B73892EED71510055E384 /* GAEvent+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387B73882EED71470055E384 /* GAEvent+SOOUM.swift */; };
+		387B738A2EED71510055E384 /* GAEvent+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387B73882EED71470055E384 /* GAEvent+SOOUM.swift */; };
 		387FA11D2E88DDC1004DF7CE /* HomeViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FA11C2E88DDBD004DF7CE /* HomeViewReactor.swift */; };
 		387FA11E2E88DDC1004DF7CE /* HomeViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FA11C2E88DDBD004DF7CE /* HomeViewReactor.swift */; };
 		387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387FBAEF2C8702C100A5E139 /* AppDelegate.swift */; };
@@ -863,8 +863,7 @@
 		2A649ECE2CAE8970002D8284 /* SOMDialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogViewController.swift; sourceTree = "<group>"; };
 		2A980B9C2D803E9D007DFA45 /* FirebaseLoggable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseLoggable.swift; sourceTree = "<group>"; };
 		2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEventProtocol.swift; sourceTree = "<group>"; };
-		2A980BA32D803EE2007DFA45 /* SOMEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMEvent.swift; sourceTree = "<group>"; };
-		2A980BA72D803F04007DFA45 /* GAManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GAManager.swift; sourceTree = "<group>"; };
+		2A980BA72D803F04007DFA45 /* GAHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GAHelper.swift; sourceTree = "<group>"; };
 		2AE6B1482CBC15BF00FA5C3C /* ReportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewController.swift; sourceTree = "<group>"; };
 		2AE6B14B2CBC160C00FA5C3C /* ReportViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportViewReactor.swift; sourceTree = "<group>"; };
 		2AFD054B2CFF76CB007C84AD /* TagRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRequest.swift; sourceTree = "<group>"; };
@@ -1000,6 +999,7 @@
 		3878FE0C2D0365C800D8955C /* SOMNavigationBar+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMNavigationBar+Rx.swift"; sourceTree = "<group>"; };
 		3879B4B42EC5AD580070846B /* RejoinableDateInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RejoinableDateInfo.swift; sourceTree = "<group>"; };
 		3879B4B72EC5ADBF0070846B /* RejoinableDateInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RejoinableDateInfoResponse.swift; sourceTree = "<group>"; };
+		387B73882EED71470055E384 /* GAEvent+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GAEvent+SOOUM.swift"; sourceTree = "<group>"; };
 		387FA11C2E88DDBD004DF7CE /* HomeViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewReactor.swift; sourceTree = "<group>"; };
 		387FBAEC2C8702C100A5E139 /* SOOUM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SOOUM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		387FBAEF2C8702C100A5E139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -1384,15 +1384,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		2A980B9B2D803E8B007DFA45 /* GAManager */ = {
+		2A980B9B2D803E8B007DFA45 /* GAHelper */ = {
 			isa = PBXGroup;
 			children = (
-				2A980BA72D803F04007DFA45 /* GAManager.swift */,
-				2A980BA32D803EE2007DFA45 /* SOMEvent.swift */,
+				2A980BA72D803F04007DFA45 /* GAHelper.swift */,
 				2A980B9F2D803EB1007DFA45 /* AnalyticsEventProtocol.swift */,
 				2A980B9C2D803E9D007DFA45 /* FirebaseLoggable.swift */,
 			);
-			path = GAManager;
+			path = GAHelper;
 			sourceTree = "<group>";
 		};
 		2AE6B1472CBC157200FA5C3C /* Report */ = {
@@ -1615,6 +1614,7 @@
 			isa = PBXGroup;
 			children = (
 				385620F42CA19E8600E0AB5A /* Alamofire */,
+				2A980B9B2D803E8B007DFA45 /* GAHelper */,
 				388D8ADD2E73E60B0044BA79 /* SwiftEntryKit */,
 				3836ACB22C8F043500A3C566 /* Typography */,
 				38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */,
@@ -1717,7 +1717,6 @@
 		385620EC2CA19C0D00E0AB5A /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				2A980B9B2D803E8B007DFA45 /* GAManager */,
 				3893B6D02D36739500F2004C /* CompositeManager.swift */,
 				38B543ED2D46506300DDF2C5 /* ManagerType.swift */,
 				3893B6CD2D36728000F2004C /* ManagerProvider.swift */,
@@ -2068,6 +2067,7 @@
 				388DA1032C8F545E00A9DD56 /* Typography+SOOUM.swift */,
 				388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */,
 				38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */,
+				387B73882EED71470055E384 /* GAEvent+SOOUM.swift */,
 			);
 			path = Foundations;
 			sourceTree = "<group>";
@@ -3170,7 +3170,6 @@
 				38A721962E73E7140071E1D8 /* View+SwiftEntryKit.swift in Sources */,
 				380F422B2E884E9C009AC59E /* HomeCardInfoResponse.swift in Sources */,
 				388698632D1986B100008600 /* NotificationRequest.swift in Sources */,
-				2A980BA52D803EEA007DFA45 /* SOMEvent.swift in Sources */,
 				38E928DA2EB7727400B3F00B /* SOMBottomToastView.swift in Sources */,
 				3803B9232ECF52CE009D14B9 /* TagCollectCardViewCell.swift in Sources */,
 				38B65E7C2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */,
@@ -3296,7 +3295,7 @@
 				381E7C1A2ECCB1A700E80249 /* TagViewController.swift in Sources */,
 				38FEBE5B2E8652DE002916A8 /* CompositeNotificationInfoResponse.swift in Sources */,
 				38D8F55E2EC4F38700DED428 /* SimpleReachability.swift in Sources */,
-				2A980BA92D803F04007DFA45 /* GAManager.swift in Sources */,
+				2A980BA92D803F04007DFA45 /* GAHelper.swift in Sources */,
 				38B21C082ECEF7D400990F49 /* PopularTagViewCell.swift in Sources */,
 				3880EF782EA0CF2F00D88608 /* RelatedTagsViewLayout.swift in Sources */,
 				381B83F32EBCEC2E00C84015 /* ProfileUserViewCell.swift in Sources */,
@@ -3454,6 +3453,7 @@
 				389E59E12EDEEFA500D0946D /* UpdateTagFavoriteUseCase.swift in Sources */,
 				383EC6152E7A50EB00EC2D1E /* AuthLocalDataSourceImpl.swift in Sources */,
 				38D8F5592EC4D89D00DED428 /* TagNofificationInfoResponse.swift in Sources */,
+				387B738A2EED71510055E384 /* GAEvent+SOOUM.swift in Sources */,
 				38C9AF302E96A49F00B401C0 /* WriteCardTag.swift in Sources */,
 				38AE85312EDFFA9500029E4C /* UpdateCardLikeUseCaseImpl.swift in Sources */,
 				389E59D52EDEEE6B00D0946D /* UpdateUserInfoUseCase.swift in Sources */,
@@ -3596,7 +3596,6 @@
 				380F422A2E884E9C009AC59E /* HomeCardInfoResponse.swift in Sources */,
 				38FDC2B62C9E746B00C094C2 /* BaseViewController.swift in Sources */,
 				3803B9242ECF52CE009D14B9 /* TagCollectCardViewCell.swift in Sources */,
-				2A980BA42D803EEA007DFA45 /* SOMEvent.swift in Sources */,
 				38B65E7D2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */,
 				38E928D92EB7727400B3F00B /* SOMBottomToastView.swift in Sources */,
 				389E59A92EDEE6F600D0946D /* ValidateNicknameUseCase.swift in Sources */,
@@ -3722,7 +3721,7 @@
 				38C2A7DE2EC0704700B941A2 /* SettingsRemoteDataSource.swift in Sources */,
 				38B21C092ECEF7D400990F49 /* PopularTagViewCell.swift in Sources */,
 				38FEBE5C2E8652DE002916A8 /* CompositeNotificationInfoResponse.swift in Sources */,
-				2A980BA82D803F04007DFA45 /* GAManager.swift in Sources */,
+				2A980BA82D803F04007DFA45 /* GAHelper.swift in Sources */,
 				38E928DD2EB7921200B3F00B /* UIRefreshControl.swift in Sources */,
 				38FEBE652E8662A3002916A8 /* NoticeInfoResponse.swift in Sources */,
 				381B83DC2EBC707A00C84015 /* ProfileInfo.swift in Sources */,
@@ -3877,6 +3876,7 @@
 				389E59E22EDEEFA500D0946D /* UpdateTagFavoriteUseCase.swift in Sources */,
 				38B543EB2D461B1A00DDF2C5 /* LocationManagerConfigruation.swift in Sources */,
 				38026E3F2CA2B45A0045E1CE /* LocationManager.swift in Sources */,
+				387B73892EED71510055E384 /* GAEvent+SOOUM.swift in Sources */,
 				383EC6162E7A50EB00EC2D1E /* AuthLocalDataSourceImpl.swift in Sources */,
 				38AE85302EDFFA9500029E4C /* UpdateCardLikeUseCaseImpl.swift in Sources */,
 				389E59D62EDEEE6B00D0946D /* UpdateUserInfoUseCase.swift in Sources */,
@@ -3942,7 +3942,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1022030;
+				CURRENT_PROJECT_VERSION = 1023000;
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
@@ -3965,13 +3965,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.22.3;
+				MARKETING_VERSION = 1.23.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D DEVELOP";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
-				SOOUM_CLARITY_ID = qrggvyniav;
+				SOOUM_CLARITY_ID = ukvzck1lyo;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
@@ -3994,7 +3994,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1022030;
+				CURRENT_PROJECT_VERSION = 1023000;
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
@@ -4017,13 +4017,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.22.3;
+				MARKETING_VERSION = 1.23.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D DEVELOP";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
-				SOOUM_CLARITY_ID = qrggvyniav;
+				SOOUM_CLARITY_ID = ukvzck1lyo;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
@@ -4260,7 +4260,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_APP_ID = 6740403078;
-				SOOUM_CLARITY_ID = qrghkiok4a;
+				SOOUM_CLARITY_ID = ukvz4wjnqm;
 				SOOUM_DISPLAY_NAME = "숨";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;
@@ -4308,7 +4308,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SOOUM_APP_ID = 6740403078;
-				SOOUM_CLARITY_ID = qrghkiok4a;
+				SOOUM_CLARITY_ID = ukvz4wjnqm;
 				SOOUM_DISPLAY_NAME = "숨";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;

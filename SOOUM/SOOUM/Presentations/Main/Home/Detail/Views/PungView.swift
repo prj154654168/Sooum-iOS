@@ -74,12 +74,12 @@ class PungView: UIView {
             .map { object, _ in
                 guard let pungTime = pungTime else {
                     object.serialTimer?.dispose()
-                    return "00 : 00 : 00"
+                    return "00:00:00"
                 }
                 
                 let currentDate = Date()
                 let remainingTime = currentDate.infoReadableTimeTakenFromThisForPung(to: pungTime)
-                if remainingTime == "00 : 00 : 00" {
+                if remainingTime == "00:00:00" {
                     object.serialTimer?.dispose()
                     object.isPunged.accept(())
                 }
@@ -87,5 +87,14 @@ class PungView: UIView {
                 return remainingTime
             }
             .bind(to: self.pungTimeLabel.rx.text)
+    }
+    
+    func isDeleted() {
+        
+        self.serialTimer?.dispose()
+        self.serialTimer = nil
+        
+        self.pungTimeLabel.removeFromSuperview()
+        self.removeFromSuperview()
     }
 }

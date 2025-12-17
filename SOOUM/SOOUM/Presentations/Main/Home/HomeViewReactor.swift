@@ -31,14 +31,16 @@ class HomeViewReactor: Reactor {
         case moreFind(String)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
-        case detailCard(String)
-        case resetPushState
+        case hasDetailCard(String, Bool)
+        case updateCards(latests: [BaseCardInfo], populars: [BaseCardInfo], distances: [BaseCardInfo])
+        case updateHasUnReadNotifications(Bool)
+        case cleanup
     }
     
     enum Mutation {
         case updateLocationPermission(Bool)
-        case cards([BaseCardInfo])
-        case more([BaseCardInfo])
+        case cards(latests: [BaseCardInfo], populars: [BaseCardInfo], distances: [BaseCardInfo])
+        case more(latests: [BaseCardInfo], distances: [BaseCardInfo])
         case updateHasUnreadNotifications(Bool)
         case notices([NoticeInfo])
         case cardIsDeleted((String, Bool)?)
@@ -128,32 +130,27 @@ class HomeViewReactor: Reactor {
             var emitObservable: Observable<Mutation> {
                 switch displayType {
                 case .latest:
-                    if let latestCards = self.currentState.latestCards {
-                        return .just(.cards(latestCards))
-                    } else {
+                    if self.currentState.latestCards?.isEmpty == true {
                         return self.refresh(.latest, distanceFilter)
-                            .catch(self.catchClosureForCards)
                     }
+                    return .empty()
                 case .popular:
-                    if let popularCards = self.currentState.popularCards {
-                        return .just(.cards(popularCards))
-                    } else {
+                    if self.currentState.popularCards?.isEmpty == true {
                         return self.refresh(.popular, distanceFilter)
-                            .catch(self.catchClosureForCards)
                     }
+                    return .empty()
                 case .distance:
-                    if let distanceCards = self.currentState.distanceCards {
-                        return .just(.cards(distanceCards))
-                    } else {
+                    if self.currentState.distanceCards?.isEmpty == true {
                         return self.refresh(.distance, distanceFilter)
-                            .catch(self.catchClosureForCards)
                     }
+                    return .empty()
                 }
             }
             
             return .concat([
-                .just(.updateDisplayType(displayType)),
                 emitObservable
+                    .catch(self.catchClosureForCards),
+                .just(.updateDisplayType(displayType))
             ])
         case let .updateDistanceFilter(distanceFilter):
             
@@ -163,15 +160,28 @@ class HomeViewReactor: Reactor {
                 self.refresh(displayType, distanceFilter)
                     .catch(self.catchClosureForCards)
             ])
-        case let .detailCard(selectedId):
+        case let .hasDetailCard(selectedId, isEventCard):
             
             return .concat([
                 .just(.cardIsDeleted(nil)),
                 self.fetchCardDetailUseCase.isDeleted(cardId: selectedId)
-                .map { (selectedId, $0) }
-                .map(Mutation.cardIsDeleted)
+                    .do(onNext: {
+                        if isEventCard, $0 == false {
+                            GAHelper.shared.logEvent(
+                                event: GAEvent.HomeView.feedToCardDetailView_cardWithEventImg_click
+                            )
+                        }
+                    })
+                    .map { (selectedId, $0) }
+                    .map(Mutation.cardIsDeleted)
             ])
-        case .resetPushState:
+        case let .updateCards(latest, populars, distances):
+            
+            return .just(.cards(latests: latest, populars: populars, distances: distances))
+        case let .updateHasUnReadNotifications(hasUnReads):
+            
+            return .just(.updateHasUnreadNotifications(hasUnReads))
+        case .cleanup:
             
             return .just(.cardIsDeleted(nil))
         }
@@ -182,18 +192,13 @@ class HomeViewReactor: Reactor {
         switch mutation {
         case let .updateLocationPermission(hasPermission):
             newState.hasPermission = hasPermission
-        case let .cards(cards):
-            switch newState.displayType {
-            case .latest: newState.latestCards = cards
-            case .popular: newState.popularCards = cards
-            case .distance: newState.distanceCards = cards
-            }
-        case let .more(cards):
-            switch newState.displayType {
-            case .latest: newState.latestCards? += cards
-            case .distance: newState.distanceCards? += cards
-            default: break
-            }
+        case let .cards(latest, popular, distance):
+            newState.latestCards = latest
+            newState.popularCards = popular
+            newState.distanceCards = distance
+        case let .more(latest, distance):
+            newState.latestCards? += latest
+            newState.distanceCards? += distance
         case let .notices(noticeInfos):
             newState.noticeInfos = noticeInfos
         case let .updateHasUnreadNotifications(hasUnreadNotifications):
@@ -226,10 +231,22 @@ private extension HomeViewReactor {
                 latitude: latitude,
                 longitude: longitude
             )
-            .map(Mutation.cards)
+            .map {
+                return .cards(
+                    latests: $0,
+                    populars: self.currentState.popularCards ?? [],
+                    distances: self.currentState.distanceCards ?? []
+                )
+            }
         case .popular:
             return self.fetchCardUseCase.popularCards(latitude: latitude, longitude: longitude)
-                .map(Mutation.cards)
+                .map {
+                    return .cards(
+                        latests: self.currentState.latestCards ?? [],
+                        populars: $0,
+                        distances: self.currentState.distanceCards ?? []
+                    )
+                }
         case .distance:
             let distanceFilter = distanceFilter.replacingOccurrences(of: "km", with: "")
             return self.fetchCardUseCase.distanceCards(
@@ -238,7 +255,13 @@ private extension HomeViewReactor {
                 longitude: longitude,
                 distanceFilter: distanceFilter
             )
-            .map(Mutation.cards)
+            .map {
+                return .cards(
+                    latests: self.currentState.latestCards ?? [],
+                    populars: self.currentState.popularCards ?? [],
+                    distances: $0
+                )
+            }
         }
     }
     
@@ -255,7 +278,12 @@ private extension HomeViewReactor {
                 latitude: latitude,
                 longitude: longitude
             )
-            .map(Mutation.more)
+            .map {
+                return .more(
+                    latests: $0,
+                    distances: self.currentState.distanceCards ?? []
+                )
+            }
         case .distance:
             let distanceFilter = self.currentState.distanceFilter.replacingOccurrences(of: "km", with: "")
             return self.fetchCardUseCase.distanceCards(
@@ -264,7 +292,12 @@ private extension HomeViewReactor {
                 longitude: longitude,
                 distanceFilter: distanceFilter
             )
-            .map(Mutation.more)
+            .map {
+                return .more(
+                    latests: self.currentState.latestCards ?? [],
+                    distances: $0
+                )
+            }
         default:
             return .empty()
         }
@@ -289,8 +322,33 @@ extension HomeViewReactor {
     
     var catchClosureForCards: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
-            .concat([
-                .just(.cards([])),
+            
+            let displayType = self.currentState.displayType
+            var emitObservable: Observable<Mutation> {
+                switch displayType {
+                case .latest:
+                    return .just(.cards(
+                        latests: [],
+                        populars: self.currentState.popularCards ?? [],
+                        distances: self.currentState.distanceCards ?? []
+                    ))
+                case .popular:
+                    return .just(.cards(
+                        latests: self.currentState.latestCards ?? [],
+                        populars: [],
+                        distances: self.currentState.distanceCards ?? []
+                    ))
+                case .distance:
+                    return .just(.cards(
+                        latests: self.currentState.latestCards ?? [],
+                        populars: self.currentState.popularCards ?? [],
+                        distances: []
+                    ))
+                }
+            }
+            
+            return .concat([
+                emitObservable,
                 .just(.updateIsRefreshing(false))
             ])
         }
@@ -298,8 +356,27 @@ extension HomeViewReactor {
     
     var catchClosureForMore: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
-            .concat([
-                .just(.more([])),
+            
+            let displayType = self.currentState.displayType
+            var emitObservable: Observable<Mutation> {
+                switch displayType {
+                case .latest:
+                    return .just(.more(
+                        latests: [],
+                        distances: self.currentState.distanceCards ?? []
+                    ))
+                case .distance:
+                    return .just(.more(
+                        latests: self.currentState.latestCards ?? [],
+                        distances: []
+                    ))
+                default:
+                    return .empty()
+                }
+            }
+            
+            return .concat([
+                emitObservable,
                 .just(.updateIsRefreshing(false))
             ])
         }
