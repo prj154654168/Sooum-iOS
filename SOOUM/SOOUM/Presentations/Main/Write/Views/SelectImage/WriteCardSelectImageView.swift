@@ -359,25 +359,29 @@ extension WriteCardSelectImageView: SOMSwipableTabBarDelegate {
                 let .abstract(imageInfo),
                 let .memo(imageInfo):
                 
-                self.cardType == .feed ?
+                if self.cardType == .feed {
                     GAHelper.shared.logEvent(
                         event: GAEvent.WriteCardView.feedBackgroundCategory_tab_click
-                    ) :
-                GAHelper.shared.logEvent(
-                    event: GAEvent.WriteCardView.commentBackgroundCategory_tab_click
-                )
+                    )
+                } else {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.WriteCardView.commentBackgroundCategory_tab_click
+                    )
+                }
                 
                 return imageInfo == self.selectedImageInfo.value?.info
             case let .event(imageInfo):
                 
-                self.cardType == .feed ?
+                if self.cardType == .feed {
                     GAHelper.shared.logEvent(
                         event: GAEvent.WriteCardView.feedBackgroundCategory_tab_click
-                    ) :
-                GAHelper.shared.logEvent(
-                    event: GAEvent.WriteCardView.commentBackgroundCategory_tab_click
-                )
-                GAHelper.shared.logEvent(event: GAEvent.WriteCardView.createFeedCardEventCategory_btn_click)
+                    )
+                } else {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.WriteCardView.commentBackgroundCategory_tab_click
+                    )
+                    GAHelper.shared.logEvent(event: GAEvent.WriteCardView.createFeedCardEventCategory_btn_click)
+                }
                 
                 return imageInfo == self.selectedImageInfo.value?.info
             case .user:
