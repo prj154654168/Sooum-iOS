@@ -35,7 +35,7 @@ disabled_rules:
   - inclusive_language
   # - inert_defer
   # - is_disjoint
-  # - large_tuple
+  - large_tuple
   # - leading_whitespace ⭕️
   # - legacy_cggeometry_functions ⭕️
   # - legacy_constant ⭕️
@@ -158,6 +158,7 @@ excluded:
   - SOOUM/Resources
   - SOOUM/Models
   - SOOUM-DevTests
+  - SOOUM/DesignSystem/Foundations
 
 # 👉🏻 Options
 # line_length: 100
