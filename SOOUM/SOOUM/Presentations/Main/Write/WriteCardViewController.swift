@@ -494,7 +494,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     imageType: imageInfo.type,
                     imageName: imageInfo.info.imgName,
                     isStory: options.contains(.story),
-                    tags: Array(Set(enteredTagTexts))
+                    tags: enteredTagTexts.reduce(into: []) { if !$0.contains($1) { $0.append($1) } }
                 )
             }
             .bind(to: reactor.action)
