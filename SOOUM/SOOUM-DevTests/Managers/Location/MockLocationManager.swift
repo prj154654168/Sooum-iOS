@@ -18,7 +18,7 @@ class MockLocationManager: CompositeManager<LocationManagerConfigruation>, Locat
         return Coordinate()
     }
     
-    var hasCoordinate: Bool { return true }
+    var hasPermission: Bool { return true }
     
     override init(provider: ManagerTypeDelegate, configure: LocationManagerConfigruation) {
         self.mockCoreLocation = MockCoreLocation()
