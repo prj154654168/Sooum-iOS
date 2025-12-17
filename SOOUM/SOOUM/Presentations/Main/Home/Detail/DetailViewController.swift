@@ -65,11 +65,6 @@ class DetailViewController: BaseNavigationViewController, View {
         $0.foregroundColor = .som.black
     }
     
-    private let rightDeleteButton = SOMButton().then {
-        $0.image = .init(.icon(.v2(.outlined(.delete_full))))
-        $0.foregroundColor = .som.black
-    }
-    
     private let pungView = PungView().then {
         $0.isHidden = true
     }
@@ -157,8 +152,9 @@ class DetailViewController: BaseNavigationViewController, View {
      override func setupNaviBar() {
          super.setupNaviBar()
          
-         let isDeleted = self.reactor?.currentState.isDeleted ?? false
-         self.navigationBar.setRightButtons([isDeleted ? self.rightDeleteButton : self.rightMoreButton])
+         if self.reactor?.currentState.isDeleted == false {
+             self.navigationBar.setRightButtons([self.rightMoreButton])
+         }
      }
      
     override func setupConstraints() {
@@ -277,13 +273,6 @@ class DetailViewController: BaseNavigationViewController, View {
                 var wrapper: SwiftEntryKitViewWrapper = bottomFloatView.sek
                 wrapper.entryName = Text.bottomFloatEntryName
                 wrapper.showBottomFloat(screenInteraction: .dismiss)
-            }
-            .disposed(by: self.disposeBag)
-        
-        // 카드 삭제 후 X 버튼 액션
-        self.rightDeleteButton.rx.throttleTap(.seconds(3))
-            .subscribe(with: self) { object, _ in
-                object.navigationPop(animated: false)
             }
             .disposed(by: self.disposeBag)
         
@@ -499,7 +488,7 @@ class DetailViewController: BaseNavigationViewController, View {
         .subscribe(with: self) { object, combined in
             
             object.navigationBar.title = Text.deletedNavigationTitle
-            object.navigationBar.setRightButtons([object.rightDeleteButton])
+            object.navigationBar.setRightButtons([])
             
             object.floatingButton.removeFromSuperview()
             
