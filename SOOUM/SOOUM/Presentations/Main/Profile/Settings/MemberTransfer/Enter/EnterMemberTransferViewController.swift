@@ -212,6 +212,8 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 guard let window = object.view.window else { return }
                 
+                GAHelper.shared.logEvent(event: GAEvent.TransferView.accountTransferSuccess)
+                
                 object.showSuccessDialog {
                     
                     let launchScreenViewController = LaunchScreenViewController()

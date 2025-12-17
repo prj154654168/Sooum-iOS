@@ -248,7 +248,6 @@ class MainTabBarController: SOMTabBarController, View {
                 }
             }
             .disposed(by: self.disposeBag)
-        
         couldPosting
             .filter { $0.isBaned }
             .observe(on: MainScheduler.instance)
@@ -276,6 +275,9 @@ extension MainTabBarController: SOMTabBarControllerDelegate {
         if viewController.tabBarItem.tag == 1 {
             
             self.willPushWriteCard.accept(())
+            
+            GAHelper.shared.logEvent(event: GAEvent.TabBar.moveToCreateFeedCardView_btn_click)
+            
             return false
         }
         

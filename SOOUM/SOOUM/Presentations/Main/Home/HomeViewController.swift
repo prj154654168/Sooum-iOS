@@ -35,6 +35,8 @@ class HomeViewController: BaseNavigationViewController, View {
         static let cancelActionTitle: String = "취소"
         static let settingActionTitle: String = "설정"
         static let confirmActionTitle: String = "확인"
+        
+        static let eventCardTitle: String = "event"
     }
     
     enum Section: Int, CaseIterable {
@@ -373,6 +375,11 @@ class HomeViewController: BaseNavigationViewController, View {
                 detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
                 object.parent?.navigationPush(detailViewController, animated: true) { _ in
                     reactor.action.onNext(.cleanup)
+                    
+                    GAHelper.shared.logEvent(event: GAEvent.HomeView.feedToCardDetailView_card_click)
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailView_tracePath_click(previous_path: .home)
+                    )
                 }
             }
             .disposed(by: self.disposeBag)
@@ -573,6 +580,8 @@ class HomeViewController: BaseNavigationViewController, View {
         
         let toTop = CGPoint(x: 0, y: -(self.tableView.contentInset.top))
         self.tableView.setContentOffset(toTop, animated: true)
+        
+        GAHelper.shared.logEvent(event: GAEvent.HomeView.feedMoveToTop_home_btn_click)
     }
     
     @objc
@@ -790,7 +799,20 @@ extension HomeViewController: UITableViewDelegate {
             return
         }
         
-        reactor.action.onNext(.hasDetailCard(selectedId))
+        var isEventCard: Bool {
+            switch item {
+            case let .latest(selectedCard):
+                return selectedCard.cardImgName.contains(Text.eventCardTitle)
+            case let .popular(selectedCard):
+                return selectedCard.cardImgName.contains(Text.eventCardTitle)
+            case let .distance(selectedCard):
+                return selectedCard.cardImgName.contains(Text.eventCardTitle)
+            case .empty:
+                return false
+            }
+        }
+        
+        reactor.action.onNext(.hasDetailCard(selectedId, isEventCard))
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

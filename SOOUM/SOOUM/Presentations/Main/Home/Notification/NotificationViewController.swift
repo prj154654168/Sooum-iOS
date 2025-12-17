@@ -268,6 +268,12 @@ class NotificationViewController: BaseNavigationViewController, View {
                 detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
                 object.navigationPush(detailViewController, animated: true) { _ in
                     reactor.action.onNext(.cleanup)
+                    
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                            previous_path: .notification
+                        )
+                    )
                 }
             }
             .disposed(by: self.disposeBag)

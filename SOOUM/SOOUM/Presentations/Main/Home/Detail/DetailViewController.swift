@@ -48,6 +48,8 @@ class DetailViewController: BaseNavigationViewController, View {
          
          static let confirmActionTitle: String = "확인"
          static let cancelActionTitle: String = "취소"
+         
+         static let eventCardTitle: String = "event"
      }
     
     
@@ -185,9 +187,9 @@ class DetailViewController: BaseNavigationViewController, View {
      
     func bind(reactor: DetailViewReactor) {
         
-        // 답카드 작성 전환
+        // 댓글카드 작성 전환
         self.floatingButton.backgoundButton.rx.throttleTap(.seconds(3))
-            .map { _ in Reactor.Action.willPushToWrite }
+            .map { _ in Reactor.Action.willPushToWrite(.floating) }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -393,16 +395,23 @@ class DetailViewController: BaseNavigationViewController, View {
                 )
                 object.navigationPush(detailViewController, animated: true) { _ in
                     reactor.action.onNext(.cleanup)
+                    
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                            previous_path: .detail
+                        )
+                    )
                 }
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.willPushToWriteEnabled)
-            .distinctUntilChanged()
+            .distinctUntilChanged(reactor.canPushToWrite)
             .filterNil()
-            .filter { $0 }
+            .filter { $0.isDeleted }
+            .map(\.enterTo)
             .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, _ in
+            .subscribe(with: self) { object, enterTo in
                 let writeCardViewController = WriteCardViewController()
                 writeCardViewController.reactor = reactor.reactorForWriteCard()
                 object.navigationPush(
@@ -410,6 +419,24 @@ class DetailViewController: BaseNavigationViewController, View {
                     animated: true
                 ) { _ in
                     reactor.action.onNext(.cleanup)
+                    
+                    if enterTo == .icon {
+                        GAHelper.shared.logEvent(
+                            event: GAEvent.DetailView.moveToCreateCommentCardView_icon_btn_click
+                        )
+                    } else {
+                        GAHelper.shared.logEvent(
+                            event: GAEvent.DetailView.moveToCreateCommentCardView_floating_btn_click
+                        )
+                        if reactor.currentState.detailCard?
+                            .cardImgName
+                            .contains(Text.eventCardTitle) == true {
+                            
+                            GAHelper.shared.logEvent(
+                                event: GAEvent.DetailView.moveToCreateCommentCardView_withEventImg_floating_btn_click
+                            )
+                        }
+                    }
                 }
             }
             .disposed(by: self.disposeBag)
@@ -612,7 +639,11 @@ extension DetailViewController: UICollectionViewDataSource {
                     with: tagInfo.id,
                     title: tagInfo.text
                 )
-                object.navigationPush(tagCollectViewController, animated: true)
+                object.navigationPush(tagCollectViewController, animated: true) { _ in
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailTag_btn_click(tag_name: tagInfo.text)
+                    )
+                }
             }
             .disposed(by: cell.disposeBag)
         
@@ -624,7 +655,7 @@ extension DetailViewController: UICollectionViewDataSource {
             .disposed(by: cell.disposeBag)
         
         cell.likeAndCommentView.commentBackgroundButton.rx.throttleTap(.seconds(3))
-            .map { _ in Reactor.Action.willPushToWrite }
+            .map { _ in Reactor.Action.willPushToWrite(.icon) }
             .bind(to: reactor.action)
             .disposed(by: cell.disposeBag)
         
@@ -650,6 +681,12 @@ extension DetailViewController: UICollectionViewDataSource {
                         )
                         object.navigationPush(detailViewController, animated: true) { _ in
                             reactor.action.onNext(.cleanup)
+                            
+                            GAHelper.shared.logEvent(
+                                event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                                    previous_path: .detail
+                                )
+                            )
                         }
                     } else {
                         reactor.action.onNext(.willPushToDetail(prevCardInfo.prevCardId))

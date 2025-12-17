@@ -9,9 +9,9 @@ import RxSwift
 
 extension Reactive where Base: WriteCardSelectImageView {
 
-    var setModels: Binder<DefaultImages> {
-        return Binder(self.base) { imgaeView, models in
-            imgaeView.setModels(models)
+    var setModels: Binder<(DefaultImages, EntranceCardType)> {
+        return Binder(self.base) { imgaeView, tuple in
+            imgaeView.setModels(tuple.0, cardType: tuple.1)
         }
     }
 }

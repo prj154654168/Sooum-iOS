@@ -144,7 +144,9 @@ class TagViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, _ in
                 let tagSearchViewController = TagSearchViewController()
                 tagSearchViewController.reactor = reactor.reactorForSearch()
-                object.parent?.navigationPush(tagSearchViewController, animated: true)
+                object.parent?.navigationPush(tagSearchViewController, animated: true) { _ in
+                    GAHelper.shared.logEvent(event: GAEvent.TagView.tagMenuSearchBar_click)
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -169,7 +171,9 @@ class TagViewController: BaseNavigationViewController, View {
                     title: model.name,
                     isFavorite: reactor.currentState.favoriteTags.contains(where: { $0.id == model.id })
                 )
-                object.parent?.navigationPush(tagCollectViewController, animated: true)
+                object.parent?.navigationPush(tagCollectViewController, animated: true) { _ in
+                    GAHelper.shared.logEvent(event: GAEvent.TagView.popularTag_item_click)
+                }
             }
             .disposed(by: self.disposeBag)
         

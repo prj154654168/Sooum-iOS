@@ -211,6 +211,29 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.relatedTagsViewBottomConstraint?.update(offset: -height)
     }
     
+    override func bind() {
+        
+        self.navigationBar.backButton.rx.tap
+            .subscribe(with: self) { object, _ in
+                
+                object.navigationPop {
+                    
+                    if case .feed = object.reactor?.entranceType {
+                        GAHelper.shared.logEvent(
+                            event: GAEvent.WriteCardView.moveToCreateFeedCardView_cancel_btn_click
+                        )
+                    }
+                    
+                    if case .comment = object.reactor?.entranceType {
+                        GAHelper.shared.logEvent(
+                            event: GAEvent.WriteCardView.moveToCreateCommentCardView_cancel_btn_click
+                        )
+                    }
+                }
+            }
+            .disposed(by: self.disposeBag)
+    }
+    
     
     // MARK: ReactorKit - bind
     
@@ -452,6 +475,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .map { object, combined in
                 let (content, imageInfo, typography, options, enteredTag) = combined
                 
+                GAHelper.shared.logEvent(event: GAEvent.WriteCardView.createFeedCard_btn_click)
+                
+                if options.contains(.distanceShare) == false {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.WriteCardView.createFeedCardWithoutDistanceSharedOpt_btn_click
+                    )
+                }
+                
                 var enteredTagTexts = object.writeCardView.writeCardTags.models.map { $0.originalText }
                 if let enteredTag = enteredTag, enteredTag.isEmpty == false {
                     enteredTagTexts.append(enteredTag)
@@ -502,6 +533,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     var viewControllers = navigationController.viewControllers
                     if (viewControllers.popLast() as? Self) != nil {
                         
+                        GAHelper.shared.logEvent(
+                            event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                                previous_path: .writeCard
+                            )
+                        )
+                        
                         viewControllers.append(detailViewController)
                         navigationController.setViewControllers(viewControllers, animated: true)
                     } else {
@@ -546,6 +583,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.defaultImages)
             .distinctUntilChanged()
             .filterNil()
+            .map { ($0, reactor.entranceType) }
             .observe(on: MainScheduler.instance)
             .bind(to: self.selectImageView.rx.setModels)
             .disposed(by: self.disposeBag)

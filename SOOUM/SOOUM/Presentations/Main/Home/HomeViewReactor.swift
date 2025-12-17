@@ -31,7 +31,7 @@ class HomeViewReactor: Reactor {
         case moreFind(String)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
-        case hasDetailCard(String)
+        case hasDetailCard(String, Bool)
         case updateCards(latests: [BaseCardInfo], populars: [BaseCardInfo], distances: [BaseCardInfo])
         case updateHasUnReadNotifications(Bool)
         case cleanup
@@ -160,13 +160,20 @@ class HomeViewReactor: Reactor {
                 self.refresh(displayType, distanceFilter)
                     .catch(self.catchClosureForCards)
             ])
-        case let .hasDetailCard(selectedId):
+        case let .hasDetailCard(selectedId, isEventCard):
             
             return .concat([
                 .just(.cardIsDeleted(nil)),
                 self.fetchCardDetailUseCase.isDeleted(cardId: selectedId)
-                .map { (selectedId, $0) }
-                .map(Mutation.cardIsDeleted)
+                    .do(onNext: {
+                        if isEventCard, $0 == false {
+                            GAHelper.shared.logEvent(
+                                event: GAEvent.HomeView.feedToCardDetailView_cardWithEventImg_click
+                            )
+                        }
+                    })
+                    .map { (selectedId, $0) }
+                    .map(Mutation.cardIsDeleted)
             ])
         case let .updateCards(latest, populars, distances):
             

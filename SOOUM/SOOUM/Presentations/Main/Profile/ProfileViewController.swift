@@ -424,6 +424,12 @@ class ProfileViewController: BaseNavigationViewController, View {
                 let base = reactor.entranceType == .my ? object.parent : object
                 base?.navigationPush(detailViewController, animated: true) { _ in
                     reactor.action.onNext(.cleanup)
+                    
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                            previous_path: .profile
+                        )
+                    )
                 }
             }
             .disposed(by: self.disposeBag)

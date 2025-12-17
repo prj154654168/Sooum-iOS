@@ -21,7 +21,7 @@ class DetailViewReactor: Reactor {
         case updateLike(Bool)
         case updateReport(Bool)
         case willPushToDetail(String)
-        case willPushToWrite
+        case willPushToWrite(GAEvent.DetailView.EnterTo)
         case cleanup
     }
     
@@ -36,8 +36,8 @@ class DetailViewReactor: Reactor {
         case updateReported(Bool)
         case updateIsBlocked(Bool)
         case updateErrors(Int?)
-        case willPushToDetail(((String, Bool)?))
-        case willPushToWrite(Bool?)
+        case willPushToDetail((String, Bool)?)
+        case willPushToWrite((Bool, GAEvent.DetailView.EnterTo)?)
     }
     
     struct State {
@@ -51,7 +51,7 @@ class DetailViewReactor: Reactor {
         fileprivate(set) var isBlocked: Bool
         fileprivate(set) var hasErrors: Int?
         fileprivate(set) var willPushToDetailEnabled: (prevCardId: String, isDeleted: Bool)?
-        fileprivate(set) var willPushToWriteEnabled: Bool?
+        fileprivate(set) var willPushToWriteEnabled: (isDeleted: Bool, enterTo: GAEvent.DetailView.EnterTo)?
     }
     
     var initialState: State
@@ -179,12 +179,12 @@ class DetailViewReactor: Reactor {
             return self.fetchCardDetailUseCase.isDeleted(cardId: prevCardId)
                 .map { (prevCardId, $0) }
                 .map(Mutation.willPushToDetail)
-        case .willPushToWrite:
+        case let .willPushToWrite(enterTo):
             
             return self.fetchCardDetailUseCase.isDeleted(cardId: self.selectedCardId)
                 .flatMapLatest { isDeleted -> Observable<Mutation> in
                     return .concat([
-                        .just(.willPushToWrite(!isDeleted)),
+                        .just(.willPushToWrite((!isDeleted, enterTo))),
                         .just(.updateIsDeleted(isDeleted))
                     ])
                 }
@@ -335,5 +335,13 @@ extension DetailViewReactor {
     ) -> Bool {
         return prevCardIsDeleted?.prevCardId == currCardIsDeleted?.prevCardId &&
             prevCardIsDeleted?.isDeleted == currCardIsDeleted?.isDeleted
+    }
+    
+    func canPushToWrite(
+        prev prevCardIsDelete: (isDeleted: Bool, enterTo: GAEvent.DetailView.EnterTo)?,
+        curr currCardIsDelete: (isDeleted: Bool, enterTo: GAEvent.DetailView.EnterTo)?
+    ) -> Bool {
+        return prevCardIsDelete?.isDeleted == currCardIsDelete?.isDeleted &&
+            prevCardIsDelete?.enterTo == currCardIsDelete?.enterTo
     }
 }

@@ -157,6 +157,10 @@ class TagCollectViewController: BaseNavigationViewController, View {
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isFavorite in
                 
+                if isFavorite {
+                    GAHelper.shared.logEvent(event: GAEvent.TagView.favoriteTagRegister_btn_click)
+                }
+                
                 let message = isFavorite ? Text.addToastMessage : Text.deleteToastMessage
                 let bottomToastView = SOMBottomToastView(
                     title: "‘\(reactor.title)’" + message,
@@ -234,6 +238,12 @@ class TagCollectViewController: BaseNavigationViewController, View {
                 detailViewController.reactor = reactor.reactorForDetail(selectedId)
                 object.navigationPush(detailViewController, animated: true) { _ in
                     reactor.action.onNext(.cleanup)
+                    
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                            previous_path: .tag_collect
+                        )
+                    )
                 }
             }
             .disposed(by: self.disposeBag)
