@@ -22,6 +22,7 @@ class SettingsViewReactor: Reactor {
     enum Mutation {
         case updateBanEndAt(Date?)
         case updateVersion(Version?)
+        case updateShouldHideTransfer(Bool)
         case updateNotificationStatus(Bool)
         case rejoinableDate(RejoinableDateInfo?)
         case cleanup
@@ -66,7 +67,15 @@ class SettingsViewReactor: Reactor {
             
             return .concat([
                 self.appVersionUseCase.version()
-                    .map(Mutation.updateVersion),
+                    .flatMapLatest { version -> Observable<Mutation> in
+                        
+                        UserDefaults.standard.set(version.shouldHideTransfer, forKey: "AppFlag")
+                        
+                        return .concat([
+                            .just(.updateShouldHideTransfer(version.shouldHideTransfer)),
+                            .just(.updateVersion(version))
+                        ])
+                    },
                 self.validateUserUseCase.postingPermission()
                     .map(\.expiredAt)
                     .map(Mutation.updateBanEndAt),
@@ -95,6 +104,8 @@ class SettingsViewReactor: Reactor {
             newState.banEndAt = banEndAt
         case let .updateVersion(version):
             newState.version = version
+        case let .updateShouldHideTransfer(shouldHideTransfer):
+            newState.shouldHideTransfer = shouldHideTransfer
         case let .updateNotificationStatus(notificationStatus):
             newState.notificationStatus = notificationStatus
         case let .rejoinableDate(rejoinableDate):
