@@ -5,11 +5,12 @@
 //  Created by 오현식 on 12/3/24.
 //
 
-
 import UIKit
 
 import SnapKit
 import Then
+
+import Kingfisher
 
 import ReactorKit
 import RxCocoa
@@ -19,37 +20,48 @@ import RxSwift
 class ProfileViewController: BaseNavigationViewController, View {
     
     enum Text {
-        static let blockButtonTitle: String = "차단하기"
+        static let navigationTitle: String = "마이"
+        static let navigationBlockButtonTitle: String = "차단"
         
-        static let blockDialogTitle: String = "정말 차단하시겠어요?"
-        static let blockDialogMessage: String = "해당 사용자의 카드와 답카드를 볼 수 없어요"
+        static let blockDialogTitle: String = "차단하시겠어요?"
+        static let blockDialogMessage: String = "님의 모든 카드를 볼 수 없어요."
         
-        static let cancelActionTitle: String = "취소"
+        static let unBlockUserDialogTitle: String = "차단 해제하시겠어요?"
+        static let unBlockUserDialogMessage: String = "님을 팔로우하고, 카드를 볼 수 있어요."
+        
+        static let deleteFollowingDialogTitle: String = "님을 팔로워에서 삭제하시겠어요?"
+        
+        static let pungedCardDialogTitle: String = "삭제된 카드예요"
+        
         static let confirmActionTitle: String = "확인"
+        static let cancelActionTitle: String = "취소"
+        static let blockActionTitle: String = "차단하기"
+        static let unBlockActionTitle: String = "차단 해제"
+        static let deleteActionTitle: String = "삭제하기"
+    }
+    
+    enum Section: Int, CaseIterable {
+        case user
+        case card
+    }
+    
+    enum Item: Hashable {
+        case user(ProfileInfo)
+        case card(type: EntranceCardType, feed: [ProfileCardInfo], comment: [ProfileCardInfo]?)
     }
     
     
     // MARK: Navi Views
     
-    private let titleView = UILabel().then {
-        $0.textColor = .som.gray800
-        $0.typography = .som.body1WithBold
-    }
-    
-    private let subTitleView = UILabel().then {
-        $0.textColor = .som.gray400
-        $0.typography = .som.body3WithRegular
-    }
-    
     private let rightBlockButton = SOMButton().then {
-        $0.title = Text.blockButtonTitle
-        $0.typography = .som.body3WithBold
-        $0.foregroundColor = .som.gray500
+        $0.title = Text.navigationBlockButtonTitle
+        $0.typography = .som.v2.subtitle1
+        $0.foregroundColor = .som.v2.black
     }
     
     private let rightSettingButton = SOMButton().then {
-        $0.image = .init(.icon(.outlined(.menu)))
-        $0.foregroundColor = .som.black
+        $0.image = .init(.icon(.v2(.outlined(.settings))))
+        $0.foregroundColor = .som.v2.black
     }
     
     
@@ -57,12 +69,18 @@ class ProfileViewController: BaseNavigationViewController, View {
     
     private let flowLayout = UICollectionViewFlowLayout().then {
         $0.scrollDirection = .vertical
+        $0.sectionHeadersPinToVisibleBounds = true
+        $0.sectionInset = .zero
     }
     private lazy var collectionView = UICollectionView(
        frame: .zero,
        collectionViewLayout: self.flowLayout
     ).then {
-        $0.backgroundColor = .som.white
+        $0.backgroundColor = .som.v2.white
+        
+        $0.contentInset = .zero
+        
+        $0.contentInsetAdjustmentBehavior = .never
         
         $0.alwaysBounceVertical = true
         $0.showsVerticalScrollIndicator = false
@@ -70,30 +88,188 @@ class ProfileViewController: BaseNavigationViewController, View {
         
         $0.refreshControl = SOMRefreshControl()
         
-        $0.register(MyProfileViewCell.self, forCellWithReuseIdentifier: MyProfileViewCell.cellIdentifier)
-        $0.register(OtherProfileViewCell.self, forCellWithReuseIdentifier: OtherProfileViewCell.cellIdentifier)
+        $0.register(ProfileUserViewCell.self, forCellWithReuseIdentifier: ProfileUserViewCell.cellIdentifier)
+        $0.register(ProfileCardsViewCell.self, forCellWithReuseIdentifier: ProfileCardsViewCell.cellIdentifier)
         $0.register(
-           ProfileViewFooter.self,
-           forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
-           withReuseIdentifier: "footer"
+            ProfileViewHeader.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: ProfileViewHeader.cellIdentifier
         )
         
-        $0.dataSource = self
         $0.delegate = self
     }
     
     
     // MARK: Variables
     
-    private(set) var profile = Profile()
-    private(set) var writtenCards = [WrittenCard]()
-    private(set) var isBlocked = false
+    typealias DataSource = UICollectionViewDiffableDataSource<Section, Item>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
     
-    override var navigationBarHeight: CGFloat {
-         68
-    }
+    private lazy var dataSource: DataSource = {
+        
+        let dataSource = DataSource(collectionView: self.collectionView) { [weak self] collectionView, indexPath, item -> UICollectionViewCell? in
+            
+            guard let self = self, let reactor = self.reactor else { return nil }
+            
+            switch item {
+            case let .user(profileInfo):
+                
+                let cell: ProfileUserViewCell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: ProfileUserViewCell.cellIdentifier,
+                    for: indexPath
+                ) as! ProfileUserViewCell
+                
+                cell.setModel(profileInfo)
+                
+                cell.cardContainerDidTap
+                    .subscribe(with: self) { object, _ in
+                        switch reactor.currentState.cardType {
+                        case .feed:
+                            guard reactor.currentState.feedCardInfos.isEmpty == false else { return }
+                            object.collectionView.setContentOffset(
+                                CGPoint(x: 0, y: 84 + 76 + 48 + 16),
+                                animated: true
+                            )
+                        case .comment:
+                            guard reactor.currentState.commentCardInfos.isEmpty == false else { return }
+                            object.collectionView.setContentOffset(
+                                CGPoint(x: 0, y: 84 + 76 + 48 + 16),
+                                animated: true
+                            )
+                        }
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+                cell.followerContainerDidTap
+                    .subscribe(with: self) { object, _ in
+                        let followViewController = FollowViewController()
+                        followViewController.reactor = reactor.reactorForFollow(
+                            type: .follower,
+                            view: profileInfo.isAlreadyFollowing == nil ? .my : .other,
+                            nickname: profileInfo.nickname,
+                            with: profileInfo.userId
+                        )
+                        let base = profileInfo.isAlreadyFollowing == nil ? object.parent : object
+                        base?.navigationPush(followViewController, animated: true)
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+                cell.followingContainerDidTap
+                    .subscribe(with: self) { object, _ in
+                        let followViewController = FollowViewController()
+                        followViewController.reactor = reactor.reactorForFollow(
+                            type: .following,
+                            view: profileInfo.isAlreadyFollowing == nil ? .my : .other,
+                            nickname: profileInfo.nickname,
+                            with: profileInfo.userId
+                        )
+                        let base = profileInfo.isAlreadyFollowing == nil ? object.parent : object
+                        base?.navigationPush(followViewController, animated: true)
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+                cell.updateProfileButton.rx.throttleTap
+                    .subscribe(with: self) { object, _ in
+                        KingfisherManager.shared.download(
+                            strUrl: profileInfo.profileImageUrl,
+                            with: profileInfo.profileImgName
+                        ) { [weak object] profileImage in
+                            let updateProfileViewController = UpdateProfileViewController()
+                            updateProfileViewController.reactor = reactor.reactorForUpdate(
+                                nickname: profileInfo.nickname,
+                                image: profileImage,
+                                imageName: profileInfo.profileImgName
+                            )
+                            object?.parent?.navigationPush(updateProfileViewController, animated: true)
+                        }
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+                cell.followButton.rx.throttleTap
+                    .subscribe(with: self) { object, _ in
+                        if profileInfo.isAlreadyFollowing == true {
+                            object.showdeleteFollowingDialog(with: profileInfo.nickname)
+                        } else {
+                            reactor.action.onNext(.follow)
+                        }
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+                cell.unBlockButton.rx.throttleTap
+                    .subscribe(with: self) { object, _ in
+                        object.showUnblockDialog(nickname: profileInfo.nickname, with: profileInfo.userId)
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+                return cell
+            case let .card(type, feeds, comments):
+                
+                let cell: ProfileCardsViewCell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: ProfileCardsViewCell.cellIdentifier,
+                    for: indexPath
+                ) as! ProfileCardsViewCell
+                
+                if case .other = reactor.entranceType {
+                    cell.setModels(type: .feed, feed: feeds, comment: nil)
+                } else {
+                    cell.setModels(type: type, feed: feeds, comment: comments ?? [])
+                }
+                
+                cell.cardDidTap
+                    .throttle(.seconds(3), scheduler: MainScheduler.instance)
+                    .map(Reactor.Action.hasDetailCard)
+                    .bind(to: reactor.action)
+                    .disposed(by: cell.disposeBag)
+                
+                cell.moreFindCards
+                    .subscribe(with: self) { object, moreInfo in
+                        reactor.action.onNext(.moreFind(moreInfo.type, moreInfo.lastId))
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+                return cell
+            }
+        }
+        
+        dataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath -> UICollectionReusableView? in
+            
+            guard let self = self else { return nil }
+            
+            if kind == UICollectionView.elementKindSectionHeader {
+                
+                let header: ProfileViewHeader = collectionView.dequeueReusableSupplementaryView(
+                    ofKind: UICollectionView.elementKindSectionHeader,
+                    withReuseIdentifier: ProfileViewHeader.cellIdentifier,
+                    for: indexPath
+                ) as! ProfileViewHeader
+                
+                header.tabBarItemDidTap
+                    .subscribe(with: self) { object, selectedIndex in
+                        object.reactor?.action.onNext(.updateCardType(selectedIndex == 0 ? .feed : .comment))
+                    }
+                    .disposed(by: header.disposeBag)
+                
+                return header
+            } else {
+                return nil
+            }
+        }
+        
+        return dataSource
+    }()
     
+    private var initialOffset: CGFloat = 0
+    private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
+    private var shouldRefreshing: Bool = false
+    
+    
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + floating button height + padding
+        return self.reactor?.entranceType == .other ? 34 + 8 : 88
+    }
     
     
     // MARK: Override func
@@ -101,37 +277,15 @@ class ProfileViewController: BaseNavigationViewController, View {
     override func setupNaviBar() {
         super.setupNaviBar()
         
-        let isMine = self.reactor?.entranceType == .my || self.reactor?.entranceType == .myWithNavi
+        guard let reactor = self.reactor else { return }
         
-        let titleContainer = UIView()
-        titleContainer.addSubview(self.titleView)
-        self.titleView.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.centerX.equalToSuperview()
-        }
+        let isMine = reactor.entranceType == .my
         
-        titleContainer.addSubview(self.subTitleView)
-        self.subTitleView.snp.makeConstraints {
-            $0.top.equalTo(self.titleView.snp.bottom).offset(2)
-            $0.bottom.leading.trailing.equalToSuperview()
-        }
+        self.navigationBar.hidesBackButton = isMine
+        self.navigationBar.title = isMine ? Text.navigationTitle : nil
+        self.navigationBar.titlePosition = .left
         
-        self.navigationBar.hidesBackButton = self.reactor?.entranceType == .my
-        self.navigationBar.titleView = titleContainer
-        if isMine {
-            self.navigationBar.setRightButtons([self.rightSettingButton])
-        } else {
-            self.navigationBar.setRightButtons([self.rightBlockButton])
-        }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        self.navigationController?.delegate = self
-        
-        // 탭바 표시
-        self.hidesBottomBarWhenPushed = self.reactor?.entranceType == .my ? false : true
+        self.navigationBar.setRightButtons(isMine ? [self.rightSettingButton] : [self.rightBlockButton])
     }
     
     override func setupConstraints() {
@@ -140,297 +294,324 @@ class ProfileViewController: BaseNavigationViewController, View {
         self.view.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints {
             $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-            $0.bottom.leading.trailing.equalToSuperview()
+            $0.bottom.horizontalEdges.equalToSuperview()
         }
     }
     
-    override func bind() {
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        self.backButton.rx.tap
-            .subscribe(with: self) { object, _ in
-                if object.isBlocked {
-                    object.navigationPop(to: MainHomeTabBarController.self, animated: true)
-                } else {
-                    object.navigationPop()
-                }
-            }
-            .disposed(by: self.disposeBag)
+        // 제스처 뒤로가기를 위한 델리게이트 설정
+        self.parent?.navigationController?.interactivePopGestureRecognizer?.delegate = self
         
-        self.rightSettingButton.rx.tap
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reloadProfileData(_:)),
+            name: .reloadProfileData,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reloadCardsData(_:)),
+            name: .reloadHomeData,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reloadCardsData(_:)),
+            name: .deletedFeedCardWithId,
+            object: nil
+        )
+    }
+    
+    
+    // MARK: ReactorKit - Bind
+    
+    func bind(reactor: ProfileViewReactor) {
+        
+        // 설정 화면 전환
+        self.rightSettingButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 let settingsViewController = SettingsViewController()
-                settingsViewController.reactor = object.reactor?.reactorForSettings()
-                object.navigationPush(settingsViewController, animated: true, bottomBarHidden: true)
+                settingsViewController.reactor = reactor.reactorForSettings()
+                object.parent?.navigationPush(settingsViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
-        self.rightBlockButton.rx.tap
+        // 상대방 차단 요청
+        self.rightBlockButton.rx.throttleTap
             .subscribe(with: self) { object, _ in
                 let cancelAction = SOMDialogAction(
                     title: Text.cancelActionTitle,
                     style: .gray,
                     action: {
-                        UIApplication.topViewController?.dismiss(animated: true)
+                        SOMDialogViewController.dismiss()
                     }
                 )
                 let confirmAction = SOMDialogAction(
-                    title: Text.confirmActionTitle,
-                    style: .primary,
+                    title: Text.blockActionTitle,
+                    style: .red,
                     action: {
-                        object.reactor?.action.onNext(.block)
+                        SOMDialogViewController.dismiss {
+                            
+                            reactor.action.onNext(.block)
+                        }
                     }
                 )
                 
                 SOMDialogViewController.show(
                     title: Text.blockDialogTitle,
                     message: Text.blockDialogMessage,
+                    textAlignment: .left,
                     actions: [cancelAction, confirmAction]
                 )
             }
             .disposed(by: self.disposeBag)
-    }
-    
-    
-    // MARK: Bind
-    
-    func bind(reactor: ProfileViewReactor) {
         
         // Action
-        self.rx.viewWillAppear
+        self.rx.viewDidLoad
             .map { _ in Reactor.Action.landing }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        let isRefreshing = reactor.state.map(\.isRefreshing).distinctUntilChanged().share()
         self.collectionView.refreshControl?.rx.controlEvent(.valueChanged)
-            .withLatestFrom(reactor.state.map(\.isLoading))
+            .withLatestFrom(isRefreshing)
             .filter { $0 == false }
+            .delay(.milliseconds(1000), scheduler: MainScheduler.instance)
             .map { _ in Reactor.Action.refresh }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
         // State
-        reactor.state.map(\.isLoading)
-            .distinctUntilChanged()
-            .subscribe(with: self.collectionView) { collectionView, isLoading in
-                if isLoading {
-                    collectionView.refreshControl?.beginRefreshingFromTop()
-                } else {
-                    collectionView.refreshControl?.endRefreshing()
-                }
+        isRefreshing
+            .filter { $0 == false }
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self.collectionView) { collectionView, _ in
+                collectionView.refreshControl?.endRefreshing()
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isProcessing)
-            .distinctUntilChanged()
-            .bind(to: self.activityIndicatorView.rx.isAnimating)
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.profile)
-            .distinctUntilChanged()
-            .subscribe(with: self) { object, profile in
-                object.profile = profile
-                object.titleView.text = profile.nickname
-                object.subTitleView.text = "TOTAL \(profile.totalVisitorCnt) TODAY \(profile.currentDayVisitors)"
-                
-                UIView.performWithoutAnimation {
-                    object.collectionView.performBatchUpdates {
-                        object.collectionView.reloadSections(IndexSet(integer: 0))
-                    }
-                }
+        let displayStates = reactor.state.map {
+            ProfileViewReactor.DisplayStates(
+                cardType: $0.cardType,
+                profileInfo: $0.profileInfo,
+                feedCardInfos: $0.feedCardInfos,
+                commentCardInfos: $0.commentCardInfos
+            )
+        }
+        let cardIsDeleted = reactor.state.map(\.cardIsDeleted)
+            .distinctUntilChanged(reactor.canPushToDetail)
+            .filterNil()
+        cardIsDeleted
+            .filter { $0.isDeleted }
+            .withLatestFrom(displayStates.map(\.cardType))
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, cardType in
+                object.showPungedCardDialog(reactor, with: cardType)
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.writtenCards)
-            .distinctUntilChanged()
-            .subscribe(with: self) { object, writtenCards in
-                object.writtenCards = writtenCards
-                
-                UIView.performWithoutAnimation {
-                    object.collectionView.performBatchUpdates {
-                        object.collectionView.reloadSections(IndexSet(integer: 0))
-                    }
-                }
-            }
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.isBlocked)
-            .distinctUntilChanged()
-            .subscribe(with: self) { object, isBlocked in
-                UIApplication.topViewController?.dismiss(animated: true) {
-                    object.isBlocked = isBlocked
-                    object.rightBlockButton.isHidden = isBlocked
+        cardIsDeleted
+            .filter { $0.isDeleted == false }
+            .map(\.selectedId)
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, selectedId in
+                let detailViewController = DetailViewController()
+                detailViewController.reactor = reactor.reactorForDetail(selectedId)
+                let base = reactor.entranceType == .my ? object.parent : object
+                base?.navigationPush(detailViewController, animated: true) { _ in
+                    reactor.action.onNext(.cleanup)
                     
-                    UIView.performWithoutAnimation {
-                        object.collectionView.performBatchUpdates {
-                            object.collectionView.reloadSections(IndexSet(integer: 0))
-                        }
-                    }
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                            previous_path: .profile
+                        )
+                    )
                 }
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.isFollow)
-            .distinctUntilChanged()
-            .filter { $0 != nil }
-            .subscribe(onNext: { _ in
-                reactor.action.onNext(.landing)
-            })
-            .disposed(by: self.disposeBag)
+        displayStates
+        .distinctUntilChanged(reactor.canUpdateCells)
+        .observe(on: MainScheduler.instance)
+        .subscribe(with: self) { object, displayStates in
+            
+            var snapshot = Snapshot()
+            snapshot.appendSections(Section.allCases)
+            
+            guard let profileInfo = displayStates.profileInfo else { return }
+            
+            if reactor.entranceType == .other, let isBlocked = profileInfo.isBlocked {
+                object.rightBlockButton.isHidden = isBlocked
+            }
+            
+            let profileItem = Item.user(profileInfo)
+            snapshot.appendItems([profileItem], toSection: .user)
+            
+            let cardItem = Item.card(
+                type: displayStates.cardType,
+                feed: displayStates.feedCardInfos,
+                comment: displayStates.commentCardInfos.isEmpty ? nil : displayStates.commentCardInfos
+            )
+            snapshot.appendItems([cardItem], toSection: .card)
+            
+            object.dataSource.apply(snapshot, animatingDifferences: false)
+        }
+        .disposed(by: self.disposeBag)
+        
+        Observable.merge(
+            reactor.pulse(\.$isBlocked).filterNil().filter { $0 },
+            reactor.pulse(\.$isFollowing).filterNil().filter { $0 }
+        )
+        .subscribe(with: self) { object, _ in
+            reactor.action.onNext(.updateProfile)
+        }
+        .disposed(by: self.disposeBag)
+    }
+    
+    
+    // MARK: Private func
+    
+    private func updateCollectionViewHeight(numberOfItems: Int) -> CGFloat {
+        
+        let lineSpacing: CGFloat = 1.0
+        // TODO: 임시, 행 개수 3 고정
+        let itemsPerRow: CGFloat = 3.0
+        let numberOfRows = ceil(CGFloat(numberOfItems) / itemsPerRow)
+        
+        let itemHeight = (self.collectionView.bounds.width - 2) / 3
+        let newHeight = (numberOfRows * itemHeight) + ((numberOfRows - 1) * lineSpacing)
+        
+        let cellHeight: CGFloat = 84 + 76 + 48 + 16
+        let headerHeight: CGFloat = 56
+        let defaultHeight: CGFloat = collectionView.bounds.height - cellHeight - headerHeight
+        
+        return max(newHeight, defaultHeight)
+    }
+    
+    
+    // MARK: Objc
+    
+    @objc
+    private func reloadProfileData(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.updateProfile)
+    }
+    
+    @objc
+    private func reloadCardsData(_ notification: Notification) {
+        
+        self.reactor?.action.onNext(.updateCards)
     }
 }
 
-extension ProfileViewController: UICollectionViewDataSource {
+
+// MARK: show Dialog
+
+private extension ProfileViewController {
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let entranceType = self.reactor?.entranceType ?? .my
-        switch entranceType {
-        case .my, .myWithNavi:
-            let myCell: MyProfileViewCell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: MyProfileViewCell.cellIdentifier,
-                for: indexPath
-            ) as! MyProfileViewCell
-            myCell.setModel(self.profile)
-            
-            myCell.updateProfileButton.rx.tap
-                .subscribe(with: self) { object, _ in
-                    let updateProfileViewController = UpdateProfileViewController()
-                    updateProfileViewController.reactor = object.reactor?.reactorForUpdate()
-                    object.navigationPush(updateProfileViewController, animated: true, bottomBarHidden: true)
-                }
-                .disposed(by: myCell.disposeBag)
-            
-            myCell.followingButton.rx.tap
-                .subscribe(with: self) { object, _ in
-                    let followViewController = FollowViewController()
-                    followViewController.reactor = object.reactor?.reactorForFollow(type: .following)
-                    object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
-                }
-                .disposed(by: myCell.disposeBag)
-            
-            myCell.followerButton.rx.tap
-                .subscribe(with: self) { object, _ in
-                    let followViewController = FollowViewController()
-                    followViewController.reactor = object.reactor?.reactorForFollow(type: .follower)
-                    object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
-                }
-                .disposed(by: myCell.disposeBag)
-            
-            return myCell
-        case .other:
-            let otherCell: OtherProfileViewCell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: OtherProfileViewCell.cellIdentifier,
-                for: indexPath
-            ) as! OtherProfileViewCell
-            otherCell.setModel(self.profile, isBlocked: self.isBlocked)
-            
-            otherCell.followButton.rx.throttleTap(.seconds(1))
-                .subscribe(with: self) { object, _ in
-                    if object.isBlocked {
-                        object.reactor?.action.onNext(.block)
-                    } else {
-                        object.reactor?.action.onNext(.follow)
-                    }
-                }
-                .disposed(by: otherCell.disposeBag)
-            
-            otherCell.followingButton.rx.tap
-                .subscribe(with: self) { object, _ in
-                    let followViewController = FollowViewController()
-                    followViewController.reactor = object.reactor?.reactorForFollow(type: .following)
-                    object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
-                }
-                .disposed(by: otherCell.disposeBag)
-            
-            otherCell.followerButton.rx.tap
-                .subscribe(with: self) { object, _ in
-                    let followViewController = FollowViewController()
-                    followViewController.reactor = object.reactor?.reactorForFollow(type: .follower)
-                    object.navigationPush(followViewController, animated: true, bottomBarHidden: true)
-                }
-                .disposed(by: otherCell.disposeBag)
-            
-            return otherCell
-        }
-    }
-    
-    func collectionView(
-        _ collectionView: UICollectionView,
-        viewForSupplementaryElementOfKind kind: String,
-        at indexPath: IndexPath
-    ) -> UICollectionReusableView {
+    func showdeleteFollowingDialog(with nickname: String) {
         
-        if kind == UICollectionView.elementKindSectionFooter {
-            
-            let footer: ProfileViewFooter = collectionView
-                .dequeueReusableSupplementaryView(
-                    ofKind: kind,
-                    withReuseIdentifier: "footer",
-                    for: indexPath
-                ) as! ProfileViewFooter
-            footer.setModel(self.writtenCards, isBlocked: self.isBlocked)
-            
-            footer.didTap
-                .subscribe(with: self) { object, selectedId in
-                    let detailViewController = DetailViewController()
-                    detailViewController.reactor = object.reactor?.ractorForDetail(selectedId)
-                    object.navigationPush(detailViewController, animated: true, bottomBarHidden: true)
+        let cancelAction = SOMDialogAction(
+            title: Text.cancelActionTitle,
+            style: .gray,
+            action: {
+                SOMDialogViewController.dismiss()
+            }
+        )
+        let deleteAction = SOMDialogAction(
+            title: Text.deleteActionTitle,
+            style: .red,
+            action: {
+                SOMDialogViewController.dismiss {
+                    self.reactor?.action.onNext(.follow)
                 }
-                .disposed(by: footer.disposeBag)
-            
-            footer.moreDisplay
-                .subscribe(with: self) { object, lastId in
-                    object.reactor?.action.onNext(.moreFind(lastId))
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: nickname + Text.deleteFollowingDialogTitle,
+            messageView: nil,
+            textAlignment: .left,
+            actions: [cancelAction, deleteAction]
+        )
+    }
+    
+    func showUnblockDialog(nickname: String, with userId: String) {
+        
+        let cancelAction = SOMDialogAction(
+            title: Text.cancelActionTitle,
+            style: .gray,
+            action: {
+                SOMDialogViewController.dismiss()
+            }
+        )
+        
+        let unBlockAction = SOMDialogAction(
+            title: Text.unBlockActionTitle,
+            style: .red,
+            action: {
+                SOMDialogViewController.dismiss {
+                    self.reactor?.action.onNext(.block)
                 }
-                .disposed(by: footer.disposeBag)
-            
-            return footer
-        } else {
-            return .init(frame: .zero)
-        }
+            }
+        )
+
+        SOMDialogViewController.show(
+            title: Text.unBlockUserDialogTitle,
+            message: nickname + Text.unBlockUserDialogMessage,
+            textAlignment: .left,
+            actions: [cancelAction, unBlockAction]
+        )
+    }
+    
+    func showPungedCardDialog(_ reactor: ProfileViewReactor, with cardType: EntranceCardType) {
+        
+        let confirmAction = SOMDialogAction(
+            title: Text.confirmActionTitle,
+            style: .primary,
+            action: {
+                SOMDialogViewController.dismiss {
+                    reactor.action.onNext(.cleanup)
+                    reactor.action.onNext(.updateCards)
+                }
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.pungedCardDialogTitle,
+            messageView: nil,
+            textAlignment: .left,
+            actions: [confirmAction]
+        )
     }
 }
+
+
+// MARK: UICollectionViewDelegateFlowLayout
 
 extension ProfileViewController: UICollectionViewDelegateFlowLayout {
-    
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        
-        let offset = scrollView.contentOffset.y
-        
-        // currentOffset <= 0 일 때, 테이블 뷰 새로고침 가능
-        self.isRefreshEnabled = (offset <= 0 && self.reactor?.currentState.isLoading == false)
-    }
-    
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-        
-        let offset = scrollView.contentOffset.y
-        
-        // isRefreshEnabled == true 이고, 스크롤이 끝났을 경우에만 테이블 뷰 새로고침
-        if self.isRefreshEnabled,
-           let refreshControl = self.collectionView.refreshControl,
-           offset <= -(refreshControl.frame.origin.y + 40) {
-            
-            refreshControl.beginRefreshingFromTop()
-        }
-    }
     
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
+        referenceSizeForHeaderInSection section: Int
     ) -> CGSize {
-        let width: CGFloat = UIScreen.main.bounds.width
-        // 내 프로필 일 때, 프로필 - 컨텐츠 + 컨텐츠 - 버튼 + 버튼 - 하단
-        // 상대 프로필 일 때, 프로필 - 버튼 + 버튼 - 하단
-        let isMine = self.reactor?.entranceType == .my || self.reactor?.entranceType == .myWithNavi
-        let spacing: CGFloat = isMine ? (16 + 18 + 30) : (22 + 22)
-        // 내 프로필 일 떄, 프로필 + 간격 + 컨텐츠 + 버튼
-        // 상대 프로필 일 때, 프로필 + 간격 + 버튼
-        let height: CGFloat = isMine ? (128 + spacing + 42 + 48) : (128 + spacing + 48)
-        return CGSize(width: width, height: height)
+        
+        if self.reactor?.entranceType == .other {
+            return .zero
+        }
+        
+        guard let section = self.dataSource.sectionIdentifier(for: section) else { return .zero }
+        
+        if case .card = section {
+            return CGSize(width: collectionView.bounds.width, height: 56)
+        } else {
+            return .zero
+        }
     }
     
     func collectionView(
@@ -438,15 +619,100 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         referenceSizeForFooterInSection section: Int
     ) -> CGSize {
-        let width: CGFloat = UIScreen.main.bounds.width
-        // 내 프로필 일 때, 프로필 - 컨텐츠 + 컨텐츠 - 버튼 + 버튼 - 하단
-        // 상대 프로필 일 때, 프로필 - 버튼 + 버튼 - 하단
-        let isMine = self.reactor?.entranceType == .my || self.reactor?.entranceType == .myWithNavi
-        let spacing: CGFloat = isMine ? (16 + 18 + 30) : (22 + 22)
-        // 내 프로필 일 떄, 프로필 + 간격 + 컨텐츠 + 버튼
-        // 상대 프로필 일 때, 프로필 + 간격 + 버튼
-        let cellHeight: CGFloat = isMine ? (128 + spacing + 42 + 48) : (128 + spacing + 48)
-        let height: CGFloat = collectionView.bounds.height - cellHeight
-        return CGSize(width: width, height: height)
+        
+        return .zero
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        
+        guard let section = self.dataSource.sectionIdentifier(for: indexPath.section),
+              let reactor = self.reactor
+        else { return .zero }
+        
+        let width: CGFloat = collectionView.bounds.width
+        switch section {
+        case .user:
+            /// top container height + bottom container height + button height + padding
+            let height: CGFloat = 84 + 76 + 48 + 16
+            return CGSize(width: width, height: height)
+        case .card:
+            
+            let feeds = reactor.currentState.feedCardInfos
+            let comments = reactor.currentState.commentCardInfos
+            
+            var height: CGFloat {
+                let cellHeight: CGFloat = 84 + 76 + 48 + 16
+                let headerHeight: CGFloat = 56
+                let defaultHeight: CGFloat = collectionView.bounds.height - cellHeight - headerHeight
+                switch reactor.currentState.cardType {
+                case .feed:
+                    
+                    let newHeight = self.updateCollectionViewHeight(numberOfItems: feeds.count)
+                    if reactor.entranceType == .my {
+                        collectionView.contentInset.bottom = defaultHeight <= newHeight ? 88 + 16 : 0
+                    }
+                    
+                    return feeds.isEmpty ? defaultHeight : newHeight
+                case .comment:
+                    
+                    let newHeight = self.updateCollectionViewHeight(numberOfItems: comments.count)
+                    collectionView.contentInset.bottom = defaultHeight <= newHeight ? 88 + 16 : 0
+                    
+                    return comments.isEmpty ? defaultHeight : newHeight
+                }
+            }
+            
+            return CGSize(width: width, height: height)
+        }
+    }
+    
+    
+    // MARK: UIScrollViewDelegate
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // currentOffset <= 0 && isRefreshing == false 일 때, 테이블 뷰 새로고침 가능
+        self.isRefreshEnabled = (offset <= 0) && (self.reactor?.currentState.isRefreshing == false)
+        self.shouldRefreshing = false
+        self.initialOffset = offset
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+        
+        // 당겨서 새로고침
+        if self.isRefreshEnabled, offset < self.initialOffset,
+           let refreshControl = self.collectionView.refreshControl as? SOMRefreshControl {
+           
+           refreshControl.updateProgress(
+               offset: scrollView.contentOffset.y,
+               topInset: scrollView.adjustedContentInset.top
+           )
+            
+            let pulledOffset = self.initialOffset - offset
+            /// refreshControl heigt + top padding
+            let refreshingOffset: CGFloat = 44 + 12
+            self.shouldRefreshing = abs(pulledOffset) >= refreshingOffset
+        }
+        
+        self.currentOffset = offset
+    }
+    
+    func scrollViewWillEndDragging(
+        _ scrollView: UIScrollView,
+        withVelocity velocity: CGPoint,
+        targetContentOffset: UnsafeMutablePointer<CGPoint>
+    ) {
+        
+        if self.shouldRefreshing {
+            self.collectionView.refreshControl?.beginRefreshing()
+        }
     }
 }

@@ -19,15 +19,53 @@ import RxSwift
 class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View {
     
     enum Text {
-        static let guideMessageTitle: String = "숨을 시작하기 위해서는\n약관 동의가 필요해요"
+        static let navigationTitle: String = "회원가입"
         
-        static let confirmButtonTitle: String = "확인"
+        static let guideMessageTitle: String = "숨 서비스 이용을 위해\n동의해주세요"
+        
+        static let termsOfSeviceUrlString: String = "https://adjoining-guanaco-d0a.notion.site/26b2142ccaa38076b491df099cd7b559"
+        static let locationServiceUrlString: String = "https://adjoining-guanaco-d0a.notion.site/26b2142ccaa380f1bfafe99f5f8a10f1?pvs=74"
+        static let privacyPolicyUrlString: String = "https://adjoining-guanaco-d0a.notion.site/26b2142ccaa38059a1dbf3e6b6b6b4e6?pvs=74"
+        
+        static let nextButtonTitle: String = "다음"
+    }
+    
+    enum TermsOfService: CaseIterable {
+        
+        case termsOfService
+        case locationService
+        case privacyPolicy
+        
+        var text: String {
+            switch self {
+            case .termsOfService:
+                "[필수] 서비스 이용 약관"
+            case .locationService:
+                "[필수] 위치정보 이용 약관"
+            case .privacyPolicy:
+                "[필수] 개인정보 처리 방침"
+            }
+        }
+        
+        var url: URL {
+            switch self {
+            case .termsOfService:
+                return URL(string: Text.termsOfSeviceUrlString)!
+            case .locationService:
+                return URL(string: Text.locationServiceUrlString)!
+            case .privacyPolicy:
+                return URL(string: Text.privacyPolicyUrlString)!
+            }
+        }
     }
     
     
     // MARK: Views
     
-    private let guideMessageView = OnboardingGuideMessageView(title: Text.guideMessageTitle)
+    private let guideMessageView = OnboardingGuideMessageView(
+        title: Text.guideMessageTitle,
+        currentNumber: 1
+    )
     
     private let agreeAllButtonView = TermsOfServiceAgreeButtonView()
     
@@ -36,60 +74,74 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
     private let privacyPolicyCellView = TermsOfServiceCellView(title: TermsOfService.privacyPolicy.text)
     
     private let nextButton = SOMButton().then {
-        $0.title = Text.confirmButtonTitle
-        $0.typography = .som.body1WithBold
-        $0.foregroundColor = .som.gray600
-        
-        $0.backgroundColor = .som.gray300
-        $0.layer.cornerRadius = 12
-        $0.clipsToBounds = true
+        $0.title = Text.nextButtonTitle
+        $0.typography = .som.v2.title1
+        $0.foregroundColor = .som.v2.white
+        $0.backgroundColor = .som.v2.black
+        $0.isEnabled = false
+    }
+    
+    
+    // MARK: Override variables
+    
+    override var bottomToastMessageOffset: CGFloat {
+        /// bottom safe layout guide + next button height + padding
+        return 34 + 56 + 8
     }
     
     
     // MARK: Override func
+    
+    override func setupNaviBar() {
+        super.setupNaviBar()
+        
+        self.navigationBar.title = Text.navigationTitle
+    }
         
     override func setupConstraints() {
         super.setupConstraints()
         
         self.view.addSubview(self.guideMessageView)
         self.guideMessageView.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(28)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(16)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
         
         self.view.addSubview(self.agreeAllButtonView)
         self.agreeAllButtonView.snp.makeConstraints {
-            $0.top.equalTo(self.guideMessageView.snp.bottom).offset(44)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(60)
+            $0.top.equalTo(self.guideMessageView.snp.bottom).offset(32)
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
         }
         
         self.view.addSubview(self.termsOfServiceCellView)
         self.termsOfServiceCellView.snp.makeConstraints {
-            $0.top.equalTo(self.agreeAllButtonView.snp.bottom).offset(36)
-            $0.leading.trailing.equalToSuperview()
+            $0.top.equalTo(self.agreeAllButtonView.snp.bottom).offset(8)
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
         }
         
         self.view.addSubview(self.locationServiceCellView)
         self.locationServiceCellView.snp.makeConstraints {
             $0.top.equalTo(self.termsOfServiceCellView.snp.bottom)
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
         }
         
         self.view.addSubview(self.privacyPolicyCellView)
         self.privacyPolicyCellView.snp.makeConstraints {
             $0.top.equalTo(self.locationServiceCellView.snp.bottom)
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.equalToSuperview()
+            $0.trailing.equalToSuperview()
         }
         
         self.view.addSubview(self.nextButton)
         self.nextButton.snp.makeConstraints {
-            $0.bottom.equalTo(self.view.safeAreaLayoutGuide).offset(-12)
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(48)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(56)
         }
     }
     
@@ -99,8 +151,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
     func bind(reactor: OnboardingTermsOfServiceViewReactor) {
         
         // Action
-        self.agreeAllButtonView.rx.tapGesture()
-            .when(.recognized)
+        self.agreeAllButtonView.rx.didSelect
             .map { _ in Reactor.Action.allAgree }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -110,7 +161,8 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.termsOfServiceCellView.rx.nextSelect
+        self.termsOfServiceCellView.rx.moveSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 if UIApplication.shared.canOpenURL(TermsOfService.termsOfService.url) {
                     UIApplication.shared.open(
@@ -127,7 +179,8 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.locationServiceCellView.rx.nextSelect
+        self.locationServiceCellView.rx.moveSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 if UIApplication.shared.canOpenURL(TermsOfService.locationService.url) {
                     UIApplication.shared.open(
@@ -144,7 +197,8 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
-        self.privacyPolicyCellView.rx.nextSelect
+        self.privacyPolicyCellView.rx.moveSelect
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 if UIApplication.shared.canOpenURL(TermsOfService.privacyPolicy.url) {
                     UIApplication.shared.open(
@@ -156,14 +210,7 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
             })
             .disposed(by: self.disposeBag)
         
-        self.nextButton.rx.tap
-            .map { _ in Reactor.Action.signUp }
-            .bind(to: reactor.action)
-            .disposed(by: disposeBag)
-        
-        // State
-        reactor.state.map(\.shouldNavigate)
-            .filter { $0 }
+        self.nextButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
                 let nicknameSettingVC = OnboardingNicknameSettingViewController()
                 nicknameSettingVC.reactor = reactor.reactorForNickname()
@@ -174,33 +221,34 @@ class OnboardingTermsOfServiceViewController: BaseNavigationViewController, View
         // State
         reactor.state.map(\.isAllAgreed)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isAllAgreed in
-                object.agreeAllButtonView.updateState(isAllAgreed)
-                
-                object.nextButton.foregroundColor = isAllAgreed ? .som.white : .som.gray600
-                object.nextButton.backgroundColor = isAllAgreed ? .som.p300 : .som.gray300
+                object.agreeAllButtonView.updateState(isAllAgreed, animated: false)
                 object.nextButton.isEnabled = isAllAgreed
             }
             .disposed(by: self.disposeBag)
 
         reactor.state.map(\.isTermsOfServiceAgreed)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isTermsOfServiceAgreed in
-                object.termsOfServiceCellView.updateState(isTermsOfServiceAgreed)
+                object.termsOfServiceCellView.updateState(isTermsOfServiceAgreed, animated: false)
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.isLocationAgreed)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isLocationAgreed in
-                object.locationServiceCellView.updateState(isLocationAgreed)
+                object.locationServiceCellView.updateState(isLocationAgreed, animated: false)
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.isPrivacyPolicyAgreed)
             .distinctUntilChanged()
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isPrivacyPolicyAgreed in
-                object.privacyPolicyCellView.updateState(isPrivacyPolicyAgreed)
+                object.privacyPolicyCellView.updateState(isPrivacyPolicyAgreed, animated: false)
             }
             .disposed(by: self.disposeBag)
     }

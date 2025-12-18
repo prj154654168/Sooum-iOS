@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 import Then
 
-
 class SettingTextCellView: UIView {
     
     enum ButtonStyle {
@@ -18,37 +17,45 @@ class SettingTextCellView: UIView {
         case toggle
     }
     
+    
+    // MARK: Views
+    
+    let backgroundButton = UIButton()
+    
     private let titleLabel = UILabel().then {
-        $0.typography = .som.body2WithBold
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.body1
     }
     
     private let arrowImageView = UIImageView().then {
-        $0.image = .init(.icon(.outlined(.next)))
-        $0.tintColor = .som.gray400
+        $0.image = .init(.icon(.v2(.outlined(.right))))
+        $0.tintColor = .som.gray300
     }
     
     let toggleSwitch = UISwitch().then {
         $0.isOn = false
-        $0.onTintColor = .som.p300
-        $0.thumbTintColor = .som.white
+        $0.onTintColor = .som.v2.pMain
+        $0.tintColor = .som.v2.gray200
+        $0.thumbTintColor = .som.v2.white
         
-        $0.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
+        if let thumb = $0.subviews.first?.subviews.last?.subviews.last {
+            thumb.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
+        }
     }
     
-    let backgroundButton = UIButton()
     
-    var buttonStyle: ButtonStyle?
+    // MARK: Variables
     
-    convenience init(
-        buttonStyle: ButtonStyle = .arrow,
-        title: String,
-        titleColor: UIColor = .som.gray500
-    ) {
+    private(set) var buttonStyle: ButtonStyle?
+    
+    
+    // MARK: Initialize
+    
+    convenience init(buttonStyle: ButtonStyle = .arrow, title: String) {
         self.init(frame: .zero)
         
         self.buttonStyle = buttonStyle
         self.titleLabel.text = title
-        self.titleLabel.textColor = titleColor
         
         self.setupConstraints()
     }
@@ -61,11 +68,16 @@ class SettingTextCellView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: Private func
+    
     private func setupConstraints() {
+        
+        self.backgroundColor = .som.v2.white
         
         self.snp.makeConstraints {
             $0.width.equalTo(UIScreen.main.bounds.width)
-            $0.height.equalTo(46)
+            $0.height.equalTo(48)
         }
         
         switch self.buttonStyle {
@@ -73,17 +85,14 @@ class SettingTextCellView: UIView {
             
             self.addSubview(self.titleLabel)
             self.titleLabel.snp.makeConstraints {
-                $0.top.equalToSuperview().offset(13)
-                $0.bottom.equalToSuperview().offset(-13)
-                $0.leading.equalToSuperview().offset(20)
+                $0.centerY.equalToSuperview()
+                $0.leading.equalToSuperview().offset(16)
             }
             
             self.addSubview(self.toggleSwitch)
             self.toggleSwitch.snp.makeConstraints {
                 $0.centerY.equalToSuperview()
-                $0.trailing.equalToSuperview().offset(-20)
-                $0.width.equalTo(40)
-                $0.height.equalTo(24)
+                $0.trailing.equalToSuperview().offset(-16)
             }
             
             self.addSubview(self.backgroundButton)
@@ -96,23 +105,20 @@ class SettingTextCellView: UIView {
             let backgroundView = UIView()
             self.addSubview(backgroundView)
             backgroundView.snp.makeConstraints {
-                $0.top.equalToSuperview().offset(7)
-                $0.bottom.equalToSuperview().offset(-7)
-                $0.leading.equalToSuperview().offset(20)
-                $0.trailing.equalToSuperview().offset(-20)
+                $0.verticalEdges.equalToSuperview()
+                $0.leading.equalToSuperview().offset(16)
+                $0.trailing.equalToSuperview().offset(-16)
             }
             
             backgroundView.addSubview(self.titleLabel)
             self.titleLabel.snp.makeConstraints {
-                $0.centerY.equalToSuperview()
-                $0.leading.equalToSuperview()
+                $0.centerY.leading.equalToSuperview()
             }
             
             backgroundView.addSubview(self.arrowImageView)
             self.arrowImageView.snp.makeConstraints {
-                $0.centerY.equalToSuperview()
-                $0.trailing.equalToSuperview()
-                $0.size.equalTo(24)
+                $0.centerY.trailing.equalToSuperview()
+                $0.size.equalTo(16)
             }
             
             self.addSubview(self.backgroundButton)

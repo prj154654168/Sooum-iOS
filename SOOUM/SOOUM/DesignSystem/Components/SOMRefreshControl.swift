@@ -10,22 +10,20 @@ import UIKit
 import SnapKit
 import Then
 
+import Lottie
 
 class SOMRefreshControl: UIRefreshControl {
     
-    private let backgroundView = UIView().then {
-        $0.backgroundColor = .som.white
-        $0.layer.cornerRadius = 40 * 0.5
-    }
     
-    private let imageView = UIImageView().then {
-        $0.image = .init(.icon(.outlined(.refresh)))
-        $0.tintColor = .som.black
+    // MARK: Views
+    
+    private let animationView = LottieAnimationView(name: "refrech_control_lottie").then {
         $0.contentMode = .scaleAspectFit
+        $0.loopMode = .loop
     }
     
     
-    // MARK: init
+    // MARK: Initialize
     
     convenience override init() {
         self.init(frame: .zero)
@@ -47,25 +45,22 @@ class SOMRefreshControl: UIRefreshControl {
     
     // MARK: Override func
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.subviews.filter { $0 != self.animationView }.forEach { $0.removeFromSuperview() }
+    }
+    
     override func beginRefreshing() {
         super.beginRefreshing()
-        self.animation(true)
+        self.animationView.alpha = 1.0
+        self.animationView.play()
+        self.sendActions(for: .valueChanged)
     }
     
     override func endRefreshing() {
         super.endRefreshing()
-        self.animation(false)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        self.backgroundView.setShadow(
-            radius: 40 * 0.5,
-            color: UIColor.som.black.withAlphaComponent(0.25),
-            blur: 4,
-            offset: .init(width: 0, height: 4)
-        )
+        self.animationView.stop()
     }
     
     
@@ -76,32 +71,27 @@ class SOMRefreshControl: UIRefreshControl {
         self.addObserver(self, forKeyPath: #keyPath(isRefreshing), options: .new, context: nil)
         
         self.tintColor = .clear
+        self.backgroundColor = .clear
         
-        self.addSubview(self.backgroundView)
-        self.backgroundView.snp.makeConstraints {
+        self.addSubview(self.animationView)
+        self.animationView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.size.equalTo(40)
-        }
-        
-        self.backgroundView.addSubview(self.imageView)
-        self.imageView.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.size.equalTo(28)
+            $0.size.equalTo(44)
         }
     }
     
-    private func animation(_ isRefreshing: Bool) {
+    
+    // MARK: Public func
+    
+    func updateProgress(offset contentOffsetY: CGFloat, topInset adjustedContentInsetTop: CGFloat) {
         
-        if isRefreshing {
-            let rotate = CABasicAnimation(keyPath: "transform.rotation.z")
-            rotate.fromValue = 0
-            rotate.toValue = NSNumber(value: Double.pi * -2.0)
-            rotate.duration = 1
-            rotate.repeatCount = Float.infinity
-            rotate.timingFunction = CAMediaTimingFunction(name: .linear)
-            self.imageView.layer.add(rotate, forKey: "rotate")
-        } else {
-            self.imageView.layer.removeAnimation(forKey: "rotate")
-        }
+        guard self.isRefreshing == false else { return }
+        
+        let offset = contentOffsetY + adjustedContentInsetTop
+        
+        let threshold: CGFloat = 60
+        let alpha = min(max(-offset / threshold, 0.0), 1.0)
+        
+        self.animationView.alpha = alpha
     }
 }

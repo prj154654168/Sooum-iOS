@@ -13,107 +13,83 @@ import Alamofire
 class ResignViewReactor: Reactor {
     
     enum Action: Equatable {
-        case check(Bool)
         case resign
+        case updateReason(WithdrawType)
+        case updateOtherReason(String)
     }
     
     enum Mutation {
-        case updateCheck(Bool)
+        case updateReason(WithdrawType)
+        case updateOtherReason(String?)
         case updateIsSuccess(Bool)
-        case updateIsProcessing(Bool)
-        case updateError(Bool)
     }
     
     struct State {
-        var isCheck: Bool
-        var isSuccess: Bool
-        var isProcessing: Bool
-        var isError: Bool
+        fileprivate(set) var reason: WithdrawType?
+        fileprivate(set) var otherReason: String?
+        fileprivate(set) var isSuccess: Bool?
     }
     
     var initialState: State = .init(
-        isCheck: false,
-        isSuccess: false,
-        isProcessing: false,
-        isError: false
+        reason: nil,
+        otherReason: nil,
+        isSuccess: nil
     )
     
-    let provider: ManagerProviderType
+    private let dependencies: AppDIContainerable
+    private let authUseCase: AuthUseCase
     
-    let banEndAt: Date?
-    
-    init(provider: ManagerProviderType, banEndAt: Date? = nil) {
-        self.provider = provider
-        self.banEndAt = banEndAt
+    init(dependencies: AppDIContainerable) {
+        self.dependencies = dependencies
+        self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case let .check(isCheck):
-            return .just(.updateCheck(!isCheck))
         case .resign:
-            let requset: SettingsRequest = .resign(token: self.provider.authManager.authInfo.token)
             
-            return .concat([
-                .just(.updateIsProcessing(true)),
-                self.provider.networkManager.request(Status.self, request: requset)
-                    .withUnretained(self)
-                    .flatMapLatest { object, response -> Observable<Mutation> in
-                        switch response.httpCode {
-                        case 418:
-                            return .just(.updateError(true))
-                        case 0:
-                            object.provider.authManager.initializeAuthInfo()
-                            SimpleDefaults.shared.initRemoteNotificationActivation()
-                            
-                            return .concat([
-                                object.provider.pushManager.switchNotification(on: false)
-                                    .flatMapLatest { error -> Observable<Mutation> in .empty() },
-                                .just(.updateIsSuccess(true))
-                            ])
-                        default:
-                            return .empty()
-                        }
-                    }
-                    .catch(self.catchClosure),
-                .just(.updateIsProcessing(false))
-            ])
+            guard let reason = self.currentState.reason else { return .empty() }
+            
+            return self.authUseCase.withdraw(
+                reaseon: reason == .other ?
+                    (self.currentState.otherReason ?? reason.message) :
+                    reason.message
+            )
+            .withUnretained(self)
+            .flatMapLatest { object, isSuccess -> Observable<Mutation> in
+                // 사용자 닉네임 제거
+                UserDefaults.standard.nickname = nil
+                // 인증 토큰 제거
+                object.authUseCase.initializeAuthInfo()
+                
+                return .just(.updateIsSuccess(isSuccess))
+            }
+        case let .updateReason(reason):
+            
+            return .just(.updateReason(reason))
+        case let .updateOtherReason(otherReason):
+            
+            return .just(.updateOtherReason(otherReason))
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        var state = state
+        var newState: State = state
         switch mutation {
-        case let .updateCheck(isCheck):
-            state.isCheck = isCheck
+        case let .updateReason(reason):
+            newState.reason = reason
+        case let .updateOtherReason(otherReason):
+            newState.otherReason = otherReason
         case let .updateIsSuccess(isSuccess):
-            state.isSuccess = isSuccess
-        case let .updateIsProcessing(isProcessing):
-            state.isProcessing = isProcessing
-        case let .updateError(isError):
-            state.isError = isError
+            newState.isSuccess = isSuccess
         }
-        return state
+        return newState
     }
 }
 
 extension ResignViewReactor {
     
     func reactorForOnboarding() -> OnboardingViewReactor {
-        OnboardingViewReactor(provider: self.provider)
-    }
-}
-
-extension ResignViewReactor {
-    
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { error in
-            
-            let nsError = error as NSError
-            return .concat([
-                .just(.updateError(nsError.code == 418)),
-                .just(.updateIsProcessing(false))
-            ])
-        }
+        OnboardingViewReactor(dependencies: self.dependencies)
     }
 }

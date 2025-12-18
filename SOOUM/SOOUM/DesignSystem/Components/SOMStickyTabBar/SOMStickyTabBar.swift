@@ -1,0 +1,240 @@
+//
+//  SOMStickyTabBar.swift
+//  SOOUM
+//
+//  Created by 오현식 on 12/21/24.
+//
+
+import UIKit
+
+import SnapKit
+import Then
+
+
+class SOMStickyTabBar: UIView {
+    
+    enum Constants {
+        static let height: CGFloat = 56
+        
+        static let selectedColor: UIColor = UIColor.som.v2.black
+        static let unSelectedColor: UIColor = UIColor.som.v2.gray400
+    }
+    
+    
+    // MARK: Views
+    
+    private let tabBarItemContainer = UIStackView().then {
+        $0.axis = .horizontal
+        $0.alignment = .fill
+        $0.distribution = .equalSpacing
+    }
+    
+    private var tabBarItems: [UIView]? {
+        let items = self.tabBarItemContainer.arrangedSubviews
+        return items.isEmpty ? nil : items
+    }
+    
+    private let bottomSeperator = UIView().then {
+        $0.backgroundColor = .som.v2.gray200
+    }
+    
+    private let selectedIndicator = UIView().then {
+        $0.backgroundColor = .som.v2.black
+    }
+    
+    
+    // MARK: Variables
+    
+    private let itemAlignment: NSTextAlignment
+    
+    var inset: UIEdgeInsets = .init(top: 0, left: 16, bottom: 0, right: 16) {
+        didSet {
+            self.refreshConstraints()
+        }
+    }
+    
+    var spacing: CGFloat = 24 {
+        didSet {
+            self.refreshConstraints()
+        }
+    }
+    
+    var items: [String] = [] {
+        didSet {
+            if self.items.isEmpty == false {
+                self.setTabBarItems(self.items)
+            }
+        }
+    }
+    
+    // Set item width with text and typography
+    var itemWidths: [CGFloat] {
+        if self.itemAlignment == .left {
+            return self.items.enumerated().map { index, item in
+                let typography: Typography = .som.v2.title2
+                /// 실제 텍스트 가로 길이
+                return (item as NSString).size(withAttributes: [.font: typography.font]).width
+            }
+        } else {
+            let horizontalInset = self.inset.left + self.inset.right
+            let totalSpacing = self.spacing * CGFloat(self.items.count - 1)
+            // 항상 화면의 가로 크기를 꽉 채운다고 가정
+            let itemWidth = (UIScreen.main.bounds.width - horizontalInset - totalSpacing) / CGFloat(self.items.count)
+            return Array(repeating: itemWidth, count: self.items.count)
+        }
+    }
+    
+    var itemFrames: [CGRect] {
+        var itemFrames: [CGRect] = []
+        var currentX: CGFloat = self.inset.left
+        for itemWidth in self.itemWidths {
+            let itemFrame = CGRect(x: currentX, y: 0, width: itemWidth, height: self.bounds.height)
+            itemFrames.append(itemFrame)
+            currentX += itemWidth + self.spacing
+        }
+        
+        return itemFrames
+    }
+    
+    var previousIndex: Int = 0
+    var selectedIndex: Int = 0
+    
+    
+    // MARK: Constraints
+    
+    private var tabBarItemContainerTopConstraint: Constraint?
+    private var tabBarItemContainerBottomConstraint: Constraint?
+    private var tabBarItemContainerLeadingConstraint: Constraint?
+    private var tabBarItemContainerTrailingConstraint: Constraint?
+    
+    private var selectedIndicatorLeadingConstraint: Constraint?
+    private var selectedIndicatorWidthConstraint: Constraint?
+    
+    
+    // MARK: Delegate
+    
+    weak var delegate: SOMStickyTabBarDelegate?
+    
+    
+    // MARK: Initialize
+    
+    init(alignment: NSTextAlignment = .left) {
+        self.itemAlignment = alignment
+        super.init(frame: .zero)
+        
+        self.setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    // MARK: Override func
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        guard let touch = touches.first else { return }
+        
+        let location = touch.location(in: self)
+        
+        for (index, frame) in self.itemFrames.enumerated() {
+            // 현재 선택한 좌표가 아이템의 내부이고 선택된 아이템이 아닐 때
+            if frame.contains(location), self.selectedIndex != index {
+                // 선택할 수 있는 상태일 때
+                if self.delegate?.tabBar(self, shouldSelectTabAt: index) ?? true {
+                    self.didSelectTabBarItem(index)
+                }
+            }
+        }
+        
+        super.touchesEnded(touches, with: event)
+    }
+    
+    
+    // MARK: Private func
+    
+    private func setupConstraints() {
+        
+        self.addSubview(self.bottomSeperator)
+        self.bottomSeperator.snp.makeConstraints {
+            $0.bottom.leading.trailing.equalToSuperview()
+            $0.height.equalTo(1)
+        }
+        
+        self.addSubview(self.tabBarItemContainer)
+        self.tabBarItemContainer.snp.makeConstraints {
+            self.tabBarItemContainerTopConstraint = $0.top.equalToSuperview().offset(self.inset.top).constraint
+            self.tabBarItemContainerBottomConstraint = $0.bottom.equalToSuperview().offset(-self.inset.bottom).constraint
+            self.tabBarItemContainerLeadingConstraint = $0.leading.equalToSuperview().offset(self.inset.left).constraint
+            self.tabBarItemContainerTrailingConstraint = $0.trailing.lessThanOrEqualToSuperview().offset(-self.inset.right).constraint
+        }
+        
+        self.addSubview(self.selectedIndicator)
+        self.selectedIndicator.snp.makeConstraints {
+            $0.bottom.equalToSuperview()
+            self.selectedIndicatorLeadingConstraint = $0.leading.equalToSuperview().offset(self.inset.left).constraint
+            self.selectedIndicatorWidthConstraint = $0.width.equalTo(0).constraint
+            $0.height.equalTo(2)
+        }
+    }
+    
+    private func refreshConstraints() {
+        
+        self.tabBarItemContainer.spacing = self.spacing
+        
+        self.tabBarItemContainerTopConstraint?.deactivate()
+        self.tabBarItemContainerBottomConstraint?.deactivate()
+        self.tabBarItemContainerLeadingConstraint?.deactivate()
+        self.tabBarItemContainerTrailingConstraint?.deactivate()
+        self.tabBarItemContainer.snp.makeConstraints {
+            self.tabBarItemContainerTopConstraint = $0.top.equalToSuperview().offset(self.inset.top).constraint
+            self.tabBarItemContainerBottomConstraint = $0.bottom.equalToSuperview().offset(-self.inset.bottom).constraint
+            self.tabBarItemContainerLeadingConstraint = $0.leading.equalToSuperview().offset(self.inset.left).constraint
+            self.tabBarItemContainerTrailingConstraint = $0.trailing.lessThanOrEqualToSuperview().offset(-self.inset.right).constraint
+        }
+    }
+    
+    private func setTabBarItems(_ items: [String]) {
+        
+        self.tabBarItemContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        items.enumerated().forEach { index, title in
+            
+            let item = SOMStickyTabBarItem(title: title)
+            item.updateState(color: index == self.selectedIndex ? Constants.selectedColor : Constants.unSelectedColor)
+            item.snp.makeConstraints {
+                $0.width.equalTo(self.itemWidths[index])
+            }
+            
+            self.tabBarItemContainer.addArrangedSubview(item)
+        }
+        
+        self.selectedIndicatorWidthConstraint?.update(offset: self.itemWidths.first ?? 0)
+    }
+    
+    
+    // MARK: Public func
+    
+    func didSelectTabBarItem(_ index: Int, with animated: Bool = true) {
+        
+        self.tabBarItemContainer.arrangedSubviews.enumerated().forEach {
+            let selectedItem = $1 as? SOMStickyTabBarItem
+            selectedItem?.updateState(color: $0 == index ? Constants.selectedColor : Constants.unSelectedColor)
+            
+            /// leading inset + spacing + item widths
+            let prevItemWidths: CGFloat = (index > 0) ? self.itemWidths[0..<index].reduce(0, +) : 0
+            let leadingOffset: CGFloat = self.inset.left + (self.spacing * CGFloat(index)) + prevItemWidths
+            self.selectedIndicatorLeadingConstraint?.update(offset: leadingOffset)
+            
+            let duration = animated ? 0.25 : 0
+            UIView.animate(withDuration: duration) { [weak self] in
+                self?.layoutIfNeeded()
+            }
+        }
+        
+        self.previousIndex = self.selectedIndex
+        self.selectedIndex = index
+        self.delegate?.tabBar(self, didSelectTabAt: index)
+    }
+}

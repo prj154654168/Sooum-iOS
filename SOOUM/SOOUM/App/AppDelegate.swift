@@ -16,12 +16,13 @@ import FirebaseMessaging
 import RxSwift
 
 import CocoaLumberjack
+import Kingfisher
 
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    let provider: ManagerProviderType = ManagerProviderContainer()
+    let appDIContainer: AppDIContainerable = AppDIContainer()
 
     /// APNS 등록 완료 핸들러
     var registerRemoteNotificationCompletion: ((Error?) -> Void)?
@@ -45,8 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Initalize token
         self.initializeTokenWhenFirstLaunch()
         
-        // Set managers
-        self.provider.initialize()
+        // Set Kinfisher caching limit
+        self.setupKingfisherCacheLimit()
         
         FirebaseApp.configure()
         // 파이어베이스 Meesaging 설정
@@ -83,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
     
-    /// Foreground(앱 켜진 상태)에서도 알림 오는 설정
+    /// Foreground(앱 켜진 상태)에서 알림 왔을 때, 설정 및 데이터 수신
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
@@ -91,9 +92,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     ) {
         // 계정 이관 성공 시 (런치 화면 > 온보딩 화면)으로 전환
         let userInfo = notification.request.content.userInfo
-        self.setupOnboardingWhenTransferSuccessed(userInfo)
+        guard let infoDic = userInfo as? [String: Any] else { return }
         
-        let options: UNNotificationPresentationOptions = [.sound, .list, .banner]
+        let info = PushNotificationInfo(infoDic)
+        if info.isTransfered { self.setupOnboarding() }
+        
+        var options: UNNotificationPresentationOptions
+        if let isReAddedNotifications = userInfo["isReAddedNotifications"] as? Bool, isReAddedNotifications {
+            options = [.list]
+        } else {
+            options = [.sound, .list, .banner]
+        }
         completionHandler(options)
     }
     
@@ -103,14 +112,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
+        // 계정 이관 성공 알림일 경우 온보딩 화면, 아닐 경우 메인 홈 탭바 화면 전환
         let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
-        if let infoDic = userInfo as? [String: Any] {
-            
-            let info = NotificationInfo(infoDic)
-            // 계정 이관 성공 알림일 경우 (런치 화면 > 온보딩 화면), 아닐 경우 메인 홈 탭바 화면 전환
-            self.provider.pushManager.setupRootViewController(info, terminated: info.isTransfered)
+        guard let infoDic = userInfo as? [String: Any] else { return }
+        
+        let info = PushNotificationInfo(infoDic)
+        if info.isTransfered {
+            self.setupOnboarding()
+        } else {
+            self.setupMainTabBar(info)
         }
-
+        
         completionHandler()
     }
     
@@ -121,7 +133,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
     ) {
         // 계정 이관 성공 시 (런치 화면 > 온보딩 화면)으로 전환
-        self.setupOnboardingWhenTransferSuccessed(userInfo)
+        guard let infoDic = userInfo as? [String: Any] else { return }
+        
+        let info = PushNotificationInfo(infoDic)
+        if info.isTransfered { self.setupLaunchScreen(info) }
         
         completionHandler(.newData)
     }
@@ -149,7 +164,8 @@ extension AppDelegate: MessagingDelegate {
             apns: deviceToken,
             fcm: Messaging.messaging().fcmToken
         )
-        self.provider.networkManager.registerFCMToken(with: current, #function)
+        let provider = self.appDIContainer.rootContainer.resolve(ManagerProviderType.self)
+        provider.networkManager.registerFCMToken(with: current, #function)
 
         self.registerRemoteNotificationCompletion?(nil)
     }
@@ -160,7 +176,8 @@ extension AppDelegate: MessagingDelegate {
             apns: messaging.apnsToken,
             fcm: fcmToken
         )
-        self.provider.networkManager.registerFCMToken(with: current, #function)
+        let provider = self.appDIContainer.rootContainer.resolve(ManagerProviderType.self)
+        provider.networkManager.registerFCMToken(with: current, #function)
     }
 }
 
@@ -184,13 +201,52 @@ extension AppDelegate {
         AuthKeyChain.shared.delete(.refreshToken)
     }
     
-    private func setupOnboardingWhenTransferSuccessed(_ userInfo: [AnyHashable: Any]?) {
-        guard let infoDic = userInfo as? [String: Any] else { return }
+    private func setupKingfisherCacheLimit() {
+        let cache = ImageCache.default
         
-        let info = NotificationInfo(infoDic)
-        if info.isTransfered {
-            
-            self.provider.pushManager.setupRootViewController(info, terminated: true)
-        }
+        /// 500MB
+        let diskLimit: UInt = 500 * 1024 * 1024
+        cache.diskStorage.config.sizeLimit = diskLimit
+        /// 디스크 캐시는 일주일 제한
+        cache.diskStorage.config.expiration = .days(7)
+        /// 100MB
+        let memoryLimit: Int = 100 * 1024 * 1024
+        cache.memoryStorage.config.totalCostLimit = memoryLimit
+    }
+    
+    func setupOnboarding() {
+        
+        guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+            let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
+        else { return }
+        
+        let onboardingViewController = OnboardingViewController()
+        onboardingViewController.reactor = OnboardingViewReactor(dependencies: self.appDIContainer)
+        onboardingViewController.modalTransitionStyle = .crossDissolve
+        window.rootViewController = UINavigationController(rootViewController: onboardingViewController)
+    }
+    
+    func setupLaunchScreen(_ info: PushNotificationInfo) {
+        
+        guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+            let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
+        else { return }
+    
+        let launchScreenViewController = LaunchScreenViewController()
+        launchScreenViewController.reactor = LaunchScreenViewReactor(dependencies: self.appDIContainer, pushInfo: info)
+        launchScreenViewController.modalTransitionStyle = .crossDissolve
+        window.rootViewController = UINavigationController(rootViewController: launchScreenViewController)
+    }
+    
+    func setupMainTabBar(_ info: PushNotificationInfo) {
+        
+        guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+            let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
+        else { return }
+    
+        let mainTabBarController = MainTabBarController()
+        mainTabBarController.reactor = MainTabBarReactor(dependencies: self.appDIContainer, pushInfo: info)
+        mainTabBarController.modalTransitionStyle = .crossDissolve
+        window.rootViewController = UINavigationController(rootViewController: mainTabBarController)
     }
 }

@@ -10,40 +10,16 @@ import UIKit
 
 /// https://github.com/Geri-Borbas/iOS.Blog.UILabel_Typography_Extensions
 extension UILabel {
-
-    fileprivate struct Keys {
-        static var kUILabelTypography: String = "kUILabelTypography"
-        static var kUILabelTextObserver: String = "kUILabelTextObserver"
-        
-        static func setObjctForTypo(_ typography: Typography) {
-            withUnsafePointer(to: Self.kUILabelTypography) {
-                objc_setAssociatedObject(self, $0, typography, .OBJC_ASSOCIATION_RETAIN)
-            }
-        }
-        static func getObjectForTypo() -> Typography? {
-            withUnsafePointer(to: Self.kUILabelTypography) {
-                objc_getAssociatedObject(self, $0) as? Typography
-            }
-        }
-        
-        static func setObjectForObserver(_ textObserver: TextObserver?) {
-            withUnsafePointer(to: Self.kUILabelTextObserver) {
-                objc_setAssociatedObject(self, $0, textObserver, .OBJC_ASSOCIATION_RETAIN)
-            }
-        }
-        static func getObjectForObserver() -> TextObserver? {
-            withUnsafePointer(to: Self.kUILabelTextObserver) {
-                objc_getAssociatedObject(self, $0) as? TextObserver
-            }
-        }
-    }
+    
+    private static var kUILabelTypography: UInt8 = 0
+    private static var kUILabelTextObserver: UInt8 = 0
 
     func setTypography(
         _ typography: Typography,
         with closure: ((NSMutableAttributedString) -> Void)? = nil
     ) {
         
-        Keys.setObjctForTypo(typography)
+        objc_setAssociatedObject(self, &Self.kUILabelTypography, typography, .OBJC_ASSOCIATION_RETAIN)
 
         self.font = typography.font
 
@@ -73,6 +49,7 @@ extension UILabel {
         }
     }
 
+    /// When self.text == nil, must set typography when input text
     var typography: Typography? {
         set {
             if let typography: Typography = newValue {
@@ -80,7 +57,7 @@ extension UILabel {
             }
         }
         get {
-            return Keys.getObjectForTypo()
+            return objc_getAssociatedObject(self, &Self.kUILabelTypography) as? Typography
         }
     }
 }
@@ -92,11 +69,11 @@ extension UILabel {
     typealias TextChangeAction = (_ oldValue: String?, _ newValue: String?) -> Void
     
     fileprivate var observer: TextObserver? {
-        get {
-            Keys.getObjectForObserver()
-        }
         set {
-            Keys.setObjectForObserver(newValue)
+            objc_setAssociatedObject(self, &Self.kUILabelTextObserver, newValue, .OBJC_ASSOCIATION_RETAIN)
+        }
+        get {
+            return objc_getAssociatedObject(self, &Self.kUILabelTextObserver) as? TextObserver
         }
     }
     

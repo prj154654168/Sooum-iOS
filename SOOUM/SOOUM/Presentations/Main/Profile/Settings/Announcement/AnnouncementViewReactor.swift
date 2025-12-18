@@ -7,75 +7,70 @@
 
 import ReactorKit
 
-
 class AnnouncementViewReactor: Reactor {
     
     enum Action: Equatable {
         case landing
         case refresh
+        case more(lastId: String)
     }
     
     enum Mutation {
-        case announcements([Announcement])
-        case updateIsLoading(Bool)
+        case announcements([NoticeInfo])
+        case more([NoticeInfo])
+        case updateIsRefreshing(Bool)
     }
     
     struct State {
-        var announcements: [Announcement]
-        var isLoading: Bool
+        var announcements: [NoticeInfo]
+        var isRefreshing: Bool
     }
     
     var initialState: State = .init(
         announcements: [],
-        isLoading: false
+        isRefreshing: false
     )
     
-    let provider: ManagerProviderType
+    private let dependencies: AppDIContainerable
+    private let fetchNoticeUseCase: FetchNoticeUseCase
     
-    init(provider: ManagerProviderType) {
-        self.provider = provider
+    init(dependencies: AppDIContainerable) {
+        self.dependencies = dependencies
+        self.fetchNoticeUseCase = dependencies.rootContainer.resolve(FetchNoticeUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
-            let request: SettingsRequest = .announcement
             
-            return self.provider.networkManager.request(AnnouncementResponse.self, request: request)
-                .flatMapLatest { response -> Observable<Mutation> in
-                    return .just(.announcements(response.embedded.announcements))
-                }
+            return self.fetchNoticeUseCase.notices(lastId: nil, size: 10, requestType: .settings)
+                .map(Mutation.announcements)
         case .refresh:
-            let request: SettingsRequest = .announcement
             
             return .concat([
-                .just(.updateIsLoading(true)),
-                self.provider.networkManager.request(AnnouncementResponse.self, request: request)
-                    .flatMapLatest { response -> Observable<Mutation> in
-                        return .just(.announcements(response.embedded.announcements))
-                    }
-                    .delay(.milliseconds(500), scheduler: MainScheduler.instance)
-                    .catch(self.catchClosure),
-                .just(.updateIsLoading(false))
+                .just(.updateIsRefreshing(true)),
+                self.fetchNoticeUseCase.notices(lastId: nil, size: 10, requestType: .settings)
+                    .map(Mutation.announcements)
+                    .catchAndReturn(.updateIsRefreshing(false)),
+                .just(.updateIsRefreshing(false))
             ])
+        case let .more(lastId):
+            
+            return self.fetchNoticeUseCase.notices(lastId: lastId, size: 10, requestType: .settings)
+                .map(Mutation.more)
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        var state = state
+        var newState: State = state
         switch mutation {
         case let .announcements(announcements):
-            state.announcements = announcements
-        case let .updateIsLoading(isLoading):
-            state.isLoading = isLoading
+            newState.announcements = announcements
+        case let .more(announcements):
+            newState.announcements += announcements
+        case let .updateIsRefreshing(isRefreshing):
+            newState.isRefreshing = isRefreshing
         }
-        return state
-    }
-}
-
-extension AnnouncementViewReactor {
-    
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { _ in .just(.updateIsLoading(false)) }
+        return newState
     }
 }

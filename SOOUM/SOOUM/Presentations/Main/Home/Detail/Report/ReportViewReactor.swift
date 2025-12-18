@@ -5,100 +5,82 @@
 //  Created by JDeoks on 10/13/24.
 //
 
-import Foundation
-
 import ReactorKit
 
 class ReportViewReactor: Reactor {
     
-    enum ReportType: String, CaseIterable {
-        case profanity = "DEFAMATION_AND_ABUSE"
-        case privacyViolation = "PRIVACY_VIOLATION"
-        case inappropriatePromotion = "INAPPROPRIATE_ADVERTISING"
-        case obsceneContent = "PORNOGRAPHY"
-        case fraud = "IMPERSONATION_AND_FRAUD"
-        case etc = "OTHER"
-        
-        var title: String {
-            switch self {
-            case .profanity:
-                "비방 및 욕설"
-            case .privacyViolation:
-                "개인정보 침해"
-            case .inappropriatePromotion:
-                "부적절한 홍보 및 바이럴"
-            case .obsceneContent:
-                "음란물"
-            case .fraud:
-                "사칭 및 사기"
-            case .etc:
-                "기타"
-            }
-        }
-        
-        var description: String {
-            switch self {
-            case .profanity:
-                "욕설을 사용하여 타인에게 모욕감을 주는 경우"
-            case .privacyViolation:
-                "법적으로 중요한 타인의 개인정보를 게재"
-            case .inappropriatePromotion:
-                "부적절한 스팸 홍보 행위"
-            case .obsceneContent:
-                "음란한 행위와 관련된 부적절한 행동"
-            case .fraud:
-                "사칭으로 타인의 권리를 침해하는 경우"
-            case .etc:
-                "해당하는 신고항목이 없는 경우"
-            }
-        }
-    }
-    
     enum Action: Equatable {
-        case report(ReportType)
+        case updateReportReason(ReportType)
+        case report
     }
     
     enum Mutation {
+        case updateReportReason(ReportType?)
         /// 업로드 완료 여부 변경
-        case updateDialogPresent(Bool)
+        case updateisReported(Bool)
+        case updateHasErrors(Bool)
     }
     
     struct State {
-        var isDialogPresented: Bool?
+        fileprivate(set) var reportReason: ReportType?
+        fileprivate(set) var isReported: Bool
+        fileprivate(set) var hasErrors: Bool
     }
     
-    var initialState: State = .init(isDialogPresented: nil)
+    var initialState: State = .init(reportReason: nil, isReported: false, hasErrors: false)
     
+    private let dependencies: AppDIContainerable
+    private let reportCardUseCase: ReportCardUseCase
     /// 신고할 카드 id
     private let id: String
     
-    let provider: ManagerProviderType
-    
-    init(provider: ManagerProviderType, _ id: String) {
-        self.provider = provider
+    init(dependencies: AppDIContainerable, with id: String) {
+        self.dependencies = dependencies
+        self.reportCardUseCase = dependencies.rootContainer.resolve(ReportCardUseCase.self)
+        
         self.id = id
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-        case .report(let reportType):
-            return summitReport(reportType: reportType)
+        case let .updateReportReason(reportReason):
+            
+            return .just(.updateReportReason(reportReason))
+        case .report:
+            
+            guard let reportReason = self.currentState.reportReason else { return .empty() }
+            
+            return self.reportCardUseCase.report(cardId: self.id, reportType: reportReason.rawValue)
+                .map(Mutation.updateisReported)
+                .catchAndReturn(.updateHasErrors(true))
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        var state: State = state
+        var newState = state
         switch mutation {
-        case let .updateDialogPresent(isPresent):
-            state.isDialogPresented = isPresent
+        case let .updateReportReason(reportReason):
+            newState.reportReason = reportReason
+        case let .updateisReported(isReported):
+            newState.isReported = isReported
+        case let .updateHasErrors(hasErrors):
+            newState.hasErrors = hasErrors
         }
-        return state
+        return newState
     }
+}
+
+extension ReportViewReactor {
     
-    func summitReport(reportType: ReportType) -> Observable<Mutation> {
-        
-        let request = ReportRequest.reportCard(id: id, reportType: reportType)
-        return self.provider.networkManager.request(Status.self, request: request)
-            .map { .updateDialogPresent($0.httpCode == 201) }
-    } 
+    // TODO: 임시, 에러 발생 시 뒤로가기
+    // var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+    //     return { error in
+    //
+    //         let nsError = error as NSError
+    //         switch nsError.code {
+    //         case 409, 410:  return .just(.updateHasErrors(true))
+    //         default:        return .empty()
+    //         }
+    //     }
+    // }
 }

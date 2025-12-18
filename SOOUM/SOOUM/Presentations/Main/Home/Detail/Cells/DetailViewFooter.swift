@@ -17,12 +17,12 @@ import Then
 class DetailViewFooter: UICollectionReusableView {
     
     enum Text {
-        static let noContentText: String = "답카드가 아직 없어요"
+        static let noContentText: String = "첫 댓글을 남겨보세요"
     }
     
-    let likeAndCommentView = LikeAndCommentView()
     
-    let noContentBackgroundView = UIImageView()
+    // MARK: Views
+    
     let noContentLabel = UILabel().then {
         $0.text = Text.noContentText
         $0.textColor = .som.gray400
@@ -30,38 +30,39 @@ class DetailViewFooter: UICollectionReusableView {
         $0.typography = .som.body1WithBold
     }
     
+    /**
+     TODO: 임시,
+     cell을 제외한 top padding 54 * 0.5, bottom inset = 10 맞추기 위해 32만큼 올림
+     현재 bottom padding == 27, 디자인 bottom padding == 10
+     */
     private let flowLayout = UICollectionViewFlowLayout().then {
-        $0.minimumLineSpacing = 8
+        $0.minimumLineSpacing = 10
+        $0.minimumInteritemSpacing = 0
         $0.scrollDirection = .horizontal
+        $0.sectionInset = .init(top: 0, left: 16, bottom: 32, right: 16)
     }
     
-    lazy var collectionView = UICollectionView(
+    private lazy var collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: self.flowLayout
     ).then {
-        $0.alwaysBounceHorizontal = true
         $0.backgroundColor = .clear
         $0.indicatorStyle = .black
         
-        $0.decelerationRate = .fast
-        
+        $0.alwaysBounceHorizontal = true
         $0.showsVerticalScrollIndicator = false
         $0.showsHorizontalScrollIndicator = false
         
-        $0.register(DetailViewFooterCell.self, forCellWithReuseIdentifier: "cell")
+        $0.register(DetailViewFooterCell.self, forCellWithReuseIdentifier: DetailViewFooterCell.cellIdentifier)
+        
         $0.dataSource = self
         $0.delegate = self
     }
     
-    var commentCards = [Card]()
     
-    var isDeletedCard: Bool = false {
-        didSet {
-            if isDeletedCard {
-                self.likeAndCommentView.updateViewsWhenDeleted()
-            }
-        }
-    }
+    // MARK: Variables
+    
+    private(set) var commentCards: [BaseCardInfo] = []
     
     private var currentOffset: CGFloat = 0
     private var isLoadingMore: Bool = false
@@ -70,6 +71,9 @@ class DetailViewFooter: UICollectionReusableView {
     let moreDisplay = PublishRelay<String>()
     
     var disposeBag = DisposeBag()
+    
+    
+    // MARK: Initialize
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -80,12 +84,18 @@ class DetailViewFooter: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: Override func
+    
     override func prepareForReuse() {
         super.prepareForReuse()
+        
         self.disposeBag = DisposeBag()
     }
     
     private func setupConstraints() {
+        
+        self.backgroundColor = .som.v2.gray100
         
         let topSeperatorView = UIView().then {
             $0.backgroundColor = .som.gray200
@@ -93,47 +103,31 @@ class DetailViewFooter: UICollectionReusableView {
         
         self.addSubview(topSeperatorView)
         topSeperatorView.snp.makeConstraints {
-            $0.top.leading.trailing.equalToSuperview()
-            $0.height.equalTo(0.4)
+            $0.top.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(1)
         }
         
-        self.addSubview(self.likeAndCommentView)
-        self.likeAndCommentView.snp.makeConstraints {
-            $0.top.equalTo(topSeperatorView.snp.bottom)
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(48)
-        }
-        
-        self.addSubviews(self.collectionView)
+        self.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints {
-            $0.top.equalTo(self.likeAndCommentView.snp.bottom)
-            $0.bottom.leading.trailing.equalToSuperview()
+            $0.edges.equalToSuperview()
         }
         
-        self.addSubviews(self.noContentBackgroundView)
-        self.noContentBackgroundView.snp.makeConstraints {
-            $0.top.equalTo(self.likeAndCommentView.snp.bottom)
-            $0.bottom.leading.trailing.equalToSuperview()
-        }
-        self.noContentBackgroundView.addSubview(self.noContentLabel)
+        self.addSubview(self.noContentLabel)
         self.noContentLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
         }
     }
     
-    func setDatas(_ datas: [Card], cardSummary: CardSummary) {
+    func setModels(_ models: [BaseCardInfo]) {
         
         self.isLoadingMore = false
         
-        self.commentCards = datas
-        self.likeAndCommentView.likeCount = cardSummary.cardLikeCnt
-        self.likeAndCommentView.commentCount = cardSummary.commentCnt
-        self.likeAndCommentView.isLikeSelected = cardSummary.isLiked
+        self.commentCards = models
         
-        self.collectionView.isHidden = datas.isEmpty
-        self.noContentBackgroundView.isHidden = !datas.isEmpty
+        self.collectionView.isHidden = models.isEmpty
+        self.noContentLabel.isHidden = models.isEmpty == false
         
-        if !datas.isEmpty {
+        UIView.performWithoutAnimation {
             self.collectionView.reloadData()
         }
     }
@@ -145,6 +139,7 @@ extension DetailViewFooter: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
+        
         return self.commentCards.count
     }
     
@@ -152,13 +147,14 @@ extension DetailViewFooter: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        let cell: DetailViewFooterCell = collectionView
-            .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        as! DetailViewFooterCell
+        
+        let cell: DetailViewFooterCell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: DetailViewFooterCell.cellIdentifier,
+            for: indexPath
+        ) as! DetailViewFooterCell
         
         let commentCard = self.commentCards[indexPath.row]
-        let model: SOMCardModel = .init(data: commentCard)
-        cell.setModel(model)
+        cell.bind(commentCard)
         
         return cell
     }
@@ -176,26 +172,27 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
         willDisplay cell: UICollectionViewCell,
         forItemAt indexPath: IndexPath
     ) {
-        if self.commentCards.count > 1 {
-            let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-            layout.sectionInset.left = 19
-            layout.sectionInset.right = 19
-        } else {
-            let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
-            let cellWidthWithSpacing = cell.bounds.width + layout.minimumLineSpacing
-            layout.sectionInset.left = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
-            layout.sectionInset.right = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
-        }
-        
+        // TODO: 답카드가 1개일 때, 중앙 정렬
+        // if self.commentCards.count > 1 {
+        //     let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        //     layout.sectionInset.left = 19
+        //     layout.sectionInset.right = 19
+        // } else {
+        //     let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        //     let cellWidthWithSpacing = cell.bounds.width + layout.minimumLineSpacing
+        //     layout.sectionInset.left = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
+        //     layout.sectionInset.right = (collectionView.bounds.width - cellWidthWithSpacing) * 0.5
+        // }
+    
         guard self.commentCards.isEmpty == false else { return }
-        
+    
         let lastSectionIndex = collectionView.numberOfSections - 1
         let lastRowIndex = collectionView.numberOfItems(inSection: lastSectionIndex) - 1
-        
+    
         if self.isLoadingMore, indexPath.section == lastSectionIndex, indexPath.item == lastRowIndex {
-            
+    
             self.isLoadingMore = false
-            
+    
             let lastId = self.commentCards[indexPath.item].id
             self.moreDisplay.accept(lastId)
         }
@@ -206,7 +203,7 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let height: CGFloat = collectionView.bounds.height
+        let height: CGFloat = collectionView.bounds.height - 10 * 2 - 34
         return CGSize(width: height, height: height)
     }
     
@@ -214,7 +211,6 @@ extension DetailViewFooter: UICollectionViewDelegateFlowLayout {
         
         let offset = scrollView.contentOffset.x
         
-        // 아래로 스크롤 중일 때, 데이터 추가로드 가능
         self.isLoadingMore = offset > self.currentOffset
         self.currentOffset = offset
     }

@@ -10,64 +10,72 @@ import UIKit
 import SnapKit
 import Then
 
-
 class LikeAndCommentView: UIView {
     
-    let likeBackgroundButton = UIButton()
-    private let likeContainer = UIStackView().then {
-        $0.axis = .horizontal
-        $0.alignment = .center
-        $0.distribution = .equalSpacing
-        $0.spacing = 4
+    enum Text {
+        static let visitedPrefix: String = "조회 "
     }
+    
+    
+    // MARK: Views
+    
+    let likeBackgroundButton = UIButton()
+    private let likeContainer = UIView()
     private let likeImageView = UIImageView().then {
-        $0.image = .init(.icon(.outlined(.heart)))
-        $0.tintColor = .som.gray800
+        $0.image = .init(.icon(.v2(.outlined(.heart))))
+        $0.tintColor = .som.v2.gray500
     }
     private let likeCountLabel = UILabel().then {
-        $0.textColor = .som.gray800
-        $0.textAlignment = .center
-        $0.typography = .som.body2WithRegular
+        $0.textColor = .som.v2.gray500
+        $0.typography = .som.v2.caption1.withAlignment(.left)
     }
     
     let commentBackgroundButton = UIButton()
-    private let commentContainer = UIStackView().then {
-        $0.axis = .horizontal
-        $0.alignment = .center
-        $0.distribution = .equalSpacing
-        $0.spacing = 4
-    }
+    private let commentContainer = UIView()
     private let commentImageView = UIImageView().then {
-        $0.image = .init(.icon(.outlined(.commentAdd)))
-        $0.tintColor = .som.gray800
+        $0.image = .init(.icon(.v2(.outlined(.message_circle))))
+        $0.tintColor = .som.v2.gray500
     }
     private let commentCountLabel = UILabel().then {
-        $0.textColor = .som.gray800
-        $0.textAlignment = .center
-        $0.typography = .som.body2WithRegular
+        $0.textColor = .som.v2.gray500
+        $0.typography = .som.v2.caption1.withAlignment(.left)
     }
     
-    private var inputLikeCount: Int = 0
-    var likeCount: Int {
-        set {
-            self.inputLikeCount = newValue
-            self.likeCountLabel.text = newValue > 99 ? "99+" : newValue.description
-        }
-        get { return inputLikeCount }
+    private let visitedLabel = UILabel().then {
+        $0.textColor = .som.v2.gray500
+        $0.typography = .som.v2.caption1
     }
     
-    private var inputCommentCount: Int = 0
-    var commentCount: Int {
-        set {
-            self.inputCommentCount = newValue
-            self.commentCountLabel.text = newValue > 99 ? "99+" : newValue.description
+    
+    // MARK: Variables
+    
+    var likeCount: Int = 0 {
+        didSet {
+            self.likeCountLabel.text = self.likeCount.description
+            self.likeCountLabel.typography = .som.v2.caption1
         }
-        get { return inputCommentCount }
+    }
+    
+    var commentCount: Int = 0 {
+        didSet {
+            self.commentCountLabel.text = self.commentCount.description
+            self.commentCountLabel.typography = .som.v2.caption1
+        }
+    }
+    
+    var visitedCount: String = "0" {
+        didSet {
+            self.visitedLabel.text = Text.visitedPrefix + self.visitedCount
+            self.visitedLabel.typography = .som.v2.caption1
+        }
     }
     
     var isLikeSelected: Bool = false {
         didSet { self.updateLikeContainerColor(self.isLikeSelected) }
     }
+    
+    
+    // MARK: Initialize
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -78,46 +86,79 @@ class LikeAndCommentView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: Private func
+    
     private func setupConstraints() {
         
-        let container = UIStackView(arrangedSubviews: [
-            self.likeContainer,
-            self.commentContainer
-        ]).then {
-            $0.axis = .horizontal
-            $0.alignment = .center
-            $0.distribution = .equalSpacing
-            $0.spacing = 6
-        }
-        self.addSubview(container)
-        container.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
-            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
+        self.backgroundColor = .som.v2.white
+        
+        self.snp.makeConstraints {
+            $0.height.equalTo(44)
         }
         
-        self.likeContainer.addArrangedSubviews(self.likeImageView, self.likeCountLabel)
+        self.addSubview(self.likeContainer)
+        self.likeContainer.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.width.equalTo(60)
+        }
+        self.likeContainer.addSubview(self.likeImageView)
+        self.likeImageView.snp.makeConstraints {
+            $0.centerY.leading.equalToSuperview()
+            $0.size.equalTo(20)
+        }
+        self.likeContainer.addSubview(self.likeCountLabel)
+        self.likeCountLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalTo(self.likeImageView.snp.trailing).offset(4)
+        }
+        
         self.addSubview(self.likeBackgroundButton)
         self.likeBackgroundButton.snp.makeConstraints {
-            $0.edges.equalTo(likeContainer)
+            $0.edges.equalTo(self.likeImageView)
         }
         
-        self.commentContainer.addArrangedSubviews(self.commentImageView, self.commentCountLabel)
+        self.addSubview(self.commentContainer)
+        self.commentContainer.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalTo(self.likeContainer.snp.trailing)
+            $0.width.equalTo(60)
+        }
+        self.commentContainer.addSubview(self.commentImageView)
+        self.commentImageView.snp.makeConstraints {
+            $0.centerY.leading.equalToSuperview()
+            $0.size.equalTo(20)
+        }
+        self.commentContainer.addSubview(self.commentCountLabel)
+        self.commentCountLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalTo(self.commentImageView.snp.trailing).offset(4)
+        }
+        
         self.addSubview(self.commentBackgroundButton)
         self.commentBackgroundButton.snp.makeConstraints {
-            $0.edges.equalTo(self.commentContainer)
+            $0.edges.equalTo(self.commentImageView)
+        }
+        
+        self.addSubview(self.visitedLabel)
+        self.visitedLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.greaterThanOrEqualTo(self.commentContainer.snp.trailing).offset(20)
+            $0.trailing.equalToSuperview().offset(-20)
         }
     }
     
     func updateLikeContainerColor(_ isSelected: Bool) {
-        
-        self.likeImageView.image = .init(.icon(isSelected ? .filled(.heart) : .outlined(.heart)))
-        self.likeImageView.tintColor = isSelected ? .som.p300 : .som.gray800
-        self.likeCountLabel.textColor = isSelected ? .som.p300 : .som.gray800
+        self.likeImageView.image = .init(.icon(.v2(isSelected ? .filled(.heart) : .outlined(.heart))))
+        self.likeImageView.tintColor = isSelected ? .som.v2.rMain : .som.v2.gray500
     }
     
     func updateViewsWhenDeleted() {
         self.likeContainer.removeFromSuperview()
+        self.likeBackgroundButton.removeFromSuperview()
+        self.commentContainer.removeFromSuperview()
         self.commentBackgroundButton.removeFromSuperview()
+        self.visitedLabel.removeFromSuperview()
     }
 }

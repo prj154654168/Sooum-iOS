@@ -7,28 +7,30 @@
 
 import UIKit
 
-
-class SOMDialogAction {
+final class SOMDialogAction {
     
     enum Style {
         case primary
+        case red
         case gray
         
         var backgroundColor: UIColor {
             switch self {
             case .primary:
-                return .som.p300
+                return .som.v2.black
+            case .red:
+                return .som.v2.rMain
             case .gray:
-                return .som.gray300
+                return .som.v2.gray100
             }
         }
         
         var foregroundColor: UIColor {
             switch self {
-            case .primary:
-                return .som.white
+            case .primary, .red:
+                return .som.v2.white
             case .gray:
-                return .som.gray700
+                return .som.v2.gray600
             }
         }
     }

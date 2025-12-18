@@ -1,0 +1,28 @@
+//
+//  UserRepository.swift
+//  SOOUM
+//
+//  Created by 오현식 on 9/17/25.
+//
+
+import Foundation
+
+import RxSwift
+
+protocol UserRepository {
+    
+    func checkAvailable() -> Observable<CheckAvailableResponse>
+    func nickname() -> Observable<NicknameResponse>
+    func validateNickname(nickname: String) -> Observable<NicknameValidateResponse>
+    func updateNickname(nickname: String) -> Observable<Int>
+    func presignedURL() -> Observable<ImageUrlInfoResponse>
+    func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Int, Error>>
+    func updateImage(imageName: String) -> Observable<Int>
+    func postingPermission() -> Observable<PostingPermissionResponse>
+    func profile(userId: String?) -> Observable<ProfileInfoResponse>
+    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int>
+    func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
+    func followings(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
+    func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int>
+    func updateBlocked(id: String, isBlocked: Bool) -> Observable<Int>
+}

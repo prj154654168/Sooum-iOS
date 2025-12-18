@@ -7,26 +7,41 @@
 
 import UIKit
 
+import Network
+
 import RxKeyboard
 import RxSwift
 
 import SnapKit
 import Then
 
+import Lottie
 
 class BaseViewController: UIViewController {
+    
+    enum Text {
+        static let bottomToastEntryName: String = "bottomToastEntryName"
+        static let instabilityNetworkToastTitle: String = "네트워크 연결이 원활하지 않습니다. 네트워크 확인 후 재접속해주세요"
+    }
 
     var disposeBag = DisposeBag()
     
+    private let monitor = NWPathMonitor()
+    
+    private let instabilityNetworkToastView = SOMBottomToastView(title: Text.instabilityNetworkToastTitle, actions: nil)
+    
     let activityIndicatorView = SOMActivityIndicatorView()
+    let loadingIndicatorView = SOMLoadingIndicatorView()
 
     private(set) var isEndEditingWhenWillDisappear: Bool = true
+    private(set) var bottomToastMessageOffset: CGFloat = 88 + 8
     
-    override var hidesBottomBarWhenPushed: Bool {
-        didSet {
-            NotificationCenter.default.post(name: .hidesBottomBarWhenPushedDidChange, object: self)
-        }
-    }
+    // TODO: 임시, 탭바 숨기지 않음
+    // override var hidesBottomBarWhenPushed: Bool {
+    //     didSet {
+    //         NotificationCenter.default.post(name: .hidesBottomBarWhenPushedDidChange, object: self)
+    //     }
+    // }
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -35,20 +50,16 @@ class BaseViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    /// Show deinit class name
+    /// show deinit class name and remove all observer
     deinit {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: .hidesBottomBarWhenPushedDidChange,
-            object: nil
-        )
+        NotificationCenter.default.removeObserver(self)
         Log.debug("Deinit: ", type(of: self).description().components(separatedBy: ".").last ?? "")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = .som.v2.white
         self.setupConstraints()
         
         self.activityIndicatorView.color = .black
@@ -57,6 +68,11 @@ class BaseViewController: UIViewController {
         self.activityIndicatorView.snp.makeConstraints {
             $0.centerX.equalTo(self.view.safeAreaLayoutGuide.snp.centerX)
             $0.centerY.equalTo(self.view.safeAreaLayoutGuide.snp.centerY)
+        }
+        
+        self.view.addSubview(self.loadingIndicatorView)
+        self.loadingIndicatorView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
 
         self.bind()
@@ -68,6 +84,19 @@ class BaseViewController: UIViewController {
                 let safeAreaInsetBottom: CGFloat = sceneDelegate?.window?.safeAreaInsets.bottom ?? 0
                 let withoutBottomSafeInset: CGFloat = max(0, height - safeAreaInsetBottom)
                 object.updatedKeyboard(withoutBottomSafeInset: withoutBottomSafeInset)
+            }
+            .disposed(by: self.disposeBag)
+        
+        SimpleReachability.shared.isConnected
+            .skip(1)
+            .filter { $0 == false }
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, _ in
+                guard object.isViewLoaded, object.view.window != nil else { return }
+                
+                var wrapper: SwiftEntryKitViewWrapper = object.instabilityNetworkToastView.sek
+                wrapper.entryName = Text.bottomToastEntryName
+                wrapper.showBottomToast(verticalOffset: object.bottomToastMessageOffset, displayDuration: 4)
             }
             .disposed(by: self.disposeBag)
     }

@@ -7,7 +7,7 @@
 
 import ReactorKit
 
-import Alamofire
+import Kingfisher
 
 
 class UpdateProfileViewReactor: Reactor {
@@ -18,131 +18,188 @@ class UpdateProfileViewReactor: Reactor {
     }
     
     enum Action: Equatable {
-        case updateImage(UIImage)
+        case uploadImage(UIImage)
+        case setDefaultImage
+        case setInitialImage
         case checkValidate(String)
         case updateProfile(String)
     }
     
     enum Mutation {
-        case updateImage(UIImage)
+        case updateImageInfo(UIImage?, String?)
         case updateIsValid(Bool)
         case updateIsSuccess(Bool)
         case updateIsProcessing(Bool)
+        case updateErrors(Bool?)
         case updateErrorMessage(String?)
     }
     
     struct State {
-        var profileImage: UIImage?
-        var isValid: Bool
-        var isSuccess: Bool
-        var isProcessing: Bool
-        var errorMessage: String?
+        fileprivate(set) var profileImage: UIImage?
+        fileprivate(set) var profileImageName: String?
+        fileprivate(set) var isValid: Bool
+        fileprivate(set) var isUpdatedSuccess: Bool
+        fileprivate(set) var isProcessing: Bool
+        fileprivate(set) var hasErrors: Bool?
+        fileprivate(set) var errorMessage: String?
     }
     
-    var initialState: State = .init(
-        profileImage: nil,
-        isValid: false,
-        isSuccess: false,
-        isProcessing: false,
-        errorMessage: nil
-    )
+    var initialState: State
     
-    private var imageName: String?
+    private let dependencies: AppDIContainerable
+    private let validateNicknameUseCase: ValidateNicknameUseCase
+    private let uploadUserImageUseCase: UploadUserImageUseCase
+    private let updateUserInfoUseCase: UpdateUserInfoUseCase
     
-    let provider: ManagerProviderType
-    var profile: Profile
+    let nickname: String
     
-    init(provider: ManagerProviderType, _ profile: Profile) {
-        self.provider = provider
-        self.profile = profile
+    init(
+        dependencies: AppDIContainerable,
+        nickname: String,
+        image profileImage: UIImage?,
+        imageName profileImageName: String?
+    ) {
+        self.dependencies = dependencies
+        self.validateNicknameUseCase = dependencies.rootContainer.resolve(ValidateNicknameUseCase.self)
+        self.uploadUserImageUseCase = dependencies.rootContainer.resolve(UploadUserImageUseCase.self)
+        self.updateUserInfoUseCase = dependencies.rootContainer.resolve(UpdateUserInfoUseCase.self)
+        
+        self.nickname = nickname
+        
+        self.initialState = .init(
+            profileImage: profileImage,
+            profileImageName: profileImageName,
+            isValid: false,
+            isUpdatedSuccess: false,
+            isProcessing: false,
+            hasErrors: nil,
+            errorMessage: nil
+        )
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+        case let .uploadImage(image):
+            
+            return .concat([
+                .just(.updateErrors(false)),
+                self.uploadImage(image)
+                    .catch(self.catchClosure)
+            ])
+        case .setDefaultImage:
+            
+            return .just(.updateImageInfo(self.initialState.profileImage, nil))
+        case .setInitialImage:
+            
+            return .just(.updateImageInfo(nil, nil))
         case let .checkValidate(nickname):
+            
+            guard nickname != self.nickname else {
+                return .concat([
+                    .just(.updateIsValid(false)),
+                    .just(.updateErrorMessage(nil))
+                ])
+            }
+            
             if nickname.isEmpty {
                 return .concat([
                     .just(.updateIsValid(false)),
                     .just(.updateErrorMessage(ErrorMessages.isEmpty.rawValue))
                 ])
             }
-            let request: JoinRequest = .validateNickname(nickname: nickname)
             
             return .concat([
                 .just(.updateErrorMessage(nil)),
-                self.provider.networkManager.request(NicknameValidationResponse.self, request: request)
-                    .flatMapLatest { response -> Observable<Mutation> in
-                        let isAvailable = response.isAvailable
-                        let errorMessage = isAvailable ? nil : ErrorMessages.inValid.rawValue
+                self.validateNicknameUseCase.checkValidation(nickname: nickname)
+                    .withUnretained(self)
+                    .flatMapLatest { object, isValid -> Observable<Mutation> in
+                        
+                        let errorMessage = isValid ? nil : ErrorMessages.inValid.rawValue
                         return .concat([
-                            .just(.updateIsValid(isAvailable)),
+                            .just(.updateIsValid(isValid)),
                             .just(.updateErrorMessage(errorMessage))
                         ])
                     }
             ])
-        case let .updateImage(image):
-            return self.updateImage(image)
         case let .updateProfile(nickname):
-            let trimedNickname = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
-            let request: ProfileRequest = .updateProfile(nickname: trimedNickname, profileImg: self.imageName)
             
+            let trimedNickname = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
+            let updatedNickname = trimedNickname == self.nickname ? nil : trimedNickname
             return .concat([
-                .just(.updateIsProcessing(true)),
-                
-                self.provider.networkManager.request(Empty.self, request: request)
-                    .flatMapLatest { _ -> Observable<Mutation> in
-                        return .just(.updateIsSuccess(true))
-                    },
-                
-                .just(.updateIsProcessing(false))
+                .just(.updateErrors(false)),
+                self.updateUserInfoUseCase.updateUserInfo(
+                    nickname: updatedNickname,
+                    imageName: self.currentState.profileImageName
+                )
+                    .map(Mutation.updateIsSuccess)
+                    .catch(self.catchClosure)
             ])
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        var state = state
+        var newState: State = state
         switch mutation {
+        case let .updateImageInfo(profileImage, profileImageName):
+            newState.profileImage = profileImage
+            newState.profileImageName = profileImageName
         case let .updateIsValid(isValid):
-            state.isValid = isValid
-        case let .updateImage(profileImage):
-            state.profileImage = profileImage
-        case let .updateIsSuccess(isSuccess):
-            state.isSuccess = isSuccess
+            newState.isValid = isValid
+        case let .updateIsSuccess(isUpdatedSuccess):
+            newState.isUpdatedSuccess = isUpdatedSuccess
         case let .updateIsProcessing(isProcessing):
-            state.isProcessing = isProcessing
+            newState.isProcessing = isProcessing
+        case let .updateErrors(hasErrors):
+            newState.hasErrors = hasErrors
         case let .updateErrorMessage(errorMessage):
-            state.errorMessage = errorMessage
+            newState.errorMessage = errorMessage
         }
-        return state
+        return newState
     }
 }
 
 extension UpdateProfileViewReactor {
     
-    private func updateImage(_ image: UIImage) -> Observable<Mutation> {
+    private func uploadImage(_ image: UIImage) -> Observable<Mutation> {
+        
         return self.presignedURL()
             .withUnretained(self)
-            .flatMapLatest { object, presignedResponse -> Observable<Mutation> in
+            .flatMapLatest { object, presignedInfo -> Observable<Mutation> in
                 if let imageData = image.jpegData(compressionQuality: 0.5),
-                   let url = URL(string: presignedResponse.strUrl) {
-                    return object.provider.networkManager.upload(imageData, to: url)
-                        .flatMapLatest { _ -> Observable<Mutation> in
-                            return .empty()
+                   let url = URL(string: presignedInfo.imgUrl) {
+                    
+                    return object.uploadUserImageUseCase.uploadToS3(imageData, with: url)
+                        .flatMapLatest { isSuccess -> Observable<Mutation> in
+                            
+                            let image = isSuccess ? image : nil
+                            let imageName = isSuccess ? presignedInfo.imgName : nil
+                            
+                            return .just(.updateImageInfo(image, imageName))
                         }
+                } else {
+                    return .empty()
                 }
-                return .empty()
             }
+            .delay(.milliseconds(1000), scheduler: MainScheduler.instance)
     }
     
-    private func presignedURL() -> Observable<(strUrl: String, imageName: String)> {
-        let request: JoinRequest = .profileImagePresignedURL
+    private func presignedURL() -> Observable<ImageUrlInfo> {
         
-        return self.provider.networkManager.request(PresignedStorageResponse.self, request: request)
-            .withUnretained(self)
-            .flatMapLatest { object, response -> Observable<(strUrl: String, imageName: String)> in
-                object.imageName = response.imgName
-                let result = (response.url.url, response.imgName)
-                return .just(result)
-            }
+        return self.uploadUserImageUseCase.presignedURL()
+    }
+    
+    private var catchClosure: ((Error) throws -> Observable<Mutation> ) {
+        return { error in
+            
+            let nsError = error as NSError
+            let endProcessing = Observable<Mutation>.concat([
+                // TODO: 부적절한 사진일 때, `확인` 버튼 탭 시 이미지 변경
+                .just(.updateIsProcessing(false)),
+                // 부적절한 이미지 업로드 에러 코드 == 422
+                .just(.updateErrors(nsError.code == 422))
+            ])
+            
+            return endProcessing
+        }
     }
 }

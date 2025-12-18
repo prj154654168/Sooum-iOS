@@ -22,27 +22,23 @@ class EnterMemberTransferViewReactor: Reactor {
     }
     
     enum Mutation {
-        case enterTransferCode(Bool)
-        case updateIsProcessing(Bool)
+        case enterTransferCode(Bool?)
     }
     
     struct State {
-        var isSuccess: Bool
-        var isProcessing: Bool
-        let entranceType: EntranceType
+        var isSuccess: Bool?
     }
     
-    var initialState: State
+    var initialState: State = State(isSuccess: nil)
     
-    let provider: ManagerProviderType
+    private let dependencies: AppDIContainerable
+    private let authUseCase: AuthUseCase
+    private let transferAccountUseCase: TransferAccountUseCase
   
-    init(provider: ManagerProviderType, entranceType: EntranceType) {
-        self.provider = provider
-        self.initialState = .init(
-            isSuccess: false,
-            isProcessing: false,
-            entranceType: entranceType
-        )
+    init(dependencies: AppDIContainerable) {
+        self.dependencies = dependencies
+        self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
+        self.transferAccountUseCase = dependencies.rootContainer.resolve(TransferAccountUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -50,35 +46,26 @@ class EnterMemberTransferViewReactor: Reactor {
         case let .enterTransferCode(transferCode):
             
             return .concat([
-                .just(.updateIsProcessing(true)),
-                
-                self.provider.networkManager.request(RSAKeyResponse.self, request: AuthRequest.getPublicKey)
-                    .map(\.publicKey)
+                .just(.enterTransferCode(nil)),
+                self.authUseCase.encryptedDeviceId()
                     .withUnretained(self)
-                    .flatMapLatest { object, publicKey -> Observable<Mutation> in
+                    .flatMapLatest { object, encryptedDeviceId -> Observable<Mutation> in
                         
-                        if let secKey = object.provider.authManager.convertPEMToSecKey(pemString: publicKey),
-                           let encryptedDeviceId = object.provider.authManager.encryptUUIDWithPublicKey(publicKey: secKey) {
-                            
-                            let request: SettingsRequest = .transferMember(
-                                transferId: transferCode,
+                        if let encryptedDeviceId = encryptedDeviceId {
+                            return object.transferAccountUseCase.enter(
+                                code: transferCode,
                                 encryptedDeviceId: encryptedDeviceId
                             )
-                            
-                            return self.provider.networkManager.request(Status.self, request: request)
-                                .withUnretained(self)
-                                .flatMapLatest { object, response -> Observable<Mutation> in
-                                    object.provider.authManager.initializeAuthInfo()
+                                .flatMapLatest { isSuccess -> Observable<Mutation> in
+                                    if isSuccess { object.authUseCase.initializeAuthInfo() }
                                     
-                                    return .just(.enterTransferCode(response.httpCode != 400))
+                                    return .just(.enterTransferCode(isSuccess))
                                 }
+                                .catchAndReturn(.enterTransferCode(false))
                         } else {
                             return .just(.enterTransferCode(false))
                         }
                     }
-                    .catch(self.catchClosure),
-                
-                .just(.updateIsProcessing(false))
             ])
         }
     }
@@ -88,8 +75,6 @@ class EnterMemberTransferViewReactor: Reactor {
         switch mutation {
         case let .enterTransferCode(isSuccess):
             state.isSuccess = isSuccess
-        case let .updateIsProcessing(isProcessing):
-            state.isProcessing = isProcessing
         }
         return state
     }
@@ -97,19 +82,7 @@ class EnterMemberTransferViewReactor: Reactor {
 
 extension EnterMemberTransferViewReactor {
     
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { _ in
-            .concat([
-                .just(.enterTransferCode(false)),
-                .just(.updateIsProcessing(false))
-            ])
-        }
-    }
-}
-
-extension EnterMemberTransferViewReactor {
-    
-    func reactorForLaunch() -> LaunchScreenViewReactor {
-        LaunchScreenViewReactor(provider: self.provider)
+    func reactorForLaunchScreen() -> LaunchScreenViewReactor {
+        LaunchScreenViewReactor(dependencies: self.dependencies)
     }
 }

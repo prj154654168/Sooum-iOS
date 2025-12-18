@@ -42,9 +42,9 @@ extension SOMAnimationTransitioning: UIViewControllerAnimatedTransitioning {
             withDuration: self.transitionDuration(using: transitionContext),
             delay: 0,
             options: [.curveEaseInOut]
-        ) {
+        ) { [weak self] in
             
-            toView.frame.origin.y = containerView.bounds.height - self.initalHeight
+            toView.frame.origin.y = containerView.bounds.height - (self?.initalHeight ?? 0.0)
         } completion: { _ in
             transitionContext.completeTransition(transitionContext.transitionWasCancelled == false)
         }

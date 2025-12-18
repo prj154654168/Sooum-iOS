@@ -42,28 +42,36 @@ extension Date {
         let hours: Int = .init(time % (24 * 60 * 60)) / (60 * 60)
         let minutes: Int = .init(time % (60 * 60)) / 60
         
-        if days > 364 {
-            return "\(days / 365)년전".trimmingCharacters(in: .whitespaces)
+        if days > 368 {
+            return "\(days / 368)년전".trimmingCharacters(in: .whitespaces)
         }
         
-        if days > 0 && days < 365 {
-            return "\(days)일전".trimmingCharacters(in: .whitespaces)
+        if days > 29 && days < 369 {
+            return "\(days / 30)개월 전".trimmingCharacters(in: .whitespaces)
+        }
+        
+        if days > 6 && days < 30 {
+            return "\(days / 7)주 전".trimmingCharacters(in: .whitespaces)
+        }
+        
+        if days > 0 && days < 7 {
+            return "\(days)일 전".trimmingCharacters(in: .whitespaces)
         }
         
         if hours > 0 && hours < 24 {
-            return "\(hours)시간전".trimmingCharacters(in: .whitespaces)
+            return "\(hours)시간 전".trimmingCharacters(in: .whitespaces)
         }
         
-        if minutes > 9 && minutes < 60 {
-            return "\(minutes / 10)0분전".trimmingCharacters(in: .whitespaces)
+        if minutes > 10 && minutes < 60 {
+            return "\(minutes / 10)0분 전".trimmingCharacters(in: .whitespaces)
         }
         
-        if minutes > 4 && minutes < 10 {
-            return "10분전".trimmingCharacters(in: .whitespaces)
+        if minutes > 0 && minutes < 11 {
+            return "\(minutes)분 전".trimmingCharacters(in: .whitespaces)
         }
         
-        if minutes < 5 {
-            return "조금전".trimmingCharacters(in: .whitespaces)
+        if minutes < 1 {
+            return "방금 전".trimmingCharacters(in: .whitespaces)
         }
 
         return ""
@@ -81,13 +89,41 @@ extension Date {
         let seconds: Int = .init(time % 60)
         
         if hours <= 0 && minutes <= 0 && seconds <= 0 {
-            return "00 : 00 : 00"
+            return "00:00:00"
         }
-        return String(format: "%02d : %02d : %02d", hours, minutes, seconds)
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+    
+    func infoReadableTimeTakenFromThisForPungToHoursAndMinutes(to: Date) -> String {
+        
+        let from: TimeInterval = self.timeIntervalSince1970
+        let to: TimeInterval = to.timeIntervalSince1970
+        let gap: TimeInterval = max(0, to - from)
+
+        let time: Int = .init(gap)
+        let minutes: Int = .init(time % (60 * 60)) / 60
+        let seconds: Int = .init(time % 60)
+        
+        if minutes <= 0 && seconds <= 0 {
+            return "00:00"
+        }
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    func infoReadableTimeTakenFromThisForBanEndPosting(to: Date) -> String {
+        
+        let from: TimeInterval = self.timeIntervalSince1970
+        let to: TimeInterval = to.timeIntervalSince1970
+        let gap: TimeInterval = max(0, to - from)
+
+        let time: Int = .init(gap)
+        let days: Int = time / (24 * 60 * 60)
+        
+        return "\(days)일간"
     }
     
     var banEndFormatted: String {
-        return self.toString("yyyy년 MM월 dd일")
+        return self.addingTimeInterval(24 * 60 * 60).toString("yyyy년 MM월 dd일")
     }
     
     var banEndDetailFormatted: String {
@@ -95,7 +131,11 @@ extension Date {
     }
     
     var announcementFormatted: String {
-        return self.toString("yyyy. MM. dd")
+        return self.toString("yyyy.MM.dd")
+    }
+    
+    var noticeFormatted: String {
+        return self.toString("M월 d일")
     }
 }
 

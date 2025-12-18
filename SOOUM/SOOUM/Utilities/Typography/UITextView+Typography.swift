@@ -7,37 +7,38 @@
 
 import UIKit
 
-
 extension UITextView {
-
-    fileprivate struct Keys {
-        static var kUITextViewTypography: String = "kUITextViewTypography"
-        
-        static func setObjctForTypo(_ typography: Typography) {
-            withUnsafePointer(to: Self.kUITextViewTypography) {
-                objc_setAssociatedObject(self, $0, typography, .OBJC_ASSOCIATION_RETAIN)
-            }
-        }
-        static func getObjectForTypo() -> Typography? {
-            withUnsafePointer(to: Self.kUITextViewTypography) {
-                objc_getAssociatedObject(self, $0) as? Typography
-            }
-        }
-    }
+    
+    private static var kUITextViewTypography: UInt8 = 0
 
     func setTypography(
         _ typography: Typography,
         with closure: ((inout [NSAttributedString.Key: Any]) -> Void)? = nil
     ) {
 
-        Keys.setObjctForTypo(typography)
+        objc_setAssociatedObject(self, &Self.kUITextViewTypography, typography, .OBJC_ASSOCIATION_RETAIN)
 
         var attributes: [NSAttributedString.Key: Any] = typography.attributes
+        var baselineOffset = attributes[.baselineOffset] as! CGFloat
+        baselineOffset -= abs(typography.font.descender)
+        attributes.removeValue(forKey: .baselineOffset)
+        
+        attributes[.baselineOffset] = baselineOffset
         attributes[.font] = typography.font
+        attributes[.foregroundColor] = self.textColor
         closure?(&attributes)
         self.typingAttributes = attributes
+        
+        if let text = self.text, text.isEmpty == false {
+            let selectedRange = self.selectedRange
+            
+            let attributedText = NSMutableAttributedString(string: text, attributes: attributes)
+            self.attributedText = attributedText
+            self.selectedRange = selectedRange
+        }
     }
 
+    /// When self.text == nil, must set typography when input text
     var typography: Typography? {
         set {
             if let typography: Typography = newValue {
@@ -45,7 +46,7 @@ extension UITextView {
             }
         }
         get {
-            return Keys.getObjectForTypo()
+            return objc_getAssociatedObject(self, &Self.kUITextViewTypography) as? Typography
         }
     }
 }

@@ -8,12 +8,17 @@
 import UIKit
 
 
+// MARK: Show
+
 extension SOMDialogViewController {
+    
+    fileprivate static weak var displayedDialogViewController: SOMDialogViewController?
     
     @discardableResult
     static func show(
         title: String,
         message: String,
+        textAlignment: NSTextAlignment = .center,
         actions: [SOMDialogAction],
         dismissesWhenBackgroundTouched: Bool = false,
         completion: ((SOMDialogViewController) -> Void)? = nil
@@ -24,8 +29,13 @@ extension SOMDialogViewController {
             let dialogViewController = SOMDialogViewController(
                 title: title,
                 message: message,
+                textAlignment: textAlignment,
                 completion: { alertController in
                     window.windowScene = nil
+                    /// Dismiss 된 alertController와 표시되었던 dialog가 같다면 제거
+                    if alertController == Self.displayedDialogViewController {
+                        Self.displayedDialogViewController = nil
+                    }
                     completion?(alertController)
                 }
             )
@@ -39,7 +49,8 @@ extension SOMDialogViewController {
     @discardableResult
     static func show(
         title: String,
-        messageView: UIView,
+        messageView: UIView?,
+        textAlignment: NSTextAlignment = .center,
         actions: [SOMDialogAction],
         dismissesWhenBackgroundTouched: Bool = false,
         completion: ((SOMDialogViewController) -> Void)? = nil
@@ -50,8 +61,13 @@ extension SOMDialogViewController {
             let dialogViewController = SOMDialogViewController(
                 title: title,
                 messageView: messageView,
+                textAlignment: textAlignment,
                 completion: { alertController in
                     window.windowScene = nil
+                    /// Dismiss 된 alertController와 표시되었던 dialog가 같다면 제거
+                    if alertController == Self.displayedDialogViewController {
+                        Self.displayedDialogViewController = nil
+                    }
                     completion?(alertController)
                 }
             )
@@ -76,6 +92,12 @@ extension SOMDialogViewController {
             }
         }()
         
+        /// 현재 표시된 dialog가 있다면 dismiss
+        if let displayedDialogViewController = Self.displayedDialogViewController {
+            displayedDialogViewController.dismiss(animated: false, completion: nil)
+            Self.displayedDialogViewController = nil
+        }
+        
         window.windowLevel = .alert
         window.backgroundColor = .clear
         window.rootViewController = rootViewController
@@ -88,6 +110,29 @@ extension SOMDialogViewController {
         
         rootViewController.present(dialogViewController, animated: true, completion: nil)
         
+        /// 표시될 dialog 저장
+        if let willDisplayDialogViewController = dialogViewController as? SOMDialogViewController {
+            self.displayedDialogViewController = willDisplayDialogViewController
+        }
+        
         return dialogViewController
+    }
+}
+
+
+// MARK: Dismiss
+
+extension SOMDialogViewController {
+    
+    static func dismiss(animated: Bool = true, completion: (() -> Void)? = nil) {
+        
+        guard let dialog = self.displayedDialogViewController else {
+            completion?()
+            return
+        }
+        
+        self.displayedDialogViewController = nil
+        
+        dialog.dismiss(animated: animated) { completion?() }
     }
 }

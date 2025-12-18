@@ -12,56 +12,61 @@ import Then
 
 import RxSwift
 
-
 class MyFollowingViewCell: UITableViewCell {
     
     enum Text {
-        static let didFollowButton: String = "팔로우 취소"
-        static let willFollowButton: String = "팔로우"
+        static let followingButtonTitle: String = "팔로잉"
     }
     
     static let cellIdentifier = String(reflecting: MyFollowingViewCell.self)
     
-    let profilBackgroundButton = UIButton()
     
+    // MARK: Views
+    
+    let profileBackgroundButton = UIButton()
     private let profileImageView = UIImageView().then {
-        $0.layer.cornerRadius = 46 * 0.5
+        $0.image = .init(.image(.v2(.profile_small)))
+        $0.contentMode = .scaleAspectFill
+        $0.backgroundColor = .som.v2.gray300
+        $0.layer.cornerRadius = 36 * 0.5
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.som.v2.gray300.cgColor
         $0.clipsToBounds = true
     }
     
-    private let profileNickname = UILabel().then {
-        $0.textColor = .som.gray700
-        $0.typography = .som.body1WithBold
+    private let nicknameLabel = UILabel().then {
+        $0.textColor = .som.v2.gray600
+        $0.typography = .som.v2.subtitle2
     }
     
     let cancelFollowButton = SOMButton().then {
-        $0.title = Text.didFollowButton
-        $0.typography = .som.body3WithBold
-        $0.foregroundColor = .som.gray400
-        $0.hasUnderlined = true
+        $0.title = Text.followingButtonTitle
+        $0.typography = .som.v2.body1
+        $0.foregroundColor = .som.v2.gray600
+        
+        $0.backgroundColor = .som.v2.gray100
+        $0.layer.cornerRadius = 8
+        $0.clipsToBounds = true
     }
     
-    let followButton = SOMButton().then {
-        $0.title = Text.willFollowButton
-        $0.typography = .som.body3WithBold
-        $0.foregroundColor = .som.white
-        
-        $0.backgroundColor = .som.p300
-        $0.layer.cornerRadius = 26 * 0.5
-        $0.clipsToBounds = true
-        $0.isHidden = true
-    }
+    
+    // MARK: Variables
+    
+    private(set) var model: FollowInfo = .defaultValue
+    
+    
+    // MARK: Variables + Rx
     
     var disposeBag = DisposeBag()
     
     
-    // MARK: Initalization
+    // MARK: Initialization
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.backgroundColor = .clear
-        self.contentView.clipsToBounds = true
+        self.selectionStyle = .none
         
         self.setupConstraints()
     }
@@ -77,7 +82,7 @@ class MyFollowingViewCell: UITableViewCell {
         super.prepareForReuse()
         
         self.profileImageView.image = nil
-        self.profileNickname.text = nil
+        self.nicknameLabel.text = nil
         
         self.disposeBag = DisposeBag()
     }
@@ -90,58 +95,48 @@ class MyFollowingViewCell: UITableViewCell {
         self.contentView.addSubview(self.profileImageView)
         self.profileImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(20)
-            $0.size.equalTo(46)
+            $0.leading.equalToSuperview().offset(16)
+            $0.size.equalTo(36)
         }
         
-        self.contentView.addSubview(self.profileNickname)
-        self.profileNickname.snp.makeConstraints {
+        self.contentView.addSubview(self.nicknameLabel)
+        self.nicknameLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalTo(self.profileImageView.snp.trailing).offset(12)
+            $0.leading.equalTo(self.profileImageView.snp.trailing).offset(10)
+        }
+        
+        self.contentView.addSubview(self.profileBackgroundButton)
+        self.profileBackgroundButton.snp.makeConstraints {
+            $0.top.equalTo(self.profileImageView.snp.top)
+            $0.bottom.equalTo(self.profileImageView.snp.bottom)
+            $0.leading.equalTo(self.profileImageView.snp.leading)
+            $0.trailing.equalTo(self.nicknameLabel.snp.trailing)
         }
         
         self.contentView.addSubview(self.cancelFollowButton)
         self.cancelFollowButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.greaterThanOrEqualTo(self.profileNickname.snp.trailing).offset(40)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.height.equalTo(29)
-        }
-        
-        self.contentView.addSubview(self.followButton)
-        self.followButton.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.greaterThanOrEqualTo(self.profileNickname.snp.trailing).offset(40)
-            $0.trailing.equalToSuperview().offset(-20)
-            $0.width.equalTo(72)
-            $0.height.equalTo(26)
-        }
-        
-        self.contentView.addSubview(self.profilBackgroundButton)
-        self.profilBackgroundButton.snp.makeConstraints {
-            $0.top.equalTo(self.profileImageView.snp.top)
-            $0.bottom.equalTo(self.profileImageView.snp.bottom)
-            $0.leading.equalTo(self.profileImageView.snp.leading)
-            $0.trailing.equalTo(self.profileNickname.snp.trailing)
+            $0.leading.greaterThanOrEqualTo(self.nicknameLabel.snp.trailing).offset(10)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.width.equalTo(68)
+            $0.height.equalTo(32)
         }
     }
     
     
     // MARK: Public func
     
-    func setModel(_ follow: Follow) {
+    func setModel(_ model: FollowInfo) {
         
-        if let url = follow.backgroundImgURL?.url {
-            self.profileImageView.setImage(strUrl: url)
+        self.model = model
+        
+        if let profileImageUrl = model.profileImageUrl {
+            self.profileImageView.setImage(strUrl: profileImageUrl)
         } else {
-            self.profileImageView.image = .init(.image(.sooumLogo))
+            self.profileImageView.image = .init(.image(.v2(.profile_small)))
         }
-        self.profileNickname.text = follow.nickname
-    }
-    
-    func updateButton(_ isFollowing: Bool) {
         
-        self.cancelFollowButton.isHidden = isFollowing == false
-        self.followButton.isHidden = isFollowing
+        self.nicknameLabel.text = model.nickname
+        self.nicknameLabel.typography = .som.v2.subtitle2
     }
 }

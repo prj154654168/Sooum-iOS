@@ -15,34 +15,48 @@ class SettingsViewReactor: Reactor {
     enum Action: Equatable {
         case landing
         case updateNotificationStatus(Bool)
+        case rejoinableDate
+        case cleanup
     }
     
     enum Mutation {
         case updateBanEndAt(Date?)
+        case updateVersion(Version?)
+        case updateShouldHideTransfer(Bool)
         case updateNotificationStatus(Bool)
-        case updateIsProcessing(Bool)
+        case rejoinableDate(RejoinableDateInfo?)
+        case cleanup
     }
     
     struct State {
+        fileprivate(set) var tokens: Token
         fileprivate(set) var banEndAt: Date?
+        fileprivate(set) var version: Version?
         fileprivate(set) var notificationStatus: Bool
-        fileprivate(set) var isProcessing: Bool
         fileprivate(set) var shouldHideTransfer: Bool
+        fileprivate(set) var rejoinableDate: RejoinableDateInfo?
     }
     
     var initialState: State
     
-    let provider: ManagerProviderType
+    private let dependencies: AppDIContainerable
+    private let appVersionUseCase: AppVersionUseCase
+    private let authUseCase: AuthUseCase
+    private let validateUserUseCase: ValidateUserUseCase
+    private let updateNotifyUseCase: UpdateNotifyUseCase
     
-    private let disposeBag = DisposeBag()
-    
-    init(provider: ManagerProviderType) {
-        self.provider = provider
+    init(dependencies: AppDIContainerable) {
+        self.dependencies = dependencies
+        self.appVersionUseCase = dependencies.rootContainer.resolve(AppVersionUseCase.self)
+        self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
+        self.validateUserUseCase = dependencies.rootContainer.resolve(ValidateUserUseCase.self)
+        self.updateNotifyUseCase = dependencies.rootContainer.resolve(UpdateNotifyUseCase.self)
         
         self.initialState = .init(
+            tokens: self.authUseCase.tokens(),
             banEndAt: nil,
-            notificationStatus: provider.pushManager.notificationStatus,
-            isProcessing: false,
+            version: nil,
+            notificationStatus: self.updateNotifyUseCase.notificationStatus(),
             shouldHideTransfer: UserDefaults.standard.bool(forKey: "AppFlag")
         )
     }
@@ -52,78 +66,76 @@ class SettingsViewReactor: Reactor {
         case .landing:
             
             return .concat([
-                .just(.updateIsProcessing(true)),
-                self.provider.networkManager.request(SettingsResponse.self, request: SettingsRequest.activate)
-                    .flatMapLatest { response -> Observable<Mutation> in
-                        return .just(.updateBanEndAt(response.banEndAt))
-                    }
-                    .catch(self.catchClosure),
-                self.provider.networkManager.request(
-                    NotificationAllowResponse.self,
-                    request: SettingsRequest.notificationAllow(isAllowNotify: nil)
-                )
-                .flatMapLatest { response -> Observable<Mutation> in
-                    return .just(.updateNotificationStatus(response.isAllowNotify))
-                }
-                .catch(self.catchClosure),
-                .just(.updateIsProcessing(false))
+                self.appVersionUseCase.version()
+                    .flatMapLatest { version -> Observable<Mutation> in
+                        
+                        UserDefaults.standard.set(version.shouldHideTransfer, forKey: "AppFlag")
+                        
+                        return .concat([
+                            .just(.updateShouldHideTransfer(version.shouldHideTransfer)),
+                            .just(.updateVersion(version))
+                        ])
+                    },
+                self.validateUserUseCase.postingPermission()
+                    .map(\.expiredAt)
+                    .map(Mutation.updateBanEndAt),
+                self.updateNotifyUseCase.updateNotify(isAllowNotify: self.initialState.notificationStatus)
+                    .map(Mutation.updateNotificationStatus)
             ])
         case let .updateNotificationStatus(state):
-            return self.provider.networkManager.request(
-                Empty.self,
-                request: SettingsRequest.notificationAllow(isAllowNotify: state)
-            )
-            .flatMapLatest { _ -> Observable<Mutation> in
-                return .just(.updateNotificationStatus(state))
-            }
-            .catchAndReturn(.updateNotificationStatus(!state))
+            
+            return self.updateNotifyUseCase.updateNotify(isAllowNotify: state)
+                .map { _ in state }
+                .map(Mutation.updateNotificationStatus)
+        case .rejoinableDate:
+            
+            return self.validateUserUseCase.iswithdrawn()
+                .map(Mutation.rejoinableDate)
+        case .cleanup:
+            
+            return .just(.cleanup)
         }
     }
     
     func reduce(state: State, mutation: Mutation) -> State {
-        var state = state
+        var newState: State = state
         switch mutation {
         case let .updateBanEndAt(banEndAt):
-            state.banEndAt = banEndAt
+            newState.banEndAt = banEndAt
+        case let .updateVersion(version):
+            newState.version = version
+        case let .updateShouldHideTransfer(shouldHideTransfer):
+            newState.shouldHideTransfer = shouldHideTransfer
         case let .updateNotificationStatus(notificationStatus):
-            state.notificationStatus = notificationStatus
-        case let .updateIsProcessing(isProcessing):
-            state.isProcessing = isProcessing
+            newState.notificationStatus = notificationStatus
+        case let .rejoinableDate(rejoinableDate):
+            newState.rejoinableDate = rejoinableDate
+        case .cleanup:
+            newState.rejoinableDate = nil
         }
-        return state
+        return newState
     }
 }
 
 extension SettingsViewReactor {
-    
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { _ in
-            .concat([
-                .just(.updateIsProcessing(false))
-            ])
-        }
-    }
-}
-
-extension SettingsViewReactor {
-    
-    func reactorForCommentHistory() -> CommentHistroyViewReactor {
-        CommentHistroyViewReactor(provider: self.provider)
-    }
     
     func reactorForTransferIssue() -> IssueMemberTransferViewReactor {
-        IssueMemberTransferViewReactor(provider: self.provider)
+        IssueMemberTransferViewReactor(dependencies: self.dependencies)
     }
     
     func reactorForTransferEnter() -> EnterMemberTransferViewReactor {
-        EnterMemberTransferViewReactor(provider: self.provider, entranceType: .settings)
+        EnterMemberTransferViewReactor(dependencies: self.dependencies)
+    }
+    
+    func reactorForBlock() -> BlockUsersViewReactor {
+        BlockUsersViewReactor(dependencies: self.dependencies)
     }
     
     func reactorForResign() -> ResignViewReactor {
-        ResignViewReactor(provider: self.provider, banEndAt: self.currentState.banEndAt)
+        ResignViewReactor(dependencies: self.dependencies)
     }
     
     func reactorForAnnouncement() -> AnnouncementViewReactor {
-        AnnouncementViewReactor(provider: self.provider)
+        AnnouncementViewReactor(dependencies: self.dependencies)
     }
 }

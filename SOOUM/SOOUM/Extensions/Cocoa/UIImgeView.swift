@@ -12,32 +12,17 @@ import Kingfisher
 import RxCocoa
 import RxSwift
 
-
 extension UIImageView {
 
-    static let placeholder: UIImage? = UIColor.som.gray400.toImage
+    static let placeholder: UIImage? = UIColor.som.v2.pMain.toImage
 
-    func setImage(strUrl: String?) {
+    func setImage(strUrl: String?, with key: String? = nil) {
         
         if let strUrl: String = strUrl, let url = URL(string: strUrl) {
-            // 캐싱된 이미지가 있다면, 먼저 사용
-            ImageCache.default.retrieveImage(forKey: url.absoluteString) { result in
-                switch result {
-                case let .success(value):
-                    if let image = value.image {
-                        self.image = image
-                    } else {
-                        self.kf.setImage(
-                            with: url,
-                            placeholder: Self.placeholder,
-                            options: [.transition(.fade(0.25))]
-                        )
-                    }
-                case let .failure(error):
-                    Log.error("Error download image failed with kingfisher: \(error.localizedDescription)")
-                }
-            }
-            
+            /// ImageResource 객체를 생성하여 URL과 Cache Key를 연결
+            let resource = KF.ImageResource(downloadURL: url, cacheKey: key ?? strUrl)
+            /// Kingfisher에 Resource를 전달하고 모든 캐시/다운로드 로직 위임
+            self.kf.setImage(with: resource)
             self.backgroundColor = .clear
         } else {
             self.kf.cancelDownloadTask()

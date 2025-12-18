@@ -17,21 +17,23 @@ class TermsOfServiceCellView: UIView {
     // MARK: Views
     
     private let checkBoxImageView = UIImageView().then {
-        $0.image = .init(.icon(.outlined(.checkBox)))
-        $0.tintColor = .som.gray500
+        $0.image = .init(.icon(.v2(.outlined(.check))))
+        $0.tintColor = .som.v2.gray200
     }
     
     private let titleLabel = UILabel().then {
-        $0.textColor = .som.gray500
-        $0.typography = .som.body1WithRegular
+        $0.textColor = .som.v2.gray500
+        $0.typography = .som.v2.subtitle1
     }
     
-    let nextButton = SOMButton().then {
-        $0.image = .init(.icon(.outlined(.next)))
-        $0.foregroundColor = .som.gray800
+    let moveButton = SOMButton().then {
+        $0.image = .init(.icon(.v2(.outlined(.right))))
+        $0.foregroundColor = .som.v2.gray500
     }
     
-    let backgroundButton = UIButton()
+    let backgroundButton = SOMButton().then {
+        $0.backgroundColor = .som.v2.white
+    }
     
     
     // MARK: Initalization
@@ -57,37 +59,38 @@ class TermsOfServiceCellView: UIView {
     
     private func setupConstraints() {
         
-        self.snp.makeConstraints {
-            $0.width.equalTo(UIScreen.main.bounds.width)
-            $0.height.equalTo(44)
+        let container = UIView()
+        self.addSubview(container)
+        container.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(48)
         }
         
-        self.addSubview(self.checkBoxImageView)
+        container.addSubview(self.backgroundButton)
+        self.backgroundButton.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        container.addSubview(self.checkBoxImageView)
         self.checkBoxImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(36)
+            $0.leading.equalToSuperview().offset(24)
             $0.size.equalTo(24)
         }
         
-        self.addSubview(self.titleLabel)
+        container.addSubview(self.titleLabel)
         self.titleLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalTo(self.checkBoxImageView.snp.trailing).offset(6)
+            $0.leading.equalTo(self.checkBoxImageView.snp.trailing).offset(8)
         }
         
-        self.addSubview(self.backgroundButton)
-        self.backgroundButton.snp.makeConstraints {
-            $0.top.equalTo(self.checkBoxImageView.snp.top)
-            $0.bottom.equalTo(self.checkBoxImageView.snp.bottom)
-            $0.leading.equalTo(self.checkBoxImageView.snp.leading)
-            $0.trailing.equalTo(self.titleLabel.snp.trailing)
-        }
-        
-        self.addSubview(self.nextButton)
-        self.nextButton.snp.makeConstraints {
-            $0.centerY.trailing.equalToSuperview()
-            $0.leading.equalTo(self.titleLabel.snp.trailing).offset(6)
-            $0.trailing.equalToSuperview().offset(-30)
+        container.addSubview(self.moveButton)
+        self.moveButton.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.greaterThanOrEqualTo(self.titleLabel.snp.trailing).offset(12)
+            $0.trailing.equalToSuperview().offset(-20)
             $0.size.equalTo(32)
         }
     }
@@ -99,13 +102,8 @@ class TermsOfServiceCellView: UIView {
         
         let animationDuration: TimeInterval = animated ? 0.25 : 0
         
-        UIView.animate(withDuration: animationDuration) {
-            self.checkBoxImageView.image = state ? .init(.icon(.filled(.checkBox))) : .init(.icon(.outlined(.checkBox)))
-            self.checkBoxImageView.tintColor = state ? .som.p300 : .som.gray600
-            
-            self.titleLabel.textColor = state ? .som.p300 : .som.gray600
-            
-            self.nextButton.foregroundColor = state ? .som.p300 : .som.gray600
+        UIView.animate(withDuration: animationDuration) { [weak self] in
+            self?.checkBoxImageView.tintColor = state ? .som.v2.pDark : .som.v2.gray200
         }
     }
 }

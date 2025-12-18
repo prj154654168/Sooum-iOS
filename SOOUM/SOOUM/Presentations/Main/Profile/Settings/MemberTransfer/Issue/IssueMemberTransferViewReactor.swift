@@ -16,50 +16,42 @@ class IssueMemberTransferViewReactor: Reactor {
     }
     
     enum Mutation {
-        case updateTransferCode(String)
+        case updateTransferInfo(TransferCodeInfo)
         case updateIsProcessing(Bool)
     }
     
     struct State {
-        var trnsferCode: String
+        var trnsferCodeInfo: TransferCodeInfo?
         var isProcessing: Bool
     }
     
     var initialState: State = .init(
-        trnsferCode: "",
+        trnsferCodeInfo: nil,
         isProcessing: false
     )
     
-    let provider: ManagerProviderType
+    private let dependencies: AppDIContainerable
+    private let transferAccountUseCase: TransferAccountUseCase
     
-    init(provider: ManagerProviderType) {
-        self.provider = provider
+    init(dependencies: AppDIContainerable) {
+        self.dependencies = dependencies
+        self.transferAccountUseCase = dependencies.rootContainer.resolve(TransferAccountUseCase.self)
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .landing:
-            let request: SettingsRequest = .transferCode(isUpdate: false)
             
-            return .concat([
-                .just(.updateIsProcessing(true)),
-                self.provider.networkManager.request(TransferCodeResponse.self, request: request)
-                    .flatMapLatest { response -> Observable<Mutation> in
-                        return .just(.updateTransferCode(response.transferCode))
-                    }
-                    .catch(self.catchClosure),
-                .just(.updateIsProcessing(false))
-            ])
+            return self.transferAccountUseCase.issue()
+                .map(Mutation.updateTransferInfo)
         case .updateTransferCode:
-            let request: SettingsRequest = .transferCode(isUpdate: true)
             
             return .concat([
                 .just(.updateIsProcessing(true)),
-                self.provider.networkManager.request(TransferCodeResponse.self, request: request)
-                    .flatMapLatest { response -> Observable<Mutation> in
-                        return .just(.updateTransferCode(response.transferCode))
-                    }
-                    .catch(self.catchClosure),
+                self.transferAccountUseCase.update()
+                    .map(Mutation.updateTransferInfo)
+                    .catchAndReturn(.updateIsProcessing(false))
+                    .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
                 .just(.updateIsProcessing(false))
             ])
         }
@@ -68,22 +60,11 @@ class IssueMemberTransferViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var state = state
         switch mutation {
-        case let .updateTransferCode(transferCode):
-            state.trnsferCode = transferCode
+        case let .updateTransferInfo(trnsferCodeInfo):
+            state.trnsferCodeInfo = trnsferCodeInfo
         case let .updateIsProcessing(isProcessing):
             state.isProcessing = isProcessing
         }
         return state
-    }
-}
-
-extension IssueMemberTransferViewReactor {
-    
-    var catchClosure: ((Error) throws -> Observable<Mutation> ) {
-        return { _ in
-            .concat([
-                .just(.updateIsProcessing(false))
-            ])
-        }
     }
 }

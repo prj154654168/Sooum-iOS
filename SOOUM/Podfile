@@ -13,9 +13,9 @@ def pods
   
   pod 'Alamofire', '~> 5.9.1'
 
-  pod 'Firebase/Analytics', '~> 10.22.0'
-  pod 'Firebase/Crashlytics', '~> 10.22.0'
-  pod 'Firebase/Messaging', '~> 10.22.0'
+  pod 'Firebase/Analytics', '~> 10.5.0'
+  pod 'Firebase/Crashlytics', '~> 10.5.0'
+  pod 'Firebase/Messaging', '~> 10.5.0'
 
   pod 'Clarity'
   
@@ -23,8 +23,11 @@ def pods
   pod 'Then', '~> 3.0.0'
   pod 'Kingfisher', '~> 7.10.0'
   pod 'YPImagePicker', '~> 5.2.2'
+  pod 'SwiftEntryKit', '~> 2.0.0'
 
   pod 'CocoaLumberjack/Swift', '~> 3.7.2'
+
+  pod 'lottie-ios'
 end
 
 target 'SOOUM-Dev' do

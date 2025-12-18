@@ -5,8 +5,7 @@
 //  Created by 오현식 on 1/6/25.
 //
 
-import Foundation
-
+import UIKit
 
 enum Info {
     
@@ -24,5 +23,13 @@ enum Info {
     
     static var clarityId: String {
         return self["ClarityId"]!
+    }
+    
+    static var iOSVersion: String {
+        return UIDevice.current.systemVersion
+    }
+    
+    static var deviceModel: String {
+        return UIDevice.current.name
     }
 }
