@@ -13,9 +13,9 @@ def pods
   
   pod 'Alamofire', '~> 5.9.1'
 
-  pod 'Firebase/Analytics', '~> 10.24.0'
-  pod 'Firebase/Crashlytics', '~> 10.24.0'
-  pod 'Firebase/Messaging', '~> 10.24.0'
+  pod 'Firebase/Analytics', '~> 10.5.0'
+  pod 'Firebase/Crashlytics', '~> 10.5.0'
+  pod 'Firebase/Messaging', '~> 10.5.0'
 
   pod 'Clarity'
   
