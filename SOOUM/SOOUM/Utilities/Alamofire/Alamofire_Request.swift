@@ -17,6 +17,9 @@ protocol BaseRequest: URLRequestConvertible {
     var parameters: Parameters { get }
     var encoding: ParameterEncoding { get }
     var authorizationType: AuthorizationType { get }
+    
+    // TODO: 앱 심사 중 사용할 endpoint
+    var serverEndpoint: String { get }
 }
 
 enum AuthorizationType: String {

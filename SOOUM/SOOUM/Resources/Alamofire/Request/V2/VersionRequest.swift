@@ -31,9 +31,15 @@ enum VersionRequest: BaseRequest {
         return .none
     }
     
+    var serverEndpoint: String {
+        return "https://test-core.sooum.org:555"
+    }
+    
     func asURLRequest() throws -> URLRequest {
         
-        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        // TODO: 앱 심사 중 사용할 url
+        // if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        if let url = URL(string: self.serverEndpoint)?.appendingPathComponent(self.path) {
             var request = URLRequest(url: url)
             request.method = self.method
             

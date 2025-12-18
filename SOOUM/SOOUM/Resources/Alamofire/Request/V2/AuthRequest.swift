@@ -7,7 +7,6 @@
 
 import Alamofire
 
-
 enum AuthRequest: BaseRequest {
     
     /// RSA 공개 키 요청
@@ -125,9 +124,19 @@ enum AuthRequest: BaseRequest {
         }
     }
     
+    var serverEndpoint: String {
+        #if DEVELOP
+        return Constants.endpoint
+        #elseif PRODUCTION
+        return UserDefaults.standard.bool(forKey: "AppFlag") ? "https://test-core.sooum.org:555" : Constants.endpoint
+        #endif
+    }
+    
     func asURLRequest() throws -> URLRequest {
         
-        if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        // TODO: 앱 심사 중 사용할 url
+        // if let url = URL(string: Constants.endpoint)?.appendingPathComponent(self.path) {
+        if let url = URL(string: self.serverEndpoint)?.appendingPathComponent(self.path) {
             var request = URLRequest(url: url)
             request.method = self.method
             
