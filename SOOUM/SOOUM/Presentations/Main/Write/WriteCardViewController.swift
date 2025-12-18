@@ -220,13 +220,13 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     
                     if case .feed = object.reactor?.entranceType {
                         GAHelper.shared.logEvent(
-                            event: GAEvent.WriteCardView.moveToCreateFeedCardView_cancel_btn_click
+                            event: GAEvent.WriteCardView.goCreateFCard_cancelBtnClick
                         )
                     }
                     
                     if case .comment = object.reactor?.entranceType {
                         GAHelper.shared.logEvent(
-                            event: GAEvent.WriteCardView.moveToCreateCommentCardView_cancel_btn_click
+                            event: GAEvent.WriteCardView.goCreateCCard_cancelBtnClick
                         )
                     }
                 }
@@ -475,11 +475,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .map { object, combined in
                 let (content, imageInfo, typography, options, enteredTag) = combined
                 
-                GAHelper.shared.logEvent(event: GAEvent.WriteCardView.createFeedCard_btn_click)
+                GAHelper.shared.logEvent(event: GAEvent.WriteCardView.createFCard_btnClick)
                 
                 if options.contains(.distanceShare) == false {
                     GAHelper.shared.logEvent(
-                        event: GAEvent.WriteCardView.createFeedCardWithoutDistanceSharedOpt_btn_click
+                        event: GAEvent.WriteCardView.createFCardWithoutDistanceOpt_btnClick
                     )
                 }
                 
@@ -534,7 +534,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     if (viewControllers.popLast() as? Self) != nil {
                         
                         GAHelper.shared.logEvent(
-                            event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                            event: GAEvent.DetailView.cardDetail_tracePathClick(
                                 previous_path: .writeCard
                             )
                         )

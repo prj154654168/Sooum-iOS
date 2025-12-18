@@ -172,7 +172,7 @@ class TagViewController: BaseNavigationViewController, View {
                     isFavorite: reactor.currentState.favoriteTags.contains(where: { $0.id == model.id })
                 )
                 object.parent?.navigationPush(tagCollectViewController, animated: true) { _ in
-                    GAHelper.shared.logEvent(event: GAEvent.TagView.popularTag_item_click)
+                    GAHelper.shared.logEvent(event: GAEvent.TagView.popularTag_itemClick)
                 }
             }
             .disposed(by: self.disposeBag)

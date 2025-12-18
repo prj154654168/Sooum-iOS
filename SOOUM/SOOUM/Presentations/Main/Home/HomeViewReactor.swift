@@ -168,7 +168,7 @@ class HomeViewReactor: Reactor {
                     .do(onNext: {
                         if isEventCard, $0 == false {
                             GAHelper.shared.logEvent(
-                                event: GAEvent.HomeView.feedToCardDetailView_cardWithEventImg_click
+                                event: GAEvent.HomeView.feedCardDetail_cardWithEventImgClick
                             )
                         }
                     })

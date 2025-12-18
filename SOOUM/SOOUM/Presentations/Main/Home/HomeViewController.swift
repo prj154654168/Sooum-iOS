@@ -376,9 +376,9 @@ class HomeViewController: BaseNavigationViewController, View {
                 object.parent?.navigationPush(detailViewController, animated: true) { _ in
                     reactor.action.onNext(.cleanup)
                     
-                    GAHelper.shared.logEvent(event: GAEvent.HomeView.feedToCardDetailView_card_click)
+                    GAHelper.shared.logEvent(event: GAEvent.HomeView.feedCardDetail_cardClick)
                     GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetailView_tracePath_click(previous_path: .home)
+                        event: GAEvent.DetailView.cardDetail_tracePathClick(previous_path: .home)
                     )
                 }
             }
@@ -581,7 +581,7 @@ class HomeViewController: BaseNavigationViewController, View {
         let toTop = CGPoint(x: 0, y: -(self.tableView.contentInset.top))
         self.tableView.setContentOffset(toTop, animated: true)
         
-        GAHelper.shared.logEvent(event: GAEvent.HomeView.feedMoveToTop_home_btn_click)
+        GAHelper.shared.logEvent(event: GAEvent.HomeView.feedMoveTop_homeBtnClick)
     }
     
     @objc

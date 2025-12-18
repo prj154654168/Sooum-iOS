@@ -361,11 +361,11 @@ extension WriteCardSelectImageView: SOMSwipableTabBarDelegate {
                 
                 if self.cardType == .feed {
                     GAHelper.shared.logEvent(
-                        event: GAEvent.WriteCardView.feedBackgroundCategory_tab_click
+                        event: GAEvent.WriteCardView.feedBackgroundCategory_tabClick
                     )
                 } else {
                     GAHelper.shared.logEvent(
-                        event: GAEvent.WriteCardView.commentBackgroundCategory_tab_click
+                        event: GAEvent.WriteCardView.commentBackgroundCategory_tabClick
                     )
                 }
                 
@@ -374,13 +374,13 @@ extension WriteCardSelectImageView: SOMSwipableTabBarDelegate {
                 
                 if self.cardType == .feed {
                     GAHelper.shared.logEvent(
-                        event: GAEvent.WriteCardView.feedBackgroundCategory_tab_click
+                        event: GAEvent.WriteCardView.feedBackgroundCategory_tabClick
                     )
                 } else {
                     GAHelper.shared.logEvent(
-                        event: GAEvent.WriteCardView.commentBackgroundCategory_tab_click
+                        event: GAEvent.WriteCardView.commentBackgroundCategory_tabClick
                     )
-                    GAHelper.shared.logEvent(event: GAEvent.WriteCardView.createFeedCardEventCategory_btn_click)
+                    GAHelper.shared.logEvent(event: GAEvent.WriteCardView.createFCardEventCategory_btnClick)
                 }
                 
                 return imageInfo == self.selectedImageInfo.value?.info

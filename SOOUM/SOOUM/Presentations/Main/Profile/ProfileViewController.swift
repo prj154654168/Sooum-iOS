@@ -426,7 +426,7 @@ class ProfileViewController: BaseNavigationViewController, View {
                     reactor.action.onNext(.cleanup)
                     
                     GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                        event: GAEvent.DetailView.cardDetail_tracePathClick(
                             previous_path: .profile
                         )
                     )
