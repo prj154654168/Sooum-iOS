@@ -387,7 +387,7 @@ class DetailViewController: BaseNavigationViewController, View {
                     reactor.action.onNext(.cleanup)
                     
                     GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                        event: GAEvent.DetailView.cardDetail_tracePathClick(
                             previous_path: .detail
                         )
                     )
@@ -410,20 +410,22 @@ class DetailViewController: BaseNavigationViewController, View {
                 ) { _ in
                     reactor.action.onNext(.cleanup)
                     
+                    GAHelper.shared.logEvent(event: GAEvent.DetailView.goCreateCCard_btnClick)
+                    
                     if enterTo == .icon {
                         GAHelper.shared.logEvent(
-                            event: GAEvent.DetailView.moveToCreateCommentCardView_icon_btn_click
+                            event: GAEvent.DetailView.goCreateCCard_iconBtnClick
                         )
                     } else {
                         GAHelper.shared.logEvent(
-                            event: GAEvent.DetailView.moveToCreateCommentCardView_floating_btn_click
+                            event: GAEvent.DetailView.goCreateCCard_fBtnClick
                         )
                         if reactor.currentState.detailCard?
                             .cardImgName
                             .contains(Text.eventCardTitle) == true {
                             
                             GAHelper.shared.logEvent(
-                                event: GAEvent.DetailView.moveToCreateCommentCardView_withEventImg_floating_btn_click
+                                event: GAEvent.DetailView.goCreateCCardWithEventImg_fBtnClick
                             )
                         }
                     }
@@ -635,7 +637,7 @@ extension DetailViewController: UICollectionViewDataSource {
                 )
                 object.navigationPush(tagCollectViewController, animated: true) { _ in
                     GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetailTag_btn_click(tag_name: tagInfo.text)
+                        event: GAEvent.DetailView.cardDetailTag_btnClick(tag_name: tagInfo.text)
                     )
                 }
             }
@@ -677,7 +679,7 @@ extension DetailViewController: UICollectionViewDataSource {
                             reactor.action.onNext(.cleanup)
                             
                             GAHelper.shared.logEvent(
-                                event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                                event: GAEvent.DetailView.cardDetail_tracePathClick(
                                     previous_path: .detail
                                 )
                             )

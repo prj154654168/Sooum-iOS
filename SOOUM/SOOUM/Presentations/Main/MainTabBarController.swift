@@ -276,7 +276,7 @@ extension MainTabBarController: SOMTabBarControllerDelegate {
             
             self.willPushWriteCard.accept(())
             
-            GAHelper.shared.logEvent(event: GAEvent.TabBar.moveToCreateFeedCardView_btn_click)
+            GAHelper.shared.logEvent(event: GAEvent.TabBar.goCreateFCard_btnClick)
             
             return false
         }

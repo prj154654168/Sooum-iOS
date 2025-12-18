@@ -50,59 +50,59 @@ enum GAEvent {
     
     enum TabBar: AnalyticsEventProtocol {
         /// 바텀 네비게이션에서 ‘카드추가’ 버튼 클릭 이벤트
-        case moveToCreateFeedCardView_btn_click
+        case goCreateFCard_btnClick
     }
     
     enum HomeView: AnalyticsEventProtocol {
         /// 피드에서 홈 버튼을 클릭하여 피드 최상단으로 이동하는 이벤트
-        case feedMoveToTop_home_btn_click
+        case feedMoveTop_homeBtnClick
         /// 피드 화면에서 카드 상세보기 이동 이벤트
-        case feedToCardDetailView_card_click
+        case feedCardDetail_cardClick
         /// 피드 화면에서 이벤트 이미지를 사용한 카드 상세보기 이동 이벤트
-        case feedToCardDetailView_cardWithEventImg_click
+        case feedCardDetail_cardWithEventImgClick
     }
     
     enum DetailView: AnalyticsEventProtocol {
         /// 카드 상세 조회 클릭 이벤트 (파라미터로 어디서 조회 하는건지 넘겨주기 feed, comment, profile)
-        case cardDetailView_tracePath_click(previous_path: ScreenPath)
+        case cardDetail_tracePathClick(previous_path: ScreenPath)
         /// 카드 상세보기에서 댓글카드 작성 버튼(아이콘 버튼과 플로팅 버튼 모두 포함) 클릭 이벤트
-        case moveToCreateCommentCardView_btn_click
+        case goCreateCCard_btnClick
         /// 카드 상세보기에서 댓글카드 작성 버튼(좋아요 옆에 있는 버튼) 클릭 이벤트
-        case moveToCreateCommentCardView_icon_btn_click
+        case goCreateCCard_iconBtnClick
         /// 카드 상세보기에서 우측 하단에 동그란 버튼(플로팅된 댓글카드 작성 버튼) 클릭 이벤트
-        case moveToCreateCommentCardView_floating_btn_click
+        case goCreateCCard_fBtnClick
         /// 이벤트 카드의 플로팅 버튼 클릭 이벤트
-        case moveToCreateCommentCardView_withEventImg_floating_btn_click
+        case goCreateCCardWithEventImg_fBtnClick
         /// 카드 상세보기 화면에서 태그 영역(특정 태그) 클릭 이벤트
-        case cardDetailTag_btn_click(tag_name: String)
+        case cardDetailTag_btnClick(tag_name: String)
     }
     
     enum WriteCardView: AnalyticsEventProtocol {
         /// 피드 카드 작성 뷰에서 뒤로가기 버튼 클릭 이벤트
-        case moveToCreateFeedCardView_cancel_btn_click
+        case goCreateFCard_cancelBtnClick
         /// 댓글카드 작성 뷰에서 뒤로가기 버튼 클릭 이벤트
-        case moveToCreateCommentCardView_cancel_btn_click
+        case goCreateCCard_cancelBtnClick
         /// 피드 카드 작성 뷰에서 태그 추가를 키보드 엔터(완료)버튼 클릭 이벤트
-        case multipleFeedTagCreation_enter_btn_click
+        case multipleFeedTagCreation_enterBtnClick
         /// 피드 카드 작성 뷰에서 기본 배경 이미지 카테고리 변경 클릭 이벤트
-        case feedBackgroundCategory_tab_click
+        case feedBackgroundCategory_tabClick
         /// 카드 만들기(피드 카드 작성 뷰)에서 ‘이벤트’ 카테고리 버튼 클릭 이벤트
-        case createFeedCardEventCategory_btn_click
+        case createFCardEventCategory_btnClick
         /// 댓글카드 작성 뷰에서 기본 배경 이미지 카테고리 변경 클릭 이벤트
-        case commentBackgroundCategory_tab_click
+        case commentBackgroundCategory_tabClick
         /// 피드 카드 작성 완료 버튼 클릭 이벤트
-        case createFeedCard_btn_click
+        case createFCard_btnClick
         /// 거리 공유 옵션을 끈 상태로 피드 카드 작성 완료 버튼 클릭 이벤트
-        case createFeedCardWithoutDistanceSharedOpt_btn_click
+        case createFCardWithoutDistanceOpt_btnClick
     }
     
     enum TagView: AnalyticsEventProtocol {
         /// 태그 즐겨찾기 등록 버튼 클릭 이벤트(즐겨찾기 취소는 해당 이벤트에 제외)
-        case favoriteTagRegister_btn_click
+        case favoriteTagRegister_btnClick
         /// 태그 메뉴 화면에서 검색바 클릭 이벤트
         case tagMenuSearchBar_click
         /// 인기 태그 영역에서 특정 태그 클릭 이벤트
-        case popularTag_item_click
+        case popularTag_itemClick
     }
     
     enum TransferView: AnalyticsEventProtocol {

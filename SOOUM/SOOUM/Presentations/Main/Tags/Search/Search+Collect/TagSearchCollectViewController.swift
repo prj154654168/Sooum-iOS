@@ -151,7 +151,7 @@ class TagSearchCollectViewController: BaseNavigationViewController, View {
             .subscribe(with: self) { object, isFavorite in
                 
                 if isFavorite {
-                    GAHelper.shared.logEvent(event: GAEvent.TagView.favoriteTagRegister_btn_click)
+                    GAHelper.shared.logEvent(event: GAEvent.TagView.favoriteTagRegister_btnClick)
                 }
                 
                 let message = isFavorite ? Text.addToastMessage : Text.deleteToastMessage
@@ -233,7 +233,7 @@ class TagSearchCollectViewController: BaseNavigationViewController, View {
                     reactor.action.onNext(.cleanup)
                     
                     GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetailView_tracePath_click(
+                        event: GAEvent.DetailView.cardDetail_tracePathClick(
                             previous_path: .tag_search_collect
                         )
                     )

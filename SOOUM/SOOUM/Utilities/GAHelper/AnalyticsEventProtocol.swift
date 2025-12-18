@@ -13,12 +13,8 @@ protocol AnalyticsEventProtocol {
 extension AnalyticsEventProtocol {
     
     var eventName: String {
-        let components = String(describing: type(of: self)).split(separator: ".").map { String($0) }
-        let enumName = components.last ?? ""
         
-        let caseName = "\(self)".components(separatedBy: "(").first ?? ""
-        
-        return "\(enumName)_\(caseName)"
+        return "\(self)".components(separatedBy: "(").first ?? ""
     }
     
     var parameters: [String: FirebaseLoggable]? {

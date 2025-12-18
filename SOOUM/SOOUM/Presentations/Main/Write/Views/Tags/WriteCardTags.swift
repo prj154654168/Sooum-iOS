@@ -344,7 +344,7 @@ extension WriteCardTags: WriteCardTagFooterDelegate {
         textField.text = nil
         textField.sendActionsToTextField(for: .editingChanged)
         
-        GAHelper.shared.logEvent(event: GAEvent.WriteCardView.multipleFeedTagCreation_enter_btn_click)
+        GAHelper.shared.logEvent(event: GAEvent.WriteCardView.multipleFeedTagCreation_enterBtnClick)
         
         return false
     }
