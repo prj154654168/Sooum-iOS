@@ -10,8 +10,9 @@
 	<string>$(SOOUM_SERVER_ENDPOINT)</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Hakgyoansim-Bold.ttf</string>
-		<string>Hakgyoansim-Light.ttf</string>
+		<string>RIDIBatang.otf</string>
+		<string>Yoonwoo.ttf</string>
+		<string>Kkukkkuk.ttf</string>
 		<string>PretendardVariable.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
