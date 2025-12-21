@@ -204,8 +204,8 @@ class WriteCardTags: UIView {
         var items = new.map { Item.tag($0) }
         items.append(Item.footer)
         snapshot.appendItems(items, toSection: .main)
-        self.dataSource.apply(snapshot, animatingDifferences: false) { [weak self] in
-            self?.scrollToRight()
+        self.dataSource.apply(snapshot, animatingDifferences: false) {
+            self.scrollToRight()
         }
     }
     

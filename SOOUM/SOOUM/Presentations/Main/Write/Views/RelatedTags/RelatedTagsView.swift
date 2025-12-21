@@ -129,8 +129,8 @@ class RelatedTagsView: UIView {
             self.models = []
             var snapshot = Snapshot()
             snapshot.appendSections([.main])
-            self.dataSource.apply(snapshot, animatingDifferences: false) { [weak self] in
-                self?.updateContentHeight()
+            self.dataSource.apply(snapshot, animatingDifferences: false) {
+                self.updateContentHeight()
             }
             return
         }
@@ -153,8 +153,8 @@ class RelatedTagsView: UIView {
         
         let items = new.map { Item.tag($0) }
         snapshot.appendItems(items, toSection: .main)
-        self.dataSource.apply(snapshot, animatingDifferences: false) { [weak self] in
-            self?.updateContentHeight()
+        self.dataSource.apply(snapshot, animatingDifferences: false) {
+            self.updateContentHeight()
         }
     }
 }
