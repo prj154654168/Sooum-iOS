@@ -9,7 +9,7 @@ import Alamofire
 
 final class AddingTokenInterceptor: RequestInterceptor {
     
-    private weak var provider: ManagerTypeDelegate?
+    private let provider: ManagerTypeDelegate
     
     init(provider: ManagerTypeDelegate) {
         self.provider = provider
@@ -21,11 +21,11 @@ final class AddingTokenInterceptor: RequestInterceptor {
         
         switch authorizationType {
         case "access":
-            let authPayloadForAccess = self.provider?.authManager.authPayloadByAccess() ?? ["Authorization": "Bearer "]
+            let authPayloadForAccess = self.provider.authManager.authPayloadByAccess()
             let authKeyForAccess = authPayloadForAccess.keys.first! as String
             request.setValue(authPayloadForAccess[authKeyForAccess], forHTTPHeaderField: authKeyForAccess)
         case "refresh":
-            let authPayloadForRefresh = self.provider?.authManager.authPayloadByRefresh() ?? ["Authorization": "Bearer "]
+            let authPayloadForRefresh = self.provider.authManager.authPayloadByRefresh()
             let authKeyForRefresh = authPayloadForRefresh.keys.first! as String
             request.setValue(authPayloadForRefresh[authKeyForRefresh], forHTTPHeaderField: authKeyForRefresh)
         default:

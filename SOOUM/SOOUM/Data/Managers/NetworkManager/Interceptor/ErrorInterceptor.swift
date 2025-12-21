@@ -32,7 +32,7 @@ final class ErrorInterceptor: RequestInterceptor {
     
     private let retryLimit: Int = 1
     
-    private weak var provider: ManagerTypeDelegate?
+    private let provider: ManagerTypeDelegate
     
     init(provider: ManagerTypeDelegate) {
         self.provider = provider
@@ -79,20 +79,8 @@ final class ErrorInterceptor: RequestInterceptor {
                 return
             }
             
-            guard let provider = self.provider else {
-                let retryError = NSError(
-                    domain: "SOOUM",
-                    code: -99,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "Retry error: `self` deallocated before network response received."
-                    ]
-                )
-                completion(.doNotRetryWithError(retryError))
-                return
-            }
-            
-            let token = provider.authManager.authInfo.token
-            provider.authManager.reAuthenticate(token) { result in
+            let token = self.provider.authManager.authInfo.token
+            self.provider.authManager.reAuthenticate(token) { result in
                 
                 switch result {
                 case .success:
@@ -159,7 +147,7 @@ final class ErrorInterceptor: RequestInterceptor {
                     let subject = Text.inquiryMailTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
                     let guideMessage = """
                         \(Text.identificationInfo)
-                        \(self.provider?.authManager.authInfo.token.refreshToken ?? "")\n
+                        \(self.provider.authManager.authInfo.token.refreshToken)\n
                         \(Text.inquiryMailGuideMessage)
                     """
                     let body = guideMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -189,7 +177,7 @@ final class ErrorInterceptor: RequestInterceptor {
     
     func goToOnboarding() {
         
-        self.provider?.authManager.initializeAuthInfo()
+        self.provider.authManager.initializeAuthInfo()
         
         DispatchQueue.main.async {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,

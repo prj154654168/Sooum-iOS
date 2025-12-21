@@ -110,10 +110,8 @@ extension AuthManager: AuthManagerDelegate {
     
     func publicKey() -> Observable<String?> {
         
-        guard let provider = self.provider else { return .just(nil) }
-        
         let request: AuthRequest = .publicKey
-        return provider.networkManager.fetch(KeyInfoResponse.self, request: request)
+        return self.provider.networkManager.fetch(KeyInfoResponse.self, request: request)
             .map(\.publicKey)
     }
     
@@ -125,11 +123,10 @@ extension AuthManager: AuthManagerDelegate {
                 
                 if let publicKey = publicKey,
                    let secKey = object.convertPEMToSecKey(pemString: publicKey),
-                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey),
-                   let provider = object.provider {
+                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
                     
                     let request: UserRequest = .checkAvailable(encryptedDeviceId: encryptedDeviceId)
-                    return provider.networkManager.perform(CheckAvailableResponse.self, request: request)
+                    return object.provider.networkManager.perform(CheckAvailableResponse.self, request: request)
                 } else {
                     return .just(CheckAvailableResponse.emptyValue())
                 }
@@ -144,16 +141,15 @@ extension AuthManager: AuthManagerDelegate {
                 
                 if let publicKey = publicKey,
                    let secKey = object.convertPEMToSecKey(pemString: publicKey),
-                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey),
-                   let provider = object.provider {
+                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
                     
                     let request: AuthRequest = .signUp(
                         encryptedDeviceId: encryptedDeviceId,
-                        isNotificationAgreed: provider.pushManager.notificationStatus,
+                        isNotificationAgreed: object.provider.pushManager.notificationStatus,
                         nickname: nickname,
                         profileImageName: profileImageName
                     )
-                    return provider.networkManager.perform(SignUpResponse.self, request: request)
+                    return object.provider.networkManager.perform(SignUpResponse.self, request: request)
                         .map(\.token)
                         .flatMapLatest { token -> Observable<Bool> in
                             
@@ -164,7 +160,7 @@ extension AuthManager: AuthManagerDelegate {
                             object.authInfo.updateToken(token)
                             
                             // FCM token 업데이트
-                            provider.networkManager.registerFCMToken(from: #function)
+                            object.provider.networkManager.registerFCMToken(from: #function)
                             return .just(true)
                         }
                 } else {
@@ -181,11 +177,10 @@ extension AuthManager: AuthManagerDelegate {
             
                 if let publicKey = publicKey,
                    let secKey = object.convertPEMToSecKey(pemString: publicKey),
-                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey),
-                   let provider = object.provider {
+                   let encryptedDeviceId = object.encryptUUIDWithPublicKey(publicKey: secKey) {
                     
                     let request: AuthRequest = .login(encryptedDeviceId: encryptedDeviceId)
-                    return provider.networkManager.perform(LoginResponse.self, request: request)
+                    return object.provider.networkManager.perform(LoginResponse.self, request: request)
                         .map(\.token)
                         .withUnretained(object)
                         .flatMapLatest { object, token -> Observable<Bool> in
@@ -194,7 +189,7 @@ extension AuthManager: AuthManagerDelegate {
                             object.authInfo.updateToken(token)
                             
                             // FCM token 업데이트
-                            provider.networkManager.registerFCMToken(from: #function)
+                            object.provider.networkManager.registerFCMToken(from: #function)
                             return .just(true)
                         }
                         .catch { error in
@@ -261,10 +256,8 @@ extension AuthManager: AuthManagerDelegate {
         self.isReAuthenticating = true
         self.pendingResults.append(completion)
         
-        guard let provider = self.provider else { return }
-        
         let request: AuthRequest = .reAuthenticationWithRefreshSession(token: token)
-        provider.networkManager.perform(TokenResponse.self, request: request)
+        self.provider.networkManager.perform(TokenResponse.self, request: request)
             .map(\.token)
             .subscribe(
                 with: self,
@@ -283,7 +276,7 @@ extension AuthManager: AuthManagerDelegate {
                         object.updateTokens(token)
                         
                         // FCM token 업데이트
-                        provider.networkManager.registerFCMToken(from: #function)
+                        object.provider.networkManager.registerFCMToken(from: #function)
                         
                         object.excutePendingResults(.success)
                     }

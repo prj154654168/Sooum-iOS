@@ -232,10 +232,11 @@ class FavoriteTagsView: UIView {
         
         self.layoutIfNeeded()
         
-        self.dataSource.apply(snapshot, animatingDifferences: false) { [weak self] in
-            guard let self = self, slicedBySize.count > 1 else { return }
+        self.dataSource.apply(snapshot, animatingDifferences: false) {
+            guard slicedBySize.count > 1 else { return }
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
                 let newIndexForIndicator = self.currentIndexForIndicator == 0 ? 1 : self.currentIndexForIndicator + 1
                 let initialIndexPath: IndexPath = IndexPath(item: newIndexForIndicator, section: Section.main.rawValue)
                 self.collectionView.scrollToItem(
