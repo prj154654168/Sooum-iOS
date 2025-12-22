@@ -33,7 +33,7 @@ extension AnalyticsEventProtocol {
                 guard let paramLabel = tupleChild.label else { continue }
                 // FirebaseLoggable 타입 검사
                 if let loggableValue = tupleChild.value as? any FirebaseLoggable {
-                    dict[paramLabel] = loggableValue
+                    dict[paramLabel] = loggableValue.description
                 }
             }
             return dict.isEmpty ? nil : dict
