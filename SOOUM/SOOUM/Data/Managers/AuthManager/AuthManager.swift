@@ -281,7 +281,9 @@ extension AuthManager: AuthManagerDelegate {
                         object.excutePendingResults(.success)
                     }
                     
-                    object.isReAuthenticating = false
+                    DispatchQueue.main.async { [weak object] in
+                        object?.isReAuthenticating = false
+                    }
                 },
                 onError: { object, error in
                     /// 재인증 과정이 실패하면 항상 재로그인 시도
@@ -289,7 +291,9 @@ extension AuthManager: AuthManagerDelegate {
                         .subscribe(onNext: { isRegistered in
                             object.excutePendingResults(isRegistered ? .success : .failure(error))
                             
-                            object.isReAuthenticating = false
+                            DispatchQueue.main.async { [weak object] in
+                                object?.isReAuthenticating = false
+                            }
                         })
                         .disposed(by: object.disposeBag)
                 }
