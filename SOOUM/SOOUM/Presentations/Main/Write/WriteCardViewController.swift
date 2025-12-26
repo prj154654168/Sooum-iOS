@@ -313,7 +313,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         self.writeCardView.writeCardTags.updateWrittenTags
             .distinctUntilChanged()
             .filterNil()
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.writeCardView.writeCardTags.rx.models())
             .disposed(by: self.disposeBag)
         
@@ -392,7 +392,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .filterNil()
             .share(replay: 1)
         selectedTypography
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.writeCardView) { writeCardView, selectedTypography in
                 var typograhpyToTextView: Typography {
                     switch selectedTypography {
@@ -584,7 +584,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .distinctUntilChanged()
             .filterNil()
             .map { ($0, reactor.entranceType) }
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.selectImageView.rx.setModels)
             .disposed(by: self.disposeBag)
         
@@ -599,7 +599,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isDownloaded)
             .filter { $0 == true }
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self.selectImageView) { selectImageView, _ in
                 selectImageView.updatedByUser()
             }

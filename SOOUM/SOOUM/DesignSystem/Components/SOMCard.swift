@@ -352,7 +352,7 @@ class SOMCard: UIView {
         self.serialTimer?.dispose()
         self.disposeBag = DisposeBag()
         
-        self.adminLabel.text = nil
+        self.adminLabel.text = Text.adminTitle
         self.cardPungTimeLabel.text = nil
         self.distanceLabel.text = nil
         self.timeLabel.text = nil
@@ -390,7 +390,8 @@ class SOMCard: UIView {
         self.cardPungTimeStackView.isHidden = model.storyExpirationTime == nil
         self.secondDot.isHidden = model.storyExpirationTime == nil
         self.distanceLabel.text = model.distance
-        self.distanceInfoStackView.isHidden = model.distance == nil
+        /// 어드민 카드의 경우 거리 표시 X
+        self.distanceInfoStackView.isHidden = (model.distance == nil || model.isAdminCard)
         self.thirdDot.isHidden = model.distance == nil
         self.timeLabel.text = model.createdAt.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
         

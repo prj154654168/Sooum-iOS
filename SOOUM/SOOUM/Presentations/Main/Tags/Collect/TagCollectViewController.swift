@@ -49,7 +49,7 @@ class TagCollectViewController: BaseNavigationViewController, View {
     
     private let rightFavoriteButton = SOMButton().then {
         $0.image = .init(.icon(.v2(.filled(.star))))
-        $0.foregroundColor = .som.v2.yMain
+        $0.foregroundColor = .som.v2.gray200
     }
     
     private let tagCollectCardsView = TagCollectCardsView()
@@ -144,7 +144,7 @@ class TagCollectViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         isFavorite
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isFavorite in
                 object.rightFavoriteButton.foregroundColor = isFavorite ? .som.v2.yMain : .som.v2.gray200
             }
@@ -211,7 +211,7 @@ class TagCollectViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.tagCardInfos)
             .distinctUntilChanged()
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, tagCardInfos in
                 
                 object.tagCollectCardsView.setModels(tagCardInfos)
@@ -232,19 +232,20 @@ class TagCollectViewController: BaseNavigationViewController, View {
         cardIsDeleted
             .filter { $0.isDeleted == false }
             .map { $0.selectedId }
+            .do(onNext: { _ in
+                reactor.action.onNext(.cleanup)
+                
+                GAHelper.shared.logEvent(
+                    event: GAEvent.DetailView.cardDetail_tracePathClick(
+                        previous_path: .tag_collect
+                    )
+                )
+            })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, selectedId in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(selectedId)
-                object.navigationPush(detailViewController, animated: true) { _ in
-                    reactor.action.onNext(.cleanup)
-                    
-                    GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetail_tracePathClick(
-                            previous_path: .tag_collect
-                        )
-                    )
-                }
+                object.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
     }

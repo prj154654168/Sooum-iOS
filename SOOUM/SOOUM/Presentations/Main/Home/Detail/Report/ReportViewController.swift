@@ -138,6 +138,9 @@ class ReportViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.isReported)
             .filter { $0 }
+            .do(onNext: { _ in
+                NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
+            })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.showSuccessReportedDialog()
@@ -146,9 +149,11 @@ class ReportViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.hasErrors)
             .filter { $0 }
+            .do(onNext: { _ in
+                NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
+            })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
                 object.navigationPop()
             }
             .disposed(by: self.disposeBag)
@@ -197,7 +202,6 @@ private extension ReportViewController {
             style: .primary,
             action: {
                 SOMDialogViewController.dismiss {
-                    NotificationCenter.default.post(name: .updatedReportState, object: nil, userInfo: nil)
                     self.navigationPop()
                 }
             }
