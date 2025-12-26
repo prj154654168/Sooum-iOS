@@ -41,7 +41,7 @@ class TagSearchCollectViewController: BaseNavigationViewController, View {
     
     private let rightFavoriteButton = SOMButton().then {
         $0.image = .init(.icon(.v2(.filled(.star))))
-        $0.foregroundColor = .som.v2.yMain
+        $0.foregroundColor = .som.v2.gray200
     }
     
     private let tagCollectCardsView = TagCollectCardsView()
