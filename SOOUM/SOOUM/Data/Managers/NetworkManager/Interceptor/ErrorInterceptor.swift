@@ -80,7 +80,7 @@ final class ErrorInterceptor: RequestInterceptor {
             }
             
             var usedToken = request.request?.value(forHTTPHeaderField: "Authorization") ?? ""
-            usedToken = usedToken.replacingOccurrences(of: "Bearer ", with: "")
+            usedToken = usedToken.replacingOccurrences(of: "Bearer ", with: "", options: .anchored)
             
             let token = self.provider.authManager.authInfo.token
             guard usedToken == token.accessToken else {
