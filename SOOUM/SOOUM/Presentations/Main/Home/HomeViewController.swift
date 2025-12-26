@@ -369,18 +369,19 @@ class HomeViewController: BaseNavigationViewController, View {
         cardIsDeleted
             .filter { $0.isDeleted == false }
             .map { $0.selectedId }
+            .do(onNext: { _ in
+                reactor.action.onNext(.cleanup)
+                
+                GAHelper.shared.logEvent(event: GAEvent.HomeView.feedCardDetail_cardClick)
+                GAHelper.shared.logEvent(
+                    event: GAEvent.DetailView.cardDetail_tracePathClick(previous_path: .home)
+                )
+            })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, selectedId in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
-                object.parent?.navigationPush(detailViewController, animated: true) { _ in
-                    reactor.action.onNext(.cleanup)
-                    
-                    GAHelper.shared.logEvent(event: GAEvent.HomeView.feedCardDetail_cardClick)
-                    GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetail_tracePathClick(previous_path: .home)
-                    )
-                }
+                object.parent?.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -392,7 +393,8 @@ class HomeViewController: BaseNavigationViewController, View {
                 distances: $0.distanceCards
             )
         }
-        .observe(on: MainScheduler.instance)
+        .distinctUntilChanged(reactor.canUpdateCells)
+        .observe(on: MainScheduler.asyncInstance)
         .subscribe(with: self) { object, displayStats in
             
             var snapshot = Snapshot()
@@ -712,17 +714,17 @@ extension HomeViewController: SOMStickyTabBarDelegate {
         let toTop = CGPoint(x: 0, y: -(self.headerViewHeight + 16))
         self.tableView.setContentOffset(toTop, animated: false)
         
-        var displayType: HomeViewReactor.DisplayType {
-            switch index {
-            case 1: return .popular
-            case 2: return .distance
-            default: return .latest
-            }
-        }
-        self.reactor?.action.onNext(.updateDisplayType(displayType))
-        
         if index == 2, self.reactor?.currentState.hasPermission == false {
             self.showLocationPermissionDialog()
+        } else {
+            var displayType: HomeViewReactor.DisplayType {
+                switch index {
+                case 1: return .popular
+                case 2: return .distance
+                default: return .latest
+                }
+            }
+            self.reactor?.action.onNext(.updateDisplayType(displayType))
         }
     }
 }

@@ -195,6 +195,7 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         let transferCode = self.transferTextField.rx.text.orEmpty.distinctUntilChanged().share()
         transferCode
             .map { $0.isEmpty == false }
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.confirmButton.rx.isEnabled)
             .disposed(by: self.disposeBag)
         
@@ -208,11 +209,12 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         let isSuccess = reactor.state.map(\.isSuccess).filterNil().share()
         isSuccess
             .filter { $0 }
+            .do(onNext: { _ in
+                GAHelper.shared.logEvent(event: GAEvent.TransferView.accountTransferSuccess)
+            })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 guard let window = object.view.window else { return }
-                
-                GAHelper.shared.logEvent(event: GAEvent.TransferView.accountTransferSuccess)
                 
                 object.showSuccessDialog {
                     

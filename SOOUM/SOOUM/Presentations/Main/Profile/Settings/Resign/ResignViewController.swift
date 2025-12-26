@@ -165,6 +165,7 @@ class ResignViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         reason
             .map { $0.isEmpty == false }
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.resignButton.rx.isEnabled)
             .disposed(by: self.disposeBag)
         
@@ -197,7 +198,7 @@ class ResignViewController: BaseNavigationViewController, View {
         reactor.state.map(\.reason)
             .distinctUntilChanged()
             .filterNil()
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, reason in
                 
                 let items = object.container.arrangedSubviews.compactMap { $0 as? SOMButton }

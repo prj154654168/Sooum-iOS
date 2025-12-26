@@ -93,18 +93,19 @@ class FollowViewController: BaseNavigationViewController, View {
             cell.profileBackgroundButton.rx.throttleTap(.seconds(3))
                 .subscribe(with: self) { object, _ in
                     if follower.isRequester {
+                        
                         guard let navigationController = object.navigationController,
-                            let tabBarController = navigationController.parent as? SOMTabBarController
+                              let tabBarController = navigationController
+                            .viewControllers
+                            .first(where: {
+                                $0.isKind(of: SOMTabBarController.self)
+                            }) as? SOMTabBarController
                         else { return }
                         
-                        if navigationController.viewControllers.first?.isKind(of: ProfileViewController.self) == true {
-                            
-                            object.navigationPopToRoot(animated: false)
-                        } else {
-                            
-                            tabBarController.didSelectedIndex(3)
-                            navigationController.viewControllers.removeAll(where: { $0.isKind(of: HomeViewController.self) == false })
-                        }
+                        navigationController.viewControllers.removeAll(where: {
+                            $0.isKind(of: SOMTabBarController.self) == false
+                        })
+                        tabBarController.didSelectedIndex(3)
                     } else {
                         let profileViewController = ProfileViewController()
                         profileViewController.reactor = reactor.reactorForProfile(follower.memberId)
@@ -170,17 +171,17 @@ class FollowViewController: BaseNavigationViewController, View {
                     .subscribe(with: self) { object, _ in
                         if following.isRequester {
                             guard let navigationController = object.navigationController,
-                                let tabBarController = navigationController.parent as? SOMTabBarController
+                                  let tabBarController = navigationController
+                                .viewControllers
+                                .first(where: {
+                                    $0.isKind(of: SOMTabBarController.self)
+                                }) as? SOMTabBarController
                             else { return }
                             
-                            if navigationController.viewControllers.first?.isKind(of: ProfileViewController.self) == true {
-                                
-                                object.navigationPopToRoot(animated: false)
-                            } else {
-                                
-                                tabBarController.didSelectedIndex(3)
-                                navigationController.viewControllers.removeAll(where: { $0.isKind(of: HomeViewController.self) == false })
-                            }
+                            navigationController.viewControllers.removeAll(where: {
+                                $0.isKind(of: SOMTabBarController.self) == false
+                            })
+                            tabBarController.didSelectedIndex(3)
                         } else {
                             let profileViewController = ProfileViewController()
                             profileViewController.reactor = reactor.reactorForProfile(following.memberId)
@@ -309,7 +310,7 @@ class FollowViewController: BaseNavigationViewController, View {
                 followings: $0.followings
             )
         }
-        .observe(on: MainScheduler.instance)
+        .observe(on: MainScheduler.asyncInstance)
         .subscribe(with: self) { object, displayStates in
             
             var followerTabItem: String {

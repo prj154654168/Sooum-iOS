@@ -79,7 +79,14 @@ final class ErrorInterceptor: RequestInterceptor {
                 return
             }
             
+            var usedToken = request.request?.value(forHTTPHeaderField: "Authorization") ?? ""
+            usedToken = usedToken.replacingOccurrences(of: "Bearer ", with: "", options: .anchored)
+            
             let token = self.provider.authManager.authInfo.token
+            guard usedToken == token.accessToken else {
+                completion(.retry)
+                return
+            }
             self.provider.authManager.reAuthenticate(token) { result in
                 
                 switch result {

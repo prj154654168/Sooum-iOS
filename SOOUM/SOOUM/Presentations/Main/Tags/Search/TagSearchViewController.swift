@@ -79,7 +79,6 @@ class TagSearchViewController: BaseNavigationViewController, View {
         self.navigationBar.backButton.rx.throttleTap
             .withLatestFrom(searchTerms)
             .map { $0 == nil }
-            .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, isNil in
                 // 검색 결과가 없을 때만
                 if isNil {
@@ -91,7 +90,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
                     )
                     object.navigationPop()
                 } else {
-                    object.reactor?.action.onNext(.reset)
+                    reactor.action.onNext(.reset)
                     object.searchTextFieldView.text = nil
                     object.searchTextFieldView.resignFirstResponder()
                 }
@@ -138,7 +137,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
         // State
         searchTerms
             .filter { $0 == nil }
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 object.searchTermsView.isHidden = true
             }
@@ -146,7 +145,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
         
         searchTerms
             .filterNil()
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, searchTerms in
                 object.searchTermsView.setModels(searchTerms)
                 object.searchTermsView.isHidden = false
@@ -158,7 +157,7 @@ class TagSearchViewController: BaseNavigationViewController, View {
             self.searchTextFieldView.textFieldDidReturn,
             resultSelector: { ($0, $1) }
         )
-        .observe(on: MainScheduler.instance)
+        .observe(on: MainScheduler.asyncInstance)
         .subscribe(with: self) { object, searchTermInfos in
             let (searchTerms, returnKeyDidTap) = searchTermInfos
             

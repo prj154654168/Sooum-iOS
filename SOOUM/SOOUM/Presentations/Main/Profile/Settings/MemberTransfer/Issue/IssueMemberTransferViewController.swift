@@ -163,7 +163,7 @@ class IssueMemberTransferViewController: BaseNavigationViewController, View {
         let trnsferCodeInfo = reactor.state.map(\.trnsferCodeInfo).distinctUntilChanged().filterNil().share()
         trnsferCodeInfo
             .map(\.code)
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.transferCodeLabel.rx.text)
             .disposed(by: self.disposeBag)
         
