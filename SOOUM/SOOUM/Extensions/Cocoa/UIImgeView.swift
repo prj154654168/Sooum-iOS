@@ -14,7 +14,7 @@ import RxSwift
 
 extension UIImageView {
 
-    static let placeholder: UIImage? = UIColor.som.v2.pMain.toImage
+    static let placeholder: UIImage? = UIColor.som.v2.gray200.toImage
 
     func setImage(strUrl: String?, with key: String? = nil) {
         
@@ -22,8 +22,7 @@ extension UIImageView {
             /// ImageResource 객체를 생성하여 URL과 Cache Key를 연결
             let resource = KF.ImageResource(downloadURL: url, cacheKey: key ?? strUrl)
             /// Kingfisher에 Resource를 전달하고 모든 캐시/다운로드 로직 위임
-            self.kf.setImage(with: resource)
-            self.backgroundColor = .clear
+            self.kf.setImage(with: resource, placeholder: Self.placeholder)
         } else {
             self.kf.cancelDownloadTask()
             self.image = Self.placeholder
