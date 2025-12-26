@@ -291,9 +291,11 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         reactor.state.map(\.isUpdatedSuccess)
             .distinctUntilChanged()
             .filter { $0 }
+            .do(onNext: { _ in
+                NotificationCenter.default.post(name: .reloadProfileData, object: nil, userInfo: nil)
+            })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                NotificationCenter.default.post(name: .reloadProfileData, object: nil, userInfo: nil)
                 object.navigationPop()
             }
             .disposed(by: self.disposeBag)
@@ -312,7 +314,6 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
             .filter { $0 == true }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                
                 object.showInappositeDialog(reactor)
             }
             .disposed(by: self.disposeBag)

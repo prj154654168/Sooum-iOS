@@ -172,7 +172,7 @@ class BlockUsersViewController: BaseNavigationViewController, View {
         
         let blockUserInfos = reactor.state.map(\.blockUserInfos).distinctUntilChanged()
         blockUserInfos
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, blockUserInfos in
                 
                 var snapshot = Snapshot()
@@ -197,7 +197,6 @@ class BlockUsersViewController: BaseNavigationViewController, View {
                 .filter { $0.isCanceled }
                 .map(\.userId)
         )
-        .observe(on: MainScheduler.instance)
         .subscribe(onNext: { combined in
             
             NotificationCenter.default.post(name: .reloadHomeData, object: nil, userInfo: nil)

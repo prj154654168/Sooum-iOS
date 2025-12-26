@@ -336,7 +336,7 @@ class DetailViewController: BaseNavigationViewController, View {
         isFeed
             .distinctUntilChanged()
             .filterNil()
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, isFeed in
                 object.navigationBar.title = isFeed ?
                 Text.feedDetailNavigationTitle :
@@ -349,7 +349,7 @@ class DetailViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         detailCard
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, detailCard in
                 object.detailCard = detailCard
                 
@@ -363,7 +363,7 @@ class DetailViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         commentCards
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, commentCards in
                 object.commentCards = commentCards
                 
@@ -376,6 +376,15 @@ class DetailViewController: BaseNavigationViewController, View {
         reactor.state.map(\.willPushToDetailEnabled)
             .distinctUntilChanged(reactor.canPushToDetail)
             .filterNil()
+            .do(onNext: { _ in
+                reactor.action.onNext(.cleanup)
+                
+                GAHelper.shared.logEvent(
+                    event: GAEvent.DetailView.cardDetail_tracePathClick(
+                        previous_path: .detail
+                    )
+                )
+            })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, willPushToDetailEnabled in
                 let detailViewController = DetailViewController()
@@ -383,15 +392,7 @@ class DetailViewController: BaseNavigationViewController, View {
                     willPushToDetailEnabled.prevCardId,
                     hasDeleted: willPushToDetailEnabled.isDeleted
                 )
-                object.navigationPush(detailViewController, animated: true) { _ in
-                    reactor.action.onNext(.cleanup)
-                    
-                    GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetail_tracePathClick(
-                            previous_path: .detail
-                        )
-                    )
-                }
+                object.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -400,43 +401,41 @@ class DetailViewController: BaseNavigationViewController, View {
             .filterNil()
             .filter { $0.isDeleted }
             .map(\.enterTo)
+            .do(onNext: { enterTo in
+                reactor.action.onNext(.cleanup)
+                
+                GAHelper.shared.logEvent(event: GAEvent.DetailView.goCreateCCard_btnClick)
+                
+                if enterTo == .icon {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.goCreateCCard_iconBtnClick
+                    )
+                } else {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.goCreateCCard_fBtnClick
+                    )
+                    if reactor.currentState.detailCard?
+                        .cardImgName
+                        .contains(Text.eventCardTitle) == true {
+                        
+                        GAHelper.shared.logEvent(
+                            event: GAEvent.DetailView.goCreateCCardWithEventImg_fBtnClick
+                        )
+                    }
+                }
+            })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, enterTo in
                 let writeCardViewController = WriteCardViewController()
                 writeCardViewController.reactor = reactor.reactorForWriteCard()
-                object.navigationPush(
-                    writeCardViewController,
-                    animated: true
-                ) { _ in
-                    reactor.action.onNext(.cleanup)
-                    
-                    GAHelper.shared.logEvent(event: GAEvent.DetailView.goCreateCCard_btnClick)
-                    
-                    if enterTo == .icon {
-                        GAHelper.shared.logEvent(
-                            event: GAEvent.DetailView.goCreateCCard_iconBtnClick
-                        )
-                    } else {
-                        GAHelper.shared.logEvent(
-                            event: GAEvent.DetailView.goCreateCCard_fBtnClick
-                        )
-                        if reactor.currentState.detailCard?
-                            .cardImgName
-                            .contains(Text.eventCardTitle) == true {
-                            
-                            GAHelper.shared.logEvent(
-                                event: GAEvent.DetailView.goCreateCCardWithEventImg_fBtnClick
-                            )
-                        }
-                    }
-                }
+                object.navigationPush(writeCardViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.isLiked)
             .distinctUntilChanged()
             .filter { $0 }
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 
                 let updated: DetailCardInfo
@@ -486,7 +485,7 @@ class DetailViewController: BaseNavigationViewController, View {
             reactor.state.map(\.hasErrors)
         )
         .map { ($0.1, $0.2, $0.3) }
-        .observe(on: MainScheduler.asyncInstance)
+        .observe(on: MainScheduler.instance)
         .subscribe(with: self) { object, combined in
             
             object.navigationBar.title = Text.deletedNavigationTitle
@@ -611,11 +610,17 @@ extension DetailViewController: UICollectionViewDataSource {
                 /// 내 프로필일 경우 탭 이동
                 if object.detailCard.isOwnCard {
                     guard let navigationController = object.navigationController,
-                        let tabBarController = navigationController.parent as? SOMTabBarController
+                          let tabBarController = navigationController
+                        .viewControllers
+                        .first(where: {
+                            $0.isKind(of: SOMTabBarController.self)
+                        }) as? SOMTabBarController
                     else { return }
                     
+                    navigationController.viewControllers.removeAll(where: {
+                        $0.isKind(of: SOMTabBarController.self) == false
+                    })
                     tabBarController.didSelectedIndex(3)
-                    navigationController.viewControllers.removeAll(where: { $0.isKind(of: HomeViewController.self) == false })
                 } else {
                     let profileViewController = ProfileViewController()
                     profileViewController.reactor = reactor.reactorForProfile(

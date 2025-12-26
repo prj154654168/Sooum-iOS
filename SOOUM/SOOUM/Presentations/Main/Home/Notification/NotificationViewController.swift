@@ -203,7 +203,7 @@ class NotificationViewController: BaseNavigationViewController, View {
                 NotificationCenter.default.post(name: .updatedHasUnreadNotification, object: nil, userInfo: nil)
             }
         })
-        .observe(on: MainScheduler.instance)
+        .observe(on: MainScheduler.asyncInstance)
         .subscribe(with: self) { object, displayStats in
             
             var snapshot = Snapshot()
@@ -255,26 +255,25 @@ class NotificationViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         cardIsDeleted
             .filter { $0.isDeleted == false }
-            .map { ($0.selectedId, $0.selectedNotiId) }
-            .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, combined in
-                
-                let (selectedId, selectedNotiId) = combined
-                if let selectedNotiId = selectedNotiId {
+            .do(onNext: { cardIsDeleted in
+                if let selectedNotiId = cardIsDeleted.selectedNotiId {
                     reactor.action.onNext(.requestRead(selectedNotiId))
                 }
+                reactor.action.onNext(.cleanup)
+                
+                GAHelper.shared.logEvent(
+                    event: GAEvent.DetailView.cardDetail_tracePathClick(
+                        previous_path: .notification
+                    )
+                )
+            })
+            .map { $0.selectedId }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, selectedId in
                 
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
-                object.navigationPush(detailViewController, animated: true) { _ in
-                    reactor.action.onNext(.cleanup)
-                    
-                    GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetail_tracePathClick(
-                            previous_path: .notification
-                        )
-                    )
-                }
+                object.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
     }

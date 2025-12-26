@@ -417,26 +417,27 @@ class ProfileViewController: BaseNavigationViewController, View {
         cardIsDeleted
             .filter { $0.isDeleted == false }
             .map(\.selectedId)
+            .do(onNext: { _ in
+                reactor.action.onNext(.cleanup)
+                
+                GAHelper.shared.logEvent(
+                    event: GAEvent.DetailView.cardDetail_tracePathClick(
+                        previous_path: .profile
+                    )
+                )
+            })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, selectedId in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(selectedId)
                 let base = reactor.entranceType == .my ? object.parent : object
-                base?.navigationPush(detailViewController, animated: true) { _ in
-                    reactor.action.onNext(.cleanup)
-                    
-                    GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetail_tracePathClick(
-                            previous_path: .profile
-                        )
-                    )
-                }
+                base?.navigationPush(detailViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
         displayStates
         .distinctUntilChanged(reactor.canUpdateCells)
-        .observe(on: MainScheduler.instance)
+        .observe(on: MainScheduler.asyncInstance)
         .subscribe(with: self) { object, displayStates in
             
             var snapshot = Snapshot()
