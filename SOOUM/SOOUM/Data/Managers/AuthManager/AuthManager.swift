@@ -37,6 +37,8 @@ protocol AuthManagerDelegate: AnyObject {
 
 class AuthManager: CompositeManager<AuthManagerConfiguration> {
     
+    private let reAuthenticateQueue = DispatchQueue(label: "com.sooum.reAuthenticate.serial.queue")
+    
     private var isReAuthenticating: Bool = false
     private var pendingResults: [(AuthResult) -> Void] = []
     
@@ -229,32 +231,35 @@ extension AuthManager: AuthManagerDelegate {
         4. RefreshToken 도 유효하지 않다면 로그인 시도
      */
     func reAuthenticate(_ token: Token, _ completion: @escaping (AuthResult) -> Void) {
-        
-        guard self.authInfo.token.isEmpty == false else {
-            let error = NSError(
-                domain: "SOOUM",
-                code: -99,
-                userInfo: [NSLocalizedDescriptionKey: "tokens not found"]
-            )
-            completion(.failure(error))
-            return
-        }
-        
-        /// 1개 이상의 API에서 reAuthenticate 요청 했을 때,
-        /// 처음 요청이 끝날 떄까지 대기
-        guard self.isReAuthenticating == false else {
+        /// isReAuthenticating == true로 변경되기 전 짧은 시간에 재인증 요청이 들어왔을 때, 순서 보장
+        let shouldRequest: Bool = self.reAuthenticateQueue.sync {
+            guard self.authInfo.token.isEmpty == false else {
+                let error = NSError(
+                    domain: "SOOUM",
+                    code: -99,
+                    userInfo: [NSLocalizedDescriptionKey: "tokens not found"]
+                )
+                completion(.failure(error))
+                return false
+            }
+            
+            /// AccessToken이 업데이트 됐다면, 즉시 성공 처리
+            guard token == self.authInfo.token else {
+                completion(.success)
+                return false
+            }
+            
             self.pendingResults.append(completion)
-            return
+            
+            /// 1개 이상의 API에서 reAuthenticate 요청 했을 때,
+            /// 처음 요청이 끝날 떄까지 대기
+            guard self.isReAuthenticating == false else { return false }
+            self.isReAuthenticating = true
+            
+            return true
         }
-        
-        /// AccessToken이 업데이트 됐다면, 즉시 성공 처리
-        guard token == self.authInfo.token else {
-            completion(.success)
-            return
-        }
-        
-        self.isReAuthenticating = true
-        self.pendingResults.append(completion)
+        /// 여러 API가 재인증 요청 시, 맨 처음 요청만 재인증 요청
+        guard shouldRequest else { return }
         
         let request: AuthRequest = .reAuthenticationWithRefreshSession(token: token)
         self.provider.networkManager.perform(TokenResponse.self, request: request)
@@ -262,7 +267,7 @@ extension AuthManager: AuthManagerDelegate {
             .subscribe(
                 with: self,
                 onNext: { object, token in
-                
+                    
                     if token.accessToken.isEmpty && token.refreshToken.isEmpty {
                         let error = NSError(
                             domain: "SOOUM",
