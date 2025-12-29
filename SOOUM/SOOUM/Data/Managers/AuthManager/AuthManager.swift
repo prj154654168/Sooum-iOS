@@ -231,6 +231,7 @@ extension AuthManager: AuthManagerDelegate {
         4. RefreshToken 도 유효하지 않다면 로그인 시도
      */
     func reAuthenticate(_ token: Token, _ completion: @escaping (AuthResult) -> Void) {
+        var immediateResult: AuthResult?
         /// isReAuthenticating == true로 변경되기 전 짧은 시간에 재인증 요청이 들어왔을 때, 순서 보장
         let shouldRequest: Bool = self.reAuthenticateQueue.sync {
             guard self.authInfo.token.isEmpty == false else {
@@ -239,13 +240,13 @@ extension AuthManager: AuthManagerDelegate {
                     code: -99,
                     userInfo: [NSLocalizedDescriptionKey: "tokens not found"]
                 )
-                completion(.failure(error))
+                immediateResult = .failure(error)
                 return false
             }
             
             /// AccessToken이 업데이트 됐다면, 즉시 성공 처리
             guard token == self.authInfo.token else {
-                completion(.success)
+                immediateResult = .success
                 return false
             }
             
@@ -259,47 +260,50 @@ extension AuthManager: AuthManagerDelegate {
             return true
         }
         /// 여러 API가 재인증 요청 시, 맨 처음 요청만 재인증 요청
-        guard shouldRequest else { return }
-        
-        let request: AuthRequest = .reAuthenticationWithRefreshSession(token: token)
-        self.provider.networkManager.perform(TokenResponse.self, request: request)
-            .map(\.token)
-            .subscribe(
-                with: self,
-                onNext: { object, token in
-                    
-                    if token.accessToken.isEmpty && token.refreshToken.isEmpty {
-                        let error = NSError(
-                            domain: "SOOUM",
-                            code: -99,
-                            userInfo: [NSLocalizedDescriptionKey: "Session not refresh"]
-                        )
+        if shouldRequest == false, let result = immediateResult {
+            completion(result)
+        } else if shouldRequest {
+            
+            let request: AuthRequest = .reAuthenticationWithRefreshSession(token: token)
+            self.provider.networkManager.perform(TokenResponse.self, request: request)
+                .map(\.token)
+                .subscribe(
+                    with: self,
+                    onNext: { object, token in
                         
-                        object.excutePendingResults(.failure(error))
-                    } else {
-                        
-                        object.updateTokens(token)
-                        
-                        // FCM token 업데이트
-                        object.provider.networkManager.registerFCMToken(from: #function)
-                        
-                        object.excutePendingResults(.success)
-                    }
-                    
-                    object.isReAuthenticating = false
-                },
-                onError: { object, error in
-                    /// 재인증 과정이 실패하면 항상 재로그인 시도
-                    object.certification()
-                        .subscribe(onNext: { isRegistered in
-                            object.excutePendingResults(isRegistered ? .success : .failure(error))
+                        if token.accessToken.isEmpty && token.refreshToken.isEmpty {
+                            let error = NSError(
+                                domain: "SOOUM",
+                                code: -99,
+                                userInfo: [NSLocalizedDescriptionKey: "Session not refresh"]
+                            )
                             
-                            object.isReAuthenticating = false
-                        })
-                        .disposed(by: object.disposeBag)
-                }
-            )
-            .disposed(by: self.disposeBag)
+                            object.excutePendingResults(.failure(error))
+                        } else {
+                            
+                            object.updateTokens(token)
+                            
+                            // FCM token 업데이트
+                            object.provider.networkManager.registerFCMToken(from: #function)
+                            
+                            object.excutePendingResults(.success)
+                        }
+                        
+                        object.isReAuthenticating = false
+                    },
+                    onError: { object, error in
+                        /// 재인증 과정이 실패하면 항상 재로그인 시도
+                        object.certification()
+                            .subscribe(onNext: { isRegistered in
+                                object.excutePendingResults(isRegistered ? .success : .failure(error))
+                                
+                                object.isReAuthenticating = false
+                            })
+                            .disposed(by: object.disposeBag)
+                    }
+                )
+                .disposed(by: self.disposeBag)
+        }
     }
     
     func initializeAuthInfo() {
