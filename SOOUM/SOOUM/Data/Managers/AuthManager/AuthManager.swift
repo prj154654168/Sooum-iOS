@@ -37,6 +37,8 @@ protocol AuthManagerDelegate: AnyObject {
 
 class AuthManager: CompositeManager<AuthManagerConfiguration> {
     
+    private let reAuthenticateQueue = DispatchQueue(label: "com.sooum.reAuthenticate.serial.queue")
+    
     private var isReAuthenticating: Bool = false
     private var pendingResults: [(AuthResult) -> Void] = []
     
@@ -229,72 +231,79 @@ extension AuthManager: AuthManagerDelegate {
         4. RefreshToken 도 유효하지 않다면 로그인 시도
      */
     func reAuthenticate(_ token: Token, _ completion: @escaping (AuthResult) -> Void) {
-        
-        guard self.authInfo.token.isEmpty == false else {
-            let error = NSError(
-                domain: "SOOUM",
-                code: -99,
-                userInfo: [NSLocalizedDescriptionKey: "tokens not found"]
-            )
-            completion(.failure(error))
-            return
-        }
-        
-        /// 1개 이상의 API에서 reAuthenticate 요청 했을 때,
-        /// 처음 요청이 끝날 떄까지 대기
-        guard self.isReAuthenticating == false else {
+        var immediateResult: AuthResult?
+        /// isReAuthenticating == true로 변경되기 전 짧은 시간에 재인증 요청이 들어왔을 때, 순서 보장
+        let shouldRequest: Bool = self.reAuthenticateQueue.sync {
+            guard self.authInfo.token.isEmpty == false else {
+                let error = NSError(
+                    domain: "SOOUM",
+                    code: -99,
+                    userInfo: [NSLocalizedDescriptionKey: "tokens not found"]
+                )
+                immediateResult = .failure(error)
+                return false
+            }
+            
+            /// AccessToken이 업데이트 됐다면, 즉시 성공 처리
+            guard token == self.authInfo.token else {
+                immediateResult = .success
+                return false
+            }
+            
             self.pendingResults.append(completion)
-            return
+            
+            /// 1개 이상의 API에서 reAuthenticate 요청 했을 때,
+            /// 처음 요청이 끝날 떄까지 대기
+            guard self.isReAuthenticating == false else { return false }
+            self.isReAuthenticating = true
+            
+            return true
         }
-        
-        /// AccessToken이 업데이트 됐다면, 즉시 성공 처리
-        guard token == self.authInfo.token else {
-            completion(.success)
-            return
-        }
-        
-        self.isReAuthenticating = true
-        self.pendingResults.append(completion)
-        
-        let request: AuthRequest = .reAuthenticationWithRefreshSession(token: token)
-        self.provider.networkManager.perform(TokenResponse.self, request: request)
-            .map(\.token)
-            .subscribe(
-                with: self,
-                onNext: { object, token in
-                
-                    if token.accessToken.isEmpty && token.refreshToken.isEmpty {
-                        let error = NSError(
-                            domain: "SOOUM",
-                            code: -99,
-                            userInfo: [NSLocalizedDescriptionKey: "Session not refresh"]
-                        )
+        /// 여러 API가 재인증 요청 시, 맨 처음 요청만 재인증 요청
+        if shouldRequest == false, let result = immediateResult {
+            completion(result)
+        } else if shouldRequest {
+            
+            let request: AuthRequest = .reAuthenticationWithRefreshSession(token: token)
+            self.provider.networkManager.perform(TokenResponse.self, request: request)
+                .map(\.token)
+                .subscribe(
+                    with: self,
+                    onNext: { object, token in
                         
-                        object.excutePendingResults(.failure(error))
-                    } else {
-                        
-                        object.updateTokens(token)
-                        
-                        // FCM token 업데이트
-                        object.provider.networkManager.registerFCMToken(from: #function)
-                        
-                        object.excutePendingResults(.success)
-                    }
-                    
-                    object.isReAuthenticating = false
-                },
-                onError: { object, error in
-                    /// 재인증 과정이 실패하면 항상 재로그인 시도
-                    object.certification()
-                        .subscribe(onNext: { isRegistered in
-                            object.excutePendingResults(isRegistered ? .success : .failure(error))
+                        if token.accessToken.isEmpty && token.refreshToken.isEmpty {
+                            let error = NSError(
+                                domain: "SOOUM",
+                                code: -99,
+                                userInfo: [NSLocalizedDescriptionKey: "Session not refresh"]
+                            )
                             
-                            object.isReAuthenticating = false
-                        })
-                        .disposed(by: object.disposeBag)
-                }
-            )
-            .disposed(by: self.disposeBag)
+                            object.excutePendingResults(.failure(error))
+                        } else {
+                            
+                            object.updateTokens(token)
+                            
+                            // FCM token 업데이트
+                            object.provider.networkManager.registerFCMToken(from: #function)
+                            
+                            object.excutePendingResults(.success)
+                        }
+                        
+                        object.isReAuthenticating = false
+                    },
+                    onError: { object, error in
+                        /// 재인증 과정이 실패하면 항상 재로그인 시도
+                        object.certification()
+                            .subscribe(onNext: { isRegistered in
+                                object.excutePendingResults(isRegistered ? .success : .failure(error))
+                                
+                                object.isReAuthenticating = false
+                            })
+                            .disposed(by: object.disposeBag)
+                    }
+                )
+                .disposed(by: self.disposeBag)
+        }
     }
     
     func initializeAuthInfo() {
