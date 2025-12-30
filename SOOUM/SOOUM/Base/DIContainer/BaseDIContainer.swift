@@ -33,6 +33,8 @@ final class BaseDIContainer: BaseDIContainerable {
     // 등록된 서비스의 생성 클로저(factory)를 저장하는 딕셔너리입니다.
     // 키는 서비스 타입의 이름(String), 값은 Any를 반환하는 클로저입니다.
     private var factories: [String: (BaseDIContainerable) -> Any] = [:]
+    // 한 번 생성된 객체를 보관하여 이후 resolve 요청 시 동일한 인스턴스를 반환하는 딕셔너리입니다.
+    private var instances: [String: Any] = [:]
     
     /// 초기화 시 부모 컨테이너를 주입받을 수 있습니다.
     /// - Parameter parent: 부모 컨테이너. nil일 경우, 최상위 컨테이너가 됩니다.
@@ -47,14 +49,22 @@ final class BaseDIContainer: BaseDIContainerable {
     
     func resolve<Service>(_ type: Service.Type) -> Service {
         let key = String(describing: type)
-        // 1. 현재 컨테이너에서 의존성 해결을 시도합니다.
+        // 1. 이미 생성되어 instances 저장소에 보관된 객체가 있는지 확인합니다.
+        // 객체가 존재한다면 새로운 객체를 만들지 않고 기존 객체를 반환하여 앱 전체에서 상태를 공유합니다.
+        if let instance = self.instances[key] as? Service {
+            return instance
+        }
+        // 2. 현재 컨테이너에서 의존성 해결을 시도합니다.
         if let factory = self.factories[key] {
             // factory는 (DIContainerProtocol) -> Any 타입을 가지므로,
             // 실제 서비스 타입(Service)으로 캐스팅하여 반환합니다.
             // register 함수에서 타입을 보장하므로 강제 캐스팅(!)이 안전합니다.
-            return factory(self) as! Service
+            let new = factory(self) as! Service
+            // 생성된 객체를 instances 저장소에 저장합니다.
+            self.instances[key] = new
+            return new
         }
-        // 2. 현재 컨테이너에서 찾지 못했고, 부모가 있다면 부모에게 해결을 위임합니다.
+        // 3. 현재 컨테이너에서 찾지 못했고, 부모가 있다면 부모에게 해결을 위임합니다.
         if let parent = self.parent {
             return parent.resolve(type)
         }
