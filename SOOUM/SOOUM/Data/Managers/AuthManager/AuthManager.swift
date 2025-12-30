@@ -232,8 +232,9 @@ extension AuthManager: AuthManagerDelegate {
      */
     func reAuthenticate(_ token: Token, _ completion: @escaping (AuthResult) -> Void) {
         var immediateResult: AuthResult?
-        /// isReAuthenticating == true로 변경되기 전 짧은 시간에 재인증 요청이 들어왔을 때, 순서 보장
-        let shouldRequest: Bool = self.reAuthenticateQueue.sync {
+        let shouldReAuthenticate: Bool = self.reAuthenticateQueue.sync { [weak self] in
+            guard let self = self else { return false }
+            
             guard self.authInfo.token.isEmpty == false else {
                 let error = NSError(
                     domain: "SOOUM",
@@ -252,21 +253,25 @@ extension AuthManager: AuthManagerDelegate {
             
             self.pendingResults.append(completion)
             
-            /// 1개 이상의 API에서 reAuthenticate 요청 했을 때,
-            /// 처음 요청이 끝날 떄까지 대기
             guard self.isReAuthenticating == false else { return false }
             self.isReAuthenticating = true
             
             return true
         }
-        /// 여러 API가 재인증 요청 시, 맨 처음 요청만 재인증 요청
-        if shouldRequest == false, let result = immediateResult {
+        
+        if shouldReAuthenticate == false, let result = immediateResult {
             completion(result)
-        } else if shouldRequest {
+        } else if shouldReAuthenticate {
             
+            /// 여러 API가 재인증 요청 시, 맨 처음 요청만 재인증 요청
             let request: AuthRequest = .reAuthenticationWithRefreshSession(token: token)
+            let scheduler: SerialDispatchQueueScheduler = .init(
+                queue: self.reAuthenticateQueue,
+                internalSerialQueueName: "reAuthenticate.serial.scheduler"
+            )
             self.provider.networkManager.perform(TokenResponse.self, request: request)
                 .map(\.token)
+                .observe(on: scheduler)
                 .subscribe(
                     with: self,
                     onNext: { object, token in
@@ -293,13 +298,29 @@ extension AuthManager: AuthManagerDelegate {
                     },
                     onError: { object, error in
                         /// 재인증 과정이 실패하면 항상 재로그인 시도
-                        object.certification()
-                            .subscribe(onNext: { isRegistered in
-                                object.excutePendingResults(isRegistered ? .success : .failure(error))
-                                
-                                object.isReAuthenticating = false
-                            })
-                            .disposed(by: object.disposeBag)
+                        if case 403 = (error as NSError).code {
+                            
+                            object.certification()
+                                .observe(on: scheduler)
+                                .subscribe(
+                                    onNext: { isRegistered in
+                                        object.excutePendingResults(isRegistered ? .success : .failure(error))
+                                        
+                                        object.isReAuthenticating = false
+                                    },
+                                    onError: { _ in
+                                        object.excutePendingResults(.failure(error))
+                                        
+                                        object.isReAuthenticating = false
+                                    }
+                                )
+                                .disposed(by: object.disposeBag)
+                        } else {
+                            
+                            object.excutePendingResults(.failure(error))
+                            
+                            object.isReAuthenticating = false
+                        }
                     }
                 )
                 .disposed(by: self.disposeBag)
@@ -327,7 +348,9 @@ extension AuthManager {
     
     /// success 또는 failure가 발생하면 모든 API 요청에 새로운 토큰을 적용하도록 실행
     private func excutePendingResults(_ result: AuthResult) {
-        self.pendingResults.forEach { $0(result) }
+        let completions = self.pendingResults
         self.pendingResults.removeAll()
+        
+        completions.forEach { $0(result) }
     }
 }
