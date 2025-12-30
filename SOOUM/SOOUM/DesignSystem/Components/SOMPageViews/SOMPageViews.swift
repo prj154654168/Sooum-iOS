@@ -197,15 +197,17 @@ class SOMPageViews: UIView {
     func setModels(_ models: [SOMPageModel]) {
         
         self.indicatorContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        for index in 0..<models.count {
-            let indicator = UIView().then {
-                $0.backgroundColor = index == 0 ? .som.v2.gray600 : .som.v2.gray300
-                $0.layer.cornerRadius = 4 * 0.5
-            }
-            self.indicatorContainer.addArrangedSubview(indicator)
-            indicator.snp.makeConstraints {
-                $0.width.equalTo(index == 0 ? 8 : 4)
-                $0.height.equalTo(4)
+        if models.count > 1 {
+            for index in 0..<models.count {
+                let indicator = UIView().then {
+                    $0.backgroundColor = index == 0 ? .som.v2.gray600 : .som.v2.gray300
+                    $0.layer.cornerRadius = 4 * 0.5
+                }
+                self.indicatorContainer.addArrangedSubview(indicator)
+                indicator.snp.makeConstraints {
+                    $0.width.equalTo(index == 0 ? 8 : 4)
+                    $0.height.equalTo(4)
+                }
             }
         }
         
@@ -309,6 +311,8 @@ extension SOMPageViews: UICollectionViewDelegateFlowLayout {
     }
     
     private func infiniteScroll(_ scrollView: UIScrollView) {
+        
+        guard self.models.count > 1 else { return }
         
         let cellWidth: CGFloat = scrollView.bounds.width
         let currentIndex: Int = Int(round(scrollView.contentOffset.x / cellWidth))
