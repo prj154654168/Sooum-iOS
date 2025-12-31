@@ -367,7 +367,7 @@ class HomeViewController: BaseNavigationViewController, View {
         cardIsDeleted
             .filter { $0.isDeleted }
             .map { $0.selectedId }
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, selectedId in
                 object.showPungedCardDialog(reactor, with: selectedId)
             }
@@ -383,7 +383,7 @@ class HomeViewController: BaseNavigationViewController, View {
                     event: GAEvent.DetailView.cardDetail_tracePathClick(previous_path: .home)
                 )
             })
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, selectedId in
                 let detailViewController = DetailViewController()
                 detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
@@ -816,6 +816,8 @@ extension HomeViewController: UITableViewDelegate {
         }
         
         // 화면 전환 전 사용자 행동 방지
+        guard SimpleReachability.shared.isCurrentStatus else { return }
+        
         self.view.isUserInteractionEnabled = false
         
         reactor.action.onNext(.hasDetailCard(selectedId, isEventCard))
