@@ -7,8 +7,6 @@
 
 import UIKit
 
-import Network
-
 import RxKeyboard
 import RxSwift
 
@@ -25,10 +23,6 @@ class BaseViewController: UIViewController {
     }
 
     var disposeBag = DisposeBag()
-    
-    private let monitor = NWPathMonitor()
-    
-    private let instabilityNetworkToastView = SOMBottomToastView(title: Text.instabilityNetworkToastTitle, actions: nil)
     
     let activityIndicatorView = SOMActivityIndicatorView()
     let loadingIndicatorView = SOMLoadingIndicatorView()
@@ -94,7 +88,12 @@ class BaseViewController: UIViewController {
             .subscribe(with: self) { object, _ in
                 guard object.isViewLoaded, object.view.window != nil else { return }
                 
-                var wrapper: SwiftEntryKitViewWrapper = object.instabilityNetworkToastView.sek
+                let instabilityNetworkToastView = SOMBottomToastView(
+                    title: Text.instabilityNetworkToastTitle,
+                    actions: nil
+                )
+                
+                var wrapper: SwiftEntryKitViewWrapper = instabilityNetworkToastView.sek
                 wrapper.entryName = Text.bottomToastEntryName
                 wrapper.showBottomToast(verticalOffset: object.bottomToastMessageOffset, displayDuration: 4)
             }
