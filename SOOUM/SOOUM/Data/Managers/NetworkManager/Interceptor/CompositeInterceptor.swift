@@ -11,7 +11,7 @@ final class CompositeInterceptor: RequestInterceptor {
     
     private let interceptors: [RequestInterceptor]
     
-    private let timeoutInterval: TimeInterval = 20.0
+    private let timeoutInterval: TimeInterval = 10.0
     
     init(provider: ManagerTypeDelegate) {
         
