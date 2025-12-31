@@ -135,6 +135,12 @@ class NotificationViewController: BaseNavigationViewController, View {
         self.navigationBar.title = Text.navigationTitle
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.view.isUserInteractionEnabled = true
+    }
+    
     override func setupConstraints() {
         super.setupConstraints()
         
@@ -327,6 +333,8 @@ private extension NotificationViewController {
             style: .primary,
             action: {
                 SOMDialogViewController.dismiss {
+                    self.view.isUserInteractionEnabled = true
+                    
                     reactor.action.onNext(.cleanup)
                     
                     reactor.action.onNext(.updateNotifications)
@@ -366,6 +374,8 @@ extension NotificationViewController: UITableViewDelegate {
             switch notification {
             case let .default(notification):
                 
+                self.view.isUserInteractionEnabled = false
+                
                 reactor.action.onNext(
                     .hasDetailCard(
                         selectedId: notification.targetCardId,
@@ -373,6 +383,8 @@ extension NotificationViewController: UITableViewDelegate {
                     )
                 )
             case let .tag(notification):
+                
+                self.view.isUserInteractionEnabled = false
                 
                 reactor.action.onNext(
                     .hasDetailCard(
@@ -395,6 +407,8 @@ extension NotificationViewController: UITableViewDelegate {
             switch notification {
             case let .default(notification):
                 
+                self.view.isUserInteractionEnabled = false
+                
                 reactor.action.onNext(
                     .hasDetailCard(
                         selectedId: notification.targetCardId,
@@ -402,6 +416,8 @@ extension NotificationViewController: UITableViewDelegate {
                     )
                 )
             case let .tag(notification):
+                
+                self.view.isUserInteractionEnabled = false
                 
                 reactor.action.onNext(
                     .hasDetailCard(

@@ -719,6 +719,7 @@ extension DetailViewController: UICollectionViewDataSource {
             guard let reactor = self.reactor else { return footer }
             
             footer.didTap
+                .throttle(.seconds(3), scheduler: MainScheduler.instance)
                 .subscribe(with: self) { object, selectedId in
                     let viewController = DetailViewController()
                     viewController.reactor = reactor.reactorForPush(selectedId)
