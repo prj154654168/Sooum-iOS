@@ -83,7 +83,7 @@ class SOMPageView: UICollectionViewCell {
         contentsContainer.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalTo(iconBackgroundView.snp.trailing).offset(10)
-            $0.trailing.greaterThanOrEqualToSuperview().offset(-16)
+            $0.trailing.equalToSuperview().offset(-16)
         }
     }
     
