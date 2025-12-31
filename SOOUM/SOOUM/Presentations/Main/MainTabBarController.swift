@@ -231,6 +231,7 @@ class MainTabBarController: SOMTabBarController, View {
         let couldPosting = reactor.pulse(\.$couldPosting).distinctUntilChanged().filterNil()
         couldPosting
             .filter { $0.isBaned == false }
+            .do(onNext: { _ in reactor.action.onNext(.cleanup) })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 
@@ -239,12 +240,7 @@ class MainTabBarController: SOMTabBarController, View {
                 let writeCardViewController = WriteCardViewController()
                 writeCardViewController.reactor = reactor.reactorForWriteCard()
                 if let selectedViewController = object.selectedViewController {
-                    selectedViewController.navigationPush(
-                        writeCardViewController,
-                        animated: true
-                    ) { _ in
-                        reactor.action.onNext(.cleanup)
-                    }
+                    selectedViewController.navigationPush(writeCardViewController, animated: true)
                 }
             }
             .disposed(by: self.disposeBag)

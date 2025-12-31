@@ -634,17 +634,18 @@ extension DetailViewController: UICollectionViewDataSource {
         
         cell.tags.tagDidTap
             .throttle(.seconds(3), scheduler: MainScheduler.instance)
+            .do(onNext: {
+                GAHelper.shared.logEvent(
+                    event: GAEvent.DetailView.cardDetailTag_btnClick(tag_name: $0.text)
+                )
+            })
             .subscribe(with: self) { object, tagInfo in
                 let tagCollectViewController = TagCollectViewController()
                 tagCollectViewController.reactor = reactor.reactorForTagCollect(
                     with: tagInfo.id,
                     title: tagInfo.text
                 )
-                object.navigationPush(tagCollectViewController, animated: true) { _ in
-                    GAHelper.shared.logEvent(
-                        event: GAEvent.DetailView.cardDetailTag_btnClick(tag_name: tagInfo.text)
-                    )
-                }
+                object.navigationPush(tagCollectViewController, animated: true)
             }
             .disposed(by: cell.disposeBag)
         
@@ -675,20 +676,20 @@ extension DetailViewController: UICollectionViewDataSource {
                 } else {
                     
                     if prevCardInfo.isPrevCardDeleted {
+                        reactor.action.onNext(.cleanup)
+                        
+                        GAHelper.shared.logEvent(
+                            event: GAEvent.DetailView.cardDetail_tracePathClick(
+                                previous_path: .detail
+                            )
+                        )
+                        
                         let detailViewController = DetailViewController()
                         detailViewController.reactor = reactor.reactorForPush(
                             prevCardInfo.prevCardId,
                             hasDeleted: true
                         )
-                        object.navigationPush(detailViewController, animated: true) { _ in
-                            reactor.action.onNext(.cleanup)
-                            
-                            GAHelper.shared.logEvent(
-                                event: GAEvent.DetailView.cardDetail_tracePathClick(
-                                    previous_path: .detail
-                                )
-                            )
-                        }
+                        object.navigationPush(detailViewController, animated: true)
                     } else {
                         reactor.action.onNext(.willPushToDetail(prevCardInfo.prevCardId))
                     }
