@@ -368,9 +368,15 @@ class HomeViewController: BaseNavigationViewController, View {
             .filter { $0.isDeleted }
             .map { $0.selectedId }
             .observe(on: MainScheduler.asyncInstance)
-            .subscribe(with: self) { object, selectedId in
-                object.showPungedCardDialog(reactor, with: selectedId)
-            }
+            .subscribe(
+                with: self,
+                onNext: { object, selectedId in
+                    object.showPungedCardDialog(reactor, with: selectedId)
+                },
+                onError: { object, _ in
+                    object.view.isUserInteractionEnabled = true
+                }
+            )
             .disposed(by: self.disposeBag)
         cardIsDeleted
             .filter { $0.isDeleted == false }
@@ -384,11 +390,17 @@ class HomeViewController: BaseNavigationViewController, View {
                 )
             })
             .observe(on: MainScheduler.asyncInstance)
-            .subscribe(with: self) { object, selectedId in
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
-                object.parent?.navigationPush(detailViewController, animated: true)
-            }
+            .subscribe(
+                with: self,
+                onNext: { object, selectedId in
+                    let detailViewController = DetailViewController()
+                    detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
+                    object.parent?.navigationPush(detailViewController, animated: true)
+                },
+                onError: { object, _ in
+                    object.view.isUserInteractionEnabled = true
+                }
+            )
             .disposed(by: self.disposeBag)
         
         reactor.state.map {

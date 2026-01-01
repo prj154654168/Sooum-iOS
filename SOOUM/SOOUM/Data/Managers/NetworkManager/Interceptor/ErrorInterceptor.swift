@@ -53,7 +53,7 @@ final class ErrorInterceptor: RequestInterceptor {
             ]
             if networkErrors.contains(urlError.code) {
                 session.cancelAllRequests { [weak self] in self?.showNetworkErrorDialog() }
-                completion(.doNotRetry)
+                completion(.doNotRetryWithError(error))
                 return
             }
         }
