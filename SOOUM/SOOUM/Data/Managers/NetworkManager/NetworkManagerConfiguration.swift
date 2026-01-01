@@ -32,8 +32,8 @@ struct NetworkManagerConfiguration: ManagerConfiguration {
         ) {
             
             self.sessionConfiguration = sessionConfiguration
-            self.sessionConfiguration.timeoutIntervalForRequest = 20.0
-            self.sessionConfiguration.timeoutIntervalForResource = 20.0
+            self.sessionConfiguration.timeoutIntervalForRequest = 10.0
+            self.sessionConfiguration.timeoutIntervalForResource = 10.0
             
             self.sessionDelegate = sessionDelegate
             self.sessionDelegateQueue = sessionDelegateQueue

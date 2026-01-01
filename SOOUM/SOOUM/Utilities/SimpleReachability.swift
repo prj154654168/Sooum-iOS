@@ -19,7 +19,11 @@ final class SimpleReachability {
     static let shared = SimpleReachability()
     
     private let monitor = NWPathMonitor()
-    private let isConnect = BehaviorRelay<Bool>(value: false)
+    private let isConnect = BehaviorRelay<Bool>(value: true)
+    
+    var isCurrentStatus: Bool {
+        return self.isConnect.value
+    }
     
     lazy var isConnected: Observable<Bool> = {
         return self.isConnect
@@ -33,7 +37,7 @@ final class SimpleReachability {
         
         self.monitor.pathUpdateHandler = { [weak self] path in
             let isAvailable = path.status == .satisfied
-            Log.info("Network is \(isAvailable ? "available" : "unavailable")")
+            Log.info("Network status: \(path.status) and is connected: \(isAvailable ? "available" : "unavailable")")
             self?.isConnect.accept(isAvailable)
         }
         self.monitor.start(queue: DispatchQueue(label: Text.networkMoniterQueueLabel, qos: .background))

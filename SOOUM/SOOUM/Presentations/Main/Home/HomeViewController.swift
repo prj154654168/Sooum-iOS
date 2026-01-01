@@ -253,6 +253,24 @@ class HomeViewController: BaseNavigationViewController, View {
         #endif
     }
     
+    override func setupConstraints() {
+        super.setupConstraints()
+        
+        self.view.addSubview(self.tableView)
+        self.tableView.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            $0.bottom.horizontalEdges.equalToSuperview()
+        }
+        
+        self.view.addSubview(self.headerContainer)
+        self.headerContainer.snp.makeConstraints {
+            self.headerViewContainerTopConstraint = $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).priority(.high).constraint
+            $0.horizontalEdges.equalToSuperview()
+        }
+        self.headerContainer.addArrangedSubview(self.stickyTabBar)
+        self.headerContainer.addArrangedSubview(self.distanceFilterView)
+    }
+    
     override func setupNaviBar() {
         super.setupNaviBar()
         
@@ -277,22 +295,10 @@ class HomeViewController: BaseNavigationViewController, View {
         self.navigationBar.setRightButtons([self.rightAlamButton])
     }
     
-    override func setupConstraints() {
-        super.setupConstraints()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        self.view.addSubview(self.tableView)
-        self.tableView.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
-            $0.bottom.horizontalEdges.equalToSuperview()
-        }
-        
-        self.view.addSubview(self.headerContainer)
-        self.headerContainer.snp.makeConstraints {
-            self.headerViewContainerTopConstraint = $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).priority(.high).constraint
-            $0.horizontalEdges.equalToSuperview()
-        }
-        self.headerContainer.addArrangedSubview(self.stickyTabBar)
-        self.headerContainer.addArrangedSubview(self.distanceFilterView)
+        self.view.isUserInteractionEnabled = true
     }
     
     
@@ -361,10 +367,16 @@ class HomeViewController: BaseNavigationViewController, View {
         cardIsDeleted
             .filter { $0.isDeleted }
             .map { $0.selectedId }
-            .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, selectedId in
-                object.showPungedCardDialog(reactor, with: selectedId)
-            }
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(
+                with: self,
+                onNext: { object, selectedId in
+                    object.showPungedCardDialog(reactor, with: selectedId)
+                },
+                onError: { object, _ in
+                    object.view.isUserInteractionEnabled = true
+                }
+            )
             .disposed(by: self.disposeBag)
         cardIsDeleted
             .filter { $0.isDeleted == false }
@@ -377,12 +389,18 @@ class HomeViewController: BaseNavigationViewController, View {
                     event: GAEvent.DetailView.cardDetail_tracePathClick(previous_path: .home)
                 )
             })
-            .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, selectedId in
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
-                object.parent?.navigationPush(detailViewController, animated: true)
-            }
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(
+                with: self,
+                onNext: { object, selectedId in
+                    let detailViewController = DetailViewController()
+                    detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
+                    object.parent?.navigationPush(detailViewController, animated: true)
+                },
+                onError: { object, _ in
+                    object.view.isUserInteractionEnabled = true
+                }
+            )
             .disposed(by: self.disposeBag)
         
         reactor.state.map {
@@ -670,6 +688,8 @@ private extension HomeViewController {
             style: .primary,
             action: {
                 SOMDialogViewController.dismiss {
+                    self.view.isUserInteractionEnabled = true
+                    
                     reactor.action.onNext(.cleanup)
                     
                     reactor.action.onNext(
@@ -765,37 +785,31 @@ extension HomeViewController: UITableViewDelegate {
               let reactor = self.reactor
         else { return }
         
+        var selectedId: String? {
+            switch item {
+            case let .latest(selectedCard),
+                let .popular(selectedCard),
+                let .distance(selectedCard):
+                
+                return selectedCard.id
+            case .empty:
+                return nil
+            }
+        }
+        guard let selectedId = selectedId else { return }
+        
         var isPunged: Bool {
             switch item {
-            case let .latest(selectedCard):
-                guard let expireAt = selectedCard.storyExpirationTime else { return false }
-                return expireAt < Date()
-            case let .popular(selectedCard):
-                guard let expireAt = selectedCard.storyExpirationTime else { return false }
-                return expireAt < Date()
-            case let .distance(selectedCard):
+            case let .latest(selectedCard),
+                let .popular(selectedCard),
+                let .distance(selectedCard):
+                
                 guard let expireAt = selectedCard.storyExpirationTime else { return false }
                 return expireAt < Date()
             case .empty:
                 return false
             }
         }
-        
-        var selectedId: String? {
-            switch item {
-            case let .latest(selectedCard):
-                return selectedCard.id
-            case let .popular(selectedCard):
-                return selectedCard.id
-            case let .distance(selectedCard):
-                return selectedCard.id
-            case .empty:
-                return nil
-            }
-        }
-        
-        guard let selectedId = selectedId else { return }
-        
         guard isPunged == false else {
             self.showPungedCardDialog(reactor, with: selectedId)
             return
@@ -803,16 +817,20 @@ extension HomeViewController: UITableViewDelegate {
         
         var isEventCard: Bool {
             switch item {
-            case let .latest(selectedCard):
-                return selectedCard.cardImgName.contains(Text.eventCardTitle)
-            case let .popular(selectedCard):
-                return selectedCard.cardImgName.contains(Text.eventCardTitle)
-            case let .distance(selectedCard):
+            case let .latest(selectedCard),
+                let .popular(selectedCard),
+                let .distance(selectedCard):
+                
                 return selectedCard.cardImgName.contains(Text.eventCardTitle)
             case .empty:
                 return false
             }
         }
+        
+        // 화면 전환 전 사용자 행동 방지
+        guard SimpleReachability.shared.isCurrentStatus else { return }
+        
+        self.view.isUserInteractionEnabled = false
         
         reactor.action.onNext(.hasDetailCard(selectedId, isEventCard))
     }

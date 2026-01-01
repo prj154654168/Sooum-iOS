@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct NoticeInfo {
+struct NoticeInfo: Hashable {
     
     let id: String
     let noticeType: NoticeType
@@ -67,17 +67,6 @@ extension NoticeInfo {
         url: nil,
         createdAt: Date()
     )
-}
-
-extension NoticeInfo: Hashable {
-    
-    static func == (lhs: NoticeInfo, rhs: NoticeInfo) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(self.id)
-    }
 }
 
 extension NoticeInfo: Decodable {
