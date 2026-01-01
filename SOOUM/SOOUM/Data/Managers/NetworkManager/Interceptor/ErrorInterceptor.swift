@@ -52,8 +52,8 @@ final class ErrorInterceptor: RequestInterceptor {
                 URLError.cannotConnectToHost
             ]
             if networkErrors.contains(urlError.code) {
-                self.showNetworkErrorDialog()
-                completion(.doNotRetry)
+                session.cancelAllRequests { [weak self] in self?.showNetworkErrorDialog() }
+                completion(.doNotRetryWithError(error))
                 return
             }
         }

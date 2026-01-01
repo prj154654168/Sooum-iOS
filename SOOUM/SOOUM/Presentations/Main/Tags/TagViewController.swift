@@ -141,12 +141,11 @@ class TagViewController: BaseNavigationViewController, View {
     func bind(reactor: TagViewReactor) {
         
         self.searchViewButtonView.rx.didTap
+            .do(onNext: { _ in GAHelper.shared.logEvent(event: GAEvent.TagView.tagMenuSearchBar_click) })
             .subscribe(with: self) { object, _ in
                 let tagSearchViewController = TagSearchViewController()
                 tagSearchViewController.reactor = reactor.reactorForSearch()
-                object.parent?.navigationPush(tagSearchViewController, animated: true) { _ in
-                    GAHelper.shared.logEvent(event: GAEvent.TagView.tagMenuSearchBar_click)
-                }
+                object.parent?.navigationPush(tagSearchViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         
@@ -164,6 +163,7 @@ class TagViewController: BaseNavigationViewController, View {
         
         self.popularTagsView.backgroundDidTap
             .throttle(.seconds(2), scheduler: MainScheduler.instance)
+            .do(onNext: { _ in GAHelper.shared.logEvent(event: GAEvent.TagView.popularTag_itemClick) })
             .subscribe(with: self) { object, model in
                 let tagCollectViewController = TagCollectViewController()
                 tagCollectViewController.reactor = reactor.reactorForCollect(
@@ -171,9 +171,7 @@ class TagViewController: BaseNavigationViewController, View {
                     title: model.name,
                     isFavorite: reactor.currentState.favoriteTags.contains(where: { $0.id == model.id })
                 )
-                object.parent?.navigationPush(tagCollectViewController, animated: true) { _ in
-                    GAHelper.shared.logEvent(event: GAEvent.TagView.popularTag_itemClick)
-                }
+                object.parent?.navigationPush(tagCollectViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         

@@ -135,6 +135,12 @@ class NotificationViewController: BaseNavigationViewController, View {
         self.navigationBar.title = Text.navigationTitle
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.view.isUserInteractionEnabled = true
+    }
+    
     override func setupConstraints() {
         super.setupConstraints()
         
@@ -249,9 +255,15 @@ class NotificationViewController: BaseNavigationViewController, View {
         cardIsDeleted
             .filter { $0.isDeleted }
             .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, _ in
-                object.showPungedCardDialog(reactor)
-            }
+            .subscribe(
+                with: self,
+                onNext: { object, _ in
+                    object.showPungedCardDialog(reactor)
+                },
+                onError: { object, _ in
+                    object.view.isUserInteractionEnabled = true
+                }
+            )
             .disposed(by: self.disposeBag)
         cardIsDeleted
             .filter { $0.isDeleted == false }
@@ -269,12 +281,17 @@ class NotificationViewController: BaseNavigationViewController, View {
             })
             .map { $0.selectedId }
             .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, selectedId in
-                
-                let detailViewController = DetailViewController()
-                detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
-                object.navigationPush(detailViewController, animated: true)
-            }
+            .subscribe(
+                with: self,
+                onNext: { object, selectedId in
+                    let detailViewController = DetailViewController()
+                    detailViewController.reactor = reactor.reactorForDetail(with: selectedId)
+                    object.navigationPush(detailViewController, animated: true)
+                },
+                onError: { object, _ in
+                    object.view.isUserInteractionEnabled = true
+                }
+            )
             .disposed(by: self.disposeBag)
     }
 }
@@ -327,6 +344,8 @@ private extension NotificationViewController {
             style: .primary,
             action: {
                 SOMDialogViewController.dismiss {
+                    self.view.isUserInteractionEnabled = true
+                    
                     reactor.action.onNext(.cleanup)
                     
                     reactor.action.onNext(.updateNotifications)
@@ -366,6 +385,10 @@ extension NotificationViewController: UITableViewDelegate {
             switch notification {
             case let .default(notification):
                 
+                guard SimpleReachability.shared.isCurrentStatus else { return }
+                
+                self.view.isUserInteractionEnabled = false
+                
                 reactor.action.onNext(
                     .hasDetailCard(
                         selectedId: notification.targetCardId,
@@ -373,6 +396,10 @@ extension NotificationViewController: UITableViewDelegate {
                     )
                 )
             case let .tag(notification):
+                
+                guard SimpleReachability.shared.isCurrentStatus else { return }
+                
+                self.view.isUserInteractionEnabled = false
                 
                 reactor.action.onNext(
                     .hasDetailCard(
@@ -395,6 +422,10 @@ extension NotificationViewController: UITableViewDelegate {
             switch notification {
             case let .default(notification):
                 
+                guard SimpleReachability.shared.isCurrentStatus else { return }
+                
+                self.view.isUserInteractionEnabled = false
+                
                 reactor.action.onNext(
                     .hasDetailCard(
                         selectedId: notification.targetCardId,
@@ -402,6 +433,10 @@ extension NotificationViewController: UITableViewDelegate {
                     )
                 )
             case let .tag(notification):
+                
+                guard SimpleReachability.shared.isCurrentStatus else { return }
+                
+                self.view.isUserInteractionEnabled = false
                 
                 reactor.action.onNext(
                     .hasDetailCard(
