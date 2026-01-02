@@ -27,6 +27,9 @@ class HomeViewController: BaseNavigationViewController, View {
         static let distanceFilternder20km: String = "20km"
         static let distanceFilternder50km: String = "50km"
         
+        static let defaultPlaceholderText: String = "아직 작성된 글이 없어요\n하고 싶은 이야기를 카드로 남겨보세요"
+        static let distancePlaceholderText: String = "아직 주변에서 작성된 카드가 없어요\n탭을 눌러 거리를 넓히거나, 첫 번째 카드를 남겨보세요"
+        
         static let dialogTitle: String = "위치 정보 사용 설정"
         static let dialogMessage: String = "내 위치 확인을 위해 ‘설정 > 앱 > 숨 > 위치’에서 위치 정보 사용을 허용해 주세요."
         
@@ -50,7 +53,7 @@ class HomeViewController: BaseNavigationViewController, View {
         case latest(BaseCardInfo)
         case popular(BaseCardInfo)
         case distance(BaseCardInfo)
-        case empty
+        case empty(String)
     }
     
     
@@ -149,9 +152,12 @@ class HomeViewController: BaseNavigationViewController, View {
             cell.bind(cardInfo)
             
             return cell
-        case .empty:
+        case let .empty(placeholderText):
             
-            return self.cellForPlaceholder(tableView, with: indexPath)
+            let placeholder = self.cellForPlaceholder(tableView, with: indexPath)
+            placeholder.bind(placeholderText)
+            
+            return placeholder
         }
     }
     
@@ -424,7 +430,7 @@ class HomeViewController: BaseNavigationViewController, View {
                 guard let latests = displayStats.latests else { return }
                 
                 guard latests.isEmpty == false else {
-                    snapshot.appendItems([.empty], toSection: .empty)
+                    snapshot.appendItems([.empty(Text.defaultPlaceholderText)], toSection: .empty)
                     break
                 }
                 
@@ -435,7 +441,7 @@ class HomeViewController: BaseNavigationViewController, View {
                 guard let populars = displayStats.populars else { return }
                 
                 guard populars.isEmpty == false else {
-                    snapshot.appendItems([.empty], toSection: .empty)
+                    snapshot.appendItems([.empty(Text.defaultPlaceholderText)], toSection: .empty)
                     break
                 }
                 
@@ -446,7 +452,7 @@ class HomeViewController: BaseNavigationViewController, View {
                 guard let distances = displayStats.distances else { return }
                 
                 guard distances.isEmpty == false else {
-                    snapshot.appendItems([.empty], toSection: .empty)
+                    snapshot.appendItems([.empty(Text.distancePlaceholderText)], toSection: .empty)
                     break
                 }
                 
