@@ -512,6 +512,8 @@
 		389EF81B2D2F454600E053AE /* Log+Extract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF8192D2F454600E053AE /* Log+Extract.swift */; };
 		389EF81E2D2F469B00E053AE /* CocoaLumberjack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF81D2D2F469B00E053AE /* CocoaLumberjack.swift */; };
 		389EF81F2D2F469B00E053AE /* CocoaLumberjack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389EF81D2D2F469B00E053AE /* CocoaLumberjack.swift */; };
+		38A27E732F0812BA00DA1D4D /* SearchTextFieldView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A27E722F0812B200DA1D4D /* SearchTextFieldView+Rx.swift */; };
+		38A27E742F0812BA00DA1D4D /* SearchTextFieldView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A27E722F0812B200DA1D4D /* SearchTextFieldView+Rx.swift */; };
 		38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38A5D1552C8CB12300B68363 /* UIImage+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */; };
 		38A627172CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A627162CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift */; };
@@ -780,10 +782,6 @@
 		38EBA90F2EB39920008B28F4 /* PostingPermission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EBA90D2EB39917008B28F4 /* PostingPermission.swift */; };
 		38EBA9112EB399A1008B28F4 /* PostingPermissionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EBA9102EB3999C008B28F4 /* PostingPermissionResponse.swift */; };
 		38EBA9122EB399A1008B28F4 /* PostingPermissionResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EBA9102EB3999C008B28F4 /* PostingPermissionResponse.swift */; };
-		38EC8D002ED44661009C2857 /* TagSearchCollectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EC8CFF2ED44658009C2857 /* TagSearchCollectViewController.swift */; };
-		38EC8D012ED44661009C2857 /* TagSearchCollectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EC8CFF2ED44658009C2857 /* TagSearchCollectViewController.swift */; };
-		38EC8D032ED44669009C2857 /* TagSearchCollectViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EC8D022ED44664009C2857 /* TagSearchCollectViewReactor.swift */; };
-		38EC8D042ED44669009C2857 /* TagSearchCollectViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EC8D022ED44664009C2857 /* TagSearchCollectViewReactor.swift */; };
 		38F161432ECDA858003BADB6 /* SearchViewButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F161422ECDA853003BADB6 /* SearchViewButton+Rx.swift */; };
 		38F161442ECDA858003BADB6 /* SearchViewButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F161422ECDA853003BADB6 /* SearchViewButton+Rx.swift */; };
 		38F161472ECDA8F0003BADB6 /* FavoriteTagPlaceholderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F161462ECDA8D1003BADB6 /* FavoriteTagPlaceholderViewCell.swift */; };
@@ -1113,6 +1111,7 @@
 		389EF8162D2F450000E053AE /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		389EF8192D2F454600E053AE /* Log+Extract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Log+Extract.swift"; sourceTree = "<group>"; };
 		389EF81D2D2F469B00E053AE /* CocoaLumberjack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocoaLumberjack.swift; sourceTree = "<group>"; };
+		38A27E722F0812B200DA1D4D /* SearchTextFieldView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchTextFieldView+Rx.swift"; sourceTree = "<group>"; };
 		38A5D1532C8CB11E00B68363 /* UIImage+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+SOOUM.swift"; sourceTree = "<group>"; };
 		38A627162CECC5A800C37A03 /* SOMTagsLayoutConfigure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTagsLayoutConfigure.swift; sourceTree = "<group>"; };
 		38A721942E73E7010071E1D8 /* View+SwiftEntryKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+SwiftEntryKit.swift"; sourceTree = "<group>"; };
@@ -1251,8 +1250,6 @@
 		38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddingTokenInterceptor.swift; sourceTree = "<group>"; };
 		38EBA90D2EB39917008B28F4 /* PostingPermission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingPermission.swift; sourceTree = "<group>"; };
 		38EBA9102EB3999C008B28F4 /* PostingPermissionResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingPermissionResponse.swift; sourceTree = "<group>"; };
-		38EC8CFF2ED44658009C2857 /* TagSearchCollectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchCollectViewController.swift; sourceTree = "<group>"; };
-		38EC8D022ED44664009C2857 /* TagSearchCollectViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSearchCollectViewReactor.swift; sourceTree = "<group>"; };
 		38F161422ECDA853003BADB6 /* SearchViewButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchViewButton+Rx.swift"; sourceTree = "<group>"; };
 		38F161462ECDA8D1003BADB6 /* FavoriteTagPlaceholderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagPlaceholderViewCell.swift; sourceTree = "<group>"; };
 		38F161492ECDAD29003BADB6 /* FavoriteTagViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagViewCell.swift; sourceTree = "<group>"; };
@@ -1457,7 +1454,6 @@
 				38787B7D2ED1E8EF004BBAA7 /* TagSearchViewReactor.swift */,
 				38787B732ED1E10E004BBAA7 /* Cells */,
 				3803B92F2ECF5F15009D14B9 /* Views */,
-				38EC8CFE2ED44643009C2857 /* Search+Collect */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -1486,6 +1482,7 @@
 			isa = PBXGroup;
 			children = (
 				3803B9302ECF5F1B009D14B9 /* SearchTextFieldView.swift */,
+				38A27E722F0812B200DA1D4D /* SearchTextFieldView+Rx.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -2713,15 +2710,6 @@
 			path = WrittenTags;
 			sourceTree = "<group>";
 		};
-		38EC8CFE2ED44643009C2857 /* Search+Collect */ = {
-			isa = PBXGroup;
-			children = (
-				38EC8CFF2ED44658009C2857 /* TagSearchCollectViewController.swift */,
-				38EC8D022ED44664009C2857 /* TagSearchCollectViewReactor.swift */,
-			);
-			path = "Search+Collect";
-			sourceTree = "<group>";
-		};
 		38F161452ECDA8B3003BADB6 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -3213,7 +3201,6 @@
 				2AFD056E2D048CAF007C84AD /* TagRequest.swift in Sources */,
 				38CA91F42EBDCFF2002C261A /* ProfileCardsPlaceholderViewCell.swift in Sources */,
 				38E928D02EB75FA300B3F00B /* PungView.swift in Sources */,
-				38EC8D042ED44669009C2857 /* TagSearchCollectViewReactor.swift in Sources */,
 				3879B4B82EC5ADC50070846B /* RejoinableDateInfoResponse.swift in Sources */,
 				38E928C82EB73FF800B3F00B /* WrittenTagModel.swift in Sources */,
 				388698602D1984D600008600 /* NotificationViewReactor.swift in Sources */,
@@ -3356,7 +3343,6 @@
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
 				380F42252E884AE5009AC59E /* CardRemoteDataSource.swift in Sources */,
 				381B83EC2EBC769900C84015 /* ProfileCardInfoResponse.swift in Sources */,
-				38EC8D012ED44661009C2857 /* TagSearchCollectViewController.swift in Sources */,
 				38E9CE1A2D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */,
 				38F88EBB2D2C1CB8002AD7A8 /* Info.swift in Sources */,
 				2A5BB7D62CDCA5C900E1C799 /* TermsOfServiceAgreeButtonView.swift in Sources */,
@@ -3439,6 +3425,7 @@
 				380F42222E87ECA3009AC59E /* CompositeNotificationInfo.swift in Sources */,
 				38AE85132EDF424800029E4C /* FetchBlockUserUseCaseImpl.swift in Sources */,
 				38899E5E2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */,
+				38A27E732F0812BA00DA1D4D /* SearchTextFieldView+Rx.swift in Sources */,
 				38AE851C2EDFF7E000029E4C /* FetchFollowUseCaseImpl.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38C2A8092EC0BB9800B941A2 /* BlockUserViewCell.swift in Sources */,
@@ -3636,7 +3623,6 @@
 				380F42312E884FBC009AC59E /* CardRepository.swift in Sources */,
 				387FA11D2E88DDC1004DF7CE /* HomeViewReactor.swift in Sources */,
 				3800575C2D9C12CB00E58A19 /* DefinedError.swift in Sources */,
-				38EC8D032ED44669009C2857 /* TagSearchCollectViewReactor.swift in Sources */,
 				38899E932E79518F0030F7CA /* CommonNotificationInfo.swift in Sources */,
 				3893B6D12D36739500F2004C /* CompositeManager.swift in Sources */,
 				3836ACB72C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
@@ -3779,7 +3765,6 @@
 				385602B62D2FB18400118530 /* NotificationPlaceholderViewCell.swift in Sources */,
 				38E9CE192D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */,
 				380F42242E884AE5009AC59E /* CardRemoteDataSource.swift in Sources */,
-				38EC8D002ED44661009C2857 /* TagSearchCollectViewController.swift in Sources */,
 				3802BDB82D0AF2F7001256EA /* PushManager+Rx.swift in Sources */,
 				381B83EB2EBC769900C84015 /* ProfileCardInfoResponse.swift in Sources */,
 				38E9CE132D37711600E85A2D /* OnboardingViewReactor.swift in Sources */,
@@ -3862,6 +3847,7 @@
 				3878D0882CFFEF0F00F9522F /* TermsOfServiceTextCellView+Rx.swift in Sources */,
 				38AE85122EDF424800029E4C /* FetchBlockUserUseCaseImpl.swift in Sources */,
 				3889A2502E79B3260030F7CA /* UserRemoteDataSource.swift in Sources */,
+				38A27E742F0812BA00DA1D4D /* SearchTextFieldView+Rx.swift in Sources */,
 				38AE851B2EDFF7E000029E4C /* FetchFollowUseCaseImpl.swift in Sources */,
 				380F42212E87ECA3009AC59E /* CompositeNotificationInfo.swift in Sources */,
 				38899E5F2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */,
@@ -3967,6 +3953,110 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.1.5;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"c++\"",
+					"-l\"sqlite3\"",
+					"-l\"swiftCoreGraphics\"",
+					"-l\"z\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"CFNetwork\"",
+					"-framework",
+					"\"Clarity\"",
+					"-framework",
+					"\"CocoaLumberjack\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreTelephony\"",
+					"-framework",
+					"\"FBLPromises\"",
+					"-framework",
+					"\"FirebaseAnalytics\"",
+					"-framework",
+					"\"FirebaseCore\"",
+					"-framework",
+					"\"FirebaseCoreExtension\"",
+					"-framework",
+					"\"FirebaseCoreInternal\"",
+					"-framework",
+					"\"FirebaseCrashlytics\"",
+					"-framework",
+					"\"FirebaseInstallations\"",
+					"-framework",
+					"\"FirebaseMessaging\"",
+					"-framework",
+					"\"FirebaseRemoteConfigInterop\"",
+					"-framework",
+					"\"FirebaseSessions\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"GoogleAdsOnDeviceConversion\"",
+					"-framework",
+					"\"GoogleAppMeasurement\"",
+					"-framework",
+					"\"GoogleAppMeasurementIdentitySupport\"",
+					"-framework",
+					"\"GoogleDataTransport\"",
+					"-framework",
+					"\"GoogleUtilities\"",
+					"-framework",
+					"\"Kingfisher\"",
+					"-framework",
+					"\"Lottie\"",
+					"-framework",
+					"\"Promises\"",
+					"-framework",
+					"\"PryntTrimmerView\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"ReactorKit\"",
+					"-framework",
+					"\"RxCocoa\"",
+					"-framework",
+					"\"RxGesture\"",
+					"-framework",
+					"\"RxKeyboard\"",
+					"-framework",
+					"\"RxRelay\"",
+					"-framework",
+					"\"RxSwift\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SnapKit\"",
+					"-framework",
+					"\"Stevia\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"SwiftEntryKit\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"Then\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"WeakMapTable\"",
+					"-framework",
+					"\"YPImagePicker\"",
+					"-framework",
+					"\"nanopb\"",
+					"-weak_framework",
+					"\"Combine\"",
+					"-weak_framework",
+					"\"SwiftUI\"",
+					"-weak_framework",
+					"\"UserNotifications\"",
+				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D DEVELOP";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4019,6 +4109,110 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.1.5;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"c++\"",
+					"-l\"sqlite3\"",
+					"-l\"swiftCoreGraphics\"",
+					"-l\"z\"",
+					"-framework",
+					"\"Accelerate\"",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"CFNetwork\"",
+					"-framework",
+					"\"Clarity\"",
+					"-framework",
+					"\"CocoaLumberjack\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"CoreTelephony\"",
+					"-framework",
+					"\"FBLPromises\"",
+					"-framework",
+					"\"FirebaseAnalytics\"",
+					"-framework",
+					"\"FirebaseCore\"",
+					"-framework",
+					"\"FirebaseCoreExtension\"",
+					"-framework",
+					"\"FirebaseCoreInternal\"",
+					"-framework",
+					"\"FirebaseCrashlytics\"",
+					"-framework",
+					"\"FirebaseInstallations\"",
+					"-framework",
+					"\"FirebaseMessaging\"",
+					"-framework",
+					"\"FirebaseRemoteConfigInterop\"",
+					"-framework",
+					"\"FirebaseSessions\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"GoogleAdsOnDeviceConversion\"",
+					"-framework",
+					"\"GoogleAppMeasurement\"",
+					"-framework",
+					"\"GoogleAppMeasurementIdentitySupport\"",
+					"-framework",
+					"\"GoogleDataTransport\"",
+					"-framework",
+					"\"GoogleUtilities\"",
+					"-framework",
+					"\"Kingfisher\"",
+					"-framework",
+					"\"Lottie\"",
+					"-framework",
+					"\"Promises\"",
+					"-framework",
+					"\"PryntTrimmerView\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"ReactorKit\"",
+					"-framework",
+					"\"RxCocoa\"",
+					"-framework",
+					"\"RxGesture\"",
+					"-framework",
+					"\"RxKeyboard\"",
+					"-framework",
+					"\"RxRelay\"",
+					"-framework",
+					"\"RxSwift\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SnapKit\"",
+					"-framework",
+					"\"Stevia\"",
+					"-framework",
+					"\"StoreKit\"",
+					"-framework",
+					"\"SwiftEntryKit\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-framework",
+					"\"Then\"",
+					"-framework",
+					"\"UIKit\"",
+					"-framework",
+					"\"WeakMapTable\"",
+					"-framework",
+					"\"YPImagePicker\"",
+					"-framework",
+					"\"nanopb\"",
+					"-weak_framework",
+					"\"Combine\"",
+					"-weak_framework",
+					"\"SwiftUI\"",
+					"-weak_framework",
+					"\"UserNotifications\"",
+				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D DEVELOP";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
