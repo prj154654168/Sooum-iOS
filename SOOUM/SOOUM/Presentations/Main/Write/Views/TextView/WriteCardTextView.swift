@@ -22,7 +22,7 @@ class WriteCardTextView: UIView {
     // MARK: Views
     
     private lazy var backgroundImageView = UIImageView().then {
-        $0.backgroundColor = .clear
+        $0.backgroundColor = .som.v2.gray100
         $0.contentMode = .scaleAspectFill
         $0.layer.borderColor = UIColor.som.v2.gray100.cgColor
         $0.layer.borderWidth = 1
@@ -84,7 +84,7 @@ class WriteCardTextView: UIView {
     
     var image: UIImage? {
         didSet {
-            guard  let image = self.image else { return }
+            guard let image = self.image else { return }
             self.backgroundImageView.image = image
         }
     }

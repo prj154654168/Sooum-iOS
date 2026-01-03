@@ -23,9 +23,7 @@ extension UITextField {
             return true
         }
         
-        var removedString: String {
-            return hasSpaces ? string : string.replacingOccurrences(of: " ", with: "")
-        }
+        let removedString: String = hasSpaces ? string : string.replacingOccurrences(of: " ", with: "")
         let nsString: NSString? = text as NSString?
         let newString: String = nsString?.replacingCharacters(in: range, with: string) ?? ""
 
@@ -84,15 +82,24 @@ extension UITextField {
             if hasSpaces {
                 return true
             } else {
-                let newPositionOffset = range.location + removedString.count
-                self.text = nsString?.replacingCharacters(in: range, with: removedString)
-
-                if let newPosition = self.position(from: self.beginningOfDocument, offset: newPositionOffset) {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.selectedTextRange = self?.textRange(from: newPosition, to: newPosition)
+                // 공백이 없는 입력일 경우, 입력됨
+                if isTyped && string == removedString {
+                    return true
+                } else {
+                    // 텍스트 입력에 공백이 포함됨
+                    // 추가되는 문자열에서 제한을 넘지 않는 길이만큼만 추가
+                    let to: Int = limit - text.count
+                    let validText: String = String(removedString.prefix(max(0, to)))
+                    self.text = nsString?.replacingCharacters(in: range, with: validText)
+                    
+                    if let position = self.position(from: self.beginningOfDocument, offset: range.location + to) {
+                        DispatchQueue.main.async { [weak self] in
+                            self?.selectedTextRange = self?.textRange(from: position, to: position)
+                        }
                     }
+                    self.sendActions(for: .editingChanged)
                 }
-                self.sendActions(for: .editingChanged)
+                // 공백 타이핑일 경우도 입력 제한
                 return false
             }
         }
