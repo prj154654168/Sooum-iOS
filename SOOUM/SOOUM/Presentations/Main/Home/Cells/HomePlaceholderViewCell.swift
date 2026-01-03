@@ -12,10 +12,6 @@ import Then
 
 class HomePlaceholderViewCell: UITableViewCell {
     
-    enum Text {
-        static let message: String = "아직 작성된 글이 없어요\n하고 싶은 이야기를 카드로 남겨보세요"
-    }
-    
     static let cellIdentifier = String(reflecting: HomePlaceholderViewCell.self)
     
     
@@ -26,10 +22,12 @@ class HomePlaceholderViewCell: UITableViewCell {
         $0.contentMode = .scaleAspectFit
     }
     
-    private let placeholderMessageLabel = UILabel().then {
-        $0.text = Text.message
+    private let placeholderLabel = UILabel().then {
         $0.textColor = .som.v2.gray400
         $0.typography = .som.v2.body1
+        $0.numberOfLines = 0
+        $0.lineBreakMode = .byWordWrapping
+        $0.lineBreakStrategy = .hangulWordPriority
     }
     
     
@@ -62,10 +60,18 @@ class HomePlaceholderViewCell: UITableViewCell {
             $0.height.equalTo(113)
         }
         
-        self.contentView.addSubview(self.placeholderMessageLabel)
-        self.placeholderMessageLabel.snp.makeConstraints {
+        self.contentView.addSubview(self.placeholderLabel)
+        self.placeholderLabel.snp.makeConstraints {
             $0.top.equalTo(self.placeholderImageView.snp.bottom).offset(20)
             $0.centerX.equalToSuperview()
         }
+    }
+    
+    
+    // MARK: Public info
+    
+    func bind(_ placeholderText: String) {
+        self.placeholderLabel.text = placeholderText
+        self.placeholderLabel.typography = .som.v2.body1
     }
 }

@@ -161,24 +161,12 @@ extension WriteCardTagFooter: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // 타이핑 시 공백 제거
-        if string == " " && range.length == 0 {
-            return false
-        }
-        // 붙여넣기 공백 제거
-        let isPasting: Bool = string.count > 1 || range.length > 0
-        var newString: String = string
-        if isPasting {
-            newString = string.replacingOccurrences(of: " ", with: "")
-            if newString.isEmpty && string.contains(" ") {
-                return false
-            }
-        }
         
         return textField.shouldChangeCharactersIn(
             in: range,
-            replacementString: newString,
-            maxCharacters: Constants.maxCharacters
+            replacementString: string,
+            maxCharacters: Constants.maxCharacters,
+            hasSpaces: false
         )
     }
     

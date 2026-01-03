@@ -9,14 +9,23 @@ import UIKit
 
 extension UITextField {
 
-    func shouldChangeCharactersIn(in range: NSRange, replacementString string: String, maxCharacters limit: Int) -> Bool {
+    func shouldChangeCharactersIn(
+        in range: NSRange,
+        replacementString string: String,
+        maxCharacters limit: Int,
+        // 공백 제거 여부
+        hasSpaces: Bool = true
+    ) -> Bool {
         guard let text = self.text else {
             return true
         }
         if string.isEmpty {
             return true
         }
-
+        
+        var removedString: String {
+            return hasSpaces ? string : string.replacingOccurrences(of: " ", with: "")
+        }
         let nsString: NSString? = text as NSString?
         let newString: String = nsString?.replacingCharacters(in: range, with: string) ?? ""
 
@@ -36,9 +45,9 @@ extension UITextField {
                     let separatedCharactersCount = separatedCharacters.count
                     // 마지막 문자를 자음 + 모음으로 나누어 갯수에 따라 판단,
                     // 갯수가 1일 때, 모음이면 입력 가능
-                    if separatedCharactersCount == 1 && lastCharacter.isConsonant && string.isConsonant == false { return true }
+                    if separatedCharactersCount == 1 && lastCharacter.isConsonant && removedString.isConsonant == false { return true }
                     // 갯수가 2일 때, 자음이면 입력 가능
-                    if separatedCharactersCount == 2 && string.isConsonant { return true }
+                    if separatedCharactersCount == 2 && removedString.isConsonant { return true }
                     // TODO: 겹받침일 때는 고려 X
                     
                     return false
@@ -46,7 +55,7 @@ extension UITextField {
                     // 텍스트 범위가 선택됨
                     // 추가되는 문자열에서 선택된 범위의 길이만큼만 교체
                     let to: Int = range.length
-                    let validText: String = String(string.prefix(max(0, to)))
+                    let validText: String = String(removedString.prefix(max(0, to)))
                     self.text = nsString?.replacingCharacters(in: range, with: validText)
 
                     if let position = self.position(from: self.beginningOfDocument, offset: range.location + to) {
@@ -60,7 +69,7 @@ extension UITextField {
                 // 텍스트 입력 후에 제한을 벗어남
                 // 추가되는 문자열에서 제한을 넘지 않는 길이만큼만 추가
                 let to: Int = limit - text.count
-                let validText: String = String(string.prefix(max(0, to)))
+                let validText: String = String(removedString.prefix(max(0, to)))
                 self.text = nsString?.replacingCharacters(in: range, with: validText)
 
                 if let position = self.position(from: self.beginningOfDocument, offset: range.location + to) {
@@ -72,7 +81,20 @@ extension UITextField {
             }
             return false
         } else {
-            return true
+            if hasSpaces {
+                return true
+            } else {
+                let newPositionOffset = range.location + removedString.count
+                self.text = nsString?.replacingCharacters(in: range, with: removedString)
+
+                if let newPosition = self.position(from: self.beginningOfDocument, offset: newPositionOffset) {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.selectedTextRange = self?.textRange(from: newPosition, to: newPosition)
+                    }
+                }
+                self.sendActions(for: .editingChanged)
+                return false
+            }
         }
     }
 }

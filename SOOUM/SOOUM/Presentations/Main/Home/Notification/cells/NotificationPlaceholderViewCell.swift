@@ -14,7 +14,7 @@ import Then
 class NotificationPlaceholderViewCell: UITableViewCell {
     
     enum Text {
-        static let placeholderLabelText: String = "아직 표시할 알림이 없어요"
+        static let placeholderLabelText: String = "아직 표시할 알림이 없어요\n활동 알림은 30일 후, 자동 삭제돼요"
     }
     
     static let cellIdentifier = String(reflecting: NotificationPlaceholderViewCell.self)
@@ -31,6 +31,9 @@ class NotificationPlaceholderViewCell: UITableViewCell {
         $0.text = Text.placeholderLabelText
         $0.textColor = .som.v2.gray400
         $0.typography = .som.v2.body1
+        $0.numberOfLines = 0
+        $0.lineBreakMode = .byWordWrapping
+        $0.lineBreakStrategy = .hangulWordPriority
     }
     
     
@@ -61,7 +64,6 @@ class NotificationPlaceholderViewCell: UITableViewCell {
         }
         
         self.contentView.addSubview(self.placeholderLabel)
-        
         self.placeholderLabel.snp.makeConstraints {
             $0.top.equalTo(self.placeholderImage.snp.bottom).offset(20)
             $0.bottom.equalToSuperview()

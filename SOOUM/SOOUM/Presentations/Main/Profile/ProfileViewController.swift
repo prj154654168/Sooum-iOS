@@ -361,9 +361,10 @@ class ProfileViewController: BaseNavigationViewController, View {
                     }
                 )
                 
+                let nickname = reactor.currentState.profileInfo?.nickname ?? ""
                 SOMDialogViewController.show(
                     title: Text.blockDialogTitle,
-                    message: Text.blockDialogMessage,
+                    message: nickname + Text.blockDialogMessage,
                     textAlignment: .left,
                     actions: [cancelAction, confirmAction]
                 )
