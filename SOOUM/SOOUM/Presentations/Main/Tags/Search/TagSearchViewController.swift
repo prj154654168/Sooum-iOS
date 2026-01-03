@@ -150,11 +150,10 @@ class TagSearchViewController: BaseNavigationViewController, View {
                     )
                     object.navigationPop()
                 } else {
+                    object.searchTextFieldView.text = nil
+                    
                     reactor.action.onNext(.cleanup(.search))
                     reactor.action.onNext(.cleanup(.tagCard))
-                    
-                    object.searchTextFieldView.text = nil
-                    object.searchTextFieldView.resignFirstResponder()
                 }
             }
             .disposed(by: self.disposeBag)
@@ -279,19 +278,14 @@ class TagSearchViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        Observable.combineLatest(
-            searchTerms.filterNil(),
-            self.searchTextFieldView.textFieldDidReturn,
-            resultSelector: { ($0, $1) }
-        )
-        .observe(on: MainScheduler.asyncInstance)
-        .subscribe(with: self) { object, searchTermInfos in
-            let (searchTerms, returnKeyDidTap) = searchTermInfos
-            
-            object.searchTermsView.setModels(searchTerms, with: returnKeyDidTap != nil)
-            object.searchTermsView.isHidden = false
-        }
-        .disposed(by: self.disposeBag)
+        self.searchTextFieldView.textFieldDidReturn
+            .withLatestFrom(searchTerms.filterNil())
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, models in
+                object.searchTermsView.setModels(models, with: true)
+                object.searchTermsView.isHidden = false
+            }
+            .disposed(by: self.disposeBag)
         
         isFavorite
             .observe(on: MainScheduler.asyncInstance)

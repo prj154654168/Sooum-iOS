@@ -72,7 +72,6 @@ class SearchTextFieldView: UIView {
     var text: String? {
         set {
             self.textField.text = newValue
-            self.textField.sendActions(for: .editingChanged)
         }
         get {
             return self.textField.text
@@ -103,7 +102,7 @@ class SearchTextFieldView: UIView {
         return self.text?.isEmpty ?? true
     }
     
-    let textFieldDidReturn = PublishRelay<String?>()
+    let textFieldDidReturn = PublishRelay<Void>()
     
     
     // MARK: Initalization
@@ -213,7 +212,7 @@ extension SearchTextFieldView: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        self.textFieldDidReturn.accept(textField.text)
+        self.textFieldDidReturn.accept(())
         return true
     }
 }
