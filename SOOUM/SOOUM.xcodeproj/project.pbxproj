@@ -3928,7 +3928,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 201050;
+				CURRENT_PROJECT_VERSION = 202000;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3952,7 +3952,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.5;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -4085,7 +4085,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 201050;
+				CURRENT_PROJECT_VERSION = 202000;
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
@@ -4108,7 +4108,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.5;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -4428,7 +4428,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 201040;
+				CURRENT_PROJECT_VERSION = 202000;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -4451,7 +4451,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.4;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D PRODUCTION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4478,7 +4478,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 201040;
+				CURRENT_PROJECT_VERSION = 202000;
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
@@ -4500,7 +4500,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.4;
+				MARKETING_VERSION = 2.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D PRODUCTION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
