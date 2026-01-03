@@ -153,7 +153,7 @@ class MemberInfoView: UIView {
         self.distanceLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalTo(self.distanceImageView.snp.trailing).offset(2)
-            $0.trailing.equalToSuperview().offset(-4)
+            $0.trailing.equalToSuperview().offset(-6)
         }
         
         self.addSubview(self.timeGapLabel)

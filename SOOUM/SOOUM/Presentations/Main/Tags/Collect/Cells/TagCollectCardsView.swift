@@ -107,6 +107,7 @@ class TagCollectCardsView: UIView {
     private(set) var models: [ProfileCardInfo]?
     
     let cardDidTapped = PublishRelay<ProfileCardInfo>()
+    let didScrolled = PublishRelay<Void>()
     let moreFindWithId = PublishRelay<String>()
     
     
@@ -220,6 +221,8 @@ extension TagCollectCardsView: UICollectionViewDelegateFlowLayout {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        self.didScrolled.accept(())
         
         let offset = scrollView.contentOffset.y
         

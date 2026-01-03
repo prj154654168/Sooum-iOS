@@ -226,19 +226,23 @@ class DetailViewCell: UICollectionViewCell {
     
     private func updateTextContainerInsetAndHeight(_ content: String, typography: Typography) {
         
-        var attributes = typography.attributes
-        attributes[.font] = typography.font
-        let attributedText = NSAttributedString(
-            string: content,
-            attributes: attributes
-        )
-        
+        // UILabel의 정확한 높이를 구하기 위해 sizeToFit 사용
         let size: CGSize = .init(width: self.contentScrollView.bounds.width, height: .greatestFiniteMagnitude)
-        let boundingHeight = attributedText.boundingRect(
-            with: size,
-            options: [.usesLineFragmentOrigin],
-            context: nil
-        ).height
+        var boundingHeight: CGFloat {
+            let label = UILabel(frame: .init(origin: .zero, size: size)).then {
+                $0.text = content
+                $0.textColor = .som.v2.white
+                $0.typography = .som.v2.body1
+                $0.textAlignment = .center
+                $0.numberOfLines = 0
+                $0.lineBreakMode = .byWordWrapping
+                $0.lineBreakStrategy = .hangulWordPriority
+                
+                $0.sizeToFit()
+            }
+            
+            return label.frame.height
+        }
         
         let lines: CGFloat = boundingHeight / typography.lineHeight
         let isScrollEnabled: Bool = lines > 8
