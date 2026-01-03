@@ -84,12 +84,12 @@ extension UITextField {
             if hasSpaces {
                 return true
             } else {
+                let newPositionOffset = range.location + removedString.count
                 self.text = nsString?.replacingCharacters(in: range, with: removedString)
-                
-                if isTyped == false,
-                   let position = self.position(from: self.beginningOfDocument, offset: range.location) {
+
+                if let newPosition = self.position(from: self.beginningOfDocument, offset: newPositionOffset) {
                     DispatchQueue.main.async { [weak self] in
-                        self?.selectedTextRange = self?.textRange(from: position, to: position)
+                        self?.selectedTextRange = self?.textRange(from: newPosition, to: newPosition)
                     }
                 }
                 self.sendActions(for: .editingChanged)
