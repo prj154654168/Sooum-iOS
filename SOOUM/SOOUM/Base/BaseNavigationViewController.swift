@@ -131,7 +131,8 @@ class BaseNavigationViewController: BaseViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         // setupNaviBar() 가 viewWillAppear(_:)에서 호출되지 않게 함
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = self.navigationPopGestureEnabled
+        // UIPanGesture를 interactivePopGestureRecognizer 처럼 사용
+        self.setupFullScreenPopGesture()
         
         // 순환참조가 발생할 경우 약한 참조인 delegate가 nil이 되기 때문에,
         // 네비게이션바 설정이 무시될 수 있습니다. 이를 방어하기 위해 네비게이션바를 설정합니다.
@@ -141,18 +142,76 @@ class BaseNavigationViewController: BaseViewController {
             self.setupNaviBar()
         }
     }
+    
+    private func setupFullScreenPopGesture() {
+        guard let naviController = self.navigationController,
+              let systemGesture = naviController.interactivePopGestureRecognizer
+        else { return }
+        
+        let hasPanGesture = naviController.view.gestureRecognizers?.contains {
+            $0 is UIPanGestureRecognizer && $0.delegate === self
+        } ?? false
+        
+        if hasPanGesture == false, self.navigationPopGestureEnabled {
+            guard let targets = systemGesture.value(forKey: "targets") as? NSMutableArray,
+                  let targetObject = targets.firstObject as? NSObject,
+                  let target = targetObject.value(forKey: "target")
+            else { return }
+            
+            let action = Selector(("handleNavigationTransition:"))
+            let panGesture = UIPanGestureRecognizer(target: target, action: action)
+            panGesture.delegate = self
+            naviController.view.addGestureRecognizer(panGesture)
+        }
+        
+        systemGesture.isEnabled = false
+    }
 }
 
 
 extension BaseNavigationViewController: UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        // 이전 VC에서 적용된 delegate 무시
+        guard self.navigationController?.topViewController === self else { return false }
+        
+        let touchPoint = gestureRecognizer.location(in: self.view)
+        let edgeThreshold: CGFloat = 50.0
+        
+        // 화면 가장자리에서 swipe back 시에는 navigationPopGestureEnabled 조건에 맞춰 뒤로가기
+        if touchPoint.x < edgeThreshold && self.navigationPopGestureEnabled {
+            return true
+        }
+        
+        // 현재 터치 영역에 따라 swipe back 제스처 실행 여부 검사
+        if let hitView = view.hitTest(touchPoint, with: nil) {
+            var current: UIView? = hitView
+            while let view = current {
+                // 현재는 항상 collectionView에서만 가로 스크롤하기 때문에 collectionView만 검사
+                if let collectionView = view as? UICollectionView,
+                   let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+                   
+                    if layout.scrollDirection == .horizontal { return false }
+                }
+                // superview로 올라가면서 검사
+                current = view.superview
+            }
+        }
+        
+        // 가로 스크롤인 collectionView가 없고, swipe back 제스처 실행 여부 검사
+        if let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
+            let velocity = panGesture.velocity(in: self.view)
+            return velocity.x > 0 && abs(velocity.x) > abs(velocity.y) && self.navigationPopGestureEnabled
+        }
+        
+        // 아무 delegate 가 설정되지 않았을 때,navigationPopGestureEnabled 조건만 검사
         return self.navigationPopGestureEnabled
     }
     
+    // swipe back 제스처 도중에 다른 제스처 무시
     func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+        shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
         return self.navigationPopGestureEnabled
     }

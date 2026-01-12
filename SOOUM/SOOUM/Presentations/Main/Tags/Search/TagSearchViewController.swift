@@ -62,6 +62,13 @@ class TagSearchViewController: BaseNavigationViewController, View {
     private var searchTextFieldWidthConstraint: Constraint?
     
     
+    // MARK: Override variables
+    
+    override var navigationPopGestureEnabled: Bool {
+        false
+    }
+    
+    
     // MARK: Override func
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) { }
