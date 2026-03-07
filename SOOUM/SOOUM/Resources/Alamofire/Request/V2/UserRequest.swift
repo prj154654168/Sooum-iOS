@@ -25,6 +25,8 @@ enum UserRequest: BaseRequest {
     case updateFCMToken(fcmToken: String)
     /// 카드추가 가능 여부 확인
     case postingPermission
+    /// 나의 역할 조회
+    case myRole
     /// 프로필 조회
     case profile(userId: String?)
     /// 나의 프로필 업데이트
@@ -70,6 +72,9 @@ enum UserRequest: BaseRequest {
         case .postingPermission:
             
             return "/api/members/permissions/posting"
+        case .myRole:
+            
+            return "/api/members/role"
         case let .profile(userId):
             
             if let userId = userId {

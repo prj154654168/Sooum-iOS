@@ -38,6 +38,12 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         return self.provider.networkManager.fetch(BaseCardInfoResponse.self, request: request)
     }
     
+    func articleCard() -> Observable<HomeArticleCardInfoResponse> {
+        
+        let request: CardRequest = .articleCard
+        return self.provider.networkManager.fetch(HomeArticleCardInfoResponse.self, request: request)
+    }
+    
     
     // MARK: Detail
     
@@ -106,7 +112,8 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         imgType: String,
         imgName: String,
         isStory: Bool,
-        tags: [String]
+        tags: [String],
+        isArticle: Bool
     ) -> Observable<WriteCardResponse> {
         
         let request: CardRequest = .writeCard(
@@ -118,7 +125,8 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
             imgType: imgType,
             imgName: imgName,
             isStory: isStory,
-            tags: tags
+            tags: tags,
+            isArticle: isArticle
         )
         return self.provider.networkManager.perform(WriteCardResponse.self, request: request)
     }

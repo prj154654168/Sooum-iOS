@@ -175,6 +175,14 @@
 		3843C1C52D4FD918009283AC /* MockCoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3843C1C42D4FD918009283AC /* MockCoreLocation.swift */; };
 		3843C1C72D4FDAC4009283AC /* MockLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3843C1C62D4FDAC4009283AC /* MockLocationManager.swift */; };
 		3843C1C92D4FDBD3009283AC /* LocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3843C1C82D4FDBD3009283AC /* LocationManagerTests.swift */; };
+		3845CA282F2DD78100F8C377 /* HomeNotiHeaderView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA272F2DD77A00F8C377 /* HomeNotiHeaderView+Rx.swift */; };
+		3845CA292F2DD78100F8C377 /* HomeNotiHeaderView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA272F2DD77A00F8C377 /* HomeNotiHeaderView+Rx.swift */; };
+		3845CA2B2F2DF6E300F8C377 /* HomeArticleViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA2A2F2DF6DB00F8C377 /* HomeArticleViewCell.swift */; };
+		3845CA2C2F2DF6E300F8C377 /* HomeArticleViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA2A2F2DF6DB00F8C377 /* HomeArticleViewCell.swift */; };
+		3845CA2E2F2DF7C300F8C377 /* ArticleCardInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA2D2F2DF7B700F8C377 /* ArticleCardInfoResponse.swift */; };
+		3845CA2F2F2DF7C300F8C377 /* ArticleCardInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA2D2F2DF7B700F8C377 /* ArticleCardInfoResponse.swift */; };
+		3845CA312F2DF7DC00F8C377 /* ArticleCardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA302F2DF7CD00F8C377 /* ArticleCardInfo.swift */; };
+		3845CA322F2DF7DC00F8C377 /* ArticleCardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA302F2DF7CD00F8C377 /* ArticleCardInfo.swift */; };
 		384972A12CA4DEC00012FCA1 /* CardRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384972A02CA4DEC00012FCA1 /* CardRequest.swift */; };
 		384972A32CA54DC10012FCA1 /* UIImgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384972A22CA54DC10012FCA1 /* UIImgeView.swift */; };
 		384972A42CA54DC10012FCA1 /* UIImgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384972A22CA54DC10012FCA1 /* UIImgeView.swift */; };
@@ -604,6 +612,12 @@
 		38B65E7A2E72A29F00DF6919 /* OnboardingNumberingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B65E782E72A29100DF6919 /* OnboardingNumberingView.swift */; };
 		38B65E7C2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B65E7B2E72ADB500DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift */; };
 		38B65E7D2E72ADB900DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B65E7B2E72ADB500DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift */; };
+		38B669A32F2F32EE000B24FD /* UserRoleResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B669A22F2F32E3000B24FD /* UserRoleResponse.swift */; };
+		38B669A42F2F32EE000B24FD /* UserRoleResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B669A22F2F32E3000B24FD /* UserRoleResponse.swift */; };
+		38B669A62F2F3330000B24FD /* UserRoleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B669A52F2F332B000B24FD /* UserRoleInfo.swift */; };
+		38B669A72F2F3330000B24FD /* UserRoleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B669A52F2F332B000B24FD /* UserRoleInfo.swift */; };
+		38B669AA2F2F354A000B24FD /* SelectCardTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B669A92F2F3545000B24FD /* SelectCardTypeView.swift */; };
+		38B669AB2F2F354A000B24FD /* SelectCardTypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B669A92F2F3545000B24FD /* SelectCardTypeView.swift */; };
 		38B6AACD2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
 		38B6AACE2CA410D800CE6DB6 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */; };
 		38B6AADB2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6AADA2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift */; };
@@ -690,6 +704,8 @@
 		38CA91F42EBDCFF2002C261A /* ProfileCardsPlaceholderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CA91F22EBDCFE6002C261A /* ProfileCardsPlaceholderViewCell.swift */; };
 		38CA91F62EBDD342002C261A /* ProfileViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CA91F52EBDD336002C261A /* ProfileViewHeader.swift */; };
 		38CA91F72EBDD342002C261A /* ProfileViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CA91F52EBDD336002C261A /* ProfileViewHeader.swift */; };
+		38CBC5CF2F2A3009005097DD /* HomeNotiHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CBC5CE2F2A3002005097DD /* HomeNotiHeaderView.swift */; };
+		38CBC5D02F2A3009005097DD /* HomeNotiHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CBC5CE2F2A3002005097DD /* HomeNotiHeaderView.swift */; };
 		38CC49822CDE3854007A0145 /* SOMPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49812CDE3854007A0145 /* SOMPresentationController.swift */; };
 		38CC49832CDE3854007A0145 /* SOMPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49812CDE3854007A0145 /* SOMPresentationController.swift */; };
 		38CC49852CDE3885007A0145 /* SOMTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CC49842CDE3885007A0145 /* SOMTransitioningDelegate.swift */; };
@@ -936,6 +952,10 @@
 		3843C1C42D4FD918009283AC /* MockCoreLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCoreLocation.swift; sourceTree = "<group>"; };
 		3843C1C62D4FDAC4009283AC /* MockLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocationManager.swift; sourceTree = "<group>"; };
 		3843C1C82D4FDBD3009283AC /* LocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTests.swift; sourceTree = "<group>"; };
+		3845CA272F2DD77A00F8C377 /* HomeNotiHeaderView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeNotiHeaderView+Rx.swift"; sourceTree = "<group>"; };
+		3845CA2A2F2DF6DB00F8C377 /* HomeArticleViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeArticleViewCell.swift; sourceTree = "<group>"; };
+		3845CA2D2F2DF7B700F8C377 /* ArticleCardInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCardInfoResponse.swift; sourceTree = "<group>"; };
+		3845CA302F2DF7CD00F8C377 /* ArticleCardInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCardInfo.swift; sourceTree = "<group>"; };
 		384972A02CA4DEC00012FCA1 /* CardRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRequest.swift; sourceTree = "<group>"; };
 		384972A22CA54DC10012FCA1 /* UIImgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImgeView.swift; sourceTree = "<group>"; };
 		385009C12D363525007175A1 /* FilterNil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterNil.swift; sourceTree = "<group>"; };
@@ -1158,6 +1178,9 @@
 		38B543ED2D46506300DDF2C5 /* ManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerType.swift; sourceTree = "<group>"; };
 		38B65E782E72A29100DF6919 /* OnboardingNumberingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingNumberingView.swift; sourceTree = "<group>"; };
 		38B65E7B2E72ADB500DF6919 /* TermsOfServiceAgreeButtonView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TermsOfServiceAgreeButtonView+Rx.swift"; sourceTree = "<group>"; };
+		38B669A22F2F32E3000B24FD /* UserRoleResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRoleResponse.swift; sourceTree = "<group>"; };
+		38B669A52F2F332B000B24FD /* UserRoleInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRoleInfo.swift; sourceTree = "<group>"; };
+		38B669A92F2F3545000B24FD /* SelectCardTypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCardTypeView.swift; sourceTree = "<group>"; };
 		38B6AACC2CA410D800CE6DB6 /* MainTabBarController.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; tabWidth = 4; };
 		38B6AADA2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewReactor.swift; sourceTree = "<group>"; tabWidth = 4; };
 		38B6AADE2CA4777200CE6DB6 /* UIViewController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Rx.swift"; sourceTree = "<group>"; };
@@ -1203,6 +1226,7 @@
 		38C9AF3B2E96ACE300B401C0 /* WriteCardTagFooterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCardTagFooterDelegate.swift; sourceTree = "<group>"; };
 		38CA91F22EBDCFE6002C261A /* ProfileCardsPlaceholderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCardsPlaceholderViewCell.swift; sourceTree = "<group>"; };
 		38CA91F52EBDD336002C261A /* ProfileViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewHeader.swift; sourceTree = "<group>"; };
+		38CBC5CE2F2A3002005097DD /* HomeNotiHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeNotiHeaderView.swift; sourceTree = "<group>"; };
 		38CC49812CDE3854007A0145 /* SOMPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMPresentationController.swift; sourceTree = "<group>"; };
 		38CC49842CDE3885007A0145 /* SOMTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMTransitioningDelegate.swift; sourceTree = "<group>"; };
 		38CC49872CDE3972007A0145 /* SOMPresentationController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMPresentationController+Show.swift"; sourceTree = "<group>"; };
@@ -2155,6 +2179,8 @@
 		38899E632E7938CD0030F7CA /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				38B669A22F2F32E3000B24FD /* UserRoleResponse.swift */,
+				3845CA2D2F2DF7B700F8C377 /* ArticleCardInfoResponse.swift */,
 				38F3398E2EE31C7E0066A5F7 /* IsCardDeletedResponse.swift */,
 				38F376102ECB789200E4A41D /* TagCardInfoResponse.swift */,
 				38F3760C2ECB778C00E4A41D /* FavoriteTagInfoResponse.swift */,
@@ -2203,6 +2229,8 @@
 		38899E692E793AEA0030F7CA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				38B669A52F2F332B000B24FD /* UserRoleInfo.swift */,
+				3845CA302F2DF7CD00F8C377 /* ArticleCardInfo.swift */,
 				3879B4B42EC5AD580070846B /* RejoinableDateInfo.swift */,
 				38C2A7FB2EC0925700B941A2 /* WithdrawType.swift */,
 				38C2A7F52EC08FEF00B941A2 /* BlockUserInfo.swift */,
@@ -2438,6 +2466,14 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		38B669A82F2F352E000B24FD /* SelectCardType */ = {
+			isa = PBXGroup;
+			children = (
+				38B669A92F2F3545000B24FD /* SelectCardTypeView.swift */,
+			);
+			path = SelectCardType;
+			sourceTree = "<group>";
+		};
 		38B6AACB2CA410C000CE6DB6 /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -2493,6 +2529,9 @@
 		38B8A5822CAE9CB7000AFE83 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				3845CA2A2F2DF6DB00F8C377 /* HomeArticleViewCell.swift */,
+				3845CA272F2DD77A00F8C377 /* HomeNotiHeaderView+Rx.swift */,
+				38CBC5CE2F2A3002005097DD /* HomeNotiHeaderView.swift */,
 				38B8A5832CAE9CC4000AFE83 /* HomeViewCell.swift */,
 				38572CDD2D2254E800B07C69 /* HomePlaceholderViewCell.swift */,
 			);
@@ -2651,6 +2690,7 @@
 			isa = PBXGroup;
 			children = (
 				386E96702E9BC008005E047D /* RelatedTags */,
+				38B669A82F2F352E000B24FD /* SelectCardType */,
 				386E96692E9A51C5005E047D /* SelectOptions */,
 				381854A42E9954DF00424D71 /* SelectTypography */,
 				3818549A2E992EC400424D71 /* SelectImage */,
@@ -3149,7 +3189,9 @@
 				3889A2772E79C29F0030F7CA /* NotificationRemoteDataSoruceImpl.swift in Sources */,
 				38F3760D2ECB779E00E4A41D /* FavoriteTagInfoResponse.swift in Sources */,
 				38C2A7EE2EC074B200B941A2 /* SettingsRepositoryImpl.swift in Sources */,
+				3845CA282F2DD78100F8C377 /* HomeNotiHeaderView+Rx.swift in Sources */,
 				38E928D32EB7624300B3F00B /* FloatingButton.swift in Sources */,
+				38CBC5CF2F2A3009005097DD /* HomeNotiHeaderView.swift in Sources */,
 				38FEBE552E865121002916A8 /* FollowNotificationInfoResponse.swift in Sources */,
 				38EBA90F2EB39920008B28F4 /* PostingPermission.swift in Sources */,
 				38899E9C2E7954D90030F7CA /* DeletedNotificationInfoResponse.swift in Sources */,
@@ -3167,6 +3209,7 @@
 				382E153B2D15A67A0097B09C /* NotificationViewCell.swift in Sources */,
 				38C2A80C2EC0BC4500B941A2 /* BlockUsersViewController.swift in Sources */,
 				388009922CABF855002A9209 /* SOMTagModel.swift in Sources */,
+				38B669AB2F2F354A000B24FD /* SelectCardTypeView.swift in Sources */,
 				3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				38FD56252EC9FAA400EC6106 /* String.swift in Sources */,
 				3836ACB82C8F04CD00A3C566 /* UILabel+Observer.swift in Sources */,
@@ -3175,9 +3218,11 @@
 				385C01B82E8EA1EF003C7894 /* SOMPageViews.swift in Sources */,
 				389E59D32EDEEE4100D0946D /* UpdateFollowUseCase.swift in Sources */,
 				385C01AE2E8E8C6F003C7894 /* SOMPageModel.swift in Sources */,
+				3845CA2B2F2DF6E300F8C377 /* HomeArticleViewCell.swift in Sources */,
 				2A032EFE2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */,
 				38787B822ED1EB21004BBAA7 /* TagCollectCardsView.swift in Sources */,
 				38C2A8022EC09A5A00B941A2 /* ResignTextFieldView.swift in Sources */,
+				3845CA2F2F2DF7C300F8C377 /* ArticleCardInfoResponse.swift in Sources */,
 				388C96372CCE41700061C598 /* AuthInfo.swift in Sources */,
 				3878D0892CFFEF0F00F9522F /* TermsOfServiceTextCellView+Rx.swift in Sources */,
 				3878D0702CFFDF9600F9522F /* SettingTextCellView.swift in Sources */,
@@ -3209,6 +3254,7 @@
 				38C2D4212CFEB82400CEA092 /* ProfileViewReactor.swift in Sources */,
 				38AE85392EDFFBBF00029E4C /* UpdateTagFavoriteUseCaseImpl.swift in Sources */,
 				38AE85452EDFFCF900029E4C /* ValidateUserUseCaseImpl.swift in Sources */,
+				3845CA322F2DF7DC00F8C377 /* ArticleCardInfo.swift in Sources */,
 				38816D9F2D004A5E00EB87D6 /* UpdateProfileViewController.swift in Sources */,
 				38D6F1842CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
 				38572CDF2D2254E800B07C69 /* HomePlaceholderViewCell.swift in Sources */,
@@ -3301,6 +3347,7 @@
 				3816C0612CCDE35300C8688C /* ErrorInterceptor.swift in Sources */,
 				3803CF7B2D016BDB00FD90DB /* IssueMemberTransferViewReactor.swift in Sources */,
 				381B83E82EBC75D700C84015 /* ProfileCardInfo.swift in Sources */,
+				38B669A32F2F32EE000B24FD /* UserRoleResponse.swift in Sources */,
 				38D5637C2D16D72D006265AA /* SOMStickyTabBar.swift in Sources */,
 				38FDC2C82C9E764300C094C2 /* BaseNavigationViewController.swift in Sources */,
 				3803B9312ECF5F21009D14B9 /* SearchTextFieldView.swift in Sources */,
@@ -3444,6 +3491,7 @@
 				38C9AF302E96A49F00B401C0 /* WriteCardTag.swift in Sources */,
 				38AE85312EDFFA9500029E4C /* UpdateCardLikeUseCaseImpl.swift in Sources */,
 				389E59D52EDEEE6B00D0946D /* UpdateUserInfoUseCase.swift in Sources */,
+				38B669A72F2F3330000B24FD /* UserRoleInfo.swift in Sources */,
 				3889A27D2E79C56E0030F7CA /* ToeknResponse.swift in Sources */,
 				3878D06C2CFFDF1F00F9522F /* SettingsViewController.swift in Sources */,
 				3803B9262ECF530C009D14B9 /* TagCollectPlaceholderViewCell.swift in Sources */,
@@ -3571,7 +3619,9 @@
 				385053582C92DD2300C80B02 /* SOMTabBarController.swift in Sources */,
 				38899E6E2E79400C0030F7CA /* ImageUrlInfoResponse.swift in Sources */,
 				3889A2782E79C29F0030F7CA /* NotificationRemoteDataSoruceImpl.swift in Sources */,
+				3845CA292F2DD78100F8C377 /* HomeNotiHeaderView+Rx.swift in Sources */,
 				38C2A7ED2EC074B200B941A2 /* SettingsRepositoryImpl.swift in Sources */,
+				38CBC5D02F2A3009005097DD /* HomeNotiHeaderView.swift in Sources */,
 				38FEBE542E865121002916A8 /* FollowNotificationInfoResponse.swift in Sources */,
 				38E928D42EB7624300B3F00B /* FloatingButton.swift in Sources */,
 				38899E9D2E7954D90030F7CA /* DeletedNotificationInfoResponse.swift in Sources */,
@@ -3589,6 +3639,7 @@
 				38D2FBCF2E81B52F006DD739 /* SOMSwipableTabBar.swift in Sources */,
 				388009942CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				38C2A80B2EC0BC4500B941A2 /* BlockUsersViewController.swift in Sources */,
+				38B669AA2F2F354A000B24FD /* SelectCardTypeView.swift in Sources */,
 				3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */,
 				38D6F1832CC243DB00E11530 /* UITextView+Typography.swift in Sources */,
 				38FD56242EC9FAA400EC6106 /* String.swift in Sources */,
@@ -3597,9 +3648,11 @@
 				3817016E2CD882C2005FC220 /* TimeoutInterceptor.swift in Sources */,
 				389E59D22EDEEE4100D0946D /* UpdateFollowUseCase.swift in Sources */,
 				383EC6112E7A4F6B00EC2D1E /* AuthLocalDataSource.swift in Sources */,
+				3845CA2C2F2DF6E300F8C377 /* HomeArticleViewCell.swift in Sources */,
 				388A2D302D00D6A100E2F2F0 /* FollowViewReactor.swift in Sources */,
 				38787B812ED1EB21004BBAA7 /* TagCollectCardsView.swift in Sources */,
 				389EF81E2D2F469B00E053AE /* CocoaLumberjack.swift in Sources */,
+				3845CA2E2F2DF7C300F8C377 /* ArticleCardInfoResponse.swift in Sources */,
 				38C9AF392E96AB9100B401C0 /* WriteCardTagFooter.swift in Sources */,
 				385C01B72E8EA1EF003C7894 /* SOMPageViews.swift in Sources */,
 				385C01AF2E8E8C6F003C7894 /* SOMPageModel.swift in Sources */,
@@ -3631,6 +3684,7 @@
 				3879B4B92EC5ADC50070846B /* RejoinableDateInfoResponse.swift in Sources */,
 				38AE853A2EDFFBBF00029E4C /* UpdateTagFavoriteUseCaseImpl.swift in Sources */,
 				38AE85462EDFFCF900029E4C /* ValidateUserUseCaseImpl.swift in Sources */,
+				3845CA312F2DF7DC00F8C377 /* ArticleCardInfo.swift in Sources */,
 				38CA91F32EBDCFF2002C261A /* ProfileCardsPlaceholderViewCell.swift in Sources */,
 				38E928D12EB75FA300B3F00B /* PungView.swift in Sources */,
 				38E928C72EB73FF800B3F00B /* WrittenTagModel.swift in Sources */,
@@ -3723,6 +3777,7 @@
 				385620EF2CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				38899E7D2E794B420030F7CA /* SignUpResponse.swift in Sources */,
 				3803CF692D0156BA00FD90DB /* SettingsViewReactor.swift in Sources */,
+				38B669A42F2F32EE000B24FD /* UserRoleResponse.swift in Sources */,
 				38D2FBD22E81B9B7006DD739 /* SOMSwipableTabBarDelegate.swift in Sources */,
 				38CA91F62EBDD342002C261A /* ProfileViewHeader.swift in Sources */,
 				3803B9322ECF5F21009D14B9 /* SearchTextFieldView.swift in Sources */,
@@ -3866,6 +3921,7 @@
 				383EC6162E7A50EB00EC2D1E /* AuthLocalDataSourceImpl.swift in Sources */,
 				38AE85302EDFFA9500029E4C /* UpdateCardLikeUseCaseImpl.swift in Sources */,
 				389E59D62EDEEE6B00D0946D /* UpdateUserInfoUseCase.swift in Sources */,
+				38B669A62F2F3330000B24FD /* UserRoleInfo.swift in Sources */,
 				3878D0852CFFED7800F9522F /* TermsOfServiceTextCellView.swift in Sources */,
 				38D8F5582EC4D89D00DED428 /* TagNofificationInfoResponse.swift in Sources */,
 				3803B9272ECF530C009D14B9 /* TagCollectPlaceholderViewCell.swift in Sources */,
@@ -3928,7 +3984,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 203000;
+				CURRENT_PROJECT_VERSION = 204020;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3952,7 +4008,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.4.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -4085,7 +4141,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 203000;
+				CURRENT_PROJECT_VERSION = 204020;
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
@@ -4108,7 +4164,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.4.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -4428,7 +4484,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 203000;
+				CURRENT_PROJECT_VERSION = 204020;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -4451,7 +4507,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.4.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D PRODUCTION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4478,7 +4534,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 203000;
+				CURRENT_PROJECT_VERSION = 204020;
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
@@ -4500,7 +4556,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.0;
+				MARKETING_VERSION = 2.4.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D PRODUCTION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -17,6 +17,7 @@ protocol CardRepository {
     func latestCard(lastId: String?, latitude: String?, longitude: String?) -> Observable<BaseCardInfoResponse>
     func popularCard(latitude: String?, longitude: String?) -> Observable<BaseCardInfoResponse>
     func distanceCard(lastId: String?, latitude: String, longitude: String, distanceFilter: String) -> Observable<BaseCardInfoResponse>
+    func articleCard() -> Observable<HomeArticleCardInfoResponse>
     
     
     // MARK: Detail
@@ -43,7 +44,8 @@ protocol CardRepository {
         imgType: String,
         imgName: String,
         isStory: Bool,
-        tags: [String]
+        tags: [String],
+        isArticle: Bool
     ) -> Observable<WriteCardResponse>
     func writeComment(
         id: String,

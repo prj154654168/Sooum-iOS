@@ -46,6 +46,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Initalize token
         self.initializeTokenWhenFirstLaunch()
         
+        // Show notice at home with latest
+        UserDefaults.hadHiddenNotice(false)
+        
         // Set Kinfisher caching limit
         self.setupKingfisherCacheLimit()
         

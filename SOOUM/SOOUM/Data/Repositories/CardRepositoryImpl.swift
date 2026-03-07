@@ -35,6 +35,11 @@ class CardRepositoryImpl: CardRepository {
         return self.remoteDataSource.distanceCard(lastId: lastId, latitude: latitude, longitude: longitude, distanceFilter: distanceFilter)
     }
     
+    func articleCard() -> Observable<HomeArticleCardInfoResponse> {
+        
+        return self.remoteDataSource.articleCard()
+    }
+    
     
     // MARK: Detail
     
@@ -95,7 +100,8 @@ class CardRepositoryImpl: CardRepository {
         imgType: String,
         imgName: String,
         isStory: Bool,
-        tags: [String]
+        tags: [String],
+        isArticle: Bool
     ) -> Observable<WriteCardResponse> {
         
         return self.remoteDataSource.writeCard(
@@ -107,7 +113,8 @@ class CardRepositoryImpl: CardRepository {
             imgType: imgType,
             imgName: imgName,
             isStory: isStory,
-            tags: tags
+            tags: tags,
+            isArticle: isArticle
         )
     }
     

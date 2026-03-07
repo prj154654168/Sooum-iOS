@@ -43,6 +43,7 @@ class HomeViewController: BaseNavigationViewController, View {
     }
     
     enum Section: Int, CaseIterable {
+        case article
         case latest
         case popular
         case distance
@@ -50,6 +51,7 @@ class HomeViewController: BaseNavigationViewController, View {
     }
     
     enum Item: Hashable {
+        case article(ArticleCardInfo)
         case latest(BaseCardInfo)
         case popular(BaseCardInfo)
         case distance(BaseCardInfo)
@@ -99,8 +101,12 @@ class HomeViewController: BaseNavigationViewController, View {
         $0.delegate = self
     }
     
-    private lazy var topNoticeView = SOMPageViews().then {
-        $0.delegate = self
+    private lazy var homeNotiHeaderView = HomeNotiHeaderView().then {
+        let frame: CGRect = .init(
+            origin: .zero,
+            size: .init(width: UIScreen.main.bounds.width - 16 * 2, height: 48 + 10)
+        )
+        $0.frame = frame
     }
     
     private lazy var tableView = UITableView().then {
@@ -117,6 +123,7 @@ class HomeViewController: BaseNavigationViewController, View {
         
         $0.refreshControl = SOMRefreshControl()
         
+        $0.register(HomeArticleViewCell.self, forCellReuseIdentifier: HomeArticleViewCell.cellIdentifier)
         $0.register(HomeViewCell.self, forCellReuseIdentifier: HomeViewCell.cellIdentifier)
         $0.register(HomePlaceholderViewCell.self, forCellReuseIdentifier: HomePlaceholderViewCell.cellIdentifier)
         
@@ -150,6 +157,12 @@ class HomeViewController: BaseNavigationViewController, View {
             
             let cell: HomeViewCell = self.cellForCard(tableView, with: indexPath)
             cell.bind(cardInfo)
+            
+            return cell
+        case let .article(articleInfo):
+            
+            let cell: HomeArticleViewCell = self.cellForArticle(tableView, with: indexPath)
+            cell.bind(articleInfo)
             
             return cell
         case let .empty(placeholderText):
@@ -336,6 +349,38 @@ class HomeViewController: BaseNavigationViewController, View {
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
+        self.homeNotiHeaderView.rx.deleteButtonDidTapped
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, _ in
+                guard reactor.currentState.displayType == .latest,
+                      let headerView = object.tableView.tableHeaderView as? HomeNotiHeaderView
+                else { return }
+                
+                let alphaAnimator = UIViewPropertyAnimator(duration: 0.3, curve: .easeInOut) {
+                    headerView.alpha = 0
+                    headerView.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
+                }
+                alphaAnimator.addCompletion { _ in
+                    headerView.transform = .identity
+                }
+            
+                alphaAnimator.startAnimation()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    reactor.action.onNext(.removeDisplyedNotice)
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
+        self.homeNotiHeaderView.backgroundDidTapped
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
+            .filterNil()
+            .subscribe(with: self) { object, urlString in
+                if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }
+            .disposed(by: self.disposeBag)
+        
         // State
         isRefreshing
             .observe(on: MainScheduler.asyncInstance)
@@ -350,21 +395,6 @@ class HomeViewController: BaseNavigationViewController, View {
             .map { $0 == false }
             .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.dotWithoutReadView.rx.isHidden)
-            .disposed(by: self.disposeBag)
-        
-        reactor.state.map(\.noticeInfos)
-            .distinctUntilChanged()
-            .filterNil()
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(with: self) { object, noticeInfos in
-                let models: [SOMPageModel] = noticeInfos.map { SOMPageModel(data: $0) }
-                object.topNoticeView.frame = CGRect(
-                    origin: .zero,
-                    size: .init(width: UIScreen.main.bounds.width - 16 * 2, height: 81)
-                )
-                object.topNoticeView.setModels(models)
-                object.tableView.tableHeaderView = noticeInfos.isEmpty ? nil : object.topNoticeView
-            }
             .disposed(by: self.disposeBag)
         
         let cardIsDeleted = reactor.state.map(\.cardIsDeleted)
@@ -409,62 +439,98 @@ class HomeViewController: BaseNavigationViewController, View {
             )
             .disposed(by: self.disposeBag)
         
-        reactor.state.map {
+        let displayStates = reactor.state.map {
             HomeViewReactor.DisplayStates(
                 displayType: $0.displayType,
                 latests: $0.latestCards,
                 populars: $0.popularCards,
-                distances: $0.distanceCards
+                distances: $0.distanceCards,
+                article: $0.articleCard,
+                noticeInfo: $0.noticeInfo
             )
         }
-        .distinctUntilChanged(reactor.canUpdateCells)
-        .observe(on: MainScheduler.asyncInstance)
-        .subscribe(with: self) { object, displayStats in
-            
-            var snapshot = Snapshot()
-            snapshot.appendSections(Section.allCases)
-            
-            switch displayStats.displayType {
-            case .latest:
+        .share()
+        
+        displayStates
+            .distinctUntilChanged(reactor.canUpdateNotice)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, displayStats in
+                guard let noticeInfo = displayStats.noticeInfo else { return }
                 
-                guard let latests = displayStats.latests else { return }
-                
-                guard latests.isEmpty == false else {
-                    snapshot.appendItems([.empty(Text.defaultPlaceholderText)], toSection: .empty)
-                    break
+                if case .latest = displayStats.displayType {
+                    object.homeNotiHeaderView.alpha = 1
+                    object.homeNotiHeaderView.setModel(noticeInfo)
+                    object.tableView.tableHeaderView = noticeInfo == .defaultValue ? nil : object.homeNotiHeaderView
+                } else {
+                    object.tableView.tableHeaderView = nil
                 }
-                
-                let new = latests.map { Item.latest($0) }
-                snapshot.appendItems(new, toSection: .latest)
-            case .popular:
-                
-                guard let populars = displayStats.populars else { return }
-                
-                guard populars.isEmpty == false else {
-                    snapshot.appendItems([.empty(Text.defaultPlaceholderText)], toSection: .empty)
-                    break
-                }
-                
-                let new = populars.map { Item.popular($0) }
-                snapshot.appendItems(new, toSection: .popular)
-            case .distance:
-                
-                guard let distances = displayStats.distances else { return }
-                
-                guard distances.isEmpty == false else {
-                    snapshot.appendItems([.empty(Text.distancePlaceholderText)], toSection: .empty)
-                    break
-                }
-                
-                let new = distances.map { Item.distance($0) }
-                snapshot.appendItems(new, toSection: .distance)
             }
-            
-            object.dataSource.apply(snapshot, animatingDifferences: false)
-            
-            object.tableView.isHidden = false
-        }
-        .disposed(by: self.disposeBag)
+            .disposed(by: self.disposeBag)
+        
+        displayStates
+            .distinctUntilChanged(reactor.canUpdateCells)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, displayStats in
+                
+                var snapshot = Snapshot()
+                snapshot.appendSections(Section.allCases)
+                
+                switch displayStats.displayType {
+                case .latest:
+                    /// Article은 `최신카드`에서만 표시
+                    if let article = displayStats.article, article != .defaultValue {
+                        let new = Item.article(article)
+                        snapshot.appendItems([new], toSection: .article)
+                    }
+                    
+                    guard let latests = displayStats.latests else { return }
+                    
+                    guard latests.isEmpty == false else {
+                        snapshot.appendItems([.empty(Text.defaultPlaceholderText)], toSection: .empty)
+                        break
+                    }
+                    
+                    let new = latests.map { Item.latest($0) }
+                    snapshot.appendItems(new, toSection: .latest)
+                case .popular:
+                    /// Article은 `최신카드`에서만 표시
+                    if let article = displayStats.article {
+                        let delete = Item.article(article)
+                        snapshot.deleteItems([delete])
+                    }
+                    
+                    guard let populars = displayStats.populars else { return }
+                    
+                    guard populars.isEmpty == false else {
+                        snapshot.appendItems([.empty(Text.defaultPlaceholderText)], toSection: .empty)
+                        break
+                    }
+                    
+                    let new = populars.map { Item.popular($0) }
+                    snapshot.appendItems(new, toSection: .popular)
+                case .distance:
+                    /// Article은 `최신카드`에서만 표시
+                    if let article = displayStats.article {
+                        let delete = Item.article(article)
+                        snapshot.deleteItems([delete])
+                    }
+                    
+                    guard let distances = displayStats.distances else { return }
+                    
+                    guard distances.isEmpty == false else {
+                        snapshot.appendItems([.empty(Text.distancePlaceholderText)], toSection: .empty)
+                        break
+                    }
+                    
+                    let new = distances.map { Item.distance($0) }
+                    snapshot.appendItems(new, toSection: .distance)
+                }
+                
+                object.dataSource.apply(snapshot, animatingDifferences: false)
+                
+                object.tableView.isHidden = false
+            }
+            .disposed(by: self.disposeBag)
     }
     
     
@@ -643,6 +709,17 @@ private extension HomeViewController {
             for: indexPath
         ) as! HomeViewCell
     }
+    
+    func cellForArticle(
+        _ tableView: UITableView,
+        with indexPath: IndexPath
+    ) -> HomeArticleViewCell {
+        
+        return tableView.dequeueReusableCell(
+            withIdentifier: HomeArticleViewCell.cellIdentifier,
+            for: indexPath
+        ) as! HomeArticleViewCell
+    }
 }
 
 
@@ -798,6 +875,9 @@ extension HomeViewController: UITableViewDelegate {
                 let .distance(selectedCard):
                 
                 return selectedCard.id
+            case let .article(selectedArticle):
+                
+                return selectedArticle.id
             case .empty:
                 return nil
             }
@@ -812,7 +892,7 @@ extension HomeViewController: UITableViewDelegate {
                 
                 guard let expireAt = selectedCard.storyExpirationTime else { return false }
                 return expireAt < Date()
-            case .empty:
+            default:
                 return false
             }
         }
@@ -828,8 +908,15 @@ extension HomeViewController: UITableViewDelegate {
                 let .distance(selectedCard):
                 
                 return selectedCard.cardImgName.contains(Text.eventCardTitle)
-            case .empty:
+            default:
                 return false
+            }
+        }
+        
+        var isArticleCard: Bool {
+            switch item {
+            case .article: return true
+            default: return false
             }
         }
         
@@ -838,7 +925,13 @@ extension HomeViewController: UITableViewDelegate {
         
         self.view.isUserInteractionEnabled = false
         
-        reactor.action.onNext(.hasDetailCard(selectedId, isEventCard))
+        reactor.action.onNext(
+            .hasDetailCard(
+                selectedId,
+                isEventCard: isEventCard,
+                isArticleCard: isArticleCard
+            )
+        )
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -850,6 +943,8 @@ extension HomeViewController: UITableViewDelegate {
         switch item {
         case .empty:
             return (UIScreen.main.bounds.height * 0.2) + 113 + 20 + 42
+        case .article:
+            return UITableView.automaticDimension
         default:
             return self.cellHeight
         }

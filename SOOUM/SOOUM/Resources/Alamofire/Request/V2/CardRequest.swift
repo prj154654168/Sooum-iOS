@@ -18,6 +18,8 @@ enum CardRequest: BaseRequest {
     case popularCard(latitude: String?, longitude: String?)
     /// 거리순
     case distancCard(lastId: String?, latitude: String, longitude: String, distanceFilter: String)
+    /// 아티클
+    case articleCard
     
     
     // MARK: Detail
@@ -51,7 +53,8 @@ enum CardRequest: BaseRequest {
         imgType: String,
         imgName: String,
         isStory: Bool,
-        tags: [String]
+        tags: [String],
+        isArticle: Bool
     )
     /// 답카드 추가
     case writeComment(
@@ -85,10 +88,12 @@ enum CardRequest: BaseRequest {
             } else {
                 return "/api/cards/feeds/distance"
             }
-        
-        case let .detailCard(id, _, _):
-            return "/api/cards/\(id)"
+        case .articleCard:
             
+            return "/api/cards/article"
+        case let .detailCard(id, _, _):
+            
+            return "/api/cards/\(id)"
         case let .commentCard(id, lastId, _, _):
             
             if let lastId = lastId {
@@ -183,7 +188,8 @@ enum CardRequest: BaseRequest {
             imgType,
             imgName,
             isStory,
-            tags
+            tags,
+            isArticle
         ):
             
             var parameters: [String: Any] = [
@@ -193,7 +199,8 @@ enum CardRequest: BaseRequest {
                 "imgType": imgType,
                 "imgName": imgName,
                 "isStory": isStory,
-                "tags": tags
+                "tags": tags,
+                "isArticle": isArticle
             ]
             
             if isDistanceShared, let latitude = latitude, let longitude = longitude {

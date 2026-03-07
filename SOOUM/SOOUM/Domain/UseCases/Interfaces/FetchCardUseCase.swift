@@ -9,7 +9,7 @@ import RxSwift
 
 protocol FetchCardUseCase: AnyObject {
     
-    /// 홈 피드 카드 조회 최신/인기/거리
+    /// 홈 피드 카드 조회 최신/인기/거리/아티클
     func latestCards(
         lastId: String?,
         latitude: String?,
@@ -25,6 +25,7 @@ protocol FetchCardUseCase: AnyObject {
         longitude: String,
         distanceFilter: String
     ) -> Observable<[BaseCardInfo]>
+    func articleCard() -> Observable<ArticleCardInfo>
     
     /// 마이 카드 조회 피드/댓글
     func writtenFeedCards(userId: String, lastId: String?) -> Observable<[ProfileCardInfo]>

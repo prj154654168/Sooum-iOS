@@ -18,7 +18,8 @@ protocol WriteCardUseCase: AnyObject {
         imgType: String,
         imgName: String,
         isStory: Bool,
-        tags: [String]
+        tags: [String],
+        isArticle: Bool
     ) -> Observable<String>
     func writeComment(
         parentCardId: String,

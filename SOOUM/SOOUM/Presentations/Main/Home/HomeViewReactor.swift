@@ -16,6 +16,8 @@ class HomeViewReactor: Reactor {
         let latests: [BaseCardInfo]?
         let populars: [BaseCardInfo]?
         let distances: [BaseCardInfo]?
+        let article: ArticleCardInfo?
+        let noticeInfo: NoticeInfo?
     }
     
     enum DisplayType: Equatable {
@@ -31,9 +33,10 @@ class HomeViewReactor: Reactor {
         case moreFind(String)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
-        case hasDetailCard(String, Bool)
+        case hasDetailCard(String, isEventCard: Bool, isArticleCard: Bool)
         case updateCards(latests: [BaseCardInfo], populars: [BaseCardInfo], distances: [BaseCardInfo])
         case updateHasUnReadNotifications(Bool)
+        case removeDisplyedNotice
         case cleanup
     }
     
@@ -41,8 +44,9 @@ class HomeViewReactor: Reactor {
         case updateLocationPermission(Bool)
         case cards(latests: [BaseCardInfo], populars: [BaseCardInfo], distances: [BaseCardInfo])
         case more(latests: [BaseCardInfo], distances: [BaseCardInfo])
+        case article(ArticleCardInfo)
         case updateHasUnreadNotifications(Bool)
-        case notices([NoticeInfo])
+        case notice(NoticeInfo?)
         case cardIsDeleted((String, Bool)?)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
@@ -52,10 +56,11 @@ class HomeViewReactor: Reactor {
     struct State {
         fileprivate(set) var hasPermission: Bool
         fileprivate(set) var displayType: DisplayType
-        fileprivate(set) var noticeInfos: [NoticeInfo]?
+        fileprivate(set) var noticeInfo: NoticeInfo?
         fileprivate(set) var latestCards: [BaseCardInfo]?
         fileprivate(set) var popularCards: [BaseCardInfo]?
         fileprivate(set) var distanceCards: [BaseCardInfo]?
+        fileprivate(set) var articleCard: ArticleCardInfo?
         fileprivate(set) var hasUnreadNotifications: Bool
         fileprivate(set) var cardIsDeleted: (selectedId: String, isDeleted: Bool)?
         fileprivate(set) var distanceFilter: String
@@ -82,10 +87,11 @@ class HomeViewReactor: Reactor {
         self.initialState = State(
             hasPermission: self.locationUseCase.hasPermission(),
             displayType: displayType,
-            noticeInfos: nil,
+            noticeInfo: nil,
             latestCards: nil,
             popularCards: nil,
             distanceCards: nil,
+            articleCard: nil,
             hasUnreadNotifications: false,
             cardIsDeleted: nil,
             distanceFilter: "1km",
@@ -105,7 +111,7 @@ class HomeViewReactor: Reactor {
             return .concat([
                 self.refresh(displayType, distanceFilter)
                     .catch(self.catchClosureForCards),
-                self.unreadNotifications()
+                self.unreadNotifications(displayType)
                     .catch(self.catchClosureForNotis)
             ])
         case .refresh:
@@ -116,7 +122,7 @@ class HomeViewReactor: Reactor {
                 .just(.updateIsRefreshing(true)),
                 self.refresh(displayType, distanceFilter)
                     .catch(self.catchClosureForCards),
-                self.unreadNotifications()
+                self.unreadNotifications(displayType)
                     .catch(self.catchClosureForNotis),
                 .just(.updateIsRefreshing(false))
             ])
@@ -160,7 +166,7 @@ class HomeViewReactor: Reactor {
                 self.refresh(displayType, distanceFilter)
                     .catch(self.catchClosureForCards)
             ])
-        case let .hasDetailCard(selectedId, isEventCard):
+        case let .hasDetailCard(selectedId, isEventCard, isArticleCard):
             
             return .concat([
                 .just(.cardIsDeleted(nil)),
@@ -172,8 +178,15 @@ class HomeViewReactor: Reactor {
                             )
                         }
                     })
-                    .map { (selectedId, $0) }
-                    .map(Mutation.cardIsDeleted)
+                    .withUnretained(self)
+                    .flatMapLatest { object, isDeleted -> Observable<Mutation> in
+                        
+                        return .concat([
+                            // TODO: 임시, 아티클 상세로 진입 시 아티클 새로고침
+                            isArticleCard ? object.article() : .empty(),
+                            .just(.cardIsDeleted((selectedId, isDeleted)))
+                        ])
+                    }
             ])
         case let .updateCards(latest, populars, distances):
             
@@ -181,6 +194,11 @@ class HomeViewReactor: Reactor {
         case let .updateHasUnReadNotifications(hasUnReads):
             
             return .just(.updateHasUnreadNotifications(hasUnReads))
+        case .removeDisplyedNotice:
+            
+            UserDefaults.hadHiddenNotice(true)
+            
+            return .just(.notice(.defaultValue))
         case .cleanup:
             
             return .just(.cardIsDeleted(nil))
@@ -199,8 +217,10 @@ class HomeViewReactor: Reactor {
         case let .more(latest, distance):
             newState.latestCards? += latest
             newState.distanceCards? += distance
-        case let .notices(noticeInfos):
-            newState.noticeInfos = noticeInfos
+        case let .article(articleCard):
+            newState.articleCard = articleCard
+        case let .notice(noticeInfo):
+            newState.noticeInfo = noticeInfo
         case let .updateHasUnreadNotifications(hasUnreadNotifications):
             newState.hasUnreadNotifications = hasUnreadNotifications
         case let .cardIsDeleted(cardIsDeleted):
@@ -226,18 +246,23 @@ private extension HomeViewReactor {
         
         switch displayType {
         case .latest:
-            return self.fetchCardUseCase.latestCards(
+            let latestCards = self.fetchCardUseCase.latestCards(
                 lastId: nil,
                 latitude: latitude,
                 longitude: longitude
             )
             .map {
-                return .cards(
+                return Mutation.cards(
                     latests: $0,
                     populars: self.currentState.popularCards ?? [],
                     distances: self.currentState.distanceCards ?? []
                 )
             }
+            
+            return .concat([
+                latestCards,
+                self.article()
+            ])
         case .popular:
             return self.fetchCardUseCase.popularCards(latitude: latitude, longitude: longitude)
                 .map {
@@ -303,16 +328,26 @@ private extension HomeViewReactor {
         }
     }
     
-    func unreadNotifications() -> Observable<Mutation> {
+    func article() -> Observable<Mutation> {
         
-        return self.fetchNoticeUseCase.notices(lastId: nil, size: 3, requestType: .notification)
-            .flatMapLatest { noticeInfos -> Observable<Mutation> in
-                
+        return self.fetchCardUseCase.articleCard().map(Mutation.article)
+    }
+    
+    func unreadNotifications(_ displayType: DisplayType) -> Observable<Mutation> {
+        
+        let isUnreadNotiEmpty = self.notificationUseCase.isUnreadNotiEmpty()
+            .map { !$0 }
+            .map(Mutation.updateHasUnreadNotifications)
+        
+        guard displayType == .latest,
+              UserDefaults.shouldHideNotice == false
+        else { return isUnreadNotiEmpty }
+        
+        return self.fetchNoticeUseCase.notices(lastId: nil, size: 1, requestType: .notification)
+            .flatMapLatest { noticeInfo -> Observable<Mutation> in
                 return .concat([
-                    self.notificationUseCase.isUnreadNotiEmpty()
-                        .map { !$0 }
-                        .map(Mutation.updateHasUnreadNotifications),
-                    .just(.notices(noticeInfos))
+                    isUnreadNotiEmpty,
+                    .just(.notice(noticeInfo.last ?? .defaultValue))
                 ])
             }
     }
@@ -327,11 +362,14 @@ extension HomeViewReactor {
             var emitObservable: Observable<Mutation> {
                 switch displayType {
                 case .latest:
-                    return .just(.cards(
-                        latests: [],
-                        populars: self.currentState.popularCards ?? [],
-                        distances: self.currentState.distanceCards ?? []
-                    ))
+                    return .concat([
+                        .just(.cards(
+                            latests: [],
+                            populars: self.currentState.popularCards ?? [],
+                            distances: self.currentState.distanceCards ?? []
+                        )),
+                        .just(.article(.defaultValue))
+                    ])
                 case .popular:
                     return .just(.cards(
                         latests: self.currentState.latestCards ?? [],
@@ -385,7 +423,7 @@ extension HomeViewReactor {
     var catchClosureForNotis: ((Error) throws -> Observable<Mutation> ) {
         return { _ in
             .concat([
-                .just(.notices([])),
+                .just(.notice(.defaultValue)),
                 .just(.updateHasUnreadNotifications(false)),
                 .just(.updateIsRefreshing(false))
             ])
@@ -399,7 +437,16 @@ extension HomeViewReactor {
         return prevDisplayState.displayType == currDisplayState.displayType &&
             prevDisplayState.latests == currDisplayState.latests &&
             prevDisplayState.populars == currDisplayState.populars &&
-            prevDisplayState.distances == currDisplayState.distances
+            prevDisplayState.distances == currDisplayState.distances &&
+            prevDisplayState.article == currDisplayState.article
+    }
+    
+    func canUpdateNotice(
+        prev prevDisplayState: DisplayStates,
+        curr currDisplayState: DisplayStates
+    ) -> Bool {
+        return prevDisplayState.displayType == currDisplayState.displayType &&
+            prevDisplayState.noticeInfo == currDisplayState.noticeInfo
     }
     
     func canPushToDetail(

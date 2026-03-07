@@ -15,7 +15,7 @@ final class FetchCardUseCaseImpl: FetchCardUseCase {
         self.repository = repository
     }
     
-    /// 홈 피드 카드 조회 최신/인기/거리
+    /// 홈 피드 카드 조회 최신/인기/거리/아티클
     func latestCards(
         lastId: String?,
         latitude: String?,
@@ -56,6 +56,11 @@ final class FetchCardUseCaseImpl: FetchCardUseCase {
             distanceFilter: distanceFilter
         )
         .map(\.cardInfos)
+    }
+    
+    func articleCard() -> Observable<ArticleCardInfo> {
+        
+        return self.repository.articleCard().map(\.articleInfo)
     }
     
     /// 마이 카드 조회 피드/댓글

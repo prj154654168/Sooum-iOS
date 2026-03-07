@@ -19,6 +19,8 @@ protocol UserRepository {
     func uploadImage(_ data: Data, with url: URL) -> Observable<Result<Int, Error>>
     func updateImage(imageName: String) -> Observable<Int>
     func postingPermission() -> Observable<PostingPermissionResponse>
+    
+    func role() -> Observable<UserRoleResponse>
     func profile(userId: String?) -> Observable<ProfileInfoResponse>
     func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int>
     func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse>

@@ -68,7 +68,9 @@ class MainTabBarController: SOMTabBarController, View {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.hasFirstLaunchGuide = UserDefaults.showGuideMessage
+        // 앱 첫 진입 및 카드 추가 진입 전 가이드 메시지 표시
+        self.hasFirstLaunchGuide = UserDefaults.needsGuideMessageAndGuide
+        if UserDefaults.shouldShowMessage { UserDefaults.hadShownMessage() }
     }
     
     override func viewWillAppear(_ animated: Bool) {

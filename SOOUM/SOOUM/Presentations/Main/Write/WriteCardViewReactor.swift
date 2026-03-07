@@ -20,7 +20,8 @@ class WriteCardViewReactor: Reactor {
             imageType: BaseCardInfo.ImageType,
             imageName: String?,
             isStory: Bool,
-            tags: [String]
+            tags: [String],
+            isArticle: Bool
         )
         case relatedTags(keyword: String)
         case updateRelatedTags
@@ -28,6 +29,7 @@ class WriteCardViewReactor: Reactor {
     }
     
     enum Mutation {
+        case myRole(UserRole)
         case defaultImages(DefaultImages)
         case updateUserImage(UIImage?, Bool)
         case writeCard(String?)
@@ -40,6 +42,7 @@ class WriteCardViewReactor: Reactor {
     struct State {
         fileprivate(set) var hasPermission: Bool
         fileprivate(set) var shouldUseCoordinates: Bool
+        fileprivate(set) var myRole: UserRole?
         fileprivate(set) var defaultImages: DefaultImages?
         fileprivate(set) var userImage: UIImage?
         fileprivate(set) var relatedTags: [TagInfo]?
@@ -53,6 +56,7 @@ class WriteCardViewReactor: Reactor {
     var initialState: State
     
     private let dependencies: AppDIContainerable
+    private let userInfoUseCase: FetchUserInfoUseCase
     private let cardImageUseCase: CardImageUseCase
     private let writeCardUseCase: WriteCardUseCase
     private let fetchTagUseCase: FetchTagUseCase
@@ -69,6 +73,7 @@ class WriteCardViewReactor: Reactor {
         parentCardId: String? = nil
     ) {
         self.dependencies = dependencies
+        self.userInfoUseCase = dependencies.rootContainer.resolve(FetchUserInfoUseCase.self)
         self.cardImageUseCase = dependencies.rootContainer.resolve(CardImageUseCase.self)
         self.writeCardUseCase = dependencies.rootContainer.resolve(WriteCardUseCase.self)
         self.fetchTagUseCase = dependencies.rootContainer.resolve(FetchTagUseCase.self)
@@ -81,6 +86,7 @@ class WriteCardViewReactor: Reactor {
         self.initialState = State(
             hasPermission: self.locationUseCase.hasPermission(),
             shouldUseCoordinates: false,
+            myRole: nil,
             defaultImages: nil,
             userImage: nil,
             relatedTags: nil,
@@ -96,8 +102,10 @@ class WriteCardViewReactor: Reactor {
         switch action {
         case .landing:
             
-            return self.cardImageUseCase.defaultImages().map(Mutation.defaultImages)
-            
+            return .concat([
+                self.userInfoUseCase.myRole().map(Mutation.myRole),
+                self.cardImageUseCase.defaultImages().map(Mutation.defaultImages)
+            ])
         case let .updateUserImage(userImage, isDownloaded):
             
             return .just(.updateUserImage(userImage, isDownloaded))
@@ -108,7 +116,8 @@ class WriteCardViewReactor: Reactor {
             imageType,
             imageName,
             isStory,
-            tags
+            tags,
+            isArticle
         ):
             
             return .concat([
@@ -121,7 +130,8 @@ class WriteCardViewReactor: Reactor {
                     imageType: imageType,
                     imageName: imageName,
                     isStory: isStory,
-                    tags: tags
+                    tags: tags,
+                    isArticle: isArticle
                 )
                 .catch(self.catchClosure)
                 .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
@@ -144,6 +154,8 @@ class WriteCardViewReactor: Reactor {
     func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         switch mutation {
+        case let .myRole(myRole):
+            newState.myRole = myRole
         case let .defaultImages(defaultImages):
             newState.defaultImages = defaultImages
         case let .updateUserImage(userImage, isDownloaded):
@@ -193,7 +205,8 @@ private extension WriteCardViewReactor {
         imageType: BaseCardInfo.ImageType,
         imageName: String?,
         isStory: Bool,
-        tags: [String]
+        tags: [String],
+        isArticle: Bool
     ) -> Observable<Mutation> {
         
         let coordinate = self.locationUseCase.coordinate()
@@ -202,6 +215,8 @@ private extension WriteCardViewReactor {
         if case .default = imageType, let imageName = imageName {
             
             if self.entranceType == .feed {
+                
+                let isArticle = self.currentState.myRole == .admin && isArticle
                 
                 return self.writeCardUseCase.writeFeed(
                     isDistanceShared: isDistanceShared,
@@ -212,7 +227,8 @@ private extension WriteCardViewReactor {
                     imgType: BaseCardInfo.ImageType.default.rawValue,
                     imgName: imageName,
                     isStory: isStory,
-                    tags: tags
+                    tags: tags,
+                    isArticle: isArticle
                 )
                 .map(Mutation.writeCard)
             } else {
@@ -241,6 +257,8 @@ private extension WriteCardViewReactor {
                     
                     if self.entranceType == .feed {
                         
+                        let isArticle = self.currentState.myRole == .admin && isArticle
+                        
                         return object.writeCardUseCase.writeFeed(
                             isDistanceShared: isDistanceShared,
                             latitude: coordinate.latitude,
@@ -250,7 +268,8 @@ private extension WriteCardViewReactor {
                             imgType: BaseCardInfo.ImageType.user.rawValue,
                             imgName: imageName,
                             isStory: isStory,
-                            tags: tags
+                            tags: tags,
+                            isArticle: isArticle
                         )
                         .map(Mutation.writeCard)
                     } else {

@@ -71,6 +71,12 @@ extension BaseCardInfo {
         case `default` = "DEFAULT"
         case user = "USER"
     }
+    /// 아티클 카드 여부
+    enum CardType: String {
+        /// 현재는 `default`가 `feed`
+        case `default`
+        case article
+    }
 }
 
 extension BaseCardInfo {

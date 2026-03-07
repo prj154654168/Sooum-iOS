@@ -33,6 +33,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let yoonwooTitle: String = "윤우체"
         static let kkookkkookTitle: String = "꾹꾹체"
         
+        static let articleTitle: String = "아티클 카드"
+        static let defaultTitle: String = "피드 카드"
+        
         static let locationDialogTitle: String = "위치 정보 사용 설정"
         static let locationDialogMessage: String = "내 위치 확인을 위해 ‘설정 > 앱 > 숨 > 위치’에서 위치 정보 사용을 허용해 주세요."
         
@@ -105,6 +108,10 @@ class WriteCardViewController: BaseNavigationViewController, View {
         ]
     }
     
+    private let selectCardTypeView = SelectCardTypeView().then {
+        $0.items = [Text.articleTitle, Text.defaultTitle]
+    }
+    
     private let selectOptionsView = SelectOptionsView()
     
     private let relatedTagsView = RelatedTagsView().then {
@@ -168,7 +175,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         let container = UIStackView(arrangedSubviews: [
             self.writeCardView,
             self.selectImageView,
-            self.selectTypographyView
+            self.selectTypographyView,
+            self.selectCardTypeView
         ]).then {
             $0.axis = .vertical
             $0.alignment = .fill
@@ -201,7 +209,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
         
-        self.writeCardGuideView.isHidden = UserDefaults.showGuideView == false
+        // 카드 추가 첫 진입 시 가이드 뷰 표시
+        self.writeCardGuideView.isHidden = UserDefaults.needsGuideMessageAndGuide == false
+        if UserDefaults.shouldShowGuideView { UserDefaults.hadShownGuideView() }
     }
     
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
@@ -445,11 +455,17 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .bind(to: self.writeCardView.writeCardTags.rx.models())
             .disposed(by: self.disposeBag)
         
-        // 위치 권한 유무에 따라 초기값 설정
-        viewDidLoad
+        /// 위치 권한 유무에 따라 초기값 설정
+        /// role == .admin 일 경우, 거리공유 옵션 비활성화
+        let myRoleIsAdmin = reactor.state.map(\.myRole)
+            .distinctUntilChanged()
+            .filterNil()
+            .map { $0 == .admin }
+        Observable.combineLatest(viewDidLoad, myRoleIsAdmin, resultSelector: { _, isAdmin in isAdmin })
             .observe(on: MainScheduler.asyncInstance)
-            .subscribe(with: self.selectOptionsView) { selectOptionsView, _ in
-                selectOptionsView.selectOptions = reactor.initialState.hasPermission ? [.distanceShare] : []
+            .subscribe(with: self.selectOptionsView) { selectOptionsView, isAdmin in
+                let initialOption = reactor.initialState.hasPermission && isAdmin == false
+                selectOptionsView.selectOptions = initialOption ? [.distanceShare] : []
             }
             .disposed(by: self.disposeBag)
         
@@ -466,6 +482,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             writeCardtext,
             selectedImageInfo.filterNil(),
             selectedTypography,
+            self.selectCardTypeView.selectedCardType.filterNil(),
             selectedOptions,
             enteredTag.startWith(nil)
         )
@@ -473,7 +490,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .withLatestFrom(combined)
             .withUnretained(self)
             .map { object, combined in
-                let (content, imageInfo, typography, options, enteredTag) = combined
+                let (content, imageInfo, typography, cardType, options, enteredTag) = combined
                 
                 GAHelper.shared.logEvent(event: GAEvent.WriteCardView.createFCard_btnClick)
                 
@@ -487,6 +504,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 if let enteredTag = enteredTag, enteredTag.isEmpty == false {
                     enteredTagTexts.append(enteredTag)
                 }
+                
                 return Reactor.Action.writeCard(
                     isDistanceShared: options.contains(.distanceShare),
                     content: content,
@@ -494,7 +512,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     imageType: imageInfo.type,
                     imageName: imageInfo.info.imgName,
                     isStory: options.contains(.story),
-                    tags: enteredTagTexts.reduce(into: []) { if !$0.contains($1) { $0.append($1) } }
+                    tags: enteredTagTexts.reduce(into: []) { if !$0.contains($1) { $0.append($1) } },
+                    isArticle: cardType == .article
                 )
             }
             .bind(to: reactor.action)
@@ -578,6 +597,12 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 
                 object.showWriteCardPermissionDialog(gapDays: banEndGapToDays ?? "", banEndFormatted: banEndToString ?? "")
             }
+            .disposed(by: self.disposeBag)
+        
+        myRoleIsAdmin
+            .map { !$0 }
+            .observe(on: MainScheduler.asyncInstance)
+            .bind(to: self.selectCardTypeView.rx.isHidden)
             .disposed(by: self.disposeBag)
         
         reactor.state.map(\.defaultImages)

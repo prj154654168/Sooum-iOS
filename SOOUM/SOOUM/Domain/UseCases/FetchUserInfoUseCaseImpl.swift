@@ -15,6 +15,11 @@ final class FetchUserInfoUseCaseImpl: FetchUserInfoUseCase {
         self.repository = repository
     }
     
+    func myRole() -> Observable<UserRole> {
+        
+        return self.repository.role().map(\.role)
+    }
+    
     func userInfo(userId: String?) -> Observable<ProfileInfo> {
         
         return self.repository.profile(userId: userId).map(\.profileInfo)
