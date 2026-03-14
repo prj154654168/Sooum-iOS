@@ -16,5 +16,16 @@ protocol SettingsRemoteDataSource {
     func enter(code: String, encryptedDeviceId: String) -> Observable<Int>
     func update() -> Observable<TransferCodeInfoResponse>
     func blockUsers(lastId: String?) -> Observable<BlockUsersInfoResponse>
-    func updateNotify(isAllowNotify: Bool) -> Observable<Int>
+    func notify() -> Observable<PushNotiStatusInfoResponse>
+    func updateNotify(
+        commentCardNotify: Bool,
+        cardLikeNotify: Bool,
+        followUserCardNotify: Bool,
+        newFollowerNotify: Bool,
+        cardNewCommentNotify: Bool,
+        recommendedContentNotify: Bool,
+        favoriteTagNotify: Bool,
+        serviceUpdateNotify: Bool,
+        policyViolationNotify: Bool
+    ) -> Observable<Int>
 }

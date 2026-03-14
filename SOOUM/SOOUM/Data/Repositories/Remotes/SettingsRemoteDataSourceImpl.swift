@@ -47,9 +47,35 @@ class SettingsRemoteDataSourceImpl: SettingsRemoteDataSource {
         return self.provider.networkManager.fetch(BlockUsersInfoResponse.self, request: request)
     }
     
-    func updateNotify(isAllowNotify: Bool) -> Observable<Int> {
+    func notify() -> Observable<PushNotiStatusInfoResponse> {
         
-        let request: UserRequest = .updateNotify(isAllowNotify: isAllowNotify)
+        let request: UserRequest = .notify
+        return self.provider.networkManager.fetch(PushNotiStatusInfoResponse.self, request: request)
+    }
+    
+    func updateNotify(
+        commentCardNotify: Bool,
+        cardLikeNotify: Bool,
+        followUserCardNotify: Bool,
+        newFollowerNotify: Bool,
+        cardNewCommentNotify: Bool,
+        recommendedContentNotify: Bool,
+        favoriteTagNotify: Bool,
+        serviceUpdateNotify: Bool,
+        policyViolationNotify: Bool
+    ) -> Observable<Int> {
+        
+        let request: UserRequest = .updateNotify(
+            commentCardNotify: commentCardNotify,
+            cardLikeNotify: cardLikeNotify,
+            followUserCardNotify: followUserCardNotify,
+            newFollowerNotify: newFollowerNotify,
+            cardNewCommentNotify: cardNewCommentNotify,
+            recommendedContentNotify: recommendedContentNotify,
+            favoriteTagNotify: favoriteTagNotify,
+            serviceUpdateNotify: serviceUpdateNotify,
+            policyViolationNotify: policyViolationNotify
+        )
         return self.provider.networkManager.perform(request)
     }
 }

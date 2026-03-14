@@ -12,5 +12,15 @@ protocol UpdateNotifyUseCase: AnyObject {
     func notificationStatus() -> Bool
     func switchNotification(on: Bool) -> Observable<Void>
     
-    func updateNotify(isAllowNotify: Bool) -> Observable<Bool>
+    func updateNotify(
+        commentCardNotify: Bool,
+        cardLikeNotify: Bool,
+        followUserCardNotify: Bool,
+        newFollowerNotify: Bool,
+        cardNewCommentNotify: Bool,
+        recommendedContentNotify: Bool,
+        favoriteTagNotify: Bool,
+        serviceUpdateNotify: Bool,
+        policyViolationNotify: Bool
+    ) -> Observable<Bool>
 }

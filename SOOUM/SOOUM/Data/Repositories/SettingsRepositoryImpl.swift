@@ -44,9 +44,34 @@ class SettingsRepositoryImpl: SettingsRepository {
         return self.remoteDataSource.blockUsers(lastId: lastId)
     }
     
-    func updateNotify(isAllowNotify: Bool) -> Observable<Int> {
+    func notify() -> Observable<PushNotiStatusInfoResponse> {
         
-        return self.remoteDataSource.updateNotify(isAllowNotify: isAllowNotify)
+        return self.remoteDataSource.notify()
+    }
+    
+    func updateNotify(
+        commentCardNotify: Bool,
+        cardLikeNotify: Bool,
+        followUserCardNotify: Bool,
+        newFollowerNotify: Bool,
+        cardNewCommentNotify: Bool,
+        recommendedContentNotify: Bool,
+        favoriteTagNotify: Bool,
+        serviceUpdateNotify: Bool,
+        policyViolationNotify: Bool
+    ) -> Observable<Int> {
+        
+        return self.remoteDataSource.updateNotify(
+            commentCardNotify: commentCardNotify,
+            cardLikeNotify: cardLikeNotify,
+            followUserCardNotify: followUserCardNotify,
+            newFollowerNotify: newFollowerNotify,
+            cardNewCommentNotify: cardNewCommentNotify,
+            recommendedContentNotify: recommendedContentNotify,
+            favoriteTagNotify: favoriteTagNotify,
+            serviceUpdateNotify: serviceUpdateNotify,
+            policyViolationNotify: policyViolationNotify
+        )
     }
     
     func notificationStatus() -> Bool {

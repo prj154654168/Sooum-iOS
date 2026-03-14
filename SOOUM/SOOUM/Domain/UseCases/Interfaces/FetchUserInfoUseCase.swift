@@ -12,4 +12,5 @@ protocol FetchUserInfoUseCase: AnyObject {
     func myRole() -> Observable<UserRole>
     func userInfo(userId: String?) -> Observable<ProfileInfo>
     func myNickname() -> Observable<String>
+    func notify() -> Observable<PushNotiStatusInfo>
 }

@@ -186,7 +186,10 @@ final class AppAssembler: BaseAssemblerable {
         // MARK: FetchUserInfoUseCase
         
         container.register(FetchUserInfoUseCase.self, factory: { resolver in
-            FetchUserInfoUseCaseImpl(repository: resolver.resolve(UserRepository.self))
+            FetchUserInfoUseCaseImpl(
+                userRepository: resolver.resolve(UserRepository.self),
+                settingsRepository: resolver.resolve(SettingsRepository.self)
+            )
         })
         
         

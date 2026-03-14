@@ -25,8 +25,29 @@ final class UpdateNotifyUseCaseImpl: UpdateNotifyUseCase {
         return self.repository.switchNotification(on: on).map { _ in }
     }
     
-    func updateNotify(isAllowNotify: Bool) -> Observable<Bool> {
+    func updateNotify(
+        commentCardNotify: Bool,
+        cardLikeNotify: Bool,
+        followUserCardNotify: Bool,
+        newFollowerNotify: Bool,
+        cardNewCommentNotify: Bool,
+        recommendedContentNotify: Bool,
+        favoriteTagNotify: Bool,
+        serviceUpdateNotify: Bool,
+        policyViolationNotify: Bool
+    ) -> Observable<Bool> {
         
-        return self.repository.updateNotify(isAllowNotify: isAllowNotify).map { $0 == 200 }
+        return self.repository.updateNotify(
+            commentCardNotify: commentCardNotify,
+            cardLikeNotify: cardLikeNotify,
+            followUserCardNotify: followUserCardNotify,
+            newFollowerNotify: newFollowerNotify,
+            cardNewCommentNotify: cardNewCommentNotify,
+            recommendedContentNotify: recommendedContentNotify,
+            favoriteTagNotify: favoriteTagNotify,
+            serviceUpdateNotify: serviceUpdateNotify,
+            policyViolationNotify: policyViolationNotify
+        )
+        .map { $0 == 200 }
     }
 }

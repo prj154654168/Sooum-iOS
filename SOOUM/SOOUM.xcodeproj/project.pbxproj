@@ -139,6 +139,14 @@
 		381E7C1D2ECCB1AD00E80249 /* TagViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381E7C1B2ECCB1AA00E80249 /* TagViewReactor.swift */; };
 		381E7C232ECCC63E00E80249 /* SearchViewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381E7C222ECCC62900E80249 /* SearchViewButton.swift */; };
 		381E7C242ECCC63E00E80249 /* SearchViewButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381E7C222ECCC62900E80249 /* SearchViewButton.swift */; };
+		3829E7DD2F5C5FD7005FDC5C /* PushNotiSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3829E7DC2F5C5FAA005FDC5C /* PushNotiSettingsViewController.swift */; };
+		3829E7DE2F5C5FD7005FDC5C /* PushNotiSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3829E7DC2F5C5FAA005FDC5C /* PushNotiSettingsViewController.swift */; };
+		3829E7E12F5C6031005FDC5C /* PushNotiSettingsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3829E7E02F5C6026005FDC5C /* PushNotiSettingsHeaderView.swift */; };
+		3829E7E22F5C6031005FDC5C /* PushNotiSettingsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3829E7E02F5C6026005FDC5C /* PushNotiSettingsHeaderView.swift */; };
+		3829E7E42F5C611D005FDC5C /* PushNotiSettingsCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3829E7E32F5C6115005FDC5C /* PushNotiSettingsCellView.swift */; };
+		3829E7E52F5C611D005FDC5C /* PushNotiSettingsCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3829E7E32F5C6115005FDC5C /* PushNotiSettingsCellView.swift */; };
+		3829E7E72F5C68B7005FDC5C /* PushNotiSettingsCellView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3829E7E62F5C68AC005FDC5C /* PushNotiSettingsCellView+Rx.swift */; };
+		3829E7E82F5C68B7005FDC5C /* PushNotiSettingsCellView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3829E7E62F5C68AC005FDC5C /* PushNotiSettingsCellView+Rx.swift */; };
 		382D5CF62CFE9B8600BFA23E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382D5CF52CFE9B8600BFA23E /* ProfileViewController.swift */; };
 		382D5CF72CFE9B8600BFA23E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382D5CF52CFE9B8600BFA23E /* ProfileViewController.swift */; };
 		382E153A2D15A67A0097B09C /* NotificationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382E15392D15A67A0097B09C /* NotificationViewCell.swift */; };
@@ -596,6 +604,12 @@
 		38B21C0F2ECF0F1D00990F49 /* PopularTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B21C0D2ECF0F1800990F49 /* PopularTagsView.swift */; };
 		38B35D082EBF7B7300709E53 /* FollowPlaceholderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B35D072EBF7B6E00709E53 /* FollowPlaceholderViewCell.swift */; };
 		38B35D092EBF7B7300709E53 /* FollowPlaceholderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B35D072EBF7B6E00709E53 /* FollowPlaceholderViewCell.swift */; };
+		38B526292F5D6BA900910CB4 /* PushNotiSettingsViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B526282F5D6B9C00910CB4 /* PushNotiSettingsViewReactor.swift */; };
+		38B5262A2F5D6BA900910CB4 /* PushNotiSettingsViewReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B526282F5D6B9C00910CB4 /* PushNotiSettingsViewReactor.swift */; };
+		38B5262C2F5D798900910CB4 /* PushNotiStatusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B5262B2F5D798100910CB4 /* PushNotiStatusInfo.swift */; };
+		38B5262D2F5D798900910CB4 /* PushNotiStatusInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B5262B2F5D798100910CB4 /* PushNotiStatusInfo.swift */; };
+		38B5262F2F5D7BDC00910CB4 /* PushNotiStatusInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B5262E2F5D7BD400910CB4 /* PushNotiStatusInfoResponse.swift */; };
+		38B526302F5D7BDC00910CB4 /* PushNotiStatusInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B5262E2F5D7BD400910CB4 /* PushNotiStatusInfoResponse.swift */; };
 		38B543DF2D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */; };
 		38B543E02D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */; };
 		38B543E22D46179500DDF2C5 /* AuthManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B543E12D46179500DDF2C5 /* AuthManagerConfiguration.swift */; };
@@ -764,6 +778,8 @@
 		38DA12B62D4E642C00AB9468 /* AuthManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DA12B52D4E642C00AB9468 /* AuthManagerTests.swift */; };
 		38DA12B92D4E847100AB9468 /* MockPushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DA12B82D4E847100AB9468 /* MockPushManager.swift */; };
 		38DA12BB2D4E872000AB9468 /* PushManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DA12BA2D4E872000AB9468 /* PushManagerTests.swift */; };
+		38E396842F61B6520050DC87 /* HapticHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E396832F61B64E0050DC87 /* HapticHelper.swift */; };
+		38E396852F61B6520050DC87 /* HapticHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E396832F61B64E0050DC87 /* HapticHelper.swift */; };
 		38E7FBEF2D3CF6BB00A359CD /* SOMDialogAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */; };
 		38E7FBF02D3CF6BC00A359CD /* SOMDialogAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */; };
 		38E928B62EB711E200B3F00B /* DetailCardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928B52EB711DE00B3F00B /* DetailCardInfo.swift */; };
@@ -931,6 +947,10 @@
 		381E7C182ECCB1A200E80249 /* TagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagViewController.swift; sourceTree = "<group>"; };
 		381E7C1B2ECCB1AA00E80249 /* TagViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagViewReactor.swift; sourceTree = "<group>"; };
 		381E7C222ECCC62900E80249 /* SearchViewButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewButton.swift; sourceTree = "<group>"; };
+		3829E7DC2F5C5FAA005FDC5C /* PushNotiSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotiSettingsViewController.swift; sourceTree = "<group>"; };
+		3829E7E02F5C6026005FDC5C /* PushNotiSettingsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotiSettingsHeaderView.swift; sourceTree = "<group>"; };
+		3829E7E32F5C6115005FDC5C /* PushNotiSettingsCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotiSettingsCellView.swift; sourceTree = "<group>"; };
+		3829E7E62F5C68AC005FDC5C /* PushNotiSettingsCellView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PushNotiSettingsCellView+Rx.swift"; sourceTree = "<group>"; };
 		382D5CF52CFE9B8600BFA23E /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		382E15392D15A67A0097B09C /* NotificationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewCell.swift; sourceTree = "<group>"; };
 		383088082EDC7B8200D99D88 /* SOMMessageBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMMessageBubbleView.swift; sourceTree = "<group>"; };
@@ -1170,6 +1190,9 @@
 		38B21C0A2ECEFF9F00990F49 /* FavoriteTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteTagsView.swift; sourceTree = "<group>"; };
 		38B21C0D2ECF0F1800990F49 /* PopularTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularTagsView.swift; sourceTree = "<group>"; };
 		38B35D072EBF7B6E00709E53 /* FollowPlaceholderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowPlaceholderViewCell.swift; sourceTree = "<group>"; };
+		38B526282F5D6B9C00910CB4 /* PushNotiSettingsViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotiSettingsViewReactor.swift; sourceTree = "<group>"; };
+		38B5262B2F5D798100910CB4 /* PushNotiStatusInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotiStatusInfo.swift; sourceTree = "<group>"; };
+		38B5262E2F5D7BD400910CB4 /* PushNotiStatusInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotiStatusInfoResponse.swift; sourceTree = "<group>"; };
 		38B543DE2D46171300DDF2C5 /* ManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerConfiguration.swift; sourceTree = "<group>"; };
 		38B543E12D46179500DDF2C5 /* AuthManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManagerConfiguration.swift; sourceTree = "<group>"; };
 		38B543E42D4617CB00DDF2C5 /* PushManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManagerConfiguration.swift; sourceTree = "<group>"; };
@@ -1258,6 +1281,7 @@
 		38DA12B52D4E642C00AB9468 /* AuthManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManagerTests.swift; sourceTree = "<group>"; };
 		38DA12B82D4E847100AB9468 /* MockPushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPushManager.swift; sourceTree = "<group>"; };
 		38DA12BA2D4E872000AB9468 /* PushManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManagerTests.swift; sourceTree = "<group>"; };
+		38E396832F61B64E0050DC87 /* HapticHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticHelper.swift; sourceTree = "<group>"; };
 		38E928B52EB711DE00B3F00B /* DetailCardInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCardInfo.swift; sourceTree = "<group>"; };
 		38E928B82EB715C300B3F00B /* ReortType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReortType.swift; sourceTree = "<group>"; };
 		38E928BE2EB72D3600B3F00B /* DetailCardInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCardInfoResponse.swift; sourceTree = "<group>"; };
@@ -1600,6 +1624,26 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		3829E7DB2F5C5F8D005FDC5C /* PushNotification */ = {
+			isa = PBXGroup;
+			children = (
+				3829E7DC2F5C5FAA005FDC5C /* PushNotiSettingsViewController.swift */,
+				38B526282F5D6B9C00910CB4 /* PushNotiSettingsViewReactor.swift */,
+				3829E7DF2F5C5FF3005FDC5C /* Cells */,
+			);
+			path = PushNotification;
+			sourceTree = "<group>";
+		};
+		3829E7DF2F5C5FF3005FDC5C /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				3829E7E32F5C6115005FDC5C /* PushNotiSettingsCellView.swift */,
+				3829E7E62F5C68AC005FDC5C /* PushNotiSettingsCellView+Rx.swift */,
+				3829E7E02F5C6026005FDC5C /* PushNotiSettingsHeaderView.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		382D5CF42CFE9B6400BFA23E /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -1634,8 +1678,8 @@
 		3836ACB12C8F042C00A3C566 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				38E396822F61B6440050DC87 /* Helper */,
 				385620F42CA19E8600E0AB5A /* Alamofire */,
-				2A980B9B2D803E8B007DFA45 /* GAHelper */,
 				388D8ADD2E73E60B0044BA79 /* SwiftEntryKit */,
 				3836ACB22C8F043500A3C566 /* Typography */,
 				38D5CE0A2CBCE8CA0054AB9A /* SimpleDefaults.swift */,
@@ -1865,6 +1909,7 @@
 				3878D07F2CFFEC4300F9522F /* termsOfService */,
 				3878D0772CFFE19600F9522F /* Resign */,
 				3878D08A2CFFF08E00F9522F /* Announcement */,
+				3829E7DB2F5C5F8D005FDC5C /* PushNotification */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -2179,6 +2224,7 @@
 		38899E632E7938CD0030F7CA /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				38B5262E2F5D7BD400910CB4 /* PushNotiStatusInfoResponse.swift */,
 				38B669A22F2F32E3000B24FD /* UserRoleResponse.swift */,
 				3845CA2D2F2DF7B700F8C377 /* ArticleCardInfoResponse.swift */,
 				38F3398E2EE31C7E0066A5F7 /* IsCardDeletedResponse.swift */,
@@ -2229,6 +2275,7 @@
 		38899E692E793AEA0030F7CA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				38B5262B2F5D798100910CB4 /* PushNotiStatusInfo.swift */,
 				38B669A52F2F332B000B24FD /* UserRoleInfo.swift */,
 				3845CA302F2DF7CD00F8C377 /* ArticleCardInfo.swift */,
 				3879B4B42EC5AD580070846B /* RejoinableDateInfo.swift */,
@@ -2729,6 +2776,15 @@
 			path = Push;
 			sourceTree = "<group>";
 		};
+		38E396822F61B6440050DC87 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				38E396832F61B64E0050DC87 /* HapticHelper.swift */,
+				2A980B9B2D803E8B007DFA45 /* GAHelper */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		38E5AA822E8D28DB005D676B /* SOMPageViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -3160,6 +3216,7 @@
 				38D488CB2D0C557300F2D38D /* SOMButton.swift in Sources */,
 				38C2A7F62EC08FF600B941A2 /* BlockUserInfo.swift in Sources */,
 				388FCAD12CFAC2BF0012C4D6 /* Notification.swift in Sources */,
+				38B5262C2F5D798900910CB4 /* PushNotiStatusInfo.swift in Sources */,
 				38F339922EE328750066A5F7 /* WriteCardGuideView.swift in Sources */,
 				3802BDB62D0AF16A001256EA /* PushManager.swift in Sources */,
 				38B6AADC2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
@@ -3269,6 +3326,7 @@
 				38787B882ED22324004BBAA7 /* RxSwift+Unretained.swift in Sources */,
 				38B543E32D46179500DDF2C5 /* AuthManagerConfiguration.swift in Sources */,
 				38D055C42CD862FE00E75590 /* SOMActivityIndicatorView.swift in Sources */,
+				3829E7E12F5C6031005FDC5C /* PushNotiSettingsHeaderView.swift in Sources */,
 				38AE85182EDF437400029E4C /* FetchCardUseCaseImpl.swift in Sources */,
 				3880EF7B2EA0D17E00D88608 /* RelatedTagsView+Rx.swift in Sources */,
 				38B543EF2D46506300DDF2C5 /* ManagerType.swift in Sources */,
@@ -3287,6 +3345,7 @@
 				3803B92B2ECF5580009D14B9 /* TagCollectViewController.swift in Sources */,
 				385620F32CA19D2D00E0AB5A /* Alamofire_Request.swift in Sources */,
 				389E59C72EDEECBF00D0946D /* WriteCardUseCase.swift in Sources */,
+				3829E7E82F5C68B7005FDC5C /* PushNotiSettingsCellView+Rx.swift in Sources */,
 				388A2D312D00D6A100E2F2F0 /* FollowViewReactor.swift in Sources */,
 				2A649ED42CAE990B002D8284 /* SOMDialogViewController.swift in Sources */,
 				3893B6CF2D36728000F2004C /* ManagerProvider.swift in Sources */,
@@ -3361,6 +3420,7 @@
 				38C9AF202E9669F600B401C0 /* TagRepository.swift in Sources */,
 				38E928C22EB73D6B00B3F00B /* MemberInfoView.swift in Sources */,
 				38F88EBF2D2C1E22002AD7A8 /* Version.swift in Sources */,
+				3829E7DD2F5C5FD7005FDC5C /* PushNotiSettingsViewController.swift in Sources */,
 				3887176D2E7BDBAE00C6143B /* NicknameResponse.swift in Sources */,
 				3880EF722EA0CDA100D88608 /* RelatedTagView.swift in Sources */,
 				38B21C0C2ECEFFAA00990F49 /* FavoriteTagsView.swift in Sources */,
@@ -3386,6 +3446,7 @@
 				38899E962E7953310030F7CA /* NotificationInfoResponse.swift in Sources */,
 				38FEBE5F2E86612C002916A8 /* NoticeViewCell.swift in Sources */,
 				38D4780A2EBBABF60041FF6C /* EntranceCardType.swift in Sources */,
+				3829E7E42F5C611D005FDC5C /* PushNotiSettingsCellView.swift in Sources */,
 				38C9AF182E96693600B401C0 /* TagRemoteDataSource.swift in Sources */,
 				38121E322CA6C77500602499 /* Double.swift in Sources */,
 				380F42252E884AE5009AC59E /* CardRemoteDataSource.swift in Sources */,
@@ -3447,6 +3508,7 @@
 				38E928B62EB711E200B3F00B /* DetailCardInfo.swift in Sources */,
 				388009952CABFAAA002A9209 /* SOMTags.swift in Sources */,
 				3878F4752CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
+				38B5262A2F5D6BA900910CB4 /* PushNotiSettingsViewReactor.swift in Sources */,
 				3878D0862CFFED7800F9522F /* TermsOfServiceTextCellView.swift in Sources */,
 				38899E832E794C360030F7CA /* LoginResponse.swift in Sources */,
 				38D478072EBBAA0B0041FF6C /* WriteCardResponse.swift in Sources */,
@@ -3471,6 +3533,7 @@
 				3889A2512E79B3260030F7CA /* UserRemoteDataSource.swift in Sources */,
 				380F42222E87ECA3009AC59E /* CompositeNotificationInfo.swift in Sources */,
 				38AE85132EDF424800029E4C /* FetchBlockUserUseCaseImpl.swift in Sources */,
+				38E396852F61B6520050DC87 /* HapticHelper.swift in Sources */,
 				38899E5E2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */,
 				38A27E732F0812BA00DA1D4D /* SearchTextFieldView+Rx.swift in Sources */,
 				38AE851C2EDFF7E000029E4C /* FetchFollowUseCaseImpl.swift in Sources */,
@@ -3516,6 +3579,7 @@
 				38FCF41C2EA00625003AC3D8 /* UITtextView.swift in Sources */,
 				389E59AC2EDEE74B00D0946D /* UploadUserImageUseCase.swift in Sources */,
 				38B8A5852CAE9CC4000AFE83 /* HomeViewCell.swift in Sources */,
+				38B5262F2F5D7BDC00910CB4 /* PushNotiStatusInfoResponse.swift in Sources */,
 				3878D0642CFFD66700F9522F /* FollowViewController.swift in Sources */,
 				38026E402CA2B45A0045E1CE /* LocationManager.swift in Sources */,
 				381A1D782CC3DA99005FDB8E /* SOMTagsLayout.swift in Sources */,
@@ -3590,6 +3654,7 @@
 				381B83DF2EBC72B400C84015 /* FollowInfo.swift in Sources */,
 				388C96362CCE41700061C598 /* AuthInfo.swift in Sources */,
 				38C2A7F72EC08FF600B941A2 /* BlockUserInfo.swift in Sources */,
+				38B5262D2F5D798900910CB4 /* PushNotiStatusInfo.swift in Sources */,
 				38F339932EE328750066A5F7 /* WriteCardGuideView.swift in Sources */,
 				388DA0FB2C8F521000A9DD56 /* FontContainer.swift in Sources */,
 				38B543DF2D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */,
@@ -3699,6 +3764,7 @@
 				38787B892ED22324004BBAA7 /* RxSwift+Unretained.swift in Sources */,
 				38B543E22D46179500DDF2C5 /* AuthManagerConfiguration.swift in Sources */,
 				38B8A58B2CAEA79A000AFE83 /* DetailViewFooter.swift in Sources */,
+				3829E7E22F5C6031005FDC5C /* PushNotiSettingsHeaderView.swift in Sources */,
 				38AE85192EDF437400029E4C /* FetchCardUseCaseImpl.swift in Sources */,
 				38B543EE2D46506300DDF2C5 /* ManagerType.swift in Sources */,
 				38C2A8052EC09BC400B941A2 /* ResignTextFieldView+Rx.swift in Sources */,
@@ -3717,6 +3783,7 @@
 				3803B92A2ECF5580009D14B9 /* TagCollectViewController.swift in Sources */,
 				388698582D1982DE00008600 /* NotificationViewController.swift in Sources */,
 				389E59C62EDEECBF00D0946D /* WriteCardUseCase.swift in Sources */,
+				3829E7E72F5C68B7005FDC5C /* PushNotiSettingsCellView+Rx.swift in Sources */,
 				38C2A7E22EC0707D00B941A2 /* TransferCodeInfo.swift in Sources */,
 				38121E342CA6DA4000602499 /* Date.swift in Sources */,
 				3878D0752CFFE01500F9522F /* SettingVersionCellView.swift in Sources */,
@@ -3791,6 +3858,7 @@
 				38D5637B2D16D72D006265AA /* SOMStickyTabBar.swift in Sources */,
 				38FD4DB12D034C1700BF5FF1 /* MyFollowingViewCell.swift in Sources */,
 				3889A2812E79D0250030F7CA /* Token.swift in Sources */,
+				3829E7DE2F5C5FD7005FDC5C /* PushNotiSettingsViewController.swift in Sources */,
 				3879B4B62EC5AD5E0070846B /* RejoinableDateInfo.swift in Sources */,
 				38C9AF212E9669F600B401C0 /* TagRepository.swift in Sources */,
 				38B21C0B2ECEFFAA00990F49 /* FavoriteTagsView.swift in Sources */,
@@ -3816,6 +3884,7 @@
 				38FEBE5E2E86612C002916A8 /* NoticeViewCell.swift in Sources */,
 				38F3D9302D06C2370049F575 /* SOMAnimationTransitioning.swift in Sources */,
 				38C9AF172E96693600B401C0 /* TagRemoteDataSource.swift in Sources */,
+				3829E7E52F5C611D005FDC5C /* PushNotiSettingsCellView.swift in Sources */,
 				38D4780B2EBBABF60041FF6C /* EntranceCardType.swift in Sources */,
 				385602B62D2FB18400118530 /* NotificationPlaceholderViewCell.swift in Sources */,
 				38E9CE192D37FED000E85A2D /* AddingTokenInterceptor.swift in Sources */,
@@ -3877,6 +3946,7 @@
 				388DA1042C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				38899E842E794C360030F7CA /* LoginResponse.swift in Sources */,
 				385053522C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
+				38B526292F5D6BA900910CB4 /* PushNotiSettingsViewReactor.swift in Sources */,
 				38D478082EBBAA0B0041FF6C /* WriteCardResponse.swift in Sources */,
 				38E928BF2EB72D3D00B3F00B /* DetailCardInfoResponse.swift in Sources */,
 				38A5D1542C8CB11E00B68363 /* UIImage+SOOUM.swift in Sources */,
@@ -3901,6 +3971,7 @@
 				3889A2962E79D9250030F7CA /* NotificationUseCaseImpl.swift in Sources */,
 				3878D0882CFFEF0F00F9522F /* TermsOfServiceTextCellView+Rx.swift in Sources */,
 				38AE85122EDF424800029E4C /* FetchBlockUserUseCaseImpl.swift in Sources */,
+				38E396842F61B6520050DC87 /* HapticHelper.swift in Sources */,
 				3889A2502E79B3260030F7CA /* UserRemoteDataSource.swift in Sources */,
 				38A27E742F0812BA00DA1D4D /* SearchTextFieldView+Rx.swift in Sources */,
 				38AE851B2EDFF7E000029E4C /* FetchFollowUseCaseImpl.swift in Sources */,
@@ -3946,6 +4017,7 @@
 				38899E582E7936DD0030F7CA /* SooumStyle_V2.swift in Sources */,
 				389E59AB2EDEE74B00D0946D /* UploadUserImageUseCase.swift in Sources */,
 				38FCF41D2EA00625003AC3D8 /* UITtextView.swift in Sources */,
+				38B526302F5D7BDC00910CB4 /* PushNotiStatusInfoResponse.swift in Sources */,
 				380F42332E884FDC009AC59E /* CardRepositoryImpl.swift in Sources */,
 				388009972CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				3866577E2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */,

@@ -43,8 +43,20 @@ enum UserRequest: BaseRequest {
     case updateFollowing(userId: String, isFollow: Bool)
     /// 상대방 차단
     case updateBlocked(id: String, isBlocked: Bool)
+    /// 푸시 알림 상태 조회
+    case notify
     /// 푸시 알림 여부 요청
-    case updateNotify(isAllowNotify: Bool)
+    case updateNotify(
+        commentCardNotify: Bool,
+        cardLikeNotify: Bool,
+        followUserCardNotify: Bool,
+        newFollowerNotify: Bool,
+        cardNewCommentNotify: Bool,
+        recommendedContentNotify: Bool,
+        favoriteTagNotify: Bool,
+        serviceUpdateNotify: Bool,
+        policyViolationNotify: Bool
+    )
     
     var path: String {
         switch self {
@@ -123,6 +135,9 @@ enum UserRequest: BaseRequest {
         case let .updateBlocked(id, _):
             
             return "/api/blocks/\(id)"
+        case .notify:
+            
+            return "/api/members/notify"
         case .updateNotify:
             
             return "/api/members/notify"
@@ -167,8 +182,28 @@ enum UserRequest: BaseRequest {
             return dictionary
         case let .updateFollowing(userId, isFollow):
             return isFollow ? ["userId": userId] : [:]
-        case let .updateNotify(isAllowNotify):
-            return ["isAllowNotify": isAllowNotify]
+        case let .updateNotify(
+            commentCardNotify,
+            cardLikeNotify,
+            followUserCardNotify,
+            newFollowerNotify,
+            cardNewCommentNotify,
+            recommendedContentNotify,
+            favoriteTagNotify,
+            serviceUpdateNotify,
+            policyViolationNotify
+        ):
+            return [
+                "commentCardNotify": commentCardNotify,
+                "cardLikeNotify": cardLikeNotify,
+                "followUserCardNotify": followUserCardNotify,
+                "newFollowerNotify": newFollowerNotify,
+                "cardNewCommentNotify": cardNewCommentNotify,
+                "recommendedContentNotify": recommendedContentNotify,
+                "favoriteTagNotify": favoriteTagNotify,
+                "serviceUpdateNotify": serviceUpdateNotify,
+                "policyViolationNotify": policyViolationNotify
+            ]
         default:
             return [:]
         }
