@@ -10,10 +10,6 @@ import RxSwift
 
 extension Reactive where Base: SettingTextCellView {
     
-    var isOn: ControlProperty<Bool> {
-        self.base.toggleSwitch.rx.isOn
-    }
-    
     var didSelect: ControlEvent<Void> {
         self.base.backgroundButton.rx.tap
     }

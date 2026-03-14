@@ -89,7 +89,7 @@ class SettingsViewController: BaseNavigationViewController, View {
         $0.showsHorizontalScrollIndicator = false
     }
     
-    private let notificationSettingCellView = SettingTextCellView(buttonStyle: .toggle, title: Text.notificationSettingTitle)
+    private let notificationSettingCellView = SettingTextCellView(title: Text.notificationSettingTitle)
     
     private let issueUserTransferCodeCellView = SettingTextCellView(title: Text.issueUserTransferCodeTitle)
     private let enterUserTransferCodeCellView = SettingTextCellView(title: Text.enterUserTransferCodeTitle)
@@ -199,9 +199,8 @@ class SettingsViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.notificationSettingCellView.rx.didSelect
-            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
-            .withUnretained(self)
-            .map { object, _ in Reactor.Action.updateNotificationStatus(!object.notificationSettingCellView.toggleSwitch.isOn) }
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
+            .map { _ in Reactor.Action.notify }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
         
@@ -326,10 +325,16 @@ class SettingsViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
-        reactor.state.map(\.notificationStatus)
-            .distinctUntilChanged()
+        reactor.state.map(\.pushNoticeStatus)
+            .filterNil()
+            .do(onNext: { _ in reactor.action.onNext(.cleanup) })
+            .map(reactor.reactorForPushNotiSettings)
             .observe(on: MainScheduler.asyncInstance)
-            .bind(to: self.notificationSettingCellView.toggleSwitch.rx.isOn)
+            .subscribe(with: self) { object, reactor in
+                let pushNotiSettingsViewController = PushNotiSettingsViewController()
+                pushNotiSettingsViewController.reactor = reactor
+                object.navigationPush(pushNotiSettingsViewController, animated: true)
+            }
             .disposed(by: self.disposeBag)
         
         version

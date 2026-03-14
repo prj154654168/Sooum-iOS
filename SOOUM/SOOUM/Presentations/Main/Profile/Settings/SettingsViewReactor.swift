@@ -7,15 +7,12 @@
 
 import ReactorKit
 
-import Alamofire
-
-
 class SettingsViewReactor: Reactor {
     
     enum Action: Equatable {
         case landing
-        case updateNotificationStatus(Bool)
         case rejoinableDate
+        case notify
         case cleanup
     }
     
@@ -23,8 +20,8 @@ class SettingsViewReactor: Reactor {
         case updateBanEndAt(Date?)
         case updateVersion(Version?)
         case updateShouldHideTransfer(Bool)
-        case updateNotificationStatus(Bool)
         case rejoinableDate(RejoinableDateInfo?)
+        case pushNotiStatus(PushNotiStatusInfo)
         case cleanup
     }
     
@@ -32,9 +29,9 @@ class SettingsViewReactor: Reactor {
         fileprivate(set) var tokens: Token
         fileprivate(set) var banEndAt: Date?
         fileprivate(set) var version: Version?
-        fileprivate(set) var notificationStatus: Bool
         fileprivate(set) var shouldHideTransfer: Bool
         fileprivate(set) var rejoinableDate: RejoinableDateInfo?
+        fileprivate(set) var pushNoticeStatus: PushNotiStatusInfo?
     }
     
     var initialState: State
@@ -43,21 +40,21 @@ class SettingsViewReactor: Reactor {
     private let appVersionUseCase: AppVersionUseCase
     private let authUseCase: AuthUseCase
     private let validateUserUseCase: ValidateUserUseCase
-    private let updateNotifyUseCase: UpdateNotifyUseCase
+    private let fetchUserInfoUseCase: FetchUserInfoUseCase
     
     init(dependencies: AppDIContainerable) {
         self.dependencies = dependencies
         self.appVersionUseCase = dependencies.rootContainer.resolve(AppVersionUseCase.self)
         self.authUseCase = dependencies.rootContainer.resolve(AuthUseCase.self)
         self.validateUserUseCase = dependencies.rootContainer.resolve(ValidateUserUseCase.self)
-        self.updateNotifyUseCase = dependencies.rootContainer.resolve(UpdateNotifyUseCase.self)
+        self.fetchUserInfoUseCase = dependencies.rootContainer.resolve(FetchUserInfoUseCase.self)
         
         self.initialState = .init(
             tokens: self.authUseCase.tokens(),
             banEndAt: nil,
             version: nil,
-            notificationStatus: self.updateNotifyUseCase.notificationStatus(),
-            shouldHideTransfer: UserDefaults.standard.bool(forKey: "AppFlag")
+            shouldHideTransfer: UserDefaults.standard.bool(forKey: "AppFlag"),
+            pushNoticeStatus: nil
         )
     }
     
@@ -78,19 +75,16 @@ class SettingsViewReactor: Reactor {
                     },
                 self.validateUserUseCase.postingPermission()
                     .map(\.expiredAt)
-                    .map(Mutation.updateBanEndAt),
-                self.updateNotifyUseCase.updateNotify(isAllowNotify: self.initialState.notificationStatus)
-                    .map(Mutation.updateNotificationStatus)
+                    .map(Mutation.updateBanEndAt)
             ])
-        case let .updateNotificationStatus(state):
-            
-            return self.updateNotifyUseCase.updateNotify(isAllowNotify: state)
-                .map { _ in state }
-                .map(Mutation.updateNotificationStatus)
         case .rejoinableDate:
             
             return self.validateUserUseCase.iswithdrawn()
                 .map(Mutation.rejoinableDate)
+        case .notify:
+            
+            return self.fetchUserInfoUseCase.notify()
+                .map(Mutation.pushNotiStatus)
         case .cleanup:
             
             return .just(.cleanup)
@@ -106,18 +100,23 @@ class SettingsViewReactor: Reactor {
             newState.version = version
         case let .updateShouldHideTransfer(shouldHideTransfer):
             newState.shouldHideTransfer = shouldHideTransfer
-        case let .updateNotificationStatus(notificationStatus):
-            newState.notificationStatus = notificationStatus
         case let .rejoinableDate(rejoinableDate):
             newState.rejoinableDate = rejoinableDate
+        case let .pushNotiStatus(pushNotiStatus):
+            newState.pushNoticeStatus = pushNotiStatus
         case .cleanup:
             newState.rejoinableDate = nil
+            newState.pushNoticeStatus = nil
         }
         return newState
     }
 }
 
 extension SettingsViewReactor {
+    
+    func reactorForPushNotiSettings(_ pushNoticeStatus: PushNotiStatusInfo) -> PushNotiSettingsViewReactor {
+        PushNotiSettingsViewReactor(dependencies: self.dependencies, with: pushNoticeStatus)
+    }
     
     func reactorForTransferIssue() -> IssueMemberTransferViewReactor {
         IssueMemberTransferViewReactor(dependencies: self.dependencies)
