@@ -206,7 +206,7 @@ final class HomeArticleViewCell: UITableViewCell {
         
         self.model = model
         
-        let cellHeight: CGFloat = model.abTestType == .b ? 87 : 72
+        let cellHeight: CGFloat = model.writerProfileImgUrls.isEmpty ? 81 : 83
         self.cellHeightConstraint?.update(offset: cellHeight)
         
         self.dot.isHidden = model.isRead
@@ -223,13 +223,6 @@ final class HomeArticleViewCell: UITableViewCell {
         self.contentLabel.text = model.cardContent
         self.contentLabel.typography = .som.v2.subtitle3.withAlignment(.left)
         
-        let isBType = model.abTestType == .b || model.articleTypeB != nil
-        self.commentedContainer.isHidden = isBType == false
-        if isBType,
-           let urlStrings = model.articleTypeB?.writerProfileImgUrls,
-           let count = model.articleTypeB?.totalWriterCnt {
-            
-            self.setupCommentedContainer(with: urlStrings, count: count)
-        }
+        self.setupCommentedContainer(with: model.writerProfileImgUrls, count: model.totalWriterCnt)
     }
 }
