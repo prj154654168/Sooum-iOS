@@ -274,7 +274,7 @@ class SettingsViewController: BaseNavigationViewController, View {
             .throttle(.seconds(1), scheduler: MainScheduler.instance)
             .withLatestFrom(version)
             .subscribe(with: self) { object, version in
-                if version.mustUpdate {
+                if version.shouldUpdate || version.mustUpdate {
                     #if DEVELOP
                     // 개발 버전일 때 testFlight로 전환
                     let strUrl = "\(Text.testFlightStrUrl)/\(Info.appId)"
