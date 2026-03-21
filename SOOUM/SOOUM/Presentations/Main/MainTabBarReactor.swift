@@ -19,9 +19,11 @@ class MainTabBarReactor: Reactor {
         case pushToTagDetail
         /// 푸시 알림(내 팔로우 화면 + 팔로우 탭)으로 진입할 경우
         case pushToFollow
+        /// 푸시 알림(팔로우한 사용자가 작성한 카드)으로 진입할 경우
+        case pushToFollowerDetail
         /// 푸시 알림(런치 화면)으로 진입할 경우
         case pushToLaunchScreen
-        /// 일반적인 경우
+        /// 정의되지 않은 유형일 경우
         case none
     }
 
@@ -65,12 +67,17 @@ class MainTabBarReactor: Reactor {
         
         var willNavigate: EntranceType {
             switch pushInfo?.notificationType {
-            case .feedLike, .commentLike, .commentWrite:  return .pushToDetail
-            case .blocked, .deleted:                     return .pushToNotification
-            case .tagUsage:                              return .pushToTagDetail
-            case .follow:                                return .pushToFollow
-            case .transferSuccess:                        return .pushToLaunchScreen
-            default:                                     return .none
+            case .viewedFeedCommentWrite,
+                    .articleCardUpload,
+                    .feedLike,
+                    .commentLike,
+                    .commentWrite:      return .pushToDetail
+            case .followerCardUpload:    return .pushToFollowerDetail
+            case .blocked, .deleted:     return .pushToNotification
+            case .tagUsage:             return .pushToTagDetail
+            case .follow:               return .pushToFollow
+            case .transferSuccess:       return .pushToLaunchScreen
+            default:                    return .none
             }
         }
         self.pushInfo = pushInfo

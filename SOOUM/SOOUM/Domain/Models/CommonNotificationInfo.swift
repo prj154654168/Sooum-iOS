@@ -27,6 +27,9 @@ extension CommonNotificationInfo {
     
     enum NotificationType: String {
         
+        case viewedFeedCommentWrite = "VIEWED_FEED_COMMENT_WRITE"
+        case followerCardUpload = "FOLLOWER_CARD_UPLOAD"
+        case articleCardUpload = "ARTICLE_CARD_UPLOAD"
         case feedLike = "FEED_LIKE"
         case commentLike = "COMMENT_LIKE"
         case commentWrite = "COMMENT_WRITE"

@@ -198,6 +198,20 @@ class MainTabBarController: SOMTabBarController, View {
                             completion: { reactor.action.onNext(.cleanup) }
                         )
                     }
+                case .pushToFollowerDetail:
+                    
+                    object.didSelectedIndex(3)
+                    
+                    guard let selectedViewController = object.selectedViewController,
+                          let targetCardId = reactor.pushInfo?.targetCardId else { return }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
+                        object?.setupDetailViewController(
+                            selectedViewController,
+                            with: reactor.reactorForDetail(targetCardId),
+                            completion: { reactor.action.onNext(.cleanup) }
+                        )
+                    }
                 case .pushToFollow:
                     
                     object.didSelectedIndex(3)
