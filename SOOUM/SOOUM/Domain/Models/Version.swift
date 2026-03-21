@@ -38,12 +38,14 @@ extension Version {
     
     /// 앱이 최신버전인지 여부
     var isLatest: Bool {
-        self.currentVersionStatus == .OK
+        self.currentVersionStatus == .OK &&
+        Self.thisAppVersion.compare(self.latestVersion, options: .numeric) == .orderedDescending
     }
     
     /// 앱에 권장되는 업데이트가 있을 경우
     var shouldUpdate: Bool {
-        Self.thisAppVersion.compare(self.latestVersion, options: .numeric) == .orderedDescending
+        self.currentVersionStatus == .OK &&
+        Self.thisAppVersion.compare(self.latestVersion, options: .numeric) == .orderedAscending
     }
     
     /// 앱이 반드시 업데이트가 필요한지 여부
