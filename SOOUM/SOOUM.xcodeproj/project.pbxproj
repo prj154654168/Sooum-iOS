@@ -2920,8 +2920,8 @@
 				385441932C870544004E2BB0 /* Frameworks */,
 				385441942C870544004E2BB0 /* Resources */,
 				63E8EF9638A3441082507A5C /* [CP] Embed Pods Frameworks */,
-				384164332EC9D47A00114AF4 /* Run Crashlytics */,
 				385BAC552F70109B001CB997 /* Embed Foundation Extensions */,
+				384164332EC9D47A00114AF4 /* Run Crashlytics */,
 			);
 			buildRules = (
 			);
