@@ -106,7 +106,13 @@ class MainTabBarReactor: Reactor {
             return self.fetchUserInfoUseCase.userInfo(userId: nil)
                 .flatMapLatest { profileInfo -> Observable<Mutation> in
                     
-                    if let notificationId = pushInfo.notificationId {
+                    var isPassingByRead: Bool {
+                        let type = pushInfo.notificationType
+                        return type == .viewedFeedCommentWrite ||
+                            type == .articleCardUpload ||
+                            type == .followerCardUpload
+                    }
+                    if isPassingByRead, let notificationId = pushInfo.notificationId {
                         
                         return self.notificationUseCase.requestRead(notificationId: notificationId)
                             .map { _ in .updateEntrance(profileInfo) }
