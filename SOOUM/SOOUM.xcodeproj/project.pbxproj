@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -234,6 +234,8 @@
 		38601E1C2D313A8200A465A9 /* SOMNavigationBar+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3878FE0C2D0365C800D8955C /* SOMNavigationBar+Rx.swift */; };
 		3862C0DF2C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
 		3862C0E02C9EB6670023C046 /* UIViewController+PushAndPop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */; };
+		38646E872F788C960020B8DF /* HomeGADViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38646E862F788C8B0020B8DF /* HomeGADViewCell.swift */; };
+		38646E882F788C960020B8DF /* HomeGADViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38646E862F788C8B0020B8DF /* HomeGADViewCell.swift */; };
 		3866577E2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */; };
 		3866577F2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */; };
 		386672552F701113006D7786 /* NotificationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3800BEA82F6E67FD00F5EEFE /* NotificationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -249,6 +251,8 @@
 		386867A52E9E378200171A5E /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386867A32E9E378000171A5E /* Array.swift */; };
 		386867A72E9E932B00171A5E /* WriteCardSelectImageView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386867A62E9E932300171A5E /* WriteCardSelectImageView+Rx.swift */; };
 		386867A82E9E932B00171A5E /* WriteCardSelectImageView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386867A62E9E932300171A5E /* WriteCardSelectImageView+Rx.swift */; };
+		386E1EBB2F789E5700CEC7EA /* NativeAdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E1EBA2F789E4D00CEC7EA /* NativeAdHelper.swift */; };
+		386E1EBC2F789E5700CEC7EA /* NativeAdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E1EBA2F789E4D00CEC7EA /* NativeAdHelper.swift */; };
 		386E966B2E9A51D9005E047D /* SelectOptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E966A2E9A51D2005E047D /* SelectOptionItem.swift */; };
 		386E966C2E9A51D9005E047D /* SelectOptionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E966A2E9A51D2005E047D /* SelectOptionItem.swift */; };
 		386E966E2E9A53D6005E047D /* SelectOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E966D2E9A53CC005E047D /* SelectOptionsView.swift */; };
@@ -1021,6 +1025,7 @@
 		385C01B62E8EA1EB003C7894 /* SOMPageViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMPageViews.swift; sourceTree = "<group>"; };
 		385E65A22CBE56D00032E120 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		3862C0DE2C9EB6670023C046 /* UIViewController+PushAndPop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PushAndPop.swift"; sourceTree = "<group>"; };
+		38646E862F788C8B0020B8DF /* HomeGADViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeGADViewCell.swift; sourceTree = "<group>"; };
 		3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Rx.swift"; sourceTree = "<group>"; };
 		386712C32E97734800541389 /* UITextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextField.swift; sourceTree = "<group>"; };
 		386712C92E977E9D00541389 /* Kkukkkuk.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Kkukkkuk.ttf; sourceTree = "<group>"; };
@@ -1028,6 +1033,7 @@
 		386712CF2E977F1B00541389 /* RIDIBatang.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = RIDIBatang.otf; sourceTree = "<group>"; };
 		386867A32E9E378000171A5E /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		386867A62E9E932300171A5E /* WriteCardSelectImageView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteCardSelectImageView+Rx.swift"; sourceTree = "<group>"; };
+		386E1EBA2F789E4D00CEC7EA /* NativeAdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeAdHelper.swift; sourceTree = "<group>"; };
 		386E966A2E9A51D2005E047D /* SelectOptionItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOptionItem.swift; sourceTree = "<group>"; };
 		386E966D2E9A53CC005E047D /* SelectOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectOptionsView.swift; sourceTree = "<group>"; };
 		3874B55F2ECB25C9004CC22A /* SettingsLocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLocalDataSource.swift; sourceTree = "<group>"; };
@@ -1355,7 +1361,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3800BEB32F6E67FD00F5EEFE /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		3800BEB32F6E67FD00F5EEFE /* Exceptions for "NotificationExtension" folder in "NotificationExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -1365,7 +1371,14 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		3800BEA92F6E67FD00F5EEFE /* NotificationExtension */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (3800BEB32F6E67FD00F5EEFE /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = NotificationExtension; sourceTree = "<group>"; };
+		3800BEA92F6E67FD00F5EEFE /* NotificationExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3800BEB32F6E67FD00F5EEFE /* Exceptions for "NotificationExtension" folder in "NotificationExtension" target */,
+			);
+			path = NotificationExtension;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2622,6 +2635,7 @@
 		38B8A5822CAE9CB7000AFE83 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				38646E862F788C8B0020B8DF /* HomeGADViewCell.swift */,
 				3845CA2A2F2DF6DB00F8C377 /* HomeArticleViewCell.swift */,
 				3845CA272F2DD77A00F8C377 /* HomeNotiHeaderView+Rx.swift */,
 				38CBC5CE2F2A3002005097DD /* HomeNotiHeaderView.swift */,
@@ -2825,6 +2839,7 @@
 		38E396822F61B6440050DC87 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				386E1EBA2F789E4D00CEC7EA /* NativeAdHelper.swift */,
 				38E396832F61B64E0050DC87 /* HapticHelper.swift */,
 				2A980B9B2D803E8B007DFA45 /* GAHelper */,
 			);
@@ -2922,6 +2937,7 @@
 				63E8EF9638A3441082507A5C /* [CP] Embed Pods Frameworks */,
 				385BAC552F70109B001CB997 /* Embed Foundation Extensions */,
 				384164332EC9D47A00114AF4 /* Run Crashlytics */,
+				8988DECA4F6842C24459417E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2942,6 +2958,7 @@
 				3857BC2E2D4D1A7B008D4264 /* Frameworks */,
 				3857BC2F2D4D1A7B008D4264 /* Resources */,
 				846CCD1C8A064988476E95A1 /* [CP] Embed Pods Frameworks */,
+				45F9B12E7EC770BDC9B32C3E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2962,6 +2979,7 @@
 				387FBAE92C8702C100A5E139 /* Frameworks */,
 				387FBAEA2C8702C100A5E139 /* Resources */,
 				01B3B59D7CDD858E2D75CB04 /* [CP] Embed Pods Frameworks */,
+				F796F4C2B568F0EB6746EC50 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -2996,7 +3014,6 @@
 				};
 			};
 			buildConfigurationList = 387FBAE72C8702C100A5E139 /* Build configuration list for PBXProject "SOOUM" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = ko;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -3005,6 +3022,7 @@
 				ko,
 			);
 			mainGroup = 387FBAE32C8702C100A5E139;
+			preferredProjectObjectVersion = 77;
 			productRefGroup = 387FBAED2C8702C100A5E139 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -3191,6 +3209,23 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# 프로젝트의 dSYM 파일을 처리하고 파일을 Crashlytics에 업로드\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
+		45F9B12E7EC770BDC9B32C3E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-DevTests/Pods-SOOUM-DevTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-DevTests/Pods-SOOUM-DevTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SOOUM-DevTests/Pods-SOOUM-DevTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		63E8EF9638A3441082507A5C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3233,6 +3268,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SOOUM-DevTests/Pods-SOOUM-DevTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		8988DECA4F6842C24459417E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		BB3C7DBC6EAB775DB30BD89D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -3253,6 +3305,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F796F4C2B568F0EB6746EC50 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -3590,6 +3659,7 @@
 				381A1D752CC3D799005FDB8E /* SOMTagsDelegate.swift in Sources */,
 				38AE85092EDF414400029E4C /* BlockUserUseCaseImpl.swift in Sources */,
 				3874B5642ECB2613004CC22A /* SettingsLocalDataSourceImpl.swift in Sources */,
+				386E1EBC2F789E5700CEC7EA /* NativeAdHelper.swift in Sources */,
 				3803CF832D017DB800FD90DB /* EnterMemberTransferViewController.swift in Sources */,
 				388693A02CF77FA7005F9EF3 /* UIApplication+Top.swift in Sources */,
 				38B8BE482D1ECBDA0084569C /* PushNotificationInfo.swift in Sources */,
@@ -3635,6 +3705,7 @@
 				38899E5E2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */,
 				38A27E732F0812BA00DA1D4D /* SearchTextFieldView+Rx.swift in Sources */,
 				38AE851C2EDFF7E000029E4C /* FetchFollowUseCaseImpl.swift in Sources */,
+				38646E872F788C960020B8DF /* HomeGADViewCell.swift in Sources */,
 				385053532C92DBE200C80B02 /* SOMTabBarItem.swift in Sources */,
 				38C2A8092EC0BB9800B941A2 /* BlockUserViewCell.swift in Sources */,
 				3880EF6F2EA0CD7100D88608 /* RelatedTagViewModel.swift in Sources */,
@@ -4028,6 +4099,7 @@
 				381DEA8B2CD4BBCB009F1FE9 /* WriteCardTextView+Rx.swift in Sources */,
 				38AE850A2EDF414400029E4C /* BlockUserUseCaseImpl.swift in Sources */,
 				3878D08C2CFFF0BF00F9522F /* AnnouncementViewControler.swift in Sources */,
+				386E1EBB2F789E5700CEC7EA /* NativeAdHelper.swift in Sources */,
 				3874B5632ECB2613004CC22A /* SettingsLocalDataSourceImpl.swift in Sources */,
 				38B8BE472D1ECBDA0084569C /* PushNotificationInfo.swift in Sources */,
 				3878F4742CA3F06C00AA46A2 /* UIStackView.swift in Sources */,
@@ -4073,6 +4145,7 @@
 				3889A2502E79B3260030F7CA /* UserRemoteDataSource.swift in Sources */,
 				38A27E742F0812BA00DA1D4D /* SearchTextFieldView+Rx.swift in Sources */,
 				38AE851B2EDFF7E000029E4C /* FetchFollowUseCaseImpl.swift in Sources */,
+				38646E882F788C960020B8DF /* HomeGADViewCell.swift in Sources */,
 				380F42212E87ECA3009AC59E /* CompositeNotificationInfo.swift in Sources */,
 				38899E5F2E7937E50030F7CA /* NicknameValidateResponse.swift in Sources */,
 				38C2A8082EC0BB9800B941A2 /* BlockUserViewCell.swift in Sources */,
@@ -4367,6 +4440,8 @@
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
 				SOOUM_CLARITY_ID = ukvzck1lyo;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
+				SOOUM_GAD_APP_ID = "ca-app-pub-7224162953021638~5969405994";
+				SOOUM_GAD_UNIT_ID = "ca-app-pub-3940256099942544/3986624511";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -4521,6 +4596,8 @@
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
 				SOOUM_CLARITY_ID = ukvzck1lyo;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
+				SOOUM_GAD_APP_ID = "ca-app-pub-7224162953021638~5969405994";
+				SOOUM_GAD_UNIT_ID = "ca-app-pub-3940256099942544/3986624511";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -4649,6 +4726,8 @@
 				SOOUM_CAMERA_DESCRIPTION = "숨에서 내 사진을 공유할 수 있도록 카메라 접근 권한을 허용해주세요.";
 				SOOUM_CLARITY_ID = "";
 				SOOUM_DISPLAY_NAME = "";
+				SOOUM_GAD_APP_ID = "";
+				SOOUM_GAD_UNIT_ID = "";
 				SOOUM_LIBRARY_DESCRIPTION = "게시글이나 프로필 업로드를 위해 권한이 필요합니다.";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "";
@@ -4713,6 +4792,8 @@
 				SOOUM_CAMERA_DESCRIPTION = "숨에서 내 사진을 공유할 수 있도록 카메라 접근 권한을 허용해주세요.";
 				SOOUM_CLARITY_ID = "";
 				SOOUM_DISPLAY_NAME = "";
+				SOOUM_GAD_APP_ID = "";
+				SOOUM_GAD_UNIT_ID = "";
 				SOOUM_LIBRARY_DESCRIPTION = "게시글이나 프로필 업로드를 위해 권한이 필요합니다.";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "";

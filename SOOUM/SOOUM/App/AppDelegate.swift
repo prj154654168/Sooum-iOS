@@ -13,6 +13,8 @@ import Firebase
 import FirebaseCore
 import FirebaseMessaging
 
+import GoogleMobileAds
+
 import RxSwift
 
 import CocoaLumberjack
@@ -61,6 +63,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Initalize clarity
         let clarityConfig = ClarityConfig(projectId: Info.clarityId)
         ClaritySDK.initialize(config: clarityConfig)
+        
+        // Initalize google admob
+        MobileAds.shared.start(completionHandler: nil)
         
         return true
     }

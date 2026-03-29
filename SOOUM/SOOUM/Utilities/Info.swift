@@ -21,6 +21,10 @@ enum Info {
         return self["CFBundleShortVersionString"]!
     }
     
+    static var adUnitId: String {
+        return self["GADUnitId"]!
+    }
+    
     static var clarityId: String {
         return self["ClarityId"]!
     }
