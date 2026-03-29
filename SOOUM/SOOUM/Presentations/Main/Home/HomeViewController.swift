@@ -14,6 +14,8 @@ import ReactorKit
 import RxCocoa
 import RxSwift
 
+import GoogleMobileAds
+
 class HomeViewController: BaseNavigationViewController, View {
     
     enum Text {
@@ -43,6 +45,7 @@ class HomeViewController: BaseNavigationViewController, View {
     }
     
     enum Section: Int, CaseIterable {
+        case admob
         case article
         case latest
         case popular
@@ -51,6 +54,7 @@ class HomeViewController: BaseNavigationViewController, View {
     }
     
     enum Item: Hashable {
+        case admob(UUID)
         case article(ArticleCardInfo)
         case latest(BaseCardInfo)
         case popular(BaseCardInfo)
@@ -123,11 +127,13 @@ class HomeViewController: BaseNavigationViewController, View {
         
         $0.refreshControl = SOMRefreshControl()
         
+        $0.register(HomeGADViewCell.self, forCellReuseIdentifier: HomeGADViewCell.cellIdentifier)
         $0.register(HomeArticleViewCell.self, forCellReuseIdentifier: HomeArticleViewCell.cellIdentifier)
         $0.register(HomeViewCell.self, forCellReuseIdentifier: HomeViewCell.cellIdentifier)
         $0.register(HomePlaceholderViewCell.self, forCellReuseIdentifier: HomePlaceholderViewCell.cellIdentifier)
         
         $0.delegate = self
+        $0.prefetchDataSource = self
     }
     
     
@@ -165,6 +171,13 @@ class HomeViewController: BaseNavigationViewController, View {
             cell.bind(articleInfo)
             
             return cell
+        case let .admob(uuid):
+            
+            let cell: HomeGADViewCell = self.cellForAdmob(tableView, with: indexPath)
+            let nativeAd = self.adCache[uuid]
+            cell.bind(nativeAd)
+            
+            return cell
         case let .empty(placeholderText):
             
             let placeholder = self.cellForPlaceholder(tableView, with: indexPath)
@@ -182,6 +195,8 @@ class HomeViewController: BaseNavigationViewController, View {
     private var headerViewHeight: CGFloat = SOMStickyTabBar.Constants.height
     private var initialOffset: CGFloat = 0
     private var currentOffset: CGFloat = 0
+    
+    private var adCache: [UUID: NativeAd] = [:]
     
     private var cellHeight: CGFloat {
         let width: CGFloat = (UIScreen.main.bounds.width - 16 * 2) * 0.5
@@ -204,6 +219,23 @@ class HomeViewController: BaseNavigationViewController, View {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NativeAdHelper.shared.configure(root: self)
+        
+        NativeAdHelper.shared.onAdLoaded = { [weak self] nativeAd in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                guard let emptyUUID = self.dataSource.snapshot().itemIdentifiers
+                    .compactMap({ item -> UUID? in
+                        guard case let .admob(uuid) = item,
+                              self.adCache[uuid] == nil else { return nil }
+                        return uuid
+                    })
+                    .first else { return }
+                
+                self.adCache[emptyUUID] = nativeAd
+            }
+        }
         
         // 제스처 뒤로가기를 위한 델리게이트 설정
         self.parent?.navigationController?.interactivePopGestureRecognizer?.delegate = self
@@ -491,6 +523,16 @@ class HomeViewController: BaseNavigationViewController, View {
                         break
                     }
                     
+                    var new: [Item] = []
+                    for (index, latest) in latests.enumerated() {
+                        new.append(Item.latest(latest))
+                        /// 네이티브 광고는 `최신카드`에서만 표시
+                        if (index + 1) % 5 == 0 {
+                            let uuid = UUID()
+                            self.adCache[uuid] = nil
+                            new.append(.admob(uuid))
+                        }
+                    }
                     let new = uniqueLatests.map { Item.latest($0) }
                     snapshot.appendItems(new, toSection: .latest)
                 case .popular:
@@ -722,6 +764,17 @@ private extension HomeViewController {
             for: indexPath
         ) as! HomeArticleViewCell
     }
+    
+    func cellForAdmob(
+        _ tableView: UITableView,
+        with indexPath: IndexPath
+    ) -> HomeGADViewCell {
+        
+        return tableView.dequeueReusableCell(
+            withIdentifier: HomeGADViewCell.cellIdentifier,
+            for: indexPath
+        ) as! HomeGADViewCell
+    }
 }
 
 
@@ -860,6 +913,22 @@ extension HomeViewController: SOMPageViewsDelegate {
 }
 
 
+// MARK: UITableViewDataSourcePrefetching
+
+extension HomeViewController: UITableViewDataSourcePrefetching {
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach { indexPath in
+            guard self.reactor?.currentState.displayType == .latest,
+                  case let .admob(uuid) = self.dataSource.itemIdentifier(for: indexPath),
+                  self.adCache[uuid] == nil else { return }
+            
+            NativeAdHelper.shared.loadAd()
+        }
+    }
+}
+
+
 // MARK: UITableViewDelegate
 
 extension HomeViewController: UITableViewDelegate {
@@ -880,7 +949,7 @@ extension HomeViewController: UITableViewDelegate {
             case let .article(selectedArticle):
                 
                 return selectedArticle.id
-            case .empty:
+            default:
                 return nil
             }
         }
@@ -945,7 +1014,7 @@ extension HomeViewController: UITableViewDelegate {
         switch item {
         case .empty:
             return (UIScreen.main.bounds.height * 0.2) + 113 + 20 + 42
-        case .article:
+        case .admob, .article:
             return UITableView.automaticDimension
         default:
             return self.cellHeight
