@@ -327,9 +327,10 @@ class SettingsViewController: BaseNavigationViewController, View {
         
         reactor.state.map(\.pushNoticeStatus)
             .filterNil()
-            .do(onNext: { _ in reactor.action.onNext(.cleanup) })
             .map(reactor.reactorForPushNotiSettings)
             .observe(on: MainScheduler.asyncInstance)
+            /// `⚠️ Reentrancy anomaly was detected.` 경고 해결하기 위해 위치 변경
+            .do(onNext: { _ in reactor.action.onNext(.cleanup) })
             .subscribe(with: self) { object, reactor in
                 let pushNotiSettingsViewController = PushNotiSettingsViewController()
                 pushNotiSettingsViewController.reactor = reactor

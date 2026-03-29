@@ -43,6 +43,14 @@ class NotificationViewController: BaseNavigationViewController, View {
     }
     
     
+    // MARK: Navi Views
+    
+    private let rightSettingButton = SOMButton().then {
+        $0.image = .init(.icon(.v2(.outlined(.settings))))
+        $0.foregroundColor = .som.v2.black
+    }
+    
+    
     // MARK: Views
     
     private lazy var headerView = SOMSwipableTabBar().then {
@@ -133,6 +141,8 @@ class NotificationViewController: BaseNavigationViewController, View {
         super.setupNaviBar()
         
         self.navigationBar.title = Text.navigationTitle
+        
+        self.navigationBar.setRightButtons([self.rightSettingButton])
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -162,6 +172,12 @@ class NotificationViewController: BaseNavigationViewController, View {
     
     func bind(reactor: NotificationViewReactor) {
         
+        // 설정 화면 전환
+        self.rightSettingButton.rx.throttleTap(.seconds(3))
+            .map { _ in Reactor.Action.notify }
+            .bind(to: reactor.action)
+            .disposed(by: self.disposeBag)
+        
         // Action
         self.rx.viewDidLoad
             .map { _ in Reactor.Action.landing }
@@ -178,6 +194,19 @@ class NotificationViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         // State
+        reactor.pulse(\.$pushNoticeStatus)
+            .filterNil()
+            .map(reactor.reactorForPushNotiSettings)
+            .observe(on: MainScheduler.asyncInstance)
+            /// `⚠️ Reentrancy anomaly was detected.` 경고 해결하기 위해 위치 변경
+            .do(onNext: { _ in reactor.action.onNext(.cleanup) })
+            .subscribe(with: self) { object, reactor in
+                let pushNotiSettingsViewController = PushNotiSettingsViewController()
+                pushNotiSettingsViewController.reactor = reactor
+                object.navigationPush(pushNotiSettingsViewController, animated: true)
+            }
+            .disposed(by: self.disposeBag)
+        
         isRefreshing
             .observe(on: MainScheduler.asyncInstance)
             .filter { $0 == false }

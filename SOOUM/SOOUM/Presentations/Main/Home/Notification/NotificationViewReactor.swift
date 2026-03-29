@@ -19,6 +19,7 @@ class NotificationViewReactor: Reactor {
         case hasDetailCard(selectedId: String, selectedNotiId: String?)
         case updateNotifications
         case requestRead(String)
+        case notify
         case cleanup
     }
     
@@ -29,6 +30,7 @@ class NotificationViewReactor: Reactor {
         case moreNotices([NoticeInfo])
         case updateDisplayType(DisplayType)
         case cardIsDeleted((String, String?, Bool)?)
+        case pushNotiStatus(PushNotiStatusInfo?)
         case updateIsRefreshing(Bool)
         case updateIsReadSuccess(Bool)
     }
@@ -39,6 +41,7 @@ class NotificationViewReactor: Reactor {
         fileprivate(set) var notifications: [CompositeNotificationInfo]?
         fileprivate(set) var notices: [NoticeInfo]?
         fileprivate(set) var cardIsDeleted: (selectedId: String, selectedNotiId: String?, isDeleted: Bool)?
+        @Pulse fileprivate(set) var pushNoticeStatus: PushNotiStatusInfo?
         fileprivate(set) var isRefreshing: Bool
         fileprivate(set) var isReadSuccess: Bool
     }
@@ -49,12 +52,14 @@ class NotificationViewReactor: Reactor {
     private let notificationUseCase: NotificationUseCase
     private let fetchNoticeUseCase: FetchNoticeUseCase
     private let fetchCardDetailUseCase: FetchCardDetailUseCase
+    private let fetchUserInfoUseCase: FetchUserInfoUseCase
     
     init(dependencies: AppDIContainerable, displayType: DisplayType = .activity(.unread)) {
         self.dependencies = dependencies
         self.notificationUseCase = dependencies.rootContainer.resolve(NotificationUseCase.self)
         self.fetchNoticeUseCase = dependencies.rootContainer.resolve(FetchNoticeUseCase.self)
         self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
+        self.fetchUserInfoUseCase = dependencies.rootContainer.resolve(FetchUserInfoUseCase.self)
         
         self.initialState = State(
           displayType: displayType,
@@ -62,6 +67,7 @@ class NotificationViewReactor: Reactor {
           notifications: nil,
           notices: nil,
           cardIsDeleted: nil,
+          pushNoticeStatus: nil,
           isRefreshing: false,
           isReadSuccess: false
         )
@@ -158,9 +164,16 @@ class NotificationViewReactor: Reactor {
                         return .just(.updateIsReadSuccess(false))
                     }
                 }
+        case .notify:
+            
+            return self.fetchUserInfoUseCase.notify()
+                .map(Mutation.pushNotiStatus)
         case .cleanup:
             
-            return .just(.cardIsDeleted(nil))
+            return .concat([
+                .just(.cardIsDeleted(nil)),
+                .just(.pushNotiStatus(nil))
+            ])
         }
     }
     
@@ -181,6 +194,8 @@ class NotificationViewReactor: Reactor {
             newState.displayType = displayType
         case let .cardIsDeleted(cardIsDeleted):
             newState.cardIsDeleted = cardIsDeleted
+        case let .pushNotiStatus(pushNotiStatus):
+            newState.pushNoticeStatus = pushNotiStatus
         case let .updateIsRefreshing(isRefreshing):
             newState.isRefreshing = isRefreshing
         case let .updateIsReadSuccess(isReadSuccess):
@@ -309,5 +324,9 @@ extension NotificationViewReactor {
     
     func reactorForProfile(with userId: String) -> ProfileViewReactor {
         ProfileViewReactor(dependencies: self.dependencies, type: .other, with: userId)
+    }
+    
+    func reactorForPushNotiSettings(_ pushNoticeStatus: PushNotiStatusInfo) -> PushNotiSettingsViewReactor {
+        PushNotiSettingsViewReactor(dependencies: self.dependencies, with: pushNoticeStatus)
     }
 }
