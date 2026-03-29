@@ -37,7 +37,7 @@ final class HomeGADViewCell: UITableViewCell {
         $0.backgroundColor = .som.v2.gray400
         $0.layer.borderColor = UIColor.som.v2.gray100.cgColor
         $0.layer.borderWidth = 1
-        $0.layer.cornerRadius = 6
+        $0.layer.cornerRadius = 8
         $0.clipsToBounds = true
     }
     
@@ -129,7 +129,7 @@ final class HomeGADViewCell: UITableViewCell {
         self.iconView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(16)
-            $0.size.equalTo(24)
+            $0.size.equalTo(32)
         }
         
         self.nativeAdView.addSubview(self.headlineLabel)
