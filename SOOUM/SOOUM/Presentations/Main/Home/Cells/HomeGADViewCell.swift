@@ -55,6 +55,9 @@ final class HomeGADViewCell: UITableViewCell {
     private let headlineLabel = UILabel().then {
         $0.textColor = .som.v2.black
         $0.typography = .som.v2.subtitle3.withAlignment(.left)
+        $0.numberOfLines = 0
+        $0.lineBreakMode = .byWordWrapping
+        $0.lineBreakStrategy = .hangulWordPriority
     }
     
     private let bodyLabel = UILabel().then {
