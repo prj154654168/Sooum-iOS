@@ -104,6 +104,10 @@ final class HomeGADViewCell: UITableViewCell {
     
     private func configure() {
         
+        /// mediaView를 등록해야 경고가 발생하지 않음
+        let mediaView = MediaView()
+        self.nativeAdView.mediaView = mediaView
+        
         self.nativeAdView.iconView = self.iconView
         self.nativeAdView.headlineView = self.headlineLabel
         self.nativeAdView.bodyView = self.bodyLabel
