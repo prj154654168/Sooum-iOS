@@ -238,7 +238,7 @@
 		38646E882F788C960020B8DF /* HomeGADViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38646E862F788C8B0020B8DF /* HomeGADViewCell.swift */; };
 		3866577E2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */; };
 		3866577F2CEF3554009F7F60 /* UIButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3866577D2CEF3554009F7F60 /* UIButton+Rx.swift */; };
-		386672552F701113006D7786 /* NotificationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3800BEA82F6E67FD00F5EEFE /* NotificationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		386672552F701113006D7786 /* NotificationExtension-Dev.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 3800BEA82F6E67FD00F5EEFE /* NotificationExtension-Dev.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		386712C42E97734B00541389 /* UITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386712C32E97734800541389 /* UITextField.swift */; };
 		386712C52E97734B00541389 /* UITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386712C32E97734800541389 /* UITextField.swift */; };
 		386712CA2E977E9D00541389 /* Kkukkkuk.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 386712C92E977E9D00541389 /* Kkukkkuk.ttf */; };
@@ -785,6 +785,7 @@
 		38DA12BB2D4E872000AB9468 /* PushManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DA12BA2D4E872000AB9468 /* PushManagerTests.swift */; };
 		38E396842F61B6520050DC87 /* HapticHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E396832F61B64E0050DC87 /* HapticHelper.swift */; };
 		38E396852F61B6520050DC87 /* HapticHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E396832F61B64E0050DC87 /* HapticHelper.swift */; };
+		38E510772F814AB300669FBC /* NotificationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38F8C4F62F814A1E001B20FA /* NotificationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		38E7FBEF2D3CF6BB00A359CD /* SOMDialogAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */; };
 		38E7FBF02D3CF6BC00A359CD /* SOMDialogAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */; };
 		38E928B62EB711E200B3F00B /* DetailCardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928B52EB711DE00B3F00B /* DetailCardInfo.swift */; };
@@ -886,6 +887,13 @@
 			remoteGlobalIDString = 3800BEA72F6E67FD00F5EEFE;
 			remoteInfo = NotificationExtension;
 		};
+		38E510782F814AB300669FBC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 387FBAE42C8702C100A5E139 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 38F8C4EF2F814A1E001B20FA;
+			remoteInfo = NotificationExtensionProd;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -895,7 +903,18 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				386672552F701113006D7786 /* NotificationExtension.appex in Embed Foundation Extensions */,
+				386672552F701113006D7786 /* NotificationExtension-Dev.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F0A1B2C3D4E5F60718293A4C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				38E510772F814AB300669FBC /* NotificationExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -925,7 +944,7 @@
 		2AFD054B2CFF76CB007C84AD /* TagRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagRequest.swift; sourceTree = "<group>"; };
 		365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM_Dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3800575B2D9C12CB00E58A19 /* DefinedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefinedError.swift; sourceTree = "<group>"; };
-		3800BEA82F6E67FD00F5EEFE /* NotificationExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		3800BEA82F6E67FD00F5EEFE /* NotificationExtension-Dev.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "NotificationExtension-Dev.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		38026E3E2CA2B45A0045E1CE /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		3802BDAB2D0AC1FB001256EA /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		3802BDB02D0AE900001256EA /* PushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManager.swift; sourceTree = "<group>"; };
@@ -1338,6 +1357,7 @@
 		38F3D92F2D06C2370049F575 /* SOMAnimationTransitioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMAnimationTransitioning.swift; sourceTree = "<group>"; };
 		38F88EB92D2C1CB8002AD7A8 /* Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info.swift; sourceTree = "<group>"; };
 		38F88EBD2D2C1E22002AD7A8 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
+		38F8C4F62F814A1E001B20FA /* NotificationExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		38FCF4182E9F88E3003AC3D8 /* WriteCardTags+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WriteCardTags+Rx.swift"; sourceTree = "<group>"; };
 		38FCF41B2EA00623003AC3D8 /* UITtextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITtextView.swift; sourceTree = "<group>"; };
 		38FD4DAD2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementViewReactor.swift; sourceTree = "<group>"; };
@@ -1361,12 +1381,23 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		3800BEB32F6E67FD00F5EEFE /* Exceptions for "NotificationExtension" folder in "NotificationExtension" target */ = {
+		3800BEB32F6E67FD00F5EEFE /* Exceptions for "NotificationExtension" folder in "NotificationExtension-Dev" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				"/Users/ohhyeonsik/Desktop/Sooum-iOS/SOOUM/NotificationExtension/Info-prod.plist",
+				"Info-dev.plist",
 			);
-			target = 3800BEA72F6E67FD00F5EEFE /* NotificationExtension */;
+			target = 3800BEA72F6E67FD00F5EEFE /* NotificationExtension-Dev */;
+		};
+		38F8C4F72F814A1E001B20FA /* Exceptions for "NotificationExtension" folder in "NotificationExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"/Users/ohhyeonsik/Desktop/Sooum-iOS/SOOUM/NotificationExtension/Info-prod.plist",
+				"Info-dev.plist",
+				Log.swift,
+				NotificationService.swift,
+			);
+			target = 38F8C4EF2F814A1E001B20FA /* NotificationExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -1374,7 +1405,8 @@
 		3800BEA92F6E67FD00F5EEFE /* NotificationExtension */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				3800BEB32F6E67FD00F5EEFE /* Exceptions for "NotificationExtension" folder in "NotificationExtension" target */,
+				38F8C4F72F814A1E001B20FA /* Exceptions for "NotificationExtension" folder in "NotificationExtension" target */,
+				3800BEB32F6E67FD00F5EEFE /* Exceptions for "NotificationExtension" folder in "NotificationExtension-Dev" target */,
 			);
 			path = NotificationExtension;
 			sourceTree = "<group>";
@@ -1410,6 +1442,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				2192C5356D8F39905D0A8181 /* Pods_SOOUM.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38F8C4F12F814A1E001B20FA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2064,7 +2103,8 @@
 				387FBAEC2C8702C100A5E139 /* SOOUM.app */,
 				3854419A2C870544004E2BB0 /* SOOUM-Dev.app */,
 				3857BC312D4D1A7B008D4264 /* SOOUM-DevTests.xctest */,
-				3800BEA82F6E67FD00F5EEFE /* NotificationExtension.appex */,
+				3800BEA82F6E67FD00F5EEFE /* NotificationExtension-Dev.appex */,
+				38F8C4F62F814A1E001B20FA /* NotificationExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2115,8 +2155,8 @@
 		387FBB062C8703F600A5E139 /* Production */ = {
 			isa = PBXGroup;
 			children = (
-				387894442D31786B00F69487 /* GoogleService-Info.plist */,
 				387FBAFD2C8702C200A5E139 /* Info-prod.plist */,
+				387894442D31786B00F69487 /* GoogleService-Info.plist */,
 			);
 			path = Production;
 			sourceTree = "<group>";
@@ -2904,9 +2944,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3800BEA72F6E67FD00F5EEFE /* NotificationExtension */ = {
+		3800BEA72F6E67FD00F5EEFE /* NotificationExtension-Dev */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3800BEB42F6E67FD00F5EEFE /* Build configuration list for PBXNativeTarget "NotificationExtension" */;
+			buildConfigurationList = 3800BEB42F6E67FD00F5EEFE /* Build configuration list for PBXNativeTarget "NotificationExtension-Dev" */;
 			buildPhases = (
 				3800BEA42F6E67FD00F5EEFE /* Sources */,
 				3800BEA52F6E67FD00F5EEFE /* Frameworks */,
@@ -2919,9 +2959,9 @@
 			fileSystemSynchronizedGroups = (
 				3800BEA92F6E67FD00F5EEFE /* NotificationExtension */,
 			);
-			name = NotificationExtension;
+			name = "NotificationExtension-Dev";
 			productName = NotificationExtension;
-			productReference = 3800BEA82F6E67FD00F5EEFE /* NotificationExtension.appex */;
+			productReference = 3800BEA82F6E67FD00F5EEFE /* NotificationExtension-Dev.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 		3854418E2C870544004E2BB0 /* SOOUM-Dev */ = {
@@ -2979,16 +3019,39 @@
 				387FBAE92C8702C100A5E139 /* Frameworks */,
 				387FBAEA2C8702C100A5E139 /* Resources */,
 				01B3B59D7CDD858E2D75CB04 /* [CP] Embed Pods Frameworks */,
+				F0A1B2C3D4E5F60718293A4C /* Embed Foundation Extensions */,
 				F796F4C2B568F0EB6746EC50 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F0A1B2C3D4E5F60718293A4D /* PBXTargetDependency */,
+				38E510792F814AB300669FBC /* PBXTargetDependency */,
 			);
 			name = SOOUM;
 			productName = SOOUM;
 			productReference = 387FBAEC2C8702C100A5E139 /* SOOUM.app */;
 			productType = "com.apple.product-type.application";
+		};
+		38F8C4EF2F814A1E001B20FA /* NotificationExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 38F8C4F32F814A1E001B20FA /* Build configuration list for PBXNativeTarget "NotificationExtension" */;
+			buildPhases = (
+				38F8C4F02F814A1E001B20FA /* Sources */,
+				38F8C4F12F814A1E001B20FA /* Frameworks */,
+				38F8C4F22F814A1E001B20FA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3800BEA92F6E67FD00F5EEFE /* NotificationExtension */,
+			);
+			name = NotificationExtension;
+			productName = NotificationExtension;
+			productReference = 38F8C4F62F814A1E001B20FA /* NotificationExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -3030,7 +3093,8 @@
 				387FBAEB2C8702C100A5E139 /* SOOUM */,
 				3854418E2C870544004E2BB0 /* SOOUM-Dev */,
 				3857BC302D4D1A7B008D4264 /* SOOUM-DevTests */,
-				3800BEA72F6E67FD00F5EEFE /* NotificationExtension */,
+				38F8C4EF2F814A1E001B20FA /* NotificationExtension */,
+				3800BEA72F6E67FD00F5EEFE /* NotificationExtension-Dev */,
 			);
 		};
 /* End PBXProject section */
@@ -3079,6 +3143,13 @@
 				387FBAFC2C8702C200A5E139 /* Base in Resources */,
 				3887176B2E7BD7AC00C6143B /* loading_indicator_lottie.json in Resources */,
 				388DA1012C8F538400A9DD56 /* PretendardVariable.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38F8C4F22F814A1E001B20FA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4195,6 +4266,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		38F8C4F02F814A1E001B20FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -4205,7 +4283,17 @@
 		};
 		385BAC542F70109B001CB997 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3800BEA72F6E67FD00F5EEFE /* NotificationExtension */;
+			target = 3800BEA72F6E67FD00F5EEFE /* NotificationExtension-Dev */;
+			targetProxy = 385BAC532F70109B001CB997 /* PBXContainerItemProxy */;
+		};
+		38E510792F814AB300669FBC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 38F8C4EF2F814A1E001B20FA /* NotificationExtension */;
+			targetProxy = 38E510782F814AB300669FBC /* PBXContainerItemProxy */;
+		};
+		F0A1B2C3D4E5F60718293A4D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3800BEA72F6E67FD00F5EEFE /* NotificationExtension-Dev */;
 			targetProxy = 385BAC532F70109B001CB997 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -4235,7 +4323,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 99FRG743RX;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NotificationExtension/Info.plist;
+				INFOPLIST_FILE = "NotificationExtension/Info-dev.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = NotificationExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -4272,7 +4360,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 99FRG743RX;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NotificationExtension/Info.plist;
+				INFOPLIST_FILE = "NotificationExtension/Info-dev.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = NotificationExtension;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -4441,7 +4529,7 @@
 				SOOUM_CLARITY_ID = ukvzck1lyo;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_GAD_APP_ID = "ca-app-pub-7224162953021638~5969405994";
-				SOOUM_GAD_UNIT_ID = "ca-app-pub-3940256099942544/3986624511";
+				SOOUM_GAD_UNIT_ID = "ca-app-pub-7224162953021638/2465096014";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -4597,7 +4685,7 @@
 				SOOUM_CLARITY_ID = ukvzck1lyo;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
 				SOOUM_GAD_APP_ID = "ca-app-pub-7224162953021638~5969405994";
-				SOOUM_GAD_UNIT_ID = "ca-app-pub-3940256099942544/3986624511";
+				SOOUM_GAD_UNIT_ID = "ca-app-pub-7224162953021638/2465096014";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = "test-core.sooum.org:555";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -4838,6 +4926,8 @@
 				SOOUM_APP_ID = 6740403078;
 				SOOUM_CLARITY_ID = ukvz4wjnqm;
 				SOOUM_DISPLAY_NAME = "숨";
+				SOOUM_GAD_APP_ID = "ca-app-pub-7224162953021638~5969405994";
+				SOOUM_GAD_UNIT_ID = "ca-app-pub-7224162953021638/2465096014";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -4885,8 +4975,84 @@
 				SOOUM_APP_ID = 6740403078;
 				SOOUM_CLARITY_ID = ukvz4wjnqm;
 				SOOUM_DISPLAY_NAME = "숨";
+				SOOUM_GAD_APP_ID = "ca-app-pub-7224162953021638~5969405994";
+				SOOUM_GAD_UNIT_ID = "ca-app-pub-7224162953021638/2465096014";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				SOOUM_SERVER_ENDPOINT = api.sooum.org;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		38F8C4F42F814A1E001B20FA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = NotificationExtension/NotificationExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 204020;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 99FRG743RX;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "NotificationExtension/info-prod.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.4.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod.NotificationExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = com.sooum.prod.notificationExtension;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		38F8C4F52F814A1E001B20FA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = NotificationExtension/NotificationExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 204020;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 99FRG743RX;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "NotificationExtension/info-prod.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = NotificationExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.4.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod.NotificationExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = com.sooum.prod.notificationExtension;
+				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -4900,7 +5066,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3800BEB42F6E67FD00F5EEFE /* Build configuration list for PBXNativeTarget "NotificationExtension" */ = {
+		3800BEB42F6E67FD00F5EEFE /* Build configuration list for PBXNativeTarget "NotificationExtension-Dev" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3800BEB12F6E67FD00F5EEFE /* Debug */,
@@ -4941,6 +5107,15 @@
 			buildConfigurations = (
 				387FBB012C8702C200A5E139 /* Debug */,
 				387FBB022C8702C200A5E139 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		38F8C4F32F814A1E001B20FA /* Build configuration list for PBXNativeTarget "NotificationExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				38F8C4F42F814A1E001B20FA /* Debug */,
+				38F8C4F52F814A1E001B20FA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
