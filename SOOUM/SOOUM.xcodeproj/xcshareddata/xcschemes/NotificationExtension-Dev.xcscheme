@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3800BEA72F6E67FD00F5EEFE"
-               BuildableName = "NotificationExtensionDev.appex"
-               BlueprintName = "NotificationExtensionDev"
+               BuildableName = "NotificationExtension.appex"
+               BlueprintName = "NotificationExtension"
                ReferencedContainer = "container:SOOUM.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

@@ -3164,8 +3164,6 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-frameworks-${CONFIGURATION}-output-files.xcfilelist",
@@ -4898,7 +4896,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 204040;
+				CURRENT_PROJECT_VERSION = 206010;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -4919,7 +4917,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.4.4;
+				MARKETING_VERSION = 2.6.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D PRODUCTION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4948,7 +4946,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 204040;
+				CURRENT_PROJECT_VERSION = 206010;
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Production/Info-prod.plist";
@@ -4968,7 +4966,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.4.4;
+				MARKETING_VERSION = 2.6.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D PRODUCTION";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4996,7 +4994,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 204020;
+				CURRENT_PROJECT_VERSION = 206010;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 99FRG743RX;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -5010,7 +5008,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.4.2;
+				MARKETING_VERSION = 2.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod.NotificationExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5033,7 +5031,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 204020;
+				CURRENT_PROJECT_VERSION = 206010;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 99FRG743RX;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -5047,7 +5045,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.4.2;
+				MARKETING_VERSION = 2.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sooum.prod.NotificationExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

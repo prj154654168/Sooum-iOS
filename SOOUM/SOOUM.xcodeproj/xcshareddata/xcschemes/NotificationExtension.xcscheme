@@ -15,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "38F8C4EF2F814A1E001B20FA"
+               BlueprintIdentifier = "3800BEA72F6E67FD00F5EEFE"
                BuildableName = "NotificationExtension.appex"
                BlueprintName = "NotificationExtension"
                ReferencedContainer = "container:SOOUM.xcodeproj">
@@ -54,7 +54,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "38F8C4EF2F814A1E001B20FA"
+            BlueprintIdentifier = "3800BEA72F6E67FD00F5EEFE"
             BuildableName = "NotificationExtension.appex"
             BlueprintName = "NotificationExtension"
             ReferencedContainer = "container:SOOUM.xcodeproj">
