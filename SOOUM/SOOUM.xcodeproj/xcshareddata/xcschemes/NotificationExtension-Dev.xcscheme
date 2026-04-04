@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1600"
+   LastUpgradeVersion = "2640"
    version = "2.0">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3800BEA72F6E67FD00F5EEFE"
-               BuildableName = "NotificationExtension.appex"
-               BlueprintName = "NotificationExtension"
+               BuildableName = "NotificationExtension-Dev.appex"
+               BlueprintName = "NotificationExtension-Dev"
                ReferencedContainer = "container:SOOUM.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
