@@ -112,7 +112,7 @@ class MainTabBarReactor: Reactor {
                             type == .articleCardUpload ||
                             type == .followerCardUpload
                     }
-                    if isPassingByRead, let notificationId = pushInfo.notificationId {
+                    if isPassingByRead == false, let notificationId = pushInfo.notificationId {
                         
                         return self.notificationUseCase.requestRead(notificationId: notificationId)
                             .map { _ in .updateEntrance(profileInfo) }
