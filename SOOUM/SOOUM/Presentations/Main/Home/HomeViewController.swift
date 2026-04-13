@@ -484,45 +484,38 @@ class HomeViewController: BaseNavigationViewController, View {
                     }
                     
                     guard let latests = displayStats.latests else { return }
+                    let uniqueLatests = self.removeDuplicatedCardsByID(latests)
                     
-                    guard latests.isEmpty == false else {
+                    guard uniqueLatests.isEmpty == false else {
                         snapshot.appendItems([.empty(Text.defaultPlaceholderText)], toSection: .empty)
                         break
                     }
                     
-                    let new = latests.map { Item.latest($0) }
+                    let new = uniqueLatests.map { Item.latest($0) }
                     snapshot.appendItems(new, toSection: .latest)
                 case .popular:
-                    /// Article은 `최신카드`에서만 표시
-                    if let article = displayStats.article {
-                        let delete = Item.article(article)
-                        snapshot.deleteItems([delete])
-                    }
                     
                     guard let populars = displayStats.populars else { return }
+                    let uniquePopulars = self.removeDuplicatedCardsByID(populars)
                     
-                    guard populars.isEmpty == false else {
+                    guard uniquePopulars.isEmpty == false else {
                         snapshot.appendItems([.empty(Text.defaultPlaceholderText)], toSection: .empty)
                         break
                     }
                     
-                    let new = populars.map { Item.popular($0) }
+                    let new = uniquePopulars.map { Item.popular($0) }
                     snapshot.appendItems(new, toSection: .popular)
                 case .distance:
-                    /// Article은 `최신카드`에서만 표시
-                    if let article = displayStats.article {
-                        let delete = Item.article(article)
-                        snapshot.deleteItems([delete])
-                    }
                     
                     guard let distances = displayStats.distances else { return }
+                    let uniqueDistances = self.removeDuplicatedCardsByID(distances)
                     
-                    guard distances.isEmpty == false else {
+                    guard uniqueDistances.isEmpty == false else {
                         snapshot.appendItems([.empty(Text.distancePlaceholderText)], toSection: .empty)
                         break
                     }
                     
-                    let new = distances.map { Item.distance($0) }
+                    let new = uniqueDistances.map { Item.distance($0) }
                     snapshot.appendItems(new, toSection: .distance)
                 }
                 
@@ -531,6 +524,15 @@ class HomeViewController: BaseNavigationViewController, View {
                 object.tableView.isHidden = false
             }
             .disposed(by: self.disposeBag)
+    }
+    
+    
+    // MARK: Private func
+    
+    func removeDuplicatedCardsByID(_ cards: [BaseCardInfo]) -> [BaseCardInfo] {
+        var seen = Set<String>()
+        let reversed = cards.reversed().filter { seen.insert($0.id).inserted }
+        return Array(reversed.reversed())
     }
     
     
