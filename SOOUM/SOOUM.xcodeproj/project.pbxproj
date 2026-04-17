@@ -655,6 +655,8 @@
 		38B8A58F2CAEB61A000AFE83 /* DetailViewFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */; };
 		38B8BE472D1ECBDA0084569C /* PushNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8BE462D1ECBDA0084569C /* PushNotificationInfo.swift */; };
 		38B8BE482D1ECBDA0084569C /* PushNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B8BE462D1ECBDA0084569C /* PushNotificationInfo.swift */; };
+		38BB227F2F92794D0095E7A0 /* SOMToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB227E2F9279470095E7A0 /* SOMToggle.swift */; };
+		38BB22802F92794D0095E7A0 /* SOMToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38BB227E2F9279470095E7A0 /* SOMToggle.swift */; };
 		38C2A7D82EC054C500B941A2 /* SettingVersionCellView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7D72EC054BE00B941A2 /* SettingVersionCellView+Rx.swift */; };
 		38C2A7D92EC054C500B941A2 /* SettingVersionCellView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7D72EC054BE00B941A2 /* SettingVersionCellView+Rx.swift */; };
 		38C2A7DB2EC06ECE00B941A2 /* SettingsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C2A7DA2EC06EC800B941A2 /* SettingsRequest.swift */; };
@@ -1262,6 +1264,7 @@
 		38B8A58D2CAEB61A000AFE83 /* DetailViewFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewFooterCell.swift; sourceTree = "<group>"; };
 		38B8BE462D1ECBDA0084569C /* PushNotificationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationInfo.swift; sourceTree = "<group>"; };
 		38B9E4692CE72CC1008A24C8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		38BB227E2F9279470095E7A0 /* SOMToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMToggle.swift; sourceTree = "<group>"; };
 		38BCF2302D32BB22004F653A /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		38C2A7D72EC054BE00B941A2 /* SettingVersionCellView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingVersionCellView+Rx.swift"; sourceTree = "<group>"; };
 		38C2A7DA2EC06EC800B941A2 /* SettingsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRequest.swift; sourceTree = "<group>"; };
@@ -2779,6 +2782,7 @@
 				3878FE0B2D0365B000D8955C /* SOMNavigationBar */,
 				38D488C92D0C557300F2D38D /* SOMButton.swift */,
 				3878F4702CA3F03400AA46A2 /* SOMCard.swift */,
+				38BB227E2F9279470095E7A0 /* SOMToggle.swift */,
 				38D8FE8F2EBE663E00F32D02 /* SOMNicknameTextField.swift */,
 				383088082EDC7B8200D99D88 /* SOMMessageBubbleView.swift */,
 				38773E7B2CB3ACB2004815CD /* SOMRefreshControl.swift */,
@@ -3531,6 +3535,7 @@
 				388C96372CCE41700061C598 /* AuthInfo.swift in Sources */,
 				3878D0892CFFEF0F00F9522F /* TermsOfServiceTextCellView+Rx.swift in Sources */,
 				3878D0702CFFDF9600F9522F /* SettingTextCellView.swift in Sources */,
+				38BB22802F92794D0095E7A0 /* SOMToggle.swift in Sources */,
 				2A5BB7BF2CDB870000E1C799 /* OnboardingGuideMessageView.swift in Sources */,
 				389E59CC2EDEED6500D0946D /* FetchUserInfoUseCase.swift in Sources */,
 				38FEBE612E8661F4002916A8 /* NoticeInfo.swift in Sources */,
@@ -3971,6 +3976,7 @@
 				38C9AF392E96AB9100B401C0 /* WriteCardTagFooter.swift in Sources */,
 				385C01B72E8EA1EF003C7894 /* SOMPageViews.swift in Sources */,
 				385C01AF2E8E8C6F003C7894 /* SOMPageModel.swift in Sources */,
+				38BB227F2F92794D0095E7A0 /* SOMToggle.swift in Sources */,
 				3880098E2CABF4C2002A9209 /* SOMTag.swift in Sources */,
 				389E59CD2EDEED6500D0946D /* FetchUserInfoUseCase.swift in Sources */,
 				38C2A8012EC09A5A00B941A2 /* ResignTextFieldView.swift in Sources */,

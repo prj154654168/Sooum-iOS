@@ -26,15 +26,8 @@ final class PushNotiSettingsCellView: UIView {
     
     let toggleBackgroundButton = UIButton()
     
-    let toggleSwitch = UISwitch().then {
-        $0.isOn = false
-        $0.onTintColor = .som.v2.pMain
-        $0.tintColor = .som.v2.gray200
-        $0.thumbTintColor = .som.v2.white
-        
-        if let thumb = $0.subviews.first?.subviews.last?.subviews.last {
-            thumb.transform = CGAffineTransform(scaleX: 0.85, y: 0.85)
-        }
+    let toggleSwitch = SOMToggle().then {
+        $0.isUserInteractionEnabled = false
     }
     
     
