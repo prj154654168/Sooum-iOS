@@ -220,22 +220,23 @@ class HomeViewController: BaseNavigationViewController, View {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NativeAdHelper.shared.configure(root: self)
-        
-        NativeAdHelper.shared.onAdLoaded = { [weak self] nativeAd in
-            guard let self else { return }
-            DispatchQueue.main.async {
-                guard let emptyUUID = self.dataSource.snapshot().itemIdentifiers
-                    .compactMap({ item -> UUID? in
-                        guard case let .admob(uuid) = item,
-                              self.adCache[uuid] == nil else { return nil }
-                        return uuid
-                    })
-                    .first else { return }
-                
-                self.adCache[emptyUUID] = nativeAd
-            }
-        }
+        // [TEMP] Home tableView 데이터 표시 시 AdMob 처리 비활성화
+//        NativeAdHelper.shared.configure(root: self)
+//
+//        NativeAdHelper.shared.onAdLoaded = { [weak self] nativeAd in
+//            guard let self else { return }
+//            DispatchQueue.main.async {
+//                guard let emptyUUID = self.dataSource.snapshot().itemIdentifiers
+//                    .compactMap({ item -> UUID? in
+//                        guard case let .admob(uuid) = item,
+//                              self.adCache[uuid] == nil else { return nil }
+//                        return uuid
+//                    })
+//                    .first else { return }
+//
+//                self.adCache[emptyUUID] = nativeAd
+//            }
+//        }
         
         // 제스처 뒤로가기를 위한 델리게이트 설정
         self.parent?.navigationController?.interactivePopGestureRecognizer?.delegate = self
@@ -501,7 +502,7 @@ class HomeViewController: BaseNavigationViewController, View {
         
         displayStates
             .distinctUntilChanged(reactor.canUpdateCells)
-            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance) 
             .subscribe(with: self) { object, displayStats in
                 
                 var snapshot = Snapshot()
@@ -524,16 +525,16 @@ class HomeViewController: BaseNavigationViewController, View {
                     }
                     
                     var new: [Item] = []
-                    for (index, latest) in latests.enumerated() {
+                    for (index, latest) in uniqueLatests.enumerated() {
                         new.append(Item.latest(latest))
-                        /// 네이티브 광고는 `최신카드`에서만 표시
-                        if (index + 1) % 5 == 0 {
-                            let uuid = UUID()
-                            self.adCache[uuid] = nil
-                            new.append(.admob(uuid))
-                        }
+                        /// [TEMP] Home tableView 데이터 표시 시 AdMob 삽입 비활성화
+//                        /// 네이티브 광고는 `최신카드`에서만 표시
+//                        if (index + 1) % 5 == 0 {
+//                            let uuid = UUID()
+//                            self.adCache[uuid] = nil
+//                            new.append(.admob(uuid))
+//                        }
                     }
-                    let new = uniqueLatests.map { Item.latest($0) }
                     snapshot.appendItems(new, toSection: .latest)
                 case .popular:
                     
@@ -918,13 +919,14 @@ extension HomeViewController: SOMPageViewsDelegate {
 extension HomeViewController: UITableViewDataSourcePrefetching {
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        indexPaths.forEach { indexPath in
-            guard self.reactor?.currentState.displayType == .latest,
-                  case let .admob(uuid) = self.dataSource.itemIdentifier(for: indexPath),
-                  self.adCache[uuid] == nil else { return }
-            
-            NativeAdHelper.shared.loadAd()
-        }
+        /// [TEMP] Home tableView 데이터 표시 시 AdMob prefetch 비활성화
+//        indexPaths.forEach { indexPath in
+//            guard self.reactor?.currentState.displayType == .latest,
+//                  case let .admob(uuid) = self.dataSource.itemIdentifier(for: indexPath),
+//                  self.adCache[uuid] == nil else { return }
+//
+//            NativeAdHelper.shared.loadAd()
+//        }
     }
 }
 
