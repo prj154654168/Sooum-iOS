@@ -12,7 +12,7 @@ import Then
 
 import Lottie
 
-class SOMActivityIndicatorView: UIActivityIndicatorView {
+class SOMActivityIndicatorView: UIView {
     
     private let backgroundView = UIView().then {
         $0.backgroundColor = .som.v2.dim
@@ -56,15 +56,15 @@ class SOMActivityIndicatorView: UIActivityIndicatorView {
         superview.bringSubviewToFront(self)
     }
     
-    override func startAnimating() {
-        super.startAnimating()
+    func startAnimating() {
+        self.isHidden = false
         self.superview?.bringSubviewToFront(self)
         self.animationView.play()
     }
     
-    override func stopAnimating() {
-        super.stopAnimating()
+    func stopAnimating() {
         self.animationView.stop()
+        self.isHidden = true
     }
     
     
@@ -72,10 +72,7 @@ class SOMActivityIndicatorView: UIActivityIndicatorView {
     
     private func setupConstraints() {
         
-        self.tintColor = .clear
         self.isHidden = true
-        
-        self.hidesWhenStopped = true
         
         self.addSubview(self.backgroundView)
         self.backgroundView.snp.makeConstraints {

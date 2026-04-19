@@ -58,8 +58,6 @@ class BaseViewController: UIViewController {
         self.view.backgroundColor = .som.v2.white
         self.setupConstraints()
         
-        self.activityIndicatorView.color = .black
-        
         self.view.addSubview(self.activityIndicatorView)
         
         self.view.addSubview(self.loadingIndicatorView)
