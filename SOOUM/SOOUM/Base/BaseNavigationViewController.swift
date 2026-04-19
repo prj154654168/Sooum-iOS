@@ -13,6 +13,7 @@ import RxSwift
 import SnapKit
 import Then
 
+private final class FullScreenPopPanGestureRecognizer: UIPanGestureRecognizer { }
 
 class BaseNavigationViewController: BaseViewController {
 
@@ -148,18 +149,25 @@ class BaseNavigationViewController: BaseViewController {
               let systemGesture = naviController.interactivePopGestureRecognizer
         else { return }
         
-        let hasPanGesture = naviController.view.gestureRecognizers?.contains {
-            $0 is UIPanGestureRecognizer && $0.delegate === self
-        } ?? false
+        let existingGesture = naviController.view.gestureRecognizers?
+            .compactMap { $0 as? FullScreenPopPanGestureRecognizer }
+            .first
         
-        if hasPanGesture == false, self.navigationPopGestureEnabled {
+        if let existingGesture = existingGesture {
+            existingGesture.delegate = self
+            existingGesture.isEnabled = self.navigationPopGestureEnabled
+            systemGesture.isEnabled = false
+            return
+        }
+        
+        if self.navigationPopGestureEnabled {
             guard let targets = systemGesture.value(forKey: "targets") as? NSMutableArray,
                   let targetObject = targets.firstObject as? NSObject,
                   let target = targetObject.value(forKey: "target")
             else { return }
             
             let action = Selector(("handleNavigationTransition:"))
-            let panGesture = UIPanGestureRecognizer(target: target, action: action)
+            let panGesture = FullScreenPopPanGestureRecognizer(target: target, action: action)
             panGesture.delegate = self
             naviController.view.addGestureRecognizer(panGesture)
         }
