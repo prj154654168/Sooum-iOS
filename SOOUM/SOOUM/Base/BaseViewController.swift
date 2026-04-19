@@ -26,6 +26,8 @@ class BaseViewController: UIViewController {
     
     let activityIndicatorView = SOMActivityIndicatorView()
     let loadingIndicatorView = SOMLoadingIndicatorView()
+    
+    private var slowNetworkRequestIds = Set<String>()
 
     private(set) var isEndEditingWhenWillDisappear: Bool = true
     private(set) var bottomToastMessageOffset: CGFloat = 88 + 8
@@ -59,10 +61,6 @@ class BaseViewController: UIViewController {
         self.activityIndicatorView.color = .black
         
         self.view.addSubview(self.activityIndicatorView)
-        self.activityIndicatorView.snp.makeConstraints {
-            $0.centerX.equalTo(self.view.safeAreaLayoutGuide.snp.centerX)
-            $0.centerY.equalTo(self.view.safeAreaLayoutGuide.snp.centerY)
-        }
         
         self.view.addSubview(self.loadingIndicatorView)
         self.loadingIndicatorView.snp.makeConstraints {
@@ -70,6 +68,7 @@ class BaseViewController: UIViewController {
         }
 
         self.bind()
+        self.registerNetworkRequestObservers()
 
         RxKeyboard.instance.visibleHeight
             .drive(with: self) { object, height in
@@ -98,6 +97,54 @@ class BaseViewController: UIViewController {
                 wrapper.showBottomToast(verticalOffset: object.bottomToastMessageOffset, displayDuration: 4)
             }
             .disposed(by: self.disposeBag)
+    }
+    
+    @objc
+    private func detectedSlowNetworkRequest(_ notification: Notification) {
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self,
+                  self.isViewLoaded,
+                  self.view.window != nil,
+                  let requestId = notification.userInfo?["requestId"] as? String
+            else { return }
+            
+            self.slowNetworkRequestIds.insert(requestId)
+            self.activityIndicatorView.startAnimating()
+        }
+    }
+    
+    @objc
+    private func didFinishNetworkRequest(_ notification: Notification) {
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self,
+                  let requestId = notification.userInfo?["requestId"] as? String
+            else { return }
+            
+            self.slowNetworkRequestIds.remove(requestId)
+            
+            guard self.slowNetworkRequestIds.isEmpty else { return }
+            
+            self.activityIndicatorView.stopAnimating()
+        }
+    }
+    
+    private func registerNetworkRequestObservers() {
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.detectedSlowNetworkRequest(_:)),
+            name: .detectedSlowNetworkRequest,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.didFinishNetworkRequest(_:)),
+            name: .didFinishNetworkRequest,
+            object: nil
+        )
     }
 
     /// Set auto layouts
@@ -132,5 +179,8 @@ class BaseViewController: UIViewController {
         if self.isEndEditingWhenWillDisappear {
             self.view.endEditing(true)
         }
+        
+        self.slowNetworkRequestIds.removeAll()
+        self.activityIndicatorView.stopAnimating()
     }
 }

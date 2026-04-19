@@ -38,4 +38,8 @@ extension Notification.Name {
     static let reloadProfileData = Notification.Name("reloadProfileData")
     /// Should reload favorite tag
     static let reloadFavoriteTagData = Notification.Name("reloadFavoriteTagData")
+    /// Network request finished
+    static let didFinishNetworkRequest = Notification.Name("didFinishNetworkRequest")
+    /// Detected slow network request
+    static let detectedSlowNetworkRequest = Notification.Name("detectedSlowNetworkRequest")
 }

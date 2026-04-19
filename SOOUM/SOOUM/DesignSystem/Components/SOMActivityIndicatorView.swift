@@ -10,19 +10,20 @@ import UIKit
 import SnapKit
 import Then
 
+import Lottie
 
 class SOMActivityIndicatorView: UIActivityIndicatorView {
     
     private let backgroundView = UIView().then {
-        $0.backgroundColor = .som.white
-        $0.layer.cornerRadius = 40 * 0.5
+        $0.backgroundColor = .som.v2.dim
     }
     
-    private let imageView = UIImageView().then {
-        $0.image = .init(.icon(.outlined(.refresh)))
-        $0.tintColor = .som.black
+    private let animationView = LottieAnimationView(name: "loading_indicator_lottie").then {
         $0.contentMode = .scaleAspectFit
+        $0.loopMode = .loop
     }
+    
+    private var didSetupFillConstraints: Bool = false
     
     
     // MARK: Init
@@ -43,25 +44,27 @@ class SOMActivityIndicatorView: UIActivityIndicatorView {
     
     // MARK: Override func
     
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        
+        guard let superview = self.superview, self.didSetupFillConstraints == false else { return }
+        
+        self.didSetupFillConstraints = true
+        self.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        superview.bringSubviewToFront(self)
+    }
+    
     override func startAnimating() {
         super.startAnimating()
-        self.animation(true)
+        self.superview?.bringSubviewToFront(self)
+        self.animationView.play()
     }
     
     override func stopAnimating() {
         super.stopAnimating()
-        self.animation(false)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        self.backgroundView.setShadow(
-            radius: 40 * 0.5,
-            color: UIColor.som.black.withAlphaComponent(0.25),
-            blur: 4,
-            offset: .init(width: 0, height: 4)
-        )
+        self.animationView.stop()
     }
     
     
@@ -70,32 +73,19 @@ class SOMActivityIndicatorView: UIActivityIndicatorView {
     private func setupConstraints() {
         
         self.tintColor = .clear
+        self.isHidden = true
+        
+        self.hidesWhenStopped = true
         
         self.addSubview(self.backgroundView)
         self.backgroundView.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.size.equalTo(40)
+            $0.edges.equalToSuperview()
         }
         
-        self.backgroundView.addSubview(self.imageView)
-        self.imageView.snp.makeConstraints {
+        self.backgroundView.addSubview(self.animationView)
+        self.animationView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.size.equalTo(28)
-        }
-    }
-    
-    private func animation(_ isAnimating: Bool) {
-        
-        if isAnimating {
-            let rotate = CABasicAnimation(keyPath: "transform.rotation.z")
-            rotate.fromValue = 0
-            rotate.toValue = NSNumber(value: Double.pi * -2.0)
-            rotate.duration = 1
-            rotate.repeatCount = Float.infinity
-            rotate.timingFunction = CAMediaTimingFunction(name: .linear)
-            self.imageView.layer.add(rotate, forKey: "rotate")
-        } else {
-            self.imageView.layer.removeAnimation(forKey: "rotate")
+            $0.size.equalTo(60)
         }
     }
 }
