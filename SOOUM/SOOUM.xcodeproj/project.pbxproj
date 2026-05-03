@@ -545,6 +545,8 @@
 		38A7219A2E73EA6F0071E1D8 /* SOMBottomFloatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A721982E73EA610071E1D8 /* SOMBottomFloatView.swift */; };
 		38AA00022CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
 		38AA00032CAD1BCC002C5F1E /* LikeAndCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */; };
+		38AE39082FA759BD003C3E96 /* AppVersionInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE39072FA759BD003C3E96 /* AppVersionInterceptor.swift */; };
+		38AE39092FA759BD003C3E96 /* AppVersionInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE39072FA759BD003C3E96 /* AppVersionInterceptor.swift */; };
 		38AE565C2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
 		38AE565D2D048B4800CAA431 /* SOMDialogViewController+Show.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */; };
 		38AE77D42E74580000B6FD13 /* OnboardingCompletedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AE77D32E7457F400B6FD13 /* OnboardingCompletedViewController.swift */; };
@@ -1208,6 +1210,7 @@
 		38A721982E73EA610071E1D8 /* SOMBottomFloatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMBottomFloatView.swift; sourceTree = "<group>"; };
 		38AA00012CAD1BCC002C5F1E /* LikeAndCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAndCommentView.swift; sourceTree = "<group>"; };
 		38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOMDialogAction.swift; sourceTree = "<group>"; };
+		38AE39072FA759BD003C3E96 /* AppVersionInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionInterceptor.swift; sourceTree = "<group>"; };
 		38AE565B2D048B4800CAA431 /* SOMDialogViewController+Show.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SOMDialogViewController+Show.swift"; sourceTree = "<group>"; };
 		38AE77D32E7457F400B6FD13 /* OnboardingCompletedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingCompletedViewController.swift; sourceTree = "<group>"; };
 		38AE77D62E7459EA00B6FD13 /* OnboardingCompletedViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingCompletedViewReactor.swift; sourceTree = "<group>"; };
@@ -1668,6 +1671,7 @@
 			isa = PBXGroup;
 			children = (
 				381701702CD88374005FC220 /* CompositeInterceptor.swift */,
+				38AE39072FA759BD003C3E96 /* AppVersionInterceptor.swift */,
 				38E9CE182D37FED000E85A2D /* AddingTokenInterceptor.swift */,
 				3817016D2CD882C2005FC220 /* TimeoutInterceptor.swift */,
 				3816C05F2CCDE35300C8688C /* ErrorInterceptor.swift */,
@@ -3627,6 +3631,7 @@
 				385620F02CA19C9500E0AB5A /* NetworkManager.swift in Sources */,
 				380F42282E884B80009AC59E /* BaseCardInfo.swift in Sources */,
 				3889A24B2E79AE960030F7CA /* AppVersionUseCase.swift in Sources */,
+				38AE39082FA759BD003C3E96 /* AppVersionInterceptor.swift in Sources */,
 				2A980BA12D803EB1007DFA45 /* AnalyticsEventProtocol.swift in Sources */,
 				38F161472ECDA8F0003BADB6 /* FavoriteTagPlaceholderViewCell.swift in Sources */,
 				389E59BB2EDEEB8300D0946D /* BlockUserUseCase.swift in Sources */,
@@ -4068,6 +4073,7 @@
 				3818549F2E99340600424D71 /* WriteCardUserImageCell.swift in Sources */,
 				381B83E22EBC736800C84015 /* ProfileInfoResponse.swift in Sources */,
 				387FBAF02C8702C100A5E139 /* AppDelegate.swift in Sources */,
+				38AE39092FA759BD003C3E96 /* AppVersionInterceptor.swift in Sources */,
 				380F42272E884B80009AC59E /* BaseCardInfo.swift in Sources */,
 				38F161482ECDA8F0003BADB6 /* FavoriteTagPlaceholderViewCell.swift in Sources */,
 				389E59BA2EDEEB8300D0946D /* BlockUserUseCase.swift in Sources */,

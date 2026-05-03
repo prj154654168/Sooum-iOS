@@ -16,6 +16,7 @@ final class CompositeInterceptor: RequestInterceptor {
     init(provider: ManagerTypeDelegate) {
         
         self.interceptors = [
+            AppVersionInterceptor(),
             AddingTokenInterceptor(provider: provider),
             TimeoutInterceptor(timeoutInterval: self.timeoutInterval),
             ErrorInterceptor(provider: provider)

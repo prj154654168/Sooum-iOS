@@ -10,6 +10,8 @@ import Foundation
 
 class AuthInfo {
     
+    private static let deviceIdLock = NSLock()
+    
     /// 기기 식별 아이디
     var deviceId: Data = .init()
     /// 토큰
@@ -28,16 +30,23 @@ extension AuthInfo {
         AuthKeyChain.shared.save(.refreshToken, data: token.refreshToken.data(using: .utf8))
     }
     
-    static func loadInfo(_ authInfo: AuthInfo) -> AuthInfo {
+    private static func loadOrCreateDeviceId() -> Data {
+        self.deviceIdLock.lock()
+        defer { self.deviceIdLock.unlock() }
         
         if let deviceId = AuthKeyChain.shared.load(.deviceId) {
-            authInfo.deviceId = deviceId
-        } else {
-            let deviceId = UUID().uuidString
-            let toData = deviceId.data(using: .utf8)!
-            AuthKeyChain.shared.save(.deviceId, data: toData)
-            authInfo.deviceId = toData
+            return deviceId
         }
+        
+        let newDeviceId = UUID().uuidString
+        let deviceIdData = Data(newDeviceId.utf8)
+        AuthKeyChain.shared.save(.deviceId, data: deviceIdData)
+        return deviceIdData
+    }
+    
+    static func loadInfo(_ authInfo: AuthInfo) -> AuthInfo {
+        
+        authInfo.deviceId = self.loadOrCreateDeviceId()
         if let data = AuthKeyChain.shared.load(.accessToken),
            let accessToken = String(data: data, encoding: .utf8) {
             authInfo.token.accessToken = accessToken
