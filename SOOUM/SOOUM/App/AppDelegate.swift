@@ -12,6 +12,10 @@ import Clarity
 import Firebase
 import FirebaseCore
 import FirebaseMessaging
+import FBSDKCoreKit
+#if PRODUCTION
+import AppTrackingTransparency
+#endif
 
 import GoogleMobileAds
 
@@ -197,7 +201,6 @@ extension AppDelegate: MessagingDelegate {
 }
 
 extension AppDelegate {
-    
     /// CocoaLumberjack 설정
     private func setupCocoaLumberjack() {
         DDLog.add(DDOSLogger.sharedInstance) // Uses os_log

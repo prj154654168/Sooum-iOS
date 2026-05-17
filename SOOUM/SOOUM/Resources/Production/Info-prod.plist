@@ -14,6 +14,8 @@
 	<string>$(SOOUM_FACEBOOK_APP_ID)</string>
 	<key>FacebookClientToken</key>
 	<string>$(SOOUM_FACEBOOK_CLIENT_TOKEN)</string>
+	<key>FacebookAdvertiserIDCollectionEnabled</key>
+	<true/>
 	<key>ServerEndpoint</key>
 	<string>$(SOOUM_SERVER_ENDPOINT)</string>
 	<key>UIAppFonts</key>

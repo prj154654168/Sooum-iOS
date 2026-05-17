@@ -7,6 +7,10 @@
 
 import CoreLocation
 import UIKit
+#if PRODUCTION
+import AppTrackingTransparency
+import FBSDKCoreKit
+#endif
 
 import ReactorKit
 import RxCocoa
@@ -48,6 +52,9 @@ class MainTabBarController: SOMTabBarController, View {
     // MARK: Variables + Rx
     
     private let willPushWriteCard = PublishRelay<Void>()
+    #if PRODUCTION
+    private var hasRequestedTrackingAuthorization = false
+    #endif
     
     
     // MARK: Initialize
@@ -77,6 +84,14 @@ class MainTabBarController: SOMTabBarController, View {
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBar.isHidden = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        #if PRODUCTION
+        self.requestTrackingAuthorizationIfNeeded()
+        #endif
     }
     
     
@@ -272,6 +287,20 @@ class MainTabBarController: SOMTabBarController, View {
             }
             .disposed(by: self.disposeBag)
     }
+}
+
+private extension MainTabBarController {
+    
+    #if PRODUCTION
+    func requestTrackingAuthorizationIfNeeded() {
+        guard #available(iOS 14, *) else { return }
+        guard self.hasRequestedTrackingAuthorization == false else { return }
+        guard ATTrackingManager.trackingAuthorizationStatus == .notDetermined else { return }
+        
+        self.hasRequestedTrackingAuthorization = true
+        ATTrackingManager.requestTrackingAuthorization { _ in }
+    }
+    #endif
 }
 
 
