@@ -53,6 +53,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Set Kinfisher caching limit
         self.setupKingfisherCacheLimit()
+
+        #if PRODUCTION
+        ApplicationDelegate.shared.application(
+            application,
+            didFinishLaunchingWithOptions: launchOptions
+        )
+        #endif
         
         FirebaseApp.configure()
         // 파이어베이스 Meesaging 설정

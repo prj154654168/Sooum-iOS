@@ -4550,6 +4550,8 @@
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
 				SOOUM_CLARITY_ID = ukvzck1lyo;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
+				SOOUM_FACEBOOK_APP_ID = "";
+				SOOUM_FACEBOOK_CLIENT_TOKEN = "";
 				SOOUM_GAD_APP_ID = "ca-app-pub-7224162953021638~5969405994";
 				SOOUM_GAD_UNIT_ID = "ca-app-pub-7224162953021638/2465096014";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
@@ -4706,6 +4708,8 @@
 				SOOUM_APP_ID = 99FRG743RX.com.sooum.dev;
 				SOOUM_CLARITY_ID = ukvzck1lyo;
 				SOOUM_DISPLAY_NAME = "[D]SOOUM";
+				SOOUM_FACEBOOK_APP_ID = "";
+				SOOUM_FACEBOOK_CLIENT_TOKEN = "";
 				SOOUM_GAD_APP_ID = "ca-app-pub-7224162953021638~5969405994";
 				SOOUM_GAD_UNIT_ID = "ca-app-pub-7224162953021638/2465096014";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
@@ -4836,6 +4840,8 @@
 				SOOUM_CAMERA_DESCRIPTION = "숨에서 내 사진을 공유할 수 있도록 카메라 접근 권한을 허용해주세요.";
 				SOOUM_CLARITY_ID = "";
 				SOOUM_DISPLAY_NAME = "";
+				SOOUM_FACEBOOK_APP_ID = "";
+				SOOUM_FACEBOOK_CLIENT_TOKEN = "";
 				SOOUM_GAD_APP_ID = "";
 				SOOUM_GAD_UNIT_ID = "";
 				SOOUM_LIBRARY_DESCRIPTION = "게시글이나 프로필 업로드를 위해 권한이 필요합니다.";
@@ -4903,6 +4909,8 @@
 				SOOUM_CAMERA_DESCRIPTION = "숨에서 내 사진을 공유할 수 있도록 카메라 접근 권한을 허용해주세요.";
 				SOOUM_CLARITY_ID = "";
 				SOOUM_DISPLAY_NAME = "";
+				SOOUM_FACEBOOK_APP_ID = "";
+				SOOUM_FACEBOOK_CLIENT_TOKEN = "";
 				SOOUM_GAD_APP_ID = "";
 				SOOUM_GAD_UNIT_ID = "";
 				SOOUM_LIBRARY_DESCRIPTION = "게시글이나 프로필 업로드를 위해 권한이 필요합니다.";
@@ -4933,6 +4941,7 @@
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "게시글이나 프로필 업로드를 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "맞춤형 광고 제공 및 서비스 개선을 위해 추적 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -4950,6 +4959,8 @@
 				SOOUM_APP_ID = 6740403078;
 				SOOUM_CLARITY_ID = ukvz4wjnqm;
 				SOOUM_DISPLAY_NAME = "숨";
+				SOOUM_FACEBOOK_APP_ID = 3639471359533637;
+				SOOUM_FACEBOOK_CLIENT_TOKEN = 9810f95484ce5f243c7be428b81cb316;
 				SOOUM_GAD_APP_ID = "ca-app-pub-7224162953021638~5969405994";
 				SOOUM_GAD_UNIT_ID = "ca-app-pub-7224162953021638/2465096014";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
@@ -4982,6 +4993,7 @@
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "게시글이나 프로필 업로드를 위해 권한이 필요합니다.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "맞춤형 광고 제공 및 서비스 개선을 위해 추적 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
@@ -4999,6 +5011,8 @@
 				SOOUM_APP_ID = 6740403078;
 				SOOUM_CLARITY_ID = ukvz4wjnqm;
 				SOOUM_DISPLAY_NAME = "숨";
+				SOOUM_FACEBOOK_APP_ID = 3639471359533637;
+				SOOUM_FACEBOOK_CLIENT_TOKEN = 9810f95484ce5f243c7be428b81cb316;
 				SOOUM_GAD_APP_ID = "ca-app-pub-7224162953021638~5969405994";
 				SOOUM_GAD_UNIT_ID = "ca-app-pub-7224162953021638/2465096014";
 				SOOUM_LOCATION_DESCRIPTION = "사용자의 위치 기반으로 피드 정보를 제공하기 위해 권한이 필요합니다.";

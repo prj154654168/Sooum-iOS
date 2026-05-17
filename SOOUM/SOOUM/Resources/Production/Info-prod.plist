@@ -10,6 +10,10 @@
 	<string>$(SOOUM_CLARITY_ID)</string>
 	<key>AppId</key>
 	<string>$(SOOUM_APP_ID)</string>
+	<key>FacebookAppID</key>
+	<string>$(SOOUM_FACEBOOK_APP_ID)</string>
+	<key>FacebookClientToken</key>
+	<string>$(SOOUM_FACEBOOK_CLIENT_TOKEN)</string>
 	<key>ServerEndpoint</key>
 	<string>$(SOOUM_SERVER_ENDPOINT)</string>
 	<key>UIAppFonts</key>

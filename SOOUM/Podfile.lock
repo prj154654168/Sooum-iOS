@@ -4,6 +4,12 @@ PODS:
   - CocoaLumberjack/Core (3.7.4)
   - CocoaLumberjack/Swift (3.7.4):
     - CocoaLumberjack/Core
+  - FBAEMKit (18.0.3):
+    - FBSDKCoreKit_Basics (= 18.0.3)
+  - FBSDKCoreKit (18.0.3):
+    - FBAEMKit (= 18.0.3)
+    - FBSDKCoreKit_Basics (= 18.0.3)
+  - FBSDKCoreKit_Basics (18.0.3)
   - Firebase/Analytics (12.0.0):
     - Firebase/Core
   - Firebase/Core (12.0.0):
@@ -175,6 +181,7 @@ DEPENDENCIES:
   - Alamofire (~> 5.9.1)
   - Clarity
   - CocoaLumberjack/Swift (~> 3.7.2)
+  - FBSDKCoreKit (~> 18.0)
   - Firebase/Analytics (~> 12.0.0)
   - Firebase/Crashlytics (~> 12.0.0)
   - Firebase/Messaging (~> 12.0.0)
@@ -197,6 +204,9 @@ SPEC REPOS:
     - Alamofire
     - Clarity
     - CocoaLumberjack
+    - FBAEMKit
+    - FBSDKCoreKit
+    - FBSDKCoreKit_Basics
     - Firebase
     - FirebaseAnalytics
     - FirebaseCore
@@ -237,6 +247,9 @@ SPEC CHECKSUMS:
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   Clarity: fbd41ffa7b3c925ffb092a717c2dd896c39eff72
   CocoaLumberjack: 543c79c114dadc3b1aba95641d8738b06b05b646
+  FBAEMKit: 2a6b529993713c185b02bc36f8c91129bf78dfb0
+  FBSDKCoreKit: 65d7f7a7d6fcc3aa6eb6e093ec737a4184fc6049
+  FBSDKCoreKit_Basics: 7bc9d8fde8f70985fba2ed7c1d07e319f969a991
   Firebase: 800d487043c0557d9faed71477a38d9aafb08a41
   FirebaseAnalytics: 6d790cd1b159b4eb61a99948df0934ce505a34f7
   FirebaseCore: 055f4ab117d5964158c833f3d5e7ec6d91648d4a
@@ -273,6 +286,6 @@ SPEC CHECKSUMS:
   WeakMapTable: 05c694ce8439a7a9ebabb56187287a63c57673d6
   YPImagePicker: afc81b3cffab05a6e7261c5daf80dc31b4e917b4
 
-PODFILE CHECKSUM: 51a27ac299359e4bb1c4538d729184896324c1aa
+PODFILE CHECKSUM: 6dfeb9768fb551877ba49ef7d0b50f13d433651f
 
 COCOAPODS: 1.16.2
