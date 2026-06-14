@@ -17,9 +17,31 @@ import RxSwift
 extension NetworkManager {
     
     static var registeredToken: PushTokenSet?
+    static var cachedAPNSToken: Data?
+    static var cachedFCMToken: String?
+    static var pendingRegistration: Bool = false
+    static var isRegisteringFCMToken: Bool = false
+    static let fcmQueue = DispatchQueue(label: "com.sooum.network.fcm.queue")
     static var fcmDisposeBag = DisposeBag()
     
     func registerFCMToken(with tokenSet: PushTokenSet, _ function: String) {
+        Self.fcmQueue.async { [weak self] in
+            guard let self else { return }
+            
+            if let apns = tokenSet.apns {
+                Self.cachedAPNSToken = apns
+            }
+            if let fcm = tokenSet.fcm {
+                Self.cachedFCMToken = fcm
+            }
+            
+            Self.pendingRegistration = true
+            self.registerFCMTokenIfPossible(from: function)
+        }
+    }
+    
+    private func registerFCMTokenIfPossible(from function: String) {
+        guard Self.isRegisteringFCMToken == false else { return }
         
         // AccessToken이 없는 경우 업데이트에 실패하므로 무시
         guard self.provider.authManager.hasToken else {
@@ -27,43 +49,61 @@ extension NetworkManager {
             return
         }
         
-        let prevTokenSet: PushTokenSet? = Self.registeredToken
-        // TODO: 이전에 업로드 성공한 토큰이 다시 등록되는 경우 무시, 계정 이관 이슈로 중복 토큰도 항상 업데이트
-        // guard tokenSet != Self.registeredToken else {
-        //     Log.info("Ignored already registered token set. (from: \(`func`))")
-        //     return
-        // }
-        Self.registeredToken = tokenSet
+        let tokenSet = PushTokenSet(
+            apns: Self.cachedAPNSToken ?? Messaging.messaging().apnsToken,
+            fcm: Self.cachedFCMToken ?? Messaging.messaging().fcmToken
+        )
         
-        guard let fcmToken = tokenSet.fcm, let apns = tokenSet.apns else { return }
+        guard let fcmToken = tokenSet.fcm, let apns = tokenSet.apns else {
+            Log.info("FCM registration is pending until both APNS and FCM tokens are ready. (from: \(function))")
+            return
+        }
+        
+        Self.cachedAPNSToken = apns
+        Self.cachedFCMToken = fcmToken
+        Self.isRegisteringFCMToken = true
+        Self.pendingRegistration = false
+        
         Log.info("Firebase registration token: \(fcmToken) [with \(apns)] (from: \(function))")
         
-        // 서버에 FCM token 등록
-        if let fcmToken = tokenSet.fcm {
-            
-            let request: UserRequest = .updateFCMToken(fcmToken: fcmToken)
-            self.perform(request)
-                .subscribe(
-                    onNext: { _ in
-                        Log.info("Update FCM token to server with", fcmToken)
-                    },
-                    onError: { _ in
-                        Log.error("Failed to update FCM token to server: not found user")
+        let request: UserRequest = .updateFCMToken(fcmToken: fcmToken)
+        self.perform(request)
+            .subscribe(
+                onNext: { [weak self] _ in
+                    Self.fcmQueue.async {
+                        Self.registeredToken = tokenSet
+                        Self.isRegisteringFCMToken = false
+                        
+                        guard Self.pendingRegistration else { return }
+                        self?.registerFCMTokenIfPossible(from: function)
                     }
-                )
-                .disposed(by: Self.fcmDisposeBag)
-        } else {
-            
-            Self.registeredToken = prevTokenSet
-            Log.info("Failed to update FCM token to server: not found device unique id")
-        }
+                    Log.info("Update FCM token to server with", fcmToken)
+                },
+                onError: { [weak self] _ in
+                    Self.fcmQueue.async {
+                        Self.pendingRegistration = true
+                        Self.isRegisteringFCMToken = false
+                        self?.registerFCMTokenIfPossible(from: function)
+                    }
+                    Log.error("Failed to update FCM token to server: not found user")
+                }
+            )
+            .disposed(by: Self.fcmDisposeBag)
     }
     
     func registerFCMToken(from func: String) {
-        let tokenSet = PushTokenSet(
-            apns: nil,
-            fcm: Messaging.messaging().fcmToken
-        )
-        self.registerFCMToken(with: tokenSet, `func`)
+        Self.fcmQueue.async { [weak self] in
+            guard let self else { return }
+            
+            if let apns = Messaging.messaging().apnsToken {
+                Self.cachedAPNSToken = apns
+            }
+            if let fcmToken = Messaging.messaging().fcmToken {
+                Self.cachedFCMToken = fcmToken
+            }
+            
+            Self.pendingRegistration = true
+            self.registerFCMTokenIfPossible(from: `func`)
+        }
     }
 }
