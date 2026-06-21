@@ -62,17 +62,17 @@ class SOMCard: UIView {
         $0.lineBreakStrategy = .hangulWordPriority
     }
     
-    /// 펑 시간, 거리, 시간, 좋아요 수, 답글 수 정보를 담는 뷰
+    /// 좋아요 수, 답글 수, 추표 수, 어드민, 평 시간 정보를 담는 뷰
     private let cardInfoContainer = UIView().then {
         $0.backgroundColor = .som.v2.white
     }
-    /// 펑 시간, 거리, 시간을 담는 스택 뷰
+    /// 좋아요 수, 답글 수, 투표 수를 담는 스택 뷰
     private let cardInfoLeadingStackView = UIStackView().then {
         $0.axis = .horizontal
-        $0.spacing = 4
+        $0.spacing = 8
         $0.alignment = .center
     }
-    /// 좋아요 수, 답글 수를 담는 스택 뷰
+    /// 펑 시간을 담는 스택 뷰
     private let cardInfoTrailingStackView = UIStackView().then {
         $0.axis = .horizontal
         $0.spacing = 4
@@ -94,13 +94,12 @@ class SOMCard: UIView {
     private let adminLabel = UILabel().then {
         $0.text = Text.adminTitle
         $0.textColor = .som.v2.black
-        $0.typography = .som.v2.caption2
+        $0.typography = .som.v2.body1
     }
-    /// 어드민 닷
-    private let firstDot = UIView().then {
-        $0.backgroundColor = .som.v2.gray500
-        $0.layer.cornerRadius = 1
-    }
+    // private let firstDot = UIView().then {
+    //     $0.backgroundColor = .som.v2.gray500
+    //     $0.layer.cornerRadius = 1
+    // }
     /// 펑 남은시간 표시 스택뷰
     private let cardPungTimeStackView = UIStackView().then {
         $0.axis = .horizontal
@@ -117,37 +116,31 @@ class SOMCard: UIView {
         $0.textColor = .som.v2.pDark
         $0.typography = .som.v2.caption2
     }
-    /// 펑 남은시간 닷
-    private let secondDot = UIView().then {
-        $0.backgroundColor = .som.v2.gray500
-        $0.layer.cornerRadius = 1
-    }
-    /// 거리 정보 표시 스택뷰
-    private let distanceInfoStackView = UIStackView().then {
-        $0.axis = .horizontal
-        $0.spacing = 2
-        $0.alignment = .center
-    }
-    /// 거리 정보 아이콘
-    private let distanceImageView = UIImageView().then {
-        $0.image = .init(.icon(.v2(.outlined(.location))))
-        $0.tintColor = .som.v2.gray500
-    }
-    /// 거리 정보 라벨
-    private let distanceLabel = UILabel().then {
-        $0.textColor = .som.v2.gray500
-        $0.typography = .som.v2.caption2
-    }
-    /// 거리 정보 닷
-    private let thirdDot = UIView().then {
-        $0.backgroundColor = .som.v2.gray500
-        $0.layer.cornerRadius = 1
-    }
-    /// 시간 정보 표시 라벨
-    private let timeLabel = UILabel().then {
-        $0.textColor = .som.v2.gray500
-        $0.typography = .som.v2.caption2
-    }
+    // private let secondDot = UIView().then {
+    //     $0.backgroundColor = .som.v2.gray500
+    //     $0.layer.cornerRadius = 1
+    // }
+    // private let distanceInfoStackView = UIStackView().then {
+    //     $0.axis = .horizontal
+    //     $0.spacing = 2
+    //     $0.alignment = .center
+    // }
+    // private let distanceImageView = UIImageView().then {
+    //     $0.image = .init(.icon(.v2(.outlined(.location))))
+    //     $0.tintColor = .som.v2.gray500
+    // }
+    // private let distanceLabel = UILabel().then {
+    //     $0.textColor = .som.v2.gray500
+    //     $0.typography = .som.v2.caption2
+    // }
+    // private let thirdDot = UIView().then {
+    //     $0.backgroundColor = .som.v2.gray500
+    //     $0.layer.cornerRadius = 1
+    // }
+    // private let timeLabel = UILabel().then {
+    //     $0.textColor = .som.v2.gray500
+    //     $0.typography = .som.v2.caption2
+    // }
     /// 좋아요 정보 표시 스택뷰
     private let likeInfoStackView = UIStackView().then {
         $0.axis = .horizontal
@@ -162,7 +155,7 @@ class SOMCard: UIView {
     /// 좋아요 정보 표시 라벨
     private let likeLabel = UILabel().then {
         $0.textColor = .som.v2.gray500
-        $0.typography = .som.v2.caption2
+        $0.typography = .som.v2.body1
     }
     /// 답카드 정보 표시 스택뷰
     private let commentInfoStackView = UIStackView().then {
@@ -178,9 +171,24 @@ class SOMCard: UIView {
     /// 답카드 정보 표시 라벨
     private let commentLabel = UILabel().then {
         $0.textColor = .som.v2.gray500
-        $0.typography = .som.v2.caption2
+        $0.typography = .som.v2.body1
     }
-    
+    /// 투표 정보 표시 스택뷰
+    private let voteInfoStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.spacing = 2
+        $0.alignment = .center
+    }
+    /// 투표 정보 표시 아이콘
+    private let voteImageView = UIImageView().then {
+        $0.image = .init(.icon(.v2(.outlined(.vote))))
+        $0.tintColor = .som.v2.gray500
+    }
+    /// 투표 정보 표시 라벨
+    private let voteLabel = UILabel().then {
+        $0.textColor = .som.v2.gray500
+        $0.typography = .som.v2.body1
+    }
     
     // MARK: Variables
     
@@ -252,54 +260,71 @@ class SOMCard: UIView {
         self.borderBackgroundView.addSubview(self.cardInfoContainer)
         self.cardInfoContainer.snp.makeConstraints {
             $0.bottom.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(34)
+            $0.height.equalTo(40)
         }
+        
         
         // 좌측
         self.cardInfoContainer.addSubview(self.cardInfoLeadingStackView)
         self.cardInfoLeadingStackView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().offset(16)
-            $0.height.equalTo(18)
+            $0.height.equalTo(21)
         }
+        
+        self.likeInfoStackView.addArrangedSubview(self.likeImageView)
+        self.likeInfoStackView.addArrangedSubview(self.likeLabel)
+        self.likeImageView.snp.makeConstraints {
+            $0.size.equalTo(20)
+        }
+        
+        self.commentInfoStackView.addArrangedSubview(self.commentImageView)
+        self.commentInfoStackView.addArrangedSubview(self.commentLabel)
+        self.commentImageView.snp.makeConstraints {
+            $0.size.equalTo(20)
+        }
+        
+        self.voteInfoStackView.addArrangedSubview(self.voteImageView)
+        self.voteInfoStackView.addArrangedSubview(self.voteLabel)
+        self.voteImageView.snp.makeConstraints {
+            $0.size.equalTo(20)
+        }
+        
+        self.cardInfoLeadingStackView.addArrangedSubview(self.likeInfoStackView)
+        self.cardInfoLeadingStackView.addArrangedSubview(self.commentInfoStackView)
+        self.cardInfoLeadingStackView.addArrangedSubview(self.voteInfoStackView)
         
         self.adminStackView.addArrangedSubview(self.adminImageView)
         self.adminStackView.addArrangedSubview(self.adminLabel)
         self.adminImageView.snp.makeConstraints {
-            $0.size.equalTo(16)
-        }
-        
-        self.cardPungTimeStackView.addArrangedSubview(self.cardPungTimeImageView)
-        self.cardPungTimeStackView.addArrangedSubview(self.cardPungTimeLabel)
-        self.cardPungTimeImageView.snp.makeConstraints {
-            $0.size.equalTo(16)
-        }
-        
-        self.distanceInfoStackView.addArrangedSubview(self.distanceImageView)
-        self.distanceInfoStackView.addArrangedSubview(self.distanceLabel)
-        self.distanceImageView.snp.makeConstraints {
-            $0.size.equalTo(14)
+            $0.size.equalTo(20)
         }
         
         self.cardInfoLeadingStackView.addArrangedSubview(self.adminStackView)
-        self.cardInfoLeadingStackView.addArrangedSubview(self.firstDot)
-        self.firstDot.snp.makeConstraints {
-            $0.size.equalTo(2)
-        }
         
-        self.cardInfoLeadingStackView.addArrangedSubview(self.distanceInfoStackView)
-        self.cardInfoLeadingStackView.addArrangedSubview(self.thirdDot)
-        self.thirdDot.snp.makeConstraints {
-            $0.size.equalTo(2)
-        }
+        // self.distanceInfoStackView.addArrangedSubview(self.distanceImageView)
+        // self.distanceInfoStackView.addArrangedSubview(self.distanceLabel)
+        // self.distanceImageView.snp.makeConstraints {
+        //     $0.size.equalTo(14)
+        // }
         
-        self.cardInfoLeadingStackView.addArrangedSubview(self.timeLabel)
-        self.cardInfoLeadingStackView.addArrangedSubview(self.secondDot)
-        self.secondDot.snp.makeConstraints {
-            $0.size.equalTo(2)
-        }
+        // self.cardInfoLeadingStackView.addArrangedSubview(self.firstDot)
+        // self.firstDot.snp.makeConstraints {
+        //     $0.size.equalTo(2)
+        // }
         
-        self.cardInfoLeadingStackView.addArrangedSubview(self.cardPungTimeStackView)
+        // self.cardInfoLeadingStackView.addArrangedSubview(self.distanceInfoStackView)
+        // self.cardInfoLeadingStackView.addArrangedSubview(self.thirdDot)
+        // self.thirdDot.snp.makeConstraints {
+        //     $0.size.equalTo(2)
+        // }
+        
+        // self.cardInfoLeadingStackView.addArrangedSubview(self.timeLabel)
+        // self.cardInfoLeadingStackView.addArrangedSubview(self.secondDot)
+        // self.secondDot.snp.makeConstraints {
+        //     $0.size.equalTo(2)
+        // }
+        
         
         // 우측
         self.cardInfoContainer.addSubview(self.cardInfoTrailingStackView)
@@ -307,23 +332,17 @@ class SOMCard: UIView {
             $0.centerY.equalToSuperview()
             $0.leading.greaterThanOrEqualTo(self.cardInfoLeadingStackView.snp.trailing).offset(4)
             $0.trailing.equalToSuperview().offset(-16)
-            $0.height.equalTo(18)
+            $0.height.equalTo(24)
         }
         
-        self.likeInfoStackView.addArrangedSubview(self.likeImageView)
-        self.likeInfoStackView.addArrangedSubview(self.likeLabel)
-        self.likeImageView.snp.makeConstraints {
-            $0.size.equalTo(14)
+        self.cardPungTimeStackView.addArrangedSubview(self.cardPungTimeImageView)
+        self.cardPungTimeStackView.addArrangedSubview(self.cardPungTimeLabel)
+        self.cardPungTimeImageView.snp.makeConstraints {
+            $0.size.equalTo(24)
         }
         
-        self.commentInfoStackView.addArrangedSubview(self.commentImageView)
-        self.commentInfoStackView.addArrangedSubview(self.commentLabel)
-        self.commentImageView.snp.makeConstraints {
-            $0.size.equalTo(14)
-        }
+        self.cardInfoLeadingStackView.addArrangedSubview(self.cardPungTimeStackView)
         
-        self.cardInfoTrailingStackView.addArrangedSubview(self.likeInfoStackView)
-        self.cardInfoTrailingStackView.addArrangedSubview(self.commentInfoStackView)
         
         // 카드 문구
         self.rootContainerImageView.addSubview(self.cardTextBackgroundBlurView)
@@ -354,8 +373,8 @@ class SOMCard: UIView {
         
         self.adminLabel.text = Text.adminTitle
         self.cardPungTimeLabel.text = nil
-        self.distanceLabel.text = nil
-        self.timeLabel.text = nil
+        // self.distanceLabel.text = nil
+        // self.timeLabel.text = nil
         self.likeLabel.text = nil
         self.commentLabel.text = nil
     }
@@ -386,23 +405,31 @@ class SOMCard: UIView {
         // 하단 정보
         // 어드민, 펑 시간, 거리, 시간
         self.adminStackView.isHidden = model.isAdminCard == false
-        self.firstDot.isHidden = model.isAdminCard == false
+        // self.firstDot.isHidden = model.isAdminCard == false
         self.cardPungTimeStackView.isHidden = model.storyExpirationTime == nil
-        self.secondDot.isHidden = model.storyExpirationTime == nil
-        self.distanceLabel.text = model.distance
-        /// 어드민 카드의 경우 거리 표시 X
-        self.distanceInfoStackView.isHidden = (model.distance == nil || model.isAdminCard)
-        self.thirdDot.isHidden = model.distance == nil
-        self.timeLabel.text = model.createdAt.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
+        // self.secondDot.isHidden = model.storyExpirationTime == nil
+        // self.distanceLabel.text = model.distance
+        // self.distanceInfoStackView.isHidden = (model.distance == nil || model.isAdminCard)
+        // self.thirdDot.isHidden = model.distance == nil
+        // self.timeLabel.text = model.createdAt.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
         
-        // 좋아요 수, 답글 수
+        // 좋아요 수, 답글 수, 투표 수
         let likeText = model.likeCnt > 99 ? "99+" : "\(model.likeCnt)"
         self.likeLabel.text = likeText
-        self.likeLabel.typography = .som.v2.caption2
+        self.likeLabel.typography = .som.v2.body1
+        
+        self.likeImageView.image = model.isLike ?
+            .init(.icon(.v2(.filled(.heart)))) :
+            .init(.icon(.v2(.outlined(.heart))))
+        self.likeImageView.tintColor = model.isLike ? .som.v2.rMain : .som.v2.gray500
         
         let commentText = model.commentCnt > 99 ? "99+" : "\(model.commentCnt)"
         self.commentLabel.text = commentText
-        self.commentLabel.typography = .som.v2.caption2
+        self.commentLabel.typography = .som.v2.body1
+        
+        let voteText = model.voteCnt > 99 ? "99+" : "\(model.voteCnt)"
+        self.voteLabel.text = voteText
+        self.voteLabel.typography = .som.v2.body1
         
         // 스토리 정보 설정
         self.subscribePungTime(model.storyExpirationTime)

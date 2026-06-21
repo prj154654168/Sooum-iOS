@@ -11,6 +11,7 @@ struct BaseCardInfo: Hashable {
     let id: String
     let likeCnt: Int
     let commentCnt: Int
+    let voteCnt: Int
     let cardImgName: String
     let cardImgURL: String
     let cardContent: String
@@ -19,6 +20,7 @@ struct BaseCardInfo: Hashable {
     let createdAt: Date
     let storyExpirationTime: Date?
     let isAdminCard: Bool
+    let isLike: Bool
 }
 
 extension BaseCardInfo {
@@ -29,6 +31,7 @@ extension BaseCardInfo {
             id: self.id,
             likeCnt: likeCnt,
             commentCnt: self.commentCnt,
+            voteCnt: self.voteCnt,
             cardImgName: self.cardImgName,
             cardImgURL: self.cardImgURL,
             cardContent: self.cardContent,
@@ -36,7 +39,8 @@ extension BaseCardInfo {
             distance: self.distance,
             createdAt: self.createdAt,
             storyExpirationTime: self.storyExpirationTime,
-            isAdminCard: self.isAdminCard
+            isAdminCard: self.isAdminCard,
+            isLike: self.isLike
         )
     }
     
@@ -46,6 +50,7 @@ extension BaseCardInfo {
             id: self.id,
             likeCnt: self.likeCnt,
             commentCnt: commentCnt,
+            voteCnt: self.voteCnt,
             cardImgName: self.cardImgName,
             cardImgURL: self.cardImgURL,
             cardContent: self.cardContent,
@@ -53,7 +58,8 @@ extension BaseCardInfo {
             distance: self.distance,
             createdAt: self.createdAt,
             storyExpirationTime: self.storyExpirationTime,
-            isAdminCard: self.isAdminCard
+            isAdminCard: self.isAdminCard,
+            isLike: self.isLike
         )
     }
 }
@@ -85,6 +91,7 @@ extension BaseCardInfo {
         id: "",
         likeCnt: 0,
         commentCnt: 0,
+        voteCnt: 0,
         cardImgName: "",
         cardImgURL: "",
         cardContent: "",
@@ -92,7 +99,8 @@ extension BaseCardInfo {
         distance: nil,
         createdAt: Date(),
         storyExpirationTime: nil,
-        isAdminCard: false
+        isAdminCard: false,
+        isLike: false
     )
 }
 
@@ -102,6 +110,7 @@ extension BaseCardInfo: Decodable {
         case id = "cardId"
         case likeCnt
         case commentCnt = "commentCardCnt"
+        case voteCnt = "pollVoterCnt"
         case cardImgName
         case cardImgURL = "cardImgUrl"
         case cardContent
@@ -110,6 +119,7 @@ extension BaseCardInfo: Decodable {
         case createdAt
         case storyExpirationTime
         case isAdminCard
+        case isLike
     }
     
     init(from decoder: any Decoder) throws {
@@ -117,6 +127,7 @@ extension BaseCardInfo: Decodable {
         self.id = String(try container.decode(Int64.self, forKey: .id))
         self.likeCnt = try container.decode(Int.self, forKey: .likeCnt)
         self.commentCnt = try container.decode(Int.self, forKey: .commentCnt)
+        self.voteCnt = try container.decode(Int.self, forKey: .voteCnt)
         self.cardImgName = try container.decode(String.self, forKey: .cardImgName)
         self.cardImgURL = try container.decode(String.self, forKey: .cardImgURL)
         self.cardContent = try container.decode(String.self, forKey: .cardContent)
@@ -125,5 +136,6 @@ extension BaseCardInfo: Decodable {
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
         self.storyExpirationTime = try container.decodeIfPresent(Date.self, forKey: .storyExpirationTime)
         self.isAdminCard = try container.decode(Bool.self, forKey: .isAdminCard)
+        self.isLike = try container.decode(Bool.self, forKey: .isLike)
     }
 }
