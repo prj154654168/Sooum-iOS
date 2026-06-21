@@ -872,6 +872,10 @@
 		38FEBE622E8661F4002916A8 /* NoticeInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FEBE602E8661F2002916A8 /* NoticeInfo.swift */; };
 		38FEBE642E8662A3002916A8 /* NoticeInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FEBE632E86629F002916A8 /* NoticeInfoResponse.swift */; };
 		38FEBE652E8662A3002916A8 /* NoticeInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FEBE632E86629F002916A8 /* NoticeInfoResponse.swift */; };
+		38FED0FA2FDE6DFB00E0258E /* MakeVoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FED0F92FDE6DF600E0258E /* MakeVoteView.swift */; };
+		38FED0FB2FDE6DFB00E0258E /* MakeVoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FED0F92FDE6DF600E0258E /* MakeVoteView.swift */; };
+		38FED0FD2FDE758100E0258E /* VoteTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FED0FC2FDE757A00E0258E /* VoteTextField.swift */; };
+		38FED0FE2FDE758100E0258E /* VoteTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FED0FC2FDE757A00E0258E /* VoteTextField.swift */; };
 		9F83B2E5C38D60FE4D409059 /* Pods_SOOUM_DevTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D0E55D6E2C99714CF229CA1 /* Pods_SOOUM_DevTests.framework */; };
 		A40D6E37CF713608CA27DF02 /* Pods_SOOUM_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */; };
 /* End PBXBuildFile section */
@@ -1377,6 +1381,8 @@
 		38FEBE5D2E866125002916A8 /* NoticeViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeViewCell.swift; sourceTree = "<group>"; };
 		38FEBE602E8661F2002916A8 /* NoticeInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeInfo.swift; sourceTree = "<group>"; };
 		38FEBE632E86629F002916A8 /* NoticeInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeInfoResponse.swift; sourceTree = "<group>"; };
+		38FED0F92FDE6DF600E0258E /* MakeVoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeVoteView.swift; sourceTree = "<group>"; };
+		38FED0FC2FDE757A00E0258E /* VoteTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteTextField.swift; sourceTree = "<group>"; };
 		4C597C004C07775E636659FE /* Pods-SOOUM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SOOUM.release.xcconfig"; path = "Target Support Files/Pods-SOOUM/Pods-SOOUM.release.xcconfig"; sourceTree = "<group>"; };
 		74194BC62F22BC2F5596D850 /* Pods_SOOUM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		79FB23C15AD70915D59D7DC3 /* Pods-SOOUM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SOOUM.debug.xcconfig"; path = "Target Support Files/Pods-SOOUM/Pods-SOOUM.debug.xcconfig"; sourceTree = "<group>"; };
@@ -2842,6 +2848,7 @@
 		38D6F17E2CC2412500E11530 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				38FED0F82FDE665000E0258E /* Vote */,
 				386E96702E9BC008005E047D /* RelatedTags */,
 				38B669A82F2F352E000B24FD /* SelectCardType */,
 				386E96692E9A51C5005E047D /* SelectOptions */,
@@ -2945,6 +2952,15 @@
 				38FDC2C62C9E764300C094C2 /* BaseNavigationViewController.swift */,
 			);
 			path = Base;
+			sourceTree = "<group>";
+		};
+		38FED0F82FDE665000E0258E /* Vote */ = {
+			isa = PBXGroup;
+			children = (
+				38FED0F92FDE6DF600E0258E /* MakeVoteView.swift */,
+				38FED0FC2FDE757A00E0258E /* VoteTextField.swift */,
+			);
+			path = Vote;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3478,6 +3494,7 @@
 				38B6AADC2CA4740B00CE6DB6 /* LaunchScreenViewReactor.swift in Sources */,
 				38B543E02D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */,
 				38787B752ED1E5B3004BBAA7 /* SearchTermViewCell.swift in Sources */,
+				38FED0FD2FDE758100E0258E /* VoteTextField.swift in Sources */,
 				3887D0342CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */,
 				38D6F17D2CC2406700E11530 /* WriteCardViewController.swift in Sources */,
 				381854982E992E9900424D71 /* WriteCardSelectImageView.swift in Sources */,
@@ -3780,6 +3797,7 @@
 				38AE85482EDFFD7E00029E4C /* WriteCardUseCaseImpl.swift in Sources */,
 				381701792CD88854005FC220 /* LogginMonitor.swift in Sources */,
 				386E966B2E9A51D9005E047D /* SelectOptionItem.swift in Sources */,
+				38FED0FB2FDE6DFB00E0258E /* MakeVoteView.swift in Sources */,
 				388DA1052C8F545E00A9DD56 /* Typography+SOOUM.swift in Sources */,
 				38D2FBCC2E81B0E5006DD739 /* SOMSwipableTabBarItem.swift in Sources */,
 				3880EF752EA0CEEE00D88608 /* RelatedTagsView.swift in Sources */,
@@ -3920,6 +3938,7 @@
 				38B543DF2D46171300DDF2C5 /* ManagerConfiguration.swift in Sources */,
 				38D5637E2D17152F006265AA /* SOMStickyTabBarDelegate.swift in Sources */,
 				38787B762ED1E5B3004BBAA7 /* SearchTermViewCell.swift in Sources */,
+				38FED0FE2FDE758100E0258E /* VoteTextField.swift in Sources */,
 				381854992E992E9900424D71 /* WriteCardSelectImageView.swift in Sources */,
 				385009C22D363525007175A1 /* FilterNil.swift in Sources */,
 				386E966F2E9A53D6005E047D /* SelectOptionsView.swift in Sources */,
@@ -4222,6 +4241,7 @@
 				38AE85492EDFFD7E00029E4C /* WriteCardUseCaseImpl.swift in Sources */,
 				38B8A5842CAE9CC4000AFE83 /* HomeViewCell.swift in Sources */,
 				3803CF852D017DC700FD90DB /* EnterMemberTransferViewReactor.swift in Sources */,
+				38FED0FA2FDE6DFB00E0258E /* MakeVoteView.swift in Sources */,
 				386E966C2E9A51D9005E047D /* SelectOptionItem.swift in Sources */,
 				38D488CA2D0C557300F2D38D /* SOMButton.swift in Sources */,
 				38D2FBCB2E81B0E5006DD739 /* SOMSwipableTabBarItem.swift in Sources */,

@@ -442,6 +442,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
             }
             .disposed(by: self.disposeBag)
         
+        selectedOptions
+            .filter { $0.contains(.vote) }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                
+            }
+            .disposed(by: self.disposeBag)
+        
         // Action
         let viewDidLoad = self.rx.viewDidLoad.share()
         viewDidLoad

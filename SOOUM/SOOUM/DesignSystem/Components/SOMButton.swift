@@ -9,6 +9,14 @@ import UIKit
 
 class SOMButton: UIButton {
     
+    var isDashedBorderEnabled: Bool = false {
+        didSet {
+            guard oldValue != self.isDashedBorderEnabled else { return }
+            self.setNeedsLayout()
+            self.setNeedsUpdateConfiguration()
+        }
+    }
+    
     var title: String? {
         didSet {
             if oldValue != self.title {
@@ -70,12 +78,19 @@ class SOMButton: UIButton {
         self.setupConfiguration()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.updateDashedBorderIfNeeded()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 private extension SOMButton {
+    
+    var dashedBorderLayerName: String { "SOMButtonDashedBorderLayer" }
     
     func setupConfiguration() {
         
@@ -148,9 +163,11 @@ private extension SOMButton {
             }
             
             updatedConfig?.background.cornerRadius = 10
+            updatedConfig?.background.strokeWidth = self.isDashedBorderEnabled ? 0 : 1
             
             self.applyConfiguration(to: &updatedConfig)
             button.configuration = updatedConfig
+            self.updateDashedBorderIfNeeded()
         }
     }
     
@@ -200,5 +217,31 @@ private extension SOMButton {
                 AttributeContainer(attributes)
             }
         }
+    }
+    
+    func updateDashedBorderIfNeeded() {
+        self.removeDashedBorderLayerIfNeeded()
+        
+        guard self.isDashedBorderEnabled, self.bounds.isEmpty == false else { return }
+        
+        let borderLayer = CAShapeLayer()
+        borderLayer.name = self.dashedBorderLayerName
+        borderLayer.frame = self.bounds
+        borderLayer.path = UIBezierPath(
+            roundedRect: self.bounds,
+            cornerRadius: self.layer.cornerRadius
+        ).cgPath
+        borderLayer.fillColor = UIColor.clear.cgColor
+        borderLayer.strokeColor = UIColor.som.v2.gray300.cgColor
+        borderLayer.lineWidth = 1
+        borderLayer.lineDashPattern = [3, 3]
+        
+        self.layer.addSublayer(borderLayer)
+    }
+    
+    func removeDashedBorderLayerIfNeeded() {
+        self.layer.sublayers?
+            .filter { $0.name == self.dashedBorderLayerName }
+            .forEach { $0.removeFromSuperlayer() }
     }
 }

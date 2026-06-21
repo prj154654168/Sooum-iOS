@@ -192,6 +192,7 @@ extension UIImage.SOOUMType {
             case message_square
             case more
             case plus
+            case remove_circle
             case right
             case search
             case settings
@@ -203,6 +204,7 @@ extension UIImage.SOOUMType {
             case trash
             case up
             case user
+            case vote
             case write
         }
         
