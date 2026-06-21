@@ -12,6 +12,10 @@ import Then
 
 import RxSwift
 
+protocol SOMCardDelegate: AnyObject {
+    func cardDidTapLike(_ card: SOMCard, model: BaseCardInfo)
+}
+
 class SOMCard: UIView {
     
     enum Text {
@@ -151,6 +155,7 @@ class SOMCard: UIView {
     private let likeImageView = UIImageView().then {
         $0.image = .init(.icon(.v2(.outlined(.heart))))
         $0.tintColor = .som.v2.gray500
+        $0.isUserInteractionEnabled = true
     }
     /// 좋아요 정보 표시 라벨
     private let likeLabel = UILabel().then {
@@ -194,6 +199,7 @@ class SOMCard: UIView {
     
     private(set) var model: BaseCardInfo = .defaultValue
     private(set) var cardType: CardType
+    weak var delegate: SOMCardDelegate?
     
     
     // MARK: Constraints
@@ -361,6 +367,12 @@ class SOMCard: UIView {
             $0.trailing.equalToSuperview().offset(-24)
             self.contentHeightConstraint = $0.height.equalTo(Typography.som.v2.body1.lineHeight).constraint
         }
+
+        let likeTapGesture = UITapGestureRecognizer(
+            target: self,
+            action: #selector(self.didTapLikeImageView)
+        )
+        self.likeImageView.addGestureRecognizer(likeTapGesture)
     }
     
     
@@ -427,7 +439,7 @@ class SOMCard: UIView {
         self.commentLabel.text = commentText
         self.commentLabel.typography = .som.v2.body1
         
-        let voteText = model.voteCnt > 99 ? "99+" : "\(model.voteCnt)"
+        let voteText = (model.voteCnt ?? 0) > 99 ? "99+" : "\(model.voteCnt ?? 0)"
         self.voteLabel.text = voteText
         self.voteLabel.typography = .som.v2.body1
         
@@ -507,5 +519,42 @@ class SOMCard: UIView {
         
         self.cardTextContentLabel.text = Text.pungedCardText
         self.updateContentHeight(Text.pungedCardText, with: .som.v2.body1)
+    }
+
+    @objc
+    private func didTapLikeImageView() {
+        self.animateLikeTap { [weak self] in
+            guard let self else { return }
+            self.delegate?.cardDidTapLike(self, model: self.model)
+        }
+    }
+    
+    private func animateLikeTap(completion: (() -> Void)? = nil) {
+        self.likeImageView.isUserInteractionEnabled = false
+        
+        UIView.animate(
+            withDuration: 0.12,
+            delay: 0,
+            options: [.curveEaseOut, .beginFromCurrentState],
+            animations: {
+                self.likeImageView.transform = CGAffineTransform(scaleX: 0.82, y: 0.82)
+            },
+            completion: { _ in
+                UIView.animate(
+                    withDuration: 0.32,
+                    delay: 0,
+                    usingSpringWithDamping: 0.45,
+                    initialSpringVelocity: 3,
+                    options: [.curveEaseInOut, .beginFromCurrentState],
+                    animations: {
+                        self.likeImageView.transform = .identity
+                    },
+                    completion: { _ in
+                        self.likeImageView.isUserInteractionEnabled = true
+                        completion?()
+                    }
+                )
+            }
+        )
     }
 }

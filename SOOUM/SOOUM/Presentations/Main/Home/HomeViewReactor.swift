@@ -31,6 +31,7 @@ class HomeViewReactor: Reactor {
         case landing
         case refresh
         case moreFind(String)
+        case updateLike(cardId: String, isLike: Bool)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
         case hasDetailCard(String, isEventCard: Bool, isArticleCard: Bool)
@@ -48,6 +49,7 @@ class HomeViewReactor: Reactor {
         case updateHasUnreadNotifications(Bool)
         case notice(NoticeInfo?)
         case cardIsDeleted((String, Bool)?)
+        case updatedFavorite((String, Bool)?)
         case updateDisplayType(DisplayType)
         case updateDistanceFilter(String)
         case updateIsRefreshing(Bool)
@@ -63,6 +65,7 @@ class HomeViewReactor: Reactor {
         fileprivate(set) var articleCard: ArticleCardInfo?
         fileprivate(set) var hasUnreadNotifications: Bool
         fileprivate(set) var cardIsDeleted: (selectedId: String, isDeleted: Bool)?
+        fileprivate(set) var updatedFavorite: (cardId: String, isLike: Bool)?
         fileprivate(set) var distanceFilter: String
         fileprivate(set) var isRefreshing: Bool
     }
@@ -74,6 +77,7 @@ class HomeViewReactor: Reactor {
     private let fetchCardDetailUseCase: FetchCardDetailUseCase
     private let fetchNoticeUseCase: FetchNoticeUseCase
     private let notificationUseCase: NotificationUseCase
+    private let updateCardLikeUseCase: UpdateCardLikeUseCase
     private let locationUseCase: LocationUseCase
     
     init(dependencies: AppDIContainerable, displayType: DisplayType = .latest) {
@@ -82,6 +86,7 @@ class HomeViewReactor: Reactor {
         self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
         self.fetchNoticeUseCase = dependencies.rootContainer.resolve(FetchNoticeUseCase.self)
         self.notificationUseCase = dependencies.rootContainer.resolve(NotificationUseCase.self)
+        self.updateCardLikeUseCase = dependencies.rootContainer.resolve(UpdateCardLikeUseCase.self)
         self.locationUseCase = dependencies.rootContainer.resolve(LocationUseCase.self)
         
         self.initialState = State(
@@ -94,6 +99,7 @@ class HomeViewReactor: Reactor {
             articleCard: nil,
             hasUnreadNotifications: false,
             cardIsDeleted: nil,
+            updatedFavorite: nil,
             distanceFilter: "1km",
             isRefreshing: false
         )
@@ -130,6 +136,12 @@ class HomeViewReactor: Reactor {
             
             return self.moreFind(lastId)
                 .catch(self.catchClosureForMore)
+        case let .updateLike(cardId, isLike):
+            
+            return self.updateCardLikeUseCase.updateLike(cardId: cardId, isLike: isLike)
+                .filter { $0 }
+                .map { _ in .updatedFavorite((cardId, isLike)) }
+                .catch { _ in .empty() }
         case let .updateDisplayType(displayType):
             
             let distanceFilter = self.currentState.distanceFilter
@@ -201,7 +213,10 @@ class HomeViewReactor: Reactor {
             return .just(.notice(.defaultValue))
         case .cleanup:
             
-            return .just(.cardIsDeleted(nil))
+            return .concat([
+                .just(.cardIsDeleted(nil)),
+                .just(.updatedFavorite(nil))
+            ])
         }
     }
     
@@ -225,6 +240,8 @@ class HomeViewReactor: Reactor {
             newState.hasUnreadNotifications = hasUnreadNotifications
         case let .cardIsDeleted(cardIsDeleted):
             newState.cardIsDeleted = cardIsDeleted
+        case let .updatedFavorite(updatedFavorite):
+            newState.updatedFavorite = updatedFavorite
         case let .updateDisplayType(displayType):
             newState.displayType = displayType
         case let .updateDistanceFilter(distanceFilter):

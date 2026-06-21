@@ -150,18 +150,21 @@ class HomeViewController: BaseNavigationViewController, View {
         case let .latest(cardInfo):
             
             let cell: HomeViewCell = self.cellForCard(tableView, with: indexPath)
+            cell.cardView.delegate = self
             cell.bind(cardInfo)
             
             return cell
         case let .popular(cardInfo):
             
             let cell: HomeViewCell = self.cellForCard(tableView, with: indexPath)
+            cell.cardView.delegate = self
             cell.bind(cardInfo)
             
             return cell
         case let .distance(cardInfo):
             
             let cell: HomeViewCell = self.cellForCard(tableView, with: indexPath)
+            cell.cardView.delegate = self
             cell.bind(cardInfo)
             
             return cell
@@ -480,6 +483,27 @@ class HomeViewController: BaseNavigationViewController, View {
             )
             .disposed(by: self.disposeBag)
         
+        reactor.state.map(\.updatedFavorite)
+            .distinctUntilChanged { prev, curr in
+                prev?.cardId == curr?.cardId && prev?.isLike == curr?.isLike
+            }
+            .filterNil()
+            .observe(on: MainScheduler.asyncInstance)
+            .do(onNext: { _ in
+                reactor.action.onNext(.cleanup)
+            })
+            .subscribe(with: self) { _, updatedFavorite in
+                NotificationCenter.default.post(
+                    name: .addedFavoriteWithCardId,
+                    object: nil,
+                    userInfo: [
+                        "cardId": updatedFavorite.cardId,
+                        "addedFavorite": updatedFavorite.isLike
+                    ]
+                )
+            }
+            .disposed(by: self.disposeBag)
+        
         let displayStates = reactor.state.map {
             HomeViewReactor.DisplayStates(
                 displayType: $0.displayType,
@@ -609,20 +633,20 @@ class HomeViewController: BaseNavigationViewController, View {
         
         if let index = latests.firstIndex(where: { $0.id == cardId }) {
             let curr = latests[index].likeCnt
-            let new = addedFavorite ? curr + 1 : curr - 1
-            latests[index] = latests[index].updateLikeCnt(new)
+            let new = addedFavorite ? curr + 1 : max(0, curr - 1)
+            latests[index] = latests[index].updateLikeCnt(new, with: addedFavorite)
         }
         
         if let index = populars.firstIndex(where: { $0.id == cardId }) {
             let curr = populars[index].likeCnt
-            let new = addedFavorite ? curr + 1 : curr - 1
-            populars[index] = populars[index].updateLikeCnt(new)
+            let new = addedFavorite ? curr + 1 : max(0, curr - 1)
+            populars[index] = populars[index].updateLikeCnt(new, with: addedFavorite)
         }
         
         if let index = distances.firstIndex(where: { $0.id == cardId }) {
             let curr = distances[index].likeCnt
-            let new = addedFavorite ? curr + 1 : curr - 1
-            distances[index] = distances[index].updateLikeCnt(new)
+            let new = addedFavorite ? curr + 1 : max(0, curr - 1)
+            distances[index] = distances[index].updateLikeCnt(new, with: addedFavorite)
         }
         
         self.reactor?.action.onNext(
@@ -1170,6 +1194,13 @@ extension HomeViewController: UITableViewDelegate {
         if self.shouldRefreshing {
             self.tableView.refreshControl?.beginRefreshing()
         }
+    }
+}
+
+extension HomeViewController: SOMCardDelegate {
+    
+    func cardDidTapLike(_ card: SOMCard, model: BaseCardInfo) {
+        self.reactor?.action.onNext(.updateLike(cardId: model.id, isLike: !model.isLike))
     }
 }
 

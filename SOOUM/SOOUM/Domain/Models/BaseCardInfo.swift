@@ -11,7 +11,7 @@ struct BaseCardInfo: Hashable {
     let id: String
     let likeCnt: Int
     let commentCnt: Int
-    let voteCnt: Int
+    let voteCnt: Int?
     let cardImgName: String
     let cardImgURL: String
     let cardContent: String
@@ -41,6 +41,25 @@ extension BaseCardInfo {
             storyExpirationTime: self.storyExpirationTime,
             isAdminCard: self.isAdminCard,
             isLike: self.isLike
+        )
+    }
+    
+    func updateLikeCnt(_ likeCnt: Int, with isLike: Bool) -> BaseCardInfo {
+        
+        return BaseCardInfo(
+            id: self.id,
+            likeCnt: likeCnt,
+            commentCnt: self.commentCnt,
+            voteCnt: self.voteCnt,
+            cardImgName: self.cardImgName,
+            cardImgURL: self.cardImgURL,
+            cardContent: self.cardContent,
+            font: self.font,
+            distance: self.distance,
+            createdAt: self.createdAt,
+            storyExpirationTime: self.storyExpirationTime,
+            isAdminCard: self.isAdminCard,
+            isLike: isLike
         )
     }
     
@@ -127,7 +146,7 @@ extension BaseCardInfo: Decodable {
         self.id = String(try container.decode(Int64.self, forKey: .id))
         self.likeCnt = try container.decode(Int.self, forKey: .likeCnt)
         self.commentCnt = try container.decode(Int.self, forKey: .commentCnt)
-        self.voteCnt = try container.decode(Int.self, forKey: .voteCnt)
+        self.voteCnt = try container.decodeIfPresent(Int.self, forKey: .voteCnt)
         self.cardImgName = try container.decode(String.self, forKey: .cardImgName)
         self.cardImgURL = try container.decode(String.self, forKey: .cardImgURL)
         self.cardContent = try container.decode(String.self, forKey: .cardContent)
