@@ -25,7 +25,10 @@ final class WriteCardUseCaseImpl: WriteCardUseCase {
         imgName: String,
         isStory: Bool,
         tags: [String],
-        isArticle: Bool
+        isArticle: Bool,
+        hasPoll: Bool,
+        pollType: String,
+        pollContents: [String]
     ) -> Observable<String> {
         
         return self.repository.writeCard(
@@ -38,7 +41,10 @@ final class WriteCardUseCaseImpl: WriteCardUseCase {
             imgName: imgName,
             isStory: isStory,
             tags: tags,
-            isArticle: isArticle
+            isArticle: isArticle,
+            hasPoll: hasPoll,
+            pollType: pollType,
+            pollContents: pollContents
         )
         .map(\.cardId)
     }

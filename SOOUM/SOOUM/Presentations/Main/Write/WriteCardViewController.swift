@@ -58,6 +58,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let confirmActionTitle: String = "확인"
         
         static let bottomFloatEntryName: String = "SOMBottomFloatView"
+        static let makeVoteEntryName: String = "MakeVoteEntry"
         static let selectLibraryButtonTitle: String = "앨범에서 사진 선택"
         static let takePictureButtonTitle: String = "사진 찍기"
         
@@ -114,6 +115,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     private let selectOptionsView = SelectOptionsView()
     
+    private let makeVoteView = MakeVoteView()
+    
     private let relatedTagsView = RelatedTagsView().then {
         $0.isHidden = true
     }
@@ -130,6 +133,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     private var isScrollingByFirstResponder: Bool = false
     private var keyboardHeight: CGFloat = 0
+    private var selectedVotes: [String] = []
+    private var isPresentingMakeVoteView: Bool = false
+    private var shouldKeepVoteOptionSelection: Bool = false
     
     // MARK: Constraint
     
@@ -208,6 +214,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         super.viewDidLoad()
         
         PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
+        self.makeVoteView.delegate = self
         
         // 카드 추가 첫 진입 시 가이드 뷰 표시
         self.writeCardGuideView.isHidden = UserDefaults.needsGuideMessageAndGuide == false
@@ -257,7 +264,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         var options: [SelectOptionItem.OptionType] {
             if reactor.entranceType == .feed {
-                return [.distanceShare, .story]
+                return [.distanceShare, .story, .vote]
             } else {
                 return [.distanceShare]
             }
@@ -443,10 +450,19 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         selectedOptions
-            .filter { $0.contains(.vote) }
+            .filter { $0.contains(.vote) == false }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                
+                object.clearVotes()
+                object.dismissMakeVoteBottomSheet(shouldKeepSelection: false)
+            }
+            .disposed(by: self.disposeBag)
+        
+        self.selectOptionsView.optionTapped
+            .filter { $0 == .vote }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                object.showMakeVoteBottomSheetIfNeeded()
             }
             .disposed(by: self.disposeBag)
         
@@ -521,7 +537,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
                     imageName: imageInfo.info.imgName,
                     isStory: options.contains(.story),
                     tags: enteredTagTexts.reduce(into: []) { if !$0.contains($1) { $0.append($1) } },
-                    isArticle: cardType == .article
+                    isArticle: cardType == .article,
+                    pollContents: object.selectedVotes
                 )
             }
             .bind(to: reactor.action)
@@ -794,6 +811,64 @@ extension WriteCardViewController {
 }
 
 
+// MARK: Vote
+
+private extension WriteCardViewController {
+    
+    func showMakeVoteBottomSheetIfNeeded() {
+        guard self.isPresentingMakeVoteView == false else { return }
+        self.isPresentingMakeVoteView = true
+        
+        self.makeVoteView.makedVotes = self.selectedVotes
+        
+        self.makeVoteView.sek.show(
+            .fullScreen(
+                entryName: Text.makeVoteEntryName,
+                screenInteraction: .dismiss,
+                completion: { [weak self] in
+                    guard let self else { return }
+                    
+                    self.isPresentingMakeVoteView = false
+                    let shouldKeepSelection = self.shouldKeepVoteOptionSelection
+                    self.shouldKeepVoteOptionSelection = false
+                    
+                    if shouldKeepSelection == false {
+                        self.clearVotes()
+                        self.removeVoteOptionSelection()
+                    }
+                }
+            )
+        )
+    }
+    
+    func dismissMakeVoteBottomSheet(shouldKeepSelection: Bool, completion: (() -> Void)? = nil) {
+        self.shouldKeepVoteOptionSelection = shouldKeepSelection
+        
+        guard self.isPresentingMakeVoteView else {
+            self.shouldKeepVoteOptionSelection = false
+            completion?()
+            return
+        }
+        
+        self.makeVoteView.sek.dismiss(entryName: Text.makeVoteEntryName) {
+            completion?()
+        }
+    }
+    
+    func removeVoteOptionSelection() {
+        let updatedOptions = self.selectOptionsView.selectOptions.filter { $0 != .vote }
+        
+        guard updatedOptions.count != self.selectOptionsView.selectOptions.count else { return }
+        self.selectOptionsView.selectOptions = updatedOptions
+    }
+    
+    func clearVotes() {
+        self.selectedVotes = []
+        self.makeVoteView.makedVotes = []
+    }
+}
+
+
 // MARK: Show picker
 
 extension WriteCardViewController {
@@ -854,5 +929,17 @@ extension WriteCardViewController: UIScrollViewDelegate {
         
         self.reactor?.action.onNext(.updateRelatedTags)
         self.view.endEditing(true)
+    }
+}
+
+extension WriteCardViewController: MakeVoteViewDelegate {
+    
+    func makeVoteViewDidTapClose(_ makeVoteView: MakeVoteView) {
+        self.dismissMakeVoteBottomSheet(shouldKeepSelection: false)
+    }
+    
+    func makeVoteView(_ makeVoteView: MakeVoteView, didTapComplete votes: [String]) {
+        self.selectedVotes = votes
+        self.dismissMakeVoteBottomSheet(shouldKeepSelection: true)
     }
 }

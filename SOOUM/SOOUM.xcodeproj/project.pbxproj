@@ -355,6 +355,8 @@
 		388371FD2C8C8F11004212EB /* UIColor+SOOUM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */; };
 		388372012C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
 		388372022C8C8FCF004212EB /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388372002C8C8FCF004212EB /* UIColor.swift */; };
+		38859FAA2FEFF12B004CC339 /* VoteOptionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38859FA92FEFF123004CC339 /* VoteOptionRowView.swift */; };
+		38859FAB2FEFF12B004CC339 /* VoteOptionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38859FA92FEFF123004CC339 /* VoteOptionRowView.swift */; };
 		3886939F2CF77FA7005F9EF3 /* UIApplication+Top.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3886939E2CF77FA7005F9EF3 /* UIApplication+Top.swift */; };
 		388693A02CF77FA7005F9EF3 /* UIApplication+Top.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3886939E2CF77FA7005F9EF3 /* UIApplication+Top.swift */; };
 		388698582D1982DE00008600 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388698572D1982DE00008600 /* NotificationViewController.swift */; };
@@ -1117,6 +1119,7 @@
 		388371F82C8C8EB1004212EB /* SooumStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SooumStyle.swift; sourceTree = "<group>"; };
 		388371FB2C8C8F11004212EB /* UIColor+SOOUM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+SOOUM.swift"; sourceTree = "<group>"; };
 		388372002C8C8FCF004212EB /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		38859FA92FEFF123004CC339 /* VoteOptionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteOptionRowView.swift; sourceTree = "<group>"; };
 		3886939E2CF77FA7005F9EF3 /* UIApplication+Top.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Top.swift"; sourceTree = "<group>"; };
 		388698572D1982DE00008600 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		3886985E2D1984D600008600 /* NotificationViewReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewReactor.swift; sourceTree = "<group>"; };
@@ -2957,6 +2960,7 @@
 		38FED0F82FDE665000E0258E /* Vote */ = {
 			isa = PBXGroup;
 			children = (
+				38859FA92FEFF123004CC339 /* VoteOptionRowView.swift */,
 				38FED0F92FDE6DF600E0258E /* MakeVoteView.swift */,
 				38FED0FC2FDE757A00E0258E /* VoteTextField.swift */,
 			);
@@ -3658,6 +3662,7 @@
 				388009982CAC20EC002A9209 /* SOMTags+Rx.swift in Sources */,
 				38E928DC2EB7921200B3F00B /* UIRefreshControl.swift in Sources */,
 				38899EAA2E799C630030F7CA /* VersionRequest.swift in Sources */,
+				38859FAA2FEFF12B004CC339 /* VoteOptionRowView.swift in Sources */,
 				381B83DD2EBC707A00C84015 /* ProfileInfo.swift in Sources */,
 				381E7C1A2ECCB1A700E80249 /* TagViewController.swift in Sources */,
 				38FEBE5B2E8652DE002916A8 /* CompositeNotificationInfoResponse.swift in Sources */,
@@ -4102,6 +4107,7 @@
 				2A5BB7C92CDBA53E00E1C799 /* OnboardingNicknameSettingViewController.swift in Sources */,
 				2AE6B1492CBC15BF00FA5C3C /* ReportViewController.swift in Sources */,
 				3887D0332CC5335200FB52E1 /* WriteCardViewReactor.swift in Sources */,
+				38859FAB2FEFF12B004CC339 /* VoteOptionRowView.swift in Sources */,
 				38D6F1802CC2413400E11530 /* WriteCardTextView.swift in Sources */,
 				381E7C192ECCB1A700E80249 /* TagViewController.swift in Sources */,
 				38899EA92E799C630030F7CA /* VersionRequest.swift in Sources */,

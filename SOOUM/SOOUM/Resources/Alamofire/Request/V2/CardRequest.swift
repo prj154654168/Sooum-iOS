@@ -54,7 +54,10 @@ enum CardRequest: BaseRequest {
         imgName: String,
         isStory: Bool,
         tags: [String],
-        isArticle: Bool
+        isArticle: Bool,
+        hasPoll: Bool,
+        pollType: String,
+        pollContents: [String]
     )
     /// 답카드 추가
     case writeComment(
@@ -121,7 +124,7 @@ enum CardRequest: BaseRequest {
             return "/api/images/card-img"
         case .writeCard:
             
-            return "/api/cards"
+            return "/api/cards/v2"
         case let .writeComment(id, _, _, _, _, _, _, _, _):
             
             return "/api/cards/\(id)"
@@ -189,7 +192,10 @@ enum CardRequest: BaseRequest {
             imgName,
             isStory,
             tags,
-            isArticle
+            isArticle,
+            hasPoll,
+            pollType,
+            pollContents
         ):
             
             var parameters: [String: Any] = [
@@ -200,7 +206,10 @@ enum CardRequest: BaseRequest {
                 "imgName": imgName,
                 "isStory": isStory,
                 "tags": tags,
-                "isArticle": isArticle
+                "isArticle": isArticle,
+                "hasPoll": hasPoll,
+                "pollType": pollType,
+                "pollContents": pollContents
             ]
             
             if isDistanceShared, let latitude = latitude, let longitude = longitude {

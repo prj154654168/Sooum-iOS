@@ -113,7 +113,10 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         imgName: String,
         isStory: Bool,
         tags: [String],
-        isArticle: Bool
+        isArticle: Bool,
+        hasPoll: Bool,
+        pollType: String,
+        pollContents: [String]
     ) -> Observable<WriteCardResponse> {
         
         let request: CardRequest = .writeCard(
@@ -126,7 +129,10 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
             imgName: imgName,
             isStory: isStory,
             tags: tags,
-            isArticle: isArticle
+            isArticle: isArticle,
+            hasPoll: hasPoll,
+            pollType: pollType,
+            pollContents: pollContents
         )
         return self.provider.networkManager.perform(WriteCardResponse.self, request: request)
     }

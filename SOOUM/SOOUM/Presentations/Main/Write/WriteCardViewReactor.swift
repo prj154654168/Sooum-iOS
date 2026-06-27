@@ -21,7 +21,8 @@ class WriteCardViewReactor: Reactor {
             imageName: String?,
             isStory: Bool,
             tags: [String],
-            isArticle: Bool
+            isArticle: Bool,
+            pollContents: [String]
         )
         case relatedTags(keyword: String)
         case updateRelatedTags
@@ -117,7 +118,8 @@ class WriteCardViewReactor: Reactor {
             imageName,
             isStory,
             tags,
-            isArticle
+            isArticle,
+            pollContents
         ):
             
             return .concat([
@@ -131,7 +133,8 @@ class WriteCardViewReactor: Reactor {
                     imageName: imageName,
                     isStory: isStory,
                     tags: tags,
-                    isArticle: isArticle
+                    isArticle: isArticle,
+                    pollContents: pollContents
                 )
                 .catch(self.catchClosure)
                 .delay(.milliseconds(1000), scheduler: MainScheduler.instance),
@@ -206,11 +209,15 @@ private extension WriteCardViewReactor {
         imageName: String?,
         isStory: Bool,
         tags: [String],
-        isArticle: Bool
+        isArticle: Bool,
+        pollContents: [String]
     ) -> Observable<Mutation> {
         
         let coordinate = self.locationUseCase.coordinate()
         let trimedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedPollContents = pollContents
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { $0.isEmpty == false }
         
         if case .default = imageType, let imageName = imageName {
             
@@ -228,7 +235,10 @@ private extension WriteCardViewReactor {
                     imgName: imageName,
                     isStory: isStory,
                     tags: tags,
-                    isArticle: isArticle
+                    isArticle: isArticle,
+                    hasPoll: trimmedPollContents.isEmpty == false,
+                    pollType: "SINGLE",
+                    pollContents: trimmedPollContents
                 )
                 .map(Mutation.writeCard)
             } else {
@@ -269,7 +279,10 @@ private extension WriteCardViewReactor {
                             imgName: imageName,
                             isStory: isStory,
                             tags: tags,
-                            isArticle: isArticle
+                            isArticle: isArticle,
+                            hasPoll: trimmedPollContents.isEmpty == false,
+                            pollType: "SINGLE",
+                            pollContents: trimmedPollContents
                         )
                         .map(Mutation.writeCard)
                     } else {

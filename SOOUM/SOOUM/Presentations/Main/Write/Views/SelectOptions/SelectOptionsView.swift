@@ -33,6 +33,7 @@ class SelectOptionsView: UIView {
     
     // MARK: Variables
     
+    let optionTapped = PublishRelay<SelectOptionItem.OptionType>()
     var selectedOptions = BehaviorRelay<[SelectOptionItem.OptionType]?>(value: nil)
     var selectOptions: [SelectOptionItem.OptionType] = [] {
         didSet {
@@ -100,9 +101,17 @@ class SelectOptionsView: UIView {
                 .when(.recognized)
                 .subscribe(with: self) { object, _ in
                     let hasOption = object.selectOptions.contains(where: { $0 == type })
-                    object.selectOptions = hasOption ?
-                        object.selectOptions.filter { $0 != type } :
-                        object.selectOptions + [type]
+                    
+                    switch type {
+                    case .vote:
+                        if hasOption == false { object.selectOptions += [type] }
+                    default:
+                        object.selectOptions = hasOption ?
+                            object.selectOptions.filter { $0 != type } :
+                            object.selectOptions + [type]
+                    }
+                    
+                    object.optionTapped.accept(type)
                 }
                 .disposed(by: self.disposeBag)
         }
