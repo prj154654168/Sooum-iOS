@@ -437,15 +437,15 @@ class DetailViewController: BaseNavigationViewController, View {
             .filter { $0 }
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
-                
+                let previousLikeCount = object.detailCard.likeCnt
                 let updated: DetailCardInfo
                 if object.detailCard.isLike {
                     
-                    let updatedLikeCnt = object.detailCard.likeCnt - 1
+                    let updatedLikeCnt = previousLikeCount - 1
                     updated = object.detailCard.updateLikeCnt(updatedLikeCnt, with: false)
                 } else {
                     
-                    let updatedLikeCnt = object.detailCard.likeCnt + 1
+                    let updatedLikeCnt = previousLikeCount + 1
                     updated = object.detailCard.updateLikeCnt(updatedLikeCnt, with: true)
                 }
                 
@@ -453,6 +453,18 @@ class DetailViewController: BaseNavigationViewController, View {
                 
                 UIView.performWithoutAnimation {
                     object.collectionView.reloadData()
+                }
+                
+                DispatchQueue.main.async {
+                    guard let cell = object.collectionView.cellForItem(
+                        at: IndexPath(item: 0, section: 0)
+                    ) as? DetailViewCell else { return }
+                    
+                    cell.animateLikeUpdate(
+                        from: previousLikeCount,
+                        to: updated.likeCnt,
+                        isSelected: updated.isLike
+                    )
                 }
             }
             .disposed(by: self.disposeBag)
@@ -650,9 +662,9 @@ extension DetailViewController: UICollectionViewDataSource {
             .disposed(by: cell.disposeBag)
         
         cell.likeAndCommentView.likeBackgroundButton.rx.throttleTap
-            .withLatestFrom(reactor.state.compactMap(\.detailCard).map(\.isLike))
-            .subscribe(onNext: { isLike in
-                reactor.action.onNext(.updateLike(!isLike))
+            .withLatestFrom(reactor.state.compactMap(\.detailCard))
+            .subscribe(onNext: { detailCard in
+                reactor.action.onNext(.updateLike(!detailCard.isLike))
             })
             .disposed(by: cell.disposeBag)
         

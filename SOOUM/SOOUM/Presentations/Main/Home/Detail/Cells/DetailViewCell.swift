@@ -129,6 +129,7 @@ class DetailViewCell: UICollectionViewCell {
         super.prepareForReuse()
         
         self.disposeBag = DisposeBag()
+        self.likeAndCommentView.prepareForReuse()
     }
     
     
@@ -312,5 +313,13 @@ class DetailViewCell: UICollectionViewCell {
         self.tags.removeFromSuperview()
         
         self.deletedCardInDetailBackgroundView.isHidden = false
+    }
+    
+    func animateLikeUpdate(from previousLikeCount: Int, to currentLikeCount: Int, isSelected: Bool) {
+        self.likeAndCommentView.animateLikeUpdate(
+            from: previousLikeCount,
+            to: currentLikeCount,
+            isSelected: isSelected
+        )
     }
 }
