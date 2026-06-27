@@ -186,9 +186,12 @@ private extension SOMButton {
             return self.foregroundColor ?? .som.v2.white
         }
         
+        configuration?.baseForegroundColor = foregroundColor
+        self.tintColor = foregroundColor
+        
         if let image = self.image {
-            configuration?.image = image
-            configuration?.imageColorTransformer = UIConfigurationColorTransformer { _ in foregroundColor }
+            configuration?.image = image.withTintColor(foregroundColor, renderingMode: .alwaysTemplate)
+            configuration?.imageColorTransformer = nil
             configuration?.imagePadding = 8
             configuration?.imagePlacement = self.imagePlacement ?? .leading
         }

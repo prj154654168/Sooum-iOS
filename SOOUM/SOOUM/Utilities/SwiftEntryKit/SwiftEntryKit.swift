@@ -21,10 +21,14 @@ protocol SwiftEntryKitExtension {
 }
 
 extension SwiftEntryKitExtension {
+    
+    func dismiss(entryName: String, _ completion: (() -> Void)? = nil) {
+        SwiftEntryKit.dismiss(.specific(entryName: entryName), with: completion)
+    }
 
     func dismiss(_ completion: (() -> Void)? = nil) {
         if let entryName = self.entryName {
-            SwiftEntryKit.dismiss(.specific(entryName: entryName), with: completion)
+            self.dismiss(entryName: entryName, completion)
         } else {
             Self.dismiss(completion)
         }
