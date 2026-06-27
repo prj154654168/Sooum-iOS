@@ -200,6 +200,8 @@ class HomeViewController: BaseNavigationViewController, View {
     private var currentOffset: CGFloat = 0
     
     private var adCache: [UUID: NativeAd] = [:]
+    private var pendingLikeCountAnimations: [String: Int] = [:]
+    private var locallyAnimatedLikeCardIDs = Set<String>()
     
     private var cellHeight: CGFloat {
         let width: CGFloat = (UIScreen.main.bounds.width - 16 * 2) * 0.5
@@ -595,6 +597,8 @@ class HomeViewController: BaseNavigationViewController, View {
                 }
                 
                 object.dataSource.apply(snapshot, animatingDifferences: false)
+                object.applyPendingLikeAnimations()
+                object.pendingLikeCountAnimations.removeAll()
                 
                 object.tableView.isHidden = false
             }
@@ -608,6 +612,35 @@ class HomeViewController: BaseNavigationViewController, View {
         var seen = Set<String>()
         let reversed = cards.reversed().filter { seen.insert($0.id).inserted }
         return Array(reversed.reversed())
+    }
+    
+    func applyPendingLikeAnimations() {
+        guard self.pendingLikeCountAnimations.isEmpty == false else { return }
+        
+        let visibleRows = self.tableView.indexPathsForVisibleRows ?? []
+        for indexPath in visibleRows {
+            guard let item = self.dataSource.itemIdentifier(for: indexPath),
+                  let cell = self.tableView.cellForRow(at: indexPath) as? HomeViewCell
+            else { continue }
+            
+            let cardInfo: BaseCardInfo?
+            switch item {
+            case let .latest(model):
+                cardInfo = model
+            case let .popular(model):
+                cardInfo = model
+            case let .distance(model):
+                cardInfo = model
+            default:
+                cardInfo = nil
+            }
+            
+            guard let cardInfo,
+                  let previousLikeCount = self.pendingLikeCountAnimations[cardInfo.id]
+            else { continue }
+            
+            cell.animateLikeCount(from: previousLikeCount, to: cardInfo.likeCnt)
+        }
     }
     
     
@@ -630,6 +663,15 @@ class HomeViewController: BaseNavigationViewController, View {
         var latests = self.reactor?.currentState.latestCards ?? []
         var populars = self.reactor?.currentState.popularCards ?? []
         var distances = self.reactor?.currentState.distanceCards ?? []
+        
+        if let previousLikeCount = latests.first(where: { $0.id == cardId })?.likeCnt
+            ?? populars.first(where: { $0.id == cardId })?.likeCnt
+            ?? distances.first(where: { $0.id == cardId })?.likeCnt {
+            if self.locallyAnimatedLikeCardIDs.contains(cardId) == false {
+                self.pendingLikeCountAnimations[cardId] = previousLikeCount
+            }
+        }
+        self.locallyAnimatedLikeCardIDs.remove(cardId)
         
         if let index = latests.firstIndex(where: { $0.id == cardId }) {
             let curr = latests[index].likeCnt
@@ -1200,6 +1242,7 @@ extension HomeViewController: UITableViewDelegate {
 extension HomeViewController: SOMCardDelegate {
     
     func cardDidTapLike(_ card: SOMCard, model: BaseCardInfo) {
+        self.locallyAnimatedLikeCardIDs.insert(model.id)
         self.reactor?.action.onNext(.updateLike(cardId: model.id, isLike: !model.isLike))
     }
 }

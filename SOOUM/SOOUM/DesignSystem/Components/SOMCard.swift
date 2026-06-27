@@ -18,6 +18,12 @@ protocol SOMCardDelegate: AnyObject {
 
 class SOMCard: UIView {
     
+    private enum Constants {
+        static let likeCountAnimationContainerTag: Int = 9_001
+        static let likeCountAnimationDuration: TimeInterval = 0.5
+        static let likeCountHorizontalPadding: CGFloat = 2
+    }
+    
     enum Text {
         static let adminTitle: String = "sooum"
         static let pungedCardText: String = "카드가 삭제되었어요"
@@ -157,6 +163,7 @@ class SOMCard: UIView {
         $0.tintColor = .som.v2.gray500
         $0.isUserInteractionEnabled = true
     }
+    private let likeCountContainer = UIView()
     /// 좋아요 정보 표시 라벨
     private let likeLabel = UILabel().then {
         $0.textColor = .som.v2.gray500
@@ -206,6 +213,7 @@ class SOMCard: UIView {
     
     // TODO: 카드 본문 높이 계산 Constraint
     private var contentHeightConstraint: Constraint?
+    private var likeCountWidthConstraint: Constraint?
     
     /// 펑 이벤트 처리 위해 추가
     var serialTimer: Disposable?
@@ -279,9 +287,16 @@ class SOMCard: UIView {
         }
         
         self.likeInfoStackView.addArrangedSubview(self.likeImageView)
-        self.likeInfoStackView.addArrangedSubview(self.likeLabel)
+        self.likeInfoStackView.addArrangedSubview(self.likeCountContainer)
         self.likeImageView.snp.makeConstraints {
             $0.size.equalTo(20)
+        }
+        self.likeCountContainer.addSubview(self.likeLabel)
+        self.likeCountContainer.snp.makeConstraints {
+            self.likeCountWidthConstraint = $0.width.equalTo(0).constraint
+        }
+        self.likeLabel.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
         
         self.commentInfoStackView.addArrangedSubview(self.commentImageView)
@@ -382,18 +397,19 @@ class SOMCard: UIView {
     func prepareForReuse() {
         self.serialTimer?.dispose()
         self.disposeBag = DisposeBag()
+        self.model = .defaultValue
         
         self.adminLabel.text = Text.adminTitle
         self.cardPungTimeLabel.text = nil
         // self.distanceLabel.text = nil
         // self.timeLabel.text = nil
+        self.resetLikeCountAnimationState()
         self.likeLabel.text = nil
         self.commentLabel.text = nil
     }
     
     /// 홈피드 모델 초기화
     func setModel(model: BaseCardInfo) {
-        
         self.model = model
         
         let borderColor = model.isAdminCard ? UIColor.som.v2.pMain : UIColor.som.v2.gray100
@@ -426,9 +442,11 @@ class SOMCard: UIView {
         // self.timeLabel.text = model.createdAt.toKorea().infoReadableTimeTakenFromThis(to: Date().toKorea())
         
         // 좋아요 수, 답글 수, 투표 수
-        let likeText = model.likeCnt > 99 ? "99+" : "\(model.likeCnt)"
+        let likeText = self.formattedLikeCount(model.likeCnt)
+        self.resetLikeCountAnimationState()
         self.likeLabel.text = likeText
         self.likeLabel.typography = .som.v2.body1
+        self.updateLikeCountWidth(for: likeText)
         
         self.likeImageView.image = model.isLike ?
             .init(.icon(.v2(.filled(.heart)))) :
@@ -445,6 +463,22 @@ class SOMCard: UIView {
         
         // 스토리 정보 설정
         self.subscribePungTime(model.storyExpirationTime)
+    }
+    
+    func animateLikeCount(from previousLikeCount: Int, to currentLikeCount: Int) {
+        let previousText = self.formattedLikeCount(previousLikeCount)
+        let newText = self.formattedLikeCount(currentLikeCount)
+        
+        guard previousText != newText else {
+            self.likeLabel.text = newText
+            return
+        }
+        
+        self.updateLikeCountText(
+            newText,
+            previousText: previousText,
+            isIncrement: currentLikeCount > previousLikeCount
+        )
     }
     
     private func updateContentHeight(_ text: String, with typography: Typography) {
@@ -476,6 +510,125 @@ class SOMCard: UIView {
         UIView.performWithoutAnimation {
             self.layoutIfNeeded()
         }
+    }
+    
+    private func formattedLikeCount(_ count: Int) -> String {
+        count > 99 ? "99+" : "\(count)"
+    }
+    
+    private func updateLikeCountText(_ newText: String, previousText: String, isIncrement: Bool) {
+        guard newText != previousText else {
+            self.likeLabel.text = newText
+            self.updateLikeCountWidth(for: newText)
+            return
+        }
+        
+        self.resetLikeCountAnimationState()
+        let fixedWidth = max(
+            self.likeCountWidth(for: previousText),
+            self.likeCountWidth(for: newText)
+        )
+        self.likeCountWidthConstraint?.update(offset: fixedWidth)
+        
+        self.likeInfoStackView.layoutIfNeeded()
+        self.likeCountContainer.layoutIfNeeded()
+        
+        let containerFrame = self.likeCountContainer.convert(self.likeCountContainer.bounds, to: self)
+        guard containerFrame.isEmpty == false else {
+            self.likeLabel.text = newText
+            self.updateLikeCountWidth(for: newText)
+            return
+        }
+        
+        let animationContainer = UIView(frame: containerFrame)
+        animationContainer.tag = Constants.likeCountAnimationContainerTag
+        animationContainer.clipsToBounds = true
+        self.addSubview(animationContainer)
+        
+        let labelHeight = max(containerFrame.height, self.likeLabel.font.lineHeight)
+        let animationLabel = self.makeLikeCountLabel(text: previousText)
+        animationLabel.frame = animationContainer.bounds
+        
+        animationContainer.addSubview(animationLabel)
+        self.likeLabel.text = newText
+        self.likeLabel.alpha = 0
+        
+        UIView.animateKeyframes(
+            withDuration: Constants.likeCountAnimationDuration,
+            delay: 0,
+            options: [.calculationModeCubic, .beginFromCurrentState],
+            animations: {
+                UIView.addKeyframe(
+                    withRelativeStartTime: 0,
+                    relativeDuration: 0.48
+                ) {
+                    animationLabel.transform = CGAffineTransform(
+                        translationX: 0,
+                        y: isIncrement ? -labelHeight : labelHeight
+                    )
+                }
+                
+                UIView.addKeyframe(
+                    withRelativeStartTime: 0.48,
+                    relativeDuration: 0
+                ) {
+                    animationLabel.text = newText
+                    animationLabel.typography = self.likeLabel.typography
+                    animationLabel.transform = CGAffineTransform(
+                        translationX: 0,
+                        y: isIncrement ? labelHeight : -labelHeight
+                    )
+                }
+                
+                UIView.addKeyframe(
+                    withRelativeStartTime: 0.48,
+                    relativeDuration: 0.52
+                ) {
+                    animationLabel.transform = .identity
+                }
+            },
+            completion: { _ in
+                self.likeLabel.text = newText
+                self.likeLabel.alpha = 1
+                self.updateLikeCountWidth(for: newText)
+                animationContainer.removeFromSuperview()
+            }
+        )
+    }
+    
+    private func makeLikeCountLabel(text: String) -> UILabel {
+        let label = UILabel()
+        label.textColor = self.likeLabel.textColor
+        label.textAlignment = self.likeLabel.textAlignment
+        label.text = text
+        label.typography = self.likeLabel.typography
+        return label
+    }
+    
+    private func resetLikeCountAnimationState() {
+        self.likeLabel.layer.removeAllAnimations()
+        self.likeLabel.transform = .identity
+        self.likeLabel.alpha = 1
+        self.viewWithTag(Constants.likeCountAnimationContainerTag)?.removeFromSuperview()
+    }
+    
+    private func updateLikeCountWidth(for text: String) {
+        self.likeCountWidthConstraint?.update(offset: self.likeCountWidth(for: text))
+    }
+    
+    private func likeCountWidth(for text: String) -> CGFloat {
+        let typography = self.likeLabel.typography ?? .som.v2.body1
+        var attributes = typography.attributes
+        attributes.updateValue(typography.font, forKey: .font)
+        let width = NSAttributedString(string: text, attributes: attributes)
+            .boundingRect(
+                with: CGSize(width: .greatestFiniteMagnitude, height: typography.lineHeight),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                context: nil
+            )
+            .width
+        
+        return ceil(width) + Constants.likeCountHorizontalPadding
     }
     
     
@@ -523,6 +676,8 @@ class SOMCard: UIView {
 
     @objc
     private func didTapLikeImageView() {
+        self.animateLikeCountForTapIfNeeded()
+        
         self.animateLikeTap { [weak self] in
             guard let self else { return }
             self.delegate?.cardDidTapLike(self, model: self.model)
@@ -536,8 +691,8 @@ class SOMCard: UIView {
             withDuration: 0.12,
             delay: 0,
             options: [.curveEaseOut, .beginFromCurrentState],
-            animations: {
-                self.likeImageView.transform = CGAffineTransform(scaleX: 0.82, y: 0.82)
+            animations: { [weak self] in
+                self?.likeImageView.transform = CGAffineTransform(scaleX: 0.82, y: 0.82)
             },
             completion: { _ in
                 UIView.animate(
@@ -546,15 +701,24 @@ class SOMCard: UIView {
                     usingSpringWithDamping: 0.45,
                     initialSpringVelocity: 3,
                     options: [.curveEaseInOut, .beginFromCurrentState],
-                    animations: {
-                        self.likeImageView.transform = .identity
+                    animations: { [weak self] in
+                        self?.likeImageView.transform = .identity
                     },
-                    completion: { _ in
-                        self.likeImageView.isUserInteractionEnabled = true
+                    completion: { [weak self] _ in
+                        self?.likeImageView.isUserInteractionEnabled = true
                         completion?()
                     }
                 )
             }
         )
+    }
+    
+    private func animateLikeCountForTapIfNeeded() {
+        let previousLikeCount = self.model.likeCnt
+        let currentLikeCount = self.model.isLike
+            ? max(0, previousLikeCount - 1)
+            : previousLikeCount + 1
+        
+        self.animateLikeCount(from: previousLikeCount, to: currentLikeCount)
     }
 }

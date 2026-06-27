@@ -65,4 +65,8 @@ class HomeViewCell: UITableViewCell {
     func bind(_ model: BaseCardInfo) {
         self.cardView.setModel(model: model)
     }
+    
+    func animateLikeCount(from previousLikeCount: Int, to currentLikeCount: Int) {
+        self.cardView.animateLikeCount(from: previousLikeCount, to: currentLikeCount)
+    }
 }
