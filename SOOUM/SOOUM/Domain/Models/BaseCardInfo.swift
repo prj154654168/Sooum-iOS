@@ -143,7 +143,11 @@ extension BaseCardInfo: Decodable {
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = String(try container.decode(Int64.self, forKey: .id))
+        if let id = try? container.decode(Int64.self, forKey: .id) {
+            self.id = String(id)
+        } else {
+            self.id = try container.decode(String.self, forKey: .id)
+        }
         self.likeCnt = try container.decode(Int.self, forKey: .likeCnt)
         self.commentCnt = try container.decode(Int.self, forKey: .commentCnt)
         self.voteCnt = try container.decodeIfPresent(Int.self, forKey: .voteCnt)
@@ -155,6 +159,6 @@ extension BaseCardInfo: Decodable {
         self.createdAt = try container.decode(Date.self, forKey: .createdAt)
         self.storyExpirationTime = try container.decodeIfPresent(Date.self, forKey: .storyExpirationTime)
         self.isAdminCard = try container.decode(Bool.self, forKey: .isAdminCard)
-        self.isLike = try container.decode(Bool.self, forKey: .isLike)
+        self.isLike = try container.decodeIfPresent(Bool.self, forKey: .isLike) ?? false
     }
 }

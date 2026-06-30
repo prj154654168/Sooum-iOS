@@ -77,6 +77,18 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         return self.provider.networkManager.perform(request)
     }
     
+    func votePollOption(id: String) -> Observable<PollVoteInfoResponse> {
+        
+        let request: CardRequest = .votePollOption(id: id, isVoted: true)
+        return self.provider.networkManager.perform(PollVoteInfoResponse.self, request: request)
+    }
+    
+    func unvotePollOption(id: String) -> Observable<Int> {
+        
+        let request: CardRequest = .votePollOption(id: id, isVoted: false)
+        return self.provider.networkManager.perform(request)
+    }
+    
     func reportCard(id: String, reportType: String) -> Observable<Int> {
         
         let request: CardRequest = .reportCard(id: id, reportType: reportType)

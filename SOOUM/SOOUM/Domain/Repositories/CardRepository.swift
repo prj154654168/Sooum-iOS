@@ -22,11 +22,13 @@ protocol CardRepository {
     
     // MARK: Detail
     
-    func detailCard(id: String, latitude: String?, longitude: String?) -> Observable<DetailCardInfoResponse>
-    func isCardDeleted(id: String) -> Observable<IsCardDeletedResponse>
-    func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<BaseCardInfoResponse>
+    func detailCard(id: String, latitude: String?, longitude: String?) -> Observable<DetailCardInfo>
+    func isCardDeleted(id: String) -> Observable<Bool>
+    func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<[BaseCardInfo]>
     func deleteCard(id: String) -> Observable<Int>
     func updateLike(id: String, isLike: Bool) -> Observable<Int>
+    func votePollOption(id: String) -> Observable<DetailCardInfo.Poll>
+    func unvotePollOption(id: String) -> Observable<Bool>
     func reportCard(id: String, reportType: String) -> Observable<Int>
     
     

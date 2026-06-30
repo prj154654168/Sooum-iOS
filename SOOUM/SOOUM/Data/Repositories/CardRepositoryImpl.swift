@@ -43,19 +43,22 @@ class CardRepositoryImpl: CardRepository {
     
     // MARK: Detail
     
-    func detailCard(id: String, latitude: String?, longitude: String?) -> Observable<DetailCardInfoResponse> {
+    func detailCard(id: String, latitude: String?, longitude: String?) -> Observable<DetailCardInfo> {
         
         return self.remoteDataSource.detailCard(id: id, latitude: latitude, longitude: longitude)
+            .map(\.cardInfos)
     }
     
-    func isCardDeleted(id: String) -> Observable<IsCardDeletedResponse> {
+    func isCardDeleted(id: String) -> Observable<Bool> {
         
         return self.remoteDataSource.isCardDeleted(id: id)
+            .map(\.isDeleted)
     }
     
-    func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<BaseCardInfoResponse> {
+    func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<[BaseCardInfo]> {
         
         return self.remoteDataSource.commentCard(id: id, lastId: lastId, latitude: latitude, longitude: longitude)
+            .map(\.cardInfos)
     }
     
     func deleteCard(id: String) -> Observable<Int> {
@@ -66,6 +69,18 @@ class CardRepositoryImpl: CardRepository {
     func updateLike(id: String, isLike: Bool) -> Observable<Int> {
         
         return self.remoteDataSource.updateLike(id: id, isLike: isLike)
+    }
+    
+    func votePollOption(id: String) -> Observable<DetailCardInfo.Poll> {
+        
+        return self.remoteDataSource.votePollOption(id: id)
+            .map(\.toDomain)
+    }
+    
+    func unvotePollOption(id: String) -> Observable<Bool> {
+        
+        return self.remoteDataSource.unvotePollOption(id: id)
+            .map { $0 == 200 }
     }
     
     func reportCard(id: String, reportType: String) -> Observable<Int> {

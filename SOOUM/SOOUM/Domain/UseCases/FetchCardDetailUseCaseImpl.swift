@@ -26,7 +26,6 @@ final class FetchCardDetailUseCaseImpl: FetchCardDetailUseCase {
             latitude: latitude,
             longitude: longitude
         )
-        .map(\.cardInfos)
     }
     
     func commentCards(
@@ -42,11 +41,10 @@ final class FetchCardDetailUseCaseImpl: FetchCardDetailUseCase {
             latitude: latitude,
             longitude: longitude
         )
-        .map(\.cardInfos)
     }
     
     func isDeleted(cardId: String) -> Observable<Bool> {
         
-        return self.repository.isCardDeleted(id: cardId).map(\.isDeleted)
+        return self.repository.isCardDeleted(id: cardId)
     }
 }

@@ -18,6 +18,18 @@ import RxSwift
 
 class DetailViewController: BaseNavigationViewController, View {
 
+    enum Item {
+        case detail
+        case vote
+    }
+
+    private enum Layout {
+        static let memberInfoHeight: CGFloat = 52
+        static let horizontalInset: CGFloat = 16
+        static let likeAndCommentHeight: CGFloat = 44
+        static let preferredMinimumFooterHeight: CGFloat = 140
+    }
+
      enum Text {
          
          static let feedDetailNavigationTitle: String = "카드"
@@ -86,6 +98,7 @@ class DetailViewController: BaseNavigationViewController, View {
          $0.refreshControl = SOMRefreshControl()
          
          $0.register(DetailViewCell.self, forCellWithReuseIdentifier: "cell")
+         $0.register(DetailVoteCell.self, forCellWithReuseIdentifier: "voteCell")
          $0.register(
             DetailViewFooter.self,
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
@@ -450,22 +463,11 @@ class DetailViewController: BaseNavigationViewController, View {
                 }
                 
                 object.detailCard = updated
-                
-                UIView.performWithoutAnimation {
-                    object.collectionView.reloadData()
-                }
-                
-                DispatchQueue.main.async {
-                    guard let cell = object.collectionView.cellForItem(
-                        at: IndexPath(item: 0, section: 0)
-                    ) as? DetailViewCell else { return }
-                    
-                    cell.animateLikeUpdate(
-                        from: previousLikeCount,
-                        to: updated.likeCnt,
-                        isSelected: updated.isLike
-                    )
-                }
+                object.updateVisibleLikeView(
+                    from: previousLikeCount,
+                    to: updated.likeCnt,
+                    isSelected: updated.isLike
+                )
             }
             .disposed(by: self.disposeBag)
         
@@ -595,7 +597,7 @@ extension DetailViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        return 1
+        return self.items.count
     }
     
     func collectionView(
@@ -603,113 +605,146 @@ extension DetailViewController: UICollectionViewDataSource {
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
         
-        let cell: DetailViewCell = collectionView
-            .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-            as! DetailViewCell
-    
-        guard self.isDeleted == false else {
-            cell.isDeleted()
-            self.pungView.isDeleted()
-            return cell
-        }
-        
-        cell.setModels(self.detailCard)
-        
-        guard let reactor = self.reactor else { return cell }
-        
-        cell.memberInfoView.memberBackgroundButton.rx.throttleTap(.seconds(3))
-            .subscribe(with: self) { object, _ in
-                /// 내 프로필일 경우 탭 이동
-                if object.detailCard.isOwnCard {
-                    guard let navigationController = object.navigationController,
-                          let tabBarController = navigationController
-                        .viewControllers
-                        .first(where: {
-                            $0.isKind(of: SOMTabBarController.self)
-                        }) as? SOMTabBarController
-                    else { return }
-                    
-                    navigationController.viewControllers.removeAll(where: {
-                        $0.isKind(of: SOMTabBarController.self) == false
-                    })
-                    tabBarController.didSelectedIndex(3)
-                } else {
-                    let profileViewController = ProfileViewController()
-                    profileViewController.reactor = reactor.reactorForProfile(
-                        type: .other,
-                        object.detailCard.memberId
-                    )
-                    object.navigationPush(profileViewController, animated: true)
-                }
+        switch self.items[indexPath.item] {
+        case .detail:
+            let cell: DetailViewCell = collectionView
+                .dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+                as! DetailViewCell
+
+            guard self.isDeleted == false else {
+                cell.isDeleted()
+                self.pungView.isDeleted()
+                return cell
             }
-            .disposed(by: cell.disposeBag)
-        
-        cell.tags.tagDidTap
-            .throttle(.seconds(3), scheduler: MainScheduler.instance)
-            .do(onNext: {
-                GAHelper.shared.logEvent(
-                    event: GAEvent.DetailView.cardDetailTag_btnClick(tag_name: $0.text)
-                )
-            })
-            .subscribe(with: self) { object, tagInfo in
-                let tagCollectViewController = TagCollectViewController()
-                tagCollectViewController.reactor = reactor.reactorForTagCollect(
-                    with: tagInfo.id,
-                    title: tagInfo.text
-                )
-                object.navigationPush(tagCollectViewController, animated: true)
-            }
-            .disposed(by: cell.disposeBag)
-        
-        cell.likeAndCommentView.likeBackgroundButton.rx.throttleTap
-            .withLatestFrom(reactor.state.compactMap(\.detailCard))
-            .subscribe(onNext: { detailCard in
-                reactor.action.onNext(.updateLike(!detailCard.isLike))
-            })
-            .disposed(by: cell.disposeBag)
-        
-        cell.likeAndCommentView.commentBackgroundButton.rx.throttleTap(.seconds(3))
-            .map { _ in Reactor.Action.willPushToWrite(.icon) }
-            .bind(to: reactor.action)
-            .disposed(by: cell.disposeBag)
-        
-        cell.prevCardBackgroundButton.rx.throttleTap(.seconds(3))
-            .subscribe(with: self) { object, _ in
-                guard let prevCardInfo = reactor.currentState.detailCard?.prevCardInfo else {
-                    object.navigationPop()
-                    return
-                }
-                /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop
-                if let naviStackCount = object.navigationController?.viewControllers.count,
-                   let prevViewController = object.navigationController?.viewControllers[naviStackCount - 2] as? Self,
-                   prevViewController.reactor?.selectedCardId == prevCardInfo.prevCardId {
-                    
-                    object.navigationPop()
-                } else {
-                    
-                    if prevCardInfo.isPrevCardDeleted {
-                        reactor.action.onNext(.cleanup)
-                        
-                        GAHelper.shared.logEvent(
-                            event: GAEvent.DetailView.cardDetail_tracePathClick(
-                                previous_path: .detail
-                            )
-                        )
-                        
-                        let detailViewController = DetailViewController()
-                        detailViewController.reactor = reactor.reactorForPush(
-                            prevCardInfo.prevCardId,
-                            hasDeleted: true
-                        )
-                        object.navigationPush(detailViewController, animated: true)
+
+            cell.setModels(
+                self.detailCard,
+                showsLikeAndCommentView: self.shouldShowLikeAndCommentInDetailCell
+            )
+
+            guard let reactor = self.reactor else { return cell }
+
+            cell.memberInfoView.memberBackgroundButton.rx.throttleTap(.seconds(3))
+                .subscribe(with: self) { object, _ in
+                    /// 내 프로필일 경우 탭 이동
+                    if object.detailCard.isOwnCard {
+                        guard let navigationController = object.navigationController,
+                              let tabBarController = navigationController
+                            .viewControllers
+                            .first(where: {
+                                $0.isKind(of: SOMTabBarController.self)
+                            }) as? SOMTabBarController
+                        else { return }
+
+                        navigationController.viewControllers.removeAll(where: {
+                            $0.isKind(of: SOMTabBarController.self) == false
+                        })
+                        tabBarController.didSelectedIndex(3)
                     } else {
-                        reactor.action.onNext(.willPushToDetail(prevCardInfo.prevCardId))
+                        let profileViewController = ProfileViewController()
+                        profileViewController.reactor = reactor.reactorForProfile(
+                            type: .other,
+                            object.detailCard.memberId
+                        )
+                        object.navigationPush(profileViewController, animated: true)
                     }
                 }
+                .disposed(by: cell.disposeBag)
+
+            cell.tags.tagDidTap
+                .throttle(.seconds(3), scheduler: MainScheduler.instance)
+                .do(onNext: {
+                    GAHelper.shared.logEvent(
+                        event: GAEvent.DetailView.cardDetailTag_btnClick(tag_name: $0.text)
+                    )
+                })
+                .subscribe(with: self) { object, tagInfo in
+                    let tagCollectViewController = TagCollectViewController()
+                    tagCollectViewController.reactor = reactor.reactorForTagCollect(
+                        with: tagInfo.id,
+                        title: tagInfo.text
+                    )
+                    object.navigationPush(tagCollectViewController, animated: true)
+                }
+                .disposed(by: cell.disposeBag)
+
+            self.bindLikeAndCommentActions(
+                cell.likeAndCommentView,
+                disposeBag: cell.disposeBag,
+                reactor: reactor
+            )
+
+            cell.prevCardBackgroundButton.rx.throttleTap(.seconds(3))
+                .subscribe(with: self) { object, _ in
+                    guard let prevCardInfo = reactor.currentState.detailCard?.prevCardInfo else {
+                        object.navigationPop()
+                        return
+                    }
+                    /// 현재 쌓인 viewControllers 중 바로 이전 viewController가 전환해야 할 전글이라면 naviPop
+                    if let naviStackCount = object.navigationController?.viewControllers.count,
+                       let prevViewController = object.navigationController?.viewControllers[naviStackCount - 2] as? Self,
+                       prevViewController.reactor?.selectedCardId == prevCardInfo.prevCardId {
+
+                        object.navigationPop()
+                    } else {
+
+                        if prevCardInfo.isPrevCardDeleted {
+                            reactor.action.onNext(.cleanup)
+
+                            GAHelper.shared.logEvent(
+                                event: GAEvent.DetailView.cardDetail_tracePathClick(
+                                    previous_path: .detail
+                                )
+                            )
+
+                            let detailViewController = DetailViewController()
+                            detailViewController.reactor = reactor.reactorForPush(
+                                prevCardInfo.prevCardId,
+                                hasDeleted: true
+                            )
+                            object.navigationPush(detailViewController, animated: true)
+                        } else {
+                            reactor.action.onNext(.willPushToDetail(prevCardInfo.prevCardId))
+                        }
+                    }
+                }
+                .disposed(by: cell.disposeBag)
+
+            return cell
+
+        case .vote:
+            let cell: DetailVoteCell = collectionView
+                .dequeueReusableCell(withReuseIdentifier: "voteCell", for: indexPath)
+                as! DetailVoteCell
+
+            cell.setModels(
+                self.detailCard,
+                showsLikeAndCommentView: self.shouldShowLikeAndCommentInVoteCell
+            )
+
+            guard let reactor = self.reactor else { return cell }
+
+            self.bindLikeAndCommentActions(
+                cell.likeAndCommentView,
+                disposeBag: cell.disposeBag,
+                reactor: reactor
+            )
+            
+            cell.onVoteOptionTap = { [weak reactor] optionId in
+                guard let reactor,
+                      let poll = reactor.currentState.detailCard?.poll,
+                      let option = poll.options.first(where: { $0.id == optionId })
+                else { return }
+                
+                if poll.isVoted, option.isVoted == false {
+                    return
+                }
+                
+                reactor.action.onNext(.updateVote(optionId: optionId, isVoted: option.isVoted))
             }
-            .disposed(by: cell.disposeBag)
-        
-        return cell
+
+            return cell
+        }
     }
     
     func collectionView(
@@ -717,38 +752,37 @@ extension DetailViewController: UICollectionViewDataSource {
         viewForSupplementaryElementOfKind kind: String,
         at indexPath: IndexPath
     ) -> UICollectionReusableView {
-        if kind == UICollectionView.elementKindSectionFooter {
-            
-            let footer: DetailViewFooter = collectionView
-                .dequeueReusableSupplementaryView(
-                    ofKind: kind,
-                    withReuseIdentifier: "footer",
-                    for: indexPath
-                ) as! DetailViewFooter
-            
-            footer.setModels(self.commentCards)
-            
-            guard let reactor = self.reactor else { return footer }
-            
-            footer.didTap
-                .throttle(.seconds(3), scheduler: MainScheduler.instance)
-                .subscribe(with: self) { object, selectedId in
-                    let viewController = DetailViewController()
-                    viewController.reactor = reactor.reactorForPush(selectedId)
-                    object.navigationPush(viewController, animated: true)
-                }
-                .disposed(by: footer.disposeBag)
-            
-            footer.moreDisplay
-                .subscribe(onNext: { lastId in
-                    reactor.action.onNext(.moreFindForComment(lastId: lastId))
-                })
-                .disposed(by: footer.disposeBag)
-            
-            return footer
-        } else {
+        guard kind == UICollectionView.elementKindSectionFooter else {
             return .init(frame: .zero)
         }
+
+        let footer: DetailViewFooter = collectionView
+            .dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: "footer",
+                for: indexPath
+            ) as! DetailViewFooter
+        
+        footer.setModels(self.commentCards)
+        
+        guard let reactor = self.reactor else { return footer }
+        
+        footer.didTap
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
+            .subscribe(with: self) { object, selectedId in
+                let viewController = DetailViewController()
+                viewController.reactor = reactor.reactorForPush(selectedId)
+                object.navigationPush(viewController, animated: true)
+            }
+            .disposed(by: footer.disposeBag)
+        
+        footer.moreDisplay
+            .subscribe(onNext: { lastId in
+                reactor.action.onNext(.moreFindForComment(lastId: lastId))
+            })
+            .disposed(by: footer.disposeBag)
+        
+        return footer
     }
 }
 
@@ -759,9 +793,15 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        let width: CGFloat = UIScreen.main.bounds.width
-        let height: CGFloat = 52 + (width - 16 * 2) + 44
-        return CGSize(width: width, height: height)
+        let width = collectionView.bounds.width
+        let layout = self.contentLayout(in: collectionView, width: width)
+
+        switch self.items[indexPath.item] {
+        case .detail:
+            return CGSize(width: width, height: self.baseDetailHeight(for: width))
+        case .vote:
+            return CGSize(width: width, height: layout.voteHeight)
+        }
     }
     
     func collectionView(
@@ -769,9 +809,8 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         referenceSizeForFooterInSection section: Int
     ) -> CGSize {
-        let width: CGFloat = UIScreen.main.bounds.width
-        let cellHeight: CGFloat = 52 + (width - 16 * 2) + 44
-        let height: CGFloat = collectionView.bounds.height - cellHeight
+        let width = collectionView.bounds.width
+        let height = self.contentLayout(in: collectionView, width: width).footerHeight
         return CGSize(width: width, height: height)
     }
     
@@ -788,13 +827,7 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let offset = scrollView.contentOffset.y
-        
-        // 아래 -> 위 스크롤 막음
-        guard offset <= self.initialOffset else {
-            scrollView.contentOffset.y = 0
-            return
-        }
-        
+
         // 당겨서 새로고침
         if self.isRefreshEnabled, offset < self.initialOffset,
            let refreshControl = self.collectionView.refreshControl as? SOMRefreshControl {
@@ -828,6 +861,65 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
 }
 
 private extension DetailViewController {
+
+    struct ContentLayout {
+        let voteHeight: CGFloat
+        let footerHeight: CGFloat
+    }
+
+    var items: [Item] {
+        guard self.isDeleted == false, self.hasVote else { return [.detail] }
+        return [.detail, .vote]
+    }
+
+    var hasVote: Bool {
+        (self.detailCard.poll?.options.isEmpty == false)
+    }
+
+    var shouldShowLikeAndCommentInDetailCell: Bool {
+        self.hasVote == false
+    }
+
+    var shouldShowLikeAndCommentInVoteCell: Bool {
+        self.hasVote
+    }
+
+    func baseDetailHeight(for width: CGFloat) -> CGFloat {
+        let likeAndCommentHeight = self.shouldShowLikeAndCommentInDetailCell ?
+            Layout.likeAndCommentHeight : 0
+        return Layout.memberInfoHeight + (width - Layout.horizontalInset * 2) + likeAndCommentHeight
+    }
+
+    func contentLayout(in collectionView: UICollectionView, width: CGFloat) -> ContentLayout {
+        let intrinsicVoteHeight = VotedView.height(for: self.detailCard.poll)
+        let voteHeight = intrinsicVoteHeight + (
+            self.shouldShowLikeAndCommentInVoteCell ? Layout.likeAndCommentHeight : 0
+        )
+        let footerHeight = max(
+            Layout.preferredMinimumFooterHeight,
+            collectionView.bounds.height - self.baseDetailHeight(for: width)
+        )
+
+        return .init(voteHeight: voteHeight, footerHeight: footerHeight)
+    }
+
+    func bindLikeAndCommentActions(
+        _ likeAndCommentView: LikeAndCommentView,
+        disposeBag: DisposeBag,
+        reactor: DetailViewReactor
+    ) {
+        likeAndCommentView.likeBackgroundButton.rx.throttleTap
+            .withLatestFrom(reactor.state.compactMap(\.detailCard))
+            .subscribe(onNext: { detailCard in
+                reactor.action.onNext(.updateLike(!detailCard.isLike))
+            })
+            .disposed(by: disposeBag)
+        
+        likeAndCommentView.commentBackgroundButton.rx.throttleTap(.seconds(3))
+            .map { _ in Reactor.Action.willPushToWrite(.icon) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+    }
     
     func showBlockedUserDialog(nickname: String, completion: (() -> Void)? = nil) {
         
@@ -854,6 +946,25 @@ private extension DetailViewController {
             textAlignment: .left,
             actions: [cancelAction, blockAction]
          )
+    }
+
+    func updateVisibleLikeView(from previousLikeCount: Int, to currentLikeCount: Int, isSelected: Bool) {
+        if self.shouldShowLikeAndCommentInVoteCell,
+           let cell = self.collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) as? DetailVoteCell {
+            cell.animateLikeUpdate(
+                from: previousLikeCount,
+                to: currentLikeCount,
+                isSelected: isSelected
+            )
+        } else if let cell = self.collectionView.cellForItem(
+            at: IndexPath(item: 0, section: 0)
+        ) as? DetailViewCell {
+            cell.animateLikeUpdate(
+                from: previousLikeCount,
+                to: currentLikeCount,
+                isSelected: isSelected
+            )
+        }
     }
     
     func showDeleteCardDialog() {

@@ -34,6 +34,8 @@ enum CardRequest: BaseRequest {
     case deleteCard(id: String)
     /// 상세보기 - 좋아요 업데이트
     case updateLike(id: String, isLike: Bool)
+    /// 상세보기 - 투표 업데이트
+    case votePollOption(id: String, isVoted: Bool)
     /// 상세보기 - 신고
     case reportCard(id: String, reportType: String)
     
@@ -113,6 +115,9 @@ enum CardRequest: BaseRequest {
         case let .updateLike(id, _):
             
             return "/api/cards/\(id)/like"
+        case let .votePollOption(id, _):
+            
+            return "/api/polls/options/\(id)/votes"
         case let .reportCard(id, _):
             
             return "/api/reports/cards/\(id)"
@@ -139,6 +144,8 @@ enum CardRequest: BaseRequest {
             return .post
         case let .updateLike(_, isLike):
             return isLike ? .post : .delete
+        case let .votePollOption(_, isVoted):
+            return isVoted ? .post : .delete
         default:
             return .get
         }

@@ -19,6 +19,14 @@ class DetailViewCell: UICollectionViewCell {
         static let deletedCardInDetailText: String = "삭제된 카드예요"
     }
     
+    private enum Layout {
+        static let cardHorizontalInset: CGFloat = 32
+        static let textContainerVerticalInset: CGFloat = 20
+        static let textHorizontalInset: CGFloat = 24
+        static let minimumTextHeight: CGFloat = Typography.som.v2.body1.lineHeight
+        static let likeAndCommentHeight: CGFloat = 44
+    }
+    
     
     // MARK: Views
     
@@ -63,6 +71,9 @@ class DetailViewCell: UICollectionViewCell {
     /// 상세보기, 본문
     private let contentScrollView = UIScrollView().then {
         $0.isScrollEnabled = false
+        $0.alwaysBounceVertical = true
+        $0.delaysContentTouches = false
+        $0.canCancelContentTouches = true
         $0.showsVerticalScrollIndicator = true
         $0.showsHorizontalScrollIndicator = false
         $0.indicatorStyle = .white
@@ -110,8 +121,7 @@ class DetailViewCell: UICollectionViewCell {
     // MARK: Constraint
     
     private var textViewBackgroundHeightConstraint: Constraint?
-    
-    
+    private var likeAndCommentHeightConstraint: Constraint?
     // MARK: Initialize
     
     override init(frame: CGRect) {
@@ -205,6 +215,7 @@ class DetailViewCell: UICollectionViewCell {
         self.likeAndCommentView.snp.makeConstraints {
             $0.top.equalTo(self.backgroundImageView.snp.bottom)
             $0.bottom.horizontalEdges.equalToSuperview()
+            self.likeAndCommentHeightConstraint = $0.height.equalTo(Layout.likeAndCommentHeight).constraint
         }
         
         self.contentView.addSubview(self.deletedCardInDetailBackgroundView)
@@ -226,37 +237,26 @@ class DetailViewCell: UICollectionViewCell {
     }
     
     private func updateTextContainerInsetAndHeight(_ content: String, typography: Typography) {
+        let contentWidth = max(
+            UIScreen.main.bounds.width - Layout.cardHorizontalInset * 2 - Layout.textHorizontalInset * 2,
+            0
+        )
+        let textHeight = Self.textHeight(for: content, typography: typography, width: contentWidth)
+        let maxVisibleTextHeight = typography.lineHeight * 8
+        let visibleTextHeight = min(textHeight, maxVisibleTextHeight)
         
-        // UILabel의 정확한 높이를 구하기 위해 sizeToFit 사용
-        let size: CGSize = .init(width: self.contentScrollView.bounds.width, height: .greatestFiniteMagnitude)
-        var boundingHeight: CGFloat {
-            let label = UILabel(frame: .init(origin: .zero, size: size)).then {
-                $0.text = content
-                $0.textColor = .som.v2.white
-                $0.typography = .som.v2.body1
-                $0.textAlignment = .center
-                $0.numberOfLines = 0
-                $0.lineBreakMode = .byWordWrapping
-                $0.lineBreakStrategy = .hangulWordPriority
-                
-                $0.sizeToFit()
-            }
-            
-            return label.frame.height
-        }
-        
-        let lines: CGFloat = boundingHeight / typography.lineHeight
-        let isScrollEnabled: Bool = lines > 8
-        let newHeight: CGFloat = isScrollEnabled ? typography.lineHeight * 8 : boundingHeight
-        let updatedHeight: CGFloat = max(newHeight, typography.lineHeight)
-        self.textViewBackgroundHeightConstraint?.update(offset: updatedHeight + 20 * 2)
-        self.contentScrollView.isScrollEnabled = isScrollEnabled
+        self.textViewBackgroundHeightConstraint?.update(
+            offset: visibleTextHeight + Layout.textContainerVerticalInset * 2
+        )
+        self.contentScrollView.isScrollEnabled = textHeight > maxVisibleTextHeight
+        self.contentScrollView.showsVerticalScrollIndicator = textHeight > maxVisibleTextHeight
+        self.contentScrollView.setContentOffset(.zero, animated: false)
     }
     
     
     // MARK: Public func
     
-    func setModels(_ model: DetailCardInfo) {
+    func setModels(_ model: DetailCardInfo, showsLikeAndCommentView: Bool) {
         
         self.model = model
         
@@ -283,13 +283,7 @@ class DetailViewCell: UICollectionViewCell {
         
         self.backgroundImageView.setImage(strUrl: model.cardImgURL, with: model.cardImgName)
         
-        let typography: Typography
-        switch model.font {
-        case .pretendard:   typography = .som.v2.body1
-        case .ridi:         typography = .som.v2.ridiCard
-        case .yoonwoo:      typography = .som.v2.yoonwooCard
-        case .kkookkkook:   typography = .som.v2.kkookkkookCard
-        }
+        let typography = Self.typography(for: model.font)
         self.contentLabelView.text = model.cardContent
         self.contentLabelView.typography = typography
         self.updateTextContainerInsetAndHeight(model.cardContent, typography: typography)
@@ -299,10 +293,11 @@ class DetailViewCell: UICollectionViewCell {
         }
         self.tags.setModels(tagModels)
         
+        self.setLikeAndCommentHidden(showsLikeAndCommentView == false)
         self.likeAndCommentView.isLikeSelected = model.isLike
         self.likeAndCommentView.likeCount = model.likeCnt
         self.likeAndCommentView.commentCount = model.commentCnt
-        self.likeAndCommentView.visitedCount = model.visitedCnt
+        self.likeAndCommentView.visitedCount = "\(model.visitedCnt)"
     }
     
     func isDeleted() {
@@ -321,5 +316,54 @@ class DetailViewCell: UICollectionViewCell {
             to: currentLikeCount,
             isSelected: isSelected
         )
+    }
+
+    func setLikeAndCommentHidden(_ isHidden: Bool) {
+        self.likeAndCommentView.isHidden = isHidden
+        self.likeAndCommentHeightConstraint?.update(offset: isHidden ? 0 : Layout.likeAndCommentHeight)
+    }
+    
+    static func typography(for font: BaseCardInfo.Font) -> Typography {
+        switch font {
+        case .pretendard:   return .som.v2.body1
+        case .ridi:         return .som.v2.ridiCard
+        case .yoonwoo:      return .som.v2.yoonwooCard
+        case .kkookkkook:   return .som.v2.kkookkkookCard
+        }
+    }
+    
+    static func contentBackgroundHeight(
+        for content: String,
+        typography: Typography,
+        cardWidth: CGFloat
+    ) -> CGFloat {
+        let textWidth = max(cardWidth - Layout.textHorizontalInset * 2, 0)
+        let textHeight = Self.textHeight(for: content, typography: typography, width: textWidth)
+        return textHeight + Layout.textContainerVerticalInset * 2
+    }
+    
+    private static func textHeight(
+        for content: String,
+        typography: Typography,
+        width: CGFloat
+    ) -> CGFloat {
+        let constrainedWidth = max(width, 0)
+        guard constrainedWidth > 0 else { return Layout.minimumTextHeight }
+        
+        let label = UILabel(frame: .init(
+            origin: .zero,
+            size: .init(width: constrainedWidth, height: .greatestFiniteMagnitude)
+        )).then {
+            $0.text = content
+            $0.textColor = .som.v2.white
+            $0.typography = typography
+            $0.textAlignment = .center
+            $0.numberOfLines = 0
+            $0.lineBreakMode = .byWordWrapping
+            $0.lineBreakStrategy = .hangulWordPriority
+            $0.sizeToFit()
+        }
+        
+        return max(ceil(label.frame.height), Layout.minimumTextHeight)
     }
 }

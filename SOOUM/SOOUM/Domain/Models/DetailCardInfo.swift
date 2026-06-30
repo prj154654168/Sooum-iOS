@@ -27,7 +27,9 @@ struct DetailCardInfo: Hashable {
     let isCommentWritten: Bool
     let tags: [Tag]
     let isOwnCard: Bool
-    let visitedCnt: String
+    let isFeedCard: Bool
+    let poll: Poll?
+    let visitedCnt: Int64
     /// 이전 카드 정보
     let prevCardInfo: PrevCardInfo?
 }
@@ -56,6 +58,8 @@ extension DetailCardInfo {
             isCommentWritten: self.isCommentWritten,
             tags: self.tags,
             isOwnCard: self.isOwnCard,
+            isFeedCard: self.isFeedCard,
+            poll: self.poll,
             visitedCnt: self.visitedCnt,
             prevCardInfo: self.prevCardInfo
         )
@@ -83,6 +87,37 @@ extension DetailCardInfo {
             isCommentWritten: self.isCommentWritten,
             tags: self.tags,
             isOwnCard: self.isOwnCard,
+            isFeedCard: self.isFeedCard,
+            poll: self.poll,
+            visitedCnt: self.visitedCnt,
+            prevCardInfo: self.prevCardInfo
+        )
+    }
+    
+    func updatePoll(_ poll: Poll?) -> DetailCardInfo {
+        
+        return DetailCardInfo(
+            id: self.id,
+            likeCnt: self.likeCnt,
+            commentCnt: self.commentCnt,
+            cardImgName: self.cardImgName,
+            cardImgURL: self.cardImgURL,
+            cardContent: self.cardContent,
+            font: self.font,
+            distance: self.distance,
+            createdAt: self.createdAt,
+            storyExpirationTime: self.storyExpirationTime,
+            isAdminCard: self.isAdminCard,
+            isReported: self.isReported,
+            memberId: self.memberId,
+            nickname: self.nickname,
+            profileImgURL: self.profileImgURL,
+            isLike: self.isLike,
+            isCommentWritten: self.isCommentWritten,
+            tags: self.tags,
+            isOwnCard: self.isOwnCard,
+            isFeedCard: self.isFeedCard,
+            poll: poll,
             visitedCnt: self.visitedCnt,
             prevCardInfo: self.prevCardInfo
         )
@@ -94,6 +129,20 @@ extension DetailCardInfo {
     struct Tag: Hashable {
         let id: String
         let title: String
+    }
+    /// 투표 정보
+    struct Poll: Hashable {
+        let totalVoterCnt: Int64
+        let isVoted: Bool
+        let options: [Option]
+        
+        struct Option: Hashable {
+            let id: String
+            let content: String
+            let voteCnt: Int64
+            let votePercentage: Double
+            let isVoted: Bool
+        }
     }
     /// 이전 카드 정보
     struct PrevCardInfo: Hashable {
@@ -117,6 +166,78 @@ extension DetailCardInfo.Tag: Decodable {
     }
 }
 
+extension DetailCardInfo.Poll.Option: Decodable {
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "pollOptionId"
+        case content
+        case voteCnt
+        case votePercentage
+        case isVoted
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = String(try container.decode(Int64.self, forKey: .id))
+        self.content = try container.decode(String.self, forKey: .content)
+        self.voteCnt = try container.decodeIfPresent(Int64.self, forKey: .voteCnt) ?? 0
+        self.votePercentage = try container.decodeIfPresent(Double.self, forKey: .votePercentage) ?? 0
+        self.isVoted = try container.decode(Bool.self, forKey: .isVoted)
+    }
+}
+
+extension DetailCardInfo.Poll: Decodable {
+    
+    enum CodingKeys: String, CodingKey {
+        case totalVoterCnt
+        case isVoted
+        case options
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.totalVoterCnt = try container.decode(Int64.self, forKey: .totalVoterCnt)
+        self.isVoted = try container.decode(Bool.self, forKey: .isVoted)
+        self.options = try container.decode([Option].self, forKey: .options)
+    }
+}
+
+extension DetailCardInfo.Poll {
+    
+    func removingVote(optionId: String) -> DetailCardInfo.Poll {
+        let updatedOptions = self.options.map { option in
+            let updatedVoteCount = option.id == optionId ? max(option.voteCnt - 1, 0) : option.voteCnt
+            
+            return Option(
+                id: option.id,
+                content: option.content,
+                voteCnt: updatedVoteCount,
+                votePercentage: 0,
+                isVoted: false
+            )
+        }
+        
+        let updatedTotalVoterCount = max(self.totalVoterCnt - 1, 0)
+        let optionsWithPercentage = updatedOptions.map { option in
+            Option(
+                id: option.id,
+                content: option.content,
+                voteCnt: option.voteCnt,
+                votePercentage: updatedTotalVoterCount == 0
+                ? 0
+                : Double(option.voteCnt) / Double(updatedTotalVoterCount) * 100,
+                isVoted: option.isVoted
+            )
+        }
+        
+        return DetailCardInfo.Poll(
+            totalVoterCnt: updatedTotalVoterCount,
+            isVoted: false,
+            options: optionsWithPercentage
+        )
+    }
+}
+
 extension DetailCardInfo.PrevCardInfo: Decodable {
     
     enum CodingKeys: String, CodingKey {
@@ -127,7 +248,11 @@ extension DetailCardInfo.PrevCardInfo: Decodable {
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.prevCardId = try container.decode(String.self, forKey: .prevCardId)
+        if let prevCardId = try? container.decode(String.self, forKey: .prevCardId) {
+            self.prevCardId = prevCardId
+        } else {
+            self.prevCardId = String(try container.decode(Int64.self, forKey: .prevCardId))
+        }
         self.isPrevCardDeleted = try container.decode(Bool.self, forKey: .isPrevCardDeleted)
         self.prevCardImgURL = try container.decodeIfPresent(String.self, forKey: .prevCardImgURL)
     }
@@ -155,7 +280,9 @@ extension DetailCardInfo {
         isCommentWritten: false,
         tags: [],
         isOwnCard: false,
-        visitedCnt: "0",
+        isFeedCard: false,
+        poll: nil,
+        visitedCnt: 0,
         prevCardInfo: nil
     )
 }
@@ -182,6 +309,8 @@ extension DetailCardInfo: Decodable {
         case isCommentWritten
         case tags
         case isOwnCard
+        case isFeedCard
+        case poll
         case visitedCnt
         case prevCardInfo
     }
@@ -207,9 +336,12 @@ extension DetailCardInfo: Decodable {
         self.isCommentWritten = try container.decode(Bool.self, forKey: .isCommentWritten)
         self.tags = try container.decode([Tag].self, forKey: .tags)
         self.isOwnCard = try container.decode(Bool.self, forKey: .isOwnCard)
-        self.visitedCnt = String(try container.decode(Int64.self, forKey: .visitedCnt))
+        self.poll = try container.decodeIfPresent(Poll.self, forKey: .poll)
+        self.visitedCnt = try container.decode(Int64.self, forKey: .visitedCnt)
         
         let singleContainer = try decoder.singleValueContainer()
         self.prevCardInfo = try? singleContainer.decode(PrevCardInfo.self)
+        self.isFeedCard = try container.decodeIfPresent(Bool.self, forKey: .isFeedCard)
+        ?? (self.prevCardInfo == nil && self.poll == nil)
     }
 }

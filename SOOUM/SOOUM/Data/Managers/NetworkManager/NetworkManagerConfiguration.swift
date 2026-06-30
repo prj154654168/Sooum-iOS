@@ -43,10 +43,33 @@ struct NetworkManagerConfiguration: ManagerConfiguration {
             fullFormatter.locale = .Korea
             fullFormatter.timeZone = .Korea
             
+            let timezoneFormatter = DateFormatter()
+            timezoneFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXXX"
+            timezoneFormatter.locale = .Korea
+            timezoneFormatter.timeZone = .Korea
+            
+            let secondFormatter = DateFormatter()
+            secondFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+            secondFormatter.locale = .Korea
+            secondFormatter.timeZone = .Korea
+            
+            let timezoneSecondFormatter = DateFormatter()
+            timezoneSecondFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssXXXXX"
+            timezoneSecondFormatter.locale = .Korea
+            timezoneSecondFormatter.timeZone = .Korea
+            
             let shortFormatter = DateFormatter()
             shortFormatter.dateFormat = "yyyy-MM-dd"
             shortFormatter.locale = .Korea
             shortFormatter.timeZone = .Korea
+            
+            let iso8601Formatter = ISO8601DateFormatter()
+            iso8601Formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            iso8601Formatter.timeZone = .Korea
+            
+            let iso8601WithoutFractionalSecondsFormatter = ISO8601DateFormatter()
+            iso8601WithoutFractionalSecondsFormatter.formatOptions = [.withInternetDateTime]
+            iso8601WithoutFractionalSecondsFormatter.timeZone = .Korea
             
             self.decoder = JSONDecoder()
             self.decoder.dateDecodingStrategy = .custom { decoder in
@@ -54,6 +77,26 @@ struct NetworkManagerConfiguration: ManagerConfiguration {
                 let dateString = try singleContainer.decode(String.self)
                 
                 if let date = fullFormatter.date(from: dateString) {
+                    return date
+                }
+                
+                if let date = timezoneFormatter.date(from: dateString) {
+                    return date
+                }
+                
+                if let date = secondFormatter.date(from: dateString) {
+                    return date
+                }
+                
+                if let date = timezoneSecondFormatter.date(from: dateString) {
+                    return date
+                }
+                
+                if let date = iso8601Formatter.date(from: dateString) {
+                    return date
+                }
+                
+                if let date = iso8601WithoutFractionalSecondsFormatter.date(from: dateString) {
                     return date
                 }
                 

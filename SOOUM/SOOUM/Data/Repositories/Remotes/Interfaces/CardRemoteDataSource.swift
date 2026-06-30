@@ -27,6 +27,8 @@ protocol CardRemoteDataSource {
     func commentCard(id: String, lastId: String?, latitude: String?, longitude: String?) -> Observable<BaseCardInfoResponse>
     func deleteCard(id: String) -> Observable<Int>
     func updateLike(id: String, isLike: Bool) -> Observable<Int>
+    func votePollOption(id: String) -> Observable<PollVoteInfoResponse>
+    func unvotePollOption(id: String) -> Observable<Int>
     func reportCard(id: String, reportType: String) -> Observable<Int>
     
     

@@ -226,6 +226,9 @@ final class AppAssembler: BaseAssemblerable {
         container.register(UpdateCardLikeUseCase.self, factory: { resolver in
             UpdateCardLikeUseCaseImpl(repository: resolver.resolve(CardRepository.self))
         })
+        container.register(UpdatePollVoteUseCase.self, factory: { resolver in
+            UpdatePollVoteUseCaseImpl(repository: resolver.resolve(CardRepository.self))
+        })
         
         
         // MARK: UpdateFollowUseCase

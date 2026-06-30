@@ -19,6 +19,7 @@ class DetailViewReactor: Reactor {
         case delete
         case block(isBlocked: Bool)
         case updateLike(Bool)
+        case updateVote(optionId: String, isVoted: Bool)
         case updateReport(Bool)
         case willPushToDetail(String)
         case willPushToWrite(GAEvent.DetailView.EnterTo)
@@ -60,6 +61,7 @@ class DetailViewReactor: Reactor {
     private let fetchCardDetailUseCase: FetchCardDetailUseCase
     private let deleteCardUseCase: DeleteCardUseCase
     private let updateCardLikeUseCase: UpdateCardLikeUseCase
+    private let updatePollVoteUseCase: UpdatePollVoteUseCase
     private let blockUserUseCase: BlockUserUseCase
     private let locationUseCase: LocationUseCase
     
@@ -74,6 +76,7 @@ class DetailViewReactor: Reactor {
         self.fetchCardDetailUseCase = dependencies.rootContainer.resolve(FetchCardDetailUseCase.self)
         self.deleteCardUseCase = dependencies.rootContainer.resolve(DeleteCardUseCase.self)
         self.updateCardLikeUseCase = dependencies.rootContainer.resolve(UpdateCardLikeUseCase.self)
+        self.updatePollVoteUseCase = dependencies.rootContainer.resolve(UpdatePollVoteUseCase.self)
         self.blockUserUseCase = dependencies.rootContainer.resolve(BlockUserUseCase.self)
         self.locationUseCase = dependencies.rootContainer.resolve(LocationUseCase.self)
         
@@ -114,7 +117,7 @@ class DetailViewReactor: Reactor {
                 )
                 .flatMapLatest { detailCardInfo -> Observable<Mutation> in
                     return .concat([
-                        .just(.cardType(detailCardInfo.prevCardInfo == nil)),
+                        .just(.cardType(detailCardInfo.isFeedCard)),
                         .just(.updateReported(detailCardInfo.isReported)),
                         .just(.detailCard(detailCardInfo))
                     ])
@@ -170,6 +173,31 @@ class DetailViewReactor: Reactor {
                         return .just(.updateIsLiked(true))
                     }
                     .catch(self.catchClosure)
+            ])
+        case let .updateVote(optionId, isVoted):
+            
+            guard let detailCard = self.currentState.detailCard,
+                  let poll = detailCard.poll
+            else { return .empty() }
+            
+            guard isVoted == false || poll.options.contains(where: { $0.id == optionId && $0.isVoted }) else {
+                return .empty()
+            }
+            
+            return .concat([
+                .just(.updateErrors(nil)),
+                (
+                    isVoted
+                    ? self.updatePollVoteUseCase.unvote(
+                        pollOptionId: optionId,
+                        currentPoll: poll
+                    )
+                        .map(detailCard.updatePoll)
+                    : self.updatePollVoteUseCase.vote(pollOptionId: optionId)
+                        .map(detailCard.updatePoll)
+                )
+                .map { Mutation.detailCard($0) }
+                .catch(self.catchClosure)
             ])
         case let .updateReport(isReported):
             

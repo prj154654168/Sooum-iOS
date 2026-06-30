@@ -11,3 +11,9 @@ protocol UpdateCardLikeUseCase: AnyObject {
     
     func updateLike(cardId: String, isLike: Bool) -> Observable<Bool>
 }
+
+protocol UpdatePollVoteUseCase: AnyObject {
+    
+    func vote(pollOptionId: String) -> Observable<DetailCardInfo.Poll>
+    func unvote(pollOptionId: String, currentPoll: DetailCardInfo.Poll) -> Observable<DetailCardInfo.Poll>
+}
