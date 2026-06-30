@@ -62,8 +62,10 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let banUserDialogSecondTrailingMessage: String = "부터 가능합니다."
         
         static let deletedCardDialogTitle: String = "삭제된 카드예요"
+        static let deleteVoteDialogTitle: String = "투표를 삭제할까요?"
         
         static let cancelActionTitle: String = "취소"
+        static let deleteActionTitle: String = "삭제"
         static let settingActionTitle: String = "설정"
         static let confirmActionTitle: String = "확인"
         
@@ -828,6 +830,34 @@ extension WriteCardViewController {
             actions: [confirmAction]
         )
     }
+    
+    func showDeleteVoteDialog() {
+        
+        let cancelAction = SOMDialogAction(
+            title: Text.cancelActionTitle,
+            style: .gray,
+            action: {
+                SOMDialogViewController.dismiss()
+            }
+        )
+        let deleteAction = SOMDialogAction(
+            title: Text.deleteActionTitle,
+            style: .primary,
+            action: { [weak self] in
+                SOMDialogViewController.dismiss {
+                    self?.clearVotes()
+                    self?.removeVoteOptionSelection()
+                }
+            }
+        )
+        
+        SOMDialogViewController.show(
+            title: Text.deleteVoteDialogTitle,
+            messageView: nil,
+            textAlignment: .left,
+            actions: [cancelAction, deleteAction]
+        )
+    }
 }
 
 
@@ -909,8 +939,7 @@ extension WriteCardViewController {
         self.selectVoteView.deleteButtonTap
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                object.clearVotes()
-                object.removeVoteOptionSelection()
+                object.showDeleteVoteDialog()
             }
             .disposed(by: self.disposeBag)
     }
