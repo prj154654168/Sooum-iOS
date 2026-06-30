@@ -23,6 +23,16 @@ import RxSwift
 
 class WriteCardViewController: BaseNavigationViewController, View {
     
+    enum VoteSheetPresentationContext {
+        case create
+        case edit
+    }
+    
+    enum VoteSheetDismissalPolicy {
+        case preserveSelection
+        case clearSelection
+    }
+    
     enum Text {
         static let navigationTitle: String = "새로운 카드"
         static let commentNavigationTitle: String = "댓글카드"
@@ -98,6 +108,10 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     private let writeCardView = WriteCardView()
     
+    private let selectVoteView = SelectVoteView().then {
+        $0.isHidden = true
+    }
+    
     private let selectImageView = WriteCardSelectImageView()
     
     private let selectTypographyView = SelectTypographyView().then {
@@ -117,6 +131,19 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     private let makeVoteView = MakeVoteView()
     
+    private lazy var contentStackView = UIStackView(arrangedSubviews: [
+        self.writeCardView,
+        self.selectVoteView,
+        self.selectImageView,
+        self.selectTypographyView,
+        self.selectCardTypeView
+    ]).then {
+        $0.axis = .vertical
+        $0.alignment = .fill
+        $0.distribution = .equalSpacing
+        $0.spacing = 24
+    }
+    
     private let relatedTagsView = RelatedTagsView().then {
         $0.isHidden = true
     }
@@ -135,7 +162,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
     private var keyboardHeight: CGFloat = 0
     private var selectedVotes: [String] = []
     private var isPresentingMakeVoteView: Bool = false
-    private var shouldKeepVoteOptionSelection: Bool = false
+    private var voteSheetPresentationContext: VoteSheetPresentationContext = .create
+    private var voteSheetDismissalPolicy: VoteSheetDismissalPolicy = .clearSelection
     
     // MARK: Constraint
     
@@ -178,20 +206,10 @@ class WriteCardViewController: BaseNavigationViewController, View {
             $0.horizontalEdges.equalToSuperview()
         }
         
-        let container = UIStackView(arrangedSubviews: [
-            self.writeCardView,
-            self.selectImageView,
-            self.selectTypographyView,
-            self.selectCardTypeView
-        ]).then {
-            $0.axis = .vertical
-            $0.alignment = .fill
-            $0.distribution = .equalSpacing
-            $0.spacing = 24
-        }
-        self.scrollContainer.addSubview(container)
-        container.snp.makeConstraints {
+        self.scrollContainer.addSubview(self.contentStackView)
+        self.contentStackView.snp.makeConstraints {
             $0.edges.equalToSuperview()
+            $0.width.equalToSuperview()
         }
         
         self.view.addSubview(self.relatedTagsView)
@@ -215,6 +233,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
         self.makeVoteView.delegate = self
+        self.bindSelectVoteView()
+        self.renderSelectedVotes()
         
         // 카드 추가 첫 진입 시 가이드 뷰 표시
         self.writeCardGuideView.isHidden = UserDefaults.needsGuideMessageAndGuide == false
@@ -454,7 +474,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
                 object.clearVotes()
-                object.dismissMakeVoteBottomSheet(shouldKeepSelection: false)
+                object.dismissMakeVoteBottomSheet(policy: .clearSelection)
             }
             .disposed(by: self.disposeBag)
         
@@ -462,7 +482,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .filter { $0 == .vote }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                object.showMakeVoteBottomSheetIfNeeded()
+                object.showMakeVoteBottomSheetIfNeeded(context: .create)
             }
             .disposed(by: self.disposeBag)
         
@@ -813,11 +833,13 @@ extension WriteCardViewController {
 
 // MARK: Vote
 
-private extension WriteCardViewController {
+extension WriteCardViewController {
     
-    func showMakeVoteBottomSheetIfNeeded() {
+    func showMakeVoteBottomSheetIfNeeded(context: VoteSheetPresentationContext) {
         guard self.isPresentingMakeVoteView == false else { return }
         self.isPresentingMakeVoteView = true
+        self.voteSheetPresentationContext = context
+        self.voteSheetDismissalPolicy = context == .edit ? .preserveSelection : .clearSelection
         
         self.makeVoteView.makedVotes = self.selectedVotes
         
@@ -829,10 +851,11 @@ private extension WriteCardViewController {
                     guard let self else { return }
                     
                     self.isPresentingMakeVoteView = false
-                    let shouldKeepSelection = self.shouldKeepVoteOptionSelection
-                    self.shouldKeepVoteOptionSelection = false
+                    let dismissalPolicy = self.voteSheetDismissalPolicy
+                    self.voteSheetDismissalPolicy = .clearSelection
+                    self.voteSheetPresentationContext = .create
                     
-                    if shouldKeepSelection == false {
+                    if dismissalPolicy == .clearSelection {
                         self.clearVotes()
                         self.removeVoteOptionSelection()
                     }
@@ -841,11 +864,11 @@ private extension WriteCardViewController {
         )
     }
     
-    func dismissMakeVoteBottomSheet(shouldKeepSelection: Bool, completion: (() -> Void)? = nil) {
-        self.shouldKeepVoteOptionSelection = shouldKeepSelection
+    func dismissMakeVoteBottomSheet(policy: VoteSheetDismissalPolicy, completion: (() -> Void)? = nil) {
+        self.voteSheetDismissalPolicy = policy
         
         guard self.isPresentingMakeVoteView else {
-            self.shouldKeepVoteOptionSelection = false
+            self.voteSheetDismissalPolicy = .clearSelection
             completion?()
             return
         }
@@ -865,6 +888,31 @@ private extension WriteCardViewController {
     func clearVotes() {
         self.selectedVotes = []
         self.makeVoteView.makedVotes = []
+        self.renderSelectedVotes()
+    }
+    
+    func renderSelectedVotes() {
+        let hasVotes = self.selectedVotes.isEmpty == false
+        
+        self.selectVoteView.items = self.selectedVotes
+        self.selectVoteView.isHidden = hasVotes == false
+    }
+    
+    func bindSelectVoteView() {
+        self.selectVoteView.editButtonTap
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                object.showMakeVoteBottomSheetIfNeeded(context: .edit)
+            }
+            .disposed(by: self.disposeBag)
+        
+        self.selectVoteView.deleteButtonTap
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                object.clearVotes()
+                object.removeVoteOptionSelection()
+            }
+            .disposed(by: self.disposeBag)
     }
 }
 
@@ -935,11 +983,15 @@ extension WriteCardViewController: UIScrollViewDelegate {
 extension WriteCardViewController: MakeVoteViewDelegate {
     
     func makeVoteViewDidTapClose(_ makeVoteView: MakeVoteView) {
-        self.dismissMakeVoteBottomSheet(shouldKeepSelection: false)
+        let dismissalPolicy: VoteSheetDismissalPolicy =
+        self.voteSheetPresentationContext == .edit ? .preserveSelection : .clearSelection
+        
+        self.dismissMakeVoteBottomSheet(policy: dismissalPolicy)
     }
     
     func makeVoteView(_ makeVoteView: MakeVoteView, didTapComplete votes: [String]) {
         self.selectedVotes = votes
-        self.dismissMakeVoteBottomSheet(shouldKeepSelection: true)
+        self.renderSelectedVotes()
+        self.dismissMakeVoteBottomSheet(policy: .preserveSelection)
     }
 }

@@ -159,6 +159,7 @@ extension UIImage.SOOUMType {
             case message_square
             case notice
             case official
+            case pencil
             case settings
             case star
             case tag

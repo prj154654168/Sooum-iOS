@@ -792,6 +792,8 @@
 		38E396842F61B6520050DC87 /* HapticHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E396832F61B64E0050DC87 /* HapticHelper.swift */; };
 		38E396852F61B6520050DC87 /* HapticHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E396832F61B64E0050DC87 /* HapticHelper.swift */; };
 		38E510772F814AB300669FBC /* NotificationExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 38F8C4F62F814A1E001B20FA /* NotificationExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		38E5FF582FF33591002558FA /* SelectVoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E5FF572FF3358B002558FA /* SelectVoteView.swift */; };
+		38E5FF592FF33591002558FA /* SelectVoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E5FF572FF3358B002558FA /* SelectVoteView.swift */; };
 		38E7FBEF2D3CF6BB00A359CD /* SOMDialogAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */; };
 		38E7FBF02D3CF6BC00A359CD /* SOMDialogAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38AA66212D3AA86F00B3F6B2 /* SOMDialogAction.swift */; };
 		38E928B62EB711E200B3F00B /* DetailCardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E928B52EB711DE00B3F00B /* DetailCardInfo.swift */; };
@@ -1343,6 +1345,7 @@
 		38DA12B82D4E847100AB9468 /* MockPushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPushManager.swift; sourceTree = "<group>"; };
 		38DA12BA2D4E872000AB9468 /* PushManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushManagerTests.swift; sourceTree = "<group>"; };
 		38E396832F61B64E0050DC87 /* HapticHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticHelper.swift; sourceTree = "<group>"; };
+		38E5FF572FF3358B002558FA /* SelectVoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectVoteView.swift; sourceTree = "<group>"; };
 		38E928B52EB711DE00B3F00B /* DetailCardInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCardInfo.swift; sourceTree = "<group>"; };
 		38E928B82EB715C300B3F00B /* ReortType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReortType.swift; sourceTree = "<group>"; };
 		38E928BE2EB72D3600B3F00B /* DetailCardInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCardInfoResponse.swift; sourceTree = "<group>"; };
@@ -2960,6 +2963,7 @@
 		38FED0F82FDE665000E0258E /* Vote */ = {
 			isa = PBXGroup;
 			children = (
+				38E5FF572FF3358B002558FA /* SelectVoteView.swift */,
 				38859FA92FEFF123004CC339 /* VoteOptionRowView.swift */,
 				38FED0F92FDE6DF600E0258E /* MakeVoteView.swift */,
 				38FED0FC2FDE757A00E0258E /* VoteTextField.swift */,
@@ -3699,6 +3703,7 @@
 				388DA0FF2C8F526C00A9DD56 /* UIFont.swift in Sources */,
 				38C9AF202E9669F600B401C0 /* TagRepository.swift in Sources */,
 				38E928C22EB73D6B00B3F00B /* MemberInfoView.swift in Sources */,
+				38E5FF582FF33591002558FA /* SelectVoteView.swift in Sources */,
 				38F88EBF2D2C1E22002AD7A8 /* Version.swift in Sources */,
 				3829E7DD2F5C5FD7005FDC5C /* PushNotiSettingsViewController.swift in Sources */,
 				3887176D2E7BDBAE00C6143B /* NicknameResponse.swift in Sources */,
@@ -4144,6 +4149,7 @@
 				381B83E92EBC75D700C84015 /* ProfileCardInfo.swift in Sources */,
 				38D5637B2D16D72D006265AA /* SOMStickyTabBar.swift in Sources */,
 				38FD4DB12D034C1700BF5FF1 /* MyFollowingViewCell.swift in Sources */,
+				38E5FF592FF33591002558FA /* SelectVoteView.swift in Sources */,
 				3889A2812E79D0250030F7CA /* Token.swift in Sources */,
 				3829E7DE2F5C5FD7005FDC5C /* PushNotiSettingsViewController.swift in Sources */,
 				3879B4B62EC5AD5E0070846B /* RejoinableDateInfo.swift in Sources */,
