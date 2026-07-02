@@ -123,6 +123,7 @@ class DetailViewController: BaseNavigationViewController, View {
     private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
     private var shouldRefreshing: Bool = false
+    private var shouldAnimateVoteResultOnce: Bool = false
     
     private var actions: [SOMBottomFloatView.FloatAction] = []
     
@@ -364,7 +365,11 @@ class DetailViewController: BaseNavigationViewController, View {
         detailCard
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, detailCard in
+                let previousPollIsVoted = object.detailCard.poll?.isVoted == true
+                let currentPollIsVoted = detailCard.poll?.isVoted == true
+
                 object.detailCard = detailCard
+                object.shouldAnimateVoteResultOnce = previousPollIsVoted == false && currentPollIsVoted
                 
                 object.pungView.subscribePungTime(detailCard.storyExpirationTime)
                 object.pungView.isHidden = detailCard.storyExpirationTime == nil
@@ -719,8 +724,10 @@ extension DetailViewController: UICollectionViewDataSource {
 
             cell.setModels(
                 self.detailCard,
-                showsLikeAndCommentView: self.shouldShowLikeAndCommentInVoteCell
+                showsLikeAndCommentView: self.shouldShowLikeAndCommentInVoteCell,
+                animatesResult: self.shouldAnimateVoteResultOnce
             )
+            self.shouldAnimateVoteResultOnce = false
 
             guard let reactor = self.reactor else { return cell }
 

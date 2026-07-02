@@ -23,7 +23,6 @@ final class DetailVoteCell: UICollectionViewCell {
     var disposeBag = DisposeBag()
     
     private var likeAndCommentHeightConstraint: Constraint?
-    private var previousPollIsVoted: Bool?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,7 +37,6 @@ final class DetailVoteCell: UICollectionViewCell {
         super.prepareForReuse()
         self.disposeBag = DisposeBag()
         self.likeAndCommentView.prepareForReuse()
-        self.previousPollIsVoted = nil
     }
 
     private func setupConstraints() {
@@ -57,10 +55,7 @@ final class DetailVoteCell: UICollectionViewCell {
         }
     }
 
-    func setModels(_ model: DetailCardInfo, showsLikeAndCommentView: Bool) {
-        let currentPollIsVoted = model.poll?.isVoted == true
-        let shouldAnimateResult = self.previousPollIsVoted == false && currentPollIsVoted
-
+    func setModels(_ model: DetailCardInfo, showsLikeAndCommentView: Bool, animatesResult: Bool) {
         self.setLikeAndCommentHidden(showsLikeAndCommentView == false)
         self.likeAndCommentView.isLikeSelected = model.isLike
         self.likeAndCommentView.likeCount = model.likeCnt
@@ -69,8 +64,7 @@ final class DetailVoteCell: UICollectionViewCell {
         self.votedView.onOptionTap = { [weak self] optionId in
             self?.onVoteOptionTap?(optionId)
         }
-        self.votedView.setModels(model.poll, animatesResult: shouldAnimateResult)
-        self.previousPollIsVoted = currentPollIsVoted
+        self.votedView.setModels(model.poll, animatesResult: animatesResult)
     }
 
     func setLikeAndCommentHidden(_ isHidden: Bool) {

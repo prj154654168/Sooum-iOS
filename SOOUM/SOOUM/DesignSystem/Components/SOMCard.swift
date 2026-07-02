@@ -486,22 +486,10 @@ class SOMCard: UIView {
         UIView.performWithoutAnimation {
             self.layoutIfNeeded()
         }
-
-        var attributes = typography.attributes
-        attributes.updateValue(typography.font, forKey: .font)
-        let attributedText = NSAttributedString(
-            string: text,
-            attributes: attributes
-        )
+        
         /// screen width - SOMCard horizontal padding - text background dim view horizontal padding - text horizontal inset
         let availableWidth = self.cardTextContentLabel.bounds.width
-        let size: CGSize = .init(width: availableWidth, height: .greatestFiniteMagnitude)
-        let boundingHeight = attributedText.boundingRect(
-            with: size,
-            options: [.usesLineFragmentOrigin],
-            context: nil
-        ).height
-        
+        let boundingHeight = typography.textBoundingHeight(for: text, width: availableWidth)
         let maxHeight = self.cardType == .feed ? typography.lineHeight * 3 : typography.lineHeight * 4
         let height = min(boundingHeight, maxHeight)
         

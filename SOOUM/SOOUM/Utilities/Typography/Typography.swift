@@ -93,4 +93,22 @@ extension Typography {
         guard let object = (object as? Typography) else { return false }
         return (self.font == object.font) && (self.lineHeight == object.lineHeight)
     }
+    
+    func textBoundingHeight(for text: String, width: CGFloat) -> CGFloat {
+        let constrainedWidth = max(width, 0)
+        guard constrainedWidth > 0 else { return 0 }
+        
+        var attributes = self.attributes
+        attributes.updateValue(self.font, forKey: .font)
+        
+        let height = NSAttributedString(string: text, attributes: attributes)
+            .boundingRect(
+                with: CGSize(width: constrainedWidth, height: .greatestFiniteMagnitude),
+                options: [.usesLineFragmentOrigin, .usesFontLeading],
+                context: nil
+            )
+            .height
+        
+        return ceil(height)
+    }
 }

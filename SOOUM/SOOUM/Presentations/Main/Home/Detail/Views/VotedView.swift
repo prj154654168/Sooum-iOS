@@ -164,11 +164,13 @@ final class VotedView: UIView {
                     self.resultLabel.alpha = 0
                     self.checkImageView.alpha = option.isVoted ? 0 : 1
                     self.percentage = 0
+                    self.updateFillWidth()
                     self.layoutIfNeeded()
 
                     DispatchQueue.main.async { [weak self] in
                         guard let self else { return }
                         self.percentage = targetPercentage
+                        self.updateFillWidth()
                         UIView.animate(
                             withDuration: Layout.fillAnimationDuration,
                             delay: 0,
@@ -183,6 +185,7 @@ final class VotedView: UIView {
                     self.resultLabel.alpha = 1
                     self.checkImageView.alpha = 1
                     self.percentage = targetPercentage
+                    self.updateFillWidth()
                 }
             } else {
                 self.percentage = 0
@@ -195,6 +198,7 @@ final class VotedView: UIView {
                 self.resultLabel.alpha = 1
                 self.checkImageView.isHidden = true
                 self.checkImageView.alpha = 1
+                self.updateFillWidth()
             }
 
             self.setNeedsLayout()
