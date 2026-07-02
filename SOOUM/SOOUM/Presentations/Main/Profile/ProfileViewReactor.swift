@@ -295,12 +295,14 @@ extension ProfileViewReactor {
     
     func reactorForUpdate(
         nickname: String,
+        profileBio: String?,
         image profileImage: UIImage?,
         imageName profileImageName: String?
     ) -> UpdateProfileViewReactor {
         UpdateProfileViewReactor(
             dependencies: self.dependencies,
             nickname: nickname,
+            profileBio: profileBio,
             image: profileImage,
             imageName: profileImageName
         )

@@ -22,7 +22,7 @@ protocol UserRemoteDataSource {
     
     func role() -> Observable<UserRoleResponse>
     func profile(userId: String?) -> Observable<ProfileInfoResponse>
-    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int>
+    func updateMyProfile(nickname: String?, profileBio: String?, imageName: String?) -> Observable<Int>
     func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
     func followings(userId: String, lastId: String?) -> Observable<FollowInfoResponse>
     func updateFollowing(userId: String, isFollow: Bool) -> Observable<Int>

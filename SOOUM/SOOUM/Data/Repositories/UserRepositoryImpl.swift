@@ -67,9 +67,13 @@ class UserRepositoryImpl: UserRepository {
         return self.remoteDataSource.profile(userId: userId)
     }
     
-    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int> {
+    func updateMyProfile(nickname: String?, profileBio: String?, imageName: String?) -> Observable<Int> {
         
-        return self.remoteDataSource.updateMyProfile(nickname: nickname, imageName: imageName)
+        return self.remoteDataSource.updateMyProfile(
+            nickname: nickname,
+            profileBio: profileBio,
+            imageName: imageName
+        )
     }
     
     func followers(userId: String, lastId: String?) -> Observable<FollowInfoResponse> {

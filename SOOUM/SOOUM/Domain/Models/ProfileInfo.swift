@@ -11,6 +11,7 @@ struct ProfileInfo: Hashable {
     
     let userId: String
     let nickname: String
+    let profileBio: String?
     let profileImgName: String?
     let profileImageUrl: String?
     let totalVisitCnt: String
@@ -37,6 +38,7 @@ extension ProfileInfo {
     static var defaultValue: ProfileInfo = ProfileInfo(
         userId: "",
         nickname: "",
+        profileBio: nil,
         profileImgName: nil,
         profileImageUrl: nil,
         totalVisitCnt: "",
@@ -51,9 +53,10 @@ extension ProfileInfo {
 
 extension ProfileInfo: Decodable {
     
-    enum CodingKeys: CodingKey {
+    enum CodingKeys: String, CodingKey {
         case userId
         case nickname
+        case profileBio = "bio"
         case profileImgName
         case profileImageUrl
         case totalVisitCnt
@@ -69,6 +72,7 @@ extension ProfileInfo: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.userId = String(try container.decode(Int64.self, forKey: .userId))
         self.nickname = try container.decode(String.self, forKey: .nickname)
+        self.profileBio = try container.decodeIfPresent(String.self, forKey: .profileBio)
         self.profileImgName = try container.decodeIfPresent(String.self, forKey: .profileImgName)
         self.profileImageUrl = try container.decodeIfPresent(String.self, forKey: .profileImageUrl)
         self.totalVisitCnt = String(try container.decode(Int64.self, forKey: .totalVisitCnt))

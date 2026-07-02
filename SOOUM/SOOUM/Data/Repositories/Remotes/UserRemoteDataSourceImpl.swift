@@ -75,9 +75,13 @@ class UserRemoteDataSourceImpl: UserRemoteDataSource {
         return self.provider.networkManager.fetch(ProfileInfoResponse.self, request: request)
     }
     
-    func updateMyProfile(nickname: String?, imageName: String?) -> Observable<Int> {
+    func updateMyProfile(nickname: String?, profileBio: String?, imageName: String?) -> Observable<Int> {
         
-        let request: UserRequest = .updateMyProfile(nickname: nickname, imageName: imageName)
+        let request: UserRequest = .updateMyProfile(
+            nickname: nickname,
+            profileBio: profileBio,
+            imageName: imageName
+        )
         return self.provider.networkManager.perform(request)
     }
     

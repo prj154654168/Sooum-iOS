@@ -26,6 +26,8 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
     enum Text {
         static let navigationTitle: String = "프로필 편집"
         static let guideMessage: String = "최대 8자까지 입력할 수 있어요"
+        static let introductionTitle: String = "소개"
+        static let introductionPlaceholder: String = "소개 작성"
         static let saveButtonTitle: String = "저장"
         
         static let cancelActionTitle: String = "취소"
@@ -55,6 +57,11 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         static let selectPhotoFullScreenCropTitle: String = "자르기"
     }
     
+    enum Layout {
+        static let profileImageTopInset: CGFloat = 24
+        static let keyboardSpacing: CGFloat = 16
+    }
+    
     
     // MARK: Views
     
@@ -80,6 +87,14 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
     private let nicknameTextField = SOMNicknameTextField().then {
         $0.guideMessage = Text.guideMessage
     }
+    private let introductionTitleLabel = UILabel().then {
+        $0.text = Text.introductionTitle
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.caption1
+    }
+    private let introductionTextView = ProfileIntroductionTextView().then {
+        $0.placeholder = Text.introductionPlaceholder
+    }
     
     private let saveButton = SOMButton().then {
         $0.title = Text.saveButtonTitle
@@ -97,6 +112,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
     // MARK: Variables
     
     private var actions: [SOMBottomFloatView.FloatAction] = []
+    private var currentContentShift: CGFloat = 0
     
     
     // MARK: Override variables
@@ -120,7 +136,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         
         self.view.addSubview(self.profileImageView)
         self.profileImageView.snp.makeConstraints {
-            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(24)
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(Layout.profileImageTopInset)
             $0.centerX.equalToSuperview()
             $0.size.equalTo(120)
         }
@@ -135,6 +151,21 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         self.nicknameTextField.snp.makeConstraints {
             $0.top.equalTo(self.profileImageView.snp.bottom).offset(40)
             $0.horizontalEdges.equalToSuperview()
+        }
+        
+        self.view.addSubview(self.introductionTitleLabel)
+        self.introductionTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(self.nicknameTextField.snp.bottom).offset(28)
+            $0.leading.equalToSuperview().offset(20)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-20)
+        }
+        
+        self.view.addSubview(self.introductionTextView)
+        self.introductionTextView.snp.makeConstraints {
+            $0.top.equalTo(self.introductionTitleLabel.snp.bottom).offset(12)
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
+            $0.height.equalTo(120)
         }
         
         self.view.addSubview(self.saveButton)
@@ -158,6 +189,19 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         let margin: CGFloat = height == 0 ? 0 : height + 12
         self.saveButton.snp.updateConstraints {
             $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).offset(-margin)
+        }
+        self.view.layoutIfNeeded()
+        
+        let nextShift = self.targetContentShift(forKeyboardHeight: height)
+        guard abs(self.currentContentShift - nextShift) > .ulpOfOne else { return }
+        
+        self.currentContentShift = nextShift
+        self.profileImageView.snp.updateConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(Layout.profileImageTopInset - nextShift)
+        }
+        
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -206,6 +250,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
                 
                 object.actions = actions
                 object.nicknameTextField.text = reactor.nickname
+                object.introductionTextView.text = reactor.profileBio
             }
             .disposed(by: self.disposeBag)
         
@@ -233,6 +278,7 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         .disposed(by: self.disposeBag)
         
         let nickname = self.nicknameTextField.textField.rx.text.orEmpty.distinctUntilChanged().share()
+        let profileBio = self.introductionTextView.textView.rx.text.orEmpty.distinctUntilChanged().share()
         nickname
             .skip(1)
             .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
@@ -241,8 +287,8 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.saveButton.rx.throttleTap(.seconds(3))
-            .withLatestFrom(nickname)
-            .map(Reactor.Action.updateProfile)
+            .withLatestFrom(Observable.combineLatest(nickname, profileBio))
+            .map { Reactor.Action.updateProfile(nickname: $0.0, profileBio: $0.1) }
             .bind(to: reactor.action)
             .disposed(by: self.disposeBag)
 
@@ -303,7 +349,12 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
         Observable.combineLatest(
             reactor.state.map(\.isValid).distinctUntilChanged(),
             profileImage.startWith(reactor.initialState.profileImage),
-            resultSelector: { $0 || $1 != reactor.initialState.profileImage }
+            profileBio.startWith(reactor.profileBio),
+            resultSelector: { isValid, image, profileBio in
+                isValid ||
+                image != reactor.initialState.profileImage ||
+                profileBio.trimmingCharacters(in: .whitespacesAndNewlines) != reactor.profileBio
+            }
         )
             .observe(on: MainScheduler.asyncInstance)
             .bind(to: self.saveButton.rx.isEnabled)
@@ -330,6 +381,16 @@ class UpdateProfileViewController: BaseNavigationViewController, View {
 }
 
 private extension UpdateProfileViewController {
+    
+    func targetContentShift(forKeyboardHeight height: CGFloat) -> CGFloat {
+        guard height > 0, self.introductionTextView.textView.isFirstResponder else { return 0 }
+        
+        let visibleBottom = self.saveButton.frame.minY - Layout.keyboardSpacing
+        let introductionMaxY = self.introductionTextView.frame.maxY
+        let overlap = introductionMaxY - visibleBottom
+        
+        return max(0, overlap)
+    }
     
     func showLibraryPermissionDialog() {
         

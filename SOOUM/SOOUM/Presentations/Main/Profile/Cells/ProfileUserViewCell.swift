@@ -25,9 +25,22 @@ class ProfileUserViewCell: UICollectionViewCell {
         static let followButtonTitle: String = "팔로우"
         static let followingButtonTitle: String = "팔로잉"
         static let unBlockButtonTitle: String = "차단 해제"
+        static let bioMoreButtonTitle: String = "더 보기"
+    }
+    
+    private enum Layout {
+        static let horizontalInset: CGFloat = 16
+        static let topContainerHeight: CGFloat = 84
+        static let bottomContainerHeight: CGFloat = 76
+        static let actionButtonHeight: CGFloat = 48
+        static let actionButtonBottomInset: CGFloat = 16
+        static let bioTopInset: CGFloat = 8
+        static let bioBottomInset: CGFloat = 12
+        static let bioMaximumLines: CGFloat = 4
     }
     
     static let cellIdentifier = String(reflecting: ProfileUserViewCell.self)
+    private static let bioTypography = Typography.som.v2.body1.withAlignment(.left)
     
     // MARK: Views
     
@@ -80,6 +93,25 @@ class ProfileUserViewCell: UICollectionViewCell {
         $0.clipsToBounds = true
     }
     
+    private let bioLabel = UILabel().then {
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.body1.withAlignment(.left)
+        $0.numberOfLines = Int(Layout.bioMaximumLines)
+        $0.lineBreakMode = .byTruncatingTail
+        $0.lineBreakStrategy = .hangulWordPriority
+    }
+    
+    private let bioMoreButton = UIButton(type: .system).then {
+        var config = UIButton.Configuration.plain()
+        config.contentInsets = .zero
+        config.baseForegroundColor = .som.v2.gray400
+        $0.configuration = config
+        $0.contentHorizontalAlignment = .leading
+        $0.titleLabel?.font = Typography.som.v2.body1.font
+        $0.setTitle(Text.bioMoreButtonTitle, for: .normal)
+        $0.isHidden = true
+    }
+    
     private let bottomContainer = UIStackView().then {
         $0.axis = .horizontal
         $0.alignment = .top
@@ -116,6 +148,14 @@ class ProfileUserViewCell: UICollectionViewCell {
     // MARK: Variables
     
     private(set) var model: ProfileInfo = .defaultValue
+    private var isBioExpanded: Bool = false
+    private var shouldShowBioMoreButton: Bool = false
+    
+    
+    // MARK: Constraints
+    
+    private var bottomContainerTopToBioLabelConstraint: Constraint?
+    private var bioLabelHeightConstraint: Constraint?
     
     
     // MARK: Variables + Rx
@@ -125,6 +165,7 @@ class ProfileUserViewCell: UICollectionViewCell {
     let cardContainerDidTap = PublishRelay<Void>()
     let followerContainerDidTap = PublishRelay<Void>()
     let followingContainerDidTap = PublishRelay<Void>()
+    let bioMoreButtonDidTap = PublishRelay<Void>()
     
     
     // MARK: Initialize
@@ -132,6 +173,7 @@ class ProfileUserViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
+        self.bioMoreButton.addTarget(self, action: #selector(self.didTapBioMoreButton), for: .touchUpInside)
         self.setupConstraints()
     }
     
@@ -143,6 +185,13 @@ class ProfileUserViewCell: UICollectionViewCell {
         super.prepareForReuse()
         
         self.disposeBag = DisposeBag()
+        self.isBioExpanded = false
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.updateBioMoreButtonVisibility()
     }
     
     
@@ -154,13 +203,13 @@ class ProfileUserViewCell: UICollectionViewCell {
         self.addSubview(topContainer)
         topContainer.snp.makeConstraints {
             $0.top.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(84)
+            $0.height.equalTo(Layout.topContainerHeight)
         }
         
         topContainer.addSubview(self.visitedAndNicknameContainer)
         self.visitedAndNicknameContainer.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(Layout.horizontalInset)
         }
         
         self.visitedCountContainer.addSubview(self.totalVisitedTitleLabel)
@@ -198,51 +247,67 @@ class ProfileUserViewCell: UICollectionViewCell {
         self.profilImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.leading.greaterThanOrEqualTo(self.visitedAndNicknameContainer.snp.trailing).offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
+            $0.trailing.equalToSuperview().offset(-Layout.horizontalInset)
             $0.size.equalTo(60)
+        }
+        
+        self.addSubview(self.bioLabel)
+        self.bioLabel.snp.makeConstraints {
+            $0.top.equalTo(topContainer.snp.bottom).offset(Layout.bioTopInset)
+            $0.leading.equalToSuperview().offset(Layout.horizontalInset)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-Layout.horizontalInset)
+            self.bioLabelHeightConstraint = $0.height.equalTo(Self.bioTypography.lineHeight).constraint
+        }
+        
+        self.addSubview(self.bioMoreButton)
+        self.bioMoreButton.snp.makeConstraints {
+            $0.bottom.equalTo(self.bioLabel.snp.bottom)
+            $0.leading.equalTo(self.bioLabel.snp.trailing)
+            $0.height.equalTo(21)
         }
         
         self.addSubview(self.bottomContainer)
         self.bottomContainer.snp.makeConstraints {
-            $0.top.equalTo(topContainer.snp.bottom)
-            $0.leading.equalToSuperview().offset(16)
-            $0.height.equalTo(76)
+            self.bottomContainerTopToBioLabelConstraint = $0.top.equalTo(self.bioLabel.snp.bottom).offset(Layout.bioBottomInset).constraint
+            $0.leading.equalToSuperview().offset(Layout.horizontalInset)
+            $0.height.equalTo(Layout.bottomContainerHeight)
         }
         
         self.addSubview(self.updateProfileButton)
         self.updateProfileButton.snp.makeConstraints {
             $0.top.equalTo(self.bottomContainer.snp.bottom)
-            $0.bottom.equalToSuperview().offset(-16)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
-            $0.height.equalTo(48)
+            $0.bottom.equalToSuperview().offset(-Layout.actionButtonBottomInset)
+            $0.leading.equalToSuperview().offset(Layout.horizontalInset)
+            $0.trailing.equalToSuperview().offset(-Layout.horizontalInset)
+            $0.height.equalTo(Layout.actionButtonHeight)
         }
         
         self.addSubview(self.followButton)
         self.followButton.snp.makeConstraints {
             $0.top.equalTo(self.bottomContainer.snp.bottom)
-            $0.bottom.equalToSuperview().offset(-16)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
-            $0.height.equalTo(48)
+            $0.bottom.equalToSuperview().offset(-Layout.actionButtonBottomInset)
+            $0.leading.equalToSuperview().offset(Layout.horizontalInset)
+            $0.trailing.equalToSuperview().offset(-Layout.horizontalInset)
+            $0.height.equalTo(Layout.actionButtonHeight)
         }
         
         self.addSubview(self.unBlockButton)
         self.unBlockButton.snp.makeConstraints {
             $0.top.equalTo(self.bottomContainer.snp.bottom)
-            $0.bottom.equalToSuperview().offset(-16)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
-            $0.height.equalTo(48)
+            $0.bottom.equalToSuperview().offset(-Layout.actionButtonBottomInset)
+            $0.leading.equalToSuperview().offset(Layout.horizontalInset)
+            $0.trailing.equalToSuperview().offset(-Layout.horizontalInset)
+            $0.height.equalTo(Layout.actionButtonHeight)
         }
     }
     
     
     // MARK: public func
     
-    func setModel(_ model: ProfileInfo) {
+    func setModel(_ model: ProfileInfo, isBioExpanded: Bool, width: CGFloat) {
         
         self.model = model
+        self.isBioExpanded = isBioExpanded
         
         self.totalVisitedCountLabel.text = model.totalVisitCnt
         self.totalVisitedCountLabel.typography = .som.v2.caption2
@@ -258,6 +323,20 @@ class ProfileUserViewCell: UICollectionViewCell {
             self.profilImageView.image = .init(.image(.v2(.profile_medium)))
         }
         
+        let bioState = Self.bioState(
+            for: model.profileBio,
+            width: width,
+            isExpanded: isBioExpanded
+        )
+        self.bioLabel.numberOfLines = isBioExpanded ? 0 : Int(Layout.bioMaximumLines)
+        self.bioLabel.lineBreakMode = isBioExpanded ? .byWordWrapping : .byTruncatingTail
+        self.bioLabel.text = bioState.text
+        self.bioLabel.typography = Self.bioTypography
+        self.bioLabel.isHidden = bioState.isHidden
+        self.bioLabelHeightConstraint?.update(offset: bioState.visibleTextHeight)
+        self.shouldShowBioMoreButton = bioState.showsMoreButton
+        self.bioMoreButton.isHidden = bioState.showsMoreButton == false || isBioExpanded
+        
         var contents: [(content: ProfileInfo.Content, count: String)] {
             var contents: [(content: ProfileInfo.Content, count: String)] = []
             
@@ -269,6 +348,8 @@ class ProfileUserViewCell: UICollectionViewCell {
         }
         self.setupItems(contents)
         
+        self.followButton.isHidden = true
+        self.unBlockButton.isHidden = true
         self.updateProfileButton.isHidden = model.isAlreadyFollowing != nil
         if let isAlreadyFollowing = model.isAlreadyFollowing, let isBlocked = model.isBlocked {
             
@@ -279,6 +360,47 @@ class ProfileUserViewCell: UICollectionViewCell {
         }
     }
     
+    func expandBio(width: CGFloat) {
+        guard self.bioLabel.isHidden == false else { return }
+        
+        self.isBioExpanded = true
+        let bioState = Self.bioState(
+            for: self.model.profileBio,
+            width: width,
+            isExpanded: true
+        )
+        self.bioLabel.numberOfLines = 0
+        self.bioLabel.lineBreakMode = .byWordWrapping
+        self.bioLabel.text = bioState.text
+        self.bioLabel.typography = Self.bioTypography
+        self.bioLabelHeightConstraint?.update(offset: bioState.visibleTextHeight)
+        self.bioMoreButton.isHidden = true
+        
+        UIView.performWithoutAnimation {
+            self.layoutIfNeeded()
+        }
+    }
+    
+    func showBioMoreButton() {
+        guard self.shouldShowBioMoreButton else { return }
+        self.isBioExpanded = false
+        let bioState = Self.bioState(
+            for: self.model.profileBio,
+            width: self.bounds.width > 0 ? self.bounds.width : UIScreen.main.bounds.width,
+            isExpanded: false
+        )
+        self.bioLabel.numberOfLines = Int(Layout.bioMaximumLines)
+        self.bioLabel.lineBreakMode = .byTruncatingTail
+        self.bioLabel.text = bioState.text
+        self.bioLabel.typography = Self.bioTypography
+        self.bioLabelHeightConstraint?.update(offset: bioState.visibleTextHeight)
+        self.bioMoreButton.isHidden = false
+        
+        UIView.performWithoutAnimation {
+            self.layoutIfNeeded()
+        }
+    }
+    
     /// 상대방 프로필 일 때만 사용
     func updateButton(_ isFollowing: Bool) {
         
@@ -286,9 +408,70 @@ class ProfileUserViewCell: UICollectionViewCell {
         self.followButton.foregroundColor = isFollowing ? .som.v2.gray600 : .som.v2.white
         self.followButton.backgroundColor = isFollowing ? .som.v2.gray100 : .som.v2.black
     }
+    
+    static func height(for model: ProfileInfo, width: CGFloat, isBioExpanded: Bool) -> CGFloat {
+        let bioState = self.bioState(for: model.profileBio, width: width, isExpanded: isBioExpanded)
+        
+        return Layout.topContainerHeight
+            + bioState.height
+            + Layout.bottomContainerHeight
+            + Layout.actionButtonHeight
+            + Layout.actionButtonBottomInset
+    }
 }
 
 private extension ProfileUserViewCell {
+    
+    struct BioState {
+        let text: String?
+        let isHidden: Bool
+        let showsMoreButton: Bool
+        let height: CGFloat
+        let visibleTextHeight: CGFloat
+    }
+    
+    static func bioState(for bio: String?, width: CGFloat, isExpanded: Bool) -> BioState {
+        let trimmedText = bio?.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let text = trimmedText, text.isEmpty == false else {
+            return BioState(text: nil, isHidden: true, showsMoreButton: false, height: 0, visibleTextHeight: 0)
+        }
+        
+        let resolvedWidth = width > 0 ? width : UIScreen.main.bounds.width
+        let availableWidth = max(resolvedWidth - (Layout.horizontalInset * 2), 0)
+        let measuredTextHeight = Self.bioTypography.textBoundingHeight(for: text, width: availableWidth)
+        let fullLineCount = max(ceil(measuredTextHeight / Self.bioTypography.lineHeight), 1)
+        let fullTextHeight = fullLineCount * Self.bioTypography.lineHeight
+        let collapsedTextHeight = Self.bioTypography.lineHeight * Layout.bioMaximumLines
+        let showsMoreButton = fullTextHeight > collapsedTextHeight
+        let visibleTextHeight = isExpanded ? fullTextHeight : min(fullTextHeight, collapsedTextHeight)
+        
+        return BioState(
+            text: text,
+            isHidden: false,
+            showsMoreButton: showsMoreButton,
+            height: Layout.bioTopInset + visibleTextHeight + Layout.bioBottomInset,
+            visibleTextHeight: visibleTextHeight
+        )
+    }
+    
+    func updateBioMoreButtonVisibility() {
+        guard self.bioLabel.isHidden == false else {
+            self.bioMoreButton.isHidden = true
+            return
+        }
+        
+        guard self.isBioExpanded == false else {
+            self.bioMoreButton.isHidden = true
+            return
+        }
+        
+        let shouldShowMoreButton = self.shouldShowBioMoreButton
+        self.bioMoreButton.isHidden = shouldShowMoreButton == false
+        
+        UIView.performWithoutAnimation {
+            self.layoutIfNeeded()
+        }
+    }
     
     func setupItems(_ items: [(content: ProfileInfo.Content, count: String)]) {
         
@@ -343,5 +526,10 @@ private extension ProfileUserViewCell {
             
             self.bottomContainer.addArrangedSubview(container)
         }
+    }
+    
+    @objc
+    func didTapBioMoreButton() {
+        self.bioMoreButtonDidTap.accept(())
     }
 }

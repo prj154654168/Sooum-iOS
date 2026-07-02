@@ -22,7 +22,7 @@ class UpdateProfileViewReactor: Reactor {
         case setDefaultImage
         case setInitialImage
         case checkValidate(String)
-        case updateProfile(String)
+        case updateProfile(nickname: String, profileBio: String)
     }
     
     enum Mutation {
@@ -52,10 +52,12 @@ class UpdateProfileViewReactor: Reactor {
     private let updateUserInfoUseCase: UpdateUserInfoUseCase
     
     let nickname: String
+    let profileBio: String
     
     init(
         dependencies: AppDIContainerable,
         nickname: String,
+        profileBio: String?,
         image profileImage: UIImage?,
         imageName profileImageName: String?
     ) {
@@ -65,6 +67,7 @@ class UpdateProfileViewReactor: Reactor {
         self.updateUserInfoUseCase = dependencies.rootContainer.resolve(UpdateUserInfoUseCase.self)
         
         self.nickname = nickname
+        self.profileBio = profileBio ?? ""
         
         self.initialState = .init(
             profileImage: profileImage,
@@ -121,14 +124,17 @@ class UpdateProfileViewReactor: Reactor {
                         ])
                     }
             ])
-        case let .updateProfile(nickname):
+        case let .updateProfile(nickname, profileBio):
             
             let trimedNickname = nickname.trimmingCharacters(in: .whitespacesAndNewlines)
             let updatedNickname = trimedNickname == self.nickname ? nil : trimedNickname
+            let trimmedProfileBio = profileBio.trimmingCharacters(in: .whitespacesAndNewlines)
+            let updatedProfileBio = trimmedProfileBio == self.profileBio ? nil : trimmedProfileBio
             return .concat([
                 .just(.updateErrors(false)),
                 self.updateUserInfoUseCase.updateUserInfo(
                     nickname: updatedNickname,
+                    profileBio: updatedProfileBio,
                     imageName: self.currentState.profileImageName
                 )
                     .map(Mutation.updateIsSuccess)

@@ -15,10 +15,11 @@ final class UpdateUserInfoUseCaseImpl: UpdateUserInfoUseCase {
         self.repository = repository
     }
     
-    func updateUserInfo(nickname: String?, imageName: String?) -> Observable<Bool> {
+    func updateUserInfo(nickname: String?, profileBio: String?, imageName: String?) -> Observable<Bool> {
         
         return self.repository.updateMyProfile(
             nickname: nickname,
+            profileBio: profileBio,
             imageName: imageName
         )
         .map { $0 == 200 }

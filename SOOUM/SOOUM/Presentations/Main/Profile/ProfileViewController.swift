@@ -119,7 +119,11 @@ class ProfileViewController: BaseNavigationViewController, View {
                     for: indexPath
                 ) as! ProfileUserViewCell
                 
-                cell.setModel(profileInfo)
+                cell.setModel(
+                    profileInfo,
+                    isBioExpanded: self.isBioExpanded,
+                    width: collectionView.bounds.width > 0 ? collectionView.bounds.width : UIScreen.main.bounds.width
+                )
                 
                 cell.cardContainerDidTap
                     .subscribe(with: self) { object, _ in
@@ -127,16 +131,31 @@ class ProfileViewController: BaseNavigationViewController, View {
                         case .feed:
                             guard reactor.currentState.feedCardInfos.isEmpty == false else { return }
                             object.collectionView.setContentOffset(
-                                CGPoint(x: 0, y: 84 + 76 + 48 + 16),
+                                CGPoint(x: 0, y: object.profileSectionHeight()),
                                 animated: true
                             )
                         case .comment:
                             guard reactor.currentState.commentCardInfos.isEmpty == false else { return }
                             object.collectionView.setContentOffset(
-                                CGPoint(x: 0, y: 84 + 76 + 48 + 16),
+                                CGPoint(x: 0, y: object.profileSectionHeight()),
                                 animated: true
                             )
                         }
+                    }
+                    .disposed(by: cell.disposeBag)
+                
+                cell.bioMoreButtonDidTap
+                    .subscribe(with: self) { object, _ in
+                        guard object.isBioExpanded == false else { return }
+                        object.isBioExpanded = true
+                        let width = object.collectionView.bounds.width > 0
+                            ? object.collectionView.bounds.width
+                            : UIScreen.main.bounds.width
+                        cell.expandBio(width: width)
+                        
+                        object.collectionView.performBatchUpdates({
+                            object.collectionView.collectionViewLayout.invalidateLayout()
+                        })
                     }
                     .disposed(by: cell.disposeBag)
                 
@@ -177,6 +196,7 @@ class ProfileViewController: BaseNavigationViewController, View {
                             let updateProfileViewController = UpdateProfileViewController()
                             updateProfileViewController.reactor = reactor.reactorForUpdate(
                                 nickname: profileInfo.nickname,
+                                profileBio: profileInfo.profileBio,
                                 image: profileImage,
                                 imageName: profileInfo.profileImgName
                             )
@@ -262,6 +282,8 @@ class ProfileViewController: BaseNavigationViewController, View {
     private var currentOffset: CGFloat = 0
     private var isRefreshEnabled: Bool = true
     private var shouldRefreshing: Bool = false
+    private var isBioExpanded: Bool = false
+    private var previousProfileBio: String?
     
     
     // MARK: Override variables
@@ -324,6 +346,12 @@ class ProfileViewController: BaseNavigationViewController, View {
             name: .deletedFeedCardWithId,
             object: nil
         )
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.showBioMoreButtonIfNeeded()
     }
     
     
@@ -446,6 +474,12 @@ class ProfileViewController: BaseNavigationViewController, View {
             
             guard let profileInfo = displayStates.profileInfo else { return }
             
+            let currentBio = profileInfo.profileBio?.trimmingCharacters(in: .whitespacesAndNewlines)
+            if object.previousProfileBio != currentBio {
+                object.previousProfileBio = currentBio
+                object.isBioExpanded = false
+            }
+            
             if reactor.entranceType == .other, let isBlocked = profileInfo.isBlocked {
                 object.rightBlockButton.isHidden = isBlocked
             }
@@ -487,11 +521,22 @@ class ProfileViewController: BaseNavigationViewController, View {
         let itemHeight = (self.collectionView.bounds.width - 2) / 3
         let newHeight = (numberOfRows * itemHeight) + ((numberOfRows - 1) * lineSpacing)
         
-        let cellHeight: CGFloat = 84 + 76 + 48 + 16
-        let headerHeight: CGFloat = 56
+        let cellHeight = self.profileSectionHeight()
+        let headerHeight: CGFloat = self.reactor?.entranceType == .my ? 56 : 0
         let defaultHeight: CGFloat = collectionView.bounds.height - cellHeight - headerHeight
         
         return max(newHeight, defaultHeight)
+    }
+    
+    private func profileSectionHeight() -> CGFloat {
+        let width = self.collectionView.bounds.width > 0 ? self.collectionView.bounds.width : UIScreen.main.bounds.width
+        let profileInfo = self.reactor?.currentState.profileInfo ?? .defaultValue
+        
+        return ProfileUserViewCell.height(
+            for: profileInfo,
+            width: width,
+            isBioExpanded: self.isBioExpanded
+        )
     }
     
     
@@ -507,6 +552,17 @@ class ProfileViewController: BaseNavigationViewController, View {
     private func reloadCardsData(_ notification: Notification) {
         
         self.reactor?.action.onNext(.updateCards)
+    }
+    
+    private func showBioMoreButtonIfNeeded() {
+        self.isBioExpanded = false
+        let visibleUserCell = self.collectionView.visibleCells
+            .compactMap { $0 as? ProfileUserViewCell }
+            .first
+        visibleUserCell?.showBioMoreButton()
+        self.collectionView.performBatchUpdates({
+            self.collectionView.collectionViewLayout.invalidateLayout()
+        })
     }
 }
 
@@ -638,17 +694,15 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
         let width: CGFloat = collectionView.bounds.width
         switch section {
         case .user:
-            /// top container height + bottom container height + button height + padding
-            let height: CGFloat = 84 + 76 + 48 + 16
-            return CGSize(width: width, height: height)
+            return CGSize(width: width, height: self.profileSectionHeight())
         case .card:
             
             let feeds = reactor.currentState.feedCardInfos
             let comments = reactor.currentState.commentCardInfos
             
             var height: CGFloat {
-                let cellHeight: CGFloat = 84 + 76 + 48 + 16
-                let headerHeight: CGFloat = 56
+                let cellHeight = self.profileSectionHeight()
+                let headerHeight: CGFloat = reactor.entranceType == .my ? 56 : 0
                 let defaultHeight: CGFloat = collectionView.bounds.height - cellHeight - headerHeight
                 switch reactor.currentState.cardType {
                 case .feed:

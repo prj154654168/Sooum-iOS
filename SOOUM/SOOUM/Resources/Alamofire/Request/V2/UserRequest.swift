@@ -30,7 +30,7 @@ enum UserRequest: BaseRequest {
     /// 프로필 조회
     case profile(userId: String?)
     /// 나의 프로필 업데이트
-    case updateMyProfile(nickname: String?, imageName: String?)
+    case updateMyProfile(nickname: String?, profileBio: String?, imageName: String?)
     /// 나의 피드 카드 조회
     case feedCards(userId: String, lastId: String?)
     /// 나의 답카드 조회
@@ -171,10 +171,13 @@ enum UserRequest: BaseRequest {
             return ["name": imageName]
         case let .updateFCMToken(fcmToken):
             return ["fcmToken": fcmToken]
-        case let .updateMyProfile(nickname, imageName):
+        case let .updateMyProfile(nickname, profileBio, imageName):
             var dictionary: [String: Any] = [:]
             if let nickname = nickname {
                 dictionary["nickname"] = nickname
+            }
+            if let profileBio = profileBio {
+                dictionary["profileBio"] = profileBio
             }
             if let imageName = imageName {
                 dictionary["profileImgName"] = imageName

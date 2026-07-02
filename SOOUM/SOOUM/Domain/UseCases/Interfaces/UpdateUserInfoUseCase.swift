@@ -9,5 +9,5 @@ import RxSwift
 
 protocol UpdateUserInfoUseCase: AnyObject {
     
-    func updateUserInfo(nickname: String?, imageName: String?) -> Observable<Bool>
+    func updateUserInfo(nickname: String?, profileBio: String?, imageName: String?) -> Observable<Bool>
 }
