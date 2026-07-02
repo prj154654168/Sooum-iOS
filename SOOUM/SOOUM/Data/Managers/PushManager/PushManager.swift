@@ -150,6 +150,7 @@ extension PushManager: PushManagerDelegate {
                                 self?.updateNotificationStatus()
                             } else {
                                 self?.notificationStatus = false
+                                appDelegate?.registerRemoteNotificationCompletion = nil
                                 if let error: Error = error {
                                     completion?(error)
                                 } else {

@@ -32,6 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     /// APNS 등록 완료 핸들러
     var registerRemoteNotificationCompletion: ((Error?) -> Void)?
+    #if DEBUG
+    private var resourceMonitorDisposable: Disposable?
+    #endif
 
     func application(
         _ application: UIApplication,
@@ -40,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // RxSwift Resource count
         #if DEBUG
-        _ = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
+        self.resourceMonitorDisposable = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 print("Resource count \(RxSwift.Resources.total)")
             })
@@ -111,7 +114,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     ) {
         // 계정 이관 성공 시 (런치 화면 > 온보딩 화면)으로 전환
         let userInfo = notification.request.content.userInfo
-        guard let infoDic = userInfo as? [String: Any] else { return }
+        guard let infoDic = userInfo as? [String: Any] else {
+            completionHandler([.sound, .list, .banner])
+            return
+        }
         
         let info = PushNotificationInfo(infoDic)
         if info.isTransfered { self.setupOnboarding() }
@@ -133,7 +139,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     ) {
         // 계정 이관 성공 알림일 경우 온보딩 화면, 아닐 경우 메인 홈 탭바 화면 전환
         let userInfo: [AnyHashable: Any] = response.notification.request.content.userInfo
-        guard let infoDic = userInfo as? [String: Any] else { return }
+        guard let infoDic = userInfo as? [String: Any] else {
+            completionHandler()
+            return
+        }
         
         let info = PushNotificationInfo(infoDic)
         if info.isTransfered {
@@ -152,7 +161,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void
     ) {
         // 계정 이관 성공 시 (런치 화면 > 온보딩 화면)으로 전환
-        guard let infoDic = userInfo as? [String: Any] else { return }
+        guard let infoDic = userInfo as? [String: Any] else {
+            completionHandler(.noData)
+            return
+        }
         
         let info = PushNotificationInfo(infoDic)
         if info.isTransfered { self.setupLaunchScreen(info) }
@@ -168,6 +180,7 @@ extension AppDelegate: MessagingDelegate {
         didFailToRegisterForRemoteNotificationsWithError error: Error
     ) {
         self.registerRemoteNotificationCompletion?(error)
+        self.registerRemoteNotificationCompletion = nil
 
         Log.error("Error registration APNS token: \(error)")
     }
@@ -187,6 +200,7 @@ extension AppDelegate: MessagingDelegate {
         provider.networkManager.registerFCMToken(with: current, #function)
 
         self.registerRemoteNotificationCompletion?(nil)
+        self.registerRemoteNotificationCompletion = nil
     }
 
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {

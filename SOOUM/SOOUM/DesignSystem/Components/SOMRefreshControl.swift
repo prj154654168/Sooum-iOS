@@ -38,11 +38,6 @@ class SOMRefreshControl: UIRefreshControl {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        self.removeObserver(self, forKeyPath: #keyPath(isRefreshing), context: nil)
-    }
-    
-    
     // MARK: Override func
     
     override func layoutSubviews() {
@@ -67,9 +62,6 @@ class SOMRefreshControl: UIRefreshControl {
     // MARK: Private func
     
     private func setupConstraints() {
-        
-        self.addObserver(self, forKeyPath: #keyPath(isRefreshing), options: .new, context: nil)
-        
         self.tintColor = .clear
         self.backgroundColor = .clear
         
