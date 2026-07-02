@@ -97,6 +97,8 @@ class OnboardingCompletedViewController: BaseNavigationViewController, View {
         // Action
         self.confirmButton.rx.throttleTap(.seconds(3))
             .subscribe(with: self) { object, _ in
+                (UIApplication.shared.delegate as? AppDelegate)?.refreshClarityEligibility()
+                
                 let viewController = MainTabBarController()
                 viewController.reactor = reactor.reactorForMainTabBar()
                 let navigationController = UINavigationController(

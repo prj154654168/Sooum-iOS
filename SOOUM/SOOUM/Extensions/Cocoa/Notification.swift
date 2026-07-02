@@ -7,9 +7,13 @@
 
 import Foundation
 
+import Clarity
+
 
 extension Notification.Name {
     
+    /// Auth state changed
+    static let didChangeAuthState = Notification.Name("didChangeAuthState")
     /// Update tabBarHidden
     static let hidesBottomBarWhenPushedDidChange = Notification.Name("hidesBottomBarWhenPushedDidChange")
     /// Update location auth state
@@ -42,4 +46,43 @@ extension Notification.Name {
     static let didFinishNetworkRequest = Notification.Name("didFinishNetworkRequest")
     /// Detected slow network request
     static let detectedSlowNetworkRequest = Notification.Name("detectedSlowNetworkRequest")
+}
+
+enum ClarityManager {
+    
+    private static var isInitialized = false
+    
+    static func activate(projectId: String) {
+        self.performOnMainThread {
+            if self.isInitialized == false {
+                let clarityConfig = ClarityConfig(projectId: projectId)
+                self.isInitialized = ClaritySDK.initialize(config: clarityConfig)
+            }
+            
+            guard self.isInitialized, ClaritySDK.isPaused() else { return }
+            ClaritySDK.resume()
+        }
+    }
+    
+    static func pause() {
+        self.performOnMainThread {
+            guard self.isInitialized, ClaritySDK.isPaused() == false else { return }
+            ClaritySDK.pause()
+        }
+    }
+    
+    static func resume() {
+        self.performOnMainThread {
+            guard self.isInitialized, ClaritySDK.isPaused() else { return }
+            ClaritySDK.resume()
+        }
+    }
+    
+    private static func performOnMainThread(_ action: @escaping () -> Void) {
+        if Thread.isMainThread {
+            action()
+        } else {
+            DispatchQueue.main.async(execute: action)
+        }
+    }
 }

@@ -23,6 +23,7 @@ extension AuthInfo {
     func initAuthInfo() {
         AuthKeyChain.shared.delete(.accessToken)
         AuthKeyChain.shared.delete(.refreshToken)
+        NotificationCenter.default.post(name: .didChangeAuthState, object: nil)
     }
     
     func updateToken(_ token: Token) {

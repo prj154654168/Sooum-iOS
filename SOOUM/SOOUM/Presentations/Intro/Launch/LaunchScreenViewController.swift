@@ -110,6 +110,8 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
             .filter { $0 == true }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
+                (UIApplication.shared.delegate as? AppDelegate)?.refreshClarityEligibility()
+                
                 let viewController = MainTabBarController()
                 viewController.reactor = reactor.reactorForMainTabBar()
                 let navigationController = UINavigationController(

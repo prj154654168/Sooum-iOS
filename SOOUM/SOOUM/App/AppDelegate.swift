@@ -7,12 +7,11 @@
 
 import UIKit
 
-import Clarity
-
+import CocoaLumberjack
+import FBSDKCoreKit
 import Firebase
 import FirebaseCore
 import FirebaseMessaging
-import FBSDKCoreKit
 #if PRODUCTION
 import AppTrackingTransparency
 #endif
@@ -21,7 +20,6 @@ import GoogleMobileAds
 
 import RxSwift
 
-import CocoaLumberjack
 import Kingfisher
 
 
@@ -35,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     #if DEBUG
     private var resourceMonitorDisposable: Disposable?
     #endif
+    private var clarityRoleDisposable: Disposable?
 
     func application(
         _ application: UIApplication,
@@ -74,9 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // 앱 실행 시 사용자에게 알림 허용 권한을 받음
         UNUserNotificationCenter.current().delegate = self
         
-        // Initalize clarity
-        let clarityConfig = ClarityConfig(projectId: Info.clarityId)
-        ClaritySDK.initialize(config: clarityConfig)
+        self.setupClarity()
         
         // Initalize google admob
         MobileAds.shared.start(completionHandler: nil)
@@ -244,6 +241,50 @@ extension AppDelegate {
         /// 100MB
         let memoryLimit: Int = 100 * 1024 * 1024
         cache.memoryStorage.config.totalCostLimit = memoryLimit
+    }
+    
+    private func setupClarity() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.didChangeAuthState),
+            name: .didChangeAuthState,
+            object: nil
+        )
+        
+        self.refreshClarityEligibility()
+    }
+    
+    @objc
+    private func didChangeAuthState() {
+        self.clarityRoleDisposable?.dispose()
+        self.clarityRoleDisposable = nil
+        ClarityManager.pause()
+    }
+    
+    func refreshClarityEligibility() {
+        self.clarityRoleDisposable?.dispose()
+        self.clarityRoleDisposable = nil
+        ClarityManager.pause()
+        
+        let provider = self.appDIContainer.rootContainer.resolve(ManagerProviderType.self)
+        guard provider.authManager.hasToken else { return }
+        
+        let userRepository = self.appDIContainer.rootContainer.resolve(UserRepository.self)
+        self.clarityRoleDisposable = userRepository.role()
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                with: self,
+                onNext: { _, response in
+                    if response.isTester {
+                        ClarityManager.pause()
+                    } else {
+                        ClarityManager.activate(projectId: Info.clarityId)
+                    }
+                },
+                onError: { _, _ in
+                    ClarityManager.pause()
+                }
+            )
     }
     
     func setupOnboarding() {
