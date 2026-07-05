@@ -24,6 +24,7 @@ class DetailViewFooterCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.cardView.isLikeTapEnabled = false
         self.setupConstraints()
     }
     

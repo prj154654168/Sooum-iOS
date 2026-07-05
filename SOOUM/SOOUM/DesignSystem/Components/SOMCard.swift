@@ -85,7 +85,7 @@ class SOMCard: UIView {
     /// 펑 시간을 담는 스택 뷰
     private let cardInfoTrailingStackView = UIStackView().then {
         $0.axis = .horizontal
-        $0.spacing = 4
+        $0.spacing = 2
         $0.alignment = .center
     }
     
@@ -206,6 +206,7 @@ class SOMCard: UIView {
     
     private(set) var model: BaseCardInfo = .defaultValue
     private(set) var cardType: CardType
+    var isLikeTapEnabled: Bool = true
     weak var delegate: SOMCardDelegate?
     
     
@@ -362,7 +363,7 @@ class SOMCard: UIView {
             $0.size.equalTo(24)
         }
         
-        self.cardInfoLeadingStackView.addArrangedSubview(self.cardPungTimeStackView)
+        self.cardInfoTrailingStackView.addArrangedSubview(self.cardPungTimeStackView)
         
         
         // 카드 문구
@@ -664,6 +665,8 @@ class SOMCard: UIView {
 
     @objc
     private func didTapLikeImageView() {
+        guard self.isLikeTapEnabled else { return }
+
         self.animateLikeCountForTapIfNeeded()
         
         self.animateLikeTap { [weak self] in
