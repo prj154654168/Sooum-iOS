@@ -118,8 +118,8 @@ class CardRepositoryImpl: CardRepository {
         tags: [String],
         isArticle: Bool,
         hasPoll: Bool,
-        pollType: String,
-        pollContents: [String]
+        pollType: String?,
+        pollContents: [String]?
     ) -> Observable<WriteCardResponse> {
         
         return self.remoteDataSource.writeCard(

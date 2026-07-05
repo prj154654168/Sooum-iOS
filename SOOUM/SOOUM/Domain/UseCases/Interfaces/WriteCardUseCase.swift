@@ -21,8 +21,8 @@ protocol WriteCardUseCase: AnyObject {
         tags: [String],
         isArticle: Bool,
         hasPoll: Bool,
-        pollType: String,
-        pollContents: [String]
+        pollType: String?,
+        pollContents: [String]?
     ) -> Observable<String>
     func writeComment(
         parentCardId: String,

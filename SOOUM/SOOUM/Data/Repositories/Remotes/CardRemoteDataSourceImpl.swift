@@ -127,8 +127,8 @@ class CardRemoteDataSourceImpl: CardRemoteDataSource {
         tags: [String],
         isArticle: Bool,
         hasPoll: Bool,
-        pollType: String,
-        pollContents: [String]
+        pollType: String?,
+        pollContents: [String]?
     ) -> Observable<WriteCardResponse> {
         
         let request: CardRequest = .writeCard(

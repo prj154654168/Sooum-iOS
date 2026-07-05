@@ -58,8 +58,8 @@ enum CardRequest: BaseRequest {
         tags: [String],
         isArticle: Bool,
         hasPoll: Bool,
-        pollType: String,
-        pollContents: [String]
+        pollType: String?,
+        pollContents: [String]?
     )
     /// 답카드 추가
     case writeComment(
@@ -214,10 +214,15 @@ enum CardRequest: BaseRequest {
                 "isStory": isStory,
                 "tags": tags,
                 "isArticle": isArticle,
-                "hasPoll": hasPoll,
-                "pollType": pollType,
-                "pollContents": pollContents
+                "hasPoll": hasPoll
             ]
+            
+            if let pollType = pollType {
+                parameters.updateValue(pollType, forKey: "pollType")
+            }
+            if let pollContents = pollContents {
+                parameters.updateValue(pollContents, forKey: "pollContents")
+            }
             
             if isDistanceShared, let latitude = latitude, let longitude = longitude {
                 parameters.updateValue(latitude, forKey: "latitude")

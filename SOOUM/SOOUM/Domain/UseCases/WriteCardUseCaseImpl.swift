@@ -27,8 +27,8 @@ final class WriteCardUseCaseImpl: WriteCardUseCase {
         tags: [String],
         isArticle: Bool,
         hasPoll: Bool,
-        pollType: String,
-        pollContents: [String]
+        pollType: String?,
+        pollContents: [String]?
     ) -> Observable<String> {
         
         return self.repository.writeCard(

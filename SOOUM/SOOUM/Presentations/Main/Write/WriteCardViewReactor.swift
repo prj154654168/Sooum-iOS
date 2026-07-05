@@ -224,6 +224,7 @@ private extension WriteCardViewReactor {
             if self.entranceType == .feed {
                 
                 let isArticle = self.currentState.myRole == .admin && isArticle
+                let hasPoll = trimmedPollContents.isEmpty == false
                 
                 return self.writeCardUseCase.writeFeed(
                     isDistanceShared: isDistanceShared,
@@ -236,9 +237,9 @@ private extension WriteCardViewReactor {
                     isStory: isStory,
                     tags: tags,
                     isArticle: isArticle,
-                    hasPoll: trimmedPollContents.isEmpty == false,
-                    pollType: "SINGLE",
-                    pollContents: trimmedPollContents
+                    hasPoll: hasPoll,
+                    pollType: hasPoll ? "SINGLE" : nil,
+                    pollContents: hasPoll ? trimmedPollContents : nil
                 )
                 .map(Mutation.writeCard)
             } else {
