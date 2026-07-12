@@ -72,6 +72,17 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
         $0.isEnabled = false
     }
     
+    private let appRouter: AppRouting
+
+    init(appRouter: AppRouting) {
+        self.appRouter = appRouter
+        super.init()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     // MARK: Override variables
     
@@ -214,14 +225,8 @@ class EnterMemberTransferViewController: BaseNavigationViewController, View {
             })
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                guard let window = object.view.window else { return }
-                
                 object.showSuccessDialog {
-                    
-                    let launchScreenViewController = LaunchScreenViewController()
-                    launchScreenViewController.reactor = reactor.reactorForLaunchScreen()
-                    launchScreenViewController.modalTransitionStyle = .crossDissolve
-                    window.rootViewController = launchScreenViewController
+                    object.appRouter.handle(.launch())
                 }
             }
             .disposed(by: self.disposeBag)

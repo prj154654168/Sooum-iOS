@@ -67,6 +67,10 @@ class OnboardingViewReactor: Reactor {
 }
 
 extension OnboardingViewReactor {
+
+    var appRouter: AppRouting {
+        self.dependencies.rootContainer.resolve(AppRouting.self)
+    }
     
     func reactorForTermsOfService() -> OnboardingTermsOfServiceViewReactor {
         OnboardingTermsOfServiceViewReactor(dependencies: self.dependencies)

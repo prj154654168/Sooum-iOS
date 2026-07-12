@@ -192,7 +192,9 @@ class OnboardingProfileImageSettingViewController: BaseNavigationViewController,
             .filter { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                let viewController = OnboardingCompletedViewController()
+                let viewController = OnboardingCompletedViewController(
+                    appRouter: reactor.appRouter
+                )
                 viewController.reactor = reactor.reactorForCompleted()
                 object.navigationPush(viewController, animated: true)
             }

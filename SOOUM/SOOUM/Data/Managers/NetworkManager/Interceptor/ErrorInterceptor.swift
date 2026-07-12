@@ -33,9 +33,11 @@ final class ErrorInterceptor: RequestInterceptor {
     private let retryLimit: Int = 1
     
     private let provider: ManagerTypeDelegate
+    private let appRouter: AppRouting
     
-    init(provider: ManagerTypeDelegate) {
+    init(provider: ManagerTypeDelegate, appRouter: AppRouting) {
         self.provider = provider
+        self.appRouter = appRouter
     }
     
     func retry(_ request: Request, for session: Session, dueTo error: any Error, completion: @escaping (RetryResult) -> Void) {
@@ -187,15 +189,7 @@ final class ErrorInterceptor: RequestInterceptor {
         self.provider.authManager.initializeAuthInfo()
         
         DispatchQueue.main.async {
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
-            else { return }
-            
-            let onBoardingViewController = OnboardingViewController()
-            onBoardingViewController.reactor = OnboardingViewReactor(dependencies: appDelegate.appDIContainer)
-            onBoardingViewController.modalTransitionStyle = .crossDissolve
-            window.rootViewController = UINavigationController(rootViewController: onBoardingViewController)
+            self.appRouter.handle(.onboarding)
         }
     }
 }

@@ -60,6 +60,10 @@ class LaunchScreenViewReactor: Reactor {
         
         self.pushInfo = pushInfo
     }
+
+    var launchPushInfo: PushNotificationInfo? {
+        self.pushInfo
+    }
     
     func mutate(action: Action) -> Observable<Mutation> {
         switch action {

@@ -113,6 +113,10 @@ class SettingsViewReactor: Reactor {
 }
 
 extension SettingsViewReactor {
+
+    var appRouter: AppRouting {
+        self.dependencies.rootContainer.resolve(AppRouting.self)
+    }
     
     func reactorForPushNotiSettings(_ pushNoticeStatus: PushNotiStatusInfo) -> PushNotiSettingsViewReactor {
         PushNotiSettingsViewReactor(dependencies: self.dependencies, with: pushNoticeStatus)

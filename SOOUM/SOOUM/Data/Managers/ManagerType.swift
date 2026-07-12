@@ -12,6 +12,7 @@ protocol ManagerTypeDelegate: AnyObject {
     var pushManager: PushManagerDelegate { get }
     var networkManager: NetworkManagerDelegate { get }
     var locationManager: LocationManagerDelegate { get }
+    var appRouter: AppRouting { get }
 }
 
 final class ManagerTypeContainer: ManagerTypeDelegate {
@@ -42,7 +43,10 @@ final class ManagerTypeContainer: ManagerTypeDelegate {
     lazy var locationManager: LocationManagerDelegate = LocationManager(provider: self, configure: self.configuare.location)
     
     let configuare: Configuration
-    init() {
+    let appRouter: AppRouting
+
+    init(appRouter: AppRouting) {
+        self.appRouter = appRouter
         self.configuare = .init()
     }
 }

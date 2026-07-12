@@ -151,6 +151,10 @@ extension OnboardingProfileImageSettingViewReactor {
 }
 
 extension OnboardingProfileImageSettingViewReactor {
+
+    var appRouter: AppRouting {
+        self.dependencies.rootContainer.resolve(AppRouting.self)
+    }
     
     func reactorForCompleted() -> OnboardingCompletedViewReactor {
         OnboardingCompletedViewReactor(dependencies: self.dependencies)

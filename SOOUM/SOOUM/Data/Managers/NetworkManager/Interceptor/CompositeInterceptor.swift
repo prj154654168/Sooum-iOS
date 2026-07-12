@@ -19,7 +19,7 @@ final class CompositeInterceptor: RequestInterceptor {
             AppVersionInterceptor(),
             AddingTokenInterceptor(provider: provider),
             TimeoutInterceptor(timeoutInterval: self.timeoutInterval),
-            ErrorInterceptor(provider: provider)
+            ErrorInterceptor(provider: provider, appRouter: provider.appRouter)
         ]
     }
     

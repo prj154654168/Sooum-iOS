@@ -9,19 +9,71 @@ import UIKit
 
 extension UIViewController {
 
+    private var enclosingMainTabBarController: MainTabBarController? {
+        if let mainTabBarController = self as? MainTabBarController {
+            return mainTabBarController
+        }
+        
+        if let navigationController = self as? UINavigationController,
+           let mainTabBarController = navigationController.parent as? MainTabBarController {
+            return mainTabBarController
+        }
+        
+        var parentViewController = self.parent
+        while let current = parentViewController {
+            if let mainTabBarController = current as? MainTabBarController {
+                return mainTabBarController
+            }
+            
+            parentViewController = current.parent
+        }
+        
+        return nil
+    }
+    
+    private var targetNavigationController: UINavigationController? {
+        if let mainTabBarController = self.enclosingMainTabBarController {
+            return mainTabBarController.navigationController
+        }
+        
+        return (self as? UINavigationController) ?? self.navigationController
+    }
+
+    private var transitionGuardSourceViewController: UIViewController {
+        if let mainTabBarController = self.enclosingMainTabBarController,
+           let navigationController = mainTabBarController.navigationController,
+           navigationController.topViewController === mainTabBarController {
+            return mainTabBarController
+        }
+        
+        if let navigationController = self as? UINavigationController {
+            return navigationController.topViewController ?? navigationController
+        }
+
+        return self
+    }
+
     func navigationPush(
         _ viewController: UIViewController,
         animated: Bool,
         bottomBarHidden: Bool = false,
         completion: ((UIViewController) -> Void)? = nil
     ) {
+        guard let navigationController = self.targetNavigationController else { return }
+        guard NavigationTransitionGuard.canPush(
+            from: self.transitionGuardSourceViewController,
+            on: navigationController
+        ) else { return }
+
         CATransaction.begin()
         CATransaction.setCompletionBlock {
             completion?(viewController)
         }
 
         self.hidesBottomBarWhenPushed = bottomBarHidden
-        self.navigationController?.pushViewController(viewController, animated: animated)
+        NavigationTransitionGuard.lock(on: navigationController)
+        navigationController.pushViewController(viewController, animated: animated)
+        NavigationTransitionGuard.unlockAfterTransition(on: navigationController)
 
         CATransaction.commit()
     }
@@ -32,20 +84,29 @@ extension UIViewController {
         bottomBarHidden: Bool = true,
         completion: (() -> Void)? = nil
     ) {
+        guard let navigationController = self.targetNavigationController else { return }
+        guard NavigationTransitionGuard.canPop(
+            from: self.transitionGuardSourceViewController,
+            on: navigationController
+        ) else { return }
+
         CATransaction.begin()
         CATransaction.setCompletionBlock(completion)
+        NavigationTransitionGuard.lock(on: navigationController)
 
+        let viewControllers = navigationController.viewControllers
         if let to: UIViewController.Type = to,
-            let viewControllers = self.navigationController?.viewControllers,
             let destination: UIViewController = viewControllers.last(
                 where: { type(of: $0) == to }
             ) {
             destination.hidesBottomBarWhenPushed = bottomBarHidden
-            self.navigationController?.popToViewController(destination, animated: animated)
+            navigationController.popToViewController(destination, animated: animated)
         } else {
             self.hidesBottomBarWhenPushed = bottomBarHidden
-            self.navigationController?.popViewController(animated: animated)
+            navigationController.popViewController(animated: animated)
         }
+
+        NavigationTransitionGuard.unlockAfterTransition(on: navigationController)
 
         CATransaction.commit()
     }
@@ -55,11 +116,19 @@ extension UIViewController {
         bottomBarHidden: Bool = true,
         completion: (() -> Void)? = nil
     ) {
+        guard let navigationController = self.targetNavigationController else { return }
+        guard NavigationTransitionGuard.canPop(
+            from: self.transitionGuardSourceViewController,
+            on: navigationController
+        ) else { return }
+
         CATransaction.begin()
         CATransaction.setCompletionBlock(completion)
         
         self.hidesBottomBarWhenPushed = bottomBarHidden
-        self.navigationController?.popToRootViewController(animated: animated)
+        NavigationTransitionGuard.lock(on: navigationController)
+        navigationController.popToRootViewController(animated: animated)
+        NavigationTransitionGuard.unlockAfterTransition(on: navigationController)
         
         CATransaction.commit()
     }

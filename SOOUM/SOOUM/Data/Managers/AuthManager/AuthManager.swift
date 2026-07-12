@@ -38,6 +38,7 @@ protocol AuthManagerDelegate: AnyObject {
 class AuthManager: CompositeManager<AuthManagerConfiguration> {
     
     private let reAuthenticateQueue = DispatchQueue(label: "com.sooum.reAuthenticate.serial.queue")
+    private let appRouter: AppRouting
     
     private var isReAuthenticating: Bool = false
     private var pendingResults: [(AuthResult) -> Void] = []
@@ -56,6 +57,7 @@ class AuthManager: CompositeManager<AuthManagerConfiguration> {
     }
     
     override init(provider: ManagerTypeDelegate, configure: AuthManagerConfiguration) {
+        self.appRouter = provider.appRouter
         super.init(provider: provider, configure: configure)
     }
 }
@@ -203,17 +205,7 @@ extension AuthManager: AuthManagerDelegate {
                                 object.authInfo.initAuthInfo()
                                 
                                 // onboarding screen 전환
-                                DispatchQueue.main.async {
-                                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                                        let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                                        let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
-                                    else { return }
-                                    
-                                    let onBoardingViewController = OnboardingViewController()
-                                    onBoardingViewController.reactor = OnboardingViewReactor(dependencies: appDelegate.appDIContainer)
-                                    onBoardingViewController.modalTransitionStyle = .crossDissolve
-                                    window.rootViewController = UINavigationController(rootViewController: onBoardingViewController)
-                                }
+                                DispatchQueue.main.async { object.appRouter.handle(.onboarding) }
                             }
                             return .just(false)
                         }

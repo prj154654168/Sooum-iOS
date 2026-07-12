@@ -48,6 +48,17 @@ class OnboardingCompletedViewController: BaseNavigationViewController, View {
         $0.backgroundColor = .som.v2.black
     }
     
+    private let appRouter: AppRouting
+
+    init(appRouter: AppRouting) {
+        self.appRouter = appRouter
+        super.init()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     // MARK: Override variables
     
@@ -96,15 +107,9 @@ class OnboardingCompletedViewController: BaseNavigationViewController, View {
         
         // Action
         self.confirmButton.rx.throttleTap(.seconds(3))
-            .subscribe(with: self) { object, _ in
+            .subscribe(with: self) { _, _ in
                 (UIApplication.shared.delegate as? AppDelegate)?.refreshClarityEligibility()
-                
-                let viewController = MainTabBarController()
-                viewController.reactor = reactor.reactorForMainTabBar()
-                let navigationController = UINavigationController(
-                    rootViewController: viewController
-                )
-                object.view.window?.rootViewController = navigationController
+                self.appRouter.handle(.mainTab())
             }
             .disposed(by: self.disposeBag)
     }

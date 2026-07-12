@@ -216,7 +216,9 @@ class SettingsViewController: BaseNavigationViewController, View {
         self.enterUserTransferCodeCellView.rx.didSelect
             .throttle(.seconds(3), scheduler: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                let enterMemberTransferViewController = EnterMemberTransferViewController()
+                let enterMemberTransferViewController = EnterMemberTransferViewController(
+                    appRouter: reactor.appRouter
+                )
                 enterMemberTransferViewController.reactor = reactor.reactorForTransferEnter()
                 object.navigationPush(enterMemberTransferViewController, animated: true)
             }
@@ -380,7 +382,9 @@ extension SettingsViewController {
             style: .primary,
             action: {
                 SOMDialogViewController.dismiss {
-                    let resignViewController = ResignViewController()
+                    let resignViewController = ResignViewController(
+                        appRouter: reactor.appRouter
+                    )
                     resignViewController.reactor = reactor.reactorForResign()
                     self.navigationPush(resignViewController, animated: true)
                 }

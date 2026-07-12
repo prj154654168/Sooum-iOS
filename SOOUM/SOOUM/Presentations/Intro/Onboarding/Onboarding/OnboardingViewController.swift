@@ -203,7 +203,9 @@ class OnboardingViewController: BaseNavigationViewController, View {
         // 계정 이관 화면 이동
         self.oldUserButton.rx.throttleTap
             .subscribe(with: self) { object, _ in
-              let enterMemberTransferViewController = EnterMemberTransferViewController()
+              let enterMemberTransferViewController = EnterMemberTransferViewController(
+                  appRouter: reactor.appRouter
+              )
               enterMemberTransferViewController.reactor = reactor.reactorForEnterTransfer()
               object.navigationPush(enterMemberTransferViewController, animated: true)
             }

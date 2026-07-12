@@ -55,11 +55,13 @@ class MainTabBarController: SOMTabBarController, View {
     #if PRODUCTION
     private var hasRequestedTrackingAuthorization = false
     #endif
+    private let appRouter: AppRouting
     
     
     // MARK: Initialize
     
-    init() {
+    init(appRouter: AppRouting) {
+        self.appRouter = appRouter
         super.init(nibName: nil, bundle: nil)
         
         self.delegate = self
@@ -93,7 +95,6 @@ class MainTabBarController: SOMTabBarController, View {
         self.requestTrackingAuthorizationIfNeeded()
         #endif
     }
-    
     
     // MARK: ReactorKit - bind
     
@@ -241,16 +242,8 @@ class MainTabBarController: SOMTabBarController, View {
                         )
                     }
                 case .pushToLaunchScreen:
-                    
-                    guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                        let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
-                    else { return }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak object] in
-                        object?.setupLaunchScreenViewController(
-                            window,
-                            with: reactor.reactorForLaunchScreen()
-                        )
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+                        self?.appRouter.handle(.launch())
                     }
                 case .none:
                     
@@ -270,9 +263,7 @@ class MainTabBarController: SOMTabBarController, View {
                 
                 let writeCardViewController = WriteCardViewController()
                 writeCardViewController.reactor = reactor.reactorForWriteCard()
-                if let selectedViewController = object.selectedViewController {
-                    selectedViewController.navigationPush(writeCardViewController, animated: true)
-                }
+                object.navigationPush(writeCardViewController, animated: true)
             }
             .disposed(by: self.disposeBag)
         couldPosting
@@ -428,10 +419,4 @@ private extension MainTabBarController {
         )
     }
     
-    func setupLaunchScreenViewController(_ window: UIWindow, with reactor: LaunchScreenViewReactor) {
-        
-        let launchScreenViewController = LaunchScreenViewController()
-        launchScreenViewController.reactor = reactor
-        window.rootViewController = UINavigationController(rootViewController: launchScreenViewController)
-    }
 }

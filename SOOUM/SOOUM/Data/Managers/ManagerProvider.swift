@@ -13,10 +13,17 @@ protocol ManagerProviderType: AnyObject {
     var pushManager: PushManagerDelegate { get }
     var networkManager: NetworkManagerDelegate { get }
     var locationManager: LocationManagerDelegate { get }
+    var appRouter: AppRouting { get }
 }
 
 final class ManagerProviderContainer: ManagerProviderType {
-    lazy var managerType: ManagerTypeDelegate = ManagerTypeContainer()
+    lazy var managerType: ManagerTypeDelegate = ManagerTypeContainer(appRouter: self.appRouter)
+
+    let appRouter: AppRouting
+
+    init(appRouter: AppRouting) {
+        self.appRouter = appRouter
+    }
     
     var authManager: AuthManagerDelegate { self.managerType.authManager }
     var pushManager: PushManagerDelegate { self.managerType.pushManager }

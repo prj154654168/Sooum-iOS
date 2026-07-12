@@ -34,6 +34,17 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         $0.contentMode = .scaleAspectFit
     }
     
+    private let appRouter: AppRouting
+    
+    init(appRouter: AppRouting) {
+        self.appRouter = appRouter
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     // MARK: Override func
     
@@ -109,28 +120,17 @@ class LaunchScreenViewController: BaseNavigationViewController, View {
         isRegistered
             .filter { $0 == true }
             .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, _ in
+            .subscribe(with: self) { _, _ in
                 (UIApplication.shared.delegate as? AppDelegate)?.refreshClarityEligibility()
-                
-                let viewController = MainTabBarController()
-                viewController.reactor = reactor.reactorForMainTabBar()
-                let navigationController = UINavigationController(
-                    rootViewController: viewController
-                )
-                object.view.window?.rootViewController = navigationController
+                self.appRouter.handle(.mainTab(pushInfo: reactor.launchPushInfo))
             }
             .disposed(by: self.disposeBag)
         // 로그인 실패 시 온보딩 화면으로 전환
         isRegistered
             .filter { $0 == false }
             .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, _ in
-                let viewController = OnboardingViewController()
-                viewController.reactor = reactor.reactorForOnboarding()
-                let navigationController = UINavigationController(
-                    rootViewController: viewController
-                )
-                object.view.window?.rootViewController = navigationController
+            .subscribe(with: self) { _, _ in
+                self.appRouter.handle(.onboarding)
             }
             .disposed(by: self.disposeBag)
     }

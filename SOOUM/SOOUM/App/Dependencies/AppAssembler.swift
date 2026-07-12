@@ -8,14 +8,30 @@
 import Foundation
 
 final class AppAssembler: BaseAssemblerable {
+
+    private let appRouteStore: AppRouteStore
+
+    init(appRouteStore: AppRouteStore) {
+        self.appRouteStore = appRouteStore
+    }
     
     // TODO: 임시, 추후 Coordinator 및 VIPER 적용 시 분기
     func assemble(container: BaseDIContainerable) {
         
         
-        // MARK: Services
+        // MARK: Coordinator
+
+        container.register(AppRouteStore.self, factory: { [appRouteStore = self.appRouteStore] _ in
+            // AppAssembler는 assemble 이후 해제될 수 있으므로 store 인스턴스를 직접 캡처한다.
+            appRouteStore
+        })
+        container.register(AppRouting.self, factory: { resolver in
+            DefaultAppRouter(routeStore: resolver.resolve(AppRouteStore.self))
+        })
         
-        container.register(ManagerProviderType.self, factory: { _ in ManagerProviderContainer() })
+        container.register(ManagerProviderType.self, factory: { resolver in
+            ManagerProviderContainer(appRouter: resolver.resolve(AppRouting.self))
+        })
         
         
         // MARK: AppVersionRepository

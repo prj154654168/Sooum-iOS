@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PushNotificationInfo {
+final class PushNotificationInfo {
     
     let notificationType: CommonNotificationInfo.NotificationType
     let notificationId: String?
@@ -34,5 +34,22 @@ class PushNotificationInfo {
                 imageURL: \(self.imageURL ?? "Nil")
             """
         )
+    }
+}
+
+extension PushNotificationInfo: Hashable {
+    
+    static func == (lhs: PushNotificationInfo, rhs: PushNotificationInfo) -> Bool {
+        lhs.notificationType == rhs.notificationType &&
+        lhs.notificationId == rhs.notificationId &&
+        lhs.targetCardId == rhs.targetCardId &&
+        lhs.imageURL == rhs.imageURL
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.notificationType)
+        hasher.combine(self.notificationId)
+        hasher.combine(self.targetCardId)
+        hasher.combine(self.imageURL)
     }
 }

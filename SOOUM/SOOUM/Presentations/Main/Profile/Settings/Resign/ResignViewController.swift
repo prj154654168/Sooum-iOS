@@ -69,6 +69,17 @@ class ResignViewController: BaseNavigationViewController, View {
         $0.isEnabled = false
     }
     
+    private let appRouter: AppRouting
+
+    init(appRouter: AppRouting) {
+        self.appRouter = appRouter
+        super.init()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     
     // MARK: Override variables
     
@@ -181,16 +192,8 @@ class ResignViewController: BaseNavigationViewController, View {
             .filter { $0 }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                guard let window = object.view.window else { return }
-                
                 object.showSuccessReportedDialog {
-                    
-                    let onboardingViewController = OnboardingViewController()
-                    onboardingViewController.reactor = reactor.reactorForOnboarding()
-                    onboardingViewController.modalTransitionStyle = .crossDissolve
-                    
-                    let navigationViewController = UINavigationController(rootViewController: onboardingViewController)
-                    window.rootViewController = navigationViewController
+                    object.appRouter.handle(.onboarding)
                 }
             }
             .disposed(by: self.disposeBag)

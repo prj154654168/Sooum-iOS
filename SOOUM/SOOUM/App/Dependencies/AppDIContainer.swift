@@ -15,12 +15,13 @@ protocol AppDIContainerable {
 final class AppDIContainer: AppDIContainerable {
     
     var rootContainer: BaseDIContainerable
+    private let appRouteStore = AppRouteStore()
     
     init() {
         
         self.rootContainer = BaseDIContainer()
         
-        let appAssembler = AppAssembler()
+        let appAssembler = AppAssembler(appRouteStore: self.appRouteStore)
         
         appAssembler.assemble(container: self.rootContainer)
     }

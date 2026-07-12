@@ -28,6 +28,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let appDIContainer: AppDIContainerable = AppDIContainer()
 
+    private var appRouter: AppRouting {
+        self.appDIContainer.rootContainer.resolve(AppRouting.self)
+    }
+
     /// APNS 등록 완료 핸들러
     var registerRemoteNotificationCompletion: ((Error?) -> Void)?
     #if DEBUG
@@ -288,38 +292,14 @@ extension AppDelegate {
     }
     
     func setupOnboarding() {
-        
-        guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-            let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
-        else { return }
-        
-        let onboardingViewController = OnboardingViewController()
-        onboardingViewController.reactor = OnboardingViewReactor(dependencies: self.appDIContainer)
-        onboardingViewController.modalTransitionStyle = .crossDissolve
-        window.rootViewController = UINavigationController(rootViewController: onboardingViewController)
+        self.appRouter.handle(.onboarding)
     }
     
     func setupLaunchScreen(_ info: PushNotificationInfo) {
-        
-        guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-            let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
-        else { return }
-    
-        let launchScreenViewController = LaunchScreenViewController()
-        launchScreenViewController.reactor = LaunchScreenViewReactor(dependencies: self.appDIContainer, pushInfo: info)
-        launchScreenViewController.modalTransitionStyle = .crossDissolve
-        window.rootViewController = UINavigationController(rootViewController: launchScreenViewController)
+        self.appRouter.handle(.launch(pushInfo: info))
     }
     
     func setupMainTabBar(_ info: PushNotificationInfo) {
-        
-        guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-            let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
-        else { return }
-    
-        let mainTabBarController = MainTabBarController()
-        mainTabBarController.reactor = MainTabBarReactor(dependencies: self.appDIContainer, pushInfo: info)
-        mainTabBarController.modalTransitionStyle = .crossDissolve
-        window.rootViewController = UINavigationController(rootViewController: mainTabBarController)
+        self.appRouter.handle(.mainTab(pushInfo: info))
     }
 }
