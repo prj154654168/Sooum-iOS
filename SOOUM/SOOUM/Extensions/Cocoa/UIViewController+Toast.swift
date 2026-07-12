@@ -7,64 +7,88 @@
 
 import UIKit
 
+import ObjectiveC
+
 
 extension UIViewController {
     
     func showToast(message: String, offset: CGFloat) {
+        self.showToast(message: message, offset: offset, in: nil, displayDuration: 7)
+    }
+    
+    func showToast(message: String, offset: CGFloat, in containerView: UIView?) {
+        self.showToast(message: message, offset: offset, in: containerView, displayDuration: 7)
+    }
+    
+    func showToast(
+        message: String,
+        offset: CGFloat,
+        in containerView: UIView?,
+        displayDuration: TimeInterval
+    ) {
+        guard let targetView = containerView ?? self.view else { return }
+        targetView.layoutIfNeeded()
         
-        let typography: Typography = .som.body2WithRegular
-        let width: CGFloat = NSString(string: message).boundingRect(
-            with: .init(width: .infinity, height: typography.lineHeight),
-            attributes: typography.attributes,
-            context: nil
-        ).width
+        targetView.som_currentToastView?.removeFromSuperview()
         
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = .som.black.withAlphaComponent(0.9)
-        backgroundView.layer.cornerRadius = 8
-        backgroundView.clipsToBounds = true
-        backgroundView.alpha = 0
+        let toastView = SOMBottomToastView(title: message, actions: nil)
+        toastView.usesStandaloneStyle = true
+        toastView.alpha = 0
         
-        self.view.addSubview(backgroundView)
-        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        targetView.addSubview(toastView)
+        toastView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            backgroundView.bottomAnchor.constraint(
-                equalTo: self.view.safeAreaLayoutGuide.bottomAnchor,
+            toastView.bottomAnchor.constraint(
+                equalTo: targetView.safeAreaLayoutGuide.bottomAnchor,
                 constant: -offset
             ),
-            backgroundView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            backgroundView.widthAnchor.constraint(equalToConstant: width + 18 * 2),
-            backgroundView.heightAnchor.constraint(equalToConstant: typography.lineHeight + 8 * 2)
+            toastView.centerXAnchor.constraint(equalTo: targetView.centerXAnchor)
         ])
         
-        let label = UILabel()
-        label.text = message
-        label.textColor = .som.white
-        label.typography = typography
-        
-        backgroundView.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            label.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
-            label.centerXAnchor.constraint(equalTo: backgroundView.centerXAnchor)
-        ])
+        targetView.som_currentToastView = toastView
+        targetView.bringSubviewToFront(toastView)
         
         UIView.animate(
-            withDuration: 0.8,
+            withDuration: 0.25,
             animations: {
-                backgroundView.alpha = 1
+                toastView.alpha = 1
             },
             completion: { _ in
-                UIView.animate(
-                    withDuration: 0.5,
-                    animations: {
-                        backgroundView.alpha = 0
-                    }, completion: { _ in
-                        backgroundView.subviews.forEach { $0.removeFromSuperview() }
-                        backgroundView.removeFromSuperview()
-                    }
-                )
+                DispatchQueue.main.asyncAfter(deadline: .now() + displayDuration) { [weak targetView, weak toastView] in
+                    guard let targetView, let toastView else { return }
+                    
+                    UIView.animate(
+                        withDuration: 0.25,
+                        animations: {
+                            toastView.alpha = 0
+                        }, completion: { _ in
+                            if targetView.som_currentToastView === toastView {
+                                targetView.som_currentToastView = nil
+                            }
+                            toastView.removeFromSuperview()
+                        }
+                    )
+                }
             }
         )
+    }
+}
+
+private var somCurrentToastViewKey: UInt8 = 0
+
+private extension UIView {
+    
+    var som_currentToastView: UIView? {
+        get {
+            objc_getAssociatedObject(self, &somCurrentToastViewKey) as? UIView
+        }
+        set {
+            objc_setAssociatedObject(
+                self,
+                &somCurrentToastViewKey,
+                newValue,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
     }
 }

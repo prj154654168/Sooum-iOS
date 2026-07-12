@@ -81,6 +81,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
         static let selectPhotoFullScreenCameraTitle: String = "카메라"
         static let selectPhotoFullScreenLibraryTitle: String = "갤러리"
         static let selectPhotoFullScreenCropTitle: String = "자르기"
+        static let voteStoryDisabledToastMessage: String = "투표가 추가된 카드는 24시간 설정을 사용할 수 없어요"
+        static let voteStoryDeselectedToastMessage: String = "투표가 추가된 카드는 24시간 설정을 사용할 수 없어 옵션이 해제됐어요"
     }
     
     
@@ -460,6 +462,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .filterNil()
             .share()
         selectedOptions
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, options in
+                let hasVote = options.contains(.vote)
+                object.selectOptionsView.setOptionEnabled(hasVote == false, for: .story)
+            }
+            .disposed(by: self.disposeBag)
+        
+        selectedOptions
             .filter { $0.contains(.distanceShare) }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, options in
@@ -484,7 +494,28 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .filter { $0 == .vote }
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
+                let options = object.selectOptionsView.selectOptions
+                if options.contains(.story) {
+                    object.selectOptionsView.selectOptions = options.filter { $0 != .story }
+                    object.showMakeVoteBottomSheetIfNeeded(context: .create)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        object.showToast(
+                            message: Text.voteStoryDeselectedToastMessage,
+                            offset: 42,
+                            in: object.makeVoteView
+                        )
+                    }
+                    return
+                }
                 object.showMakeVoteBottomSheetIfNeeded(context: .create)
+            }
+            .disposed(by: self.disposeBag)
+        
+        self.selectOptionsView.disabledOptionTapped
+            .filter { $0 == .story }
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                object.showVoteStoryDisabledToast()
             }
             .disposed(by: self.disposeBag)
         
@@ -842,7 +873,7 @@ extension WriteCardViewController {
         )
         let deleteAction = SOMDialogAction(
             title: Text.deleteActionTitle,
-            style: .primary,
+            style: .red,
             action: { [weak self] in
                 SOMDialogViewController.dismiss {
                     self?.clearVotes()
@@ -864,6 +895,13 @@ extension WriteCardViewController {
 // MARK: Vote
 
 extension WriteCardViewController {
+    
+    func showVoteStoryDisabledToast() {
+        self.showToast(
+            message: Text.voteStoryDisabledToastMessage,
+            offset: self.bottomToastMessageOffset + 48
+        )
+    }
     
     func showMakeVoteBottomSheetIfNeeded(context: VoteSheetPresentationContext) {
         guard self.isPresentingMakeVoteView == false else { return }

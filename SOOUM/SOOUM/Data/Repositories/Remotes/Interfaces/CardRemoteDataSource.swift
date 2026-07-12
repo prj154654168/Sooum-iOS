@@ -49,8 +49,8 @@ protocol CardRemoteDataSource {
         tags: [String],
         isArticle: Bool,
         hasPoll: Bool,
-        pollType: String,
-        pollContents: [String]
+        pollType: String?,
+        pollContents: [String]?
     ) -> Observable<WriteCardResponse>
     func writeComment(
         id: String,

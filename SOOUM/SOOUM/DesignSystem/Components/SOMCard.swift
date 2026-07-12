@@ -449,10 +449,7 @@ class SOMCard: UIView {
         self.likeLabel.typography = .som.v2.body1
         self.updateLikeCountWidth(for: likeText)
         
-        self.likeImageView.image = model.isLike ?
-            .init(.icon(.v2(.filled(.heart)))) :
-            .init(.icon(.v2(.outlined(.heart))))
-        self.likeImageView.tintColor = model.isLike ? .som.v2.rMain : .som.v2.gray500
+        self.updateLikeImageView(isSelected: model.isLike)
         
         let commentText = model.commentCnt > 99 ? "99+" : "\(model.commentCnt)"
         self.commentLabel.text = commentText
@@ -593,6 +590,13 @@ class SOMCard: UIView {
         label.typography = self.likeLabel.typography
         return label
     }
+
+    private func updateLikeImageView(isSelected: Bool) {
+        self.likeImageView.image = .init(
+            .icon(.v2(isSelected ? .filled(.heart) : .outlined(.heart)))
+        )
+        self.likeImageView.tintColor = isSelected ? .som.v2.rMain : .som.v2.gray500
+    }
     
     private func resetLikeCountAnimationState() {
         self.likeLabel.layer.removeAllAnimations()
@@ -667,6 +671,8 @@ class SOMCard: UIView {
     private func didTapLikeImageView() {
         guard self.isLikeTapEnabled else { return }
 
+        HapticHelper.shared.trigger(.light)
+        self.updateLikeImageView(isSelected: self.model.isLike == false)
         self.animateLikeCountForTapIfNeeded()
         
         self.animateLikeTap { [weak self] in

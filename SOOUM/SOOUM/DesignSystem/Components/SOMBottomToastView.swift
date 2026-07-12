@@ -27,6 +27,12 @@ class SOMBottomToastView: UIView {
     
     // MARK: Variables
     
+    var usesStandaloneStyle: Bool = false {
+        didSet {
+            self.updateStyle()
+        }
+    }
+    
     private var actions: [ToastAction]?
     
     
@@ -43,6 +49,7 @@ class SOMBottomToastView: UIView {
         super.init(frame: frame)
         
         self.setupConstraints()
+        self.updateStyle()
     }
     
     required init?(coder: NSCoder) {
@@ -64,6 +71,12 @@ private extension SOMBottomToastView {
             $0.centerY.trailing.equalToSuperview()
             $0.leading.equalToSuperview().offset(12)
         }
+    }
+    
+    func updateStyle() {
+        self.backgroundColor = self.usesStandaloneStyle ? .som.v2.gray500 : .clear
+        self.layer.cornerRadius = self.usesStandaloneStyle ? 6 : 0
+        self.clipsToBounds = self.usesStandaloneStyle
     }
     
     func setupActions(title: String, _ actions: [ToastAction]?) {

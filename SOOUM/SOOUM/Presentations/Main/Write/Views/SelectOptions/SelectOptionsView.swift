@@ -34,6 +34,7 @@ class SelectOptionsView: UIView {
     // MARK: Variables
     
     let optionTapped = PublishRelay<SelectOptionItem.OptionType>()
+    let disabledOptionTapped = PublishRelay<SelectOptionItem.OptionType>()
     var selectedOptions = BehaviorRelay<[SelectOptionItem.OptionType]?>(value: nil)
     var selectOptions: [SelectOptionItem.OptionType] = [] {
         didSet {
@@ -100,6 +101,11 @@ class SelectOptionsView: UIView {
             item.rx.tapGesture()
                 .when(.recognized)
                 .subscribe(with: self) { object, _ in
+                    guard item.isEnabled else {
+                        object.disabledOptionTapped.accept(type)
+                        return
+                    }
+                    
                     let hasOption = object.selectOptions.contains(where: { $0 == type })
                     
                     switch type {
@@ -115,5 +121,14 @@ class SelectOptionsView: UIView {
                 }
                 .disposed(by: self.disposeBag)
         }
+    }
+    
+    func setOptionEnabled(_ isEnabled: Bool, for type: SelectOptionItem.OptionType) {
+        guard let item = self.container.arrangedSubviews
+            .compactMap({ $0 as? SelectOptionItem })
+            .first(where: { $0.optionType == type })
+        else { return }
+        
+        item.isEnabled = isEnabled
     }
 }

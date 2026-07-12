@@ -51,9 +51,13 @@ class SelectOptionItem: UIView {
     
     var isSelected: Bool = false {
         didSet {
-            self.backgroundColor = self.isSelected ? .som.v2.pLight1 : .som.v2.gray100
-            self.iconImageView.tintColor = self.isSelected ? .som.v2.gray600 : .som.v2.gray400
-            self.titleLabel.textColor = self.isSelected ? .som.v2.gray600 : .som.v2.gray400
+            self.updateAppearance()
+        }
+    }
+    
+    var isEnabled: Bool = true {
+        didSet {
+            self.updateAppearance()
         }
     }
     
@@ -83,9 +87,9 @@ class SelectOptionItem: UIView {
     
     private func setupConstraints() {
         
-        self.backgroundColor = .som.v2.gray100
         self.layer.cornerRadius = 32 * 0.5
         self.clipsToBounds = true
+        self.updateAppearance()
         
         self.addSubview(self.iconImageView)
         self.iconImageView.snp.makeConstraints {
@@ -102,5 +106,13 @@ class SelectOptionItem: UIView {
             $0.leading.equalTo(self.iconImageView.snp.trailing).offset(4)
             $0.trailing.equalToSuperview().offset(-10)
         }
+    }
+    
+    private func updateAppearance() {
+        self.backgroundColor = self.isEnabled
+            ? (self.isSelected ? .som.v2.pLight1 : .som.v2.gray100)
+            : .som.v2.gray200
+        self.iconImageView.tintColor = self.isSelected ? .som.v2.gray600 : .som.v2.gray400
+        self.titleLabel.textColor = self.isSelected ? .som.v2.gray600 : .som.v2.gray400
     }
 }
