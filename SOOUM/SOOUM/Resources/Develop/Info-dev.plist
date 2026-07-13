@@ -10,6 +10,8 @@
 	<string>$(SOOUM_APP_ID)</string>
 	<key>ClarityId</key>
 	<string>$(SOOUM_CLARITY_ID)</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>SOOUM uses the microphone only when recording video during content capture.</string>
 	<key>ServerEndpoint</key>
 	<string>$(SOOUM_SERVER_ENDPOINT)</string>
 	<key>UIAppFonts</key>

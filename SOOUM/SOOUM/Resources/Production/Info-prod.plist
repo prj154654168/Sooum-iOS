@@ -16,6 +16,8 @@
 	<string>$(SOOUM_FACEBOOK_CLIENT_TOKEN)</string>
 	<key>FacebookAdvertiserIDCollectionEnabled</key>
 	<true/>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>SOOUM uses the microphone only when recording video during content capture.</string>
 	<key>ServerEndpoint</key>
 	<string>$(SOOUM_SERVER_ENDPOINT)</string>
 	<key>UIAppFonts</key>
