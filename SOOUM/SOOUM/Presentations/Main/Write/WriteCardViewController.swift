@@ -33,6 +33,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
         case clearSelection
     }
     
+    enum DeleteVoteFlow {
+        case deleteOnly
+        case recreate
+    }
+    
     enum Text {
         static let navigationTitle: String = "새로운 카드"
         static let commentNavigationTitle: String = "댓글카드"
@@ -166,6 +171,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
     private var keyboardHeight: CGFloat = 0
     private var selectedVotes: [String] = []
     private var isPresentingMakeVoteView: Bool = false
+    private var isVoteGuideTemporarilyHidden: Bool = false
     private var voteSheetPresentationContext: VoteSheetPresentationContext = .create
     private var voteSheetDismissalPolicy: VoteSheetDismissalPolicy = .clearSelection
     
@@ -221,6 +227,10 @@ class WriteCardViewController: BaseNavigationViewController, View {
             self.relatedTagsViewBottomConstraint = $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).constraint
             $0.horizontalEdges.equalToSuperview()
         }
+
+        // selectOptionsView의 말풍선이 scrollContainer 뒤로 숨지 않도록,
+        // relatedTagsView 바로 아래, scrollContainer 바로 위에 둔다.
+        self.view.insertSubview(self.selectOptionsView, belowSubview: self.relatedTagsView)
         
         guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
             let window: UIWindow = windowScene.windows.first(where: { $0.isKeyWindow })
@@ -236,6 +246,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         super.viewDidLoad()
         
         PHPhotoLibrary.requestAuthorization(for: .readWrite) { _ in }
+        UserDefaults.hadShownWriteCardVoteGuideIfNeeded()
         self.makeVoteView.delegate = self
         self.bindSelectVoteView()
         self.renderSelectedVotes()
@@ -294,6 +305,23 @@ class WriteCardViewController: BaseNavigationViewController, View {
             }
         }
         self.selectOptionsView.items = options
+        self.refreshVoteGuideVisibility()
+
+        NotificationCenter.default.rx.notification(UIApplication.didBecomeActiveNotification)
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                object.isVoteGuideTemporarilyHidden = false
+                object.refreshVoteGuideVisibility()
+            }
+            .disposed(by: self.disposeBag)
+
+        self.selectOptionsView.voteGuideDeleteButtonDidTap
+            .observe(on: MainScheduler.instance)
+            .subscribe(with: self) { object, _ in
+                object.isVoteGuideTemporarilyHidden = true
+                object.refreshVoteGuideVisibility()
+            }
+            .disposed(by: self.disposeBag)
         
         self.writeCardView.textViewDidBeginEditing
             .observe(on: MainScheduler.instance)
@@ -862,7 +890,7 @@ extension WriteCardViewController {
         )
     }
     
-    func showDeleteVoteDialog() {
+    func showDeleteVoteDialog(flow: DeleteVoteFlow = .deleteOnly) {
         
         let cancelAction = SOMDialogAction(
             title: Text.cancelActionTitle,
@@ -876,8 +904,16 @@ extension WriteCardViewController {
             style: .red,
             action: { [weak self] in
                 SOMDialogViewController.dismiss {
-                    self?.clearVotes()
-                    self?.removeVoteOptionSelection()
+                    guard let self else { return }
+                    
+                    self.clearVotes()
+                    
+                    switch flow {
+                    case .deleteOnly:
+                        self.removeVoteOptionSelection()
+                    case .recreate:
+                        self.showMakeVoteBottomSheetIfNeeded(context: .create)
+                    }
                 }
             }
         )
@@ -906,6 +942,8 @@ extension WriteCardViewController {
     func showMakeVoteBottomSheetIfNeeded(context: VoteSheetPresentationContext) {
         guard self.isPresentingMakeVoteView == false else { return }
         self.isPresentingMakeVoteView = true
+        self.isVoteGuideTemporarilyHidden = true
+        self.refreshVoteGuideVisibility()
         self.voteSheetPresentationContext = context
         self.voteSheetDismissalPolicy = context == .edit ? .preserveSelection : .clearSelection
         
@@ -958,6 +996,17 @@ extension WriteCardViewController {
         self.makeVoteView.makedVotes = []
         self.renderSelectedVotes()
     }
+
+    func refreshVoteGuideVisibility() {
+        let shouldShowVoteGuide = UserDefaults.shouldShowWriteCardVoteGuide
+            && self.isVoteGuideTemporarilyHidden == false
+        
+        if shouldShowVoteGuide {
+            self.selectOptionsView.showVoteGuide()
+        } else {
+            self.selectOptionsView.hideVoteGuide()
+        }
+    }
     
     func renderSelectedVotes() {
         let hasVotes = self.selectedVotes.isEmpty == false
@@ -970,7 +1019,7 @@ extension WriteCardViewController {
         self.selectVoteView.editButtonTap
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                object.showMakeVoteBottomSheetIfNeeded(context: .edit)
+                object.showDeleteVoteDialog(flow: .recreate)
             }
             .disposed(by: self.disposeBag)
         

@@ -236,17 +236,10 @@ final class MakeVoteView: UIView {
         self.addVoteButton.isHidden = self.voteOptions.count >= Constants.maximumVoteCount
     }
     
-    private func uniqueValidVotes() -> [String] {
-        var seenVotes = Set<String>()
-        
-        return self.voteOptions
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { $0.isEmpty == false }
-            .filter { seenVotes.insert($0).inserted }
-    }
-    
     private func updateCompleteButtonState() {
-        let validVotes = self.uniqueValidVotes()
+        let validVotes = self.voteOptions.filter {
+            $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+        }
         self.completeButton.isEnabled = validVotes.count >= Constants.minimumVoteCount
     }
     
@@ -265,7 +258,9 @@ final class MakeVoteView: UIView {
     
     @objc
     private func completeButtonDidTapped(_ button: UIButton) {
-        let validVotes = self.uniqueValidVotes()
+        let validVotes = self.voteOptions
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { $0.isEmpty == false }
         
         guard validVotes.count >= Constants.minimumVoteCount else { return }
         self.delegate?.makeVoteView(self, didTapComplete: validVotes)

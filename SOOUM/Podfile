@@ -25,7 +25,7 @@ def pods
   pod 'SnapKit', '~> 5.7.1'
   pod 'Then', '~> 3.0.0'
   pod 'Kingfisher', '~> 7.10.0'
-  pod 'YPImagePicker', '~> 5.2.2'
+  pod 'YPImagePicker', '~> 5.3.2'
   pod 'SwiftEntryKit', '~> 2.0.0'
 
   pod 'CocoaLumberjack/Swift', '~> 3.7.2'

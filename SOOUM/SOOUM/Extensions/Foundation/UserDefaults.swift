@@ -14,6 +14,7 @@ extension UserDefaults {
         static let hasBeenLaunchedBefore: String = "hasBeenLaunchedBefore"
         static let hasBeenShowMessageGuide: String = "hasBeenShowMessageGuide"
         static let hasBeenShowWriteCardGuide: String = "hasBeenShowWriteCardGuide"
+        static let writeCardVoteGuideFirstShownAt: String = "writeCardVoteGuideFirstShownAt"
         static let shouldHideNotice: String = "shouldHideNotice"
         static let shouldHideArticleDot: String = "shouldHideArticleDot"
         static let userNickname: String = "userNickname"
@@ -39,6 +40,24 @@ extension UserDefaults {
     // 가이드 메시지 및 뷰 상태 업데이트
     static func hadShownMessage() { UserDefaults.standard.set(true, forKey: Keys.hasBeenShowMessageGuide) }
     static func hadShownGuideView() { UserDefaults.standard.set(true, forKey: Keys.hasBeenShowWriteCardGuide) }
+
+    // WriteCardViewController 최초 진입 시각 저장 및 노출 조건
+    static func hadShownWriteCardVoteGuideIfNeeded(now: Date = .init()) {
+        if UserDefaults.standard.object(forKey: Keys.writeCardVoteGuideFirstShownAt) == nil {
+            UserDefaults.standard.set(now, forKey: Keys.writeCardVoteGuideFirstShownAt)
+        }
+    }
+
+    static var shouldShowWriteCardVoteGuide: Bool {
+        guard let firstShownAt = UserDefaults.standard.object(
+            forKey: Keys.writeCardVoteGuideFirstShownAt
+        ) as? Date else {
+            return false
+        }
+
+        let week: TimeInterval = 60 * 60 * 24 * 7
+        return Date().timeIntervalSince(firstShownAt) < week
+    }
     
     // 메인 홈 > 최신카드, 공지 숨김 처리를 위한 flag
     static var shouldHideNotice: Bool { UserDefaults.standard.bool(forKey: Keys.shouldHideNotice) }

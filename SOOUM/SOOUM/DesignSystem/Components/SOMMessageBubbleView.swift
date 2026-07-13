@@ -9,6 +9,7 @@ import UIKit
 
 import SnapKit
 import Then
+import RxCocoa
 
 class SOMMessageBubbleView: UIView {
     
@@ -29,6 +30,11 @@ class SOMMessageBubbleView: UIView {
         $0.typography = .som.v2.caption1
     }
     
+    private let deleteButton = SOMButton().then {
+        $0.image = .init(.icon(.v2(.outlined(.delete))))
+        $0.foregroundColor = .som.v2.white
+    }
+    
     
     // MARK: Variables
     
@@ -42,14 +48,24 @@ class SOMMessageBubbleView: UIView {
         }
     }
     
+    let deleteButtonDidTap = PublishRelay<Void>()
+    
+    private var isDeletable: Bool = false
+    
     
     // MARK: Initialize
     
+    init(isDeletable: Bool = false) {
+        super.init(frame: .zero)
+        
+        self.isDeletable = isDeletable
+        if isDeletable == false { self.isUserInteractionEnabled = false }
+        self.setupConstraints()
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         self.isUserInteractionEnabled = false
-        
         self.setupConstraints()
     }
     
@@ -82,5 +98,25 @@ class SOMMessageBubbleView: UIView {
             $0.leading.equalToSuperview().offset(10)
             $0.trailing.equalToSuperview().offset(-10)
         }
+        
+        if isDeletable {
+            self.messageBackgroundView.addSubview(self.deleteButton)
+            self.deleteButton.snp.makeConstraints {
+                $0.centerY.equalToSuperview()
+                $0.leading.greaterThanOrEqualTo(self.messageLabel.snp.trailing).offset(2)
+                $0.trailing.equalToSuperview().offset(-8)
+                $0.size.equalTo(16)
+            }
+            self.deleteButton.addTarget(
+                self,
+                action: #selector(self.didTapDeleteButton),
+                for: .touchUpInside
+            )
+        }
+    }
+    
+    @objc
+    private func didTapDeleteButton() {
+        self.deleteButtonDidTap.accept(())
     }
 }

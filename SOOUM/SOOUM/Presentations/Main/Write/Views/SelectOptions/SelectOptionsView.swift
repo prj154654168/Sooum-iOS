@@ -29,12 +29,20 @@ class SelectOptionsView: UIView {
         $0.distribution = .equalSpacing
         $0.spacing = 6
     }
+
+    private let voteGuideMessage = "투표를 추가해 사람들의 의견을 물어보세요!"
+    
+    private lazy var voteGuideBubbleView = SOMMessageBubbleView(isDeletable: true).then {
+        $0.message = self.voteGuideMessage
+        $0.isHidden = true
+    }
     
     
     // MARK: Variables
     
     let optionTapped = PublishRelay<SelectOptionItem.OptionType>()
     let disabledOptionTapped = PublishRelay<SelectOptionItem.OptionType>()
+    let voteGuideDeleteButtonDidTap = PublishRelay<Void>()
     var selectedOptions = BehaviorRelay<[SelectOptionItem.OptionType]?>(value: nil)
     var selectOptions: [SelectOptionItem.OptionType] = [] {
         didSet {
@@ -58,6 +66,10 @@ class SelectOptionsView: UIView {
     }
     
     private var disposeBag = DisposeBag()
+    private weak var voteItem: SelectOptionItem?
+    private var shouldShowVoteGuide: Bool = false
+    private var voteGuideLastLayoutFrame: CGRect = .zero
+    private var voteGuideLastLayoutWidth: CGFloat = 0
     
     
     // MARK: Initialize
@@ -89,6 +101,19 @@ class SelectOptionsView: UIView {
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.lessThanOrEqualToSuperview().offset(-16)
         }
+
+        self.addSubview(self.voteGuideBubbleView)
+        self.voteGuideBubbleView.snp.makeConstraints {
+            $0.width.equalTo(158)
+            $0.height.equalTo(29)
+        }
+
+        self.voteGuideBubbleView.deleteButtonDidTap
+            .subscribe(with: self) { object, _ in
+                object.hideVoteGuide()
+                object.voteGuideDeleteButtonDidTap.accept(())
+            }
+            .disposed(by: self.disposeBag)
     }
     
     private func setupItems(_ items: [SelectOptionItem.OptionType]) {
@@ -97,6 +122,10 @@ class SelectOptionsView: UIView {
             
             let item = SelectOptionItem(type: type)
             self.container.addArrangedSubview(item)
+
+            if type == .vote {
+                self.voteItem = item
+            }
             
             item.rx.tapGesture()
                 .when(.recognized)
@@ -121,6 +150,8 @@ class SelectOptionsView: UIView {
                 }
                 .disposed(by: self.disposeBag)
         }
+
+        self.setNeedsLayout()
     }
     
     func setOptionEnabled(_ isEnabled: Bool, for type: SelectOptionItem.OptionType) {
@@ -130,5 +161,50 @@ class SelectOptionsView: UIView {
         else { return }
         
         item.isEnabled = isEnabled
+    }
+    
+    func showVoteGuide() {
+        self.shouldShowVoteGuide = true
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+    }
+    
+    func hideVoteGuide() {
+        self.shouldShowVoteGuide = false
+        self.voteGuideBubbleView.isHidden = true
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.layoutVoteGuideIfNeeded()
+    }
+    
+    private func layoutVoteGuideIfNeeded() {
+        guard self.shouldShowVoteGuide, let voteItem = self.voteItem else {
+            self.voteGuideBubbleView.isHidden = true
+            return
+        }
+
+        let messageWidth = (self.voteGuideMessage as NSString).size(
+            withAttributes: [.font: Typography.som.v2.caption1.font]
+        ).width
+        let bubbleWidth = ceil(messageWidth) + 10 + 2 + 16 + 8
+        let voteItemFrame = voteItem.frame
+
+        guard self.voteGuideBubbleView.isHidden
+            || self.voteGuideLastLayoutFrame != voteItemFrame
+            || self.voteGuideLastLayoutWidth != bubbleWidth
+        else { return }
+        
+        self.voteGuideBubbleView.isHidden = false
+        self.bringSubviewToFront(self.voteGuideBubbleView)
+        self.voteGuideBubbleView.snp.remakeConstraints {
+            $0.centerX.equalTo(voteItem.snp.centerX)
+            $0.bottom.equalTo(voteItem.snp.top).offset(-4)
+            $0.width.equalTo(bubbleWidth)
+            $0.height.equalTo(29)
+        }
+        self.voteGuideLastLayoutFrame = voteItemFrame
+        self.voteGuideLastLayoutWidth = bubbleWidth
     }
 }

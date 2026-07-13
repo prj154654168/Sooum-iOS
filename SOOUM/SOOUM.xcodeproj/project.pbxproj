@@ -179,26 +179,6 @@
 		383EC6212E7A564600EC2D1E /* AppAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383EC61F2E7A564200EC2D1E /* AppAssembler.swift */; };
 		383EC6232E7A56CE00EC2D1E /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383EC6222E7A56CA00EC2D1E /* AppDIContainer.swift */; };
 		383EC6242E7A56CE00EC2D1E /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383EC6222E7A56CA00EC2D1E /* AppDIContainer.swift */; };
-		39B1001130B2000100AAA111 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000130B2000100AAA111 /* Coordinator.swift */; };
-		39B1001230B2000100AAA111 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000130B2000100AAA111 /* Coordinator.swift */; };
-		39B1001330B2000100AAA111 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000230B2000100AAA111 /* AppCoordinator.swift */; };
-		39B1001430B2000100AAA111 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000230B2000100AAA111 /* AppCoordinator.swift */; };
-		39B1001530B2000100AAA111 /* MainTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000330B2000100AAA111 /* MainTabCoordinator.swift */; };
-		39B1001630B2000100AAA111 /* MainTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000330B2000100AAA111 /* MainTabCoordinator.swift */; };
-		39B1001730B2000100AAA111 /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000430B2000100AAA111 /* AppRoute.swift */; };
-		39B1001830B2000100AAA111 /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000430B2000100AAA111 /* AppRoute.swift */; };
-		39B1001930B2000100AAA111 /* ScreenFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000530B2000100AAA111 /* ScreenFactory.swift */; };
-		39B1001A30B2000100AAA111 /* ScreenFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000530B2000100AAA111 /* ScreenFactory.swift */; };
-		39B1001B30B2000100AAA111 /* AppRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000630B2000100AAA111 /* AppRouting.swift */; };
-		39B1001C30B2000100AAA111 /* AppRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000630B2000100AAA111 /* AppRouting.swift */; };
-		39B1001D30B2000100AAA111 /* AppRouteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000730B2000100AAA111 /* AppRouteStore.swift */; };
-		39B1001E30B2000100AAA111 /* AppRouteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000730B2000100AAA111 /* AppRouteStore.swift */; };
-		39B1001F30B2000100AAA111 /* SceneRouteHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000830B2000100AAA111 /* SceneRouteHandling.swift */; };
-		39B1002030B2000100AAA111 /* SceneRouteHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000830B2000100AAA111 /* SceneRouteHandling.swift */; };
-		39B1002130B2000100AAA111 /* DefaultAppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000930B2000100AAA111 /* DefaultAppRouter.swift */; };
-		39B1002230B2000100AAA111 /* DefaultAppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000930B2000100AAA111 /* DefaultAppRouter.swift */; };
-		39B1002330B2000100AAA111 /* NavigationTransitionGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000A30B2000100AAA111 /* NavigationTransitionGuard.swift */; };
-		39B1002430B2000100AAA111 /* NavigationTransitionGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000A30B2000100AAA111 /* NavigationTransitionGuard.swift */; };
 		3843C1BE2D4FB778009283AC /* MockAlamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3843C1BD2D4FB778009283AC /* MockAlamofire.swift */; };
 		3843C1C02D4FC226009283AC /* MockNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3843C1BF2D4FC226009283AC /* MockNetworkManager.swift */; };
 		3843C1C22D4FC99E009283AC /* NetworkManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3843C1C12D4FC99E009283AC /* NetworkManagerTests.swift */; };
@@ -906,6 +886,26 @@
 		38FED0FB2FDE6DFB00E0258E /* MakeVoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FED0F92FDE6DF600E0258E /* MakeVoteView.swift */; };
 		38FED0FD2FDE758100E0258E /* VoteTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FED0FC2FDE757A00E0258E /* VoteTextField.swift */; };
 		38FED0FE2FDE758100E0258E /* VoteTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FED0FC2FDE757A00E0258E /* VoteTextField.swift */; };
+		39B1001130B2000100AAA111 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000130B2000100AAA111 /* Coordinator.swift */; };
+		39B1001230B2000100AAA111 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000130B2000100AAA111 /* Coordinator.swift */; };
+		39B1001330B2000100AAA111 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000230B2000100AAA111 /* AppCoordinator.swift */; };
+		39B1001430B2000100AAA111 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000230B2000100AAA111 /* AppCoordinator.swift */; };
+		39B1001530B2000100AAA111 /* MainTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000330B2000100AAA111 /* MainTabCoordinator.swift */; };
+		39B1001630B2000100AAA111 /* MainTabCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000330B2000100AAA111 /* MainTabCoordinator.swift */; };
+		39B1001730B2000100AAA111 /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000430B2000100AAA111 /* AppRoute.swift */; };
+		39B1001830B2000100AAA111 /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000430B2000100AAA111 /* AppRoute.swift */; };
+		39B1001930B2000100AAA111 /* ScreenFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000530B2000100AAA111 /* ScreenFactory.swift */; };
+		39B1001A30B2000100AAA111 /* ScreenFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000530B2000100AAA111 /* ScreenFactory.swift */; };
+		39B1001B30B2000100AAA111 /* AppRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000630B2000100AAA111 /* AppRouting.swift */; };
+		39B1001C30B2000100AAA111 /* AppRouting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000630B2000100AAA111 /* AppRouting.swift */; };
+		39B1001D30B2000100AAA111 /* AppRouteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000730B2000100AAA111 /* AppRouteStore.swift */; };
+		39B1001E30B2000100AAA111 /* AppRouteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000730B2000100AAA111 /* AppRouteStore.swift */; };
+		39B1001F30B2000100AAA111 /* SceneRouteHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000830B2000100AAA111 /* SceneRouteHandling.swift */; };
+		39B1002030B2000100AAA111 /* SceneRouteHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000830B2000100AAA111 /* SceneRouteHandling.swift */; };
+		39B1002130B2000100AAA111 /* DefaultAppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000930B2000100AAA111 /* DefaultAppRouter.swift */; };
+		39B1002230B2000100AAA111 /* DefaultAppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000930B2000100AAA111 /* DefaultAppRouter.swift */; };
+		39B1002330B2000100AAA111 /* NavigationTransitionGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000A30B2000100AAA111 /* NavigationTransitionGuard.swift */; };
+		39B1002430B2000100AAA111 /* NavigationTransitionGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B1000A30B2000100AAA111 /* NavigationTransitionGuard.swift */; };
 		9F83B2E5C38D60FE4D409059 /* Pods_SOOUM_DevTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D0E55D6E2C99714CF229CA1 /* Pods_SOOUM_DevTests.framework */; };
 		A40D6E37CF713608CA27DF02 /* Pods_SOOUM_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 365609D6E03DDA36B6BDBE3A /* Pods_SOOUM_Dev.framework */; };
 /* End PBXBuildFile section */
@@ -1051,16 +1051,6 @@
 		383EC61B2E7A548600EC2D1E /* BaseDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseDIContainer.swift; sourceTree = "<group>"; };
 		383EC61F2E7A564200EC2D1E /* AppAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAssembler.swift; sourceTree = "<group>"; };
 		383EC6222E7A56CA00EC2D1E /* AppDIContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDIContainer.swift; sourceTree = "<group>"; };
-		39B1000130B2000100AAA111 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
-		39B1000230B2000100AAA111 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
-		39B1000330B2000100AAA111 /* MainTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabCoordinator.swift; sourceTree = "<group>"; };
-		39B1000430B2000100AAA111 /* AppRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
-		39B1000530B2000100AAA111 /* ScreenFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenFactory.swift; sourceTree = "<group>"; };
-		39B1000630B2000100AAA111 /* AppRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouting.swift; sourceTree = "<group>"; };
-		39B1000730B2000100AAA111 /* AppRouteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouteStore.swift; sourceTree = "<group>"; };
-		39B1000830B2000100AAA111 /* SceneRouteHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRouteHandling.swift; sourceTree = "<group>"; };
-		39B1000930B2000100AAA111 /* DefaultAppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAppRouter.swift; sourceTree = "<group>"; };
-		39B1000A30B2000100AAA111 /* NavigationTransitionGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTransitionGuard.swift; sourceTree = "<group>"; };
 		3843C1BD2D4FB778009283AC /* MockAlamofire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAlamofire.swift; sourceTree = "<group>"; };
 		3843C1BF2D4FC226009283AC /* MockNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkManager.swift; sourceTree = "<group>"; };
 		3843C1C12D4FC99E009283AC /* NetworkManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManagerTests.swift; sourceTree = "<group>"; };
@@ -1428,6 +1418,16 @@
 		38FEBE632E86629F002916A8 /* NoticeInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeInfoResponse.swift; sourceTree = "<group>"; };
 		38FED0F92FDE6DF600E0258E /* MakeVoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeVoteView.swift; sourceTree = "<group>"; };
 		38FED0FC2FDE757A00E0258E /* VoteTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteTextField.swift; sourceTree = "<group>"; };
+		39B1000130B2000100AAA111 /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		39B1000230B2000100AAA111 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		39B1000330B2000100AAA111 /* MainTabCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabCoordinator.swift; sourceTree = "<group>"; };
+		39B1000430B2000100AAA111 /* AppRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
+		39B1000530B2000100AAA111 /* ScreenFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenFactory.swift; sourceTree = "<group>"; };
+		39B1000630B2000100AAA111 /* AppRouting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouting.swift; sourceTree = "<group>"; };
+		39B1000730B2000100AAA111 /* AppRouteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouteStore.swift; sourceTree = "<group>"; };
+		39B1000830B2000100AAA111 /* SceneRouteHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneRouteHandling.swift; sourceTree = "<group>"; };
+		39B1000930B2000100AAA111 /* DefaultAppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAppRouter.swift; sourceTree = "<group>"; };
+		39B1000A30B2000100AAA111 /* NavigationTransitionGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTransitionGuard.swift; sourceTree = "<group>"; };
 		4C597C004C07775E636659FE /* Pods-SOOUM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SOOUM.release.xcconfig"; path = "Target Support Files/Pods-SOOUM/Pods-SOOUM.release.xcconfig"; sourceTree = "<group>"; };
 		74194BC62F22BC2F5596D850 /* Pods_SOOUM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SOOUM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		79FB23C15AD70915D59D7DC3 /* Pods-SOOUM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SOOUM.debug.xcconfig"; path = "Target Support Files/Pods-SOOUM/Pods-SOOUM.debug.xcconfig"; sourceTree = "<group>"; };
@@ -1889,60 +1889,6 @@
 				383EC61F2E7A564200EC2D1E /* AppAssembler.swift */,
 			);
 			path = Dependencies;
-			sourceTree = "<group>";
-		};
-		39B1000B30B2000100AAA111 /* Coordinator */ = {
-			isa = PBXGroup;
-			children = (
-				39B1000130B2000100AAA111 /* Coordinator.swift */,
-				39B1000230B2000100AAA111 /* AppCoordinator.swift */,
-				39B1000C30B2000100AAA111 /* Main */,
-				39B1000D30B2000100AAA111 /* Route */,
-			);
-			path = Coordinator;
-			sourceTree = "<group>";
-		};
-		39B1000C30B2000100AAA111 /* Main */ = {
-			isa = PBXGroup;
-			children = (
-				39B1000330B2000100AAA111 /* MainTabCoordinator.swift */,
-			);
-			path = Main;
-			sourceTree = "<group>";
-		};
-		39B1000D30B2000100AAA111 /* Route */ = {
-			isa = PBXGroup;
-			children = (
-				39B1000430B2000100AAA111 /* AppRoute.swift */,
-			);
-			path = Route;
-			sourceTree = "<group>";
-		};
-		39B1000E30B2000100AAA111 /* Factory */ = {
-			isa = PBXGroup;
-			children = (
-				39B1000530B2000100AAA111 /* ScreenFactory.swift */,
-			);
-			path = Factory;
-			sourceTree = "<group>";
-		};
-		39B1000F30B2000100AAA111 /* Routing */ = {
-			isa = PBXGroup;
-			children = (
-				39B1000630B2000100AAA111 /* AppRouting.swift */,
-				39B1000730B2000100AAA111 /* AppRouteStore.swift */,
-				39B1000830B2000100AAA111 /* SceneRouteHandling.swift */,
-				39B1000930B2000100AAA111 /* DefaultAppRouter.swift */,
-			);
-			path = Routing;
-			sourceTree = "<group>";
-		};
-		39B1001030B2000100AAA111 /* Navigation */ = {
-			isa = PBXGroup;
-			children = (
-				39B1000A30B2000100AAA111 /* NavigationTransitionGuard.swift */,
-			);
-			path = Navigation;
 			sourceTree = "<group>";
 		};
 		3843C1BC2D4FB399009283AC /* Network */ = {
@@ -3079,6 +3025,60 @@
 			path = Vote;
 			sourceTree = "<group>";
 		};
+		39B1000B30B2000100AAA111 /* Coordinator */ = {
+			isa = PBXGroup;
+			children = (
+				39B1000130B2000100AAA111 /* Coordinator.swift */,
+				39B1000230B2000100AAA111 /* AppCoordinator.swift */,
+				39B1000C30B2000100AAA111 /* Main */,
+				39B1000D30B2000100AAA111 /* Route */,
+			);
+			path = Coordinator;
+			sourceTree = "<group>";
+		};
+		39B1000C30B2000100AAA111 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				39B1000330B2000100AAA111 /* MainTabCoordinator.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		39B1000D30B2000100AAA111 /* Route */ = {
+			isa = PBXGroup;
+			children = (
+				39B1000430B2000100AAA111 /* AppRoute.swift */,
+			);
+			path = Route;
+			sourceTree = "<group>";
+		};
+		39B1000E30B2000100AAA111 /* Factory */ = {
+			isa = PBXGroup;
+			children = (
+				39B1000530B2000100AAA111 /* ScreenFactory.swift */,
+			);
+			path = Factory;
+			sourceTree = "<group>";
+		};
+		39B1000F30B2000100AAA111 /* Routing */ = {
+			isa = PBXGroup;
+			children = (
+				39B1000630B2000100AAA111 /* AppRouting.swift */,
+				39B1000730B2000100AAA111 /* AppRouteStore.swift */,
+				39B1000830B2000100AAA111 /* SceneRouteHandling.swift */,
+				39B1000930B2000100AAA111 /* DefaultAppRouter.swift */,
+			);
+			path = Routing;
+			sourceTree = "<group>";
+		};
+		39B1001030B2000100AAA111 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				39B1000A30B2000100AAA111 /* NavigationTransitionGuard.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3302,13 +3302,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3426,13 +3422,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-DevTests/Pods-SOOUM-DevTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-DevTests/Pods-SOOUM-DevTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3447,13 +3439,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3468,13 +3456,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-DevTests/Pods-SOOUM-DevTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-DevTests/Pods-SOOUM-DevTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3489,13 +3473,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM-Dev/Pods-SOOUM-Dev-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3532,13 +3512,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SOOUM/Pods-SOOUM-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3555,23 +3531,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-			3854418F2C870544004E2BB0 /* Sources */ = {
-				isa = PBXSourcesBuildPhase;
-				buildActionMask = 2147483647;
-				files = (
-					39B1001230B2000100AAA111 /* Coordinator.swift in Sources */,
-					39B1001430B2000100AAA111 /* AppCoordinator.swift in Sources */,
-					39B1001630B2000100AAA111 /* MainTabCoordinator.swift in Sources */,
-					39B1001830B2000100AAA111 /* AppRoute.swift in Sources */,
-					39B1001A30B2000100AAA111 /* ScreenFactory.swift in Sources */,
-					39B1001C30B2000100AAA111 /* AppRouting.swift in Sources */,
-					39B1001E30B2000100AAA111 /* AppRouteStore.swift in Sources */,
-					39B1002030B2000100AAA111 /* SceneRouteHandling.swift in Sources */,
-					39B1002230B2000100AAA111 /* DefaultAppRouter.swift in Sources */,
-					39B1002430B2000100AAA111 /* NavigationTransitionGuard.swift in Sources */,
-					38D8E2922CCD232B00CE2E0A /* AuthManager.swift in Sources */,
-					38B8A5892CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
-					38F1A00230B1000100AAA111 /* DetailVoteCell.swift in Sources */,
+		3854418F2C870544004E2BB0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39B1001230B2000100AAA111 /* Coordinator.swift in Sources */,
+				39B1001430B2000100AAA111 /* AppCoordinator.swift in Sources */,
+				39B1001630B2000100AAA111 /* MainTabCoordinator.swift in Sources */,
+				39B1001830B2000100AAA111 /* AppRoute.swift in Sources */,
+				39B1001A30B2000100AAA111 /* ScreenFactory.swift in Sources */,
+				39B1001C30B2000100AAA111 /* AppRouting.swift in Sources */,
+				39B1001E30B2000100AAA111 /* AppRouteStore.swift in Sources */,
+				39B1002030B2000100AAA111 /* SceneRouteHandling.swift in Sources */,
+				39B1002230B2000100AAA111 /* DefaultAppRouter.swift in Sources */,
+				39B1002430B2000100AAA111 /* NavigationTransitionGuard.swift in Sources */,
+				38D8E2922CCD232B00CE2E0A /* AuthManager.swift in Sources */,
+				38B8A5892CAEA5F9000AFE83 /* DetailViewCell.swift in Sources */,
+				38F1A00230B1000100AAA111 /* DetailVoteCell.swift in Sources */,
 				389EF81F2D2F469B00E053AE /* CocoaLumberjack.swift in Sources */,
 				3802BDB92D0AF2F7001256EA /* PushManager+Rx.swift in Sources */,
 				3880EF802EA0DB0900D88608 /* WriteCardTagsDelegate.swift in Sources */,
@@ -4014,23 +3990,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-			387FBAE82C8702C100A5E139 /* Sources */ = {
-				isa = PBXSourcesBuildPhase;
-				buildActionMask = 2147483647;
-				files = (
-					39B1001130B2000100AAA111 /* Coordinator.swift in Sources */,
-					39B1001330B2000100AAA111 /* AppCoordinator.swift in Sources */,
-					39B1001530B2000100AAA111 /* MainTabCoordinator.swift in Sources */,
-					39B1001730B2000100AAA111 /* AppRoute.swift in Sources */,
-					39B1001930B2000100AAA111 /* ScreenFactory.swift in Sources */,
-					39B1001B30B2000100AAA111 /* AppRouting.swift in Sources */,
-					39B1001D30B2000100AAA111 /* AppRouteStore.swift in Sources */,
-					39B1001F30B2000100AAA111 /* SceneRouteHandling.swift in Sources */,
-					39B1002130B2000100AAA111 /* DefaultAppRouter.swift in Sources */,
-					39B1002330B2000100AAA111 /* NavigationTransitionGuard.swift in Sources */,
-					38FD4DAE2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift in Sources */,
-					385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
-					38F88EBA2D2C1CB8002AD7A8 /* Info.swift in Sources */,
+		387FBAE82C8702C100A5E139 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				39B1001130B2000100AAA111 /* Coordinator.swift in Sources */,
+				39B1001330B2000100AAA111 /* AppCoordinator.swift in Sources */,
+				39B1001530B2000100AAA111 /* MainTabCoordinator.swift in Sources */,
+				39B1001730B2000100AAA111 /* AppRoute.swift in Sources */,
+				39B1001930B2000100AAA111 /* ScreenFactory.swift in Sources */,
+				39B1001B30B2000100AAA111 /* AppRouting.swift in Sources */,
+				39B1001D30B2000100AAA111 /* AppRouteStore.swift in Sources */,
+				39B1001F30B2000100AAA111 /* SceneRouteHandling.swift in Sources */,
+				39B1002130B2000100AAA111 /* DefaultAppRouter.swift in Sources */,
+				39B1002330B2000100AAA111 /* NavigationTransitionGuard.swift in Sources */,
+				38FD4DAE2D032FCE00BF5FF1 /* AnnouncementViewReactor.swift in Sources */,
+				385620F62CA19EA900E0AB5A /* Alamofire_constants.swift in Sources */,
+				38F88EBA2D2C1CB8002AD7A8 /* Info.swift in Sources */,
 				38D563842D1719B1006265AA /* SOMStickyTabBarItem.swift in Sources */,
 				2A5BB7BE2CDB870000E1C799 /* OnboardingGuideMessageView.swift in Sources */,
 				38E5FF5B2FF381C8002558FA /* VotedView.swift in Sources */,
@@ -5094,7 +5070,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
+				CODE_SIGN_ENTITLEMENTS = SOOUM/Resources//SOOUM.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 209000;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -5147,7 +5123,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources//SOOUM.entitlements";
+				CODE_SIGN_ENTITLEMENTS = SOOUM/Resources//SOOUM.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 209000;
 				DEVELOPMENT_TEAM = 99FRG743RX;
