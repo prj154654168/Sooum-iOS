@@ -4558,7 +4558,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2010000;
+				CURRENT_PROJECT_VERSION = 2010010;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -4580,7 +4580,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.10.0;
+				MARKETING_VERSION = 2.10.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -4717,7 +4717,7 @@
 				CODE_SIGN_ENTITLEMENTS = "SOOUM/Resources/SOOUM-Dev.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2010000;
+				CURRENT_PROJECT_VERSION = 2010010;
 				DEVELOPMENT_TEAM = 99FRG743RX;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "SOOUM/Resources/Develop/Info-dev.plist";
@@ -4738,7 +4738,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.10.0;
+				MARKETING_VERSION = 2.10.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
