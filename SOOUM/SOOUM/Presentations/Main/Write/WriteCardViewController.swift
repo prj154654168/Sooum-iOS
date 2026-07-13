@@ -23,6 +23,14 @@ import RxSwift
 
 class WriteCardViewController: BaseNavigationViewController, View {
     
+    private enum Layout {
+        static let voteGuideLabelLeadingInset: CGFloat = 10
+        static let voteGuideDeleteSpacing: CGFloat = 2
+        static let voteGuideDeleteButtonSize: CGFloat = 16
+        static let voteGuideDeleteTrailingInset: CGFloat = 8
+        static let voteGuideBottomSpacing: CGFloat = 4
+    }
+    
     enum VoteSheetPresentationContext {
         case create
         case edit
@@ -138,6 +146,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
     
     private let selectOptionsView = SelectOptionsView()
     
+    private lazy var voteGuideBubbleView = SOMMessageBubbleView(isDeletable: true).then {
+        $0.message = SelectOptionsView.Text.voteGuideMessage
+        $0.isHidden = true
+    }
+    
     private let makeVoteView = MakeVoteView()
     
     private lazy var contentStackView = UIStackView(arrangedSubviews: [
@@ -172,12 +185,19 @@ class WriteCardViewController: BaseNavigationViewController, View {
     private var selectedVotes: [String] = []
     private var isPresentingMakeVoteView: Bool = false
     private var isVoteGuideTemporarilyHidden: Bool = false
+    private var shouldShowVoteGuide: Bool = false
+    private var lastVoteGuideAnchorFrame: CGRect = .zero
+    private var lastVoteGuideWidth: CGFloat = 0
+    private var lastVoteGuideVisibility: Bool = false
     private var voteSheetPresentationContext: VoteSheetPresentationContext = .create
     private var voteSheetDismissalPolicy: VoteSheetDismissalPolicy = .clearSelection
     
     // MARK: Constraint
     
     private var relatedTagsViewBottomConstraint: Constraint?
+    private var voteGuideBubbleCenterXConstraint: Constraint?
+    private var voteGuideBubbleBottomConstraint: Constraint?
+    private var voteGuideBubbleWidthConstraint: Constraint?
     
     
     // MARK: Override variables
@@ -227,9 +247,14 @@ class WriteCardViewController: BaseNavigationViewController, View {
             self.relatedTagsViewBottomConstraint = $0.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom).constraint
             $0.horizontalEdges.equalToSuperview()
         }
+        
+        self.view.insertSubview(self.voteGuideBubbleView, belowSubview: self.relatedTagsView)
+        self.voteGuideBubbleView.snp.makeConstraints {
+            self.voteGuideBubbleCenterXConstraint = $0.centerX.equalTo(self.view.snp.leading).offset(0).constraint
+            self.voteGuideBubbleBottomConstraint = $0.bottom.equalTo(self.view.snp.top).offset(0).constraint
+            self.voteGuideBubbleWidthConstraint = $0.width.equalTo(self.voteGuideBubbleWidth).constraint
+        }
 
-        // selectOptionsView의 말풍선이 scrollContainer 뒤로 숨지 않도록,
-        // relatedTagsView 바로 아래, scrollContainer 바로 위에 둔다.
         self.view.insertSubview(self.selectOptionsView, belowSubview: self.relatedTagsView)
         
         guard let windowScene: UIWindowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -254,6 +279,13 @@ class WriteCardViewController: BaseNavigationViewController, View {
         // 카드 추가 첫 진입 시 가이드 뷰 표시
         self.writeCardGuideView.isHidden = UserDefaults.needsGuideMessageAndGuide == false
         if UserDefaults.shouldShowGuideView { UserDefaults.hadShownGuideView() }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        guard self.shouldShowVoteGuide else { return }
+        self.layoutVoteGuideIfNeeded()
     }
     
     override func updatedKeyboard(withoutBottomSafeInset height: CGFloat) {
@@ -305,18 +337,20 @@ class WriteCardViewController: BaseNavigationViewController, View {
             }
         }
         self.selectOptionsView.items = options
+        self.selectOptionsView.selectOptions = []
+        self.selectOptionsView.setOptionEnabled(reactor.initialState.hasPermission, for: .distanceShare)
         self.refreshVoteGuideVisibility()
 
         NotificationCenter.default.rx.notification(UIApplication.didBecomeActiveNotification)
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 object.isVoteGuideTemporarilyHidden = false
                 object.refreshVoteGuideVisibility()
             }
             .disposed(by: self.disposeBag)
 
-        self.selectOptionsView.voteGuideDeleteButtonDidTap
-            .observe(on: MainScheduler.instance)
+        self.voteGuideBubbleView.deleteButtonDidTap
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 object.isVoteGuideTemporarilyHidden = true
                 object.refreshVoteGuideVisibility()
@@ -324,7 +358,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.writeCardView.textViewDidBeginEditing
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 object.isScrollingByFirstResponder = true
                 
@@ -337,7 +371,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         
         self.relatedTagsView.updatedContentHeight
             .distinctUntilChanged()
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, updatedContentHeight in
                 object.isScrollingByFirstResponder = true
                 
@@ -371,7 +405,9 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         let writeCardtext = self.writeCardView.writeCardTextView.rx.text.orEmpty.distinctUntilChanged().share()
-        let selectedImageInfo = self.selectImageView.selectedImageInfo.share()
+        let selectedImageInfo = self.selectImageView.selectedImageInfo
+            .observe(on: MainScheduler.asyncInstance)
+            .share()
         writeCardtext
             .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false }
             .withLatestFrom(selectedImageInfo, resultSelector: { $0 && $1 != nil })
@@ -419,7 +455,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.selectImageView.selectedUseUserImageCell
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 
                 let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
@@ -459,6 +495,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         let selectedTypography = self.selectTypographyView.selectedTypography
             .distinctUntilChanged()
             .filterNil()
+            .observe(on: MainScheduler.asyncInstance)
             .share(replay: 1)
         selectedTypography
             .observe(on: MainScheduler.asyncInstance)
@@ -488,9 +525,15 @@ class WriteCardViewController: BaseNavigationViewController, View {
         let selectedOptions = self.selectOptionsView.selectedOptions
             .distinctUntilChanged()
             .filterNil()
+            .observe(on: MainScheduler.asyncInstance)
             .share()
+        
+        let selectedCardType = self.selectCardTypeView.selectedCardType
+            .filterNil()
+            .observe(on: MainScheduler.asyncInstance)
+            .share(replay: 1)
         selectedOptions
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, options in
                 let hasVote = options.contains(.vote)
                 object.selectOptionsView.setOptionEnabled(hasVote == false, for: .story)
@@ -498,20 +541,8 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         selectedOptions
-            .filter { $0.contains(.distanceShare) }
-            .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, options in
-                // 선택된 옵션 중 `거리공유` 옵션이 존재하고, 위치 권한이 허용되지 않았을 때
-                guard reactor.initialState.hasPermission == false else { return }
-                
-                object.selectOptionsView.selectOptions = options.filter { $0 != .distanceShare }
-                object.showLocationPermissionDialog()
-            }
-            .disposed(by: self.disposeBag)
-        
-        selectedOptions
             .filter { $0.contains(.vote) == false }
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, _ in
                 object.clearVotes()
                 object.dismissMakeVoteBottomSheet(policy: .clearSelection)
@@ -519,31 +550,43 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .disposed(by: self.disposeBag)
         
         self.selectOptionsView.optionTapped
-            .filter { $0 == .vote }
-            .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, _ in
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, option in
                 let options = object.selectOptionsView.selectOptions
-                if options.contains(.story) {
-                    object.selectOptionsView.selectOptions = options.filter { $0 != .story }
-                    object.showMakeVoteBottomSheetIfNeeded(context: .create)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        object.showToast(
-                            message: Text.voteStoryDeselectedToastMessage,
-                            offset: 42,
-                            in: object.makeVoteView
-                        )
+                
+                switch option {
+                case .vote:
+                    if options.contains(.story) {
+                        object.selectOptionsView.selectOptions = options.filter { $0 != .story }
+                        object.showMakeVoteBottomSheetIfNeeded(context: .create)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            object.showToast(
+                                message: Text.voteStoryDeselectedToastMessage,
+                                offset: 42,
+                                in: object.makeVoteView
+                            )
+                        }
+                        return
                     }
+                    
+                    object.showMakeVoteBottomSheetIfNeeded(context: .create)
+                default:
                     return
                 }
-                object.showMakeVoteBottomSheetIfNeeded(context: .create)
             }
             .disposed(by: self.disposeBag)
         
         self.selectOptionsView.disabledOptionTapped
-            .filter { $0 == .story }
-            .observe(on: MainScheduler.instance)
-            .subscribe(with: self) { object, _ in
-                object.showVoteStoryDisabledToast()
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(with: self) { object, option in
+                switch option {
+                case .distanceShare:
+                    object.showLocationPermissionDialog()
+                case .story:
+                    object.showVoteStoryDisabledToast()
+                default:
+                    return
+                }
             }
             .disposed(by: self.disposeBag)
         
@@ -560,11 +603,10 @@ class WriteCardViewController: BaseNavigationViewController, View {
             .bind(to: self.writeCardView.writeCardTags.rx.models())
             .disposed(by: self.disposeBag)
         
-        /// 위치 권한 유무에 따라 초기값 설정
-        /// role == .admin 일 경우, 거리공유 옵션 비활성화
         let myRoleIsAdmin = reactor.state.map(\.myRole)
             .distinctUntilChanged()
             .filterNil()
+            .observe(on: MainScheduler.asyncInstance)
             .map { $0 == .admin }
         Observable.combineLatest(viewDidLoad, myRoleIsAdmin, resultSelector: { _, isAdmin in isAdmin })
             .observe(on: MainScheduler.asyncInstance)
@@ -587,7 +629,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
             writeCardtext,
             selectedImageInfo.filterNil(),
             selectedTypography,
-            self.selectCardTypeView.selectedCardType.filterNil(),
+            selectedCardType,
             selectedOptions,
             enteredTag.startWith(nil)
         )
@@ -932,11 +974,103 @@ extension WriteCardViewController {
 
 extension WriteCardViewController {
     
+    var voteGuideBubbleWidth: CGFloat {
+        let messageWidth = (SelectOptionsView.Text.voteGuideMessage as NSString).size(
+            withAttributes: [.font: Typography.som.v2.caption1.font]
+        ).width
+        
+        return ceil(messageWidth)
+            + Layout.voteGuideLabelLeadingInset
+            + Layout.voteGuideDeleteSpacing
+            + Layout.voteGuideDeleteButtonSize
+            + Layout.voteGuideDeleteTrailingInset
+    }
+    
+    func layoutVoteGuideIfNeeded() {
+        guard self.view.window != nil else { return }
+        
+        guard self.shouldShowVoteGuide,
+              let voteGuideAnchorFrame = self.selectOptionsView.voteGuideAnchorFrame(in: self.view)
+        else {
+            guard self.lastVoteGuideVisibility else { return }
+            
+            self.voteGuideBubbleView.isHidden = true
+            self.lastVoteGuideVisibility = false
+            return
+        }
+        
+        let voteGuideBubbleWidth = self.voteGuideBubbleWidth
+        let shouldUpdateLayout = self.lastVoteGuideVisibility == false
+            || self.lastVoteGuideAnchorFrame != voteGuideAnchorFrame
+            || self.lastVoteGuideWidth != voteGuideBubbleWidth
+        
+        guard shouldUpdateLayout else { return }
+        
+        self.voteGuideBubbleView.isHidden = false
+        self.view.bringSubviewToFront(self.voteGuideBubbleView)
+        if self.relatedTagsView.superview === self.view {
+            self.view.bringSubviewToFront(self.relatedTagsView)
+        }
+        
+        self.voteGuideBubbleCenterXConstraint?.update(offset: voteGuideAnchorFrame.midX)
+        self.voteGuideBubbleBottomConstraint?.update(offset: voteGuideAnchorFrame.minY - Layout.voteGuideBottomSpacing)
+        self.voteGuideBubbleWidthConstraint?.update(offset: voteGuideBubbleWidth)
+        
+        self.lastVoteGuideAnchorFrame = voteGuideAnchorFrame
+        self.lastVoteGuideWidth = voteGuideBubbleWidth
+        self.lastVoteGuideVisibility = true
+    }
+    
     func showVoteStoryDisabledToast() {
         self.showToast(
             message: Text.voteStoryDisabledToastMessage,
-            offset: self.bottomToastMessageOffset + 48
+            offset: self.bottomToastMessageOffset
         )
+    }
+
+    func presentMakeVoteViewAnimated() {
+        guard let containerView = self.view.window ??
+                self.navigationController?.view ??
+                self.view
+        else { return }
+
+        if self.makeVoteView.superview !== containerView {
+            self.makeVoteView.removeFromSuperview()
+            containerView.addSubview(self.makeVoteView)
+            self.makeVoteView.snp.makeConstraints {
+                $0.edges.equalToSuperview()
+            }
+        }
+
+        containerView.layoutIfNeeded()
+        self.makeVoteView.transform = .init(translationX: containerView.bounds.width, y: 0)
+
+        UIView.animate(
+            withDuration: 0.4,
+            delay: 0,
+            options: [.curveEaseInOut]
+        ) {
+            self.makeVoteView.transform = .identity
+        }
+    }
+
+    func dismissMakeVoteViewAnimated(completion: (() -> Void)? = nil) {
+        guard let containerView = self.makeVoteView.superview else {
+            completion?()
+            return
+        }
+
+        UIView.animate(
+            withDuration: 0.4,
+            delay: 0,
+            options: [.curveEaseInOut]
+        ) {
+            self.makeVoteView.transform = .init(translationX: containerView.bounds.width, y: 0)
+        } completion: { _ in
+            self.makeVoteView.transform = .identity
+            self.makeVoteView.removeFromSuperview()
+            completion?()
+        }
     }
     
     func showMakeVoteBottomSheetIfNeeded(context: VoteSheetPresentationContext) {
@@ -948,26 +1082,8 @@ extension WriteCardViewController {
         self.voteSheetDismissalPolicy = context == .edit ? .preserveSelection : .clearSelection
         
         self.makeVoteView.makedVotes = self.selectedVotes
-        
-        self.makeVoteView.sek.show(
-            .fullScreen(
-                entryName: Text.makeVoteEntryName,
-                screenInteraction: .dismiss,
-                completion: { [weak self] in
-                    guard let self else { return }
-                    
-                    self.isPresentingMakeVoteView = false
-                    let dismissalPolicy = self.voteSheetDismissalPolicy
-                    self.voteSheetDismissalPolicy = .clearSelection
-                    self.voteSheetPresentationContext = .create
-                    
-                    if dismissalPolicy == .clearSelection {
-                        self.clearVotes()
-                        self.removeVoteOptionSelection()
-                    }
-                }
-            )
-        )
+
+        self.presentMakeVoteViewAnimated()
     }
     
     func dismissMakeVoteBottomSheet(policy: VoteSheetDismissalPolicy, completion: (() -> Void)? = nil) {
@@ -978,8 +1094,23 @@ extension WriteCardViewController {
             completion?()
             return
         }
-        
-        self.makeVoteView.sek.dismiss(entryName: Text.makeVoteEntryName) {
+
+        self.dismissMakeVoteViewAnimated { [weak self] in
+            guard let self else {
+                completion?()
+                return
+            }
+
+            self.isPresentingMakeVoteView = false
+            let dismissalPolicy = self.voteSheetDismissalPolicy
+            self.voteSheetDismissalPolicy = .clearSelection
+            self.voteSheetPresentationContext = .create
+
+            if dismissalPolicy == .clearSelection {
+                self.clearVotes()
+                self.removeVoteOptionSelection()
+            }
+
             completion?()
         }
     }
@@ -998,14 +1129,9 @@ extension WriteCardViewController {
     }
 
     func refreshVoteGuideVisibility() {
-        let shouldShowVoteGuide = UserDefaults.shouldShowWriteCardVoteGuide
+        self.shouldShowVoteGuide = UserDefaults.shouldShowWriteCardVoteGuide
             && self.isVoteGuideTemporarilyHidden == false
-        
-        if shouldShowVoteGuide {
-            self.selectOptionsView.showVoteGuide()
-        } else {
-            self.selectOptionsView.hideVoteGuide()
-        }
+        self.voteGuideBubbleView.isHidden = self.shouldShowVoteGuide == false
     }
     
     func renderSelectedVotes() {
@@ -1091,7 +1217,9 @@ extension WriteCardViewController: UIScrollViewDelegate {
         
         guard self.isScrollingByFirstResponder == false else { return }
         
-        self.reactor?.action.onNext(.updateRelatedTags)
+        DispatchQueue.main.async { [weak self] in
+            self?.reactor?.action.onNext(.updateRelatedTags)
+        }
         self.view.endEditing(true)
     }
 }

@@ -113,7 +113,7 @@ class WriteCardTags: UIView {
             else { return }
             
             footer.text = self.updateFooterText
-            footer.sendActionsToTextField(for: .editingChanged)
+            self.syncFooterState(with: footer, notifyDelegate: true)
         }
     }
     
@@ -241,6 +241,15 @@ class WriteCardTags: UIView {
         
         self.scrollToRight(animated: true)
         self.delegate?.textDidChanged(textField.text)
+    }
+    
+    private func syncFooterState(with footer: WriteCardTagFooter, notifyDelegate: Bool) {
+        self.footerText = footer.text
+        self.collectionView.collectionViewLayout.invalidateLayout()
+        self.scrollToRight(animated: true)
+        
+        guard notifyDelegate else { return }
+        self.delegate?.textDidChanged(footer.text)
     }
 }
 

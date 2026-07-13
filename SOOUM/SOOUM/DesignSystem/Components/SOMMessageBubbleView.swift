@@ -13,12 +13,24 @@ import RxCocoa
 
 class SOMMessageBubbleView: UIView {
     
+    private enum Layout {
+        static let bubbleHeight: CGFloat = 26
+        static let bubbleCornerRadius: CGFloat = bubbleHeight * 0.5
+        static let labelLeadingInset: CGFloat = 10
+        static let labelTrailingInset: CGFloat = 10
+        static let labelToDeleteSpacing: CGFloat = 2
+        static let deleteButtonTrailingInset: CGFloat = 8
+        static let deleteButtonSize: CGFloat = 16
+        static let tailWidth: CGFloat = 6
+        static let tailHeight: CGFloat = 3
+    }
+    
     
     // MARK: Views
     
     private let messageBackgroundView = UIView().then {
         $0.backgroundColor = .som.v2.black
-        $0.layer.cornerRadius = 26 * 0.5
+        $0.layer.cornerRadius = Layout.bubbleCornerRadius
     }
     
     private let messageTailView = UIImageView().then {
@@ -81,37 +93,43 @@ class SOMMessageBubbleView: UIView {
         self.addSubview(self.messageBackgroundView)
         self.messageBackgroundView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-            $0.height.equalTo(26)
+            $0.height.equalTo(Layout.bubbleHeight)
         }
         
         self.addSubview(self.messageTailView)
         self.messageTailView.snp.makeConstraints {
             $0.top.equalTo(self.messageBackgroundView.snp.bottom)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(6)
-            $0.height.equalTo(3)
+            $0.width.equalTo(Layout.tailWidth)
+            $0.height.equalTo(Layout.tailHeight)
         }
         
         self.messageBackgroundView.addSubview(self.messageLabel)
-        self.messageLabel.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(10)
-            $0.trailing.equalToSuperview().offset(-10)
-        }
-        
         if isDeletable {
             self.messageBackgroundView.addSubview(self.deleteButton)
             self.deleteButton.snp.makeConstraints {
                 $0.centerY.equalToSuperview()
-                $0.leading.greaterThanOrEqualTo(self.messageLabel.snp.trailing).offset(2)
-                $0.trailing.equalToSuperview().offset(-8)
-                $0.size.equalTo(16)
+                $0.trailing.equalToSuperview().offset(-Layout.deleteButtonTrailingInset)
+                $0.size.equalTo(Layout.deleteButtonSize)
             }
+            
+            self.messageLabel.snp.makeConstraints {
+                $0.centerY.equalToSuperview()
+                $0.leading.equalToSuperview().offset(Layout.labelLeadingInset)
+                $0.trailing.equalTo(self.deleteButton.snp.leading).offset(-Layout.labelToDeleteSpacing)
+            }
+            
             self.deleteButton.addTarget(
                 self,
                 action: #selector(self.didTapDeleteButton),
                 for: .touchUpInside
             )
+        } else {
+            self.messageLabel.snp.makeConstraints {
+                $0.centerY.equalToSuperview()
+                $0.leading.equalToSuperview().offset(Layout.labelLeadingInset)
+                $0.trailing.equalToSuperview().offset(-Layout.labelTrailingInset)
+            }
         }
     }
     

@@ -62,7 +62,7 @@ final class VotedView: UIView {
         }
 
         private let resultLabel = UILabel().then {
-            $0.textColor = .som.v2.gray500
+            $0.textColor = .som.v2.black
             $0.typography = .som.v2.subtitle1.withAlignment(.right)
             $0.setContentHuggingPriority(.required, for: .horizontal)
             $0.setContentCompressionResistancePriority(.required, for: .horizontal)
