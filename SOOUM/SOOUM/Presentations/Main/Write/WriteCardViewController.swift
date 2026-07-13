@@ -1024,7 +1024,7 @@ extension WriteCardViewController {
     func showVoteStoryDisabledToast() {
         self.showToast(
             message: Text.voteStoryDisabledToastMessage,
-            offset: self.bottomToastMessageOffset
+            offset: self.bottomToastMessageOffset + 8
         )
     }
 
