@@ -11,7 +11,24 @@ final class HapticHelper {
     
     static let shared = HapticHelper()
     
-    private init() {}
+    private let notificationGenerator = UINotificationFeedbackGenerator()
+    private let selectionGenerator = UISelectionFeedbackGenerator()
+    private let impactGenerators: [UIImpactFeedbackGenerator.FeedbackStyle: UIImpactFeedbackGenerator]
+    
+    private init() {
+        let styles: [UIImpactFeedbackGenerator.FeedbackStyle] = [.light, .medium, .heavy, .soft, .rigid]
+        var generators: [UIImpactFeedbackGenerator.FeedbackStyle: UIImpactFeedbackGenerator] = [:]
+        
+        styles.forEach { style in
+            generators[style] = UIImpactFeedbackGenerator(style: style)
+        }
+        
+        self.impactGenerators = generators
+        
+        self.notificationGenerator.prepare()
+        self.selectionGenerator.prepare()
+        self.impactGenerators.values.forEach { $0.prepare() }
+    }
 
     /// 햅틱 피드백 종류
     enum HapticType {
@@ -36,37 +53,40 @@ final class HapticHelper {
     func trigger(_ type: HapticType) {
         switch type {
         case .success, .warning, .error:
-            let generator = UINotificationFeedbackGenerator()
-            /// 지연 시간 최소화를 위해 미리 준비
-            generator.prepare()
-            
             switch type {
-            case .success: generator.notificationOccurred(.success)
-            case .warning: generator.notificationOccurred(.warning)
-            case .error:   generator.notificationOccurred(.error)
+            case .success: self.notificationGenerator.notificationOccurred(.success)
+            case .warning: self.notificationGenerator.notificationOccurred(.warning)
+            case .error:   self.notificationGenerator.notificationOccurred(.error)
             default: break
             }
             
+            self.notificationGenerator.prepare()
+            
         case .light, .medium, .heavy, .soft, .rigid:
-            var style: UIImpactFeedbackGenerator.FeedbackStyle
+            guard let generator = self.impactGenerator(for: type) else { return }
             
-            switch type {
-            case .light:  style = .light
-            case .medium: style = .medium
-            case .heavy:  style = .heavy
-            case .soft:   style = .soft
-            case .rigid:  style = .rigid
-            default:      style = .medium
-            }
-            
-            let generator = UIImpactFeedbackGenerator(style: style)
-            generator.prepare()
             generator.impactOccurred()
+            generator.prepare()
             
         case .selection:
-            let generator = UISelectionFeedbackGenerator()
-            generator.prepare()
-            generator.selectionChanged()
+            self.selectionGenerator.selectionChanged()
+            self.selectionGenerator.prepare()
         }
+    }
+    
+    private func impactGenerator(for type: HapticType) -> UIImpactFeedbackGenerator? {
+        let style: UIImpactFeedbackGenerator.FeedbackStyle
+        
+        switch type {
+        case .light:  style = .light
+        case .medium: style = .medium
+        case .heavy:  style = .heavy
+        case .soft:   style = .soft
+        case .rigid:  style = .rigid
+        default:
+            return nil
+            }
+        
+        return self.impactGenerators[style]
     }
 }
