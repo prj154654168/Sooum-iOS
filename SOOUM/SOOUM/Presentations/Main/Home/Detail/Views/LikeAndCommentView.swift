@@ -131,7 +131,7 @@ class LikeAndCommentView: UIView {
         
         self.addSubview(self.likeBackgroundButton)
         self.likeBackgroundButton.snp.makeConstraints {
-            $0.edges.equalTo(self.likeImageView)
+            $0.edges.equalTo(self.likeContainer)
         }
         
         self.addSubview(self.commentContainer)

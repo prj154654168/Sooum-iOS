@@ -388,7 +388,7 @@ class SOMCard: UIView {
             target: self,
             action: #selector(self.didTapLikeImageView)
         )
-        self.likeImageView.addGestureRecognizer(likeTapGesture)
+        self.likeInfoStackView.addGestureRecognizer(likeTapGesture)
     }
     
     

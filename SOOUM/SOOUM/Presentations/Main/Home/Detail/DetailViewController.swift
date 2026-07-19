@@ -918,6 +918,7 @@ private extension DetailViewController {
         likeAndCommentView.likeBackgroundButton.rx.throttleTap
             .withLatestFrom(reactor.state.compactMap(\.detailCard))
             .subscribe(onNext: { detailCard in
+                HapticHelper.shared.trigger(.light)
                 reactor.action.onNext(.updateLike(!detailCard.isLike))
             })
             .disposed(by: disposeBag)
