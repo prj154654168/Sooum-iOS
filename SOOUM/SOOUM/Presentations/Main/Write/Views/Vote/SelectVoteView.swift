@@ -31,22 +31,25 @@ class SelectVoteView: UIView {
     
     private let editButton = SOMButton().then {
         $0.image = UIImage(.icon(.v2(.filled(.pencil))))?.resized(
-            .init(width: 16, height: 16),
+            .init(width: 18, height: 18),
             color: .som.v2.black
         )
         $0.foregroundColor = .som.v2.black
         
         $0.backgroundColor = .som.v2.gray100
-        $0.layer.cornerRadius = 24 * 0.5
+        $0.layer.cornerRadius = 28 * 0.5
         $0.clipsToBounds = true
     }
     
     private let deleteButton = SOMButton().then {
-        $0.image = .init(.icon(.v2(.outlined(.delete))))
+        $0.image = .init(.icon(.v2(.outlined(.delete))))?.resized(
+            .init(width: 18, height: 18),
+            color: .som.v2.black
+        )
         $0.foregroundColor = .som.v2.black
         
         $0.backgroundColor = .som.v2.gray100
-        $0.layer.cornerRadius = 24 * 0.5
+        $0.layer.cornerRadius = 28 * 0.5
         $0.clipsToBounds = true
     }
     
@@ -101,19 +104,19 @@ class SelectVoteView: UIView {
         self.deleteButton.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.trailing.equalToSuperview().offset(-20)
-            $0.size.equalTo(24)
+            $0.size.equalTo(28)
         }
         
         self.addSubview(self.editButton)
         self.editButton.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.trailing.equalTo(self.deleteButton.snp.leading).offset(-8)
-            $0.size.equalTo(24)
+            $0.size.equalTo(28)
         }
         
         self.addSubview(self.container)
         self.container.snp.makeConstraints {
-            $0.top.equalTo(self.titleLabel.snp.bottom).offset(10)
+            $0.top.equalTo(self.titleLabel.snp.bottom).offset(15)
             $0.bottom.equalToSuperview()
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)

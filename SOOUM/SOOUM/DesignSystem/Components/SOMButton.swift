@@ -9,6 +9,8 @@ import UIKit
 
 class SOMButton: UIButton {
     
+    private let defaultCornerRadius: CGFloat = 10
+    
     var isDashedBorderEnabled: Bool = false {
         didSet {
             guard oldValue != self.isDashedBorderEnabled else { return }
@@ -80,6 +82,7 @@ class SOMButton: UIButton {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        self.syncConfigurationCornerRadiusIfNeeded()
         self.updateDashedBorderIfNeeded()
     }
     
@@ -99,7 +102,7 @@ private extension SOMButton {
         
         self.configuration = configuration
         self.backgroundColor = .clear
-        self.layer.cornerRadius = 10
+        self.layer.cornerRadius = self.defaultCornerRadius
         self.clipsToBounds = true
         
         self.configurationUpdateHandler = { [weak self] button in
@@ -162,13 +165,21 @@ private extension SOMButton {
                 return self.backgroundColor ?? .clear
             }
             
-            updatedConfig?.background.cornerRadius = 10
+            updatedConfig?.background.cornerRadius = self.layer.cornerRadius
             updatedConfig?.background.strokeWidth = self.isDashedBorderEnabled ? 0 : 1
             
             self.applyConfiguration(to: &updatedConfig)
             button.configuration = updatedConfig
             self.updateDashedBorderIfNeeded()
         }
+    }
+    
+    func syncConfigurationCornerRadiusIfNeeded() {
+        guard self.configuration?.background.cornerRadius != self.layer.cornerRadius else { return }
+        
+        var updatedConfig = self.configuration
+        updatedConfig?.background.cornerRadius = self.layer.cornerRadius
+        self.configuration = updatedConfig
     }
     
     func applyConfiguration(to configuration: inout UIButton.Configuration?) {
