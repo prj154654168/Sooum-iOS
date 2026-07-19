@@ -558,7 +558,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
                 case .vote:
                     if options.contains(.story) {
                         object.selectOptionsView.selectOptions = options.filter { $0 != .story }
-                        object.showMakeVoteBottomSheetIfNeeded(context: .create)
+                        if object.selectedVotes.isEmpty {
+                            object.showMakeVoteBottomSheetIfNeeded(context: .create)
+                        } else {
+                            object.showDeleteVoteDialog(flow: .recreate)
+                        }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                             object.showToast(
                                 message: Text.voteStoryDeselectedToastMessage,
@@ -569,7 +573,11 @@ class WriteCardViewController: BaseNavigationViewController, View {
                         return
                     }
                     
-                    object.showMakeVoteBottomSheetIfNeeded(context: .create)
+                    if object.selectedVotes.isEmpty {
+                        object.showMakeVoteBottomSheetIfNeeded(context: .create)
+                    } else {
+                        object.showDeleteVoteDialog(flow: .recreate)
+                    }
                 default:
                     return
                 }
@@ -1145,7 +1153,7 @@ extension WriteCardViewController {
         self.selectVoteView.editButtonTap
             .observe(on: MainScheduler.instance)
             .subscribe(with: self) { object, _ in
-                object.showDeleteVoteDialog(flow: .recreate)
+                object.showMakeVoteBottomSheetIfNeeded(context: .edit)
             }
             .disposed(by: self.disposeBag)
         
