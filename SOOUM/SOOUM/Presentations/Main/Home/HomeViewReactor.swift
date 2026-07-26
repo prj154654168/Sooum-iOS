@@ -16,7 +16,7 @@ class HomeViewReactor: Reactor {
         let latests: [BaseCardInfo]?
         let populars: [BaseCardInfo]?
         let distances: [BaseCardInfo]?
-        let article: ArticleCardInfo?
+        let article: [ArticleCardInfo]
         let noticeInfo: NoticeInfo?
     }
     
@@ -45,7 +45,7 @@ class HomeViewReactor: Reactor {
         case updateLocationPermission(Bool)
         case cards(latests: [BaseCardInfo], populars: [BaseCardInfo], distances: [BaseCardInfo])
         case more(latests: [BaseCardInfo], distances: [BaseCardInfo])
-        case article(ArticleCardInfo)
+        case article([ArticleCardInfo])
         case updateHasUnreadNotifications(Bool)
         case notice(NoticeInfo?)
         case cardIsDeleted((String, Bool)?)
@@ -62,7 +62,7 @@ class HomeViewReactor: Reactor {
         fileprivate(set) var latestCards: [BaseCardInfo]?
         fileprivate(set) var popularCards: [BaseCardInfo]?
         fileprivate(set) var distanceCards: [BaseCardInfo]?
-        fileprivate(set) var articleCard: ArticleCardInfo?
+        fileprivate(set) var articleCards: [ArticleCardInfo]
         fileprivate(set) var hasUnreadNotifications: Bool
         fileprivate(set) var cardIsDeleted: (selectedId: String, isDeleted: Bool)?
         fileprivate(set) var updatedFavorite: (cardId: String, isLike: Bool)?
@@ -96,7 +96,7 @@ class HomeViewReactor: Reactor {
             latestCards: nil,
             popularCards: nil,
             distanceCards: nil,
-            articleCard: nil,
+            articleCards: [],
             hasUnreadNotifications: false,
             cardIsDeleted: nil,
             updatedFavorite: nil,
@@ -232,8 +232,8 @@ class HomeViewReactor: Reactor {
         case let .more(latest, distance):
             newState.latestCards? += latest
             newState.distanceCards? += distance
-        case let .article(articleCard):
-            newState.articleCard = articleCard
+        case let .article(articleCards):
+            newState.articleCards = articleCards
         case let .notice(noticeInfo):
             newState.noticeInfo = noticeInfo
         case let .updateHasUnreadNotifications(hasUnreadNotifications):
@@ -385,7 +385,7 @@ extension HomeViewReactor {
                             populars: self.currentState.popularCards ?? [],
                             distances: self.currentState.distanceCards ?? []
                         )),
-                        .just(.article(.defaultValue))
+                        .just(.article([]))
                     ])
                 case .popular:
                     return .just(.cards(

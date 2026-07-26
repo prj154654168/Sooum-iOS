@@ -25,7 +25,7 @@ protocol FetchCardUseCase: AnyObject {
         longitude: String,
         distanceFilter: String
     ) -> Observable<[BaseCardInfo]>
-    func articleCard() -> Observable<ArticleCardInfo>
+    func articleCard() -> Observable<[ArticleCardInfo]>
     
     /// 마이 카드 조회 피드/댓글
     func writtenFeedCards(userId: String, lastId: String?) -> Observable<[ProfileCardInfo]>

@@ -95,7 +95,7 @@ enum CardRequest: BaseRequest {
             }
         case .articleCard:
             
-            return "/api/cards/article"
+            return "/api/cards/article/v2"
         case let .detailCard(id, _, _):
             
             return "/api/cards/\(id)"

@@ -189,6 +189,10 @@
 		3845CA292F2DD78100F8C377 /* HomeNotiHeaderView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA272F2DD77A00F8C377 /* HomeNotiHeaderView+Rx.swift */; };
 		3845CA2B2F2DF6E300F8C377 /* HomeArticleViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA2A2F2DF6DB00F8C377 /* HomeArticleViewCell.swift */; };
 		3845CA2C2F2DF6E300F8C377 /* HomeArticleViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA2A2F2DF6DB00F8C377 /* HomeArticleViewCell.swift */; };
+		38F3A1C126B14C5B00A1B201 /* ArticlePreviewCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3A1C026B14C5B00A1B201 /* ArticlePreviewCollectionCell.swift */; };
+		38F3A1C226B14C5B00A1B201 /* ArticlePreviewCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3A1C026B14C5B00A1B201 /* ArticlePreviewCollectionCell.swift */; };
+		38F3A1C426B14E0100A1B201 /* LinearGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3A1C326B14E0100A1B201 /* LinearGradientView.swift */; };
+		38F3A1C526B14E0100A1B201 /* LinearGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F3A1C326B14E0100A1B201 /* LinearGradientView.swift */; };
 		3845CA2E2F2DF7C300F8C377 /* ArticleCardInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA2D2F2DF7B700F8C377 /* ArticleCardInfoResponse.swift */; };
 		3845CA2F2F2DF7C300F8C377 /* ArticleCardInfoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA2D2F2DF7B700F8C377 /* ArticleCardInfoResponse.swift */; };
 		3845CA312F2DF7DC00F8C377 /* ArticleCardInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3845CA302F2DF7CD00F8C377 /* ArticleCardInfo.swift */; };
@@ -1059,6 +1063,8 @@
 		3843C1C82D4FDBD3009283AC /* LocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTests.swift; sourceTree = "<group>"; };
 		3845CA272F2DD77A00F8C377 /* HomeNotiHeaderView+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeNotiHeaderView+Rx.swift"; sourceTree = "<group>"; };
 		3845CA2A2F2DF6DB00F8C377 /* HomeArticleViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeArticleViewCell.swift; sourceTree = "<group>"; };
+		38F3A1C026B14C5B00A1B201 /* ArticlePreviewCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlePreviewCollectionCell.swift; sourceTree = "<group>"; };
+		38F3A1C326B14E0100A1B201 /* LinearGradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearGradientView.swift; sourceTree = "<group>"; };
 		3845CA2D2F2DF7B700F8C377 /* ArticleCardInfoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCardInfoResponse.swift; sourceTree = "<group>"; };
 		3845CA302F2DF7CD00F8C377 /* ArticleCardInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCardInfo.swift; sourceTree = "<group>"; };
 		384972A02CA4DEC00012FCA1 /* CardRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardRequest.swift; sourceTree = "<group>"; };
@@ -2747,6 +2753,8 @@
 			children = (
 				38646E862F788C8B0020B8DF /* HomeGADViewCell.swift */,
 				3845CA2A2F2DF6DB00F8C377 /* HomeArticleViewCell.swift */,
+				38F3A1C026B14C5B00A1B201 /* ArticlePreviewCollectionCell.swift */,
+				38F3A1C326B14E0100A1B201 /* LinearGradientView.swift */,
 				3845CA272F2DD77A00F8C377 /* HomeNotiHeaderView+Rx.swift */,
 				38CBC5CE2F2A3002005097DD /* HomeNotiHeaderView.swift */,
 				38B8A5832CAE9CC4000AFE83 /* HomeViewCell.swift */,
@@ -3678,6 +3686,8 @@
 				389E59D32EDEEE4100D0946D /* UpdateFollowUseCase.swift in Sources */,
 				385C01AE2E8E8C6F003C7894 /* SOMPageModel.swift in Sources */,
 				3845CA2B2F2DF6E300F8C377 /* HomeArticleViewCell.swift in Sources */,
+				38F3A1C126B14C5B00A1B201 /* ArticlePreviewCollectionCell.swift in Sources */,
+				38F3A1C426B14E0100A1B201 /* LinearGradientView.swift in Sources */,
 				2A032EFE2CE517DD008326C0 /* OnboardingTermsOfServiceViewReactor.swift in Sources */,
 				38787B822ED1EB21004BBAA7 /* TagCollectCardsView.swift in Sources */,
 				38C2A8022EC09A5A00B941A2 /* ResignTextFieldView.swift in Sources */,
@@ -4136,6 +4146,8 @@
 				389E59D22EDEEE4100D0946D /* UpdateFollowUseCase.swift in Sources */,
 				383EC6112E7A4F6B00EC2D1E /* AuthLocalDataSource.swift in Sources */,
 				3845CA2C2F2DF6E300F8C377 /* HomeArticleViewCell.swift in Sources */,
+				38F3A1C226B14C5B00A1B201 /* ArticlePreviewCollectionCell.swift in Sources */,
+				38F3A1C526B14E0100A1B201 /* LinearGradientView.swift in Sources */,
 				388A2D302D00D6A100E2F2F0 /* FollowViewReactor.swift in Sources */,
 				38787B812ED1EB21004BBAA7 /* TagCollectCardsView.swift in Sources */,
 				389EF81E2D2F469B00E053AE /* CocoaLumberjack.swift in Sources */,

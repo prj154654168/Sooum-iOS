@@ -9,24 +9,20 @@ import Alamofire
 
 struct HomeArticleCardInfoResponse {
     
-    let articleInfo: ArticleCardInfo
+    let articleInfos: [ArticleCardInfo]
 }
 
 extension HomeArticleCardInfoResponse: EmptyResponse {
     
     static func emptyValue() -> HomeArticleCardInfoResponse {
-        HomeArticleCardInfoResponse(articleInfo: ArticleCardInfo.defaultValue)
+        HomeArticleCardInfoResponse(articleInfos: [])
     }
 }
 
 extension HomeArticleCardInfoResponse: Decodable {
-    
-    enum CodingKeys: String, CodingKey {
-        case articleInfo
-    }
-    
+
     init(from decoder: any Decoder) throws {
         let singleContainer = try decoder.singleValueContainer()
-        self.articleInfo = try singleContainer.decode(ArticleCardInfo.self)
+        self.articleInfos = try singleContainer.decode([ArticleCardInfo].self)
     }
 }

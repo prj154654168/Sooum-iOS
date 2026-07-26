@@ -12,9 +12,22 @@ import Then
 
 final class HomeArticleViewCell: UITableViewCell {
     
+    private enum Metric {
+        static let containerHorizontalInset: CGFloat = 16
+        static let containerTopInset: CGFloat = 16
+        static let sectionBottomSpacing: CGFloat = 10
+        static let containerBottomInset: CGFloat = 16
+        static let cellBottomInset: CGFloat = 10
+        static let cardWidth: CGFloat = 230
+        static let minimumCardHeight: CGFloat = 48
+        static let cardSpacing: CGFloat = 10
+        static let rightGradientWidth: CGFloat = 20
+    }
+    
     static let cellIdentifier = String(reflecting: HomeArticleViewCell.self)
     
     enum Text {
+        static let sectionTitle: String = "숨터"
         static let noCommentCardMessage: String = "첫 댓글을 남겨보세요"
         static let commentCardTrailingMessage: String = "명이 카드를 남겼어요"
     }
@@ -27,53 +40,56 @@ final class HomeArticleViewCell: UITableViewCell {
         $0.layer.cornerRadius = 16
     }
     
-    private let dot = UIView().then {
-        $0.backgroundColor = .som.v2.rMain
-        $0.layer.borderColor = UIColor.som.v2.white.cgColor
-        $0.layer.cornerRadius = 12 * 0.5
-        $0.layer.borderWidth = 2
+    private let sectionTitleLabel = UILabel().then {
+        $0.text = Text.sectionTitle
+        $0.textColor = .som.v2.black
+        $0.typography = .som.v2.caption1.withAlignment(.left)
     }
     
-    private let profileImageView = UIImageView().then {
-        $0.image = .init(.image(.v2(.profile_medium)))
-        $0.contentMode = .scaleAspectFill
+    private let flowLayout = UICollectionViewFlowLayout().then {
+        $0.scrollDirection = .horizontal
+        $0.minimumLineSpacing = Metric.cardSpacing
+        $0.minimumInteritemSpacing = Metric.cardSpacing
+        $0.sectionInset = .init(top: 0, left: 16, bottom: 0, right: 16)
+    }
+    
+    private lazy var collectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: self.flowLayout
+    ).then {
         $0.backgroundColor = .clear
-        $0.layer.cornerRadius = 16
-        $0.clipsToBounds = true
+        $0.showsHorizontalScrollIndicator = false
+        $0.showsVerticalScrollIndicator = false
+        $0.alwaysBounceVertical = false
+        $0.dataSource = self
+        $0.delegate = self
+        $0.register(
+            ArticlePreviewCollectionCell.self,
+            forCellWithReuseIdentifier: ArticlePreviewCollectionCell.cellIdentifier
+        )
     }
     
-    private let contentsContainer = UIStackView().then {
-        $0.axis = .vertical
-        $0.alignment = .leading
-        $0.distribution = .equalSpacing
-        $0.spacing = 0
+    private let rightGradientView = LinearGradientView().then {
+        $0.isHidden = false
+        $0.configuration = .init(
+            stops: [
+                .init(color: .som.v2.white.withAlphaComponent(0.0), location: 0.0),
+                .init(color: .som.v2.white.withAlphaComponent(1.0), location: 1.0)
+            ],
+            direction: .leftToRight
+        )
     }
-    
-    private let nicknameLabel = UILabel().then {
-        $0.textColor = .som.v2.gray400
-        $0.typography = .som.v2.caption2
-    }
-    
-    private let contentLabel = UILabel().then {
-        $0.textColor = .som.v2.gray600
-        $0.typography = .som.v2.subtitle3.withAlignment(.left)
-        $0.numberOfLines = 1
-        $0.lineBreakMode = .byTruncatingTail
-        $0.lineBreakStrategy = .hangulWordPriority
-    }
-    
-    // B 유형
-    private let commentedContainer = UIView()
     
     
     // MARK: Variables
     
-    private(set) var model: ArticleCardInfo?
+    private(set) var models: [ArticleCardInfo] = []
+    var onSelectArticle: ((ArticleCardInfo) -> Void)?
     
     
     // MARK: Constraint
     
-    private var cellHeightConstraint: Constraint?
+    private var collectionHeightConstraint: Constraint?
     
     
     // MARK: Initialize
@@ -94,6 +110,16 @@ final class HomeArticleViewCell: UITableViewCell {
     
     // MARK: Override func
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.models = []
+        self.onSelectArticle = nil
+        self.collectionView.setContentOffset(.zero, animated: false)
+        self.collectionHeightConstraint?.update(offset: Metric.minimumCardHeight)
+        self.collectionView.reloadData()
+    }
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -113,116 +139,91 @@ final class HomeArticleViewCell: UITableViewCell {
         self.contentView.addSubview(self.shadowbackgroundView)
         self.shadowbackgroundView.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.bottom.equalToSuperview().offset(-10)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
-            self.cellHeightConstraint = $0.height.equalTo(72).constraint
+            $0.bottom.equalToSuperview().offset(-Metric.cellBottomInset)
+            $0.leading.equalToSuperview().offset(Metric.containerHorizontalInset)
+            $0.trailing.equalToSuperview().offset(-Metric.containerHorizontalInset)
         }
         
-        self.shadowbackgroundView.addSubview(self.profileImageView)
-        self.profileImageView.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalToSuperview().offset(12)
-            $0.size.equalTo(48)
+        self.shadowbackgroundView.addSubview(self.sectionTitleLabel)
+        self.sectionTitleLabel.snp.makeConstraints {
+            $0.top.leading.equalToSuperview().offset(Metric.containerTopInset)
+            $0.trailing.lessThanOrEqualToSuperview().offset(-Metric.containerTopInset)
         }
         
-        self.shadowbackgroundView.addSubview(self.dot)
-        self.dot.snp.makeConstraints {
-            $0.top.equalTo(self.profileImageView.snp.top)
-            $0.trailing.equalTo(self.profileImageView.snp.trailing)
-            $0.size.equalTo(12)
+        self.shadowbackgroundView.addSubview(self.collectionView)
+        self.collectionView.snp.makeConstraints {
+            $0.top.equalTo(self.sectionTitleLabel.snp.bottom).offset(Metric.sectionBottomSpacing)
+            $0.horizontalEdges.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-Metric.containerBottomInset)
+            self.collectionHeightConstraint = $0.height.equalTo(Metric.minimumCardHeight).constraint
         }
         
-        self.shadowbackgroundView.addSubview(self.contentsContainer)
-        self.contentsContainer.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalTo(self.profileImageView.snp.trailing).offset(10)
-            $0.trailing.equalToSuperview().offset(-12)
-        }
-        self.contentsContainer.addArrangedSubview(self.nicknameLabel)
-        self.contentsContainer.addArrangedSubview(self.contentLabel)
-        self.contentsContainer.addArrangedSubview(self.commentedContainer)
-    }
-    
-    private func setupCommentedContainer(with urlStrings: [String], count commentedCount: Int) {
-        
-        self.commentedContainer.subviews.forEach { $0.removeFromSuperview() }
-        
-        let commentedProfileContainer = UIStackView().then {
-            $0.axis = .horizontal
-            $0.spacing = -4
-        }
-        
-        urlStrings.forEach { urlString in
-            
-            let imageView = UIImageView().then {
-                $0.image = .init(.image(.v2(.profile_small)))
-                $0.contentMode = .scaleAspectFill
-                $0.backgroundColor = .som.v2.white
-                $0.layer.cornerRadius = 20 * 0.5
-                $0.layer.borderWidth = 1
-                $0.layer.borderColor = UIColor.som.v2.white.cgColor
-                $0.clipsToBounds = true
-            }
-            if urlString.isEmpty == false { imageView.setImage(strUrl: urlString) }
-            
-            imageView.snp.makeConstraints {
-                $0.size.equalTo(20)
-            }
-            
-            commentedProfileContainer.addArrangedSubview(imageView)
-        }
-        
-        let hasComment = commentedCount > 0
-        let countLabel = UILabel().then {
-            $0.text = hasComment ?
-                "\(commentedCount.description)\(Text.commentCardTrailingMessage)" :
-                Text.noCommentCardMessage
-            $0.textColor = .som.v2.gray500
-            $0.typography = .som.v2.caption2
-        }
-        
-        self.commentedContainer.addSubview(commentedProfileContainer)
-        commentedProfileContainer.snp.makeConstraints {
-            $0.verticalEdges.leading.equalToSuperview()
-        }
-        
-        self.commentedContainer.addSubview(countLabel)
-        countLabel.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-            $0.leading.equalTo(commentedProfileContainer.snp.trailing).offset(hasComment ? 4 : 0)
-            $0.trailing.lessThanOrEqualToSuperview()
-        }
-        
-        self.commentedContainer.snp.remakeConstraints {
-            $0.height.equalTo(hasComment ? 20 : 18)
+        self.shadowbackgroundView.addSubview(self.rightGradientView)
+        self.rightGradientView.snp.makeConstraints {
+            $0.top.bottom.equalTo(self.collectionView)
+            $0.trailing.equalTo(self.collectionView.snp.trailing)
+            $0.width.equalTo(Metric.rightGradientWidth)
         }
     }
     
     
     // MARK: Public func
     
-    func bind(_ model: ArticleCardInfo) {
+    func bind(_ models: [ArticleCardInfo]) {
         
-        self.model = model
+        self.models = models
         
-        let cellHeight: CGFloat = model.writerProfileImgUrls.isEmpty ? 81 : 83
-        self.cellHeightConstraint?.update(offset: cellHeight)
+        let maxCardHeight = models
+            .map { ArticlePreviewCollectionCell.preferredHeight(for: $0, width: Metric.cardWidth) }
+            .max() ?? Metric.minimumCardHeight
+        self.collectionHeightConstraint?.update(offset: maxCardHeight)
         
-        self.dot.isHidden = model.isRead
+        self.collectionView.reloadData()
+        self.collectionView.collectionViewLayout.invalidateLayout()
+    }
+}
+
+extension HomeArticleViewCell: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        self.models.count
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
         
-        if model.profileImageUrl.isEmpty {
-            self.profileImageView.image = .init(.image(.v2(.profile_medium)))
-        } else {
-            self.profileImageView.setImage(strUrl: model.profileImageUrl)
+        let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: ArticlePreviewCollectionCell.cellIdentifier,
+            for: indexPath
+        ) as! ArticlePreviewCollectionCell
+        cell.bind(self.models[indexPath.item])
+        return cell
+    }
+}
+
+extension HomeArticleViewCell: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard self.models.indices.contains(indexPath.item) else { return }
+        self.onSelectArticle?(self.models[indexPath.item])
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        
+        guard self.models.indices.contains(indexPath.item) else {
+            return CGSize(width: Metric.cardWidth, height: Metric.minimumCardHeight)
         }
         
-        self.nicknameLabel.text = model.nickname
-        self.nicknameLabel.typography = .som.v2.caption2
-        
-        self.contentLabel.text = model.cardContent
-        self.contentLabel.typography = .som.v2.subtitle3.withAlignment(.left)
-        
-        self.setupCommentedContainer(with: model.writerProfileImgUrls, count: model.totalWriterCnt)
+        let model = self.models[indexPath.item]
+        return CGSize(
+            width: Metric.cardWidth,
+            height: ArticlePreviewCollectionCell.preferredHeight(for: model, width: Metric.cardWidth)
+        )
     }
 }

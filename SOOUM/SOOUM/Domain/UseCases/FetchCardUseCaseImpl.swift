@@ -58,9 +58,9 @@ final class FetchCardUseCaseImpl: FetchCardUseCase {
         .map(\.cardInfos)
     }
     
-    func articleCard() -> Observable<ArticleCardInfo> {
+    func articleCard() -> Observable<[ArticleCardInfo]> {
         
-        return self.repository.articleCard().map(\.articleInfo)
+        return self.repository.articleCard().map(\.articleInfos)
     }
     
     /// 마이 카드 조회 피드/댓글

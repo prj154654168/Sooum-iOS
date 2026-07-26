@@ -55,7 +55,7 @@ class HomeViewController: BaseNavigationViewController, View {
     
     enum Item: Hashable {
         case admob(UUID)
-        case article(ArticleCardInfo)
+        case article([ArticleCardInfo])
         case latest(BaseCardInfo)
         case popular(BaseCardInfo)
         case distance(BaseCardInfo)
@@ -172,6 +172,9 @@ class HomeViewController: BaseNavigationViewController, View {
             
             let cell: HomeArticleViewCell = self.cellForArticle(tableView, with: indexPath)
             cell.bind(articleInfo)
+            cell.onSelectArticle = { [weak self] selectedArticle in
+                self?.handleArticleSelection(selectedArticle)
+            }
             
             return cell
         case let .admob(uuid):
@@ -463,6 +466,7 @@ class HomeViewController: BaseNavigationViewController, View {
         cardIsDeleted
             .filter { $0.isDeleted == false }
             .map { $0.selectedId }
+            .observe(on: MainScheduler.asyncInstance)
             .do(onNext: { _ in
                 reactor.action.onNext(.cleanup)
                 
@@ -471,7 +475,6 @@ class HomeViewController: BaseNavigationViewController, View {
                     event: GAEvent.DetailView.cardDetail_tracePathClick(previous_path: .home)
                 )
             })
-            .observe(on: MainScheduler.asyncInstance)
             .subscribe(
                 with: self,
                 onNext: { object, selectedId in
@@ -512,7 +515,7 @@ class HomeViewController: BaseNavigationViewController, View {
                 latests: $0.latestCards,
                 populars: $0.popularCards,
                 distances: $0.distanceCards,
-                article: $0.articleCard,
+                article: $0.articleCards,
                 noticeInfo: $0.noticeInfo
             )
         }
@@ -545,8 +548,8 @@ class HomeViewController: BaseNavigationViewController, View {
                 switch displayStats.displayType {
                 case .latest:
                     /// Article은 `최신카드`에서만 표시
-                    if let article = displayStats.article, article != .defaultValue {
-                        let new = Item.article(article)
+                    if displayStats.article.isEmpty == false {
+                        let new = Item.article(displayStats.article)
                         snapshot.appendItems([new], toSection: .article)
                     }
                     
@@ -641,6 +644,21 @@ class HomeViewController: BaseNavigationViewController, View {
             
             cell.animateLikeCount(from: previousLikeCount, to: cardInfo.likeCnt)
         }
+    }
+    
+    func handleArticleSelection(_ selectedArticle: ArticleCardInfo) {
+        guard let reactor = self.reactor,
+              SimpleReachability.shared.isCurrentStatus
+        else { return }
+        
+        self.view.isUserInteractionEnabled = false
+        reactor.action.onNext(
+            .hasDetailCard(
+                selectedArticle.id,
+                isEventCard: false,
+                isArticleCard: true
+            )
+        )
     }
     
     
@@ -1051,9 +1069,8 @@ extension HomeViewController: UITableViewDelegate {
                 let .distance(selectedCard):
                 
                 return selectedCard.id
-            case let .article(selectedArticle):
-                
-                return selectedArticle.id
+            case .article:
+                return nil
             default:
                 return nil
             }
