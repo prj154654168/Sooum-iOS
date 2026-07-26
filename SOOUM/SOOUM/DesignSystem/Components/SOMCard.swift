@@ -316,14 +316,6 @@ class SOMCard: UIView {
         self.cardInfoLeadingStackView.addArrangedSubview(self.commentInfoStackView)
         self.cardInfoLeadingStackView.addArrangedSubview(self.voteInfoStackView)
         
-        self.adminStackView.addArrangedSubview(self.adminImageView)
-        self.adminStackView.addArrangedSubview(self.adminLabel)
-        self.adminImageView.snp.makeConstraints {
-            $0.size.equalTo(20)
-        }
-        
-        self.cardInfoLeadingStackView.addArrangedSubview(self.adminStackView)
-        
         // self.distanceInfoStackView.addArrangedSubview(self.distanceImageView)
         // self.distanceInfoStackView.addArrangedSubview(self.distanceLabel)
         // self.distanceImageView.snp.makeConstraints {
@@ -364,6 +356,14 @@ class SOMCard: UIView {
         }
         
         self.cardInfoTrailingStackView.addArrangedSubview(self.cardPungTimeStackView)
+        
+        self.adminStackView.addArrangedSubview(self.adminImageView)
+        self.adminStackView.addArrangedSubview(self.adminLabel)
+        self.adminImageView.snp.makeConstraints {
+            $0.size.equalTo(20)
+        }
+        
+        self.cardInfoTrailingStackView.addArrangedSubview(self.adminStackView)
         
         
         // 카드 문구
