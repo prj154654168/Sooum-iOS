@@ -126,9 +126,7 @@ final class ArticlePreviewCollectionCell: UICollectionViewCell {
             withConstrainedWidth: contentWidth,
             font: Typography.som.v2.caption2.font
         )
-        let footerHeight = model.writerProfileImgUrls.isEmpty
-            ? footerLabelHeight
-            : max(Metric.avatarSize, footerLabelHeight)
+        let footerHeight = max(Metric.avatarSize, footerLabelHeight)
         
         return ceil(
             Metric.topInset +
