@@ -436,6 +436,7 @@ class SOMCard: UIView {
         self.adminStackView.isHidden = model.isAdminCard == false
         // self.firstDot.isHidden = model.isAdminCard == false
         self.cardPungTimeStackView.isHidden = model.storyExpirationTime == nil
+        self.voteInfoStackView.isHidden = model.voteCnt == nil
         // self.secondDot.isHidden = model.storyExpirationTime == nil
         // self.distanceLabel.text = model.distance
         // self.distanceInfoStackView.isHidden = (model.distance == nil || model.isAdminCard)
