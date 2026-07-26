@@ -9,6 +9,8 @@ import GoogleMobileAds
 
 final class NativeAdHelper: NSObject {
     
+    typealias LoadCompletion = (Result<NativeAd, Error>) -> Void
+    
     static let shared = NativeAdHelper()
     
     private override init() {
@@ -31,7 +33,7 @@ final class NativeAdHelper: NSObject {
     }
     
     private var loadedAds: [NativeAdWrapper] = []
-    private var pendingLoaders: [AdLoader] = []
+    private var pendingRequests: [PendingRequest] = []
     
     private weak var rootViewController: UIViewController?
     
@@ -41,18 +43,37 @@ final class NativeAdHelper: NSObject {
         return Info.adUnitId
     }
     
-    var onAdLoaded: ((NativeAd) -> Void)?
-    var onAdFailed: ((Error) -> Void)?
+    private final class PendingRequest {
+        let loader: AdLoader
+        let completion: LoadCompletion?
+        var loadedAd: NativeAd?
+        
+        init(loader: AdLoader, completion: LoadCompletion?) {
+            self.loader = loader
+            self.completion = completion
+        }
+    }
     
     func configure(root rootViewController: UIViewController) {
         self.rootViewController = rootViewController
     }
     
-    func loadAd() {
+    func loadAd(completion: LoadCompletion? = nil) {
         guard let rootViewController = self.rootViewController ?? UIApplication.topViewController else {
             Log.error("Can not find rootViewController")
+            let error = NSError(
+                domain: "com.sooum.nativeAdHelper",
+                code: 0,
+                userInfo: [NSLocalizedDescriptionKey: "Can not find rootViewController"]
+            )
+            completion?(.failure(error))
             return
         }
+        
+        self.loadAd(from: rootViewController, completion: completion)
+    }
+    
+    func loadAd(from rootViewController: UIViewController, completion: LoadCompletion? = nil) {
         let adLoader = AdLoader(
             adUnitID: self.adUnitID,
             rootViewController: rootViewController,
@@ -60,9 +81,12 @@ final class NativeAdHelper: NSObject {
             options: nil
         )
         adLoader.delegate = self
+        
+        let pendingRequest = PendingRequest(loader: adLoader, completion: completion)
         self.adQueue.async(flags: .barrier) {
-            self.pendingLoaders.append(adLoader)
+            self.pendingRequests.append(pendingRequest)
         }
+        
         adLoader.load(Request())
     }
     
@@ -78,14 +102,14 @@ final class NativeAdHelper: NSObject {
     func reset() {
         self.adQueue.async(flags: .barrier) {
             self.loadedAds.removeAll()
-            self.pendingLoaders.removeAll()
+            self.pendingRequests.removeAll()
         }
     }
     
     @objc
     private func handleAppDidBackground() {
         self.adQueue.async(flags: .barrier) {
-            self.pendingLoaders.removeAll()
+            self.pendingRequests.removeAll()
         }
     }
 }
@@ -97,30 +121,31 @@ extension NativeAdHelper: NativeAdLoaderDelegate {
         let wrapper = NativeAdWrapper(ad: nativeAd, loadedAt: Date())
         self.adQueue.async(flags: .barrier) {
             self.loadedAds.append(wrapper)
+            self.pendingRequests.first(where: { $0.loader == adLoader })?.loadedAd = nativeAd
         }
     }
     
     func adLoaderDidFinishLoading(_ adLoader: AdLoader) {
         self.adQueue.async(flags: .barrier) {
-            self.pendingLoaders.removeAll(where: { $0 == adLoader })
-        }
-        
-        self.adQueue.async {
-            if let wrapper = self.loadedAds.last {
-                DispatchQueue.main.async { [weak self] in
-                    self?.onAdLoaded?(wrapper.ad)
-                }
+            guard let index = self.pendingRequests.firstIndex(where: { $0.loader == adLoader }) else { return }
+            
+            let request = self.pendingRequests.remove(at: index)
+            guard let loadedAd = request.loadedAd else { return }
+            
+            DispatchQueue.main.async {
+                request.completion?(.success(loadedAd))
             }
         }
     }
     
     func adLoader(_ adLoader: AdLoader, didFailToReceiveAdWithError error: Error) {
         self.adQueue.async(flags: .barrier) {
-            self.pendingLoaders.removeAll(where: { $0 == adLoader })
-        }
-        
-        DispatchQueue.main.async {
-            self.onAdFailed?(error)
+            guard let index = self.pendingRequests.firstIndex(where: { $0.loader == adLoader }) else { return }
+            
+            let request = self.pendingRequests.remove(at: index)
+            DispatchQueue.main.async {
+                request.completion?(.failure(error))
+            }
         }
     }
 }
