@@ -352,7 +352,7 @@ class SOMCard: UIView {
         self.cardPungTimeStackView.addArrangedSubview(self.cardPungTimeImageView)
         self.cardPungTimeStackView.addArrangedSubview(self.cardPungTimeLabel)
         self.cardPungTimeImageView.snp.makeConstraints {
-            $0.size.equalTo(24)
+            $0.size.equalTo(20)
         }
         
         self.cardInfoTrailingStackView.addArrangedSubview(self.cardPungTimeStackView)
