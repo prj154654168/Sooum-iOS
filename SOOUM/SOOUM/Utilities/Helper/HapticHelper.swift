@@ -83,9 +83,8 @@ final class HapticHelper {
         case .heavy:  style = .heavy
         case .soft:   style = .soft
         case .rigid:  style = .rigid
-        default:
-            return nil
-            }
+        default:      return nil
+        }
         
         return self.impactGenerators[style]
     }

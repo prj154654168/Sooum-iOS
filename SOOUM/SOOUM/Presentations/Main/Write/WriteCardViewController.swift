@@ -745,7 +745,7 @@ class WriteCardViewController: BaseNavigationViewController, View {
         reactor.state.map(\.couldPosting)
             .filterNil()
             .filter { $0.isBaned }
-            .observe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(with: self) { object, postingPermission in
                 
                 let banEndGapToDays = postingPermission.expiredAt?.infoReadableTimeTakenFromThisForBanEndPosting(to: Date().toKorea())
