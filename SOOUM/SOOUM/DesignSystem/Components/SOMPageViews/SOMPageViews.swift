@@ -100,6 +100,7 @@ class SOMPageViews: UIView {
     
     private var scrollTimer: Timer?
     private var hasLayoutsubviews: Bool = false
+    private var isUserInteracting: Bool = false
     
     weak var delegate: SOMPageViewsDelegate?
     
@@ -172,16 +173,19 @@ class SOMPageViews: UIView {
     
     func startAutoScroll() {
         
-        guard self.models.count > 1, self.hasLayoutsubviews else { return }
+        guard self.scrollTimer == nil,
+              self.models.count > 1,
+              self.hasLayoutsubviews,
+              self.window != nil,
+              self.isUserInteracting == false
+        else { return }
         
-        self.stopAutoScroll()
-        
-        self.scrollTimer = Timer.scheduledTimer(
-            timeInterval: 5.0,
-            target: self,
-            selector: #selector(self.handelAutoScroll),
-            userInfo: nil,
-            repeats: true
+        self.scrollTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
+            self?.handelAutoScroll()
+        }
+        RunLoop.main.add(
+            self.scrollTimer!,
+            forMode: .common
         )
     }
     
@@ -197,6 +201,7 @@ class SOMPageViews: UIView {
     func setModels(_ models: [SOMPageModel]) {
         
         self.indicatorContainer.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        self.currentIndexForIndicator = 0
         if models.count > 1 {
             for index in 0..<models.count {
                 let indicator = UIView().then {
@@ -233,7 +238,10 @@ class SOMPageViews: UIView {
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems(modelsToItem, toSection: .main)
         self.dataSource.apply(snapshot, animatingDifferences: false) {
-            guard models.count > 1 else { return }
+            guard models.count > 1 else {
+                self.startAutoScroll()
+                return
+            }
             
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
@@ -243,6 +251,7 @@ class SOMPageViews: UIView {
                     at: .centeredHorizontally,
                     animated: false
                 )
+                self.startAutoScroll()
             }
         }
     }
@@ -301,11 +310,22 @@ extension SOMPageViews: UICollectionViewDelegateFlowLayout {
     /// 사용자 인터랙션 시 타이머 중지
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         
+        self.isUserInteracting = true
         self.stopAutoScroll()
     }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        guard decelerate == false else { return }
+        
+        self.isUserInteracting = false
+        self.infiniteScroll(scrollView)
+        self.startAutoScroll()
+    }
+
     /// 사용자 인터랙션이 끝났을 때, 타이머 재시작
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         
+        self.isUserInteracting = false
         self.infiniteScroll(scrollView)
         self.startAutoScroll()
     }
