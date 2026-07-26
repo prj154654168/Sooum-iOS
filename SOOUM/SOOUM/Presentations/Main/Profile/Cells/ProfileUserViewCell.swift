@@ -41,6 +41,7 @@ class ProfileUserViewCell: UICollectionViewCell {
     
     static let cellIdentifier = String(reflecting: ProfileUserViewCell.self)
     private static let bioTypography = Typography.som.v2.body1.withAlignment(.left)
+    private static let collapsedBioSuffix = "… \(Text.bioMoreButtonTitle)"
     
     // MARK: Views
     
@@ -97,19 +98,9 @@ class ProfileUserViewCell: UICollectionViewCell {
         $0.textColor = .som.v2.black
         $0.typography = .som.v2.body1.withAlignment(.left)
         $0.numberOfLines = Int(Layout.bioMaximumLines)
-        $0.lineBreakMode = .byTruncatingTail
+        $0.lineBreakMode = .byWordWrapping
         $0.lineBreakStrategy = .hangulWordPriority
-    }
-    
-    private let bioMoreButton = UIButton(type: .system).then {
-        var config = UIButton.Configuration.plain()
-        config.contentInsets = .zero
-        config.baseForegroundColor = .som.v2.gray400
-        $0.configuration = config
-        $0.contentHorizontalAlignment = .leading
-        $0.titleLabel?.font = Typography.som.v2.body1.font
-        $0.setTitle(Text.bioMoreButtonTitle, for: .normal)
-        $0.isHidden = true
+        $0.isUserInteractionEnabled = true
     }
     
     private let bottomContainer = UIStackView().then {
@@ -150,6 +141,7 @@ class ProfileUserViewCell: UICollectionViewCell {
     private(set) var model: ProfileInfo = .defaultValue
     private var isBioExpanded: Bool = false
     private var shouldShowBioMoreButton: Bool = false
+    private var bioMoreTextRange: NSRange?
     
     
     // MARK: Constraints
@@ -173,7 +165,7 @@ class ProfileUserViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
-        self.bioMoreButton.addTarget(self, action: #selector(self.didTapBioMoreButton), for: .touchUpInside)
+        self.bioLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.didTapBioLabel(_:))))
         self.setupConstraints()
     }
     
@@ -186,12 +178,8 @@ class ProfileUserViewCell: UICollectionViewCell {
         
         self.disposeBag = DisposeBag()
         self.isBioExpanded = false
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        self.updateBioMoreButtonVisibility()
+        self.shouldShowBioMoreButton = false
+        self.bioMoreTextRange = nil
     }
     
     
@@ -255,15 +243,8 @@ class ProfileUserViewCell: UICollectionViewCell {
         self.bioLabel.snp.makeConstraints {
             $0.top.equalTo(topContainer.snp.bottom).offset(Layout.bioTopInset)
             $0.leading.equalToSuperview().offset(Layout.horizontalInset)
-            $0.trailing.lessThanOrEqualToSuperview().offset(-Layout.horizontalInset)
+            $0.trailing.equalToSuperview().offset(-Layout.horizontalInset)
             self.bioLabelHeightConstraint = $0.height.equalTo(Self.bioTypography.lineHeight).constraint
-        }
-        
-        self.addSubview(self.bioMoreButton)
-        self.bioMoreButton.snp.makeConstraints {
-            $0.bottom.equalTo(self.bioLabel.snp.bottom)
-            $0.leading.equalTo(self.bioLabel.snp.trailing)
-            $0.height.equalTo(21)
         }
         
         self.addSubview(self.bottomContainer)
@@ -328,14 +309,11 @@ class ProfileUserViewCell: UICollectionViewCell {
             width: width,
             isExpanded: isBioExpanded
         )
-        self.bioLabel.numberOfLines = isBioExpanded ? 0 : Int(Layout.bioMaximumLines)
-        self.bioLabel.lineBreakMode = isBioExpanded ? .byWordWrapping : .byTruncatingTail
-        self.bioLabel.text = bioState.text
-        self.bioLabel.typography = Self.bioTypography
         self.bioLabel.isHidden = bioState.isHidden
         self.bioLabelHeightConstraint?.update(offset: bioState.visibleTextHeight)
         self.shouldShowBioMoreButton = bioState.showsMoreButton
-        self.bioMoreButton.isHidden = bioState.showsMoreButton == false || isBioExpanded
+        self.bioMoreTextRange = bioState.moreTextRange
+        self.applyBioState(bioState)
         
         var contents: [(content: ProfileInfo.Content, count: String)] {
             var contents: [(content: ProfileInfo.Content, count: String)] = []
@@ -369,12 +347,9 @@ class ProfileUserViewCell: UICollectionViewCell {
             width: width,
             isExpanded: true
         )
-        self.bioLabel.numberOfLines = 0
-        self.bioLabel.lineBreakMode = .byWordWrapping
-        self.bioLabel.text = bioState.text
-        self.bioLabel.typography = Self.bioTypography
         self.bioLabelHeightConstraint?.update(offset: bioState.visibleTextHeight)
-        self.bioMoreButton.isHidden = true
+        self.bioMoreTextRange = bioState.moreTextRange
+        self.applyBioState(bioState)
         
         UIView.performWithoutAnimation {
             self.layoutIfNeeded()
@@ -389,12 +364,9 @@ class ProfileUserViewCell: UICollectionViewCell {
             width: self.bounds.width > 0 ? self.bounds.width : UIScreen.main.bounds.width,
             isExpanded: false
         )
-        self.bioLabel.numberOfLines = Int(Layout.bioMaximumLines)
-        self.bioLabel.lineBreakMode = .byTruncatingTail
-        self.bioLabel.text = bioState.text
-        self.bioLabel.typography = Self.bioTypography
         self.bioLabelHeightConstraint?.update(offset: bioState.visibleTextHeight)
-        self.bioMoreButton.isHidden = false
+        self.bioMoreTextRange = bioState.moreTextRange
+        self.applyBioState(bioState)
         
         UIView.performWithoutAnimation {
             self.layoutIfNeeded()
@@ -423,9 +395,10 @@ class ProfileUserViewCell: UICollectionViewCell {
 private extension ProfileUserViewCell {
     
     struct BioState {
-        let text: String?
         let isHidden: Bool
         let showsMoreButton: Bool
+        let attributedText: NSAttributedString?
+        let moreTextRange: NSRange?
         let height: CGFloat
         let visibleTextHeight: CGFloat
     }
@@ -433,7 +406,7 @@ private extension ProfileUserViewCell {
     static func bioState(for bio: String?, width: CGFloat, isExpanded: Bool) -> BioState {
         let trimmedText = bio?.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let text = trimmedText, text.isEmpty == false else {
-            return BioState(text: nil, isHidden: true, showsMoreButton: false, height: 0, visibleTextHeight: 0)
+            return BioState(isHidden: true, showsMoreButton: false, attributedText: nil, moreTextRange: nil, height: 0, visibleTextHeight: 0)
         }
         
         let resolvedWidth = width > 0 ? width : UIScreen.main.bounds.width
@@ -444,33 +417,87 @@ private extension ProfileUserViewCell {
         let collapsedTextHeight = Self.bioTypography.lineHeight * Layout.bioMaximumLines
         let showsMoreButton = fullTextHeight > collapsedTextHeight
         let visibleTextHeight = isExpanded ? fullTextHeight : min(fullTextHeight, collapsedTextHeight)
+        let attributedText: NSAttributedString?
+        let moreTextRange: NSRange?
+        
+        if isExpanded || showsMoreButton == false {
+            attributedText = Self.bioAttributedText(for: text, highlightedMoreRange: nil)
+            moreTextRange = nil
+        } else {
+            let collapsedResult = Self.collapsedBioAttributedText(for: text, width: availableWidth)
+            attributedText = collapsedResult.text
+            moreTextRange = collapsedResult.moreTextRange
+        }
         
         return BioState(
-            text: text,
             isHidden: false,
             showsMoreButton: showsMoreButton,
+            attributedText: attributedText,
+            moreTextRange: moreTextRange,
             height: Layout.bioTopInset + visibleTextHeight + Layout.bioBottomInset,
             visibleTextHeight: visibleTextHeight
         )
     }
     
-    func updateBioMoreButtonVisibility() {
-        guard self.bioLabel.isHidden == false else {
-            self.bioMoreButton.isHidden = true
-            return
+    static func collapsedBioAttributedText(for text: String, width: CGFloat) -> (text: NSAttributedString, moreTextRange: NSRange?) {
+        let collapsedHeight = Self.bioTypography.lineHeight * Layout.bioMaximumLines
+        guard Self.bioTypography.textBoundingHeight(for: text, width: width) > collapsedHeight else {
+            return (Self.bioAttributedText(for: text, highlightedMoreRange: nil), nil)
         }
         
-        guard self.isBioExpanded == false else {
-            self.bioMoreButton.isHidden = true
-            return
+        let nsText = text as NSString
+        var low = 0
+        var high = nsText.length
+        var bestCandidate = Self.collapsedBioSuffix
+        
+        while low <= high {
+            let mid = (low + high) / 2
+            let prefix = nsText.substring(to: mid).trimmingCharacters(in: .whitespacesAndNewlines)
+            let candidate = prefix.isEmpty ? Self.collapsedBioSuffix : prefix + Self.collapsedBioSuffix
+            let candidateHeight = Self.bioTypography.textBoundingHeight(for: candidate, width: width)
+            
+            if candidateHeight <= collapsedHeight {
+                bestCandidate = candidate
+                low = mid + 1
+            } else {
+                high = mid - 1
+            }
         }
         
-        let shouldShowMoreButton = self.shouldShowBioMoreButton
-        self.bioMoreButton.isHidden = shouldShowMoreButton == false
+        let moreRange = (bestCandidate as NSString).range(of: Text.bioMoreButtonTitle)
+        return (
+            Self.bioAttributedText(for: bestCandidate, highlightedMoreRange: moreRange.location == NSNotFound ? nil : moreRange),
+            moreRange.location == NSNotFound ? nil : moreRange
+        )
+    }
+    
+    static func bioAttributedText(for text: String, highlightedMoreRange: NSRange?) -> NSAttributedString {
+        let attributedText = NSMutableAttributedString(
+            string: text,
+            attributes: Self.bioTextAttributes(textColor: .som.v2.black)
+        )
         
-        UIView.performWithoutAnimation {
-            self.layoutIfNeeded()
+        if let highlightedMoreRange {
+            attributedText.addAttributes(
+                Self.bioTextAttributes(textColor: .som.v2.gray400),
+                range: highlightedMoreRange
+            )
         }
+        
+        return attributedText
+    }
+    
+    static func bioTextAttributes(textColor: UIColor) -> [NSAttributedString.Key: Any] {
+        var attributes = Self.bioTypography.attributes
+        attributes[.font] = Self.bioTypography.font
+        attributes[.foregroundColor] = textColor
+        return attributes
+    }
+    
+    func applyBioState(_ bioState: BioState) {
+        self.bioLabel.numberOfLines = self.isBioExpanded ? 0 : Int(Layout.bioMaximumLines)
+        self.bioLabel.lineBreakMode = .byWordWrapping
+        self.bioLabel.attributedText = bioState.attributedText
     }
     
     func setupItems(_ items: [(content: ProfileInfo.Content, count: String)]) {
@@ -529,7 +556,41 @@ private extension ProfileUserViewCell {
     }
     
     @objc
-    func didTapBioMoreButton() {
+    func didTapBioLabel(_ gestureRecognizer: UITapGestureRecognizer) {
+        guard self.shouldShowBioMoreButton,
+              self.isBioExpanded == false,
+              let moreTextRange = self.bioMoreTextRange,
+              let attributedText = self.bioLabel.attributedText
+        else {
+            return
+        }
+        
+        let layoutManager = NSLayoutManager()
+        let textContainer = NSTextContainer(size: self.bioLabel.bounds.size)
+        let textStorage = NSTextStorage(attributedString: attributedText)
+        
+        textContainer.lineFragmentPadding = 0
+        textContainer.maximumNumberOfLines = self.bioLabel.numberOfLines
+        textContainer.lineBreakMode = self.bioLabel.lineBreakMode
+        
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+        
+        let location = gestureRecognizer.location(in: self.bioLabel)
+        let textBoundingBox = layoutManager.usedRect(for: textContainer)
+        let textContainerOffset = CGPoint(x: -textBoundingBox.origin.x, y: -textBoundingBox.origin.y)
+        let textContainerPoint = CGPoint(
+            x: location.x - textContainerOffset.x,
+            y: location.y - textContainerOffset.y
+        )
+        let characterIndex = layoutManager.characterIndex(
+            for: textContainerPoint,
+            in: textContainer,
+            fractionOfDistanceBetweenInsertionPoints: nil
+        )
+        
+        guard NSLocationInRange(characterIndex, moreTextRange) else { return }
+        
         self.bioMoreButtonDidTap.accept(())
     }
 }
