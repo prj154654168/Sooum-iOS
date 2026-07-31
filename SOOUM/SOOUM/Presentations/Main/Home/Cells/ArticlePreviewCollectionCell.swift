@@ -114,23 +114,12 @@ final class ArticlePreviewCollectionCell: UICollectionViewCell {
     }
     
     static func preferredHeight(for model: ArticleCardInfo, width: CGFloat) -> CGFloat {
-        let contentWidth = width - (Metric.horizontalInset * 2)
-        let titleHeight = model.cardContent.height(
-            withConstrainedWidth: contentWidth,
-            font: Typography.som.v2.subtitle3.font
-        )
-        let footerText = model.totalWriterCnt > 0
-            ? "\(model.totalWriterCnt.description)\(HomeArticleViewCell.Text.commentCardTrailingMessage)"
-            : HomeArticleViewCell.Text.noCommentCardMessage
-        let footerLabelHeight = footerText.height(
-            withConstrainedWidth: contentWidth,
-            font: Typography.som.v2.caption2.font
-        )
-        let footerHeight = max(Metric.avatarSize, footerLabelHeight)
+        let titleHeight = Typography.som.v2.subtitle3.lineHeight
+        let footerHeight = max(Metric.avatarSize, Typography.som.v2.caption2.lineHeight)
         
         return ceil(
             Metric.topInset +
-            max(titleHeight, Typography.som.v2.subtitle3.lineHeight) +
+            titleHeight +
             Metric.titleBottomSpacing +
             footerHeight +
             Metric.bottomInset
